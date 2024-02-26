@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1239" class="ch18">
+			<p id="_idParaDest-167" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor233"></a>18. Transitions, Transforms, and Animation</p>
+		</div>
+		<div id="_idContainer1240" class="ch18">
+			<h1 class="chapterLabel">18</h1>
+		</div>
+		<div id="_idContainer1241" class="ch18">
+			<h1 class="chapterTitle"><a id="_idTextAnchor234"></a>Transitions, Transforms, and Animation</h1>
+		</div>
+		<div id="_idContainer1242" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In This Chapter</p>
+			<p class="chapterContents">Creating smooth transitions</p>
+			<p class="chapterContents">Moving, rotating, and scaling elements</p>
+			<p class="chapterContents">Combining transitions and transforms</p>
+			<p class="chapterContents">A few words about 3-D transforms</p>
+			<p class="chapterContents">Keyframe animations</p>
+		</div>
+		<div id="_idContainer1301" class="ch18">
+			<p class="body">We’ve seen CSS used for visual effects like rounded corners, color gradients, and drop shadows that previously had to be created with graphics. In this chapter, we’ll look at some CSS3 properties for producing animated interactive effects that were previously possible only with JavaScript or Flash. </p>
+			<p class="body">We’ll start with CSS Transitions, a nifty way to make style changes fade smoothly from one to another. Then we’ll discuss CSS Transforms for repositioning, scaling, rotating, and skewing elements and look at how you can animate them with transitions. I’m going to close out the chapter with brief introductions to 3-D Transforms and CSS Animation, which are important to know about but are too vast a topic to cover here, so I’ll give you just a taste.</p>
+			<p class="body">The problem with this chapter is that animation and time-based effects don’t work on paper, so I can’t show them off right here. I did the next best thing, though, and made the source code for the figures available in the materials for this chapter (<a href="http://www.learningwebdesign.com/5e/materials"><span class="URL-Email">learningwebdesign.com/5e/materials</span></a>) in a folder called <span class="Filename">figures</span>. Just open the file in your browser.</p>
+			<h1 id="_idParaDest-168" class="HeadA"><a id="_idTextAnchor235"></a>Ease-y Does It (CSS Transitions)</h1>
+			<p class="body">Picture, <a id="_idIndexMarker3357"></a>if you will, a link in a navigation menu that changes from blue to red when the mouse hovers over it. The background is blue…mouse passes over it…BAM! Red! It goes from state to state instantly, with no states in between. Now imagine putting your mouse over the link and having the background gradually change from blue to red, passing through several shades of purple on the way. It’s smoooooth. And when you remove the mouse, it fades back down to blue again. </p>
+			<p class="body"><em class="Emphasis">That’s</em> what CSS Transitions do. They smooth out otherwise abrupt changes to property values between two states over time by filling in the frames in between. Animators call <a id="_idIndexMarker3358"></a>that <span class="FirstTerm">tweening</span>. When used with reserve, CSS Transitions can add sophistication and polish to your interfaces and even improve usability. </p>
+			<p class="body">CSS Transitions were originally developed by the WebKit team for the Safari browser, and they are a Working Draft at the W3C (see <span class="Xref">Note</span>). Browser support for Transitions is excellent (see the <span class="Xref">“CSS Transition Support”</span> sidebar), so there is no reason not to use them in your designs, particularly if you treat them as an enhancement. For example, on the rare non-supporting browser (I’m looking at you, old IE), our link snapping directly from blue to red is not a big deal. </p>
+			<div>
+				<div id="_idContainer1243" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">You can read CSS Transitions Module for yourself at <span class="URL-Email--Sidebar-">www.w3.org/TR/css-transitions-1/.</span></p>
+				</div>
+			</div>
+			<p class="Note-Holder"><a href="http://www.w3.org/TR/css-transitions-1/"></a></p>
+			<div>
+				<div id="_idContainer1244" class="sidebar">
+					<h5 class="SidebarSeries">Support Tip</h5>
+					<h5 class="SidebarTitle">CSS Transition Support</h5>
+					<p class="SidebarBody">The good <a id="_idIndexMarker3359"></a>news is that all modern browsers released since 2013 support CSS transition properties without the need for prefixes. There are a few holes in support you should know about:</p>
+					<ul>
+						<li class="SidebarListBullet">Most notably, Internet Explorer versions 9 and earlier do not support transitions and ignore transition properties entirely.</li>
+						<li class="SidebarListBullet">Chrome and Safari versions released between 2010 and 2013 support transitions with the <span class="Literal-Sidebar">-webkit-</span> prefix. Later versions do not require a prefix.</li>
+						<li class="SidebarListBullet">On mobile, iOS versions 3.1–6.0 (2010–2013) and Android versions 2.1–4.3 (2009–2013) require the <span class="Literal-Sidebar">-webkit-</span> prefix. Later versions do not require prefixes. </li>
+						<li class="SidebarListBullet">Firefox versions released between 2011 and 2012 require the <span class="Literal-Sidebar">-moz-</span> prefix, but they are nearly extinct as I write this.</li>
+					</ul>
+					<p class="SidebarBody">As always, check your own server’s statistics (be sure to pay attention to mobile use) to see which browsers you need to support, and check <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> for support and bug details. </p>
+					<p class="SidebarBody">In the examples throughout this chapter, I use only the standard (non-prefixed) properties. If you need to support browsers that require prefixes, I suggest using <a id="_idIndexMarker3360"></a>Autoprefixer, which is discussed in <span class="Xref--Sidebar-">Chapter 19, More CSS Techniques</span>. And remember, when using prefixed properties, always include the non-prefixed version last for forward compatibility with supporting browsers.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Transition Basics</h2>
+			<p class="body">Transitions are a lot of fun, so let’s give them a whirl. When applying a transition, you have a few decisions to make, each of which is set with a CSS property:</p>
+			<ul>
+				<li class="ListBullet">Which CSS property to change (<a id="_idIndexMarker3361"></a><span class="Literal-fc">transition-property</span>) (<em class="Emphasis">Required)</em></li>
+				<li class="ListBullet">How long it should take (<a id="_idIndexMarker3362"></a><span class="Literal-fc">transition-duration</span>)<em class="Emphasis"> (Required)</em></li>
+				<li class="ListBullet">The manner in which the transition accelerates <a id="_idIndexMarker3363"></a>(<span class="Literal-fc">transition-timing-function</span>)</li>
+				<li class="ListBullet">Whether there should be a pause before it starts <a id="_idIndexMarker3364"></a>(<span class="Literal-fc">transition-delay</span>)</li>
+			</ul>
+			<p class="body">Transitions require a beginning state and an end state. The element as it appears when it first loads is the beginning state. The end state needs to be triggered by a state change such <a id="_idIndexMarker3365"></a><a id="_idIndexMarker3366"></a><a id="_idIndexMarker3367"></a>as <span class="Literal-fc">:hover</span>, <span class="Literal-fc">:focus</span>, or <span class="Literal-fc">:active</span>, which is what we’ll be using for the examples in this chapter. You could use JavaScript to change the element (such as adding a <span class="Literal-fc">class</span> attribute) and use that as a transition trigger as well.</p>
+			<p class="body">Let’s put that all together with a simple example. Here is that blue-to-red link you imagined earlier (<span class="Xref-Figure">Figure 18-1</span>). There’s nothing special about the markup. I added a <span class="Literal-fc">class</span> so I could be specific about which links receive transitions.</p>
+			<div>
+				<figure id="_idContainer1246" class="figWCaption">
+					<p class="body"><img src="image/lwd5_1801_transition.png" alt="" width="1337" height="775"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-1.</span> The background color of this link gradually fades from blue to red over .3 seconds when awesome sauce a transition is applied.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The transition properties are applied to the object that will be transitioned—in this case, the <span class="Literal-fc">a</span> element in its normal state. You’ll see them in the set of other declarations for <span class="Literal-fc">.smooth</span>, like <span class="Literal-fc">padding</span> and <span class="Literal-fc">background-color</span>. I’ve changed the background color of the link to red by declaring the <span class="Literal-fc">background-color</span> for the <span class="Literal-fc">:hover</span> state (and <span class="Literal-fc">:focus</span> too, in case someone is tabbing through links with a keyboard). </p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;a href="…" class="smooth"&gt;awesomesauce&lt;/a&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">.smooth {<br/>  display: block;<br/>   text-decoration:none;<br/>   text-align: center;<br/>  padding: 1em 2em;<br/>  width: 10em;<br/>  border-radius: 1.5em;<br/>  color: #fff;<br/>  background-color: mediumblue;<br/><code class="CodeColor">  transition-property: background-color;<br/>  transition-duration: 0.3s;</code> <br/>}<br/>.smooth:hover, .smooth:focus {<br/>  background-color: red;<br/>}</pre>
+			<h3 class="HeadC">Specifying the property</h3>
+			<p class="RefNameCode-Left">transition-property</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">property-name</span> | <span class="prop-code">all</span> | <span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">all</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements, <span class="Literal-Sidebar">:before</span> and <span class="Literal-Sidebar">:after</span> pseudo-elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body"><span class="Literal-fc">transition-property</span> <a id="_idIndexMarker3368"></a>identifies the CSS property that is changing and that you want to transition smoothly. In our example, it’s the <span class="Literal-fc">background-color</span>. You can also change the foreground color, borders, dimensions, font- and text-related attributes, and many more. <span class="Xref-Figure">Table 18-1</span> lists the animatable CSS properties as of this writing. The general rule is that if its value is a color, length, or number, that property can be a transition property. </p>
+			<div>
+				<div id="_idContainer1247" class="contents">
+					<table id="table001-17" class="Table">
+						<colgroup>
+							<col/>
+						</colgroup>
+						<thead>
+							<tr class="Table">
+								<td class="Table Table-Title Table-Head">
+									<p class="TableTitle"><span class="Table-Label">Table 18-1.</span>  Animatable CSS <a id="_idIndexMarker3369"></a><a id="_idIndexMarker3370"></a><a id="_idIndexMarker3371"></a><a id="_idIndexMarker3372"></a><a id="_idIndexMarker3373"></a><a id="_idIndexMarker3374"></a><a id="_idIndexMarker3375"></a><a id="_idIndexMarker3376"></a><a id="_idIndexMarker3377"></a><a id="_idIndexMarker3378"></a><a id="_idIndexMarker3379"></a><a id="_idIndexMarker3380"></a><a id="_idIndexMarker3381"></a><a id="_idIndexMarker3382"></a><a id="_idIndexMarker3383"></a><a id="_idIndexMarker3384"></a><a id="_idIndexMarker3385"></a><a id="_idIndexMarker3386"></a><a id="_idIndexMarker3387"></a><a id="_idIndexMarker3388"></a><a id="_idIndexMarker3389"></a><a id="_idIndexMarker3390"></a><a id="_idIndexMarker3391"></a><a id="_idIndexMarker3392"></a><a id="_idIndexMarker3393"></a><a id="_idIndexMarker3394"></a><a id="_idIndexMarker3395"></a><a id="_idIndexMarker3396"></a><a id="_idIndexMarker3397"></a><a id="_idIndexMarker3398"></a><a id="_idIndexMarker3399"></a><a id="_idIndexMarker3400"></a><a id="_idIndexMarker3401"></a><a id="_idIndexMarker3402"></a><a id="_idIndexMarker3403"></a><a id="_idIndexMarker3404"></a>properties</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Head Table-Head">
+									<p class="TableHeader">Backgrounds</p>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">background-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">background-position</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Borders and outlines</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-bottom-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-bottom-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-left-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-left-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-right-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-right-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-top-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-top-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">border-spacing</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">outline-color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">outline-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Color and opacity</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">color</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">opacity</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">visibility</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Font and text </p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">font-size</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">font-weight</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">letter-spacing</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">line-height</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">text-indent</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">text-shadow</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">word-spacing</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">vertical-align</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Element box measurements</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">height</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">max-height</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">max-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">min-height</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">min-width</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">margin-bottom</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">margin-left</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">margin-top</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">padding-bottom</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">padding-left</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">padding-right</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">padding-top</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Position</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">top</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">right</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">bottom</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">left</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">z-index</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">clip-path</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableHeader">Transforms (not in the<a id="_idIndexMarker3405"></a><a id="_idIndexMarker3406"></a><a id="_idIndexMarker3407"></a><a id="_idIndexMarker3408"></a><a id="_idIndexMarker3409"></a><a id="_idIndexMarker3410"></a><a id="_idIndexMarker3411"></a><a id="_idIndexMarker3412"></a><a id="_idIndexMarker3413"></a><a id="_idIndexMarker3414"></a><a id="_idIndexMarker3415"></a><a id="_idIndexMarker3416"></a><a id="_idIndexMarker3417"></a><a id="_idIndexMarker3418"></a><a id="_idIndexMarker3419"></a><a id="_idIndexMarker3420"></a><a id="_idIndexMarker3421"></a> spec as of this writing, but supported)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">transform</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left">
+									<pre class="cellCode">transform-origin</pre>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<h3 class="HeadC">How long should it take?</h3>
+			<p class="RefNameCode-Left">transition-duration</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">time</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0s</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements, <span class="Literal-Sidebar">:before</span> and <span class="Literal-Sidebar">:after</span> pseudo-elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body"><span class="Literal-fc">transition-duration</span> <a id="_idIndexMarker3422"></a>sets the amount of time it takes for the animation to complete in seconds (<span class="Literal-fc">s</span>) or milliseconds (<span class="Literal-fc">ms</span>). I’ve chosen .3 seconds, which is just enough to notice something happened but not so long that the transition feels sluggish or slows the user down. There is no correct duration, of course, but I’ve found that .2s seems to be a popular transition time for UI elements. Experiment to find the duration that makes sense for your application. </p>
+			<h2 class="HeadB">Timing Functions</h2>
+			<p class="RefNameCode-Left">transition-timing-function</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">ease</span> | <span class="prop-code">linear</span> | <span class="prop-code">ease-in</span> | <span class="prop-code">ease-out</span> | <span class="prop-code">ease-in-out</span> | <span class="prop-code">step-start</span> | <span class="prop-code">step-end</span> | <span class="prop-code">steps</span> | <span class="prop-code">cubic-bezier(</span><span class="Replaceable">#</span><span class="prop-code">,</span><span class="Replaceable">#</span><span class="prop-code">,</span><span class="Replaceable">#</span><span class="prop-code">,</span><span class="Replaceable">#</span><span class="prop-code">)</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">ease</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements, <span class="Literal-fc">:before</span> and <span class="Literal-fc">:after</span> pseudo-elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <a id="_idIndexMarker3423"></a>property <a id="_idIndexMarker3424"></a>and the duration are required and form the foundation of a transition, but you can refine it further. There are a number of ways a transition can roll out over time. For example, it could start out fast and then slow down, start out slow and speed up, or stay the same speed all the way through, just to name a few possibilities. I think of it as the transition “style,” but in the spec, it is known as <a id="_idIndexMarker3425"></a><a id="_idIndexMarker3426"></a>the <span class="FirstTerm">timing function</span> or <span class="FirstTerm">easing function</span>. </p>
+			<p class="body">The timing function you choose can have a big impact on the feel and believability of the animation, so if you plan on using transitions and CSS<a id="_idIndexMarker3427"></a><a id="_idIndexMarker3428"></a> animations, it is a good idea to get familiar with the options.</p>
+			<p class="body">If I set the <span class="Literal-fc">transition-timing-function</span> to <span class="Literal-fc">ease-in-out</span>, the transition will start out slow, then speed up, then slow down again as it comes to the end state. </p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/>  transition-property: background-color;<br/>   transition-duration: 0.3s;<br/><code class="CodeColor">  transition-timing-function: ease-in-out;<br/></code>}</pre>
+			<p class="body">The <span class="Literal-fc">transition-timing-function</span> property takes one of the following keyword values:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">ease</span></p>
+			<p class="ListVariable">Starts slowly, accelerates quickly, and then slows down at the end. This is the default value and works just fine for most short transitions.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">linear</span></p>
+			<p class="ListVariable">Stays consistent from the transition’s beginning to end. Because it is so consistent, some say it has a mechanical feeling.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">ease-in</span></p>
+			<p class="ListVariable">Starts slowly, then speeds up.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">ease-out</span></p>
+			<p class="ListVariable">Starts out fast, then slows down.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">ease-in-out</span></p>
+			<p class="ListVariable">Starts slowly, speeds up, and then slows down again at the very end. It is similar to <span class="Literal-fc">ease</span>, but with less pronounced acceleration in the middle.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">cubic-bezier(</span><span class="Replaceable">x1</span><span class="Literal-fc">,</span><span class="Replaceable">y1</span><span class="Literal-fc">,</span><span class="Replaceable">x2</span><span class="Literal-fc">,</span><span class="Replaceable">y2</span><span class="Literal-fc">)</span></p>
+			<p class="ListVariable">The acceleration of a transition can be plotted with a curve called a <span class="FirstTerm">Bezier curve.</span> The steep parts of the curve indicate a fast rate of change, and the flat parts indicate a slow rate of change. <span class="Xref-Figure">Figure 18-2</span> shows the Bezier curves that represent the function keywords as well as a custom curve I created. You can see that the <span class="Literal-fc">ease</span> curve is a tiny bit flat in the beginning, gets very steep (fast), then ends flat (slow). The <span class="Literal-fc">linear</span> keyword, on the other hand, moves at a consistent rate for the whole transition.</p>
+			<p class="ListVariable_cont">You can get the feel of your animation <em class="Emphasis">just right</em> by creating a custom curve. The <a id="_idIndexMarker3429"></a>site <a href="http://Cubic-Bezier.com"><span class="URL-Email">Cubic-Bezier.com</span></a> is a great tool for playing around with transition timing and generating the resulting code. The four numbers in the value represent the x and y positions of the start and end Bezier curve handles (the pink and blue dots in <span class="Xref-Figure">Figure 18-2</span>).</p>
+			<div>
+				<figure id="_idContainer1249" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1802_cubicbezier.png" alt="" width="1338" height="615"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-2.</span> Examples of Bezier curves from Cubic-Bezier.com. On the left is my custom curve that starts fast, slows down, and ends fast. </figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-Sidebar">steps(</span><span class="Replaceable">#</span><span class="Literal-Sidebar">, start|end)</span></p>
+			<p class="ListVariable">Divides the transitions into a number of steps as defined by a stepping function. The first value is the number of steps, and the <span class="Literal-fc">start</span> and <span class="Literal-fc">end</span> keywords define whether the change in state happens at the beginning (<span class="Literal-fc">start</span>) or end of each step. Step animation is especially useful for keyframe animation with sprite images. For a better explanation and examples, I recommend the article “Using Multi-Step Animations and Transitions,” by <a id="_idIndexMarker3430"></a>Geoff Graham on <a id="_idIndexMarker3431"></a>CSS-Tricks (<a href="http://css-tricks.com/using-multi-step-animations-transitions/"><span class="URL-Email">css-tricks.com/using-multi-step-animations-transitions/</span></a>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">step-start</span></p>
+			<p class="ListVariable">Changes states in one step, at the beginning of the duration time (the same as <span class="Literal-fc">steps(1,start)</span>). The result is a sudden state change, the same as if no transition had been applied at all.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">step-end</span></p>
+			<p class="ListVariable">Changes states in one step, at the end of the duration time (the same as <span class="Literal-fc">steps(1,end)</span>).</p>
+			<p class="body">It’s difficult to show the various options on a still page, but I have put together a little demo, which is illustrated in <span class="Xref-Figure">Figure 18-3</span> and available in the <span class="Filename">figures</span> folder with the materials for this chapter. The width of each labeled element (white with a blue border) transitions over the course of 4 seconds when you hover over the green box. They all arrive at their full width at exactly the same time, but they get there in different manners. The image shown in <span class="Xref-Figure">Figure 18-3</span> <a id="_idTextAnchor236"></a>was taken at the 2-second mark, halfway through the duration of the transition.</p>
+			<div>
+				<div id="_idContainer1250" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The W3C has broken out the timing functions into their own spec so they are easier to share among modules. It is available at <a href="http://www.w3.org/TR/css-timing-1/"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-timing-1/</span></a>.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1252" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1803_timing.png" alt="" width="1321" height="1839"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-3.</span> In this <span class="Literal-Sidebar">transition-timing-function</span> demo, the elements reach full width at the same time but vary in the manner in which they get there. If you’d like to see it in action, the <span class="Filename--Sidebar-">ch18_figures.html</span> file is available with the materials for this chapter.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Setting a Delay</h2>
+			<p class="RefNameCode-Left">transition-delay</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">time</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0s</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements, <span class="Literal-fc">:before</span> and <span class="Literal-fc">:after</span> pseudo-elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <a id="_idIndexMarker3432"></a><span class="Literal-fc">transition-delay</span> <a id="_idIndexMarker3433"></a><a id="_idIndexMarker3434"></a>property, as you might guess, delays the start of the animation by a specified amount of time. In the following example, the background color transition starts .2 seconds after the pointer moves over the link. </p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/>  transition-property: background-color;<br/>  transition-duration: 0.3s;<br/>  transition-timing-function: ease-in-out;<br/><code class="CodeColor">  transition-delay: 0.2s;</code><br/>}</pre>
+			<h2 class="HeadB">The Shorthand transition Property</h2>
+			<p class="body">Thankfully, the <a id="_idIndexMarker3435"></a>authors of the CSS3 spec had the good sense to give us the shorthand <a id="_idIndexMarker3436"></a><span class="Literal-fc">transition</span> property to combine all of these properties into one declaration. You’ve seen this sort of thing with the shorthand <span class="Literal-fc">border</span> property. Here is the syntax:</p>
+			<pre class="CodeFirst">transition: <span class="Replaceable">property duration timing-function delay;</span></pre>
+			<p class="body">The values for each of the <span class="Literal-fc">transition-*</span> properties are listed out, separated by character spaces. The order isn’t important as long as the duration (which is required) appears before delay (which is optional). If you provide only one time value, it will be assumed to be the duration. </p>
+			<p class="body">Using the blue-to-red link example, we could combine the four transition properties we’ve applied so far into this one line:</p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/><code class="CodeColor">  transition: background-color 0.3s ease-in-out 0.2s;</code><br/>}</pre>
+			<p class="body">Definitely an improvement. </p>
+			<h2 class="HeadB">Applying Multiple Transitions</h2>
+			<p class="body">So far, <a id="_idIndexMarker3437"></a>we’ve changed only one property at a time, but it is possible to transition several properties at once. Let’s go back to the “awesomesauce” link example. This time, in addition to changing from blue to red, I’d like the <span class="Literal-fc">letter-spacing</span> to increase a bit. I also want the text color to change to black, but more slowly than the other animations. <span class="Xref-Figure">Figure 18-4</span> attempts to show these transitions on this static page.</p>
+			<div>
+				<figure id="_idContainer1254" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1804_multiple.png" alt="" width="1337" height="854"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-4.</span> The <span class="Literal-Sidebar">color</span>, <span class="Literal-Sidebar">background-color</span>, and <span class="Literal-Sidebar">letter-spacing</span> change at different paces.</figcaption>
+				</figure>
+			</div>
+			<p class="body">One way to do this is to list all of the values for each property separated by commas, as shown in this example:</p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/>  transition-property: <code class="CodeColor">background-color, color, letter-spacing;</code><br/>  transition-duration: <code class="CodeColor">0.3s, 2s, 0.3s;</code><br/>  transition-timing-function: <code class="CodeColor">ease-out, ease-in, ease-out;</code><br/>  }<br/>.smooth:hover, .smooth:focus {<br/>  background-color: red;<br/>  letter-spacing: 3px;<br/>  color: black;<br/>}</pre>
+			<p class="body">The values are matched up according to their positions in the list. For example, the transition on the <span class="Literal-fc">color</span> property (second in the list) has a duration of 2s and uses the <span class="Literal-fc">ease-in</span> timing function. If one list has fewer values than the others, the browser repeats the values in the list, starting over at the beginning. In the previous example, if I had omitted the third value (.3s) for <span class="Literal-fc">transition-duration</span><span class="Literal-fc"><a id="_idIndexMarker3438"></a></span>, the browser would loop back to the beginning of the list and use the first value (.3s) for <span class="Literal-fc">letter-spacing</span>. In this case, the effect would be the same. </p>
+			<p class="body">You can line up values for the shorthand <span class="Literal-fc">transition</span> property as well. The same set of styles we just saw could also be written as follows:</p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/>  transition: <code class="CodeColor">background-color 0.3s ease-out,<br/>             color 2s ease-in,<br/>             letter-spacing 0.3s ease-out;</code><br/> }</pre>
+			<h2 class="HeadB">A Transition for All Occasions</h2>
+			<p class="body">But what if you <a id="_idIndexMarker3439"></a>just want to add a little bit of smoothness to all your state changes, regardless of which property might change? For cases when you want the same duration, timing function, and delay to apply to all transitions that might occur on an element, use the <span class="Literal-fc">all</span> value for<a id="_idIndexMarker3440"></a> <span class="Literal-fc">transition-property</span>. In the following example, I’ve specified that any property that might change for the <span class="Literal-fc">.smooth</span> element should last .2 seconds and animate via the <span class="Literal-fc">ease-in-out</span> function.</p>
+			<pre class="CodeFirst">.smooth {<br/>  …<br/>  transition: <code class="CodeColor">all</code> 0.2s ease-in-out; <br/>}</pre>
+			<p class="body">For user interface changes, a short, subtle transition is often all you need for all your transitions, so the <span class="Literal-fc">all</span> value will come in handy. Well, that wraps up our lesson on CSS3 Transitions. Now you give it a try in <span class="Xref-Figure">Exercise 18-1</span>.</p>
+			<div>
+				<div id="_idContainer1258" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 18-1.</span> Trying out transitions </h6>
+					<p class="SidebarBody">In this exercise, we’re going to create the rollover and active states for a menu link (<span class="Xref-Figure">Figure 18-5</span>) with animated transitions. I’ve put together a starter document (<span class="Filename--Sidebar-">exercise_18-1.html</span>) for you in the <span class="Filename--Sidebar-">materials</span> folder for this chapter at <a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">learningwebdesign.com/</span></a><span class="URL-Email--Sidebar-">5e/materials</span>. Be sure you are using an up-to-date desktop browser to view your work (see <span class="Xref--Sidebar-">Note</span>).</p>
+					<div>
+						<div id="_idContainer1255" class="note">
+							<h5 class="noteHeader">Note</h5>
+							<p class="note">If you’re using a touch device for this exercise, you’ll miss out on this effect because there is no hover state on touch screens. You may see the hover state with a single tap. Transitions triggered by a click/tap or when the page loads will work on all devices, but they are not covered here.</p>
+						</div>
+					</div>
+					<div>
+						<figure id="_idContainer1257" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1805_exercise1.png" alt="" width="1321" height="683"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-5.</span> In this exercise, we’ll create transitions between these link states.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">First, take a look at the styles that are already applied. The list has been converted to a horizontal menu with Flexbox. The <span class="Literal-Sidebar">a</span> element has been set to display as a block element, underlines are turned off, dimensions and padding are applied, and the color, background color, and border are established. I used the <span class="Literal-Sidebar">box-shadow</span> property to make it look as though the links are floating off the page. </p>
+					<ol>
+						<li class="SidebarListNumber">Now we’ll define the styles for the hover and focus states. When the user puts the pointer over or tabs to the link, make the background color change to green (<span class="Literal-Sidebar">#c6de89</span>) and the border color change to a darker shade of green (<span class="Literal-Sidebar">#a3c058</span>). <pre class="SidebarCodeFirst"><code class="CodeColor">a:hover, a:focus {<br/>  background-color: #c6de89;<br/>  border-color: #a3c058;<br/>} </code></pre></li>
+						<li class="SidebarListNumber">While the user clicks the link (<span class="Literal-Sidebar">:active</span>), make it move down by 3 pixels as though it is being pressed. Do this by setting the <span class="Literal-Sidebar">a</span> element’s <span class="Literal-Sidebar">position</span> to relative and its <span class="Literal-Sidebar">top</span> position to 0px , and then change the value of the <span class="Literal-Sidebar">top</span> property for the active state. This moves the link 3 pixels away from the top edge (in other words, down). <p class="SidebarListItem_cont"><strong class="Emphasis_Bold">NOTE:</strong>  Setting the top to 0px in the initial state is for working around a bug that arises when transitioning the <span class="Literal-Sidebar">top</span>, <span class="Literal-Sidebar">bottom</span>, <span class="Literal-Sidebar">left</span>, and <span class="Literal-Sidebar">right</span> properties.</p><pre class="SidebarCodeFirst">a {<br/>  …<br/><code class="CodeColor">  position: relative;<br/>  top: 0px;</code><br/>}<br/><code class="CodeColor">a:active {<br/>  top: 3px;<br/>}</code></pre></li>
+						<li class="SidebarListNumber">Logically, if the button were pressed down, there would be less room for the shadow, so we’ll reduce the <span class="Literal-Sidebar">box-shadow</span> distance as well.<pre class="SidebarCodeFirst">a:active {<br/>  top: 3px;<br/><code class="CodeColor">  box-shadow: 0 1px 2px rgba(0,0,0,.5);</code><br/>}</pre></li>
+						<li class="SidebarListNumber">Save the file and give it a try in the browser. The links should turn green and move down when you click or tap them. I’d say it’s pretty good just like that. Now we can enhance the experience by adding some smooth transitions.</li>
+						<li class="SidebarListNumber">Make the background and border color transition ease in over 0.2 seconds, and see how that changes the experience of using the menu. I’m using the shorthand <span class="Literal-Sidebar">transition</span> property to keep the code simple. I’m also using the default <span class="Literal-Sidebar">ease</span> timing function at first so we can omit that value.<p class="SidebarListItem_cont">I’m not using any vendor prefixes here because modern browsers don’t need them. If you wanted to support mobile browsers released in 2013 and earlier, you could include the <span class="Literal-Sidebar">-webkit-</span> prefixed version as well, but since this isn’t production code, we’re fine without it.</p><pre class="SidebarCodeFirst">a {<br/><code class="CodeColor">  transition: background-color 0.2s,<br/>             border-color 0.2s;</code><br/>} </pre></li>
+						<li class="SidebarListNumber">Save your document, open it in the browser, and try moving your mouse over the links. Do you agree it feels nicer? Now I’d like you to try some other duration values. See if you can still see the difference with a 0.1s duration. Now try a full second (1s). I think you’ll find that 1 second is surprisingly slow. Try setting it to several seconds and trying out various <span class="Literal-Sidebar">timing-function</span> values (just add them after the duration times). Can you tell the difference? Do you have a preference? When you are done experimenting, set the duration back to 0.2 seconds.</li>
+						<li class="SidebarListNumber">Now let’s see what happens when we add a transition to the downward motion of the link when it is clicked or tapped. Transition both the <span class="Literal-Sidebar">top</span> and <span class="Literal-Sidebar">box-shadow</span> properties because they should move in tandem. Let’s start with a 0.2s duration like the others.<pre class="SidebarCodeFirst">a {<br/>  transition:<br/>    background-color 0.2s,<br/>    border-color 0.2s,<br/>    <code class="CodeColor">top 0.2s,<br/>    box-shadow 0.2s;</code><br/>}</pre><p class="SidebarListItem_cont">Save the file, open it in the browser, and try clicking the links. That transition really changes the experience of using the menu, doesn’t it? The buttons feel more difficult to “press.” Try increasing the duration. Do they feel even more difficult? I find it interesting to see the effect that timing has on the experience of a user interface. It is important to get it right and not make things feel sluggish. I’d say that a very short transition such as 0.1 second—or even no transition at all—would keep these buttons feeling snappy. </p></li>
+						<li class="SidebarListNumber">If you thought increasing the duration made the menu uncomfortable to use, try adding a short 0.5-second delay to the <span class="Literal-Sidebar">top</span> and <span class="Literal-Sidebar">box-shadow</span> properties. <pre class="SidebarCodeFirst">a {<br/>  transition:<br/>    background-color 0.2s,<br/>    border-color 0.2s,<br/>    top 0.1s <code class="CodeColor">0.5s</code>,<br/>    box-shadow 0.1s <code class="CodeColor">0.5s</code>;<br/>}</pre><p class="SidebarListItem_cont">I think you’ll find that little bit of extra time makes the whole thing feel broken. Timing is everything!</p></li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-169" class="HeadA"><a id="_idTextAnchor237"></a>CSS Transforms</h1>
+			<p class="RefNameCode-Left">transform</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">rotate()</span> | <span class="prop-code">rotateX()</span> | <span class="prop-code">rotateY()</span> | <span class="prop-code">rotateZ()</span> | <span class="prop-code">rotate3d()</span> | <span class="prop-code">translate()</span> | <span class="prop-code">translateX()</span> | <span class="prop-code">translateY()</span> | <span class="prop-code">scale()</span> | <span class="prop-code">scaleX()</span> | <span class="prop-code">scaleY()</span> | <span class="prop-code">skew()</span> | <span class="prop-code">skewX()</span> | <span class="prop-code">skewY()</span> | <span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	transformable elements (see sidebar)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<div>
+				<div id="_idContainer1259" class="sidebar">
+					<h5 class="SidebarTitle">Transformable Elements</h5>
+					<p class="SidebarBody">You can apply the <span class="Literal-Sidebar">transform</span> property to most element types:</p>
+					<ul>
+						<li class="SidebarListBullet">HTML elements with replaced content, such as <a id="_idIndexMarker3441"></a><span class="Literal-Sidebar">img</span>, <span class="Literal-Sidebar">canvas</span>, form inputs, and embedded media</li>
+						<li class="SidebarListBullet">Elements with their display set to <span class="Literal-Sidebar">block</span>, <span class="Literal-Sidebar">inline-block</span>, <span class="Literal-Sidebar">inline-table</span> (or any of the <span class="Literal-Sidebar">table-*</span> display types), <span class="Literal-Sidebar">grid</span>, and <span class="Literal-Sidebar">flex</span></li>
+					</ul>
+					<p class="SidebarBody">It may be easier to note the element types you <em class="Emphasis">cannot</em> transform, which include:</p>
+					<ul>
+						<li class="SidebarListBullet">Non-replaced inline elements, like <span class="Literal-Sidebar">em</span> or <span class="Literal-Sidebar">span</span></li>
+						<li class="SidebarListBullet">Table columns and column groups (but who’d want to?)</li>
+					</ul>
+				</div>
+			</div>
+			<p class="body">The CSS3 <a id="_idIndexMarker3442"></a><a id="_idIndexMarker3443"></a>Transforms Module (<a href="http://www.w3.org/TR/css-transforms-1"><span class="URL-Email">www.w3.org/TR/css-transforms-1</span></a>) gives authors a way to rotate, relocate, resize, and skew HTML elements in both two- and three-dimensional space. It is worth noting up front that transforms change how an element displays, but it is not motion- or time-based. However, you can animate from one transform state to another using transitions or keyframe animations, so they are useful to learn about in the context of animation.</p>
+			<p class="body">This chapter focuses on the more straightforward two-dimensional transforms because they have more practical uses. Transforms are supported on virtually all current browser versions without vendor prefixes (see the sidebar <span class="Xref">“CSS Transforms Support”</span> for exceptions). </p>
+			<p class="body">You can apply a transform to the normal state of an element, and it appears in its transformed state when the page loads. Just be sure that the page is still usable on browsers that don’t support transforms. It is common to introduce a transform only when users interact with the element <a id="_idIndexMarker3444"></a>via <span class="Literal-fc">:hover</span> or a JavaScript event. Either way, transforms are a good candidate for progressive enhancement—if an IE8 user sees an element straight instead of at a jaunty angle, it’s probably no biggie.</p>
+			<div>
+				<div id="_idContainer1260" class="sidebar">
+					<h5 class="SidebarSeries">Support Tip</h5>
+					<h5 class="SidebarTitle">CSS Transforms Support</h5>
+					<p class="SidebarBody">As of this writing, CSS Transforms are supported by every major <a id="_idIndexMarker3445"></a>browser without vendor prefixes; however, that support has happened more recently than Transitions, and there are a few more holes. Here are a few browser-related pointers:</p>
+					<ul>
+						<li class="SidebarListBullet">Internet Explorer 8 and earlier have no support for transforms. Version 9 supports Transforms with the <span class="Literal-Sidebar">-ms-</span> prefix. </li>
+						<li class="SidebarListBullet">IE 10 and 11 and all versions of Edge support transforms without prefixes, but they do not support transforms on elements in SVGs.</li>
+						<li class="SidebarListBullet">Use the <span class="Literal-Sidebar">-webkit-</span> prefix if you need to support the following browsers: <p class="SidebarListItem_cont">— Android v2.1 to 4.4.4 (prefixes dropped in 2017)</p><p class="SidebarListItem_cont">— OS Safari v3.2 to 8.4 (prefixes dropped in 2015)</p><p class="SidebarListItem_cont">— Safari 8 and earlier (prefixes dropped in 2015)</p><p class="SidebarListItem_cont">— Opera versions up to v.22 (prefixes dropped in 2014)</p></li>
+					</ul>
+					<p class="SidebarBody">As of this writing, it is still recommended that you include <span class="Literal-Sidebar">-ms-</span> and <span class="Literal-Sidebar">-webkit-</span> prefixes for <span class="Literal-Sidebar">transform</span>, but that may no longer be the case by the time you are reading this. Check <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> for updated browser information, and <a href="http://ShouldIPrefix.com"><span class="URL-Email--Sidebar-">ShouldIPrefix.com</span></a> for recommendations. </p>
+				</div>
+			</div>
+			<p class="body"><span class="Xref-Figure">Figure 18-6</span> shows a representation of four two-dimensional transform functions: <span class="Literal-fc">rotate()</span>, <span class="Literal-fc">translate()</span>, <span class="Literal-fc">scale()</span>, and <span class="Literal-fc">skew()</span> (see <span class="Xref">Note</span>). The dashed outline shows the element’s original position.</p>
+			<div>
+				<figure id="_idContainer1262" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1806_transforms-ebook.png" alt="" width="1338" height="1045"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-6.</span> Four types of <a id="_idIndexMarker3446"></a><a id="_idIndexMarker3447"></a><a id="_idIndexMarker3448"></a><a id="_idIndexMarker3449"></a>transforms: <span class="Literal-Sidebar">rotate()</span>, <span class="Literal-Sidebar">translate()</span>, <span class="Literal-Sidebar">scale()</span>, and <span class="Literal-Sidebar">skew()</span>.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1263" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">There are actually five 2-D transform functions in the CSS spec. The fifth, <span class="Literal-Sidebar">matrix()</span>, <a id="_idIndexMarker3450"></a>allows you to craft your own combined transformation using six values and some badass trigonometry. There are tools that can take a number of transforms and combine them into a matrix function, but the result isn’t very user-friendly. Fascinating in theory, but more than I want to take on personally. </p>
+				</div>
+			</div>
+			<p class="body">When an element transforms, its element box keeps its original position and influences the layout around it, in the same way that space is left behind by a relatively positioned element. It is as though the transformation magically picks up the pixels of the rendered element, messes around with them, and lays them back down on top of the page. So, if you move an element with <span class="Literal-fc">transform</span>, you’re moving only a picture of it. That picture has no effect on the surrounding layout. Let’s go through the transform functions one by one, starting with <span class="Literal-fc">rotate()</span>.</p>
+			<h2 class="HeadB">Transforming the Angle (rotate)</h2>
+			<p class="body">If you’d like an <a id="_idIndexMarker3451"></a><a id="_idIndexMarker3452"></a>element to appear on a bit of an angle, use the <span class="Literal-fc">rotate()</span> transform function. The value of the <span class="Literal-fc">rotate()</span> function is an angle specified in positive (clockwise) or negative (counterclockwise) degrees. The image in <span class="Xref-Figure">Figure 18-7</span> has been rotated –10 degrees (350 degrees) with the following style rule. The tinted image shows the element’s original position for reference.</p>
+			<pre class="CodeFirst">img {<br/>  width: 400px;<br/>  height: 300px;<br/><code class="CodeColor">  transform: rotate(-10deg);</code><br/>}</pre>
+			<p class="body">Notice that the image rotates around its center point, which is the default point around which all transformations happen. But you can change that easily with the <span class="Literal-fc">transform-origin</span> property.</p>
+			<div>
+				<figure id="_idContainer1265" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1807_rotate.png" alt="" width="1338" height="567"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-7.</span> Rotating an <span class="Literal-Sidebar">img</span> element by using <span class="Literal-Sidebar">transform: rotate()</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="RefNameCode-Left">transform-origin</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">percentage</span> | <span class="prop-replace">length</span> | <span class="prop-code">left</span> | <span class="prop-code">center</span> | <span class="prop-code">right</span> | <span class="prop-code">top</span> | <span class="prop-code">bottom</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">50% 50%</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	transformable elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The value for <span class="Literal-fc">transform-origin</span> is<a id="_idIndexMarker3453"></a> either two keywords, length measurements, or <a id="_idIndexMarker3454"></a>percentage values. The first value is the horizontal offset, and the second is the vertical offset. If only one value is provided, it will be used for both. The syntax is the same as you learned for <span class="Literal-fc">background-position</span> back in <a href="lwd5_chapter13.xhtml#_idTextAnchor169"><span class="Xref">Chapter </span><span class="Xref">13</span><span class="Xref">, Colors and Backgrounds</span></a>. If we wanted to rotate our image around a point at the center of its top edge, we could write it in any of the following ways:</p>
+			<pre class="CodeFirst">transform-origin: center top; <br/>transform-origin: 50%, 0%; <br/>transform-origin: 200px, 0;</pre>
+			<p class="body">The images in <span class="Xref-Figure">Figure 18-8</span> have all been rotated 25 degrees, but from different origin points. It is easy to demonstrate the origin point with the <span class="Literal-fc">rotate()</span> function, but keep in mind that you can set an origin point for any of the transform functions.</p>
+			<div>
+				<figure id="_idContainer1267" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1808_origin-ebook.png" alt="" width="1338" height="1190"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-8.</span> Changing the point around which the image rotates by using <span class="Literal-Sidebar">transform-origin</span>.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Transforming the Position (translate)</h2>
+			<p class="body">Another thing <a id="_idIndexMarker3455"></a>you can do with the <span class="Literal-fc">transform</span> property is give the element’s rendering a new location on the page by using one of three <span class="Literal-fc">translate()</span> functions, as shown in the examples in <span class="Xref-Figure">Figure 18-9</span>. The <a id="_idIndexMarker3456"></a><a id="_idIndexMarker3457"></a><span class="Literal-fc">translateX()</span> function allows you to move an element on a horizontal axis; <span class="Literal-fc">translateY()</span> is for moving along the vertical axis; and <span class="Literal-fc">translate()</span> combines both x and y values. </p>
+			<pre class="CodeFirst">transform: <code class="CodeColor">translateX(50px)</code>;<br/>transform: <code class="CodeColor">translateY(25px)</code>; <br/>transform: <code class="CodeColor">translate(50px, 25px)</code>; <span class="Code-Comment">/* (translateX, translateY) */</span></pre>
+			<div>
+				<figure id="_idContainer1269" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1809_translate.png" alt="" width="1321" height="593"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-9.</span> Moving an element around with the <span class="Literal-Sidebar">translate()</span> function.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Provide length values in any of the CSS units or as a percentage value. Percentages are calculated on the width of the<a id="_idIndexMarker3458"></a> <span class="FirstTerm">bounding box</span>—that is, from border edge to border edge (which, incidentally, is how percentages are calculated in SVG, from which transforms were adapted). You can provide positive or negative values, as shown in <span class="Xref-Figure">Figure 18-9</span>.</p>
+			<p class="body">If you provide only one value for the shorthand <span class="Literal-fc">translate()</span> function, it will be presumed to be the <span class="Literal-fc">translateX</span> value, and <span class="Literal-fc">translateY</span> will be set to zero. So <span class="Literal-fc">translate(20px)</span> would be equivalent to applying both <span class="Literal-fc">translateX(20px)</span> and <span class="Literal-fc">translateY(0)</span>.</p>
+			<p class="body">How do you like the <span class="Literal-fc">transform</span> property so far? We have two more functions to go.  </p>
+			<h2 class="HeadB">Transforming the Size (scale)</h2>
+			<p class="body">Make an element appear<a id="_idIndexMarker3459"></a> <a id="_idIndexMarker3460"></a>larger or smaller by using one of three scale functions: <span class="Literal-fc">scaleX()</span> (horizontal), <span class="Literal-fc">scaleY()</span> (vertical), and the shorthand <span class="Literal-fc">scale()</span>. The value is a unitless number that specifies a size ratio. This example makes an image 150% its original width:</p>
+			<pre class="CodeFirst">a img {<br/>  transform: <code class="CodeColor">scaleX(1.5)</code>;<br/>}</pre>
+			<p class="body">The <span class="Literal-fc">scale()</span> shorthand lists a value for <span class="Literal-fc">scaleX</span> and a value for <span class="Literal-fc">scaleY</span>. This example makes an element twice as wide but half as tall as the original:</p>
+			<pre class="CodeFirst">a img {<br/>  transform: <code class="CodeColor">scale(2, .5)</code>;<br/>}</pre>
+			<p class="body">Unlike <span class="Literal-fc">translate()</span>, however, if you provide only one value for <span class="Literal-fc">scale()</span>, it will be used as the scaling factor in both directions. So specifying <span class="Literal-fc">scale(2)</span> is the same as applying <span class="Literal-fc">scaleX(2)</span> and <span class="Literal-fc">scaleY(2)</span>, which is intuitively the way you’d want it to be.</p>
+			<p class="body"><span class="Xref-Figure">Figure 18-10</span> shows the results of all our scaling endeavors.</p>
+			<div>
+				<figure id="_idContainer1271" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1810_scale-ebook.png" alt="" width="1337" height="1058"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-10.</span> Changing the size of an element with the <span class="Literal-Sidebar">scale()</span> function. </figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Making It Slanty (skew)</h2>
+			<p class="body">The quirky<a id="_idIndexMarker3461"></a> collection of <a id="_idIndexMarker3462"></a><a id="_idIndexMarker3463"></a><a id="_idIndexMarker3464"></a>skew properties—<span class="Literal-fc">skewX()</span>, <span class="Literal-fc">skewY()</span>, and the shorthand <span class="Literal-fc">skew()</span>—changes the angle of either the horizontal or vertical axis (or both axes) by a specified number of degrees. As for <span class="Literal-fc">translate()</span>, if you provide only one value, it is used for <span class="Literal-fc">skewX()</span>, and <span class="Literal-fc">skewY()</span> will be set to zero.</p>
+			<p class="body">The best way to get an idea of how skewing works is to take a look at some examples (<span class="Xref-Figure">Figure 18-11</span>):</p>
+			<pre class="CodeFirst">a img {<br/>  transform: <code class="CodeColor">skewX(15deg)</code>;<br/>} <br/>a img {<br/>  transform: <code class="CodeColor">skewY(30deg)</code>;<br/>} <br/>a img {<br/>  transform: <code class="CodeColor">skew(15deg, 30deg)</code>;<br/>}</pre>
+			<div>
+				<figure id="_idContainer1273" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1811_skew-ebook.png" alt="" width="1338" height="1290"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-11.</span> Slanting an element by using the <span class="Literal-Sidebar">skew()</span> function.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Applying Multiple Transforms</h2>
+			<p class="body">It is possible to apply more than one transform to a single element by listing out the functions and their values, separated by spaces, like this:</p>
+			<pre class="CodeFirst">transform: <span class="Replaceable">function(value) function(value);</span></pre>
+			<p class="body">In the example in <span class="Xref-Figure">Figure 18-12</span>, I’ve made the forest image get larger, tilt a little, and move down and to the right when the mouse is over it or when it is in focus:</p>
+			<pre class="CodeFirst">img:hover, img:focus {<br/>  <code class="CodeColor">transform: scale(1.5) rotate(-5deg) translate(50px,30px);</code><br/>}</pre>
+			<div>
+				<figure id="_idContainer1275" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1812_multitransform.png" alt="" width="1321" height="656"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-12.</span> Applying<a id="_idIndexMarker3465"></a> <span class="Literal-Sidebar">scale()</span>, <span class="Literal-Sidebar">rotate()</span>, and <span class="Literal-Sidebar">translate()</span> to a single element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">It is important to note that transforms are applied in the order in which they are listed. For example, if you apply a <span class="Literal-fc">translate()</span> and then <span class="Literal-fc">rotate()</span>, you get a different result than with a <span class="Literal-fc">rotate()</span> and then a <span class="Literal-fc">translate()</span>. Order matters.</p>
+			<p class="body">Another thing to watch out for is that if you want to apply an additional transform on a different state (such as <span class="Literal-fc">:hover</span>, <span class="Literal-fc">:focus</span>, or <span class="Literal-fc">:active</span>), you need to repeat all of the transforms already applied to the element. For example, this <span class="Literal-fc">a</span> element is rotated 45 degrees in its normal state. If I apply a <span class="Literal-fc">scale()</span> transform on the <span class="Literal-fc">hover</span> state, I would lose the rotation unless I explicitly declare it again:</p>
+			<pre class="CodeFirst">a {<br/>  transform: <code class="CodeColor">rotate(45deg)</code>;<br/>}<br/>a:hover {<br/>  transform: <code class="CodeColor">scale(1.25)</code>;  <span class="Code-Comment">/* rotate on a element would be lost */</span><br/> }</pre>
+			<p class="body">To achieve both the rotation and the scale, provide both transform values:</p>
+			<pre class="CodeFirst">a:hover {<br/>  transform: <code class="CodeColor">rotate(45deg) scale(1.25)</code>;  <span class="Code-Comment">/* rotates and scales */</span><br/> }</pre>
+			<h2 class="HeadB">Smooooooth Transforms</h2>
+			<p class="body">The multiple transforms<a id="_idIndexMarker3466"></a> applied to the redwood forest image look interesting, but it might <em class="Emphasis">feel</em> better if we got there with a smooth animation instead of just BAM! Now that you know about transitions and transforms, let’s put them together and make some magic happen. And by “magic,” of course I mean some basic animation effects between two states. We’ll do that together, step-by-step, in <span class="Xref-Figure">Exercise 18-2</span>. </p>
+			<div>
+				<div id="_idContainer1280" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 18-2.</span> Transitioning transforms</h6>
+					<p class="SidebarBody">In this exercise, we’ll make the travel photos in the gallery shown in <span class="Xref-Figure">Figure 18-13</span> grow and spin out to an angle when the user mouses over them—and we’ll make it smoooooth with a transition. A starter document (<span class="Filename--Sidebar-">exercise_18-2.html</span>) and all of the images are available in the <span class="Filename--Sidebar-">materials</span> folder for this chapter.</p>
+					<div>
+						<figure id="_idContainer1277" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1813_ex2.png" alt="" width="1156" height="344"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-13.</span> Photos get larger and tilt on <span class="Literal-Sidebar">:hover</span> and <span class="Literal-Sidebar">:focus</span> . A transition is used to help smooth out the change between states. You can see how it works when you are finished with this exercise (or check it out in the <span class="Filename--Sidebar-">ch18_figures.html</span> page). </figcaption>
+						</figure>
+					</div>
+					<ol>
+						<li class="SidebarListNumber" value="1">Open <span class="Filename--Sidebar-">exercise_18-2.html</span> in a text editor, and you will see that there are already styles that arrange the list items horizontally and apply a slight drop shadow. The first thing we’ll do is add the <span class="Literal-Sidebar">transform</span> property for each image. </li>
+						<li class="SidebarListNumber">We want the transforms to take effect only when the mouse is over the image or when the image has focus, so the <span class="Literal-Sidebar">transform</span> property should be applied to the <span class="Literal-Sidebar">:hover</span> and <span class="Literal-Sidebar">:focus</span> states. Because I want each image to tilt a little differently, we’ll need to write a rule for each one, using its unique ID as the selector. You can save and check your work when you’re done.<pre class="SidebarCodeFirst">a:hover #img1, a:focus #img1 {<br/><code class="CodeColor">  transform: rotate(-3deg);</code><br/>} <br/>a:hover #img2, a:focus #img2 {<br/><code class="CodeColor">  transform: rotate(5deg); </code><br/>} <br/>a:hover #img3, a:focus #img3 {<br/>  <code class="CodeColor">transform: rotate(-7deg);</code><br/>}<br/>a:hover #img4, a:focus #img4 {<br/>  <code class="CodeColor">transform: rotate(2deg);</code><br/>}  </pre><div id="_idContainer1278" class="note"><h5 class="noteHeader">NOTE</h5><p class="note">As of this writing, prefixes are still recommended for the <span class="Literal-Sidebar">transform</span> property, so for production-quality code, the complete rule would look like this:</p><pre class="SidebarCodeFirst">a:hover #img1, a:focus #img1 {<br/><code class="CodeColor">  -webkit-transform: rotate(-3deg);<br/>  -ms-transform: rotate(-3deg); </code><span class="Code-Comment">/* for IE9 */</span><br/><code class="CodeColor">   transform: rotate(-3deg);</code><br/>} </pre><p class="note">Because we are checking our work on a modern browser, we can omit the prefixes for this exercise.</p></div></li>
+						<li class="SidebarListNumber">Now let’s make the images a little larger as well, to give visitors a better view. Add <span class="Literal-Sidebar">scale(1.5)</span> to each of the <span class="Literal-Sidebar">transform</span> values. Here is the first one; you do the rest:<pre class="SidebarCodeFirst"><code class="CodeColor">a:hover #img1 {<br/>  transform: rotate(-3deg) scale(1.5);<br/>}</code> </pre><p class="SidebarListItem_cont">Note that my image files are created at the larger size and then scaled down for the thumbnail view. If we started with small images and scaled them larger, they would look crummy.</p></li>
+						<li class="SidebarListNumber">As long as we are giving the appearance of lifting the photos off the screen, let’s make the drop shadow appear to be a little farther away by increasing the offset and blur, and lightening the shade of gray. All images should have the same effect, so add one rule using <span class="Literal-Sidebar">a:hover img</span> as the selector.<pre class="SidebarCodeFirst"><code class="CodeColor">a:hover img {<br/>  box-shadow: 6px 6px 6px rgba(0,0,0,.3);<br/>}</code></pre><p class="SidebarListItem_cont">Save your file and check it out in a browser. The images should tilt and look larger when you mouse over them. But the action is kind of jarring. Let’s fix that with a transition.</p></li>
+						<li class="SidebarListNumber">Add the <span class="Literal-Sidebar">transition</span> shorthand property to the normal <span class="Literal-Sidebar">img</span> state (i.e., not on <span class="Literal-Sidebar">:hover</span> or <span class="Literal-Sidebar">:focus</span>). The property we want to transition in this case is <span class="Literal-Sidebar">transform</span>. Set the duration to 0.3 seconds and use the <span class="Literal-Sidebar">linear</span> timing function.<pre class="SidebarCodeFirst">img {<br/>  …<br/><code class="CodeColor">  transition: transform 0.3s linear;</code><br/>}</pre></li>
+					</ol>
+					<div>
+						<div id="_idContainer1279" class="note">
+							<h5 class="noteHeader">Note</h5>
+							<p class="note">The prefixed <span class="Literal-Sidebar">transform</span> property should be included in the context of a transition as well, as shown in this fully prefixed declaration:</p>
+							<pre class="SidebarCodeFirst"><code class="CodeColor">-webkit-transition: -webkit-transform</code> .3s linear;</pre>
+							<p class="note">The <span class="Literal-Sidebar">-ms-</span> prefix is not needed because transitions are not supported by IE9. Those users will see an immediate change to the transformed image without the smooth transition, which is fine.</p>
+						</div>
+					</div>
+					<p class="SidebarBody">And that’s all there is to it! You can try playing around with different durations and timing functions, or try altering the transforms or their origin points to see what other effects you can come up with.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">3-D Transforms</h2>
+			<p class="body">In addition to <a id="_idIndexMarker3467"></a><a id="_idIndexMarker3468"></a>the two-dimensional transform functions we’ve just seen, the CSS Transforms spec also describes a system for creating a sense of three-dimensional space and perspective. Combined with transitions, you can use 3-D transforms to create rich interactive interfaces, such as image carousels, flippable cards, or spinning cubes! <span class="Xref-Figure">Figure 18-14</span> shows a few examples of interfaces created with 3-D transforms. </p>
+			<p class="body">It’s worth noting that this method does not create 3-D objects with a sense of volume; it merely tilts the otherwise flat element box around on three axes (animation expert Val Head calls them “postcards in space”). The rotating cube example in the figure merely stitches together six element boxes at different angles. That said, 3-D transforms still add some interesting depth to an otherwise flat web page.</p>
+			<div>
+				<figure id="_idContainer1282" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1814_tranforms.png" alt="" width="1321" height="1029"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-14.</span> Some examples of 3-D transforms. The book covers, movie posters, and 3-D cube also have cool animation effects, so it’s worth going to the links and checking them out. Webflow is a visual web design tool that includes the ability to create 3-D transformed elements.</figcaption>
+				</figure>
+			</div>
+			<p class="body">3-D transforms are not a need-to-know skill for folks just starting out in web design, so I’m not going to go into full detail here, but I will give you a taste of what it takes to add a third dimension to a design. If you’d like to learn more, the following tutorials are good places to start (although the browser support information they contain may be out-of-date):</p>
+			<ul>
+				<li class="ListBullet">“<a href="http://coding.smashingmagazine.com/2012/01/06/adventures-in-the-third-dimension-css-3-d-transforms/">Adventures in the Third Dimension: CSS 3D Transforms</a>” by <a id="_idIndexMarker3469"></a>Peter Gasston (<a href="http://coding.smashingmagazine.com/2012/01/06/adventures-in-the-third-dimension-css-3-d-transforms/"><span class="URL-Email">coding.smashingmagazine.com/2012/01/06/adventures-in-the-third-dimension-css-3-d-transforms/</span></a>)</li>
+				<li class="ListBullet">“Intro to CSS 3D Transforms” by <a id="_idIndexMarker3470"></a>David DeSandro (<a href="http://desandro.github.com/3dtransforms/"><span class="URL-Email">desandro.github.com/3dtransforms/</span></a>)</li>
+			</ul>
+			<p class="body">To give you a very basic example, I’m going to use the images from <span class="Xref-Figure">Exercise 18-2</span> and arrange them as though they are in a 3-D carousel-style gallery (<span class="Xref-Figure">Figure 18-15</span>). </p>
+			<div>
+				<figure id="_idContainer1284" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1815_3dtransform.png" alt="" width="899" height="244"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-15.</span> Our aquarium images arranged in space…space…space…</figcaption>
+				</figure>
+			</div>
+			<p class="body">The markup is the same unordered list used in the previous exercise: </p>
+			<pre class="CodeFirst">&lt;ul&gt;<br/>  &lt;li&gt;&lt;a href=""&gt;&lt;img src="anchovies.jpg" id="img1" alt=""&gt;&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href=""&gt;&lt;img src="jellyfish1.jpg" id="img2" alt=""&gt;&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href=""&gt;&lt;img src="bluejellyfish.jpg" id="img3" alt=""&gt;&lt;/a&gt;  &lt;/li&gt;<br/>  &lt;li&gt;&lt;a href=""&gt;&lt;img src="seadragon.jpg" id="img4" alt=""&gt;&lt;/a&gt;&lt;/li&gt;<br/>&lt;/ul&gt;   </pre>
+			<p class="body">The first step is to add some amount of “perspective” to the containing element by using <a id="_idIndexMarker3471"></a>the <span class="Literal-fc">perspective</span> property. This tells the browser that the child elements should behave as though they are in 3-D space. The value of the <span class="Literal-fc">perspective</span> property is some integer larger than zero that specifies a distance from the element’s origin on the z-axis. The lower the value, the more extreme the perspective. I have found that values between 300 and 1,500 are reasonable, but this is something you need to fuss around with until you get the desired effect. </p>
+			<pre class="CodeFirst">ul {<br/>  width: 1000px;<br/>  height: 100px;<br/>  list-style-type: none;<br/>  padding: 0;<br/>  margin: 0;<br/><code class="CodeColor">  perspective: 600;</code><br/>}  </pre>
+			<div>
+				<div id="_idContainer1285" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">When using the <span class="Literal-Sidebar">-webkit-</span> prefix for <span class="Literal-Sidebar">transform</span>, include the prefixed version of <span class="Literal-Sidebar">perspective</span> as well (<span class="Literal-Sidebar">-webkit-perspective</span>).</p>
+				</div>
+			</div>
+			<p class="body">The<a id="_idIndexMarker3472"></a> <span class="Literal-fc">perspective-origin</span> property (not shown) describes the position of your eyes relative to the transformed items. The values are a horizontal position (<span class="Literal-fc">left</span>, <span class="Literal-fc">center</span>, <span class="Literal-fc">right</span>, or a length or percentage) and a vertical position (<span class="Literal-fc">top</span>, <span class="Literal-fc">bottom</span>, <span class="Literal-fc">center</span>, or a length or percentage value). The default (<span class="Xref-Figure">Figure 18-15</span>) is centered vertically and horizontally (<span class="Literal-fc">perspective-origin: 50% 50%</span>). The final transform-related property is<a id="_idIndexMarker3473"></a> <span class="Literal-fc">backface-visibility</span>, which controls whether the reverse side of the element is visible when it spins around.  </p>
+			<p class="body">With the 3-D space established, apply one of the 3-D transform functions to each child element—in this case, the <span class="Literal-fc">li</span> within the <span class="Literal-fc">ul</span>. The 3-D functions include <a id="_idIndexMarker3474"></a><a id="_idIndexMarker3475"></a><a id="_idIndexMarker3476"></a><a id="_idIndexMarker3477"></a><a id="_idIndexMarker3478"></a><a id="_idIndexMarker3479"></a><a id="_idIndexMarker3480"></a><a id="_idIndexMarker3481"></a><a id="_idIndexMarker3482"></a><span class="Literal-fc">translate3d</span>, <span class="Literal-fc">translateZ</span>, <span class="Literal-fc">scale3d</span>, <span class="Literal-fc">scaleZ</span>, <span class="Literal-fc">rotate3d</span>, <span class="Literal-fc">rotateX</span>, <span class="Literal-fc">rotateY</span>, <span class="Literal-fc">rotateZ</span>, and <span class="Literal-fc">matrix3d</span>. You should recognize some terms in there. The <span class="Literal-fc">*Z</span> functions define the object’s orientation relative to the <a id="_idIndexMarker3483"></a>z-axis (picture it running from your nose to this page, <a id="_idIndexMarker3484"></a><a id="_idIndexMarker3485"></a>whereas the x- and y-axes lie flat on the page).</p>
+			<p class="body">In our example in <span class="Xref-Figure">Figure 18-15</span>, each <span class="Literal-fc">li</span> is rotated 45 degrees around its y-axis (vertical axis) by using the <span class="Literal-fc">rotateY</span> function, which works as though the element boxes are rotating around a pole.</p>
+			<p class="body">Compare the result to <span class="Xref-Figure">Figure 18-16</span>, in which each <span class="Literal-fc">li</span> is rotated on its x-axis (horizontal axis) by using <span class="Literal-fc">rotateX</span>. It’s as though the element boxes are rotating around a horizontal bar.</p>
+			<pre class="CodeFirst">li {<br/>  float: left;<br/>   margin-right: 10px;<br/><code class="CodeColor">  transform: rotateX(45deg);</code><br/>} </pre>
+			<div>
+				<figure id="_idContainer1287" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1816_transformX.png" alt="" width="927" height="128"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-16.</span> The same list of images rotated on their horizontal axes with <span class="Literal-Sidebar">rotateX()</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Obviously, I’m barely scratching the surface of what can be done with 3-D transforms, but this should give you a mental model for how it works. Next up, I’ll introduce you to a more sophisticated way to set your web pages in motion.</p>
+			<h1 id="_idParaDest-170" class="HeadA"><a id="_idTextAnchor238"></a>Keyframe Animation</h1>
+			<p class="body">The CSS Animations <a id="_idIndexMarker3486"></a>Module allows authors to create real, honest-to-goodness keyframe animation. <span class="Xref-Figure">Figure 18-17</span> shows just a few examples that you can see in action online. Unlike transitions that go from a beginning state to an end state, keyframe animation allows you to explicitly specify other states at points along the way, allowing for more granular control of the action. Those “points along the way” are established by <span class="FirstTerm">keyframes</span> that define the beginning or end of a segment of animation. </p>
+			<div>
+				<div id="_idContainer1288" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Keyframe animation is known as <a id="_idIndexMarker3487"></a><span class="FirstTerm--Sidebar-">explicit animation</span> because you program its behavior. By contrast, transitions are an example of <a id="_idIndexMarker3488"></a><span class="FirstTerm--Sidebar-">implicit animation</span> because they are triggered only when a property changes.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1290" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1817_keyframe.png" alt="" width="1321" height="1233"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-17.</span> Examples of animations using only CSS.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Creating keyframe animations is complex, and more than I can cover here. But I would like for you to have some idea of how it works, so I’ll sketch out the minimal details. The following resources are good starting points for learning more:</p>
+			<ul>
+				<li class="ListBullet"><span class="Citation">CSS Animations Level 1 (a Working Draft at the time of this writing) at </span><a href="http://www.w3.org/TR/css-animations-1/.%20"><span class="URL-Email">www.w3.org/TR/css-animations-1/.</span></a></li>
+				<li class="ListBullet"><span class="Citation">Transitions and Animations in CSS</span> by <a id="_idIndexMarker3489"></a><a id="_idIndexMarker3490"></a>Estelle Weyl (O’Reilly).</li>
+				<li class="ListBullet">“Animation &amp; UX Resources” by Val Head (<a href="http://valhead.com/ui-animation/"><span class="URL-Email">valhead.com/ui-animation/</span></a>). Val has compiled a mega-list of resources regarding web animation, including links to tutorials, articles, tools, galleries, and more. It is not limited to CSS keyframe animation, but as long as you’re delving into animation, you can trust Val to point you to good stuff.</li>
+				<li class="ListBullet">“CSS: Animation” course by <a id="_idIndexMarker3491"></a>Val Head on <a id="_idIndexMarker3492"></a>Lynda.com (<a href="https://www.lynda.com/CSS-tutorials/CSS-Animation/439683-2.html"><span class="URL-Email">www.lynda.com/CSS-tutorials/CSS-Animation/439683-2.html</span></a>). You’ll need a subscription to Lynda.com, but if you are in web-design-learning mode, it may be a good investment.</li>
+				<li class="ListBullet">“CSS Animation for Beginners” by <a id="_idIndexMarker3493"></a>Rachel Cope (<a href="http://robots.thoughtbot.com/css-animation-for-beginners"><span class="URL-Email">robots.thoughtbot.com/css-animation-for-beginners</span></a>). This is a clearly written tutorial with lots of examples.</li>
+				<li class="ListBullet">“The Guide to CSS Animation: Principles and Examples” by <a id="_idIndexMarker3494"></a>Tom Waterhouse (<a href="http://www.smashingmagazine.com/2011/09/the-guide-to-css-animation-principles-and-examples/"><span class="URL-Email">www.smashingmagazine.com/2011/09/the-guide-to-css-animation-principles-and-examples/</span></a>). This tutorial goes beyond CSS code to include tips for creating natural animation effects.<div id="_idContainer1291" class="sidebar"><h5 class="SidebarTitle">Animation Tools</h5><p class="SidebarBody">If you want to add a <a id="_idIndexMarker3495"></a>simple animation effect to an element—a quick flip here or a little shimmy there—you may be able to find a premade effect you can apply to your design. Here are a few sites that provide ready-made CSS for common animation effects (some also use JQuery<a id="_idIndexMarker3496"></a> plug-ins, but they explain how to use them):</p><ul><li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Animate.css</span> by <a id="_idIndexMarker3497"></a>Daniel Eden (<a href="http://daneden.github.io/animate.css/"><span class="URL-Email--Sidebar-">daneden.github.io/animate.css/</span></a>)</li><li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">CSS Animation Cheat Sheet</span><strong class="Emphasis_Bold"> </strong>by <a id="_idIndexMarker3498"></a>Justin Aguilar (<a href="http://www.justinaguilar.com/animations/index.html"><span class="URL-Email--Sidebar-">www.justinaguilar.com/animations/index.html</span></a>)</li><li class="SidebarListBullet"><a id="_idIndexMarker3499"></a><span class="ListStartItem--Sidebar-">AngryTools CSS Animation Kit</span> (<a href="http://angrytools.com/css/animation/"><span class="URL-Email--Sidebar-">angrytools.com/css/animation/</span></a>)</li></ul></div><div id="_idContainer1292" class="sidebar"><h5 class="SidebarSeries">Support Tip</h5><h5 class="SidebarTitle">CSS Keyframe Browser Support</h5><p class="SidebarBody">All current<a id="_idIndexMarker3500"></a> versions of major desktop and mobile browsers support CSS keyframe animation without vendor prefixes. Here are the exceptions:</p><ul><li class="SidebarListBullet">Internet Explorer 9 and earlier do not support keyframe animation at all. The animation will appear in its start state, so be sure that first frame is an acceptable fallback.</li><li class="SidebarListBullet">You need to use the <span class="Literal-Sidebar">-webkit-</span> prefix to support the following browsers: Safari and iOS Safari 8 and earlier (2014), Chrome 41 and earlier (2015), Opera 29 and earlier (2015), and Android 4.4.4 and earlier (2014). As I am writing this, these browsers represent enough traffic that it is still recommended that you include the <span class="Literal-Sidebar">-webkit-</span> prefix, but that may change based on when you are doing development and who your target audience is.<p class="SidebarListItem_cont">Note that you need the prefixed keyframe at-rule as well as prefixed <span class="Literal-Sidebar">animation-*</span> properties. As always, the standard, unprefixed rules go after prefixed versions.</p><pre class="SidebarCodeFirst">@-webkit-keyframes  -webkit-animation-*</pre></li></ul></div></li>
+			</ul>
+			<h2 class="HeadB">Establishing the Keyframes</h2>
+			<p class="body">The animation <a id="_idIndexMarker3501"></a>process has two parts: </p>
+			<ol>
+				<li class="ListNumber" value="1">Establish the keyframes with a <span class="Literal-fc">@keyframes</span> rule. </li>
+				<li class="ListNumber">Add the animation properties to the elements that will be animated.</li>
+			</ol>
+			<p class="body">Here is a very simple set of keyframes that changes the background color of an element over time. It’s not a very action-packed animation, but it should give you a basic understanding of what a <span class="Literal-fc">@keyframes</span> rule does. </p>
+			<pre class="CodeFirst">@keyframes <code class="CodeColor">colors</code> {<br/>  0% { background-color: red; }<br/>  20% { background-color: orange; }<br/>  40% { background-color: yellow; }<br/>  60% { background-color: green; }<br/>  80% { background-color: blue; }<br/>  100% { background-color: purple; }<br/>}</pre>
+			<p class="body">The keyframes at-rule identifies the name of the animation, the stages of the animation represented by percentage (%) values, and the CSS properties that are affected for each stage. Here’s what a <span class="Literal-fc">@keyframes</span> rule looks like abstracted down to its syntax:</p>
+			<pre class="CodeFirst">@keyframes <span class="Replaceable">animation-name</span><code class="CodeColor"> </code>{<br/><code class="CodeColor">   </code><span class="Replaceable">keyframe</span> { <span class="Replaceable">property: value;</span><code class="CodeColor"> </code>}<br/>  <span class="Code-Comment"> /* additional keyframes */</span><span class="Replaceable"> </span><br/>}</pre>
+			<p class="body">The sample <a id="_idIndexMarker3502"></a><span class="Literal-fc">@keyframes</span> rule says: create an animation sequence called “colors.” At the beginning of the animation, the <span class="Literal-fc">background-color</span> of the element should be red; at 20% through the animation runtime, the background color should be orange; and so on, until it reaches the end of the animation. The browser fills in all the shades of color in between each keyframe (or <em class="Emphasis">tweens</em> it, to use the lingo). This is represented the best I could in <span class="Xref-Figure">Figure 18-18</span><span class="Xref">.</span></p>
+			<div>
+				<figure id="_idContainer1294" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1818_magicanim.png" alt="" width="1338" height="1172"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-18.</span> Animating through the colors of the rainbow by using keyframes.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Each <a id="_idIndexMarker3503"></a>percentage value and the property/value declaration defines a keyframe in the animation sequence. </p>
+			<p class="body">As an alternative to percentages, you can use the keyword <span class="Literal-fc">from</span> for the start of an animation sequence (equivalent to 0%) and the keyword <span class="Literal-fc">to</span> for denoting the end (100%). The following example makes an element slide in from right to left as the left margin reduces to 0:</p>
+			<pre class="CodeFirst">@keyframe slide {<br/>  <code class="CodeColor">from</code> { margin-left: 100% }<br/>  <code class="CodeColor">to</code> { margin-left: 0%; }<br/>}</pre>
+			<h2 class="HeadB">Adding Animation Properties</h2>
+			<p class="body">Now we can apply this animation sequence to an element or multiple elements in the document by using a collection of animation properties that are very similar to the set of transition properties that you already know.</p>
+			<p class="body">I am going to apply the rainbow animation to the <span class="Literal-fc">#magic</span> <span class="Literal-fc">div</span> in my document: </p>
+			<pre class="CodeFirst">&lt;div id="magic"&gt;Magic!&lt;/div&gt;</pre>
+			<p class="body">In the <a id="_idIndexMarker3504"></a>CSS rule for <span class="Literal-fc">#magic</span>, I make decisions about the animation I want to apply:</p>
+			<ul>
+				<li class="ListBullet">Which animation to use (<a id="_idIndexMarker3505"></a><span class="Literal-fc">animation-name</span>) (<em class="Emphasis">Required</em>).</li>
+				<li class="ListBullet">How long it should take (<a id="_idIndexMarker3506"></a><span class="Literal-fc">animation-duration</span>) (<em class="Emphasis">Required</em>).</li>
+				<li class="ListBullet">The manner in which it should accelerate (<a id="_idIndexMarker3507"></a><span class="Literal-fc">animation-timing-function</span>). This property uses the same timing function keywords that we covered for CSS Transitions.</li>
+				<li class="ListBullet">Whether to pause before it starts (<a id="_idIndexMarker3508"></a><span class="Literal-fc">animation-delay</span>).</li>
+			</ul>
+			<p class="body">Looks familiar, right? There are a few other animation-specific properties to know about as well:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">animation-iteration-count</span></p>
+			<p class="ListVariable">How<a id="_idIndexMarker3509"></a> many times the animation should repeat. This can be set to a whole number or <span class="Literal-fc">infinite</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">animation-direction</span></p>
+			<p class="ListVariable">Whether <a id="_idIndexMarker3510"></a>the animation plays forward (<span class="Literal-fc">normal</span>), in reverse (<span class="Literal-fc">reverse</span>), or alternates back and forth starting at the beginning (<span class="Literal-fc">alternate</span>), or alternates starting from the end (<span class="Literal-fc">alternate-reverse</span>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">animation-fill-mode</span></p>
+			<p class="ListVariable">The animation <a id="_idIndexMarker3511"></a>fill mode determines what happens with the animation before it begins and after it ends. By default (<span class="Literal-fc">none</span>), the animation shows whatever property values were not specified via <span class="Literal-fc">@keyframes</span>. If you want the last keyframe to stay visible after the animation plays, use the <span class="Literal-fc">forwards</span> keyword. If there is a delay set on the animation and you want the first keyframe to show during that delay, use <span class="Literal-fc">backwards</span>. To retain the beginning and end states, use <span class="Literal-fc">both</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">animation-play-state</span></p>
+			<p class="ListVariable">Whether the <a id="_idIndexMarker3512"></a>animation should be <span class="Literal-fc">running</span> or <span class="Literal-fc">paused</span> when it loads. The play-state can be toggled on and off  based on user input with JavaScript or on hover.</p>
+			<p class="body">The <span class="Literal-fc">animation-name</span> property tells the browser which keyframe sequence to apply to the <span class="Literal-fc">#magic</span> <span class="Literal-fc">div</span>. I’ve also set the duration and timing function, and used <span class="Literal-fc">animation-iteration-count</span> to make it repeat infinitely. I could have provided a specific number value, like 2 to play it twice, but how fun are only two rainbows? And for fun, I’ve set the <span class="Literal-fc">animation-direction</span> to <span class="Literal-fc">alternate</span>, which makes the animation play in reverse after it has played forward. Here is the resulting rule for the animated <span class="Literal-fc">div</span>:</p>
+			<pre class="CodeFirst">#magic {<br/>  …<br/>  animation-name: colors;<br/>  animation-duration: 5s;<br/>  animation-timing-function: linear;<br/>  animation-iteration-count: infinite;<br/>  animation-direction: alternate;<br/>}</pre>
+			<p class="body">That gets a bit verbose, especially when you consider that each property may also follow a prefixed version. You can also use the <a id="_idIndexMarker3513"></a><span class="Literal-fc">animation</span> shorthand property to combine the values, just as we did for <span class="Literal-fc">transition</span>:</p>
+			<pre class="CodeFirst">#magic {<br/>  animation: colors 5s linear infinite alternate;<br/>} </pre>
+			<p class="body">Those are the bare bones of creating keyframes and applying animations to an element on the page. To make elements move around (what we typically think of as “animation”), use keyframes to change the position of an element on the screen with <span class="Literal-fc">translate</span> (the best option for performance) or with the <span class="Literal-fc">top</span>, <span class="Literal-fc">right</span>, <span class="Literal-fc">bottom</span>, and <span class="Literal-fc">left</span> properties. When the keyframes are tweened, the object will move smoothly from position to position. You can also animate the other transform functions such as <span class="Literal-fc">scale</span> and <span class="Literal-fc">skew</span>. </p>
+			<div>
+				<div id="_idContainer1297" class="sidebar">
+					<h5 class="SidebarTitle">Animation Inspectors</h5>
+					<p class="SidebarBody">Both Chrome and <a id="_idIndexMarker3514"></a><a id="_idIndexMarker3515"></a><a id="_idIndexMarker3516"></a>Firefox offer tools to inspect and modify web animations (<span class="Xref-Figure">Figure 18-19</span>). When you inspect an animated element in the Developer Tools, click the Animations tab to see a timeline of all the animations applied to that object. You can slow down the animation to reveal what is happening on a detailed level. You can also modify the animation by making changes to the timing, delay, duration, and keyframes.  For more information, see the following:</p>
+					<ul>
+						<li class="SidebarListBullet">Firefox Animation Inspector (<a href="http://developer.mozilla.org/en-US/docs/Tools/Page_Inspector/How_to/Work_with_animations"><span class="URL-Email--Sidebar-">developer.mozilla.org/en-US/docs/Tools/Page_Inspector/How_to/Work_with_animations</span></a>)</li>
+						<li class="SidebarListBullet">Chrome Animation Inspector (<a href="http://developers.google.com/web/tools/chrome-devtools/inspect-styles/animations"><span class="URL-Email--Sidebar-">developers.google.com/web/tools/chrome-devtools/inspect-styles/animations</span></a>)</li>
+					</ul>
+					<div>
+						<figure id="_idContainer1296" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1819_animinspect.png" alt="" width="1258" height="985"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-19.</span> Animation inspectors are part of the developer tools offered by Firefox and Chrome browsers.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">When to Use Keyframe Animation</h2>
+			<p class="body">To keep my <a id="_idIndexMarker3517"></a>example simple, I chose to change only the background color of a button element, but of course, keyframe animations can be used to create real animations, especially when combined with the CSS transform functions for spinning and moving elements around on the page. If you only need to change an element from one state to another, a transition is the way to go. But if you have a linear animation such as moving a character, an object, or its parts around, keyframe animation is the most appropriate choice.</p>
+			<p class="body">For more complex keyframe animations, particularly those that change with user interaction or require complex physics, <a id="_idIndexMarker3518"></a>using JavaScript for animation may be a better choice than CSS animation. JavaScript animation also has better support in older browsers, making it preferable if animation is critical to the mission of the page. CSS keyframe animation is a good solution for simple animations used as an enhancement to a baseline experience.</p>
+			<p class="body">I should note that as I write this, there is a lot of excitement in the web community for animating <a id="_idIndexMarker3519"></a><a id="_idIndexMarker3520"></a>SVG graphics. When you place the source code for an SVG directly in the HTML document, the elements in it are available to be animated. As of this writing, there are still limitations and browser support issues around using CSS to animate SVGs, but as browser support grows, this approach looks very promising. In the meantime, JavaScript has better access to SVG properties, has better browser support, and is the more common solution for SVG animation. </p>
+			<h1 id="_idParaDest-171" class="HeadA"><a id="_idTextAnchor239"></a>Wrapping Up</h1>
+			<p class="body">I hope I’ve helped you to wrap your head around how CSS can be used to add a little motion and smoothness to your pages. For adding motion to a web page, we have CSS Transitions to smooth out changes from one state to another and CSS Keyframe Animation for animating a series of states. We also looked at CSS Transforms for repositioning, spinning, resizing, or skewing an element when it is rendered on the screen. </p>
+			<p class="body">Used thoughtfully, animation can make your interfaces more intuitive and enhance your brand personality. It’s powerful stuff, but with great power comes great responsibility. To learn how to use web animation to enhance the user experience in a meaningful way, I recommend the book <span class="Citation">Designing Interface Animation: Meaningful Motion for User Experience</span> by Val Head (Rosenfeld Media).</p>
+			<p class="body">Now let’s see if you were paying attention with a 12-question quiz! </p>
+			<div>
+				<div id="_idContainer1300" class="sidebar">
+					<h5 class="SidebarTitle">Need a Little Inspiration?</h5>
+					<p class="SidebarBody">The <a id="_idIndexMarker3521"></a>Codrops blog (<a href="http://tympanus.net/codrops/"><span class="URL-Email--Sidebar-">tympanus.net/codrops/</span></a>), curated by <a id="_idIndexMarker3522"></a>Manoela Ilic and<a id="_idIndexMarker3523"></a> Pedro Botelho, is a treasure trove of examples of CSS transitions, transforms, and animations. Check out the Playground for cool experiments (like the collection of hover effects in <span class="Xref-Figure">Figure 18-20</span>) and the Tutorials section for step-by-step how-to information with code examples. </p>
+					<div>
+						<figure id="_idContainer1299" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1820_codrops.png" alt="" width="1338" height="665"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 18-20.</span> One of many examples of CSS transitions, transforms, and animations at the Codrops blog.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h1 id="_idParaDest-172" class="HeadA"><a id="_idTextAnchor240"></a>Test Yourself</h1>
+			<p class="body">Think you know your way around transitions, transforms, and keyframe animations? Here are a few questions to find out (answers in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>):</p>
+			<ol>
+				<li class="ListNumber" value="1">What is tweening?</li>
+				<li class="ListNumber">If a transition had keyframes, how many would it have?</li>
+				<li class="ListNumber">Write out the transition declaration (property and value) you would use to accomplish the following:<ol><li class="ListNumber_Indent">Wait .5 seconds before the transition starts.</li><li class="ListNumber_Indent">Make the transition happen at a constant speed.</li><li class="ListNumber_Indent">Make the transition last .5 seconds.</li><li class="ListNumber_Indent">Make the lines of text slowly grow farther apart.</li></ol></li>
+				<li class="ListNumber">Which of the following can you <em class="Emphasis">not</em> animate?<ol><li class="ListNumber_Indent" value="1"><code class="Code">width</code></li><li class="ListNumber_Indent"><code class="Code">padding</code></li><li class="ListNumber_Indent"><code class="Code">text-transform</code></li><li class="ListNumber_Indent"><code class="Code">word-spacing</code></li></ol></li>
+			</ol>
+			<ol>
+				<li class="ListNumber" value="5">Which timing function will be used if you omit the <span class="Literal-fc">transition-timing-function</span> property? Describe its action.</li>
+				<li class="ListNumber">In the following transition, what does .2s describe?<pre class="CodeFirst"><code class="Code">transition: color .2s linear;</code></pre></li>
+				<li class="ListNumber">Which transition will finish first?<ol><li class="ListNumber_Indent" value="1"><code class="Code">transition: width 300ms ease-in;</code></li><li class="ListNumber_Indent"><code class="Code">transition: width 300ms ease-out;</code></li></ol></li>
+				<li class="ListNumber">Write the <span class="Literal-fc">transform</span> declaration to accomplish the following:<ol><li class="ListNumber_Indent" value="1">Tilt the element 7 degrees clockwise.</li><li class="ListNumber_Indent">Reposition the element 25 pixels up and 50 pixels to the left.</li><li class="ListNumber_Indent">Rotate the element from its bottom-right corner.</li><li class="ListNumber_Indent">Make a 400-pixel-wide image display at 500 pixels wide.</li></ol></li>
+				<li class="ListNumber">In the following transform declaration, what does the 3 value describe?<pre class="CodeFirst"><code class="Code">transform: scale(2, 3)</code></pre></li>
+				<li class="ListNumber">Which 3-D transform would look more angled and dramatic?<ol><li class="ListNumber_Indent" value="1"><code class="Code">perspective: 250;</code></li><li class="ListNumber_Indent"><code class="Code">perspective: 1250;</code></li></ol></li>
+				<li class="ListNumber">What happens halfway through this animation?<pre class="CodeFirst"><code class="Code">@keyframes border-bulge {<br/></code><code class="Code">  from { border-width: 1px; }<br/>  25% { border-width: 10px; }<br/>  50% { border-width: 3px; }<br/>  to { border-width: 5px; }<br/>}</code></pre></li>
+				<li class="ListNumber">Write the animation declaration you would use to accomplish the following:<ol><li class="ListNumber_Indent" value="1">Make the animation play in reverse.</li><li class="ListNumber_Indent">Make the entire animation last 5 seconds.</li><li class="ListNumber_Indent">Wait 2 seconds before running the animation.</li><li class="ListNumber_Indent">Repeat the animation three times and then stop.</li><li class="ListNumber_Indent">The end state of the animation stays visible after the animation is done playing.</li></ol></li>
+			</ol>
+			<h1 id="_idParaDest-173" class="HeadA"><a id="_idTextAnchor241"></a>CSS Review: Transitions, Transforms, and Animation</h1>
+			<p class="body">Here is a summary <a id="_idIndexMarker3524"></a><a id="_idIndexMarker3525"></a><a id="_idIndexMarker3526"></a>of the properties covered in this chapter. </p>
+			<table id="table002-11" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Property</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A <a id="_idIndexMarker3527"></a>shorthand property that combines animation properties</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-name</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker3528"></a> the named animation sequence to apply</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-duration</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker3529"></a>the amount of time the animation lasts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-timing-function</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Describes<a id="_idIndexMarker3530"></a> the acceleration of the animation</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-iteration-count</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates<a id="_idIndexMarker3531"></a> the number of times the animation repeats</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-direction</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker3532"></a> whether the animation plays forward, in reverse, or alternates back and forth</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-play-state</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker3533"></a>whether the animation is running or paused</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-delay</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates<a id="_idIndexMarker3534"></a> the amount of time before the animation starts running</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">animation-fill-mode</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Overrides<a id="_idIndexMarker3535"></a> limits to when animation properties can be applied</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">backface-visibility</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Determines <a id="_idIndexMarker3536"></a>whether the reverse side of an element may be visible in 3-D transforms</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">perspective</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Establishes<a id="_idIndexMarker3537"></a> an element as a 3-D space and specifies the perceived depth</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">perspective-origin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker3538"></a> the position of your viewpoint in a 3-D space</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transform</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker3539"></a>that the rendering of an element should be altered via one of the 2-D or 3-D transform functions</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transform-origin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Denotes <a id="_idIndexMarker3540"></a>the point around which an element is transformed</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transform-style</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Preserves <a id="_idIndexMarker3541"></a>a 3-D context when transformed elements are nested</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transition</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A shorthand <a id="_idIndexMarker3542"></a>property that combines transition properties</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transition-property</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Defines <a id="_idIndexMarker3543"></a>which CSS property will be transitioned</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transition-duration</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker3544"></a> the amount of time the transition animation lasts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transition-timing-function</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Describes<a id="_idIndexMarker3545"></a> the manner in which the transition happens (changes in acceleration rates)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">transition-delay</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker3546"></a>the amount of time before the transition starts</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

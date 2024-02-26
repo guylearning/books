@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer402" class="ch08">
+			<p id="_idParaDest-70" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor098"></a>8. Table Markup</p>
+		</div>
+		<div id="_idContainer403" class="ch08">
+			<h1 class="chapterLabel">8</h1>
+		</div>
+		<div id="_idContainer404" class="ch08">
+			<h1 class="chapterTitle"><a id="_idTextAnchor099"></a>Table Markup</h1>
+		</div>
+		<div id="_idContainer405" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this Chapter</p>
+			<p class="chapterContents">How tables are used</p>
+			<p class="chapterContents">Basic table structure</p>
+			<p class="chapterContents">Spanning rows and columns</p>
+			<p class="chapterContents">Row and column groups</p>
+			<p class="chapterContents">Making tables accessible</p>
+		</div>
+		<div id="_idContainer444" class="ch08">
+			<p class="body">Before we launch into the markup for tables, let’s check in with our progress so far. We’ve covered a lot of territory: how to establish the basic structure of an HTML document, how to mark up text to give it meaning and structure, how to make links, and how to embed simple images on the page. </p>
+			<p class="body">This chapter and the next two chapters, <a href="lwd5_chapter09.xhtml#_idTextAnchor110"><span class="Xref">Chapter </span><span class="Xref">9</span><span class="Xref">, Forms</span></a>, and <a href="lwd5_chapter10.xhtml#_idTextAnchor122"><span class="Xref">Chapter </span><span class="Xref">10</span><span class="Xref">, Embedded Media</span></a>, describe the markup for specialized content that you might not have a need for right away. If you’re getting antsy to make your pages look good, skip right to <a href="lwd5_chapter11.xhtml#_idTextAnchor131"><span class="Xref">Part III</span></a> and start playing with Cascading Style Sheets. The tables, forms, and media chapters will be here when you’re ready for them.</p>
+			<p class="body">Are you still with me? Great. Let’s talk tables. We’ll start out by reviewing how tables should be used, then learn the elements used to create them.  Remember, this is an HTML chapter, so we’re going to focus on the markup that structures the content into tables, and we won’t be concerned with how the tables look (that will be tackled in various CSS chapters in <a href="lwd5_chapter11.xhtml#_idTextAnchor131"><span class="Xref">Part III</span></a>). </p>
+			<h1 id="_idParaDest-71" class="HeadA"><a id="_idTextAnchor100"></a>How to Use Tables</h1>
+			<p class="body">HTML tables<a id="_idIndexMarker1160"></a> <a id="_idIndexMarker1161"></a>were created for instances when you need to add <span class="FirstTerm">tabular material</span> (data arranged into rows and columns) to a web page. Tables may be used to organize schedules, product comparisons, statistics, or other types of information, as shown in <span class="Xref-Figure">Figure 8-1</span>. Note that “data” doesn’t necessarily mean numbers. A table cell may contain any sort of information, including numbers, text elements, and even images and multimedia objects.</p>
+			<div>
+				<figure id="_idContainer407" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0801_tables.png" alt="" width="1321" height="1571"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-1.</span><span class="FigureLabel"> </span>Examples of tables used for tabular information, such as charts, calendars, and schedules.</figcaption>
+				</figure>
+			</div>
+			<p class="body">In visual browsers, the arrangement of data in rows and columns gives readers an instant understanding of the relationships between data cells and their respective header labels. Bear in mind when you are creating tables, however, that some readers will be hearing your data read aloud with a screen reader or reading Braille output. Later in this chapter, we’ll discuss measures you can take to make table content accessible to users who don’t have the benefit of visual presentation.</p>
+			<p class="body">In the days before style sheets, tables were the only option for creating multicolumn layouts or controlling alignment and whitespace. Layout tables, particularly the complex nested table arrangements that were once standard web design fare, have gone the way of the dodo. If you need rows and columns for presentation purposes, there are alternatives that use CSS to achieve the desired effect. In one approach known as <span class="FirstTerm">CSS Tables</span>, nested <span class="Literal-fc">div</span>s provide the markup, and CSS Table properties make them behave like rows and cells in the browser. You can also achieve many of the effects that previously required table markup using Flexbox and Grid Layout techniques (see <a href="lwd5_chapter16.xhtml#_idTextAnchor217"><span class="Xref">Chapter </span><span class="Xref">16</span><span class="Xref">, CSS Layout with Flexbox and Grid</span></a>). </p>
+			<p class="body">That said, this chapter focuses on HTML table elements used to semantically mark up rows and columns of data as described in the HTML specification. </p>
+			<h1 id="_idParaDest-72" class="HeadA"><a id="_idTextAnchor101"></a>Minimal Table Structure</h1>
+			<div>
+				<div id="_idContainer408" class="ref">
+					<p class="refNameCode">&lt;table&gt;…&lt;/table&gt;</p>
+					<p class="refPurpose">Tabular content (rows and columns)</p>
+					<p class="refNameCode">&lt;tr&gt;…&lt;/tr&gt;</p>
+					<p class="refPurpose">Table row</p>
+					<p class="refNameCode">&lt;th&gt;…&lt;/th&gt;</p>
+					<p class="refPurpose">Table header</p>
+					<p class="refNameCode">&lt;td&gt;…&lt;/td&gt;</p>
+					<p class="refPurpose">Table cell data</p>
+				</div>
+			</div>
+			<p class="body">Let’s take a look at a <a id="_idIndexMarker1162"></a>simple table to see what it’s made of. Here is a small table with <a id="_idIndexMarker1163"></a><a id="_idIndexMarker1164"></a><a id="_idIndexMarker1165"></a><a id="_idIndexMarker1166"></a>three rows and three columns that lists nutritional information. </p>
+			<table id="table001-7" class="No-Table-Style">
+				<colgroup>
+					<col/>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="No-Table-Style">
+						<td class="No-Table-Style">
+							<p class="TableHeader">Menu item</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableHeader">Calories</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableHeader">Fat (g)</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="No-Table-Style">
+						<td class="No-Table-Style">
+							<p class="TableBody">Chicken noodle soup</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableBody">120</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableBody">2</p>
+						</td>
+					</tr>
+					<tr class="No-Table-Style">
+						<td class="No-Table-Style">
+							<p class="TableBody">Caesar salad</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableBody">400</p>
+						</td>
+						<td class="No-Table-Style">
+							<p class="TableBody">26 </p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="body"><span class="Xref-Figure">Figure 8-2</span> reveals the structure of this table according to the HTML table model. All of the table’s content goes into cells that are arranged into rows. Cells contain either header information (titles for the columns, such as “Calories”) or data, which may be any sort of content.</p>
+			<div>
+				<figure id="_idContainer410" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0802.png" alt="" width="1333" height="458"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-2.</span><span class="FigureLabel"> </span>Tables are made up of rows that contain cells. Cells are the containers for content.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Simple enough, right? Now let’s look at how those parts translate into elements (<span class="Xref-Figure">Figure 8-3</span>).</p>
+			<div>
+				<figure id="_idContainer412" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0803.png" alt="" width="1333" height="458"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-3.</span><span class="FigureLabel"> </span>The elements that make up the basic structure of a table.</figcaption>
+				</figure>
+			</div>
+			<p class="body"><span class="Xref-Figure">Figure 8-3</span> shows the elements that identify the table (<span class="Literal-fc">table</span>), rows (<span class="Literal-fc">tr</span>, for “table row”), and cells (<span class="Literal-fc">th</span>, for “table headers,” and <span class="Literal-fc">td</span>, for “table data”). Cells are the heart of the table, because that’s where the actual content goes. The other elements just hold things together.</p>
+			<p class="body">What we don’t see are column elements. The number of columns in a table is implied by the number of cells in each row. This is one of the things that make HTML tables potentially tricky. Rows are easy—if you want the table to have three rows, just use three <span class="Literal-fc">tr</span> elements. Columns are different. For a table with four columns, you need to make sure that every row has four <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span> elements. (There’s more to the column story, which I cover in the section <span class="Xref">“Row and Column Groups”</span> later in this chapter.)</p>
+			<p class="body">Written out in a source document, the markup for the table in <span class="Xref-Figure">Figure 8-3</span> looks like the following sample. It is common to stack the <span class="Literal-fc">th</span> and <span class="Literal-fc">td</span> elements in order to make them easier to find in the source. This does not affect how the browser renders them.</p>
+			<pre class="CodeFirst"><span class="codeOrange">&lt;table&gt;</span><br/> <span class="codeBlue">   &lt;tr&gt;</span> <br/><span class="codeGreen">      &lt;th&gt;Menu item&lt;/th&gt;<br/>      &lt;th&gt;Calories&lt;/th&gt;<br/>      &lt;th&gt;Fat (g)&lt;/th&gt;</span> <br/><span class="codeBlue">   &lt;/tr&gt;</span><br/> <span class="codeBlue">   &lt;tr&gt;</span><br/> <span class="codeGreen">      &lt;td&gt;Chicken noodle soup&lt;/td&gt;<br/>      &lt;td&gt;120&lt;/td&gt;<br/>      &lt;td&gt;2&lt;/td&gt;</span><br/> <span class="codeBlue">   &lt;/tr&gt;</span><br/> <span class="codeBlue">   &lt;tr&gt;</span> <br/><span class="codeGreen">      &lt;td&gt;Caesar salad&lt;/td&gt;<br/>      &lt;td&gt;400&lt;/td&gt;<br/>      &lt;td&gt;26&lt;/td&gt;</span> <br/><span class="codeBlue">   &lt;/tr&gt;</span><br/> <span class="codeOrange">&lt;/table&gt;</span></pre>
+			<p class="body">Remember, all the content must go in cells—that is, within <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span> elements. You can put any content in a cell: text, a graphic, or even another table.</p>
+			<p class="body">Start and end <span class="Literal-fc">table</span> tags identify the beginning and end of the tabular material. The <span class="Literal-fc">table</span> element may directly contain only some number of <span class="Literal-fc">tr</span> (row) elements, a caption and, optionally, the row and column group elements listed in the <span class="Xref">“Row and Column Groups”</span> section. The only thing that can go in the <span class="Literal-fc">tr</span> element is some number of <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span> elements. In other words, there may be no text content within the <span class="Literal-fc">table</span> and <span class="Literal-fc">tr</span> elements that isn’t contained within a <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span>.</p>
+			<div>
+				<div id="_idContainer413" class="sidebar">
+					<h5 class="SidebarSeries">Fun with the spec</h5>
+					<p class="SidebarBody">According to the HTML5 spec,<a id="_idIndexMarker1167"></a> a <span class="Literal-Sidebar">table</span> element may contain “in this order: optionally<a id="_idIndexMarker1168"></a> a <span class="Literal-Sidebar">caption</span> element, followed by zero or<a id="_idIndexMarker1169"></a> more <span class="Literal-Sidebar">colgroup</span> elements, followed optionally by <a id="_idIndexMarker1170"></a>a <span class="Literal-Sidebar">thead</span> element, followed by either zero or more <span class="Literal-Sidebar">tbody</span> elements<a id="_idIndexMarker1171"></a> or one or more <span class="Literal-Sidebar">tr</span> elements, followed optionally by a <span class="Literal-Sidebar">tfoot</span> element <a id="_idIndexMarker1172"></a>(but there can only be one <span class="Literal-Sidebar">tfoot</span> element child in total).” </p>
+					<p class="SidebarBody">Well, I’m glad we cleared that up!</p>
+				</div>
+			</div>
+			<p class="body">Finally, <span class="Xref-Figure">Figure 8-4</span> shows how the table would look in a simple web page, as displayed by default in a browser. I know it’s not exciting. Excitement happens in the CSS. What is worth noting is that tables always start on new lines by default in browsers.</p>
+			<div>
+				<figure id="_idContainer415" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0804_sample.png" alt="" width="1321" height="573"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-4.</span><span class="FigureLabel"> </span>The default rendering of our sample table in a browser.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Here is the source for another table. Can you tell how many rows and columns it will have when it is displayed in a browser?</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>   &lt;tr&gt;<br/>      &lt;th&gt;Burgers&lt;/th&gt;<br/>      &lt;td&gt;Organic Grass-fed Beef&lt;/td&gt;<br/>      &lt;td&gt;Black Bean Veggie&lt;/td&gt;<br/>   &lt;/tr&gt;<br/><span class="Code_EmphasisBold">   </span>&lt;tr&gt;<br/>      &lt;th&gt;Fries&lt;/th&gt;<br/>      &lt;td&gt;Hand-cut Idaho potato&lt;/td&gt;<br/>      &lt;td&gt;Seasoned sweet potato&lt;/td&gt;<br/>  <span class="Code_EmphasisBold"> </span>&lt;/tr&gt;<br/>&lt;/table&gt;</pre>
+			<p class="body">If you guessed that it’s a table with two rows and three columns, you are correct! Two <span class="Literal-fc">tr</span> elements create two rows; one <span class="Literal-fc">th</span> and two <span class="Literal-fc">td</span> elements in each row create three columns.</p>
+			<div>
+				<div id="_idContainer416" class="sidebar">
+					<h5 class="SidebarTitle">Stylin’ Tables</h5>
+					<p class="SidebarBody">Once you<a id="_idIndexMarker1173"></a> build the structure of the table in the markup, it’s no problem to add a layer of style to customize its appearance. </p>
+					<p class="SidebarBody">Style sheets can and should be used to control these aspects of a table’s visual presentation. We’ll get to all the formatting tools you’ll need in the following chapters:</p>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">Chapter 12, Formatting Text</span>:</p>
+					<ul>
+						<li class="SidebarListBullet">Font settings<a id="_idIndexMarker1174"></a> for cell contents</li>
+						<li class="SidebarListBullet">Text color in cells</li>
+					</ul>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">Chapter 13, Colors and Backgrounds</span>:</p>
+					<ul>
+						<li class="SidebarListBullet">Background colors</li>
+						<li class="SidebarListBullet">Tiling background images </li>
+					</ul>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">Chapter 14, Thinking Inside the Box</span>:</p>
+					<ul>
+						<li class="SidebarListBullet">Table dimensions (width and height)</li>
+						<li class="SidebarListBullet">Borders </li>
+						<li class="SidebarListBullet">Cell padding (space around cell contents) </li>
+						<li class="SidebarListBullet">Margins around the table</li>
+					</ul>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">Chapter 19, More CSS Techniques</span>:</p>
+					<ul>
+						<li class="SidebarListBullet">Special properties for controlling borders and spacing between cells</li>
+					</ul>
+				</div>
+			</div>
+			<h1 id="_idParaDest-73" class="HeadA"><a id="_idTextAnchor102"></a>Table Headers</h1>
+			<p class="body">As you can <a id="_idIndexMarker1175"></a><a id="_idIndexMarker1176"></a>see in <span class="Xref-Figure">Figure 8-4</span>, the text marked up as headers (<span class="Literal-fc">th</span> elements) is displayed differently from the other cells in the table (<span class="Literal-fc">td</span> elements). The difference, however, is not purely cosmetic. Table headers are important because they provide information or context about the cells in the row or column they precede. The <span class="Literal-fc">th</span> element may be handled differently than <span class="Literal-fc">td</span>s by alternative browsing devices. For example, screen readers may read the header aloud before each data cell (“Menu item: Caesar salad, Calories: 400, Fat-g: 26”). </p>
+			<p class="body">In this way, headers are a key tool for making table content accessible. Don’t try to fake them by formatting a row of <span class="Literal-fc">td</span> elements differently than the rest of the table. Conversely, don’t avoid using <span class="Literal-fc">th</span> elements because of their default rendering (bold and centered). Instead, mark up the headers semantically and change the presentation later with a style rule.</p>
+			<p class="body">That covers the basics. Before we get fancier, try your hand at <span class="Xref-Figure">Exercise 8-1</span>. </p>
+			<div>
+				<div id="_idContainer419" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 8-1.</span>    Making a simple table</h6>
+					<p class="SidebarBody">Try <a id="_idIndexMarker1177"></a>writing the markup for the table shown in <span class="Xref-Figure">Figure 8-5</span>. You can open a text editor or just write it down on paper. The finished markup is provided in the <span class="Filename--Sidebar-">materials</span> folder (<a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">www.learningwebdesign.com/5e/materials</span></a>).</p>
+					<p class="SidebarBody">Note that I’ve added a 1-pixel border around cells with a style rule just to make the structure clear. If you would like borders on your tables, copy this <span class="Literal-Sidebar">style</span> element into the <span class="Literal-Sidebar">head</span> of the document(s) you create for the exercises in this chapter:</p>
+					<pre class="SidebarCodeFirst">&lt;style&gt;<br/>td, th {<br/>  border: 1px solid gray;<br/>}<br/>&lt;/style&gt;</pre>
+					<p class="SidebarBody">Be sure to close all table elements. Technically, you are not <em class="Emphasis">required</em> to close <span class="Literal-Sidebar">tr</span>, <span class="Literal-Sidebar">th</span>, and <span class="Literal-Sidebar">td</span> elements, but I want you to get in the habit of writing tidy source code for maximum predictability across all browsing devices.</p>
+					<div>
+						<figure id="_idContainer418" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0805_exercise1.png" alt="" width="600" height="434"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-5.</span> Write the markup for this table.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h1 id="_idParaDest-74" class="HeadA"><a id="_idTextAnchor103"></a>Spanning Cells</h1>
+			<p class="body">One fundamental feature of table structure is cell <span class="FirstTerm">spanning</span>, which is the stretching of a cell to cover several rows or columns. Spanning cells allows you to create complex table structures, but it has the side effect of making the markup a little more difficult to keep track of. It can also make it potentially more difficult for users with screen readers to follow. </p>
+			<p class="body">You make a header or data cell span by adding the <a id="_idIndexMarker1178"></a><a id="_idIndexMarker1179"></a><span class="Literal-fc">colspan</span> or <span class="Literal-fc">rowspan</span> attributes, as we’ll discuss next.</p>
+			<h2 class="HeadB">Column Spans</h2>
+			<p class="body"><span class="FirstTerm">Column spans</span>, created <a id="_idIndexMarker1180"></a><a id="_idIndexMarker1181"></a><a id="_idIndexMarker1182"></a>with the <span class="Literal-fc">colspan</span> attribute in <a id="_idIndexMarker1183"></a><a id="_idIndexMarker1184"></a>the <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span> element, stretch a cell to the right to span over the subsequent columns (<span class="Xref-Figure">Figure 8-6</span>). Here a column span is used to make a header apply to two columns (I’ve added a border around the cells to reveal the structure of the table in the screenshot).</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>   &lt;tr&gt;<br/>      &lt;th <code class="CodeColor">colspan="2"</code>&gt;Fat&lt;/th&gt;<br/>   &lt;/tr&gt;<br/>   &lt;tr&gt;<br/>      &lt;td&gt;Saturated Fat (g)&lt;/td&gt;<br/>      &lt;td&gt;Unsaturated Fat (g)&lt;/td&gt;<br/>   &lt;/tr&gt;<br/>&lt;/table&gt;</pre>
+			<div>
+				<figure id="_idContainer421" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0806_colspan.png" alt="" width="1214" height="230"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-6.</span><span class="FigureLabel"> </span>The <span class="Literal-Sidebar">colspan</span> attribute stretches a cell to the right to span the specified number of columns.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Notice in the first row (<span class="Literal-fc">tr</span>) that there is only one <span class="Literal-fc">th</span> element, while the second row has two <span class="Literal-fc">td</span> elements. The <span class="Literal-fc">th</span> for the column that was spanned over is no longer in the source; the cell with the <span class="Literal-fc">colspan</span> stands in for it. Every row should have the same number of cells or equivalent <span class="Literal-fc">colspan</span> values. For example, there are two <span class="Literal-fc">td</span> elements and the <span class="Literal-fc">colspan</span> value is 2, so the implied number of columns in each row is equal.</p>
+			<div>
+				<div id="_idContainer422" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Be careful with <span class="Literal-Sidebar">colspan</span> values. If you specify a number that exceeds the number of columns in the table, browsers add columns to the existing table, which typically screws things up.</p>
+				</div>
+			</div>
+			<p class="body">Try your hand at column spanning in <span class="Xref-Figure">Exercise 8-2</span>.</p>
+			<div>
+				<div id="_idContainer425" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 8-2.</span>  Column spans</h6>
+					<p class="SidebarBody">Try writing the markup for the table shown in <span class="Xref-Figure">Figure 8-7</span>. You can open a text editor or just write it down on paper. I’ve added borders to reveal the cell structure in the figure, but your table won’t have them unless you add the style sheet shown in <span class="Xref-Figure">Exercise 8-1</span>. Again, the final markup is provided in the <span class="Filename--Sidebar-">materials</span> folder.</p>
+					<p class="SidebarBody">Some hints:</p>
+					<ul>
+						<li class="SidebarListBullet">The first and third rows show that the table has a total of three columns.</li>
+						<li class="SidebarListBullet">When a cell is spanned over, its <span class="Literal-Sidebar">td</span> element does not appear in the table.</li>
+					</ul>
+					<div>
+						<figure id="_idContainer424" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0807_exercise2.png" alt="" width="675" height="276"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-7.</span> Practice column spans by writing the markup for this table.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Row Spans</h2>
+			<p class="body">Row spans, <a id="_idIndexMarker1185"></a>created with the <span class="Literal-fc">rowspan</span> attribute, work just like column spans, but they cause the cell to span downward over several rows. In this example, the first cell in the table spans down three rows (<span class="Xref-Figure">Figure 8-8</span>).</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>   &lt;tr&gt;<br/>      &lt;th <code class="CodeColor">rowspan="3"</code>&gt;Serving Size&lt;/th&gt;<br/>      &lt;td&gt;Small (8oz.)&lt;/td&gt;<br/>   &lt;/tr&gt;<br/>    &lt;tr&gt;<br/>      &lt;td&gt;Medium (16oz.)&lt;/td&gt;<br/>   &lt;/tr&gt;<br/>   &lt;tr&gt;<br/>      &lt;td&gt;Large (24oz.)&lt;/td&gt;<br/>   &lt;/tr&gt;<br/>&lt;/table&gt;</pre>
+			<p class="body">Again, notice that the <span class="Literal-fc">td</span> elements for the cells that were spanned over (the first cells in the remaining rows) do not appear in the source. The <span class="Literal-fc">rowspan="3"</span> implies cells for the subsequent two rows, so no <span class="Literal-fc">td</span> elements are needed. </p>
+			<p class="body">If you loved spanning columns, you’ll love spanning rows in <span class="Xref-Figure">Exercise 8-3.</span></p>
+			<div>
+				<figure id="_idContainer427" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0808_rowspan.png" alt="" width="1338" height="239"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-8.</span> The <span class="Literal-Sidebar">rowspan</span> attribute stretches a cell downward to span the specified number of rows.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer430" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 8-3.</span>  Row spans</h6>
+					<p class="SidebarBody">Try writing the markup for the table shown in <span class="Xref-Figure">Figure 8-9</span>. Remember that cells that are spanned over do not appear in the table code. </p>
+					<p class="SidebarBody">Some hints:</p>
+					<ul>
+						<li class="SidebarListBullet">Rows always span downward, so the “oranges” cell is part of the first row even though its content is vertically centered.</li>
+						<li class="SidebarListBullet">Cells that are spanned over do not appear in the code.</li>
+					</ul>
+					<div>
+						<figure id="_idContainer429" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0809_exercise3.png" alt="" width="607" height="217"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-9.</span> Practice row spans by writing the markup for this table.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Space in and Between Cells</h2>
+			<p class="body">By default, tables expand just enough to fit the content of the cells, which can look a little cramped. Old versions of HTML <a id="_idIndexMarker1186"></a><a id="_idIndexMarker1187"></a>included <span class="Literal-fc">cellpadding</span> and <span class="Literal-fc">cellspacing</span> attributes for adding space within and between cells, but they have been kicked out of HTML5 as they are obsolete, presentational markup.The proper way to adjust table cell spacing is with style sheets, of course. The <span class="Xref">“Styling Tables”</span> section in <a href="lwd5_chapter19.xhtml#_idTextAnchor243"><span class="Xref">Chapter </span><span class="Xref">19</span><span class="Xref">, More CSS Techniques</span></a> addresses cell spacing.</p>
+			<h1 id="_idParaDest-75" class="HeadA"><a id="_idTextAnchor104"></a>Table Accessibility </h1>
+			<p class="body">As a web <a id="_idIndexMarker1188"></a><a id="_idIndexMarker1189"></a>designer, it is important that you always keep in mind how your site’s content is going to be used by visitors with impaired sight. It is especially challenging to make sense of tabular material by using a screen reader, but the HTML specification provides measures to improve the experience and make your content more understandable.</p>
+			<h2 class="HeadB">Describing Table Content</h2>
+			<div>
+				<div id="_idContainer431" class="ref">
+					<p class="refNameCode">&lt;caption&gt;…&lt;/caption&gt;</p>
+					<p class="refPurpose">Title or description to be displayed with the table</p>
+				</div>
+			</div>
+			<p class="body">The most effective way to give sight-impaired users an overview of your table is to give it a title or description with the <a id="_idIndexMarker1190"></a><span class="Literal-fc">caption</span> element. Captions display next to the table (generally, above it) and can be used to describe the table’s contents or provide hints on how it is structured.</p>
+			<p class="body">When used, the <span class="Literal-fc">caption</span> element must be the first thing within the <span class="Literal-fc">table</span> element, as shown in this example, which adds a caption to the nutritional chart from earlier in the chapter:</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>   <code class="CodeColor">&lt;caption&gt;</code>Nutritional Information<code class="CodeColor">&lt;/caption&gt;</code><br/>   &lt;tr&gt;<br/>      &lt;th&gt;Menu item&lt;/th&gt;<br/>      &lt;th&gt;Calories&lt;/th&gt;<br/>      &lt;th&gt;Fat (g)&lt;/th&gt;<br/>   &lt;/tr&gt;<br/><span class="Replaceable">   </span><span class="Code-Comment">&lt;!-- table continues --&gt;</span><br/>&lt;/table&gt;</pre>
+			<p class="body">The caption is displayed above the table by default, as shown in <span class="Xref-Figure">Figure 8-10</span>, although you can use a style sheet property to move it below the table (<span class="Literal-fc">caption-side: bottom</span>).</p>
+			<div>
+				<figure id="_idContainer433" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0810_caption.png" alt="" width="1224" height="343"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-10.</span> The table caption is displayed above the table by default.</figcaption>
+				</figure>
+			</div>
+			<p class="body">For longer descriptions, you could consider putting the table in a <span class="Literal-fc">figure</span> element and using the <span class="Literal-fc">figcaption</span> element for the description. The HTML5 specification has a number of suggestions for providing table descriptions (<a href="http://www.w3.org/TR/html5/tabular-data.html#table-descriptions-techniques"><span class="URL-Email">www.w3.org/TR/html5/tabular-data.html#table-descriptions-techniques</span></a>).</p>
+			<h2 class="HeadB">Connecting Cells and Headers</h2>
+			<p class="body">We discussed<a id="_idIndexMarker1191"></a><a id="_idIndexMarker1192"></a> headers briefly as a straightforward method for improving the accessibility of table content, but sometimes it may be difficult to know which header applies to which cells. For example, headers may be at the left or right edge of a row rather than at the top of a column. And although it may be easy for sighted users to understand a table structure at a glance, for users hearing the data as text, the overall organization is not as clear. The <span class="Literal-fc">scope</span> and <span class="Literal-fc">headers</span> attributes allow authors to explicitly associate headers and their respective content.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">scope</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">scope</span> attribute <a id="_idIndexMarker1193"></a>associates a table header with the row, column, group of rows (such as <span class="Literal-fc">tbody</span>), or column group in which it appears by using the values <span class="Literal-fc">row</span>, <span class="Literal-fc">col</span>, <span class="Literal-fc">rowgroup</span>, or <span class="Literal-fc">colgroup</span>, respectively. This example uses the <span class="Literal-fc">scope</span> attribute to declare that a header cell applies to the current row:</p>
+			<pre class="CodeFirst">&lt;tr&gt;<br/>   &lt;th <code class="CodeColor">scope="row"</code>&gt;Mars&lt;/th&gt;<br/>   &lt;td&gt;.95&lt;/td&gt;<br/>   &lt;td&gt;.62&lt;/td&gt;<br/>   &lt;td&gt;0&lt;/td&gt;<br/>&lt;/tr&gt;</pre>
+			<p class="ListVariable_cont">Accessibility experts recommend that every <span class="Literal-fc">th</span> element contain a <span class="Literal-fc">scope</span> attribute to make its associated data explicitly clear. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">headers</span></p>
+			<p class="ListVariable">For really <a id="_idIndexMarker1194"></a>complicated tables in which <span class="Literal-fc">scope</span> is not sufficient to associate a table data cell with its respective header (such as when the table contains multiple spanned cells), the <span class="Literal-fc">headers</span> attribute is used in the <span class="Literal-fc">td</span> element to explicitly tie it to a header’s <span class="Literal-fc">id</span> value. In this example, the cell content “.38” is tied to the header “Diameter measured in earths”:</p>
+			<pre class="CodeFirst">&lt;th <code class="CodeColor">id="diameter"</code>&gt;Diameter measured in earths&lt;/th&gt;<br/><span class="Code-Comment">&lt;!-- many other cells --&gt;</span><br/><span class="Replaceable"> </span>&lt;td <code class="CodeColor">headers="diameter"</code>&gt;.38&lt;/td&gt;<br/><span class="Code-Comment">&lt;!-- many other cells --&gt;</span></pre>
+			<p class="ListVariable_cont">Unfortunately, support of the <span class="Literal-fc">id</span>/<span class="Literal-fc">headers</span> feature is unreliable. The recommended best practice is to create tables in a way that a simple <span class="Literal-fc">scope</span> attribute will do the job.</p>
+			<div>
+				<div id="_idContainer434" class="note">
+					<h5 class="WarningHeader">Browser support alert</h5>
+					<p class="note">Although the advanced table features intended to improve accessibility have been in the specs for many years, support by <a id="_idIndexMarker1195"></a>screen readers and other assistive devices is unreliable at best. It is still recommended that you mark up your data semantically within table cells and that they make sense when read in order from the source, which is exactly how some of your visitors may encounter them.</p>
+				</div>
+			</div>
+			<p class="body">This section is obviously only the tip of the iceberg of table accessibility. In-depth instruction on authoring accessible tables is beyond the scope of this beginner book. If you’d like to learn more, I recommend “Creating Accessible Tables” at <a id="_idIndexMarker1196"></a>WebAIM (<a href="http://webaim.org/techniques/tables/data"><span class="URL-Email">webaim.org/techniques/tables/data</span></a>) as an excellent starting point.</p>
+			<p class="body">There is one more important set of elements for helping make the semantic structure of a table clear: row and column grouping elements.</p>
+			<h1 id="_idParaDest-76" class="HeadA"><a id="_idTextAnchor105"></a>Row and Column Groups</h1>
+			<p class="body">The sample <a id="_idIndexMarker1197"></a><a id="_idIndexMarker1198"></a>tables we’ve been looking at so far in this chapter have been stripped down to their bare essentials to make the structure clear while you’re learning how tables work. But tables in the real world are not always so simple. Check out the beauty in <span class="Xref-Figure">Figure 8-11</span> from the CSS Writing Modes Level 3 spec. You can identify three groups of columns (one with headers, two with two columns each), and three groupings of rows (headers, data, and a footnote). </p>
+			<p class="body">Conceptual table groupings like these are marked up with row group and column group elements that provide additional semantic structure and more “hooks” for styling or scripting. For example, the row and column groups in <span class="Xref-Figure">Figure 8-11</span> were styled with thicker borders to make them stand out visually. </p>
+			<div>
+				<figure id="_idContainer436" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0811_groups.png" alt="" width="1050" height="382"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-11.</span><span class="FigureLabel"> </span>An example of a table with row and column groups (from the CSS Writing Modes Level 3 specification).</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer437" class="sidebar">
+					<h5 class="SidebarSeries">View Source</h5>
+					<p class="SidebarBody">View the source of the table in <span class="Xref-Figure">Figure 8-11</span> at <a href="http://www.w3.org/TR/css-writing-modes-3/#unicode-bidi%20"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-writing-modes-3/#unicode-bidi </span></a>(you need to scroll down a little). The source is too long to print here, but it is clearly marked up and easy to follow. Note that it uses all the row group elements, column groups, and the <span class="Literal-Sidebar">scope</span> attribute we saw in the last section to associate headers with rows. There are several interesting tables on this page for your source-viewing pleasure. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Row Group Elements</h2>
+			<div>
+				<div id="_idContainer438" class="ref">
+					<p class="refNameCode">&lt;thead&gt;…&lt;/thead&gt;</p>
+					<p class="refPurpose">Table header row group</p>
+					<p class="refNameCode">&lt;tbody&gt;…&lt;/tbody&gt;</p>
+					<p class="refPurpose">Table body row group</p>
+					<p class="refNameCode">&lt;tfoot&gt;…&lt;/tfoot&gt;</p>
+					<p class="refPurpose">Table footer row group</p>
+				</div>
+			</div>
+			<p class="body">You can describe rows or groups of rows as belonging to a header, footer, or the body of a table by using<a id="_idIndexMarker1199"></a><a id="_idIndexMarker1200"></a><a id="_idIndexMarker1201"></a> the <span class="Literal-fc">thead</span>, <span class="Literal-fc">tfoot</span>, and <span class="Literal-fc">tbody</span> elements, respectively. Some<a id="_idIndexMarker1202"></a> <span class="FirstTerm">user agents</span> (another word for a browser) may repeat the header and footer rows on tables that span multiple pages. For example, the head and foot rows may print on every page of a multipage table. Authors may also use these elements to apply styles to various regions of a table.</p>
+			<p class="body">Row group elements may only contain one or more <span class="Literal-fc">tr</span> elements. They contain no direct text content. The <span class="Literal-fc">thead</span> element should appear first, followed by any number of <span class="Literal-fc">tbody</span> elements, followed by an optional <span class="Literal-fc">tfoot</span>. </p>
+			<p class="body">This is the row group markup for the table in <span class="Xref-Figure">Figure 8-11</span> (<span class="Literal-fc">td</span> and <span class="Literal-fc">th</span> elements are hidden to save space):</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>…<br/><code class="CodeColor">&lt;thead&gt;</code><br/>  <span class="Code-Comment">&lt;!-- headers in these rows--&gt;</span><br/>   &lt;tr&gt;&lt;/tr&gt;<br/>   &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/><code class="CodeColor">&lt;thead&gt;<br/>&lt;tbody&gt;</code><br/>  <span class="Code-Comment">&lt;!-- data --&gt;</span><br/>   &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;tr&gt;&lt;/tr&gt;<br/><code class="CodeColor">&lt;/tbody&gt;<br/>&lt;tfoot&gt;</code><br/>  <span class="Code-Comment">&lt;!-- footnote --&gt;</span><br/>   &lt;tr&gt;&lt;/tr&gt;<br/><code class="CodeColor">&lt;/tfoot&gt;</code><br/>&lt;/table&gt;</pre>
+			<h2 class="HeadB">Column Group Elements</h2>
+			<div>
+				<div id="_idContainer439" class="ref">
+					<p class="refNameCode">&lt;colgroup&gt;…&lt;/colgroup&gt;</p>
+					<p class="refPurpose">A semantically related group of columns</p>
+					<p class="refNameCode">&lt;col&gt;…&lt;/col&gt;</p>
+					<p class="refPurpose">One column in a column group</p>
+				</div>
+			</div>
+			<p class="body">As you’ve learned, columns are implied by the number of cells (<span class="Literal-fc">td</span> or <span class="Literal-fc">th</span>) in each row. You can semantically group columns (and assign <span class="Literal-fc">id</span> and <span class="Literal-fc">class</span> values) using <a id="_idIndexMarker1203"></a>the <span class="Literal-fc">colgroup</span> element.</p>
+			<p class="body">Column groups are identified at the start of the table, just after the <span class="Literal-fc">caption</span> if there is one, and they give the browser a little heads-up as to the column arrangement in the table. The number of columns a <span class="Literal-fc">colgroup</span> represents is specified with the <span class="Literal-fc">span</span> attribute. Here is the column group section at the beginning of the table in <span class="Xref-Figure">Figure 8-11</span>:</p>
+			<pre class="CodeFirst">&lt;table&gt;<br/>  &lt;caption&gt;…&lt;/caption&gt;<br/>  <code class="CodeColor">&lt;colgroup&gt;&lt;/colgroup&gt;<br/>  &lt;colgroup span="2"&gt;&lt;/colgroup&gt;<br/>  &lt;colgroup span="2"&gt;&lt;/colgroup&gt;</code><br/>   <span class="Code-Comment">&lt;!-- rest of table... --&gt;</span></pre>
+			<p class="body">That’s all there is to it. If you need to access individual columns within a <span class="Literal-fc">colgroup</span> for scripting or styling, identify them with<a id="_idIndexMarker1204"></a> <span class="Literal-fc">col</span> elements. The previous column group section could also have been written like this:</p>
+			<pre class="CodeFirst">  &lt;colgroup&gt;&lt;/colgroup&gt;<br/>  &lt;colgroup&gt;<br/><code class="CodeColor">    &lt;col class="start"&gt;<br/>    &lt;col class="end"&gt;<br/></code>  &lt;/colgroup&gt;<br/>  &lt;colgroup&gt;<br/>    <code class="CodeColor">&lt;col class="start"&gt;<br/>    &lt;col class="end"&gt;</code><br/>  &lt;/colgroup&gt;</pre>
+			<p class="body">Note that the <span class="Literal-fc">colgroup</span> elements contain no content—they only provide an indication of semantically relevant column structure. The empty <span class="Literal-fc">col</span> elements are used as handles for scripts or styles, but are not required. </p>
+			<div>
+				<div id="_idContainer440" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">When <span class="Literal-Sidebar">colgroup</span> elements contain <span class="Literal-Sidebar">col</span> elements, they <a id="_idIndexMarker1205"></a><a id="_idIndexMarker1206"></a>must not have a <span class="Literal-Sidebar">span</span> attribute.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-77" class="HeadA"><a id="_idTextAnchor106"></a>Wrapping Up Tables</h1>
+			<p class="body">This chapter gave you a good overview of the components of HTML tables. <span class="Xref-Figure">Exercise 8-4</span> combines most of what we’ve covered to give you a little more practice at authoring tables.</p>
+			<div>
+				<div id="_idContainer443" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 8-4.</span> The table challenge</h6>
+					<p class="SidebarBody">Now it’s time to put <a id="_idIndexMarker1207"></a>together the table writing skills you’ve acquired in this chapter. Your challenge is to write out the source document for the table shown in <span class="Xref-Figure">Figure 8-12</span>.</p>
+					<div>
+						<figure id="_idContainer442" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0812_exercise4.png" alt="" width="987" height="428"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 8-12.</span> The table challenge.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">I’ll walk you through it one step at a time.</p>
+					<ol>
+						<li class="SidebarListNumber">First, open a new document in your text editor and set up its overall structure (<span class="Literal-Sidebar">DOCTYPE</span>, <span class="Literal-Sidebar">html</span>, <span class="Literal-Sidebar">head</span>, <span class="Literal-Sidebar">title</span>, and <span class="Literal-Sidebar">body</span> elements). Save the document as <span class="Filename--Sidebar-">table.html</span> in the directory of your choice.</li>
+						<li class="SidebarListNumber">Next, in order to make the boundaries of the cells and table clear when you check your work, I’m going to have you add some simple style sheet rules to the document. Don’t worry about understanding exactly what’s happening here (although it’s fairly intuitive); just insert this <span class="Literal-Sidebar">style</span> element in the <span class="Literal-Sidebar">head</span> of the document exactly as you see it here:<pre class="SidebarCodeFirst">&lt;head&gt;<br/>  &lt;title&gt;Table Challenge&lt;/title&gt;<br/>  <code class="CodeColor">&lt;style&gt;<br/>    td, th { border: 1px solid #CCC; }<br/>    table { border: 1px solid black; }<br/>  &lt;/style&gt;</code><br/>&lt;/head&gt;</pre></li>
+						<li class="SidebarListNumber">Now it’s time to start building the table. I usually start by setting up the table and adding as many empty row elements as I’ll need for the final table as placeholders, as shown here. You can tell from the figure that there are five rows in this table: <pre class="SidebarCodeFirst">&lt;body&gt;<br/>  &lt;table&gt;<br/>    &lt;tr&gt;&lt;/tr&gt;<br/>    &lt;tr&gt;&lt;/tr&gt;<br/>    &lt;tr&gt;&lt;/tr&gt;<br/>    &lt;tr&gt;&lt;/tr&gt;<br/>    &lt;tr&gt;&lt;/tr&gt;<br/>  &lt;/table&gt;<br/>&lt;/body&gt;</pre></li>
+						<li class="SidebarListNumber">Start with the top row, and fill in the <span class="Literal-Sidebar">th</span> and <span class="Literal-Sidebar">td</span> elements from left to right, including any row or column spans as necessary. I’ll help with the first row. <p class="SidebarListItem_cont">The first cell (the one in the top-left corner) spans down the height of two rows, so it gets a <span class="Literal-Sidebar">rowspan</span> attribute. I’ll use a <span class="Literal-Sidebar">th</span> here to keep it consistent with the rest of the row. This cell has no content:</p><pre class="SidebarCodeFirst">&lt;table&gt;<br/>  &lt;tr&gt;<br/>    <code class="CodeColor">&lt;th rowspan="2"&gt;&lt;/th&gt;</code><br/>  &lt;/tr&gt;</pre><p class="SidebarListItem_cont">The cell in the second column of the first row spans over the width of two columns, so it gets a <span class="Literal-Sidebar">colspan</span> attribute:</p><pre class="SidebarCodeFirst">&lt;table&gt;<br/>  &lt;tr&gt;<br/>    &lt;th rowspan="2"&gt;&lt;/th&gt;<br/>    <code class="CodeColor">&lt;th colspan="2"&gt;A common header for two subheads&lt;/th&gt;</code><br/>  &lt;/tr&gt;</pre><p class="SidebarListItem_cont">The cell in the third column has been spanned over by the <span class="Literal-fc">colspan</span> we just added, so we don’t need to include it in the markup. The cell in the fourth column also spans down two rows:</p><pre class="SidebarCodeFirst">&lt;table&gt;<br/>  &lt;tr&gt;<br/>    &lt;th rowspan="2"&gt;&lt;/th&gt;<br/>    &lt;th colspan="2"&gt;A common header for two subheads&lt;/th&gt;<br/><code class="CodeColor">    &lt;th rowspan="2"&gt;Header 3&lt;/th&gt;</code><br/>  &lt;/tr&gt;</pre></li>
+						<li class="SidebarListNumber">Now it’s your turn. Continue filling in the <span class="Literal-Sidebar">th</span> and <span class="Literal-Sidebar">td</span> elements for the remaining four rows of the table. Here’s a hint: the first and last cells in the second row have been spanned over. Also, if it’s bold in the example, make it a header.</li>
+						<li class="SidebarListNumber">To complete the content, add the title over the table by using the <span class="Literal-Sidebar">caption</span> element.</li>
+						<li class="SidebarListNumber">Use the <span class="Literal-Sidebar">scope</span> attribute to make sure that the Thing A, Thing B, and Thing C headers are associated with their respective rows.</li>
+						<li class="SidebarListNumber">Finally, give the table row and column groups for greater sematic clarity. There is no <span class="Literal-Sidebar">tfoot</span> in this table. There are two column groups: one column for headers, the rest for data. Use the <span class="Literal-Sidebar">span</span> attribute (no need for individual column identification).</li>
+						<li class="SidebarListNumber">Save your work and open the file in a browser. The table should look just like the one on this page. If not, go back and adjust your markup. If you’re stumped, the final markup for this exercise is provided in the <span class="Filename--Sidebar-">materials</span> folder.</li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-78" class="HeadA"><a id="_idTextAnchor107"></a>Test Yourself</h1>
+			<p class="body">The answers to these questions appear in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber" value="1">What are the parts (elements) of a basic HTML table?</li>
+				<li class="ListNumber">What elements can a <span class="Literal-fc">table</span> contain directly (i.e., first-level children)?</li>
+				<li class="ListNumber">What elements can a <span class="Literal-fc">tr</span> contain?</li>
+				<li class="ListNumber">When would you use the <span class="Literal-fc">col</span> (column) element?</li>
+				<li class="ListNumber">Find five errors in this table markup:<pre class="CodeFirst">&lt;caption&gt;Primetime Television 1965&lt;/caption&gt;<br/>&lt;table&gt;<br/>  Thursday Night<br/>   &lt;tr&gt;&lt;/tr&gt;<br/>    &lt;th&gt;7:30&lt;/th&gt;<br/>    &lt;th&gt;8:00&lt;/th&gt;<br/>    &lt;th&gt;8:30&lt;/th&gt;<br/>  &lt;tr&gt;<br/>    &lt;td&gt;Shindig&lt;/td&gt;<br/>    &lt;td&gt;Donna Reed Show&lt;/td&gt;<br/>    &lt;td&gt;Bewitched&lt;/td&gt;<br/>  &lt;tr&gt;<br/>    &lt;colspan="2"&gt;Laredo&lt;/colspan&gt;<br/>    &lt;td&gt;Daniel Boone&lt;/td&gt;<br/>  &lt;/tr&gt;<br/>&lt;/table&gt;</pre></li>
+			</ol>
+			<h1 id="_idParaDest-79" class="HeadA"><a id="_idTextAnchor108"></a>Element Review: Tables</h1>
+			<p class="body">The following is a <a id="_idIndexMarker1208"></a>summary of the elements we covered in this chapter.</p>
+			<table id="table002-4" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Element and attributes</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">table</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Establishes a <a id="_idIndexMarker1209"></a>table element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">tr</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Establishes a <a id="_idIndexMarker1210"></a>row within a table</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">td</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Establishes a <a id="_idIndexMarker1211"></a>cell within a table row</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">colspan="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Number of<a id="_idIndexMarker1212"></a> columns the cell should span</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">rowspan="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Number <a id="_idIndexMarker1213"></a>of rows the cell should span</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">headers="<span class="Replaceable--8pt-">header name</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Associates <a id="_idIndexMarker1214"></a>the data cell with a header</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">th</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Table header associated with a row or column</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">abbr="<span class="Replaceable--8pt-">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Alternative<a id="_idIndexMarker1215"></a> label for when the header cell is referenced in other contexts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">colspan="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Number <a id="_idIndexMarker1216"></a>of columns the cell should span</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">rowspan="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Number of<a id="_idIndexMarker1217"></a> rows the cell should span</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">headers="<span class="Replaceable--8pt-">header name</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Associates<a id="_idIndexMarker1218"></a> a header with another header</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">scope="row|col|rowgroup|colgroup"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Associates <a id="_idIndexMarker1219"></a>the header with a row, row group, column, or column group</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">caption</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Gives the<a id="_idIndexMarker1220"></a> table a title that displays in the browser</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">colgroup</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Declares a <a id="_idIndexMarker1221"></a>group of columns</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">span="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Number of<a id="_idIndexMarker1222"></a> columns the column group spans; may not be used when the <span class="Literal-Sidebar">colgroup</span> contains <span class="Literal-Sidebar">col</span> elements</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">col</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Declares a<a id="_idIndexMarker1223"></a> column</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">span="<span class="Replaceable--8pt-">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Number of <a id="_idIndexMarker1224"></a>columns the column spans</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">tbody</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Identifies a <a id="_idIndexMarker1225"></a>table body row group</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">thead</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Identifies a <a id="_idIndexMarker1226"></a>table header row group</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">tfoot</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Identifies a <a id="_idIndexMarker1227"></a>table footer row group</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

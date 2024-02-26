@@ -1,0 +1,1570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer445" class="ch09">
+			<p id="_idParaDest-80" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor109"></a>9. Forms</p>
+		</div>
+		<div id="_idContainer446" class="ch09">
+			<h1 class="chapterLabel">9</h1>
+		</div>
+		<div id="_idContainer447" class="ch09">
+			<h1 class="chapterTitle"><a id="_idTextAnchor110"></a><a id="_idTextAnchor111"></a>Forms</h1>
+		</div>
+		<div id="_idContainer448" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In This Chapter</p>
+			<p class="chapterContents">How forms work</p>
+			<p class="chapterContents">Elements for adding form widgets</p>
+			<p class="chapterContents">Making forms accessible</p>
+			<p class="chapterContents">Form design basics</p>
+		</div>
+		<div id="_idContainer531" class="ch09">
+			<p class="body">It didn’t <a id="_idIndexMarker1228"></a>take long for the web to shift from a network of pages to read to a place where you go to get things <em class="Emphasis">done</em>—making purchases, booking plane tickets, signing petitions, searching a site, posting a tweet…the list goes on! Web forms handle all of these interactions. </p>
+			<p class="body">In fact, in response to this shift from page to application, HTML5 introduced a bonanza of new form controls and attributes that make it easier for users to fill out forms and for developers to create them. Tasks that have traditionally relied on JavaScript may be handled by markup and native browser behavior alone. HTML5 introduces a number of new form-related elements, 12 new input types, and many new attributes (they are listed in <span class="Xref-Figure">Table 9-1</span> at the end of this chapter). Some of these features are waiting for browser implementation to catch up, so I will be sure to note which controls may not be universally supported.</p>
+			<p class="body">This chapter introduces web forms, how they work, and the markup used to create them. I’ll also briefly discuss the importance of web form design.</p>
+			<h1 id="_idParaDest-81" class="HeadA"><a id="_idTextAnchor112"></a>How Forms Work</h1>
+			<p class="body">There are two <a id="_idIndexMarker1229"></a>parts to a working form. The first part is the form that you see on the page itself that is created using HTML markup. Forms are made up of buttons, input fields, and drop-down menus (collectively known as <span class="FirstTerm">form controls</span>) used to collect information from the user. Forms may also contain text and other elements. </p>
+			<p class="body">The other component of a web form is an application or script on the server that processes the information collected by the form and returns an appropriate response. It’s what makes the form <em class="Emphasis">work</em>. In other words, posting an HTML document with form elements isn’t enough. Web applications and scripts require programming know-how that is beyond the scope of this book, but the <span class="Xref">“Getting Your Forms to Work”</span> sidebar, later in this chapter, provides some options for getting the scripts you need.</p>
+			<h2 class="HeadB">From Data Entry to Response</h2>
+			<p class="body">If you are going to be creating web forms, it is beneficial to understand what is happening <a id="_idIndexMarker1230"></a>behind the scenes. This example traces the steps of a transaction using a simple form that gathers names and email addresses for a mailing list; however, it is typical of the process for many forms.</p>
+			<ol>
+				<li class="ListNumber">Your visitor—let’s call her Sally—opens the page with a web form in the browser window. The browser sees the form control elements in the markup and renders them with the appropriate form controls on the page, including two text-entry fields and a Submit button (shown in <span class="Xref-Figure">Figure 9-1</span>).</li>
+				<li class="ListNumber">Sally would like to sign up for this mailing list, so she enters her name and email address into the fields and <span class="FirstTerm">submits</span> the form by hitting the Submit button.</li>
+				<li class="ListNumber">The browser collects the information she entered, encodes it (see the sidebar <span class="Xref--Sidebar-">“A Word About Encoding”</span>), and sends it to the web application on the server. </li>
+				<li class="ListNumber">The web application accepts the information and processes it (that is, does whatever it is programmed to do with it). In this example, the name and email address are added to a mailing list database. </li>
+				<li class="ListNumber">The web application also returns a response. The kind of response sent back depends on the content and purpose of the form. Here, the response is a simple web page saying thank you for signing up for the mailing list. Other applications might respond by reloading the form page with updated information, by moving the user on to another related form page, or by issuing an error message if the form is not filled out correctly, to name only a few examples.</li>
+				<li class="ListNumber">The server sends the web application’s response back to the browser, where it is displayed. Sally can see that the form worked and that she has been added to the mailing list. </li>
+			</ol>
+			<div>
+				<div id="_idContainer449" class="sidebar">
+					<h5 class="SidebarTitle">A Word About Encoding</h5>
+					<p class="SidebarBody">Form data is <a id="_idIndexMarker1231"></a><a id="_idIndexMarker1232"></a>encoded via the same method used for URLs. Spaces and other characters that are not permitted get translated into their hexadecimal equivalents. For example, each space character in the collected form data is represented by the character <span class="Literal-Sidebar">+</span> or <span class="Literal-Sidebar">%20</span> and a slash (<span class="Literal-Sidebar">/</span>) character is replaced with <span class="Literal-Sidebar">%2F</span>. You don’t need to worry about this; the browser handles it automatically. </p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer451" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0901.png" alt="" width="1321" height="1467"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-1.</span> What happens behind the scenes when a web form is submitted.</figcaption>
+				</figure>
+			</div>
+			<h1 id="_idParaDest-82" class="HeadA"><a id="_idTextAnchor113"></a>The form Element</h1>
+			<div>
+				<div id="_idContainer452" class="ref">
+					<p class="refNameCode">&lt;form&gt;…&lt;/form&gt;</p>
+					<p class="refPurpose">Interactive form</p>
+				</div>
+			</div>
+			<p class="body">Forms are <a id="_idIndexMarker1233"></a><a id="_idIndexMarker1234"></a>added to web pages with (no surprise here) the <span class="Literal-fc">form</span> element. The <span class="Literal-fc">form</span> element is a container for all the content of the form, including some number of form controls, such as text-entry fields and buttons. It may also contain block elements (<span class="Literal-fc">h1</span>, <span class="Literal-fc">p</span>, and lists, for example). However, it may <em class="Emphasis">not</em> contain another <span class="Literal-fc">form</span> element.</p>
+			<div>
+				<div id="_idContainer453" class="sidebar">
+					<h5 class="SidebarSeries">Markup TIP</h5>
+					<p class="SidebarBody">Be careful not to<a id="_idIndexMarker1235"></a> <a id="_idIndexMarker1236"></a><a id="_idIndexMarker1237"></a>nest <span class="Literal-Sidebar">form</span> elements or allow them to overlap. A <span class="Literal-Sidebar">form</span> element must be closed before the next one begins.</p>
+				</div>
+			</div>
+			<p class="body">This sample source document contains a form similar to the one shown in <span class="Xref-Figure">Figure 9-1</span>:</p>
+			<pre class="CodeFirst">&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;title&gt;Mailing List Signup&lt;/title&gt;<br/>  &lt;meta charset="utf-8"&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;h1&gt;Mailing List Signup&lt;/h1&gt;<br/><br/> <code class="CodeColor">  &lt;form action="/mailinglist.php" method="POST"&gt;</code><br/>    &lt;fieldset&gt;<br/>      &lt;legend&gt;Join our email list&lt;/legend&gt;<br/>      &lt;p&gt;Get news about the band such as tour dates and special MP3 releases sent to your own in-box.&lt;/p&gt;<br/>      &lt;ol&gt;<br/>       &lt;li&gt;&lt;label for="firstlast"&gt;Name:&lt;/label&gt;<br/>         &lt;input type="text" name="fullname" id="firstlast"&gt;&lt;/li&gt;<br/>       &lt;li&gt;&lt;label for="email"&gt;Email:&lt;/label&gt;<br/>         &lt;input type="text" name="email" id="email"&gt;&lt;/li&gt;<br/>      &lt;/ol&gt;<br/>      &lt;input type="submit" value="Submit"&gt;<br/>    &lt;/fieldset&gt;<br/><code class="CodeColor">  &lt;/form&gt; </code> <br/><br/>&lt;/body&gt;<br/>&lt;/html&gt;</pre>
+			<div>
+				<div id="_idContainer454" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">It is current best practice to wrap form controls in semantic HTML elements such as lists or <span class="Literal-Sidebar">div</span>s. Ordered lists, <a id="_idIndexMarker1238"></a><a id="_idIndexMarker1239"></a><a id="_idIndexMarker1240"></a>as shown in this example, are a popular solution, but know that there are often default styles that you’ll need to clear out before styling them, particularly on mobile browsers. The <a id="_idIndexMarker1241"></a><a id="_idIndexMarker1242"></a><a id="_idIndexMarker1243"></a><span class="Literal-Sidebar">fieldset</span>, <span class="Literal-Sidebar">legend</span>, and <span class="Literal-Sidebar">label</span> elements used in the example improve accessibility. They are explained later in this chapter.</p>
+				</div>
+			</div>
+			<p class="body">In addition to being a container for form control elements, the <span class="Literal-fc">form</span> element has some attributes that are necessary for interacting with the form processing program on the server. Let’s take a look at each.</p>
+			<h2 class="HeadB">The action Attribute</h2>
+			<p class="body">The <span class="Literal-fc">action</span> <a id="_idIndexMarker1244"></a>attribute provides the location (URL) of the application or script that will be used to process the form. The <span class="Literal-fc">action</span> attribute in this example sends the data to a script called <span class="Filename">mailinglist.php</span>: </p>
+			<pre class="CodeFirst">&lt;form <code class="CodeColor">action="/mailinglist.php"</code> method="POST"&gt;...&lt;/form&gt;</pre>
+			<p class="body">The <span class="Filename">.php</span> suffix indicates that this form is processed by a script written in the PHP <a id="_idIndexMarker1245"></a>scripting language, but web forms may be processed by any of the following technologies:</p>
+			<ul>
+				<li class="ListBullet">PHP (<span class="Filename">.php</span>) is <a id="_idIndexMarker1246"></a>an open source scripting language most commonly used with the Apache web server. It is the most popular and widely supported forms processing option.</li>
+				<li class="ListBullet">Microsoft<a id="_idIndexMarker1247"></a><a id="_idIndexMarker1248"></a><a id="_idIndexMarker1249"></a> <a id="_idIndexMarker1250"></a>ASP (Active Server Pages; <span class="Filename">.asp</span>) is a programming environment for the <a id="_idIndexMarker1251"></a><a id="_idIndexMarker1252"></a><a id="_idIndexMarker1253"></a>Microsoft Internet Information Server (IIS).</li>
+				<li class="ListBullet">Microsoft’s <a id="_idIndexMarker1254"></a>ASP.NET (Active Server Page; <span class="Filename">.aspx</span>) is a newer Microsoft language that was designed to compete with PHP.</li>
+				<li class="ListBullet">Ruby on Rails. <a id="_idIndexMarker1255"></a>Ruby is the programming language that is used with the Rails platform. Many popular web applications are built with it.</li>
+				<li class="ListBullet">JavaServer <a id="_idIndexMarker1256"></a>Pages (<span class="Filename">.jsp</span>) is a Java-based technology similar to ASP.</li>
+				<li class="ListBullet">Python is a <a id="_idIndexMarker1257"></a>popular scripting language for web and server applications.</li>
+			</ul>
+			<p class="body">There are other form-processing options that may have their own suffixes or none at all (as is the case for the Ruby on Rails platform). Check with your programmer, server administrator, or script documentation for the proper name and location of the program to be provided by the <span class="Literal-fc">action</span> attribute (see <span class="Xref">Web Hosting Tip</span>).</p>
+			<div>
+				<div id="_idContainer455" class="sidebar">
+					<h5 class="SidebarSeries">Web Hosting Tip</h5>
+					<p class="SidebarBody">If you know you want or need to work with a particular form processing language, make sure to confirm it is supported when you are shopping for a web hosting service. </p>
+				</div>
+			</div>
+			<p class="body">Sometimes there is form processing code such as PHP embedded right in the HTML file. In that case, leave the action empty, and the form will post to the page itself.</p>
+			<div>
+				<div id="_idContainer456" class="sidebar">
+					<h5 class="SidebarTitle">Getting Your Forms to Work</h5>
+					<p class="SidebarBody">If you aren’t a programmer, don’t fret. You have a few options for getting your forms operational:</p>
+					<p class="SidebarListVariableTerm">Use hosting plan goodies</p>
+					<p class="SidebarListVariable">Many site hosting plans include access to scripts for simple functions such as mailing lists. More advanced plans may even provide everything you need to add a full shopping cart system to your site as part of your monthly hosting fee. Documentation or a technical support person should be available to help you use them.</p>
+					<p class="SidebarListVariableTerm">Hire a programmer</p>
+					<p class="SidebarListVariable">If you need a custom solution, you may need to hire a programmer who has server-side programming skills. Tell your programmer what you are looking to accomplish with your form, and she will suggest a solution. Again, you need to make sure you have permission to install scripts on your server under your current hosting plan, and that the server supports the language you choose.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">The method Attribute</h2>
+			<p class="body">The <span class="Literal-fc">method</span> attribute <a id="_idIndexMarker1258"></a>specifies how the information should be sent to the server. Let’s use this data gathered from the sample form in <span class="Xref-Figure">Figure 9-1</span> as an example.</p>
+			<pre class="CodeFirst">fullname = Sally Strongarm email = strongarm@example.com</pre>
+			<p class="body">When the browser encodes that information for its trip to the server, it looks like this (see the earlier sidebar if you need a refresher on encoding):</p>
+			<pre class="CodeFirst">fullname=Sally+Strongarm&amp;email=strongarm%40example.com</pre>
+			<p class="body">There are only two methods for sending this encoded data to the server: POST or GET, indicated by the <span class="Literal-fc">method</span> attribute in the <span class="Literal-fc">form</span> element. The method is optional and will default to GET if omitted. We’ll look at the difference between the two methods in the following sections. Our example uses the POST method, as shown here:</p>
+			<pre class="CodeFirst">&lt;form action="/mailinglist.php" <code class="CodeColor">method="POST"</code>&gt;...&lt;/form&gt;</pre>
+			<h3 class="HeadC">The GET method</h3>
+			<p class="body">With the <a id="_idIndexMarker1259"></a>GET method, the encoded form data gets tacked right onto the URL sent to the server. A question mark character separates the URL from the following data, as shown here:</p>
+			<pre class="CodeFirst">get http://www.bandname.com/mailinglist.php?name=Sally+Strongarm&amp;email=strongarm%40example.com</pre>
+			<p class="body">GET is inappropriate if the form submission performs an action, such as deleting something or adding data to a database, because if the user goes back, it gets submitted again.</p>
+			<h3 class="HeadC">The POST method</h3>
+			<p class="body">When the <a id="_idIndexMarker1260"></a>form’s method is set to POST, the browser sends a separate server request containing some special headers followed by the data. In theory, only the <a id="_idIndexMarker1261"></a><a id="_idIndexMarker1262"></a>server sees the content of this request, and thus it is the best method for sending secure information such as a home address or other personal information. In practice, make sure <a id="_idIndexMarker1263"></a><a id="_idIndexMarker1264"></a>HTTPS is enabled on your server so the user’s data is encrypted and inaccessible in transit. (HTTPS is discussed in <a href="lwd5_chapter02.xhtml#_idTextAnchor019"><span class="Xref">Chapter </span><span class="Xref">2</span><span class="Xref">, How the Web Works</span></a>.)</p>
+			<p class="body">The POST method is also preferable for sending a lot of data, such as a lengthy text entry, because there is no character limit as there is for GET. </p>
+			<p class="body">The GET method is appropriate if you want users to be able to bookmark the results of a form submission (such as a list of search results). Because the content of the form is in plain sight, GET is not appropriate for forms with private personal or financial information. In addition, GET may not be used when the form is used to upload a file.</p>
+			<div>
+				<div id="_idContainer457" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">POST and GET are not case-sensitive and are commonly listed in all uppercase by convention. In XHTML documents, however, the value of the <span class="Literal-Sidebar">method</span> attribute (post or get) must be provided in all lowercase letters. </p>
+				</div>
+			</div>
+			<p class="body">In this chapter, we’ll stick with the more prevalent POST method. Now that we’ve gotten through the technical aspects of the <span class="Literal-fc">form</span> element, let’s turn our attention to form controls. </p>
+			<h1 id="_idParaDest-83" class="HeadA"><a id="_idTextAnchor114"></a>Variables and Content</h1>
+			<p class="body">Web forms use a<a id="_idIndexMarker1265"></a> <a id="_idIndexMarker1266"></a>variety of controls that allow users to enter information or choose between options. Control types include various text-entry fields, buttons, menus, and a few controls with special functions. They are added to the document with a collection of form control elements that we’ll be examining one by one in the upcoming <span class="Xref">“The Great Form Control Roundup”</span> section. </p>
+			<p class="body">As a web designer, you need to be familiar with control options to make your forms easy and intuitive to use. It is also useful to have an idea of what form controls are doing behind the scenes.</p>
+			<h2 class="HeadB">The name Attribute</h2>
+			<p class="body">The job of<a id="_idIndexMarker1267"></a> <a id="_idIndexMarker1268"></a><a id="_idIndexMarker1269"></a>each form control is to collect one bit of information from a user. In the previous form example, text-entry fields collect the visitor’s name and email address. To use the technical term, “fullname” and “email” are two <span class="FirstTerm">variables</span> collected by the form. The data entered by the user (“Sally Strongarm” and “strongarm@example.com”) is the <span class="FirstTerm">value</span> or <span class="FirstTerm">content</span> of the variables. </p>
+			<div>
+				<div id="_idContainer458" class="callout">
+					<p class="callout">All form controls (except submit and reset buttons) must include a name attribute.</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">name</span> attribute provides the variable name for the control. In this example, the text gathered by a <span class="Literal-fc">textarea</span> element is defined as the “comment” variable:</p>
+			<pre class="CodeFirst">&lt;textarea <code class="CodeColor">name="comment"</code> rows="4" cols="45" placeholder="Leave us a comment."&gt;&lt;/textarea&gt;</pre>
+			<p class="body">When a user enters a comment in the field (“This is the best band ever!”), it would be passed to the server as a name/value (variable/content) pair like this:</p>
+			<pre class="CodeFirst">comment=This+is+the+best+band+ever%21</pre>
+			<p class="body">All form control elements must include a <span class="Literal-fc">name</span> attribute so the form processing application can sort the information. You may include a <span class="Literal-fc">name</span> attribute for <span class="Literal-fc">submit</span> <a id="_idIndexMarker1270"></a><a id="_idIndexMarker1271"></a><a id="_idIndexMarker1272"></a><a id="_idIndexMarker1273"></a><a id="_idIndexMarker1274"></a><a id="_idIndexMarker1275"></a>and <span class="Literal-fc">reset</span> button elements, but they are not required, because they have special functions (submitting or resetting the form) not related to data collection. </p>
+			<h2 class="HeadB">Naming Your Variables</h2>
+			<p class="body">You can’t just <a id="_idIndexMarker1276"></a><a id="_idIndexMarker1277"></a>name controls willy-nilly. The web application that processes the data is programmed to look for specific variable names. If you are designing a form to work with a preexisting application or script, you need to find out the specific variable names to use in the form so they are speaking the same language. You can get the variable names from the instructions provided with a ready-to-use script on your server, your system administrator, or the programmer you are working with. </p>
+			<p class="body">If the script or application will be created later, be sure to name your variables simply and descriptively and to document them well. In addition, to avoid confusion, you are advised to name each variable uniquely—that is, don’t use the same name for two variables (however, there may be exceptions for which it is desirable). You should also avoid putting character spaces in variable names. Use an underscore or hyphen instead.</p>
+			<p class="body">We’ve covered the basics of the <span class="Literal-fc">form</span> element and how variables are named. Now we can get to the real meat of form markup: the controls.</p>
+			<h1 id="_idParaDest-84" class="HeadA"><a id="_idTextAnchor115"></a>The Great Form Control Roundup</h1>
+			<p class="body">This is the <a id="_idIndexMarker1278"></a><a id="_idIndexMarker1279"></a>fun part—playing with the markup that adds form controls to the page. This section introduces the elements used to create the following:</p>
+			<ul>
+				<li class="ListBullet">Text-entry controls</li>
+				<li class="ListBullet">Specialized text-entry controls</li>
+				<li class="ListBullet">Submit and reset buttons</li>
+				<li class="ListBullet">Radio and checkbox buttons</li>
+				<li class="ListBullet">Pull-down and scrolling menus</li>
+				<li class="ListBullet">File selection and upload control</li>
+				<li class="ListBullet">Hidden controls</li>
+				<li class="ListBullet">Dates and times</li>
+				<li class="ListBullet">Numerical controls </li>
+				<li class="ListBullet">Color picker control </li>
+			</ul>
+			<p class="body">We’ll pause along the way to allow you to try them out by constructing the pizza ordering form shown in <span class="Xref-Figure">Figure 9-2</span>.</p>
+			<p class="body">As you will see, the majority of controls are added to a form via the <span class="Literal-fc">input</span> element. The functionality and appearance of the <span class="Literal-fc">input</span> element changes based on the value of the <span class="Literal-fc">type</span> attribute in the tag. In HTML5.2, there are <em class="Emphasis">twenty-two</em> types of input controls. We’ll take a look at them all.</p>
+			<div>
+				<div id="_idContainer459" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The attributes associated with each input type are listed in <span class="Xref-Figure">Table 9-1</span> at the end of this chapter.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer461" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0902_finishedform.png" alt="" width="1321" height="1178"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-2.</span> The pizza ordering form we’ll build in the exercises in this chapter.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Text-Entry Controls</h2>
+			<p class="body">One of <a id="_idIndexMarker1280"></a><a id="_idIndexMarker1281"></a>the<a id="_idIndexMarker1282"></a> <a id="_idIndexMarker1283"></a>most common web form tasks is entering text information. Which element you use to collect text input depends on whether users are asked to enter a single line of text (<span class="Literal-fc">input</span>) or <a id="_idIndexMarker1284"></a><a id="_idIndexMarker1285"></a>multiple lines (<span class="Literal-fc">textarea</span>).</p>
+			<p class="body">Be aware that if your form has text-entry fields, it needs to use the secure HTTPS protocol to protect the user-entered content while their data is in transit to the server (see the <span class="Xref">“HTTPS, the Secure Web Protocol”</span> sidebar in <span class="Xref"> </span> for more information).</p>
+			<div>
+				<div id="_idContainer462" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The markup examples throughout this section include the <span class="Literal-Sidebar">label</span> element, which is used to improve <a id="_idIndexMarker1286"></a><a id="_idIndexMarker1287"></a><a id="_idIndexMarker1288"></a>accessibility. We will discuss <span class="Literal-Sidebar">label</span> in the upcoming <span class="Xref--Sidebar-">“Form Accessibility Features”</span> section, but in the meantime, I want you to get used to seeing proper form markup. </p>
+				</div>
+			</div>
+			<h3 class="HeadC">Single-line text field</h3>
+			<div>
+				<div id="_idContainer463" class="ref">
+					<p class="refNameCode">&lt;input type="text"&gt;</p>
+					<p class="refPurpose">Single-line text-entry control</p>
+				</div>
+			</div>
+			<p class="body">One of the <a id="_idIndexMarker1289"></a>most straightforward form input types is the text-entry field for entering a single word or line of text. In fact, it is the default input type, which means it is what you’ll get if you forget to include the <span class="Literal-fc">type</span> attribute or include an unrecognized value. Add a text input field to a form by inserting an <span class="Literal-fc">input</span> element with its <span class="Literal-fc">type</span> attribute set to <span class="Literal-fc">text</span>, as shown here and in <span class="Xref-Figure">Figure 9-3</span>:</p>
+			<pre class="CodeFirst">&lt;li&gt;&lt;label&gt;Favorite color: <code class="CodeColor">&lt;input type="text"</code> name="favcolor" value="Red" maxlength="50"<code class="CodeColor">&gt;</code>&lt;/label&gt;&lt;/li&gt;</pre>
+			<div>
+				<figure id="_idContainer465" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0903_textfields.png" alt="" width="1321" height="1124"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-3.</span><span class="FigureLabel"> </span>Examples of the text-entry control options for web forms.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer466" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">The specific rendering style of form controls varies by operating system and browser version.</p>
+				</div>
+			</div>
+			<p class="body">There are a few attributes in there that I’d like to point out:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">name</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">name</span> attribute is <a id="_idIndexMarker1290"></a>required for indicating the variable name.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">value</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">value</span> <a id="_idIndexMarker1291"></a>attribute specifies default text that appears in the field when the form is loaded. When you reset a form, it returns to this value. The value of the <span class="Literal-fc">value</span> attribute gets submitted to the server, so in this example, the value “Red” will be sent with the form unless the user changes it. As an alternative, you could use the <a id="_idIndexMarker1292"></a><span class="Literal-fc">placeholder</span> attribute to provide a hint of what to type in the field, such as “My favorite color”. The value of <span class="Literal-fc">placeholder</span> is not submitted with the form, and is purely a user interface enhancement. You’ll see it in action in the upcoming section.</p>
+			<div>
+				<div id="_idContainer467" class="note">
+					<h5 class="WarningHeader">Browser support note</h5>
+					<p class="note">Versions of Internet Explorer prior to version 11 and older versions of <a id="_idIndexMarker1293"></a>Android do not support <span class="Literal-Sidebar">placeholder</span>.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">maxlength</span>, <span class="Literal-fc">minlength	 </span></p>
+			<p class="ListVariable">By default, <a id="_idIndexMarker1294"></a><a id="_idIndexMarker1295"></a>users can type an unlimited number of characters in a text field regardless of its size (the display scrolls to the right if the text exceeds the character width of the box). You can set a maximum character limit using the <span class="Literal-fc">maxlength</span> attribute if the form-processing program you are using requires it. The <span class="Literal-fc">minlength</span> attribute specifies the minimum number of characters.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">size</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">size</span> <a id="_idIndexMarker1296"></a>attribute specifies the length of the input field in number of visible characters. It is more common, however, to use style sheets to set the size of the input area. By default, a text input widget displays at a size that accommodates 20 characters.</p>
+			<h3 class="HeadC">Multiline text-entry field</h3>
+			<div>
+				<div id="_idContainer468" class="ref">
+					<p class="refNameCode">&lt;textarea&gt;…&lt;/textarea&gt;</p>
+					<p class="refPurpose">Multiline text-entry control</p>
+				</div>
+			</div>
+			<p class="body">At times, <a id="_idIndexMarker1297"></a>you’ll want your users to be able to enter more than just one line of text. For these instances, use the <span class="Literal-fc">textarea</span> element, which is replaced by a multiline, scrollable text entry box when displayed by the browser (<span class="Xref-Figure">Figure 9-3</span>).</p>
+			<p class="body">Unlike the empty <span class="Literal-fc">input</span> element, you can put content between the opening and closing tags in the <span class="Literal-fc">textarea</span> element. The content of the <span class="Literal-fc">textarea</span> element shows up in the text box when the form is displayed in the browser. It also gets sent to the server when the form is submitted, so carefully consider what goes there. </p>
+			<pre class="CodeFirst">&lt;p&gt;&lt;label&gt;Official contest entry: &lt;br&gt;<br/>&lt;em&gt;Tell us why you love the band. Five winners will get backstage passes!&lt;/em&gt;&lt;br&gt;<br/><code class="CodeColor">&lt;textarea name="contest_entry" rows="5" cols="50"&gt;</code>The band is totally awesome!<code class="CodeColor">&lt;/textarea&gt;</code>&lt;/label&gt;&lt;/p&gt;</pre>
+			<p class="body">T<a id="_idTextAnchor116"></a>he <span class="Literal-fc">rows</span> and <span class="Literal-fc">cols</span> attributes <a id="_idIndexMarker1298"></a><a id="_idIndexMarker1299"></a>provide a way to specify the size of the <span class="Literal-fc">textarea</span> with markup. <span class="Literal-fc">rows</span> specifies the number of lines the text area should display, and <span class="Literal-fc">cols</span> specifies the width in number of characters (although it is more common to use CSS to specify the width of the field). Scrollbars will be provided if the user types more text than fits in the allotted space.</p>
+			<p class="body">There are also a few attributes not shown in the example. The <a id="_idIndexMarker1300"></a><span class="Literal-fc">wrap</span> attribute specifies whether the soft line breaks (where the text naturally wraps at the edge of the box) are preserved when the form is submitted. A value of <span class="Literal-fc">soft</span> (the default) does not preserve line breaks. The <span class="Literal-fc">hard</span> value preserves line breaks when the <span class="Literal-fc">cols</span> attribute is used to set the character width of the box. The<a id="_idIndexMarker1301"></a><a id="_idIndexMarker1302"></a> <span class="Literal-fc">maxlength</span> and <span class="Literal-fc">minlength</span> attributes set the maximum and minimum number of characters that can be typed into the field.</p>
+			<p class="body">It is not uncommon for developers to put nothing between the opening and closing tags, and provide a hint of what should go there with a <span class="Literal-fc">placeholder</span> attribute instead. Placeholder text, unlike <span class="Literal-fc">textarea</span> content, is not sent to the server when the form is submitted. Examples of <span class="Literal-fc">textarea</span> content and placeholder text are shown in <span class="Xref-Figure">Figure 9-3</span>.</p>
+			<pre class="CodeFirst">&lt;p&gt;Official contest entry:&lt;br&gt;<br/>&lt;em&gt;Tell us why you love the band. Five winners will get backstage passes!&lt;/em&gt;&lt;br&gt;<br/><code class="CodeColor">&lt;textarea name="contest_entry" placeholder="50 words or less" rows="5" cols="50"&gt;&lt;/textarea&gt;</code><br/>&lt;/p&gt;</pre>
+			<div>
+				<div id="_idContainer469" class="sidebar">
+					<h5 class="SidebarTitle">disabled and readonly</h5>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">disabled</span> and <span class="Literal-Sidebar">readonly</span><span class="Literal-Sidebar"><a id="_idIndexMarker1303"></a><a id="_idIndexMarker1304"></a><a id="_idIndexMarker1305"></a><a id="_idIndexMarker1306"></a></span> attributes both prevent users from interacting with a form control, but they work slightly differently. </p>
+					<p class="SidebarBody">When a form element is disabled, it cannot be selected. Visual browsers may render the control as grayed-out by default (which you can change with CSS, of course). The disabled state can only be changed with a script. This is a useful attribute for restricting access to some form fields based on data entered earlier in the form and can be applied to any <a id="_idIndexMarker1307"></a>form control or <span class="Literal-Sidebar">fieldset</span>.</p>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">readonly</span> attribute prevents the user from changing the value of the form control (although it can be selected). This enables developers to use scripts to set values for controls contingent on other data entered earlier in the form. Inputs that are <span class="Literal-Sidebar">readonly</span> should have strong visual cues that they are somehow different from other inputs, or they could be confusing to users who are trying to change their values. The <span class="Literal-Sidebar">readonly</span> attribute can be used <a id="_idIndexMarker1308"></a>with <span class="Literal-Sidebar">textarea</span> and text-based input controls (see <span class="Xref-Figure">Table 9-1</span> at the very end of this chapter).</p>
+					<p class="SidebarBody">The most important difference is that <span class="Literal-Sidebar">readonly</span> fields are submitted when the form is submitted, but <span class="Literal-Sidebar">disabled</span> ones are not.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Specialized Text-Entry Fields</h2>
+			<p class="body">In addition to the <a id="_idIndexMarker1309"></a><a id="_idIndexMarker1310"></a><a id="_idIndexMarker1311"></a>generic single-line text entry, there are a number of input types for entering specific types of information such as passwords, search terms, email addresses, telephone numbers, and URLs.</p>
+			<h3 class="HeadC">Password entry field</h3>
+			<div>
+				<div id="_idContainer470" class="ref">
+					<p class="refNameCode">&lt;input type="password"&gt;</p>
+					<p class="refPurpose">Password text control</p>
+				</div>
+			</div>
+			<p class="body">A password<a id="_idIndexMarker1312"></a> field works just like a text-entry field, except the characters are obscured from view by <a id="_idIndexMarker1313"></a><a id="_idIndexMarker1314"></a><a id="_idIndexMarker1315"></a>asterisk (*) or bullet (•) characters, or another character determined by the browser.</p>
+			<p class="body">It’s important to note that although the characters entered in the password field are not visible to casual onlookers, the form does not encrypt the information, so it should not be considered a real security measure. </p>
+			<p class="body">Here is an example of the markup for a password field. <span class="Xref-Figure">Figure 9-4</span><span class="Xref"> </span>shows how it might look after the user enters a password in the field.</p>
+			<pre class="CodeFirst">&lt;li&gt;&lt;label for="form-pswd"&gt;Password:&lt;/label&gt;&lt;br&gt;<br/> &lt;<code class="CodeColor">input type="password"</code> name="pswd" maxlength="12" id="form-pswd"&gt;&lt;/li&gt;</pre>
+			<div>
+				<figure id="_idContainer472" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0904_password.png" alt="" width="1321" height="208"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-4.</span> Passwords are converted to bullets in the browser display.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Search, email, telephone numbers, and URLs</h3>
+			<div>
+				<div id="_idContainer473" class="ref">
+					<p class="refNameCode">&lt;input type="search"&gt;</p>
+					<p class="refPurpose">Search field</p>
+					<p class="refNameCode">&lt;input type="email"&gt;</p>
+					<p class="refPurpose">Email address</p>
+					<p class="refNameCode">&lt;input type="tel"&gt;</p>
+					<p class="refPurpose">Telephone number</p>
+					<p class="refNameCode">&lt;input type="url"&gt;</p>
+					<p class="refPurpose">Location (URL)</p>
+				</div>
+			</div>
+			<p class="body">Until HTML5,<a id="_idIndexMarker1316"></a><a id="_idIndexMarker1317"></a><a id="_idIndexMarker1318"></a><a id="_idIndexMarker1319"></a> the only way to collect email addresses, telephone numbers, URLs, or search terms was to insert a generic text input field. In HTML5, the <span class="Literal-fc">email</span>, <span class="Literal-fc">tel</span>, <span class="Literal-fc">url</span>, and <span class="Literal-fc">search</span> input types give the browser a heads-up as to what type of information to expect in the field. These input types use the same attributes as the generic text input type described earlier (<span class="Literal-fc">name</span>, <span class="Literal-fc">maxlength</span>, <span class="Literal-fc">minlength</span>, <span class="Literal-fc">size</span>, <a id="_idIndexMarker1320"></a><a id="_idIndexMarker1321"></a>and <span class="Literal-fc">value</span>), as well as a number of other attributes (see <span class="Xref-Figure">Table 9-1</span> at the end of the chapter).</p>
+			<p class="body">All of these input types are typically displayed as single-line text inputs. But browsers <a id="_idIndexMarker1322"></a>that support them can do some interesting things with the extra semantic information. For example, Safari on iOS uses the input type to provide a keyboard well suited to the entry task, such as the keyboard featuring a Search button for the <span class="Literal-fc">search</span> input type or a “.com” button when the input type is set to <span class="Literal-fc">url</span> (<span class="Xref-Figure">Figure 9-5</span>). Browsers usually add a one-click “clear field” icon (usually a little X) in search fields. A supporting browser could check the user’s input to see that it is valid—for example, by making sure text entered in an <span class="Literal-fc">email</span> input follows the standard email address structure (in the past, you needed JavaScript for validation). For example, the Opera (<span class="Xref-Figure">Figure 9-6</span>) and Chrome browsers display a warning if the input does not match the expected format. </p>
+			<p class="body">Although email, search, telephone, and URL inputs are well supported by up-to-date browsers, there may be inconsistencies in the way they are handled. Older browsers, such as Opera Mini and any version of Internet Explorer prior to 11, do not recognize them at all, but will display the default generic text input instead, which works perfectly fine. </p>
+			<div>
+				<div id="_idContainer474" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">The values from form controls should be checked by the server code (PHP, ASP.NET, etc.), as they can be hacked or manipulated. So, although they make controlling and validating user input easier, it is still vital to perform server-side checks before updating the database on the server.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer476" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0905_keyboards.png" alt="" width="2025" height="938"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-5.</span> Safari on iOS provides custom keyboards based on the input type.</figcaption>
+				</figure>
+			</div>
+			<p class="Figure_Holder"> </p>
+			<div>
+				<figure id="_idContainer478" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0906_warning.png" alt="" width="1321" height="329"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-6.</span> Opera displays a warning when input does not match the expected <span class="Literal-Sidebar">email</span> format as part of its client-side validation support.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer481" class="sidebar">
+					<h5 class="SidebarTitle">Drop-Down Suggestions</h5>
+					<p class="refNameCode">&lt;datalist&gt;…&lt;/datalist&gt;</p>
+					<p class="refPurpose">Drop-down menu input</p>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">datalist</span> element <a id="_idIndexMarker1323"></a>allows the author to provide a <a id="_idIndexMarker1324"></a><a id="_idIndexMarker1325"></a><a id="_idIndexMarker1326"></a><a id="_idIndexMarker1327"></a>drop-down menu of suggested values for any <a id="_idIndexMarker1328"></a>type of text input. It gives the user some shortcuts to select from, but if none are selected, the user can still type in their own text. Within the <span class="Literal-Sidebar">datalist</span> element, suggested values are marked up <a id="_idIndexMarker1329"></a><a id="_idIndexMarker1330"></a>as <span class="Literal-Sidebar">option</span> elements. Use <a id="_idIndexMarker1331"></a>the <span class="Literal-Sidebar">list</span> attribute in the <span class="Literal-Sidebar">input</span> element to associate it with <a id="_idIndexMarker1332"></a>the <span class="Literal-Sidebar">id</span> of its respective <span class="Literal-Sidebar">datalist</span>.</p>
+					<p class="SidebarBody">In the following example (<span class="Xref-Figure">Figure 9-7</span>), a <span class="Literal-Sidebar">datalist</span> suggests several education level options for a text input:</p>
+					<pre class="SidebarCodeFirst">&lt;p&gt;Education completed: &lt;input type="text" <code class="CodeColor">list="edulevel"</code> name="education"&gt;&lt;/p&gt;<br/><br/> <code class="CodeColor">&lt;datalist id="edulevel"&gt;</code><br/>  &lt;option value="High School"&gt;<br/>  &lt;option value="Bachelors Degree"&gt;<br/>  &lt;option value="Masters Degree"&gt;<br/>  &lt;option value="PhD"&gt;<br/><code class="CodeColor">&lt;/datalist&gt;</code></pre>
+					<p class="SidebarBody">As of this writing, browser support for datalists remains spotty. Chrome and Opera support it, but there is a bug that makes datalists unscrollable (i.e., unusable) if the list is too long, so it is best used for short lists of options.  IE11 and Edge have buggy implementations, and Safari and iOS don’t support it at all. The good news is if it is unsupported, browsers present a simple text input, which is a perfectly acceptable fallback. You could also use a <a id="_idIndexMarker1333"></a>JavaScript polyfill to create <span class="Literal-Sidebar">datalist</span> functionality.</p>
+					<div>
+						<figure id="_idContainer480" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0907_datalist.png" alt="" width="1258" height="313"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-7.</span> A <span class="Literal-Sidebar">datalist</span> creates a pop-up menu of suggested values for a text-entry field.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Submit and Reset Buttons</h2>
+			<p class="refNameCode">&lt;input type="submit"&gt;</p>
+			<p class="refPurpose">Submits the form data to the server</p>
+			<p class="refNameCode">&lt;input type="reset"&gt;</p>
+			<p class="refPurpose">Resets the form controls to their default settings</p>
+			<p class="body">There are <a id="_idIndexMarker1334"></a><a id="_idIndexMarker1335"></a><a id="_idIndexMarker1336"></a><a id="_idIndexMarker1337"></a><a id="_idIndexMarker1338"></a><a id="_idIndexMarker1339"></a>several kinds of buttons that can be added to web forms. The most fundamental is the submit button. When clicked or tapped, the submit button immediately sends the collected form data to the server for processing. A reset button returns the form controls to the state they were in when the form initially loaded. In other words, resetting the form doesn’t simply clear all the fields. </p>
+			<p class="body">Both submit and reset buttons are added via the <span class="Literal-fc">input</span> element. As mentioned earlier, because these buttons have specific functions that do not include the entry of data, they are the only form control elements that do not require the <span class="Literal-fc">name</span> attribute, although it is OK to add one if you need it.</p>
+			<p class="body">Submit and reset buttons are straightforward to use. Just place them in the appropriate place in the form, which in most cases is at the very end. By default, the submit button displays with the label “Submit” or “Submit Query,” and the reset button is labeled “Reset.” You can change the text on the button by using the <span class="Literal-fc">value</span> attribute, as shown in the reset button in this example (<span class="Xref-Figure">Figure 9-8</span>).</p>
+			<pre class="CodeFirst">&lt;p&gt;&lt;input <code class="CodeColor">type="submit"</code>&gt; &lt;input <code class="CodeColor">type="reset" value="Start over"</code>&gt;&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer483" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0908_submitreset.png" alt="" width="1321" height="375"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-8.</span> Submit and reset buttons.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The reset button is not used in forms as commonly as it used to be. That is because in contemporary form development, we use <a id="_idIndexMarker1340"></a><a id="_idIndexMarker1341"></a><a id="_idIndexMarker1342"></a>JavaScript to check the validity of form inputs along the way, so users get feedback as they go along. With thoughtful design and assistance, fewer users should get to the end of the form and need to reset the whole thing. Still, it is a good function to be aware of. </p>
+			<div>
+				<div id="_idContainer484" class="sidebar">
+					<h5 class="SidebarTitle">A Few More Buttons</h5>
+					<p class="SidebarBody">There are a handful of custom button elements that are a little off the beaten path for beginners, but in the interest of thoroughness, here they are tucked off in a sidebar.</p>
+					<h5 class="sbHead">Image buttons</h5>
+					<p class="RefNameCode-Left">&lt;input type="image"&gt;</p>
+					<p class="SidebarBody">This <a id="_idIndexMarker1343"></a>type of <span class="Literal-Sidebar">input</span> control allows you to replace the submit button with an image of your choice. The image will appear flat, not like a 3-D button. Unfortunately, this type of button has accessibility issues, so be sure to include a carefully chosen <span class="Literal-Sidebar">alt</span> value.</p>
+					<h5 class="sbHead">Custom input button</h5>
+					<p class="RefNameCode-Left">&lt;input type="button"&gt;</p>
+					<p class="SidebarBody">Setting <a id="_idIndexMarker1344"></a><a id="_idIndexMarker1345"></a><a id="_idIndexMarker1346"></a>the type of the <span class="Literal-fc">input</span> element to “button” creates a button that can be customized with JavaScript. It has no predefined function on its own, unlike submit and reset buttons.</p>
+					<h5 class="sbHead">The button element</h5>
+					<p class="RefNameCode-Left">&lt;button&gt;…&lt;/button&gt;</p>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">button</span> element is a flexible element for creating custom buttons similar to those created with the <span class="Literal-Sidebar">input</span> element. The content of the <span class="Literal-Sidebar">button</span> element (text and/or images) is what gets displayed on the button. </p>
+					<p class="SidebarBody">For more information, read “When to Use the Button Element,” by <a id="_idIndexMarker1347"></a>Chris Coyier (<a href="http://css-tricks.com/use-button-element/"><span class="URL-Email--Sidebar-">css-tricks.com/use-button-element/</span></a>).</p>
+				</div>
+			</div>
+			<p class="body">At this point, you know enough about form markup to start building the questionnaire shown in <span class="Xref-Figure">Figure 9-2</span>. </p>
+			<p class="body"><span class="Xref-Figure">Exercise 9-1</span> walks you through the first steps.</p>
+			<div>
+				<div id="_idContainer489" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 9-1.</span> Starting the pizza order form</h6>
+					<p class="SidebarBody-2Col">Here’s the scenario. You are the web designer in charge of creating an online pizza ordering form for Black Goose Bistro. The owner has handed you a sketch (<span class="Xref-Figure">Figure 9-9</span>) of the form’s content. There are sticky notes from the programmer with information about the script and variable names you need to use. </p>
+					<div>
+						<figure id="_idContainer486" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0909_formsketch_textoutlines.png" alt="" width="1204" height="1904"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-9.</span> A sketch of the Black Goose Bistro pizza ordering form.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody-2Col">Your challenge is to turn the sketch into a functional form. I’ve given you a head start by creating a bare-bones document with text content and minimal markup and styles. This document, <span class="Filename--Sidebar-">pizza.html</span>, is available online at<a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-"> learningwebdesign.com/5e/materials</span></a>. The finished form is also provided.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">Open the file <span class="Filename--Sidebar-">pizza.html</span> in a text editor.</li>
+						<li class="SidebarListNumber">The first thing we’ll do is put everything after the intro paragraph into a <span class="Literal-Sidebar">form</span> element. The programmer has left a note specifying the <span class="Literal-Sidebar">action</span> and the <span class="Literal-Sidebar">method</span> to use for this form. The resulting <span class="Literal-Sidebar">form</span> element should look like this (keep it on one line):<pre class="SidebarCodeFirst"><code class="CodeColor">&lt;form action="http://www.blackgoosebistro.com/pizza.php" method="POST"&gt;…&lt;/form&gt; </code></pre></li>
+						<li class="SidebarListNumber">In this exercise, we’ll work on the “Your Information” section of the form. Start with the first five short text-entry form controls that are marked up appropriately as an unordered list. Here’s the first one; you insert the other four:<pre class="SidebarCodeFirst">&lt;li&gt;Name: <code class="CodeColor">&lt;input type="text" name="customername"&gt; </code>&lt;/li&gt;</pre><p class="SidebarListItem_cont">HINTS: Choose the most appropriate input type for each entry field. Be sure to name the input elements as specified in the programmer’s note. </p></li>
+						<li class="SidebarListNumber">After “Delivery instructions:” add a line break and a multiline text area. Because we aren’t writing a style sheet for this form, use markup to make it four rows long and 60 characters wide (in the real world, CSS is preferable because it gives you more fine-tuned control): <pre class="SidebarCodeFirst">&lt;li&gt;Delivery instructions:<code class="CodeColor">&lt;br&gt;&lt;textarea name="instructions" rows="4" cols="60" maxlength="400" placeholder="No more than 400 characters long"&gt;&lt;/textarea&gt;</code>&lt;/li&gt;</pre></li>
+						<li class="SidebarListNumber">We’ll skip the rest of the form for now until we get a few more controls under our belt, but we can add the submit and reset buttons at the end, just before the <span class="Literal-Sidebar">&lt;/form&gt;</span> tag. Note that they’ve asked us to change the text on the submit button.<pre class="SidebarCodeFirst"><code class="CodeColor">&lt;p&gt;&lt;input type="submit" value="Bring me a pizza!"&gt;&lt;input type="reset"&gt;&lt;/p&gt;</code></pre></li>
+						<li class="SidebarListNumber">Now, save the document and open it in a browser. The parts that are finished should generally match <span class="Xref-Figure">Figure 9-2</span>. If they don’t, then you have some more work to do. </li>
+					</ol>
+					<p class="SidebarBody">Once the document looks right, take it for a spin by entering some information and submitting the form. You should get a response like the one shown in <span class="Xref-Figure">Figure 9-10</span><span class="Xref">.</span> Yes, <span class="Filename--Sidebar-">pizza.php</span> actually works, but sorry, no pizzas will be delivered.</p>
+					<div>
+						<figure id="_idContainer488" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0910.png" alt="" width="796" height="472"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-10.</span> You should see a response page like this if your form is working. The pizza description fields will be added in later exercises, so they will return “empty” for now.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Radio and Checkbox Buttons</h2>
+			<p class="body">Both <a id="_idIndexMarker1348"></a><a id="_idIndexMarker1349"></a><a id="_idIndexMarker1350"></a><a id="_idIndexMarker1351"></a><a id="_idIndexMarker1352"></a><a id="_idIndexMarker1353"></a>checkbox and radio buttons make it simple for your visitors to choose from a number of provided options. They are similar in that they function like little on/off switches that can be toggled by the user and are added with the <span class="Literal-fc">input</span> element. They serve distinct functions, however.</p>
+			<p class="body">A form control made up of a collection of radio buttons is appropriate when only one option from the group is permitted—in other words, when the selections are mutually exclusive (such as “Yes or No,” or “Pick-up or Delivery”). When one radio button is “on,” all of the others must be “off,” sort of the way buttons used to work on old radios: press one button in, and the rest pop out. </p>
+			<p class="body">When checkboxes are grouped together, however, it is possible to select as many or as few from the group as desired. This makes them the right choice for lists in which more than one selection is OK.</p>
+			<div>
+				<div id="_idContainer490" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">I have omitted<a id="_idIndexMarker1354"></a><a id="_idIndexMarker1355"></a><a id="_idIndexMarker1356"></a><a id="_idIndexMarker1357"></a> the <span class="Literal-Sidebar">fieldset</span> and <span class="Literal-Sidebar">label</span> elements from the code examples for radio buttons, checkboxes, and menus in order to keep the markup structure as simple and clear as possible. In the upcoming section <span class="Xref--Sidebar-">“Form Accessibility Features,”</span> you will learn why it is important to include them in your markup for all form elements.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Radio buttons</h3>
+			<div>
+				<div id="_idContainer491" class="ref">
+					<p class="refNameCode">&lt;input type="radio"&gt;</p>
+					<p class="refPurpose">Radio button</p>
+				</div>
+			</div>
+			<p class="body">Radio buttons are added to a form via the <span class="Literal-fc">input</span> element with the <span class="Literal-fc">type</span> attribute set to “radio.” Here is the syntax for a minimal radio button:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;input type="radio" name="</code><span class="Replaceable">variable</span><code class="CodeColor">" value="</code><span class="Replaceable">value</span><code class="CodeColor">"&gt;</code></pre>
+			<p class="body">The <span class="Literal-fc">name</span> attribute is required and plays an important role in binding multiple radio inputs into a set. When you give a number of radio button inputs the same <span class="Literal-fc">name</span> value (“age” in the following example), they create a group of mutually exclusive options.</p>
+			<p class="body">In this example, radio buttons are used as an interface for users to enter their age group. A person can’t belong to more than one age group, so radio buttons are the right choice. <span class="Xref-Figure">Figure 9-11</span> shows how radio buttons are rendered in the browser.</p>
+			<pre class="CodeFirst">&lt;p&gt;How old are you?&lt;/p&gt;<br/>&lt;ol&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="radio" name="age"</code> value="under24" checked&gt; under 24&lt;/li&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="radio" name="age"</code> value="25-34"&gt; 25 to 34&lt;/li&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="radio" name="age"</code> value="35-44"&gt; 35 to 44&lt;/li&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="radio" name="age"</code> value="over45"&gt; 45+&lt;/li&gt;<br/>&lt;/ol&gt;</pre>
+			<p class="body">Notice that all of the <span class="Literal-fc">input</span> elements have the same variable name (“age”), but their values are different. Because these are radio buttons, only one button can be checked at a time, and therefore, only one value will be sent to the server for processing when the form is submitted. </p>
+			<div>
+				<figure id="_idContainer493" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0911_radiocheckbox.png" alt="" width="1321" height="475"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-11.</span><span class="FigureLabel"> </span>Radio buttons (left) are appropriate when only one selection is permitted. Checkboxes (right) are best when users may choose any number of choices, from none to all of them.</figcaption>
+				</figure>
+			</div>
+			<p class="body">You can decide which button is checked when the form loads by adding the <span class="Literal-fc">checked</span> attribute to the <span class="Literal-fc">input</span> element (see <span class="Xref">Note</span>). In this example, the button next to “under 24” will be checked when the page loads.</p>
+			<div>
+				<div id="_idContainer494" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">It may look like <a id="_idIndexMarker1358"></a>the <span class="Literal-Sidebar">checked</span> attribute has no value, but it is one of the attributes in HTML that can be <span class="FirstTerm--Sidebar-">minimized</span> to one word. Behind the scenes, the minimized <span class="Literal-Sidebar">checked</span> attribute stands for the rather redundant:</p>
+					<pre class="SidebarCodeFirst">checked="checked"</pre>
+					<p class="note">One of the rules of the stricter XHTML syntax is that attributes cannot be minimized in this way. </p>
+				</div>
+			</div>
+			<h3 class="HeadC">Checkbox buttons</h3>
+			<div>
+				<div id="_idContainer495" class="ref">
+					<p class="refNameCode">&lt;input type="checkbox"&gt;</p>
+					<p class="refPurpose">Checkbox button</p>
+				</div>
+			</div>
+			<p class="body">Checkboxes are <a id="_idIndexMarker1359"></a><a id="_idIndexMarker1360"></a><a id="_idIndexMarker1361"></a>added via the <span class="Literal-fc">input</span> element with its type set to <span class="Literal-fc">checkbox</span>. As with radio buttons, you create groups of checkboxes by assigning them the same <span class="Literal-fc">name</span> value. The difference, as we’ve already noted, is that more than one checkbox may be checked at a time. The value of every checked button will be sent to the server when the form is submitted. Here’s an example of a group of checkbox buttons used to indicate musical interests; <span class="Xref-Figure">Figure 9-11</span> shows how they look in the browser:</p>
+			<pre class="CodeFirst">&lt;p&gt;What type of music do you listen to?&lt;/p&gt;<br/>&lt;ul&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="checkbox" name="genre"</code> value="punk" checked&gt; Punk rock&lt;/li&gt;<br/>  &lt;li&gt;&lt;<code class="CodeColor">input type="checkbox" name="genre"</code> value="indie" checked&gt; Indie rock&lt;/li&gt;<br/>   &lt;li&gt;&lt;<code class="CodeColor">input type="checkbox" name="genre"</code> value="hiphop"&gt; Hip Hop&lt;/li&gt;<br/>   &lt;li&gt;&lt;<code class="CodeColor">input type="checkbox" name="genre"</code> value="rockabilly"&gt; Rockabilly&lt;/li&gt;<br/>&lt;/ul&gt;</pre>
+			<p class="body">Checkboxes don’t necessarily need to be used in groups, of course. In this example, a single checkbox is used to allow visitors to opt in to special promotions. The value of the control will be passed along to the server only if the user checks the box.</p>
+			<pre class="CodeFirst">&lt;p&gt;<code class="CodeColor">&lt;input type="checkbox" name="OptIn" value="yes"&gt;</code> Yes, send me news and special promotions by email.&lt;/p&gt;</pre>
+			<p class="body">Checkbox buttons also use the <span class="Literal-fc">checked</span> attribute to make them preselected when the form loads.</p>
+			<p class="body">In <span class="Xref-Figure">Exercise 9-2</span>, you’ll get a chance to add both radio and checkbox buttons to the pizza ordering form. </p>
+			<div>
+				<div id="_idContainer497" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 9-2.</span> Adding radio buttons and checkboxes</h6>
+					<p class="SidebarBody">The next section of the Black Goose Bistro pizza ordering form uses radio buttons and checkboxes for selecting pizza options. Open the <span class="Filename--Sidebar-">pizza.html</span> document and follow these steps:</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">In the “Design Your Dream Pizza” section, there are lists of Crust and Toppings options. The Crust options should be radio buttons because pizzas have only one crust. Insert a radio button before each option. Follow this example for the remaining crust options:<pre class="SidebarCodeFirst">&lt;li&gt;<code class="CodeColor">&lt;input type="radio" name="crust" value="white"&gt;</code> Classic white&lt;/li&gt;</pre></li>
+						<li class="SidebarListNumber">Mark up the Toppings options as you did the Crust options, but this time, the <span class="Literal-Sidebar">type</span> should be <span class="Literal-Sidebar">checkbox</span>. Be sure the variable name for each is <span class="Literal-Sidebar">toppings[]</span>, and that the “Red sauce” option is preselected (<span class="Literal-Sidebar">checked</span>), as noted on the sketch in <span class="Xref-Figure">Exercise 9-1</span>.<div id="_idContainer496" class="note"><h5 class="noteHeader">Note</h5><p class="note">The <span class="Literal-Sidebar">toppings[]</span> variable name has brackets at the end because it follows a PHP naming convention. It is only a coincidence that it resembles a checkbox.</p></div></li>
+						<li class="SidebarListNumber">Save the document and check your work by opening it in a browser to make sure it looks right; then submit the form to make sure it’s functioning properly.</li>
+					</ol>
+				</div>
+			</div>
+			<h2 class="HeadB">Menus</h2>
+			<div>
+				<div id="_idContainer498" class="ref">
+					<p class="refNameCode">&lt;select&gt;…&lt;/select&gt;</p>
+					<p class="refPurpose">Menu control</p>
+					<p class="refNameCode">&lt;option&gt;…&lt;/option&gt;</p>
+					<p class="refPurpose">An option within a menu</p>
+					<p class="refNameCode">&lt;optgroup&gt;…&lt;/optgroup&gt;</p>
+					<p class="RefPurpose-Left">A logical grouping of options within a menu</p>
+				</div>
+			</div>
+			<p class="body">Another way to <a id="_idIndexMarker1362"></a><a id="_idIndexMarker1363"></a>provide a list of choices is to put them in a drop-down or scrolling menu. Menus tend to be more compact than groups of buttons and checkboxes. </p>
+			<p class="body">You add both drop-down and scrolling menus to a form with the <span class="Literal-fc">select</span> element. Whether the menu pulls down or scrolls is the result of how you specify its size and whether you allow more than one option to be selected. Let’s take a look at <a id="_idIndexMarker1364"></a>both menu types.</p>
+			<h3 class="HeadC">Drop-down menus</h3>
+			<p class="body">The <span class="Literal-fc">select</span> element<a id="_idIndexMarker1365"></a><a id="_idIndexMarker1366"></a><a id="_idIndexMarker1367"></a><a id="_idIndexMarker1368"></a> displays as a <span class="FirstTerm">drop-down menu</span> (also called a <span class="FirstTerm">pull-down menu</span>) by default when no size is specified or if the <a id="_idIndexMarker1369"></a><span class="Literal-fc">size</span> attribute is set to 1. In pull-down menus, only one item may be selected. Here’s an example (shown in <span class="Xref-Figure">Figure 9-12</span>):</p>
+			<pre class="CodeFirst">&lt;p&gt;What is your favorite 80s band?<br/><code class="CodeColor">&lt;select name="EightiesFave"&gt;</code><br/>   &lt;option&gt;The Cure&lt;/option&gt;<br/>   &lt;option&gt;Cocteau Twins&lt;/option&gt;<br/>   &lt;option&gt;Tears for Fears&lt;/option&gt;<br/>   &lt;option&gt;Thompson Twins&lt;/option&gt;<br/>   &lt;option <code class="CodeColor">value="EBTG"</code>&gt;Everything But the Girl&lt;/option&gt;<br/>   &lt;option&gt;Depeche Mode&lt;/option&gt;<br/>   &lt;option&gt;The Smiths&lt;/option&gt;<br/>   &lt;option&gt;New Order&lt;/option&gt;<br/><code class="CodeColor">&lt;/select&gt;</code><br/>&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer500" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0912_pulldown.png" alt="" width="1338" height="204"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-12.</span><span class="FigureLabel"> </span>Pull-down menus pop open when the user clicks the arrow or bar.</figcaption>
+				</figure>
+			</div>
+			<p class="body">You can see that the <span class="Literal-fc">select</span> element is just a container for a number of <span class="Literal-fc">option</span> <a id="_idIndexMarker1370"></a>elements. The content of the chosen <span class="Literal-fc">option</span> element is what gets passed to the web application when the form is submitted. If, for some reason, you want to send a different value than what appears in the menu, use the<a id="_idIndexMarker1371"></a> <span class="Literal-fc">value</span> attribute to provide an overriding value. For example, if someone selects “Everything But the Girl” from the sample menu, the form submits the value “EBTG” for the “EightiesFave” variable. For the others, the content between the <span class="Literal-fc">option</span> tags will be sent as the value.</p>
+			<h3 class="HeadC">Scrolling menus</h3>
+			<p class="body">To make <a id="_idIndexMarker1372"></a><a id="_idIndexMarker1373"></a>the menu display as a scrolling list, simply specify the number of lines you’d like to be visible using the <span class="Literal-fc">size</span> attribute. This example menu has the same options as the previous one, except it has been set to display as a scrolling list that is six lines tall (<span class="Xref-Figure">Figure 9-13</span>):</p>
+			<pre class="CodeFirst">&lt;p&gt;What 80s bands did you listen to?<br/><code class="CodeColor">&lt;select name="EightiesBands" size="6" multiple&gt;</code><br/>   &lt;option&gt;The Cure&lt;/option&gt;   &lt;option&gt;Cocteau Twins&lt;/option&gt;<br/>   &lt;option <code class="CodeColor">selected</code>&gt;Tears for Fears&lt;/option&gt;<br/>   &lt;option <code class="CodeColor">selected</code>&gt;Thompson Twins&lt;/option&gt;<br/>   &lt;option value="EBTG"&gt;Everything But the Girl&lt;/option&gt;<br/>   &lt;option&gt;Depeche Mode&lt;/option&gt;<br/>   &lt;option&gt;The Smiths&lt;/option&gt;<br/>   &lt;option&gt;New Order&lt;/option&gt;<br/><code class="CodeColor">&lt;/select&gt;</code><br/>&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer502" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0913_scrollingmenu.png" alt="" width="1337" height="404"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-13.</span><span class="FigureLabel"> </span>A scrolling menu with multiple options selected.</figcaption>
+				</figure>
+			</div>
+			<p class="body">You may notice a few minimized attributes tucked in there. The <a id="_idIndexMarker1374"></a><span class="Literal-fc">multiple</span> attribute allows users to make more than one selection from the scrolling list. Note that pull-down menus do not allow multiple selections; when the browser detects the <span class="Literal-fc">multiple</span> attribute, it displays a small scrolling menu automatically by default.</p>
+			<p class="body">Use the <a id="_idIndexMarker1375"></a><span class="Literal-fc">selected</span> attribute in an <span class="Literal-fc">option</span> element to make it the default value for the menu control. Selected options are highlighted when the form loads. The <span class="Literal-fc">selected</span> attribute can be used with pull-down menus as well.</p>
+			<h3 class="HeadC">Grouping menu options</h3>
+			<p class="body">You can <a id="_idIndexMarker1376"></a>use the <span class="Literal-fc">optgroup</span> element to create conceptual groups of options. The required <span class="Literal-fc">label</span> attribute provides the heading for the group (see <span class="Xref">Note</span>). <span class="Xref-Figure">Figure 9-14</span> shows how option groups are rendered in modern browsers. </p>
+			<div>
+				<div id="_idContainer503" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">The <span class="Literal-Sidebar">label</span> <a id="_idIndexMarker1377"></a>attribute in the <span class="Literal-Sidebar">optgroup</span> element is not the same as the <a id="_idIndexMarker1378"></a><span class="Literal-Sidebar">label</span> element used to improve accessibility (discussed later in this chapter). </p>
+				</div>
+			</div>
+			<pre class="CodeFirst">&lt;select name="icecream" size="7" multiple&gt;<br/><code class="CodeColor">  &lt;optgroup label="traditional"&gt;</code><br/>    &lt;option&gt;vanilla&lt;/option&gt;<br/>    &lt;option&gt;chocolate&lt;/option&gt;<br/><code class="CodeColor">  &lt;/optgroup&gt;<br/>  &lt;optgroup label="fancy"&gt;</code><br/>    &lt;option&gt;Super praline&lt;/option&gt;<br/>    &lt;option&gt;Nut surprise&lt;/option&gt;<br/>    &lt;option&gt;Candy corn&lt;/option&gt;<br/><code class="CodeColor">  &lt;/optgroup&gt;</code><br/>&lt;/select&gt;</pre>
+			<div>
+				<figure id="_idContainer505" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0914_optiongroups.png" alt="" width="1338" height="421"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-14.</span> Option groups.</figcaption>
+				</figure>
+			</div>
+			<p class="body">In <span class="Xref-Figure">Exercise 9-3</span>, you will use the <span class="Literal-fc">select</span> element to let Black Goose Bistro customers choose a number of pizzas for their order.</p>
+			<div>
+				<div id="_idContainer506" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 9-3.</span>  Adding a menu</h6>
+					<p class="SidebarBody">The only other control that needs to be added to the order form is a pull-down menu for selecting the number of pizzas to have delivered. </p>
+					<ol>
+						<li class="SidebarListNumber" value="1">Insert a <span class="Literal-fc">select</span> menu element with the option to order between 1 and 6 pizzas:<pre class="SidebarCodeFirst">&lt;p&gt;How many pizzas:<br/><code class="CodeColor">&lt;select name="number" size="1"&gt;<br/>    &lt;option&gt;1&lt;/option&gt;</code><br/><span class="Code-Comment">&lt;-- more options here --&gt;</span><span class="Replaceable"> </span><br/><code class="CodeColor">&lt;/select&gt;</code><br/>&lt;/p&gt;</pre></li>
+						<li class="SidebarListNumber">Save the document and check it in a browser. You can submit the form, too, to be sure that it’s working. You should get the “Thank You” response page listing all of the information you entered in the form.</li>
+					</ol>
+					<p class="SidebarBody">Congratulations! You’ve built your first working web form. In <span class="Xref-Figure">Exercise 9-4</span>, we’ll add markup that makes it more accessible to assistive devices.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">File Selection Control</h2>
+			<p class="refNameCode">&lt;input type="file"&gt;</p>
+			<p class="refPurpose">File selection field</p>
+			<p class="body">Web forms <a id="_idIndexMarker1379"></a><a id="_idIndexMarker1380"></a><a id="_idIndexMarker1381"></a>can collect more than just data. They can also be used to transmit external documents from a user’s hard drive. For example, a printing company could use a web form to upload artwork for a business card order. A magazine could use a form to collect digital photos for a photo contest.</p>
+			<p class="body">The file selection control makes it possible for users to select a document from the hard drive to be submitted with the form data. We add it to the form by using our old friend, the <span class="Literal-fc">input</span> element, with its <span class="Literal-fc">type</span> set to <span class="Literal-fc">file</span>.</p>
+			<p class="body">The markup sample here (<span class="Xref-Figure">Figure 9-15</span><span class="Xref">)</span> shows a file selection control used for photo submissions:</p>
+			<pre class="CodeFirst">&lt;form action="/client.php" method="POST" <code class="CodeColor">enctype="multipart/form-data"</code>&gt;<br/>  &lt;label&gt;Send a photo to be used as your online icon &lt;em&gt;(optional) &lt;/em&gt;&lt;br&gt;<br/>  <code class="CodeColor">&lt;input type="file" name="photo"&gt;</code>&lt;/label&gt;<br/>&lt;/form&gt; </pre>
+			<p class="body">The file upload widget varies slightly by browser and operating system, but it is generally a button that allows you to access the file organization system on your computer (<span class="Xref-Figure">Figure 9-15</span>).</p>
+			<div>
+				<figure id="_idContainer508" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0915_file.png" alt="" width="1321" height="371"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-15.</span><span class="FigureLabel"> </span>A file selection form field.</figcaption>
+				</figure>
+			</div>
+			<p class="body">It is important to note that when a form contains a file selection input element, you must specify the encoding type (<span class="Literal-fc">enctype</span>) as <span class="Literal-fc">multipart/form-data</span> in the <span class="Literal-fc">form</span> element and use the POST method. </p>
+			<p class="body">The file input type has a few attributes. The <a id="_idIndexMarker1382"></a><span class="Literal-fc">accept</span> attribute gives the browser a heads-up on what file types may be accepted (audio, video, image, or some other format identified by its media type). Adding the <a id="_idIndexMarker1383"></a><span class="Literal-fc">multiple</span> attributes allows multiple files to be selected for upload. The <a id="_idIndexMarker1384"></a><span class="Literal-fc">required</span> attribute, as it says, requires a file to be selected.</p>
+			<h2 class="HeadB">Hidden Controls</h2>
+			<div>
+				<div id="_idContainer509" class="ref">
+					<p class="refNameCode">&lt;input type="hidden"&gt;</p>
+					<p class="refPurpose">Hidden control field</p>
+				</div>
+			</div>
+			<p class="body">There may be <a id="_idIndexMarker1385"></a><a id="_idIndexMarker1386"></a><a id="_idIndexMarker1387"></a>times when you need to send information to the form processing application that does not come from the user. In these instances, you can use a hidden form control that sends data when the form is submitted, but is not visible when the form is displayed in a browser.</p>
+			<p class="body">Hidden controls are added via the <span class="Literal-fc">input</span> element with the <span class="Literal-fc">type</span> set to <span class="Literal-fc">hidden</span>.<span class="Literal-fc"> </span>Its sole purpose is to pass a name/value pair to the server when the form is submitted. In this example, a hidden form element is used to provide the location of the appropriate thank-you document to display when the transaction is complete:</p>
+			<pre class="CodeFirst">&lt;<code class="CodeColor">input type="hidden"</code> name="success-link" value="http://www.example.com/ thankyou.html"&gt;</pre>
+			<p class="body">I’ve worked with forms that have had dozens of hidden controls in the <span class="Literal-fc">form</span> element before getting to the parts that the user actually fills out. This is the kind of information you get from the application programmer, system administrator, or whoever is helping you get your forms processed. If you are using an existing script, be sure to check the accompanying instructions to see if any hidden form variables are required.</p>
+			<div>
+				<div id="_idContainer510" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">It is possible for users to access and manipulate hidden form controls. If you should become a professional web developer, you will learn to program defensively for this sort of thing.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Date and Time Controls </h2>
+			<div>
+				<div id="_idContainer511" class="ref">
+					<p class="refNameCode">&lt;input type="date"&gt;</p>
+					<p class="refPurpose">Date input control</p>
+					<p class="refNameCode">&lt;input type="time"&gt;</p>
+					<p class="refPurpose">Time input control</p>
+					<p class="refNameCode">&lt;input type="datetime-local"&gt;</p>
+					<p class="refPurpose">Date/time control </p>
+					<p class="refNameCode">&lt;input type="month"&gt;</p>
+					<p class="refPurpose">Specifies a month in a year</p>
+					<p class="refNameCode">&lt;input type="week"&gt;</p>
+					<p class="refPurpose">Specifies a particular week in a year</p>
+				</div>
+			</div>
+			<p class="body">If you’ve ever <a id="_idIndexMarker1388"></a><a id="_idIndexMarker1389"></a><a id="_idIndexMarker1390"></a><a id="_idIndexMarker1391"></a><a id="_idIndexMarker1392"></a><a id="_idIndexMarker1393"></a><a id="_idIndexMarker1394"></a><a id="_idIndexMarker1395"></a>booked a hotel or a flight online, you’ve no doubt used a little calendar widget for choosing the date. Chances are, that little calendar was created with JavaScript. HTML5 introduced six new input types that make date and time selection widgets part of a browser’s standard built-in display capabilities, just as they can display checkboxes, pop-up menus, and other widgets today. As of this writing, the date and time pickers are implemented on only a few browsers (Chrome, Microsoft Edge, Opera, Vivaldi, and Android), but on non-supporting browsers, the date and time input types display as a perfectly usable text-entry field instead. <span class="Xref-Figure">Figure 9-16</span> shows date and time widgets as rendered in Chrome on macOS. </p>
+			<div>
+				<figure id="_idContainer513" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0916_datetime.png" alt="" width="1321" height="1550"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-16.</span> Date and time picker inputs (shown in Chrome on macOS). </figcaption>
+				</figure>
+			</div>
+			<p class="body">The new date- and time-related input types are as follows:</p>
+			<div>
+				<div id="_idContainer514" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The <span class="Literal-Sidebar">value</span> attribute is <a id="_idIndexMarker1396"></a>optional but may be included to provide a starting date or time in the widget. It is included here to demonstrate date and time formats.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">&lt;input </span><span class="Literal-fc">type="date"</span><span class="Literal-fc"> name="name" value="2017-01-14"&gt;</span></p>
+			<p class="ListVariable">Creates a date input control, such as a pop-up calendar, for specifying a date (year, month, day). The initial value must be provided in ISO date format (<span class="Literal-fc">YYYY-MM-DD</span>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">&lt;input </span><span class="Literal-fc">type="time"</span><span class="Literal-fc"> name="name" value="03:13:00"&gt;</span></p>
+			<p class="ListVariable">Creates a time input control for specifying a time (hour, minute, seconds, fractional sections) with no time zone indicated. The value is provided as <span class="Literal-fc">hh:mm:ss</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">&lt;input </span><span class="Literal-fc">type="datetime-local"</span><span class="Literal-fc"> name="name" value="2017-01-14T03:13:00"&gt;</span></p>
+			<p class="ListVariable">Creates a combined date/time input control with no time zone information (<span class="Literal-fc">YYYY-MM-DDThh:mm:ss</span>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">&lt;input </span><span class="Literal-fc">type="month"</span><span class="Literal-fc"> name="name" value="2017-01"&gt;</span></p>
+			<p class="ListVariable">Creates a date input control that specifies a particular month in a year (<span class="Literal-fc">YYYY-MM</span>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">&lt;input </span><span class="Literal-fc">type="week"</span><span class="Literal-fc"> name="name" value="2017-W2"&gt;</span></p>
+			<p class="ListVariable">Creates a date input control for specifying a particular week in a year using an ISO week numbering format (<span class="Literal-fc">YYYY-W#</span>).</p>
+			<h2 class="HeadB">Numerical Inputs</h2>
+			<div>
+				<div id="_idContainer515" class="ref">
+					<p class="refNameCode">&lt;input type="number"&gt;</p>
+					<p class="refPurpose">Number input</p>
+					<p class="refNameCode">&lt;input type="range"&gt;</p>
+					<p class="refPurpose">Slider input</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">number</span> and <span class="Literal-fc">range</span> input <a id="_idIndexMarker1397"></a><a id="_idIndexMarker1398"></a>types collect numerical data. For the <span class="Literal-fc">number</span> input, the browser may supply a spinner widget with up and down arrows for selecting a specific numerical value (a text input may display in user agents that don’t support the input type). The <span class="Literal-fc">range</span> input is typically displayed as a slider (<span class="Xref-Figure">Figure 9-17</span>) that allows the user to select a value within a specified range:</p>
+			<pre class="CodeFirst">&lt;label&gt;Number of guests &lt;<code class="CodeColor">input type="number"</code> name="guests" min="1" max="6"&gt;&lt;/label&gt; <br/><br/>&lt;label&gt;Satisfaction (0 to 10) &lt;<code class="CodeColor">input type="range"</code> name="satisfaction" min="0" max="10" step="1"&gt;&lt;/label&gt;</pre>
+			<div>
+				<figure id="_idContainer517" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0917_numberrange.png" alt="" width="1321" height="767"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-17.</span> The <span class="Literal-Sidebar">number</span> and <span class="Literal-Sidebar">range</span> input types (shown in Chrome on macOS).</figcaption>
+				</figure>
+			</div>
+			<p class="body">Both the <span class="Literal-fc">number</span> and <span class="Literal-fc">range</span> input types accept the <a id="_idIndexMarker1399"></a><a id="_idIndexMarker1400"></a><span class="Literal-fc">min</span> and <span class="Literal-fc">max</span> attributes for specifying the minimum and maximum values allowed for the input (again, the browser could check that the user input complies with the constraint). Both <span class="Literal-fc">min</span> and <span class="Literal-fc">max</span> are optional, and you can also set one without the other. Negative <a id="_idIndexMarker1401"></a>values are allowed. When the element is selected, the value can be increased or decreased with the number keys on a computer keyboard, in addition to being moved with the mouse or a finger.</p>
+			<p class="body">The <span class="Literal-fc">step</span> attribute <a id="_idIndexMarker1402"></a>allows developers to specify the acceptable increments for numerical input. The default is 1. A value of “.5” would permit values 1, 1.5, 2, 2.5, and so on; a value of 100 would permit 100, 200, 300, and so on. You can also set the <span class="Literal-fc">step</span> attribute to <span class="Literal-fc">any</span> to explicitly accept any value increment. </p>
+			<p class="body">These two elements allow for only the calculated step values, not for a specified list of allowed values (such as 1, 2, 3, 5, 8, 13, 21).  If you need customized values, you need to use JavaScript to program that behavior.</p>
+			<p class="body">Because these are newer elements, browser support is inconsistent. Some UI widgets include up and down arrows for increasing or decreasing the amount, but many don’t. Mobile browsers (iOS Safari, Android, Chrome for Android) currently do not support <span class="Literal-fc">min</span>, <span class="Literal-fc">max</span>, and <span class="Literal-fc">step</span>. Internet Explorer 9 and earlier do not support number and range inputs at all. Again, browsers that don’t support these new input types display a standard text input field instead, which is a fine fallback.</p>
+			<h2 class="HeadB">Color Selector </h2>
+			<div>
+				<div id="_idContainer518" class="ref">
+					<p class="refNameCode">&lt;input type="color"&gt;</p>
+					<p class="refPurpose">Color picker</p>
+				</div>
+			</div>
+			<p class="body">The <a id="_idIndexMarker1403"></a>intent<a id="_idIndexMarker1404"></a> of the color control type is to create a pop-up color picker for visually selecting a color value similar to those used in operating systems or image-editing programs. Values are provided in hexadecimal <a id="_idIndexMarker1405"></a>RGB values (#RRGGBB). <span class="Xref-Figure">Figure 9-18</span> shows the color picker in Chrome on macOS (it is the same as the macOS color picker). Non-supporting browsers—currently all versions of IE, iOS Safari, and<a id="_idIndexMarker1406"></a> older versions of Android—display the default text input instead. </p>
+			<pre class="CodeFirst">&lt;label&gt;Your favorite color: &lt;<code class="CodeColor">input type="color"</code> name="favorite"&gt;&lt;/label&gt;</pre>
+			<div>
+				<figure id="_idContainer520" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0918_color.png" alt="" width="1321" height="696"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-18.</span> The <span class="Literal-Sidebar">color</span> input type (shown in Chrome on macOS).</figcaption>
+				</figure>
+			</div>
+			<p class="body">That wraps up the form control roundup. Learning how to insert form controls is one part of the forms production process, but any web developer worth her salt will take the time to make sure the form is as accessible as possible. Fortunately, there are a few things we can do in markup to describe the form’s structure.</p>
+			<div>
+				<div id="_idContainer521" class="sidebar">
+					<h5 class="SidebarTitle">A Few More Form Elements</h5>
+					<p class="SidebarBody">For the sake of completeness, let’s look at the remaining form elements. These were added in HTML5 and, as of this writing, they still have spotty browser support. They are somewhat esoteric anyway, so you may wait a while to add these to your HTML toolbox. We’ve already covered the <a id="_idIndexMarker1407"></a><span class="Literal-Sidebar">datalist</span> element for providing suggested values for text inputs. HTML5 also introduced the following elements:</p>
+					<h5 class="sbHead">progress</h5>
+					<p class="refNameCode">&lt;progress&gt;…&lt;/progress&gt;</p>
+					<p class="refPurpose">Indicates the state of an ongoing process</p>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">progress</span> element<a id="_idIndexMarker1408"></a> gives users feedback on the state of an ongoing process, such as a file download. It may indicate a specific percentage of completion (<span class="FirstTerm--Sidebar-">determinate</span>), like a progress bar, or just indicate a “waiting” state (<span class="FirstTerm--Sidebar-">indeterminate</span>), like a spinner. The <span class="Literal-Sidebar">progress</span> element requires scripting to function.</p>
+					<pre class="SidebarCodeFirst">Percent downloaded: <code class="CodeColor">&lt;progress max="100" id="fave"&gt;</code>0<code class="CodeColor">&lt;/progress&gt;</code></pre>
+					<h5 class="sbHead">meter</h5>
+					<p class="refNameCode">&lt;meter&gt;…&lt;/meter&gt;</p>
+					<p class="refPurpose">Represents a measurement within a range </p>
+					<p class="SidebarBody"><span class="Literal-Sidebar">meter</span> represents a measurement within a known range of values (also known as a <span class="FirstTerm--Sidebar-">gauge</span>). It has a number of attributes: <a id="_idIndexMarker1409"></a><a id="_idIndexMarker1410"></a><span class="Literal-Sidebar">min</span> and <span class="Literal-Sidebar">max</span> indicate the highest and lowest values for the range (they default to 0 and 100); <a id="_idIndexMarker1411"></a><a id="_idIndexMarker1412"></a><span class="Literal-Sidebar">low</span> and <span class="Literal-Sidebar">high</span> could be used to trigger warnings at undesirable levels; and <a id="_idIndexMarker1413"></a><span class="Literal-Sidebar">optimum</span> specifies a preferred value. </p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">&lt;meter min="0" max="100" name="volume"&gt;</code>60%<code class="CodeColor">&lt;/meter&gt;</code></pre>
+					<h5 class="sbHead">output</h5>
+					<p class="refNameCode">&lt;output&gt;…&lt;/output&gt;</p>
+					<p class="refPurpose">Calculated output value</p>
+					<p class="SidebarBody">Simply put, the <span class="Literal-Sidebar">output</span> <a id="_idIndexMarker1414"></a><a id="_idIndexMarker1415"></a>element indicates the result of a calculation by a script or program. This example, taken from the HTML5.2 specification, uses the <span class="Literal-Sidebar">output</span> element and JavaScript to display the sum of numbers entered into inputs a and b.</p>
+					<pre class="SidebarCodeFirst">&lt;form onsubmit="return false" oninput="o.value = a.valueAsNumber + b.valueAsNumber"&gt;<br/>&lt;input name=a type=number step=any&gt; <br/>+ &lt;input name=b type=number step=any&gt; =   <br/><code class="CodeColor">&lt;output name=o for="a b"&gt;&lt;/output&gt;</code><br/>&lt;/form&gt;</pre>
+				</div>
+			</div>
+			<h1 id="_idParaDest-85" class="HeadA"><a id="_idTextAnchor117"></a>Form Accessibility Features</h1>
+			<p class="body">It is essential to <a id="_idIndexMarker1416"></a><a id="_idIndexMarker1417"></a>consider how users without the benefit of visual browsers will be able to understand and navigate through your web forms. The <span class="Literal-fc">label</span>, <span class="Literal-fc">fieldset</span>, and <span class="Literal-fc">legend</span> form elements improve accessibility by making the semantic connections between the components of a form clear. Not only is the resulting markup more semantically rich, but there are also more elements available to act as “hooks” for style sheet rules. Everybody wins!</p>
+			<h2 class="HeadB">Labels</h2>
+			<div>
+				<div id="_idContainer522" class="ref">
+					<p class="refNameCode">&lt;label&gt;…&lt;/label&gt;</p>
+					<p class="refPurpose">Attaches information to form controls</p>
+				</div>
+			</div>
+			<p class="body">Although we may see the label “Address” right next to a text field for entering an address in a visual browser, in the source, the label and field input may be separated. The <a id="_idIndexMarker1418"></a><span class="Literal-fc">label</span> element associates descriptive text with its respective form field. This provides important context for users with speech-based browsers. Another advantage to using labels is that users can click or tap anywhere on them to select or focus the form control. Users with touch devices will appreciate the larger tap target.</p>
+			<p class="body">Each <span class="Literal-fc">label</span> element is associated with exactly one form control. There are two ways to use it. One method, <a id="_idIndexMarker1419"></a>called <span class="FirstTerm">implicit association</span>,<a id="_idIndexMarker1420"></a><a id="_idIndexMarker1421"></a> nests the control and its description within a <span class="Literal-fc">label</span> element. In the following example, <span class="Literal-fc">label</span>s are assigned to individual checkboxes and their related text descriptions. (By the way, this is the way to label <a id="_idIndexMarker1422"></a><a id="_idIndexMarker1423"></a><a id="_idIndexMarker1424"></a><a id="_idIndexMarker1425"></a><a id="_idIndexMarker1426"></a><a id="_idIndexMarker1427"></a>radio buttons and checkboxes. You can’t assign a label to the entire group.) </p>
+			<pre class="CodeFirst">&lt;ul&gt;<br/>  &lt;li&gt;<code class="CodeColor">&lt;label&gt;</code>&lt;input type="checkbox" name="genre" value="punk"&gt; Punk rock<code class="CodeColor">&lt;/label&gt;</code>&lt;/li&gt;<br/>   &lt;li&gt;<code class="CodeColor">&lt;label&gt;</code>&lt;input type="checkbox" name="genre" value="indie"&gt; Indie rock<code class="CodeColor">&lt;/label&gt;</code>&lt;/li&gt;<br/>   &lt;li&gt;<code class="CodeColor">&lt;label&gt;</code>&lt;input type="checkbox" name="genre" value="hiphop"&gt; Hip Hop<code class="CodeColor">&lt;/label&gt;</code>&lt;/li&gt;<br/>   &lt;li&gt;<code class="CodeColor">&lt;label&gt;</code>&lt;input type="checkbox" name="genre" value="rockabilly"&gt; Rockabilly<code class="CodeColor">&lt;/label&gt;</code>&lt;/li&gt;<br/>&lt;/ul&gt;</pre>
+			<p class="body">The other method, <a id="_idIndexMarker1428"></a>called <span class="FirstTerm">explicit association</span>, matches the label with the control’s <span class="Literal-fc">id</span> reference. The <span class="Literal-fc">for</span> attribute says which control the label is for. This approach is useful when the control is not directly next to its descriptive text in the source. It also offers the potential advantage of keeping the label and the control as two distinct elements, which you may find handy when aligning them with style sheets.</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;label for="form-login-username"&gt;</code>Login account<code class="CodeColor">&lt;/label&gt;</code><br/><code class="CodeColor"> </code>&lt;input type="text" name="login" <code class="CodeColor">id="form-login-username"</code>&gt; <br/><br/><code class="CodeColor">&lt;label for="form-login-password"&gt;</code>Password<code class="CodeColor">&lt;/label&gt;</code><br/>&lt;input type="password" name="password" <code class="CodeColor">id="form-login-password"</code>&gt;</pre>
+			<div>
+				<div id="_idContainer523" class="sidebar">
+					<h5 class="SidebarSeries">Markup TIP</h5>
+					<p class="SidebarBody">To keep form-related <span class="Literal-Sidebar">id</span>s distinct from other <span class="Literal-Sidebar">id</span>s on the page, consider prefacing them with “form-” as shown in the examples.</p>
+					<p class="SidebarBody">Another technique for keeping forms organized is to give<a id="_idIndexMarker1429"></a> the <span class="Literal-Sidebar">form</span> element an ID name and include it as a prefix in the IDs for the controls it contains as follows:</p>
+					<pre class="SidebarCodeFirst">&lt;form id="<code class="CodeColor">form-login</code>"&gt;<br/>&lt;input id="<code class="CodeColor">form-login</code>-user"&gt;<br/>&lt;input id="<code class="CodeColor">form-login</code>-passwd"&gt;</pre>
+				</div>
+			</div>
+			<h2 class="HeadB">fieldset and legend</h2>
+			<div>
+				<div id="_idContainer524" class="ref">
+					<p class="refNameCode">&lt;fieldset&gt;…&lt;/fieldset</p>
+					<p class="refPurpose">Groups related controls and labels</p>
+					<p class="refNameCode">&lt;legend&gt;…&lt;/legend&gt;</p>
+					<p class="refPurpose">Assigns a caption to a fieldset</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">fieldset</span> element <a id="_idIndexMarker1430"></a>indicates a logical group of form controls. A <span class="Literal-fc">fieldset</span> may also include a <a id="_idIndexMarker1431"></a><span class="Literal-fc">legend</span> element that provides a caption for the enclosed fields. </p>
+			<p class="body"><span class="Xref-Figure">Figure 9-19</span> shows the default rendering of the following example, but you could use style sheets to change the way the <span class="Literal-fc">fieldset</span> and <span class="Literal-fc">legend</span> appear (see <span class="Xref">Warning</span>):</p>
+			<div>
+				<div id="_idContainer525" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Fieldsets and legends tend to throw some curveballs when it comes to styling. For example, background colors in fieldsets are handled differently from browser to browser. Legends are unique in that their text doesn’t wrap. The solution is to put a <span class="Literal-Sidebar">span</span> or <span class="Literal-Sidebar">b</span> element <a id="_idIndexMarker1432"></a>in them and control presentation of the contained element without sacrificing accessibility. Be sure to do lots of testing if you style these form elements.</p>
+				</div>
+			</div>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;fieldset&gt;<br/>  &lt;legend&gt;</code>Mailing List Sign-up<code class="CodeColor">&lt;/legend&gt;</code><br/>  &lt;ul&gt;<br/>    &lt;li&gt;&lt;label&gt;Add me to your mailing list &lt;input type="radio"     name="list" value="yes" checked&gt;&lt;/label&gt;&lt;/li&gt;<br/>     &lt;li&gt;&lt;label&gt;No thanks &lt;input type="radio" name="list" value="no"&gt;  &lt;/label&gt;&lt;/li&gt;<br/>  &lt;/ul&gt;<br/><code class="CodeColor">&lt;/fieldset&gt;</code><br/><br/> <code class="CodeColor">&lt;fieldset&gt;</code><br/><code class="CodeColor">  &lt;legend&gt;</code>Customer Information<code class="CodeColor">&lt;/legend&gt;</code><br/>  &lt;ul&gt;<br/>    &lt;li&gt;&lt;label&gt;Full name: &lt;input type="text" name="fullname"&gt;&lt;/label&gt; &lt;/li&gt;<br/>    &lt;li&gt;&lt;label&gt;Email: &lt;input type="text" name="email"&gt;&lt;/label&gt;&lt;/li&gt;<br/>    &lt;li&gt;&lt;label&gt;State: &lt;input type="text" name="state"&gt;&lt;/label&gt;&lt;/li&gt;<br/>  &lt;/ul&gt;<br/><code class="CodeColor">&lt;/fieldset&gt; </code></pre>
+			<div>
+				<figure id="_idContainer527" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0919_fieldset.png" alt="" width="1321" height="771"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 9-19.</span><span class="FigureLabel"> </span>The default rendering of fieldsets and legends.</figcaption>
+				</figure>
+			</div>
+			<p class="body">In <span class="Xref-Figure">Exercise 9-4</span>, we’ll wrap up the pizza order form by making it more accessible with labels and fieldsets.</p>
+			<div>
+				<div id="_idContainer528" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 9-4.</span> Labels and fieldsets</h6>
+					<p class="SidebarBody">Our pizza ordering form is working, but we need to label it appropriately and create some <span class="Literal-Sidebar">fieldsets</span> to make it more usable on assistive devices. Once again, open the <span class="Filename--Sidebar-">pizza.html</span> document and follow these steps. </p>
+					<p class="SidebarBody">I like to start with the broad strokes and fill in details later, so we’ll begin this exercise by organizing the form controls into fieldsets, and then we’ll do all the labeling. You could do it the other way around, and ideally, you’d just mark up the labels and fieldsets as you go along instead of adding them all later.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">The “Your Information” section at the top of the form is definitely conceptually related, so let’s wrap it all in a <span class="Literal-Sidebar">fieldset</span> element. Change the markup of the section title from a paragraph (<span class="Literal-fc">p</span>) to a <span class="Literal-Sidebar">legend</span> for the fieldset: <pre class="SidebarCodeFirst"><code class="CodeColor">&lt;fieldset&gt;<br/>  &lt;legend&gt;</code>Your Information<code class="CodeColor">&lt;/legend&gt;</code><br/>  &lt;ul&gt;<br/>    &lt;li&gt;Name: &lt;input type="text" name="fullname"&gt;<br/>    &lt;/li&gt;<br/>     …<br/>  &lt;/ul&gt;<br/><code class="CodeColor">&lt;/fieldset&gt;</code></pre></li>
+						<li class="SidebarListNumber">Next, group the Crust, Toppings, and Number questions in a big fieldset with the legend “Pizza specs” (the text is there; you just need to change it from a <span class="Literal-Sidebar">p</span> to a <span class="Literal-Sidebar">legend</span>):<pre class="SidebarCodeFirst">&lt;h2&gt;Design Your Dream Pizza:&lt;/h2&gt;<br/><code class="CodeColor">&lt;fieldset&gt;<br/>  &lt;legend&gt;</code>Pizza specs<code class="CodeColor">&lt;/legend&gt;</code><br/>  Crust…<br/>  Toppings…<br/>  Number…<br/><code class="CodeColor">&lt;/fieldset&gt; </code></pre></li>
+						<li class="SidebarListNumber">Create another fieldset just for the Crust options, again changing the description in a paragraph to a <span class="Literal-Sidebar">legend</span>. Do the same for the Toppings and Number sections. In the end, you will have three fieldsets contained within the larger “Pizza specs” fieldset. When you are done, save your document and open it in a browser. Now it should look very close to the final form shown back in <span class="Xref-Figure">Figure 9-2</span>, given the expected browser differences: <pre class="SidebarCodeFirst"><code class="CodeColor">&lt;fieldset&gt;<br/>  &lt;legend&gt;</code>Crust &lt;em&gt;(Choose one)&lt;/em&gt;:<code class="CodeColor">&lt;/legend&gt;</code><br/>  &lt;ul&gt;…&lt;/ul&gt;<br/><code class="CodeColor">&lt;/fieldset&gt;</code></pre></li>
+						<li class="SidebarListNumber">OK, now let’s get some labels in there. In the “Your Information” fieldset, explicitly tie the label to the text input by using the <span class="Literal-Sidebar">for</span>/<span class="Literal-Sidebar">id</span> label method. Wrap the description in <span class="Literal-Sidebar">label</span> tags and add the <span class="Literal-Sidebar">id</span> to the input. The <span class="Literal-Sidebar">for</span>/<span class="Literal-Sidebar">id</span> values should be descriptive and they must match. I’ve done the first one for you; you do the other four:<pre class="SidebarCodeFirst">&lt;li&gt;<code class="CodeColor">&lt;label for="form-name"&gt;</code>Name:<code class="CodeColor">&lt;/label&gt;</code> &lt;input type="text" name="customername" <code class="CodeColor">id="form-name"</code>&gt;&lt;/li&gt;</pre></li>
+						<li class="SidebarListNumber">For the radio and checkbox buttons, wrap the <span class="Literal-Sidebar">label</span> element around the <span class="Literal-Sidebar">input</span> and its value label. In this way, the button will be selected when the user clicks or taps anywhere inside the <span class="Literal-Sidebar">label</span> element. Here’s the first one; you do the rest:<pre class="SidebarCodeFirst">&lt;li&gt;<code class="CodeColor">&lt;label&gt;</code>&lt;input type="radio" name="crust" value="white"&gt; Classic White<code class="CodeColor">&lt;/label&gt;</code>&lt;/li&gt;</pre></li>
+					</ol>
+					<p class="SidebarBody">Save your document, and you’re done! Labels don’t have any effect on how the form looks by default, but you can feel good about the added semantic value you’ve added and maybe even use them to apply styles at another time.</p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer529" class="sidebar">
+					<h5 class="SidebarTitle">DIY Form Widgets</h5>
+					<p class="SidebarBody">Despite having <a id="_idIndexMarker1433"></a><a id="_idIndexMarker1434"></a><a id="_idIndexMarker1435"></a><a id="_idIndexMarker1436"></a>dozens of form widgets straight out of HTML to choose from, it is common for developers to “roll their own” form widgets using markup, CSS, and JavaScript. This might be preferable if you want to provide custom functionality or to make the styling of the form extra-fancy. For example, you could create a drop-down menu using an <a id="_idIndexMarker1437"></a><a id="_idIndexMarker1438"></a>unordered list <a id="_idIndexMarker1439"></a>inside a <span class="Literal-Sidebar">div</span> instead of the <a id="_idIndexMarker1440"></a>standard <span class="Literal-Sidebar">select</span> element:</p>
+					<pre class="SidebarCodeFirst">&lt;div class="select" role="listbox"&gt;<br/>  &lt;ul class="optionlist"&gt;<br/>    &lt;li class="option" role="option"&gt;Red&lt;/li&gt;<br/>    &lt;li class="option" role="option"&gt;Yellow&lt;/li&gt;<br/>  &lt;/ul&gt;<br/>&lt;/div&gt;</pre>
+					<p class="SidebarBody">To help assistive technologies like screen readers recognize this as a form element, use the <a id="_idIndexMarker1441"></a>ARIA <span class="Literal-Sidebar">role</span> attribute to describe the intended function of the <span class="Literal-Sidebar">div</span> (a listbox) and each <span class="Literal-Sidebar">li</span> (an option in that listbox). There are also many <a id="_idIndexMarker1442"></a><a id="_idIndexMarker1443"></a>ARIA states and properties that make forms, both standard and custom, usable with assistive devices. For a complete list, see <a href="https://www.w3.org/WAI/PF/aria-1.1/states_and_properties"><span class="URL-Email--Sidebar-">www.w3.org/WAI/PF/aria-1.1/states_and_properties</span></a>. </p>
+					<p class="SidebarBody">Custom form widgets require scripting and CSS well beyond the scope of this book, but I wanted you to be aware of the technique. It’s also extremely easy to mess up, making a user’s interaction with the form awkward and frustrating (even for sighted users), so “roll your own” with caution.</p>
+					<p class="SidebarBody">The article “How to Build Custom Form Widgets” on MDN Web Docs provides a nice overview (<a href="http://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/How_to_build_custom_form_widgets"><span class="URL-Email--Sidebar-">developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/How_to_build_custom_form_widgets</span></a>). You might also choose to use a premade custom widget from one of the available JavaScript Libraries like <a id="_idIndexMarker1444"></a><a id="_idIndexMarker1445"></a>jQuery UI (<a href="http://jqueryui.com"><span class="URL-Email--Sidebar-">jqueryui.com</span></a>).  </p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-86" class="HeadA"><a id="_idTextAnchor118"></a>Form Layout and Design</h1>
+			<p class="body">I can’t close <a id="_idIndexMarker1446"></a>this chapter without saying a few words about form design, even though this chapter is about markup, not presentation.</p>
+			<h2 class="HeadB">Usable Forms</h2>
+			<p class="body">A poorly designed form can ruin a user’s experience on your site and negatively impact your business goals. Badly designed forms mean lost customers, so it is critical to get it right—both on the desktop and for small-screen devices with their special requirements. You want the path to a purchase or other action to be as frictionless as possible.</p>
+			<p class="body">The topic of good web form design is a rich one that could fill a book in itself. In fact, there is such a book: <em class="Emphasis">Web Form Design</em> (Rosenfeld Media) by web form expert <a id="_idIndexMarker1447"></a>Luke Wroblewski, and I recommend it highly. Luke’s subsequent book, <span class="Citation">Mobile First</span> (A Book Apart), includes tips for how to format forms in a mobile context. You can browse over a hundred articles about forms on his site at <a href="http://www.lukew.com/ff?tag=forms"><span class="URL-Email">www.lukew.com/ff?tag=forms</span></a>.</p>
+			<p class="body">Here I’ll offer just a very small sampling of tips from <span class="Citation">Web Form Design</span> to get you started, but the whole book is worth a read:</p>
+			<p class="ListVariableTerm">Avoid unnecessary questions. </p>
+			<p class="ListVariable">Help your users get through your form as easily as possible by not including questions that are not absolutely necessary to the task at hand. Extra questions, in addition to slowing things down, may make a user wary of your motivations for asking. If you have another way of getting the information (for example, the type of credit card can be determined from the first four numbers of the account), then use alternative means and don’t put the burden on the user. If there is information that might be nice to have but is not required, consider asking at a later time, after the form has been submitted and you have built a relationship with the user. </p>
+			<p class="ListVariableTerm">Consider the impact of label placement.</p>
+			<p class="ListVariable">The position of the label relative to the input affects the time it takes to fill out the form. The less the user’s eye needs to bounce around the page, the quicker the form completion. Putting the labels above their respective fields creates a single alignment for faster scans and completion, particularly when you’re asking for familiar information (name, address, etc.). Top-positioned labels can also accommodate labels of varying lengths and work best on narrow, small-screen devices. They do result in a longer form, however, so if vertical space is a concern, you can position the labels to the left of the inputs. Left alignment of labels results in the slowest form completion, but it may be appropriate if you want the user to slow down or be able to scan and consider the types of required information.</p>
+			<p class="ListVariableTerm">Choose input types carefully. </p>
+			<p class="ListVariable">As you’ve seen in this chapter, there are quite a few input types to choose from, and sometimes it’s not easy to decide which one to use. For example, a list of options could be presented as a pull-down menu or a number of choices with checkboxes. Weigh the pros and cons of each control type carefully, and follow up with user testing.</p>
+			<p class="ListVariableTerm">Group related inputs. </p>
+			<p class="ListVariable">It is easier to parse the many fields, menus, and buttons in a form if they are visually grouped by related topic. For example, a user’s contact information could be presented in a compact group so that five or six inputs are perceived as one unit. Usually, all you need is a very subtle indication, such as a fine horizontal rule and some extra space. Don’t overdo it.</p>
+			<p class="ListVariableTerm">Clarify primary and secondary actions. </p>
+			<p class="ListVariable">The primary action at the end of the form is usually some form of submit button (“Buy,” “Register,” etc.) that signals the completion of the form and the readiness to move forward. You want that button to be visually dominant and easy to find (aligning it along the main axis of the form is helpful as well). Using JavaScript, you can gray out the submit button as non-functioning until all necessary data has been filled in.</p>
+			<p class="ListVariable_cont">Secondary actions tend to take you a step back, such as clearing or resetting the form. If you must include a secondary action, make sure that it is styled to look different and less important than the primary action. It is also a good idea to provide an opportunity to undo the action.</p>
+			<h2 class="HeadB">Styling Forms</h2>
+			<p class="body">As we’ve <a id="_idIndexMarker1448"></a>seen in this chapter, the default rendering of form markup is not up to par with the quality we see on most professional web forms today. As for other elements, you can use style sheets to create a clean form layout as well as change the appearance of most form controls. Something as simple as nice alignment and a look that is consistent with the rest of your site can go a long way toward improving the impression you make on a user. </p>
+			<p class="body">Keep in mind that form widgets are drawn by the browser and are informed by operating system conventions. However, you can still apply dimensions, margins, fonts, colors, borders, and background effects to form elements such as text inputs, select menus, textareas, fieldsets, labels, and legends. Be sure to test in a variety of browsers to check for unpleasant surprises. <a href="lwd5_chapter19.xhtml#_idTextAnchor243"><span class="Xref">Chapter </span><span class="Xref">19</span><span class="Xref">, More CSS Techniques</span></a>, in <a href="lwd5_chapter11.xhtml#_idTextAnchor131"><span class="Xref">Part III</span></a>, lists some specific techniques once you have more experience with CSS. For more help, a web search for “CSS for forms” will turn up a number of tutorials. </p>
+			<h1 id="_idParaDest-87" class="HeadA"><a id="_idTextAnchor119"></a>Test Yourself</h1>
+			<p class="body">Ready to put your web form know-how to the test? Here are a few questions to make sure you’ve gotten the basics. You’ll find the answers in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber" value="1">Decide whether each of these forms should be sent via the GET or POST method:<ol><li class="ListNumber_Indent">A form for accessing your bank account online	________</li><li class="ListNumber_Indent">A form for sending t-shirt artwork to the printer	________</li><li class="ListNumber_Indent">A form for searching archived articles		________</li><li class="ListNumber_Indent">A form for collecting long essay entries		________</li></ol></li>
+				<li class="ListNumber">Which form control element is best suited for the following tasks? When the answer is “input,” be sure to also include the type. Some tasks may have more than one correct answer.<ol><li class="ListNumber_Indent" value="1">Choose your astrological sign from 12 signs.</li><li class="ListNumber_Indent">Indicate whether you have a history of heart disease (yes or no).</li><li class="ListNumber_Indent">Write up a book review.</li><li class="ListNumber_Indent">Select your favorite ice cream flavors from a list of eight flavors.</li><li class="ListNumber_Indent">Select your favorite ice cream flavors from a list of 25 flavors.</li></ol></li>
+				<li class="ListNumber">Each of these markup examples contains an error. Can you spot it?<ol><li class="ListNumber_Indent" value="1"><code class="Code">&lt;checkbox name="color" value="teal"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;select name="popsicle"&gt;</code><code class="Code">  &lt;option value="orange"&gt;  &lt;option value="grape"&gt;  &lt;option value="cherry"&gt;   &lt;/select&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;input type="password"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;textarea name="essay" width="100" height="6"&gt;Your story.&lt;/textarea&gt;</code></li></ol></li>
+			</ol>
+			<h1 id="_idParaDest-88" class="HeadA"><a id="_idTextAnchor120"></a>Element Review: Forms</h1>
+			<p class="body">The following table <a id="_idIndexMarker1449"></a><a id="_idIndexMarker1450"></a>lists all of the form-related elements and attributes included in HTML 5.2 (some attributes were not covered in this chapter). The attributes for each input type are listed in <span class="Xref-Figure">Table 9-1</span>. </p>
+			<table id="table001-8" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Element and attributes</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">button</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Generic<a id="_idIndexMarker1451"></a><a id="_idIndexMarker1452"></a> <a id="_idIndexMarker1453"></a>input button</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autofocus</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Automatically <a id="_idIndexMarker1454"></a>focuses the form control when the page is loaded</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Supplies a<a id="_idIndexMarker1455"></a> unique variable name for the control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Disables <a id="_idIndexMarker1456"></a>the input so it cannot be selected</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">type="submit|reset|button"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">The <a id="_idIndexMarker1457"></a>type of custom button </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">value="<span class="Replaceable">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Specifies <a id="_idIndexMarker1458"></a>the value to be sent to the server</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">menu="<span class="Replaceable">idvalue</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Specifies <a id="_idIndexMarker1459"></a>a designated pop-up menu</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">form,formaction, formenctype, formmethod, formnovalidate, formtarget</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBodyIndent">Form<a id="_idIndexMarker1460"></a> <a id="_idIndexMarker1461"></a><a id="_idIndexMarker1462"></a><a id="_idIndexMarker1463"></a><a id="_idIndexMarker1464"></a><a id="_idIndexMarker1465"></a>submission-related attributes used for submit and reset type buttons</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">datalist </pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Provides a <a id="_idIndexMarker1466"></a>list of options for text inputs</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">fieldset</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Groups <a id="_idIndexMarker1467"></a>related controls and labels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Disables <a id="_idIndexMarker1468"></a>all the inputs in the fieldset so they cannot be selected, edited, or submitted</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">form="<span class="Replaceable-Sidebar">idvalue</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Associates <a id="_idIndexMarker1469"></a>the element with a specific form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBodyIndent">Supplies a <a id="_idIndexMarker1470"></a>unique variable name for the control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">form</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Form <a id="_idIndexMarker1471"></a>element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">action="<span class="Replaceable-Sidebar">url</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Location <a id="_idIndexMarker1472"></a>of forms processing program (<em class="Emphasis">required</em>)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">method="get|post"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">The <a id="_idIndexMarker1473"></a>method used to submit the form data</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">enctype="<span class="Replaceable">content type</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">The <a id="_idIndexMarker1474"></a>encoding method, generally either <span class="Literal-Sidebar">application/x-www-form-urlencoded</span> (default) or <span class="Literal-Sidebar">multipart/form-data</span></p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">accept-charset="<span class="Replaceable">characterset</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Character <a id="_idIndexMarker1475"></a>encodings to use</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autocomplete</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Default <a id="_idIndexMarker1476"></a>setting for autofill feature for controls in the form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Name<a id="_idIndexMarker1477"></a> of the form to use in the <span class="Literal-Sidebar">document.forms</span> API</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">novalidate</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBodyIndent">Bypasses <a id="_idIndexMarker1478"></a>form control validation for this form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left Table-Body-Left">
+							<pre class="CellCode-indent">target="text|_blank|_self|_parent|_top"</pre>
+						</td>
+						<td class="Table Table-Body-Right Table-Body-Right">
+							<p class="TableBodyIndent">Sets <a id="_idIndexMarker1479"></a>the browsing context </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">input</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Creates a variety of <a id="_idIndexMarker1480"></a><a id="_idIndexMarker1481"></a>controls, based on the <span class="Literal-Sidebar">type</span> value</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autofocus</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates the<a id="_idIndexMarker1482"></a> control should be ready for input when the document loads</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">type="submit|reset|button|text|password|checkbox|radio|image|file|hidden|email|tel| search|url|date|time|datetime-local|month|week|number|range|color"</pre>
+							<pre class="CellCode-indent">See <span class="Xref-Figure">Table 9-1</span> for a full list of attributes associated with each input type.</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">The type of <a id="_idIndexMarker1483"></a><a id="_idIndexMarker1484"></a><a id="_idIndexMarker1485"></a><a id="_idIndexMarker1486"></a><a id="_idIndexMarker1487"></a><a id="_idIndexMarker1488"></a><a id="_idIndexMarker1489"></a><a id="_idIndexMarker1490"></a><a id="_idIndexMarker1491"></a><a id="_idIndexMarker1492"></a><a id="_idIndexMarker1493"></a><a id="_idIndexMarker1494"></a><a id="_idIndexMarker1495"></a><a id="_idIndexMarker1496"></a><a id="_idIndexMarker1497"></a><a id="_idIndexMarker1498"></a><a id="_idIndexMarker1499"></a><a id="_idIndexMarker1500"></a><a id="_idIndexMarker1501"></a><a id="_idIndexMarker1502"></a><a id="_idIndexMarker1503"></a><a id="_idIndexMarker1504"></a><a id="_idIndexMarker1505"></a><a id="_idIndexMarker1506"></a><a id="_idIndexMarker1507"></a><a id="_idIndexMarker1508"></a><a id="_idIndexMarker1509"></a><a id="_idIndexMarker1510"></a><a id="_idIndexMarker1511"></a><a id="_idIndexMarker1512"></a><a id="_idIndexMarker1513"></a><a id="_idIndexMarker1514"></a><a id="_idIndexMarker1515"></a><a id="_idIndexMarker1516"></a><a id="_idIndexMarker1517"></a><a id="_idIndexMarker1518"></a><a id="_idIndexMarker1519"></a><a id="_idIndexMarker1520"></a><a id="_idIndexMarker1521"></a><a id="_idIndexMarker1522"></a><a id="_idIndexMarker1523"></a><a id="_idIndexMarker1524"></a>input</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Disables<a id="_idIndexMarker1525"></a> the input so it cannot be selected, edited, or submitted</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">form="<span class="Replaceable">form id value</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Associates <a id="_idIndexMarker1526"></a>the control with a specified form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">label</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Attaches <a id="_idIndexMarker1527"></a>information to controls</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">for="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Identifies <a id="_idIndexMarker1528"></a>the associated control by its <span class="Literal-Sidebar">id</span> reference</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">legend</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Assigns a <a id="_idIndexMarker1529"></a>caption to a <span class="Literal-Sidebar">fieldset</span></p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">meter </pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Represents a<a id="_idIndexMarker1530"></a> fractional value within a known range</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">high="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates <a id="_idIndexMarker1531"></a>the range that is considered “high” for the gauge</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">low="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates<a id="_idIndexMarker1532"></a> the range that is considered “low” for the gauge</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">max="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Specifies <a id="_idIndexMarker1533"></a>the highest value for the range</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">min="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Specifies <a id="_idIndexMarker1534"></a>the lowest value for the range</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">optimum="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates the<a id="_idIndexMarker1535"></a> number considered to be “optimum”</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">value="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Specifies the <a id="_idIndexMarker1536"></a>actual or measured value</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">optgroup</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Defines a <a id="_idIndexMarker1537"></a>group of options</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Disables <a id="_idIndexMarker1538"></a>the <span class="Literal-Sidebar">optgroup</span> so it cannot be selected </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">label="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Supplies a <a id="_idIndexMarker1539"></a>label for a group of options</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">option</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">An option <a id="_idIndexMarker1540"></a>within a select menu control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Disables <a id="_idIndexMarker1541"></a>the <span class="Literal-Sidebar">option</span> so it cannot be selected</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">label="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Supplies<a id="_idIndexMarker1542"></a> an alternate label for the option</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">selected</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Preselects <a id="_idIndexMarker1543"></a>the option</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">value="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Supplies an <a id="_idIndexMarker1544"></a>alternate value for the option</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">output</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Represents the <a id="_idIndexMarker1545"></a>results of a calculation</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">for="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Creates <a id="_idIndexMarker1546"></a>a relationship between output and another element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">form="<span class="Replaceable-Sidebar">form id value</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Associates <a id="_idIndexMarker1547"></a>the control with a specified form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Supplies a <a id="_idIndexMarker1548"></a>unique variable name for the control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">progress</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Represents <a id="_idIndexMarker1549"></a>the completion progress of a task (can be used even if the maximum value of the task is not known)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">max="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Specifies the <a id="_idIndexMarker1550"></a>total value or final size of the task</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">value="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Specifies<a id="_idIndexMarker1551"></a> how much of the task has been completed</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">select</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Pull-down <a id="_idIndexMarker1552"></a>menu or scrolling list</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autofocus</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates <a id="_idIndexMarker1553"></a>the control should be highlighted and ready for input when the document loads</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates <a id="_idIndexMarker1554"></a>the control is nonfunctional; can be activated with a script</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">form="<span class="Replaceable-Sidebar">form id value</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Associates <a id="_idIndexMarker1555"></a>the control with a specified form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">multiple</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Allows <a id="_idIndexMarker1556"></a>multiple selections in a scrolling list</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Supplies a<a id="_idIndexMarker1557"></a> unique variable name for the control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">required</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates <a id="_idIndexMarker1558"></a>the user input is required for this control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">size="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">The <a id="_idIndexMarker1559"></a>height of the scrolling list in text lines</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">textarea</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Multiline <a id="_idIndexMarker1560"></a><a id="_idIndexMarker1561"></a>text-entry field</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autocomplete</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Hint for <a id="_idIndexMarker1562"></a>form autofill feature</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">autofocus</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates<a id="_idIndexMarker1563"></a> the control should be highlighted and ready for input when the document loads</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">cols="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">The <a id="_idIndexMarker1564"></a>width of the text area in characters</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">dirname="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Allows<a id="_idIndexMarker1565"></a> text directionality to be submitted</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">disabled</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Disables <a id="_idIndexMarker1566"></a>the control so it cannot be selected</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">form="f<span class="Replaceable-Sidebar">orm id value</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Associates<a id="_idIndexMarker1567"></a> the control with a specified form</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">inputmode</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Hint for <a id="_idIndexMarker1568"></a>selecting an input modality</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">maxlength="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Specifies the <a id="_idIndexMarker1569"></a>maximum number of characters the user can enter</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">minlength="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Specifies <a id="_idIndexMarker1570"></a>the minimum number of characters the user can enter</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">name="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Supplies<a id="_idIndexMarker1571"></a> a unique variable name for the control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">placeholder="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Provides a <a id="_idIndexMarker1572"></a>short hint to help the user enter the correct data</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">readonly</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Makes <a id="_idIndexMarker1573"></a>the control unalterable by the user</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">required</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">Indicates <a id="_idIndexMarker1574"></a>user input is required for this control</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">rows="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody_level2">The <a id="_idIndexMarker1575"></a>height of the text area in text lines</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">wrap="hard|soft"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody_level2">Controls <a id="_idIndexMarker1576"></a>whether line breaks in the text input are returned in the data; <span class="Literal-Sidebar">hard</span> preserves line breaks, while <span class="Literal-Sidebar">soft</span> does not</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<div id="_idContainer530" class="contents">
+					<table id="table002-5" class="Table">
+						<colgroup>
+							<col/>
+							<col/>
+						</colgroup>
+						<thead>
+							<tr class="Table">
+								<td class="Table Table-Title Table-Head" colspan="2">
+									<p class="TableTitle"><span class="Table-Label">Table 9-1.</span> Available attributes for each input <a id="_idIndexMarker1577"></a><a id="_idIndexMarker1578"></a><a id="_idIndexMarker1579"></a><a id="_idIndexMarker1580"></a><a id="_idIndexMarker1581"></a><a id="_idIndexMarker1582"></a><a id="_idIndexMarker1583"></a><a id="_idIndexMarker1584"></a><a id="_idIndexMarker1585"></a><a id="_idIndexMarker1586"></a><a id="_idIndexMarker1587"></a><a id="_idIndexMarker1588"></a><a id="_idIndexMarker1589"></a><a id="_idIndexMarker1590"></a><a id="_idIndexMarker1591"></a><a id="_idIndexMarker1592"></a><a id="_idIndexMarker1593"></a><a id="_idIndexMarker1594"></a><a id="_idIndexMarker1595"></a><a id="_idIndexMarker1596"></a><a id="_idIndexMarker1597"></a><a id="_idIndexMarker1598"></a><a id="_idIndexMarker1599"></a><a id="_idIndexMarker1600"></a><a id="_idIndexMarker1601"></a><a id="_idIndexMarker1602"></a><a id="_idIndexMarker1603"></a><a id="_idIndexMarker1604"></a><a id="_idIndexMarker1605"></a><a id="_idIndexMarker1606"></a><a id="_idIndexMarker1607"></a><a id="_idIndexMarker1608"></a><a id="_idIndexMarker1609"></a><a id="_idIndexMarker1610"></a><a id="_idIndexMarker1611"></a><a id="_idIndexMarker1612"></a><a id="_idIndexMarker1613"></a><a id="_idIndexMarker1614"></a><a id="_idIndexMarker1615"></a><a id="_idIndexMarker1616"></a><a id="_idIndexMarker1617"></a><a id="_idIndexMarker1618"></a><a id="_idIndexMarker1619"></a><a id="_idIndexMarker1620"></a><a id="_idIndexMarker1621"></a><a id="_idIndexMarker1622"></a><a id="_idIndexMarker1623"></a><a id="_idIndexMarker1624"></a><a id="_idIndexMarker1625"></a><a id="_idIndexMarker1626"></a><a id="_idIndexMarker1627"></a><a id="_idIndexMarker1628"></a><a id="_idIndexMarker1629"></a><a id="_idIndexMarker1630"></a><a id="_idIndexMarker1631"></a><a id="_idIndexMarker1632"></a><a id="_idIndexMarker1633"></a><a id="_idIndexMarker1634"></a>type</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Head Table-Head">
+									<p class="TableHeader">Input type</p>
+								</td>
+								<td class="Table Table-Head Table-Head">
+									<p class="TableHeader">Accepted attributes</p>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">submit</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autofocus, disabled form, formaction, formenctype, formmethod, formnovalidate, formtarget, name, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">reset</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autofocus, disabled, form, name, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">button</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autofocus, disabled, form, name, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">text</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, maxlength, minlength, name, pattern, placeholder, readonly, required, size, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">password</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, maxlength, minlength, name, pattern, placeholder, readonly, required, size, valu</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">checkbox</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autofocus, checked, disabled, form, name, required, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">radio</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autofocus, checked, disabled, form, name, required, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">image</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">alt, autofocus, disabled, form, formaction, formenctype, formmethod, formnovalidate, formtarget, height, name, src, width </pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">file</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">accept, autofocus, disabled, form, maxlength, minlength, multiple, name, required, size, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">hidden</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">disabled, form, name, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">email</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, maxlength, minlength, multiple, name, pattern, placeholder, readonly, required, size, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">telephone</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, maxlength, minlength, name, pattern, placeholder, readonly, required, size, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">search</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, maxlength, minlength, name, pattern, placeholder, readonly, required, size, valu</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">url</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, maxlength, minlength, name, pattern, placeholder, readonly, required, size, valu</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">number</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, readonly, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">range</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">date</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">time</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">datetime-local</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">month</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">week</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, max, min, name, required, step, value</pre>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body Table-Body-Left">
+									<pre class="cellCode">color</pre>
+								</td>
+								<td class="Table Table-Body Table-Body-Right">
+									<pre class="cellCode">autocomplete, autofocus, disabled, form, list, name, value</pre>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

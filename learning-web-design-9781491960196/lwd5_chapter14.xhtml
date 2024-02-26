@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer849" class="ch14">
+			<p id="_idParaDest-134" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor190"></a>14. Thinking Inside the Box</p>
+		</div>
+		<div id="_idContainer850" class="ch14">
+			<h1 class="chapterLabel">14</h1>
+		</div>
+		<div id="_idContainer851" class="ch14">
+			<h1 class="chapterTitle"><a id="_idTextAnchor191"></a><a id="_idTextAnchor192"></a>Thinking Inside the Box</h1>
+		</div>
+		<div id="_idContainer852" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">The parts of an element box</p>
+			<p class="chapterContents">Setting box dimensions</p>
+			<p class="chapterContents">Padding</p>
+			<p class="chapterContents">Borders</p>
+			<p class="chapterContents">Outlines</p>
+			<p class="chapterContents">Margins</p>
+			<p class="chapterContents">Assigning display roles</p>
+			<p class="chapterContents">Adding a drop shadow</p>
+		</div>
+		<div id="_idContainer923" class="ch14">
+			<p class="body">In <a href="lwd5_chapter11.xhtml#_idTextAnchor134"><span class="Xref">Chapter </span><span class="Xref">11</span><span class="Xref">, Introducing Cascading Style Sheets</span></a> I described the <span class="FirstTerm">box model</span> as one of the fundamental concepts of CSS. According to the box model, every element in a document generates a box to which properties such as width, height, padding, borders, and margins can be applied. You probably already have a feel for how element boxes work from adding backgrounds to elements. This chapter covers all the box-related properties, beginning with an overview of the components of an element box, and then taking on the box properties from the inside out: content dimensions, padding, borders, and margins.</p>
+			<h1 id="_idParaDest-135" class="HeadA"><a id="_idTextAnchor193"></a>The Element Box</h1>
+			<p class="body">As we’ve <a id="_idIndexMarker2583"></a><a id="_idIndexMarker2584"></a><a id="_idIndexMarker2585"></a><a id="_idIndexMarker2586"></a>seen, every element in a document, both block-level and inline, generates a rectangular <span class="FirstTerm">element box</span>. The components of an element box are diagrammed in <span class="Xref-Figure">Figure 14-1</span>. Pay attention to the new terminology—it will be helpful in keeping things straight later in the chapter.</p>
+			<div>
+				<figure id="_idContainer854" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1401_elementbox.png" alt="" width="1321" height="585"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-1.</span><span class="FigureLabel"> </span>The parts of an element box according to the CSS box model.</figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm">Content area</p>
+			<p class="ListVariable">At the core of<a id="_idIndexMarker2587"></a> the element box is the content itself. In <span class="Xref-Figure">Figure 14-1</span>, the content area is indicated by a white box. </p>
+			<p class="ListVariableTerm">Inner edges</p>
+			<p class="ListVariable">The edges of the<a id="_idIndexMarker2588"></a> content area are referred to as the inner edges of the element box. Although the inner edges are made distinct by a color change in <span class="Xref-Figure">Figure 14-1</span>, in real pages, the edge of the content area is invisible.</p>
+			<p class="ListVariableTerm">Padding</p>
+			<p class="ListVariable">The padding <a id="_idIndexMarker2589"></a><a id="_idIndexMarker2590"></a>is the area between the content area and an optional border. In the diagram, the padding area is indicated by a yellow-orange color. Padding is optional.</p>
+			<p class="ListVariableTerm">Border</p>
+			<p class="ListVariable">The border is a <a id="_idIndexMarker2591"></a><a id="_idIndexMarker2592"></a>line (or stylized line) that surrounds the element and its padding. Borders are also optional.</p>
+			<p class="ListVariableTerm">Margin</p>
+			<p class="ListVariable">The <a id="_idIndexMarker2593"></a><a id="_idIndexMarker2594"></a>margin is an optional amount of space added on the <em class="Emphasis">outside</em> of the border. In the diagram, the margin is indicated with light-blue shading, but in reality, margins are always transparent, allowing the background of the parent element to show through. </p>
+			<p class="ListVariableTerm">Outer edge</p>
+			<p class="ListVariable">The outside<a id="_idIndexMarker2595"></a> edges of the margin area make up the outer edges of the element box. This is the total area the element takes up on the page, and it includes the width of the content area plus the total amount of padding, border, and margins applied to the element. The outer edge in the diagram is indicated with a dotted line, but in real web pages, the edge of the margin is invisible.</p>
+			<div>
+				<div id="_idContainer855" class="callout">
+					<p class="callout">The amount of space taken up by an element on the page includes the content plus the total amount of padding, borders, and margins applied to the element.</p>
+				</div>
+			</div>
+			<p class="body">All elements have these box components; however, as you will see, some properties behave differently based on whether the element is block or inline. In fact, we’ll see some of those differences right away as we look at box dimensions.</p>
+			<h1 id="_idParaDest-136" class="HeadA"><a id="_idTextAnchor194"></a>Specifying Box Dimensions</h1>
+			<p class="RefNameCode-Left">width</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length </span>| <span class="prop-replace">percentage</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	block-level <a id="_idIndexMarker2596"></a><a id="_idIndexMarker2597"></a><a id="_idIndexMarker2598"></a>elements and replaced inline elements (such as images)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">height</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length </span>| <span class="prop-replace">percentage</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	block-level elements and replaced inline elements (such as images)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">box-sizing </p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">content-box</span> | <span class="prop-code">border-box</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">content-box</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span>  	no</p>
+			<p class="body">By default, the <a id="_idIndexMarker2599"></a><a id="_idIndexMarker2600"></a>width and height of a block element are calculated automatically by the browser (thus the default <span class="Literal-fc">auto</span> value). The box will be as wide as the browser window or other containing block element, and as tall as necessary to fit the content. However, you can use the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> properties to make the content area of an element a specific width or height. </p>
+			<p class="body">Unfortunately, setting box dimensions is not as simple as just dropping those properties in your style sheet. You have to know exactly which part of the element box you are sizing. </p>
+			<p class="body">There are two ways to specify the size of an element. The default method—introduced way back in CSS1—applies the width and height values to the <em class="Emphasis">content box</em>. That means that the resulting size of the element will be the dimensions you specify <em class="Emphasis">plus</em> the amount of padding and borders that have been added to the element. The other method—introduced as part of the <span class="Literal-fc">box-sizing</span> property in CSS3—applies the width and height values to the <em class="Emphasis">border box</em>, which includes the content, padding, and border. With this method, the <a id="_idIndexMarker2601"></a>resulting <span class="FirstTerm">visible element box</span>, including padding and borders, will be exactly the dimensions you specify. We’re going to get familiar with both methods in this section. </p>
+			<div>
+				<div id="_idContainer856" class="note">
+					<h5 class="WarningHeader">Browser Support Tip</h5>
+					<p class="note">The major browsers began supporting the <span class="Literal-Sidebar">box-sizing</span> property in 2011 and 2012. For browsers released prior to that (Chrome &lt;10, Safari &lt;5.1, Safari iOS &lt;5.1, or Android &lt;4.3), there is the prefixed version <span class="Literal-Sidebar">–webkit-box-sizing</span>, but at this point, the prefix is considered no longer necessary. Internet Explorer 6 and 7 do not support <span class="Literal-Sidebar">box-sizing</span> at all, but they are fairly extinct.</p>
+				</div>
+			</div>
+			<p class="body">Regardless of the method you choose, you can specify the width and height only for block-level elements and non-text inline elements such as images. The <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> properties do not apply to inline text<a id="_idIndexMarker2602"></a><a id="_idIndexMarker2603"></a><a id="_idIndexMarker2604"></a> (<span class="FirstTerm">non-replaced</span>) elements and are ignored by the browser. In other words, you cannot specify the width and height of an anchor (<span class="Literal-fc">a</span>) or <span class="Literal-fc">strong</span> element (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer857" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Actually, there is a way to apply <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> properties to inline elements such as anchors (<span class="Literal-Sidebar">a</span>): by forcing them to behave as block elements with the <span class="Literal-Sidebar">display</span> <a id="_idIndexMarker2605"></a>property, covered at the end of this chapter.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Sizing the Content Box </h2>
+			<p class="body">By default <a id="_idIndexMarker2606"></a><a id="_idIndexMarker2607"></a>(that is, if you do not include a <a id="_idIndexMarker2608"></a><span class="Literal-fc">box-sizing</span> rule in your styles), the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> properties are applied to the content box. That is the way all current browsers interpret width and height values, but you can explicitly specify this behavior by setting <span class="Literal-fc">box-sizing: content-box</span>. </p>
+			<p class="body">In the following example and in <span class="Xref-Figure">Figure 14-2</span>, a simple box is given a width of 500 pixels and a height of 150 pixels, with 20 pixels of padding, a 5-pixel border, and a 20-pixel margin all around. In the default content box model, the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> values are applied to the <em class="Emphasis">content area only</em>. </p>
+			<pre class="CodeFirst">p {<br/>  background: #f2f5d5;<br/>  <code class="CodeColor">width: 500px;</code><br/>  height: 150px;<br/>  padding: 20px;<br/>  border: 5px solid gray;<br/>  margin: 20px;<br/>}</pre>
+			<p class="body">The resulting width of the <em class="Emphasis">visible</em> element box ends up being 550 pixels: the content plus 40px padding (20px left and right) and 10px of border (5px left and right). </p>
+			<p class="ListSimple"><span class="ListStartItem">Visible element box = </span></p>
+			<p class="ListSimple"><span class="ListStartItem">5px + 20px + </span><span class="ListStartItem"><code class="CodeColor">500px width</code></span><span class="ListStartItem"> + 20px + 5px = 550 pixels</span></p>
+			<p class="body">When you throw in 40 pixels of margin, the width of the <em class="Emphasis">entire</em> element box is 590 pixels. Knowing the resulting size of your elements is critical to getting layouts to behave predictably.</p>
+			<p class="ListSimple"><span class="ListStartItem">Element box =</span></p>
+			<p class="ListSimple"><span class="ListStartItem">20px + 5px + 20px + </span><span class="ListStartItem"><code class="CodeColor">500px width</code></span><span class="ListStartItem"> + 20px + 5px + 20px = 590 pixels</span></p>
+			<div>
+				<figure id="_idContainer859" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1402_contentbox.png" alt="" width="1321" height="721"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-2.</span> Specifying the <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> with the <span class="Literal-Sidebar">content-box</span> model.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Using the border-box Model</h2>
+			<p class="body">The other way to <a id="_idIndexMarker2609"></a>specify the size of an element is to apply width and height dimensions to the entire visible box, including the padding and border. Because this is not the default browser behavior, you need to explicitly set <span class="Literal-fc">box-sizing: border-box</span> in the style sheet.</p>
+			<p class="body">Let’s look at the same paragraph example from the previous section and see what happens when we make it 500 pixels using the <span class="Literal-fc">border-box</span> method (<span class="Xref-Figure">Figure 14-3</span>). All other style declarations for the box stay the same. </p>
+			<pre class="CodeFirst">p {<br/>  …<br/><code class="CodeColor">  box-sizing: border-box;</code><br/>  width: 500px;<br/>  height: 150px;<br/>}</pre>
+			<div>
+				<figure id="_idContainer861" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1403_borderbox.png" alt="" width="1321" height="1324"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-3.</span> Sizing an element with the <span class="Literal-Sidebar">border-box</span> method. The bottom diagram compares the resulting boxes from each sizing method. </figcaption>
+				</figure>
+			</div>
+			<p class="body">Now the width of the visible box is 500 pixels (compare to 550 pixels in the content-box model), and the total element width is 540px. Many developers find the <span class="Literal-fc">border-box</span> model to be a more intuitive way to size elements. It is particularly helpful for specifying widths in percentages, which is a cornerstone of responsive design. For example, you can make two columns 50% wide and know that they will fit next to each other without having to mess around with adding calculated padding and border widths to the mix (although you still need to account for margins).</p>
+			<p class="body">In fact, many developers simply set <em class="Emphasis">everything</em> in the document to use the <span class="Literal-fc">border-box</span> model by setting it on the root (<span class="Literal-fc">html</span>) element, then setting all other elements to inherit using the universal selecter (*), like this: </p>
+			<pre class="CodeFirst">html {box-sizing: border-box;} <br/>*, *:before, *:after {box-sizing: inherit;}</pre>
+			<p class="body">For more information on this technique, read <a id="_idIndexMarker2610"></a><a id="_idIndexMarker2611"></a>Chris Coyier’s article “Inheriting box-sizing Probably Slightly Better Best-Practice” (<a href="http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice"><span class="URL-Email">css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice</span></a>).</p>
+			<h2 class="HeadB">Specifying Height</h2>
+			<p class="body">The <span class="Literal-fc">height</span> property works just the same as <span class="Literal-fc">width</span>. In general practice, it is less common to specify the height of elements. It is more in keeping with the nature of the medium to allow the height to be calculated automatically, allowing the element box to change based on the font size, user settings, or other factors. If you do specify a height for an element containing text, be sure to also consider what happens should the content not fit. Fortunately, CSS gives you some options, as we’ll see in the next section.</p>
+			<div>
+				<div id="_idContainer862" class="sidebar">
+					<h5 class="SidebarTitle">Maximum and Minimum Dimensions</h5>
+					<p class="SidebarBody">If you want to set a limit on the size of a block element, use the <span class="Literal-Sidebar">max-</span> and <span class="Literal-Sidebar">min-</span> width and height properties.</p>
+					<p class="RefNameCode-Left">max-height<span class="COMMA">,</span> max-width<span class="COMMA">,</span> min-height<span class="COMMA">,</span> min-width</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">none</span> </p>
+					<p class="SidebarBody">These <a id="_idIndexMarker2612"></a><a id="_idIndexMarker2613"></a><a id="_idIndexMarker2614"></a><a id="_idIndexMarker2615"></a>properties work with block-level and replaced elements (like images) only. When the <span class="Literal-Sidebar">content-box</span> model is used, the value applies to the content area only, so if you apply padding, borders, or margins, it will make the overall element box larger, even if a <span class="Literal-Sidebar">max-width</span> or <span class="Literal-Sidebar">max-height</span> property has been specified. Note also that IE8 does not support <span class="Literal-Sidebar">box-sizing</span> on elements with <span class="Literal-Sidebar">max-</span>/<span class="Literal-Sidebar">min-</span> sizes.</p>
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Avoid using <span class="Literal-Sidebar">max-</span> and <span class="Literal-Sidebar">min-</span> widths and heights with the <span class="Literal-Sidebar">border-box</span> model. They are known to cause browser problems.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Handling Overflow</h2>
+			<p class="body">When an <a id="_idIndexMarker2616"></a>element is sized too small for its contents, you can specify what to do with the <a id="_idIndexMarker2617"></a>content that doesn’t fit by using the <span class="Literal-fc">overflow</span> property.</p>
+			<p class="RefNameCode-Left">overflow</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">visible</span> | <span class="prop-code">hidden</span> | <span class="prop-code">scroll</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">visible</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	block-level elements and replaced inline elements (such as images)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body"><span class="Xref-Figure">Figure 14-4</span> demonstrates the predefined values for <span class="Literal-fc">overflow</span>. In the figure, the various values are applied to an element that is 150 pixels square. The background color makes the edges of the content area apparent.</p>
+			<div>
+				<figure id="_idContainer864" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1404_overflow-ebook.png" alt="" width="1337" height="970"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-4.</span> Options for handling content overflow. The scroll and auto options have narrow gray scrollbars to the right of the text (as rendered on macOS).</figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">visible</span></p>
+			<p class="ListVariable">The default value is <span class="Literal-fc">visible</span>, which allows the content to hang out over the element box so that it all can be seen.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">hidden</span></p>
+			<p class="ListVariable">When <span class="Literal-fc">overflow</span> is set to <span class="Literal-fc">hidden</span>, the content that does not fit gets clipped off and does not appear beyond the edges of the element’s content area.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">scroll</span></p>
+			<p class="ListVariable">When <span class="Literal-fc">scroll</span> is <a id="_idIndexMarker2618"></a>specified, scrollbars are added to the element box to let users scroll through the content. Be aware that they may become visible only when you click the element to scroll it. There is an issue with this value on old iOS (&lt;4), Android (&lt;2.3), and a few other older mobile browsers, so it may be worthwhile to use a simpler alternative to <span class="Literal-fc">overflow:scroll</span> for mobile.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">auto</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">auto</span> value allows the browser to decide how to handle overflow. In most cases, scrollbars are added only when the content doesn’t fit and they are needed.</p>
+			<h1 id="_idParaDest-137" class="HeadA"><a id="_idTextAnchor195"></a>Padding </h1>
+			<p class="body"><span class="FirstTerm">Padding</span> is the<a id="_idIndexMarker2619"></a> <a id="_idIndexMarker2620"></a>space between the content area and the border (or the place the border would be if one isn’t specified). I find it helpful to add padding to elements when using a background color or a border. It gives the content a little breathing room, and prevents the border or edge of the background from bumping right up against the text. </p>
+			<p class="body">You can add padding to the individual sides of any element (block-level or inline). There is also a shorthand <span class="Literal-fc">padding</span> property that lets you add padding on all sides at<a id="_idIndexMarker2621"></a><a id="_idIndexMarker2622"></a><a id="_idIndexMarker2623"></a><a id="_idIndexMarker2624"></a> once.</p>
+			<p class="RefNameCode-Left">padding-top<span class="COMMA">,</span> padding-right<span class="COMMA">,</span> padding-bottom<span class="COMMA">,</span> padding-left</p>
+			<p class="property">Values: 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span></p>
+			<p class="property">Default: 	<span class="prop-code">0</span></p>
+			<p class="property">Applies to: 	all elements</p>
+			<p class="property">Inherits: 	no</p>
+			<p class="RefNameCode-Left">padding</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <span class="Literal-fc">padding-top</span>, <span class="Literal-fc">padding-right</span>, <span class="Literal-fc">padding-bottom</span>, and <span class="Literal-fc">padding-left</span> properties specify an amount of padding for each side of an element, as shown in this example and <span class="Xref-Figure">Figure 14-5</span> (note that I’ve also added a background color to make the outer edges of the padding area apparent).</p>
+			<pre class="CodeFirst">blockquote {<br/>  <code class="CodeColor">padding-top: 2em;<br/>  padding-right: 4em;<br/>  padding-bottom: 2em;<br/>  padding-left: 4em;</code><br/>  background-color: #D098D4; <span class="Code-Comment">/* light green */</span> <br/>}</pre>
+			<div>
+				<figure id="_idContainer866" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1405_padding.png" alt="" width="1337" height="502"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-5.</span> Adding padding around the content of an element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Specify padding in any of the CSS length units (<span class="Literal-fc">em</span> and <span class="Literal-fc">px</span> are the most common) or as a percentage of the <em class="Emphasis">width</em> of the parent element. Yes, the parent’s width is used as the basis, even for top and bottom padding. If the width of the parent element changes, so will the padding values on all sides of the child element, which makes <a id="_idIndexMarker2625"></a><a id="_idIndexMarker2626"></a>percentage values somewhat tricky to manage.</p>
+			<h2 class="HeadB">The Shorthand padding Property</h2>
+			<p class="body">As an alternative to<a id="_idIndexMarker2627"></a> setting padding one side at a time, you can use the shorthand <span class="Literal-fc">padding</span> property to add padding all around the element. The syntax is interesting; you can specify four, three, two, or one value for a single <span class="Literal-fc">padding</span> property. Let’s see how that works, starting with four values.</p>
+			<p class="body">When you supply four <span class="Literal-fc">padding</span> values, they are applied to each side in <em class="Emphasis">clockwise</em> order, starting at the top. Some people use the mnemonic device “TRouBLe” for the order <em class="Emphasis">Top Right Bottom Left</em>. This is a common syntax for applying shorthand values in CSS, so take a careful look:</p>
+			<pre class="CodeFirst">padding: <span class="Replaceable">top right bottom left</span>; </pre>
+			<p class="body">Using the <span class="Literal-fc">padding</span> property, we could reproduce the padding specified with the four individual properties in the previous example like this:</p>
+			<pre class="CodeFirst">blockquote {<br/>  <code class="CodeColor">padding: 2em 4em 2em 4em;</code><br/>  background-color: #D098D4;<br/>}</pre>
+			<p class="body">If the left and right padding are the same, you can shorten it by supplying only three values. The value for “right” (the second value in the string) will be mirrored and used for “left” as well. It is as though the browser assumes the “left” value is missing, so it just uses the “right” value on both sides. The syntax for three values is as follows:</p>
+			<pre class="CodeFirst">padding: <span class="Replaceable">top right/left bottom</span>; </pre>
+			<p class="body">This rule would be equivalent to the previous example because the padding on both the left and right edges of the element is set to 4em:</p>
+			<pre class="CodeFirst">blockquote {<br/>  <code class="CodeColor">padding: 2em 4em 2em;</code><br/>  background-color: #D098D4;<br/>}</pre>
+			<p class="body">Continuing with this pattern, if you provide only two values, the first one is used for the top and the bottom edges, and the second one is used for the left and right edges:</p>
+			<pre class="CodeFirst">padding: <span class="Replaceable">top/bottom right/left</span>;</pre>
+			<p class="body">Again, the same effect achieved by the previous two examples could be accomplished with this rule:</p>
+			<pre class="CodeFirst">blockquote {<br/>  <code class="CodeColor">padding: 2em 4em;</code><br/>  background-color: #D098D4;<br/>}</pre>
+			<div>
+				<div id="_idContainer867" class="sidebar">
+					<h5 class="SidebarSeries">AT A GLANCE</h5>
+					<h5 class="SidebarTitle">Shorthand Values</h5>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">1 value</strong></p>
+					<p class="SidebarBody"><span class="Literal-Sidebar">padding: 10px;</span></p>
+					<p class="SidebarBody">Applied to all sides.</p>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">2 values</strong></p>
+					<p class="SidebarBody"><span class="Literal-fc">padding: 10px 6px;</span></p>
+					<p class="SidebarBody">First is top and bottom; second is left and right.</p>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">3 values</strong></p>
+					<p class="SidebarBody"><span class="Literal-fc">padding: 10px 6px 4px;</span></p>
+					<p class="SidebarBody">First is top; second is left and right; third is bottom.</p>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">4 values</strong></p>
+					<p class="SidebarBody"><span class="Literal-fc">padding: 10px 6px 4px 10px;</span></p>
+					<p class="SidebarBody">Applied clockwise to top, right, bottom, and left edges consecutively (TRBL).</p>
+				</div>
+			</div>
+			<p class="body">Note that all of the previous examples have the same visual effect as shown in <span class="Xref-Figure">Figure 14-5</span>. </p>
+			<p class="body">Finally, if you provide just one value, it will be applied to all four sides of the element. This declaration applies 15 pixels of padding on all sides of a <span class="Literal-fc">div</span> element:</p>
+			<pre class="CodeFirst">div#announcement {<br/>  <code class="CodeColor">padding: 15px;</code><br/>  border: 1px solid;<br/>}</pre>
+			<p class="body">Get a feel for adding padding to elements in <span class="Xref-Figure">Exercise 14-1</span>.</p>
+			<div>
+				<div id="_idContainer873" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 14-1.</span> Adding a little padding</h6>
+					<p class="SidebarBody">In this exercise, we’ll begin adding box properties to improve the appearance of a site for the fictional Black Goose Bakery. I’ve given you a head start by marking up the source (<span class="Filename--Sidebar-">bakery.html</span>). Unlike pages in previous exercises, the bakery page uses an external style sheet, <span class="Filename--Sidebar-">bakery-styles.css</span>. Everything we will be doing to format this site over the next few chapters happens in the CSS file, so you should never need edit the HTML document; however, that is the file you will open in the browser to see the results of your style changes. All the files are available at <a href="http://www.learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">learningwebdesign.com/5e/materials</span></a>.</p>
+					<p class="SidebarBody"><span class="Xref-Figure">Figure 14-6</span> shows before and after shots of the site. It’s going to take several exercises over three chapters to get there, and padding is just the beginning. In <span class="Xref--Sidebar-">Chapter 16, CSS Layout with Flexbox and Grid</span>, we’ll turn that ugly navigation list into a nice navigation menu bar (in the meantime, please avert your eyes) and give the page a two-column layout suitable for larger screens. </p>
+					<div>
+						<figure id="_idContainer869" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1406_exercise1.png" alt="" width="2025" height="1167"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-6.</span> Before and after shots of the Black Goose Bakery site. </figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Start by getting familiar with the source document. Open <span class="Filename--Sidebar-">bakery.html</span> in a browser and a text editor to see what you’ve got to work with. The style sheet has been added with an <span class="Literal-Sidebar">@import</span> rule in the <span class="Literal-Sidebar">style</span> element. The document has been marked up with <span class="Literal-Sidebar">header</span> (including a <span class="Literal-Sidebar">nav</span> section), <span class="Literal-Sidebar">main</span>, <span class="Literal-Sidebar">aside</span>, and <span class="Literal-Sidebar">footer</span> sections. </p>
+					<p class="SidebarBody">Now take a look at <span class="Filename--Sidebar-">bakery-styles.css</span> in your text editor. I used comments in the style sheet to organize the styles related to each section (bonus points for you if you keep the styles organized as you go along!). You will find styles for text formatting, colors, and backgrounds—all properties that we’ve covered so far in this book, so they should look familiar.  Now let’s add some rules to <span class="Filename--Sidebar-">bakery-styles.css</span> to add padding to the elements.</p>
+					<div>
+						<div id="_idContainer870" class="note">
+							<h5 class="noteHeader">Note</h5>
+							<p class="note">This design uses a <a id="_idIndexMarker2628"></a><a id="_idIndexMarker2629"></a><a id="_idIndexMarker2630"></a>Google web font called <a id="_idIndexMarker2631"></a>Stint. You will need to have an internet connection in order to see it. If you are working offline, you will see Georgia or some serif font instead, which is just fine for these purposes, but your page won’t look exactly like the ones in the figures.</p>
+						</div>
+					</div>
+					<ol>
+						<li class="SidebarListNumber">The first thing we’ll do is to set the <span class="Literal-Sidebar">box-sizing</span> model to <span class="Literal-Sidebar">border-box</span> for all the elements in the document. Add these new rules to the existing <span class="Literal-Sidebar">style</span> element. This will make measurements simpler going forward.<pre class="SidebarCodeFirst"><code class="CodeColor">html {<br/>  box-sizing: border-box; <br/>} <br/>* {<br/>  box-sizing: inherit; <br/>}</code> </pre></li>
+						<li class="SidebarListNumber">Now find the styles for the <span class="Literal-Sidebar">header</span> and give it a height. It will fill 100% of the width of the page by default, so the width is taken care of. I picked 15em for the height because it seemed tall enough to accommodate the content and show a nice amount of the croissant background image, but you can play around with it.<pre class="SidebarCodeFirst">header {<br/>  …<br/><code class="CodeColor">  height: 15em; </code><br/>} </pre></li>
+						<li class="SidebarListNumber">The <span class="Literal-Sidebar">main</span> section is going to need a little padding, so add 1em of padding on all sides. You can add this declaration after the existing <span class="Literal-Sidebar">main</span> styles.<pre class="SidebarCodeFirst">main {<br/>  …<br/>  <code class="CodeColor">padding: 1em; </code><br/>} </pre></li>
+						<li class="SidebarListNumber">Next, we’ll get a little fancier with the <span class="Literal-Sidebar">aside</span> element (“Hours”). We’ll need extra padding on the left side for the tiling scallop background image to be visible. There are several approaches to applying different padding amounts to each side, but I’m going to do it in a way that gives you experience deliberately overriding earlier declarations.<p class="SidebarListItem_cont">Use the <span class="Literal-fc">padding</span> shorthand property to add 1em of padding on all sides of the <span class="Literal-fc">aside</span> element. Then write a second declaration that adds 45 pixels of padding on just the left side. Because the <span class="Literal-Sidebar">padding-left</span> declaration comes second, it will override the 1em setting applied with the shorthand.</p><pre class="SidebarCodeFirst">aside {<br/>  …<br/>  <code class="CodeColor">padding: 1em;<br/>  padding-left: 45px; </code><br/>} </pre></li>
+						<li class="SidebarListNumber">Finally, that footer is looking skinny and cramped. Let’s add padding, which will increase the height of the footer and give the content some space.<pre class="SidebarCodeFirst">footer {<br/>  …<br/>  <code class="CodeColor">padding: 1em; </code><br/>}</pre></li>
+						<li class="SidebarListNumber">Save the <span class="Filename--Sidebar-">bakery-styles.css</span> document, and then open (or reload) <span class="Filename--Sidebar-">bakery.html</span> in the browser to see the result of your work. The changes at this point are pretty subtle. <span class="Xref-Figure">Figure 14-7</span> highlights the padding additions.<figure id="_idContainer872" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1407_ex1_padding.png" alt="" width="552" height="775"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-7.</span> The shaded areas indicate the padding added to <span class="Literal-Sidebar">main</span> (blue), <span class="Literal-Sidebar">aside</span> (pink), and <span class="Literal-Sidebar">footer</span> (yellow). Colors added for demo purposes but wouldn’t render in the browser.</figcaption></figure></li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-138" class="HeadA"><a id="_idTextAnchor196"></a>Borders</h1>
+			<p class="body">A <span class="FirstTerm">border</span> <a id="_idIndexMarker2632"></a><a id="_idIndexMarker2633"></a>is simply a line drawn around the content area and its (optional) padding. You can choose from eight border styles and make them any width and color you like. Borders can be applied all around the element or just on a particular side or sides. CSS3 introduced properties for rounding the corners or applying images to borders. We’ll start our border exploration with the various border styles.</p>
+			<h2 class="HeadB">Border Style</h2>
+			<p class="body">The style is the<a id="_idIndexMarker2634"></a> <a id="_idIndexMarker2635"></a>most important of the border properties because, according to the CSS specification, if there is no border style specified, the border does not exist (the default is <span class="Literal-fc">none</span>). In other words, you must always declare the style of the border, or the other border properties will be ignored. </p>
+			<div>
+				<div id="_idContainer874" class="sidebar">
+					<h5 class="SidebarSeries">DESIGN TIP</h5>
+					<h5 class="SidebarTitle">Bottom Borders Instead of Underlines</h5>
+					<p class="SidebarBody">Turning off link underlines and replacing them with a custom bottom border is a common design technique. It lightens the look of links while still making them stand out from ordinary text.</p>
+				</div>
+			</div>
+			<p class="body">Border styles can be <a id="_idIndexMarker2636"></a><a id="_idIndexMarker2637"></a><a id="_idIndexMarker2638"></a><a id="_idIndexMarker2639"></a>applied one side at a time or with the shorthand <span class="Literal-fc">border-style</span> property.</p>
+			<p class="RefNameCode-Left">border-top-style<span class="COMMA">,</span> border-right-style<span class="COMMA">,</span> border-bottom-style<span class="COMMA">,</span> border-left-style</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none</span> | <span class="prop-code">solid</span> | <span class="prop-code">hidden</span> | <span class="prop-code">dotted</span> | <span class="prop-code">dashed</span> | <span class="prop-code">double</span> | <span class="prop-code">groove</span> | <span class="prop-code">ridge</span> | <span class="prop-code">inset</span> | <span class="prop-code">outset</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">border-style</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none</span> | <span class="prop-code">solid</span> | <span class="prop-code">hidden</span> | <span class="prop-code">dotted</span> | <span class="prop-code">dashed</span> | <span class="prop-code">double</span> | <span class="prop-code">groove</span> | <span class="prop-code">ridge</span> | <span class="prop-code">inset</span> | <span class="prop-code">outset</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The value of the <span class="Literal-fc">border-style</span> property is one of 10 keywords describing the available border styles, as shown in <span class="Xref-Figure">Figure 14-8</span>. The value <span class="Literal-fc">hidden</span> is equivalent to <span class="Literal-fc">none</span>.</p>
+			<div>
+				<figure id="_idContainer876" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1408_bordersstyle.png" alt="" width="1314" height="920"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-8.</span> The available border styles (shown at the default medium width).</figcaption>
+				</figure>
+			</div>
+			<p class="body">Use the side-specific border style properties (<span class="Literal-fc">border-top-style</span>, <span class="Literal-fc">border-right-style</span>, <span class="Literal-fc">border-bottom-style</span>, and <span class="Literal-fc">border-left-style</span>) to apply a style to one side of the element. If you do not specify a width, the default medium width will be used. If there is no color specified, the border uses the foreground color of the element (same as the text). </p>
+			<p class="body">In the following example, I’ve applied a different style to each side of an element to show the single-side border properties in action (<span class="Xref-Figure">Figure 14-9</span>).</p>
+			<pre class="CodeFirst">div#silly {<br/><code class="CodeColor">  border-top-style: solid;<br/>  border-right-style: dashed;<br/>  border-bottom-style: double;<br/>  border-left-style: dotted;</code><br/>  width: 300px;<br/>  height: 100px;<br/>}</pre>
+			<p class="body">The <span class="Literal-fc">border-style</span> shorthand property works on the clockwise (TRouBLe) system described for <span class="Literal-fc">padding</span> earlier. You can supply four values for all four sides or fewer values when the left/right and top/bottom borders are the same. The silly border effect in the previous example could also be specified with the <span class="Literal-fc">border-style</span> property as shown here, and the result would be the same as shown in <span class="Xref-Figure">Figure 14-9</span>:</p>
+			<pre class="CodeFirst"><code class="CodeColor">  border-style: solid dashed double dotted;</code></pre>
+			<div>
+				<figure id="_idContainer878" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1409_4borders.png" alt="" width="1330" height="476"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-9.</span> Border styles applied to individual sides of an element.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Border Width (Thickness)</h2>
+			<p class="body">Use one of the <a id="_idIndexMarker2640"></a><a id="_idIndexMarker2641"></a><a id="_idIndexMarker2642"></a><a id="_idIndexMarker2643"></a><a id="_idIndexMarker2644"></a><a id="_idIndexMarker2645"></a><span class="Literal-fc">border-width</span> properties to specify the thickness of the border. Once again, you can target each side of the element with a single-side property, or specify several sides at once in clockwise order with the shorthand <span class="Literal-fc">border-width</span> property. </p>
+			<p class="RefNameCode-Left">border-top-width<span class="COMMA">,</span> border-right-width<span class="COMMA">,</span> border-bottom-width<span class="COMMA">,</span> border-left-width</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-code">thin</span> | <span class="prop-code">medium</span> | <span class="prop-code">thick</span>  </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">medium</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">border-width</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-code">thin</span> | <span class="prop-code">medium</span> | <span class="prop-code">thick</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">medium</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The most common way to specify the width of borders is using a pixel or em measurement; however, you can also specify one of the keywords (<span class="Literal-fc">thin</span>, <span class="Literal-fc">medium</span>, or <span class="Literal-fc">thick</span>) and leave the rendering up to the browser. </p>
+			<p class="body">I’ve included a mix of values in this example (<span class="Xref-Figure">Figure 14-10</span>). Notice that I’ve also included the <span class="Literal-fc">border-style</span> property because if I didn’t, the border would not render at all:</p>
+			<pre class="CodeFirst">div#help {<br/><code class="CodeColor">  border-top-width: thin;<br/>  border-right-width: medium;<br/>  border-bottom-width: thick;<br/>  border-left-width: 12px;</code><br/>  border-style: solid;<br/>  width: 300px;<br/>  height: 100px; <br/>}</pre>
+			<p class="body">or:</p>
+			<pre class="CodeFirst">div#help {<br/><code class="CodeColor">  border-width: thin medium thick 12px;</code><br/>  border-style: solid;<br/>  width: 300px;<br/>  height: 100px; <br/>}</pre>
+			<div>
+				<figure id="_idContainer880" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1410_borderwidth.png" alt="" width="1230" height="589"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-10.</span> Specifying the width of borders.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Border Color</h2>
+			<p class="body">Border colors are specified in the same way: via the side-specific properties or the <span class="Literal-fc">border-color</span> shorthand property. When you specify a border color, it overrides the foreground <a id="_idIndexMarker2646"></a><a id="_idIndexMarker2647"></a><a id="_idIndexMarker2648"></a><a id="_idIndexMarker2649"></a><a id="_idIndexMarker2650"></a><a id="_idIndexMarker2651"></a>color as set by the <span class="Literal-fc">color</span> property for the element.</p>
+			<p class="RefNameCode-Left">border-top-color<span class="COMMA">,</span> border-right-color<span class="COMMA">,</span> border-bottom-color<span class="COMMA">,</span> border-left-color</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">color name</span> or <span class="prop-replace">RGB/HSL value</span> | <span class="prop-code">transparent</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	the value of the <span class="prop-code">color</span> property for the element</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">border-color</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">color name</span> or <span class="prop-replace">RGB/HSL value</span> | <span class="prop-code">transparent</span>  </p>
+			<p class="property"><span class="prop-label">Default:</span> 	the value of the <span class="prop-code">color</span> property for the element</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">You know all about specifying color values, and you should be getting used to the shorthand properties as well, so I’ll keep this example short and sweet (<span class="Xref-Figure">Figure 14-11</span>). Here, I’ve provided two values for the shorthand <span class="Literal-fc">border-color</span> property to make the top and bottom of a <span class="Literal-fc">div</span> maroon and the left and right sides aqua:</p>
+			<div>
+				<figure id="_idContainer882" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1411_bordercolor.png" alt="" width="1330" height="465"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-11.</span> Specifying the color of borders.</figcaption>
+				</figure>
+			</div>
+			<pre class="CodeFirst">div#special {<br/>  <code class="CodeColor">border-color: maroon aqua;<br/>  </code>border-style: solid;<br/>  border-width: 6px;<br/>  width: 300px;<br/>  height: 100px;<br/>}</pre>
+			<div>
+				<div id="_idContainer883" class="sidebar">
+					<h5 class="SidebarSeries">Design Tip</h5>
+					<p class="SidebarBody">Setting <span class="Literal-Sidebar">border-color</span> to<a id="_idIndexMarker2652"></a> <span class="Literal-Sidebar">transparent</span> allows the background to show through the border, yet holds the width of the border as specified. This may be useful when you’re creating rollover (<span class="Literal-Sidebar">:hover</span>) effects with borders, because the space where the border will appear is maintained even when the mouse is not over the element. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Combining Style, Width, and Color</h2>
+			<p class="body">The authors of<a id="_idIndexMarker2653"></a><a id="_idIndexMarker2654"></a><a id="_idIndexMarker2655"></a><a id="_idIndexMarker2656"></a> CSS didn’t skimp when it came to border shortcuts. They also created properties for providing style, width, and color values in one declaration, one side at a time. You can specify the appearance of specific sides, or use the <span class="Literal-fc">border</span> <a id="_idIndexMarker2657"></a><a id="_idIndexMarker2658"></a><a id="_idIndexMarker2659"></a><a id="_idIndexMarker2660"></a>property to change all four sides at once.</p>
+			<p class="RefNameCode-Left">border-top<span class="COMMA">,</span> border-right<span class="COMMA">,</span> border-bottom<span class="COMMA">,</span> border-left</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">border-style</span>  <span class="prop-replace">border-width</span>  <span class="prop-replace">border-color</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	defaults for each property</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">border</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">border-style</span>  <span class="prop-replace">border-width</span>  <span class="prop-replace">border-color</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	defaults for each property</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The values for <span class="Literal-fc">border</span> and the side-specific border properties may include style, width, and color values in any order. You do not need to declare all three, but if the border style value is omitted, no border will render. </p>
+			<p class="body">The <span class="Literal-fc">border</span> shorthand property works a bit differently than the other shorthand properties that we’ve covered in that it takes one set of values and always applies them to all four sides of the element. In other words, it does not use the clockwise TRBL system that we’ve seen with other shorthand properties.</p>
+			<p class="body">Here is a smattering of valid border shortcut examples to give you an idea of how they work:</p>
+			<pre class="CodeFirst">h1 { <code class="CodeColor">border-left: red .5em solid;</code> }      <span class="Code-Comment">/* left border only */</span> <br/>h2 { <code class="CodeColor">border-bottom: 1px solid;</code> }        <span class="Code-Comment"> /* bottom border only */</span><br/>p.example { <code class="CodeColor">border: 2px dotted #663;</code> }    <span class="Code-Comment">/* all four sides */</span></pre>
+			<div>
+				<div id="_idContainer884" class="sidebar">
+					<h5 class="SidebarTitle">CSS Outlines</h5>
+					<p class="SidebarBody">Another type of rule you can draw around an element is an <span class="FirstTerm--Sidebar-">outline</span>. Outlines look like borders, and the syntax is the same, but there is an important difference. Outlines, unlike borders, are not calculated in the width of the element box. They just lay on top, not interfering with anything. Outlines are drawn on the outside edge of the border (if one is specified) and overlap the margin. </p>
+					<p class="SidebarBody">Because outlines do not affect layout, they’re a great tool for checking your design. You can turn them on and off without affecting width measurements to see where and how element boxes are positioned.</p>
+					<p class="SidebarBody">The outline properties are similar to border properties with one important difference: It is not possible to specify outlines for particular sides of the element box—it’s all or nothing. </p>
+					<p class="RefNameCode-Left">outline-style</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">auto</span> | <span class="prop-code">solid</span> | <span class="prop-code">none</span> | <span class="prop-code">dotted</span> | <span class="prop-code">dashed</span> | <span class="prop-code">double</span> | <span class="prop-code">groove</span> | <span class="prop-code">ridge</span> | <span class="prop-code">inset</span> | <span class="prop-code">outset</span></p>
+					<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+					<p class="SidebarBody">These are <a id="_idIndexMarker2661"></a>the same as the <span class="Literal-fc">border-style</span> values, with the addition of <span class="Literal-Sidebar">auto</span>, which lets the browser choose the style. Also, you cannot set the <span class="Literal-Sidebar">outline-style</span> to <span class="Literal-Sidebar">hidden</span>.</p>
+					<p class="RefNameCode-Left">outline-width</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-code">thin</span> | <span class="prop-code">medium</span> | <span class="prop-code">thick</span> </p>
+					<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">medium</span></p>
+					<p class="SidebarBody">Same as <a id="_idIndexMarker2662"></a><span class="Literal-Sidebar">border-width</span> values.</p>
+					<p class="RefNameCode-Left">outline-color</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">color name</span> or <span class="prop-replace">RGB/HSL value</span> | <span class="prop-code">invert</span></p>
+					<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">invert</span></p>
+					<p class="SidebarBody">The <a id="_idIndexMarker2663"></a>default <span class="Literal-Sidebar">invert</span> value applies the inverse of the background color to the outline, but it has very little browser support.</p>
+					<p class="RefNameCode-Left">outline-offset</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> </p>
+					<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+					<p class="SidebarBody">By default, the <a id="_idIndexMarker2664"></a>outline is drawn just outside the border edge. <span class="Literal-Sidebar">outline-offset</span> moves the outline beyond the border by a specified length. </p>
+					<p class="RefNameCode-Left">outline</p>
+					<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">outline-style  outline-width  outline-color</span> </p>
+					<p class="property"><span class="prop-label">Default:</span> 	Defaults of individual properties</p>
+					<p class="SidebarBody">The <a id="_idIndexMarker2665"></a>shorthand <span class="Literal-Sidebar">outline</span> property combines values for <span class="Literal-Sidebar">outline-style</span>, <span class="Literal-Sidebar">outline-width</span>, and <span class="Literal-Sidebar">outline-color</span>. Remember that you can specify them only for all sides of the element at once.</p>
+					<pre class="SidebarCodeFirst">div#story { <code class="CodeColor">outline: 2px dashed red;</code> }</pre>
+				</div>
+			</div>
+			<h2 class="HeadB">Rounded Corners with border-radius</h2>
+			<p class="body">Perhaps you’d <a id="_idIndexMarker2666"></a><a id="_idIndexMarker2667"></a><a id="_idIndexMarker2668"></a><a id="_idIndexMarker2669"></a><a id="_idIndexMarker2670"></a><a id="_idIndexMarker2671"></a>like your element boxes to look a little softer and rounder. Well, then, the <span class="Literal-fc">border-radius</span> property is for you! There are individual corner properties as well as a <span class="Literal-fc">border-radius</span> shorthand. </p>
+			<p class="RefNameCode-Left">border-top-left-radius<span class="COMMA">,</span> border-top-right-radius<span class="COMMA">,</span> border-bottom-right-radius<span class="COMMA">,</span> border-bottom-left-radius </p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">border-radius </p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">1, 2, 3, or 4 length or percentage values</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">To round <a id="_idIndexMarker2672"></a>off the corner of an element, simply apply one of the <span class="Literal-fc">border-radius</span> properties, but keep in mind that you will see the result only if the element has a border or background color. Values are typically provided in ems or pixels. <a id="_idIndexMarker2673"></a>Percentages are allowed and are nice for keeping the curve proportional to the box should it resize, but you may run into some browser inconsistencies. </p>
+			<p class="body">You can target the corners individually or use the shorthand <span class="Literal-fc">border-radius</span> property. If you provide one value for <span class="Literal-fc">border-radius</span>, it is applied to all four corners. Four values are applied clockwise, starting in the top-left corner (top-left, top-right, bottom-right, bottom-left). When you supply two values, the first one is used for top-left and bottom-right, and the second is for the other two corners. </p>
+			<p class="body">Compare the <span class="Literal-fc">border-radius</span> values to the resulting boxes in <span class="Xref-Figure">Figure 14-12</span>. You can achieve many different effects, from slightly softened corners to a long capsule shape, depending on how you set the values.</p>
+			<div>
+				<figure id="_idContainer886" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1412_borderradius-ebook.png" alt="" width="1225" height="993"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-12.</span> Make the corners of element boxes rounded with the <span class="Literal-Sidebar">border-radius</span> properties.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer887" class="note">
+					<h5 class="WarningHeader">Browser support Note</h5>
+					<p class="note">All browsers have been supporting <span class="Literal-Sidebar">border-radius</span> properties using the standard syntax (that is, without prefixes) since about 2010. There are prefixed properties for Firefox &lt;3.6 and Safari &lt;5.0, but they’re so old it’s probably not worth worrying about. Internet Explorer 8 and earlier, however, do not support <span class="Literal-Sidebar">border-radius</span> at all. But in this case, chances are the usability of your site doesn’t depend on rounded corners, so this is a good opportunity to practice progressive enhancement: non-supporting browsers get perfectly acceptable square corners, and all modern browsers get a little something extra.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Elliptical corners </h3>
+			<p class="body">So far, the<a id="_idIndexMarker2674"></a> corners we’ve made are sections of perfect circles, but you can also make a corner elliptical by specifying two values: the first for the horizontal radius and the second for the vertical radius (see <span class="Xref-Figure">Figure 14-13</span>, <span class="Circle-Frame-Neg">A</span> and <span class="Circle-Frame-Neg">B</span>). </p>
+			<pre class="CodeFirst"><span class="Circle-Frame-Neg">A</span><span class="AlphaBullet--9pt-"> </span>border-top-right-radius: 100px 50px; <br/><span class="Circle-Frame-Neg">B</span> border-top-right-radius: 50px 20px;<br/>   border-top-left-radius: 50px 20px;</pre>
+			<p class="body">If you want to use the shorthand property, the horizontal and vertical radii get separated by a slash (otherwise, they’d be confused for different corner values). The following example sets the horizontal radius on all corners to 60px and the vertical radius to 40px (<span class="Xref-Figure">Figure 14-13</span>, <span class="Circle-Frame-Neg">C</span>): </p>
+			<pre class="CodeFirst"><span class="Circle-Frame-Neg">C</span> border-radius: 60px / 40px; </pre>
+			<p class="body">If you want to see something really nutty, take a look at a <span class="Literal-fc">border-radius</span> shorthand property that specifies a different ellipse for each of the four corners. All of the horizontal values are lined up on the left of the slash in clockwise order (top-left, top-right, bottom-right, bottom-left), and all of the corresponding vertical values are lined up on the right (<span class="Xref-Figure">Figure 14-13</span>, <span class="Circle-Frame-Neg">D</span>):</p>
+			<pre class="CodeFirst"><span class="Circle-Frame-Neg">D</span> border-radius: 36px 40px 60px 20px / 12px 10px 30px 36px;</pre>
+			<div>
+				<figure id="_idContainer889" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1413_ellipses_code.png" alt="" width="1321" height="792"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-13.</span> Applying elliptical corners to boxes.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Now it’s time to try your hand at borders. <span class="Xref-Figure">Exercise 14-2 </span>will not only give you some practice, but it should also give you some ideas on the ways borders can be used to add visual interest to designs.</p>
+			<div>
+				<div id="_idContainer892" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 14-2.</span> Border tricks</h6>
+					<p class="SidebarBody">In this exercise, we’ll have some fun with borders on the Black Goose Bakery page. In addition to putting borders around content sections of the page, we’ll use borders to beef up the headlines and as an alternative to underlines under links.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">Open <span class="Filename--Sidebar-">bakery-styles.css</span> in a text editor if it isn’t already. We’ll start with the basics by using the shorthand <span class="Literal-Sidebar">border</span> property to add a tan double rule around the <span class="Literal-fc">main</span> element. Add the new declaration to the existing rule for <span class="Literal-Sidebar">main</span>:<pre class="SidebarCodeFirst">main {<br/>  …<br/>  padding: 1em; <code class="CodeColor"><br/>  border: double 4px #EADDC4; </code><br/>}</pre></li>
+						<li class="SidebarListNumber">Now try out some <span class="Literal-Sidebar">border-radius</span> properties to add generous rounded corners to the <span class="Literal-Sidebar">main</span> and <span class="Literal-fc">aside</span> sections. A 25-pixel radius should do. Pixels are my choice over ems here because I don’t want the radius to scale with the text. Start by adding this declaration to the styles for <span class="Literal-Sidebar">main</span>:<pre class="SidebarCodeFirst"><code class="CodeColor">  border-radius: 25px; </code></pre><p class="SidebarListItem_cont">And give just the top-right corner of the <span class="Literal-Sidebar">aside</span> a matching rounded corner:</p><pre class="SidebarCodeFirst">aside { <br/>  …<br/><code class="CodeColor">  border-top-right-radius: 25px;</code><br/>} </pre></li>
+						<li class="SidebarListNumber">Just for fun (and practice), we’ll add a decorative border on two sides of the baked goods headings (<span class="Literal-Sidebar">h3</span>). Find the existing rule for <span class="Literal-Sidebar">h3</span> elements and add a declaration that adds a 1-pixel solid rule on the top of the headline. Add another that adds a thicker 3-pixel solid rule on the left. I want the borders to be the same color as the text, so we don’t need to specify the <span class="Literal-Sidebar">border-color</span>. Finally, to prevent the text from bumping into the left border, add a little bit of padding (1em) to the left of the headline content:<pre class="SidebarCodeFirst">h3 {<br/>   …<br/>   <code class="CodeColor">border-top: 1px solid;<br/>   border-left: 3px solid;<br/>   padding-left: 1em; </code><br/>}</pre></li>
+						<li class="SidebarListNumber">The last thing we’ll do is to replace the standard underline with a decorative bottom border under links. Start by turning off the underline for all links. Add this rule in the “link styles” section of the style sheet:<pre class="SidebarCodeFirst"><code class="CodeColor">a {<br/>  text-decoration: none;<br/>}</code></pre><p class="SidebarListItem_cont">Then add a 1-pixel dotted border to the bottom edge of links:</p><pre class="SidebarCodeFirst">a {<br/>  text-decoration: none;<br/>  <code class="CodeColor">border-bottom: 1px dotted;</code><br/>}</pre><p class="SidebarListItem_cont">As is often the case when you add a border to an element, it is a good idea to also add a little padding to keep things from bumping together:</p><pre class="SidebarCodeFirst">a {<br/>  text-decoration: none;<br/>  border-bottom: 1px dotted;<br/>  <code class="CodeColor">padding-bottom: .2em;</code><br/>}</pre><p class="SidebarListItem_cont">Now you can save the style sheet and reload <span class="Filename--Sidebar-">bakery.html</span> in the browser. <span class="Xref-Figure">Figure 14-14</span> shows a detail of how your page should be looking so far.</p><figure id="_idContainer891" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1414_exercise2.png" alt="" width="920" height="443"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-14.</span> The results of our border additions.</figcaption></figure></li>
+					</ol>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer895" class="sidebar">
+					<h5 class="SidebarTitle">Picture-Perfect Borders</h5>
+					<p class="SidebarBody">CSS3 introduced the <span class="Literal-Sidebar">border-image-*</span> properties, which let you fill in the sides and corners of a border box with an image of your choice, as shown in <span class="Xref-Figure">Figure 14-15</span>. </p>
+					<div>
+						<figure id="_idContainer894" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1415_borderimage_copy.png" alt="" width="1875" height="663"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-15.</span> Examples of a border image applied to a box.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Border images are applied with a collection of five properties: </p>
+					<ul>
+						<li class="SidebarListBullet"><span class="Literal-Sidebar">border-image-source</span> <a id="_idIndexMarker2675"></a>indicates the location of the image</li>
+						<li class="SidebarListBullet"><span class="Literal-Sidebar">border-image-slice</span> <a id="_idIndexMarker2676"></a>divides the image into nine sections using offset measurements</li>
+						<li class="SidebarListBullet"><span class="Literal-Sidebar">border-image-width</span> <a id="_idIndexMarker2677"></a>specifies the width of the border area</li>
+						<li class="SidebarListBullet"><span class="Literal-Sidebar">border-image-repeat</span> <a id="_idIndexMarker2678"></a>specifies whether the image should stretch or repeat along the sides</li>
+						<li class="SidebarListBullet"><span class="Literal-Sidebar">border-image-outset</span> <a id="_idIndexMarker2679"></a>pushes the border away from the content by the specified amount</li>
+					</ul>
+					<p class="SidebarBody">There is also a shorthand <a id="_idIndexMarker2680"></a><span class="Literal-Sidebar">border-image</span> property that combines the individual properties in the following syntax:</p>
+					<pre class="SidebarCodeFirst">border-image: <span class="Replaceable-Sidebar">source</span> <span class="Replaceable-Sidebar">slice</span> / <span class="Replaceable-Sidebar">width</span> / <span class="Replaceable-Sidebar">outset</span> <span class="Replaceable-Sidebar">repeat</span>;</pre>
+					<p class="SidebarBody">The style rules for the image border in <span class="Xref-Figure">Figure 14-15</span> are as follows:</p>
+					<pre class="SidebarCodeFirst">border: 5px solid #d1214a; <span class="Code-Comment">/* red */</span></pre>
+					<pre class="SidebarCode"><code class="CodeColor">border-image:</code> <code class="CodeColor">url(fancyframe.png) 55 fill / 55px / 25px stretch;</code></pre>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">border</span> shorthand provides a fallback style for the border should the image not load or if the <span class="Literal-Sidebar">border-image</span> isn’t supported by the browser.</p>
+					<p class="SidebarBody">The <span class="Literal-fc">border-image</span> rule tells the browser to apply the image <span class="Filename--Sidebar-">fancyframe.png</span> to the border, slice it <span class="Literal-Sidebar">55</span> pixels from the edges, and use the center of the image to <span class="Literal-fc">fill</span> the center of the box. The width of the border area is <span class="Literal-Sidebar">55px</span>, and the image should be pushed toward the margins by <span class="Literal-Sidebar">25px</span>. Finally, the image areas that make up the sides should <span class="Literal-Sidebar">stretch</span> to fill the width and height of the box. </p>
+					<p class="SidebarBody">That's not much of an explanation, I know, but I've written an article, <span class="Xref">“Border Images</span>,<span class="Xref">”</span> which goes into more detail. You can download it at <a href="http://learningwebdesign.com/articles/"><span class="URL-Email--Sidebar-">learningwebdesign.com/articles/</span></a>. For even more information on border images, check out these resources:</p>
+					<ul>
+						<li class="SidebarListBullet">The CSS Background and Borders Module Level 3 (<a href="http://www.w3.org/TR/css-backgrounds-3/#the-border-image-source"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-backgrounds-3/#the-border-image-source</span></a>)</li>
+						<li class="SidebarListBullet">The <span class="Literal-Sidebar">border-image</span> listing on <a id="_idIndexMarker2681"></a>CSS-Tricks (<a href="https://css-tricks.com/almanac/properties/b/border-image/"><span class="URL-Email--Sidebar-">css-tricks.com/almanac/properties/b/border-image/</span></a>), for a less dense explanation</li>
+					</ul>
+				</div>
+			</div>
+			<h1 id="_idParaDest-139" class="HeadA"><a id="_idTextAnchor197"></a>Margins</h1>
+			<p class="body">A <span class="FirstTerm">margin</span> is an <a id="_idIndexMarker2682"></a><a id="_idIndexMarker2683"></a>optional amount of space that you can add on the outside of the border. Margins keep elements from bumping into one another or the edge of the browser window or viewport. </p>
+			<p class="body">The side-specific and shorthand <span class="Literal-fc">margin</span> properties work much like the <span class="Literal-fc">padding</span> properties we’ve looked at already; however, margins have some special behaviors to <a id="_idIndexMarker2684"></a><a id="_idIndexMarker2685"></a><a id="_idIndexMarker2686"></a><a id="_idIndexMarker2687"></a>be aware of. </p>
+			<p class="RefNameCode-Left">margin-top<span class="COMMA">,</span> margin-right<span class="COMMA">,</span> margin-bottom<span class="COMMA">,</span> margin-left</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="RefNameCode-Left">margin</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <a id="_idIndexMarker2688"></a>margin properties are very straightforward to use. You can either specify an amount of margin to appear on each side of the element or use the <span class="Literal-fc">margin</span> property to specify all sides at once. </p>
+			<div>
+				<div id="_idContainer896" class="sidebar">
+					<h5 class="SidebarSeries">CSS TIP</h5>
+					<h5 class="SidebarTitle">Browser Default Margins</h5>
+					<p class="SidebarBody">You may<a id="_idIndexMarker2689"></a><a id="_idIndexMarker2690"></a> have noticed that space is added automatically around headings, paragraphs, and other block elements. That’s the browser’s default style sheet at work, applying margin amounts above and below those elements.</p>
+					<p class="SidebarBody">It’s good to keep in mind that the browser is applying its own values for margins and padding behind the scenes. These values will be used unless you specifically override them with your own style rules.</p>
+					<p class="SidebarBody">If you are working on a design and coming across mysterious amounts of space that you didn’t add, the browser’s default styles may be the culprit. To troubleshoot, I recommend using your browser’s <a id="_idIndexMarker2691"></a>Web Inspector tool, which will show you the source of all the styles applied to the element. Or if you just don’t want to worry about browser styles at all, one solution is to reset the padding and margins for all elements to zero, which is discussed in the “CSS Reset” section in <span class="Xref--Sidebar-">Chapter 19, More CSS Techniques</span>.</p>
+				</div>
+			</div>
+			<p class="body">The shorthand <span class="Literal-fc">margin</span> property works the same as the <span class="Literal-fc">padding</span> shorthand. When you supply four values, they are applied in clockwise order (top, right, bottom, left) to the sides of the element. If you supply three values, the middle value applies to both the left and right sides. When two values are provided, the first is used for the top and bottom, and the second applies to the left and right edges. Finally, one value will be applied to all four sides of the element.</p>
+			<p class="body">As with most web measurements, ems, pixels, and percentages are the most common ways to specify margins. Be aware, however, that if you specify a <a id="_idIndexMarker2692"></a><a id="_idIndexMarker2693"></a>percentage value, it is calculated based on the <em class="Emphasis">width</em> of the parent element. If the parent’s width changes, so will the margins on all four sides of the child element (padding has this behavior as well). The <span class="Literal-fc">auto</span> keyword allows the browser to fill in the amount of margin necessary to fit or fill the available space (see <span class="Xref">Power Tool</span> sidebar).</p>
+			<div>
+				<div id="_idContainer897" class="sidebar">
+					<h5 class="SidebarSeries">Power Tool</h5>
+					<h5 class="SidebarTitle">Centering with auto Margins</h5>
+					<p class="SidebarBody">Setting the margin to <span class="Literal-Sidebar">auto</span> on the left and right sides of a sized element has the effect of <a id="_idIndexMarker2694"></a>centering the element in its container. </p>
+				</div>
+			</div>
+			<p class="body"><span class="Xref-Figure">Figure 14-16</span> shows the results of the following margin examples. I’ve added a red border to the elements in the examples to make their boundaries more clear. The dotted rules were added in the figure illustration to indicate the outer edges of the margins for clarity purposes only, but they are not something you’d see in the browser.</p>
+			<pre class="CodeFirst"><span class="Circle-Frame-Neg">A</span>  p#A {<br/><code class="CodeColor">      margin: 4em;</code><br/>      border: 2px solid red;<br/>      background: #e2f3f5;<br/>    }<br/><span class="Circle-Frame-Neg">B</span>  p#B {<br/><code class="CodeColor">      margin-top: 2em;<br/>      margin-right: 250px;<br/>      margin-bottom: 1em;<br/>      margin-left: 4em;</code><br/>      border: 2px solid red;<br/>      background: #e2f3f5;<br/>    }<br/><span class="Circle-Frame-Neg">C</span>  body {<br/><code class="CodeColor">      margin: 0 20%;</code><br/>      border: 3px solid red;<br/>      background-color: #e2f3f5;<br/>    }</pre>
+			<div>
+				<figure id="_idContainer899" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1416_margins_nocode.png" alt="" width="1338" height="1618"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-16.</span><span class="FigureLabel"> </span>Applying margins to the <span class="Literal-Sidebar">body</span> and to individual elements.</figcaption>
+				</figure>
+			</div>
+			<p class="Figure_Holder">Take a look at Example <span class="Circle-Frame-Neg">C</span> in <span class="Xref-Figure">Figure 14-16</span>. Here I’ve applied the <span class="Literal-fc">margin</span> property to the <span class="Literal-fc">body</span> element of the document. For this particular design, I set the top margin to zero (0) so the <span class="Literal-fc">body</span> starts flush against the top edge of the browser window. Adding equal amounts of margin to the left and right sides of the <span class="Literal-fc">body</span> keeps the content of the page centered and gives it a little breathing room. </p>
+			<div>
+				<div id="_idContainer900" class="callout">
+					<p class="callout">Adding a margin to the body element adds space between the page content and the edges of the viewport.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Margin Behavior</h2>
+			<p class="body">Although it is easy to write rules that apply margin amounts around HTML elements, it is important to be familiar with some of the quirks of margin behavior.</p>
+			<h3 class="HeadC">Collapsing margins</h3>
+			<p class="body">The most <a id="_idIndexMarker2695"></a><a id="_idIndexMarker2696"></a>significant margin behavior to be aware of is that the top and bottom margins of neighboring elements <span class="FirstTerm">collapse</span>. This means that instead of accumulating, adjacent margins overlap, and only the largest value is used. </p>
+			<p class="body">Using the two paragraphs from the previous figure as an example, if the top element has a bottom margin of 4em, and the following element has a top margin of 2em, the resulting margin space between elements does not add up to 6ems Rather, the margins collapse and the resulting margin between the paragraphs will be 4em, the largest specified value. This is demonstrated in <span class="Xref-Figure">Figure 14-17</span>.</p>
+			<p class="body">The only time top and bottom margins<em class="Emphasis"> don’t</em> collapse is for floated or absolutely positioned elements (we’ll get to that in <a href="lwd5_chapter15.xhtml#_idTextAnchor204"><span class="Xref">Chapter </span><span class="Xref">15</span><span class="Xref">, Floating and Positioning</span></a>). Margins on the left and right sides never collapse, so they’re nice and predictable.</p>
+			<div>
+				<figure id="_idContainer902" class="figWCaption">
+					<p class="Figure_Holder"><span class="FigureLabel"> </span><img src="image/lwd5_1417_collapsing.png" alt="" width="1321" height="576"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-17.</span><span class="FigureLabel"> </span>Vertical margins of neighboring elements collapse so that only the larger value is used.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer903" class="sidebar">
+					<h5 class="SidebarSeries">FURTHER READING</h5>
+					<h5 class="SidebarTitle">Collapsing Margins</h5>
+					<p class="SidebarBody">When spacing between and around elements behaves unpredictably, collapsing margins are often to blame. Here are a few articles that dig deep into collapsing margin behavior. Although they were written long ago, the information is still solid and may help you understand what is happening behind the scenes in your layouts.</p>
+					<ul>
+						<li class="SidebarListBullet">“No Margin for Error” by <a id="_idIndexMarker2697"></a>Andy Budd (<a href="http://www.andybudd.com/archives/2003/11/no_margin_for_error/"><span class="URL-Email--Sidebar-">www.andybudd.com/archives/2003/11/no_margin_for_error</span></a>)</li>
+						<li class="SidebarListBullet">“Uncollapsing Margins” by <a id="_idIndexMarker2698"></a>Eric Meyer (<a href="http://www.complexspiral.com/publications/uncollapsing-margins"><span class="URL-Email--Sidebar-">www.complexspiral.com/publications/uncollapsing-margins</span></a>)</li>
+					</ul>
+				</div>
+			</div>
+			<h3 class="HeadC">Margins on inline elements</h3>
+			<p class="body">You can apply top <a id="_idIndexMarker2699"></a><a id="_idIndexMarker2700"></a><a id="_idIndexMarker2701"></a><a id="_idIndexMarker2702"></a><a id="_idIndexMarker2703"></a>and bottom margins to inline text elements (or “non-replaced inline elements,” to use the proper CSS terminology), but it won’t add vertical space above and below the element, and the height of the line will not change. However, when you apply left and right margins to inline text elements, margin space <em class="Emphasis">will</em> be held clear before and after the text in the flow of the element, even if that element breaks over several lines.</p>
+			<p class="body">Just to keep things interesting, margins on<a id="_idIndexMarker2704"></a> replaced inline elements, such as images, <em class="Emphasis">do</em> render on all sides, and therefore do affect the height of the line. See <span class="Xref-Figure">Figure 14-18</span> for examples of each.</p>
+			<div>
+				<figure id="_idContainer905" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1418_inline.png" alt="" width="1321" height="771"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-18.</span> Examples of margins on inline elements. Only horizontal margins are rendered on non-replaced elements (top). Margins are rendered on all sides of replaced elements such as images.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Negative margins</h3>
+			<p class="body">It is worth <a id="_idIndexMarker2705"></a><a id="_idIndexMarker2706"></a><a id="_idIndexMarker2707"></a>noting that it is possible to specify negative values for margins. When you apply a negative margin, the content, padding, and border are moved in the opposite direction that would have resulted from a positive margin value. </p>
+			<p class="body">I’ll make this clear with an example. <span class="Xref-Figure">Figure 14-19</span> shows two neighboring paragraphs with different-colored borders applied to show their boundaries. In the left view, I’ve added a 3em bottom margin to the top paragraph, which has the effect of pushing the following paragraph <em class="Emphasis">down</em> by that amount. If I specify a negative value (–3em), the following element moves <em class="Emphasis">up</em> by that amount and overlaps the element with the negative margin.</p>
+			<div>
+				<figure id="_idContainer907" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1419_negative.png" alt="" width="1875" height="713"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-19.</span><span class="FigureLabel"> </span>Using negative margins.</figcaption>
+				</figure>
+			</div>
+			<p class="body">This may seem like a strange thing to do, and in fact, you probably wouldn’t make blocks of text overlap as shown. The point here is that you can use margins with both positive and negative values to move elements around on the page. This is the basis of some older CSS layout techniques. </p>
+			<p class="body">Now let’s use margins to add some space between parts of the Black Goose Bakery home page in <span class="Xref-Figure">Exercise 14-3</span>. </p>
+			<div>
+				<div id="_idContainer911" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 14-3.</span> Adding margin space around elements</h6>
+					<p class="SidebarBody">It’s time to adjust the margins around the elements on the bakery page. We’ll start by adjusting margins on the whole document, and then make tweaks to each section from top to bottom. You should have <span class="Filename--Sidebar-">bakery-styles.css</span> open in a text editor.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">It is a common practice to set the margin for the <span class="Literal-Sidebar">body</span> element to zero, thus clearing out the browser’s default margin setting. Add this margin declaration to the <span class="Literal-Sidebar">body</span> styles, and then save the file and open it in a browser. You’ll see that the elements now go to the very edge of the window with no space between.<pre class="SidebarCodeFirst">body {<br/>  …<br/><code class="CodeColor">  margin: 0;</code><br/>}</pre><div id="_idContainer908" class="note"><h5 class="noteHeader">NOTE</h5><p class="note">When the value is 0, you don’t need to provide a specific unit.</p></div></li>
+						<li class="SidebarListNumber">If you are a careful observer, you may have noticed that there is still a bit of whitespace above the colored navigation bar. That happens to be the top margin of the <span class="Literal-Sidebar">ul</span> list pushing the whole <span class="Literal-Sidebar">nav</span> element down from the top edge of the browser. Let’s take care of that. Add a new style rule in the “nav styles” section of the style sheet:<pre class="SidebarCodeFirst"><code class="CodeColor">nav ul { 	<br/>  margin: 0; <br/>}</code> </pre></li>
+						<li class="SidebarListNumber">Margins are good for nudging elements around in the layout. For example, I think I’d like to move the <span class="Literal-Sidebar">h1</span> with the logotype down a bit, so I’ll add a margin to its top edge. I played around with a few values before deciding on 1.5em for this new style rule:<pre class="SidebarCodeFirst"><code class="CodeColor">header h1 { 	<br/>  margin-top: 1.5em;<br/>}</code></pre><p class="SidebarListItem_cont">I’d like the intro paragraph in the header to be a little closer to the logotype, so let’s get wacky and use a <em class="Emphasis">negative</em> top margin to pull it <em class="Emphasis">up</em>. Add this declaration to the existing style rule:</p><pre class="SidebarCodeFirst">header p {<br/>   …<br/>  <code class="CodeColor">margin-top: -12px;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">Give the <span class="Literal-Sidebar">main</span> section a 2.5% margin on all sides:<pre class="SidebarCodeFirst">main {<br/>  …<br/><code class="CodeColor">  margin: 2.5%;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">Add a little extra space above the <span class="Literal-fc">h3</span> headings in the main area. I’ve chosen 2.5em, but you can play around with different values to see what you like best:<pre class="SidebarCodeFirst">h3 {<br/>  …<br/>  <code class="CodeColor">margin-top: 2.5em;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">Finally, add some space around the <span class="Literal-Sidebar">aside</span>. This time, we’ll do different amounts on each side for kicks. Put 1em on the top, 2.5% on the right side, 0 on the bottom, and 10% margin on the left. I’m going to let you do this one yourself. Can you make all those changes with one declaration?  If you want to check your work, my finished version of the Black Goose Bakery page so far is available with the exercise materials for this chapter.</li>
+						<li class="SidebarListNumber">Save the style sheet again, and reload the page in the browser. It should look like the one in <span class="Xref-Figure">Figure 14-20</span>. This isn’t the most beautiful design, particularly if your browser window is set wide. However, if you resize your browser window narrow, you’ll find that it wouldn’t be too bad as the small-screen version in a responsive design. (Bet you can’t wait for the Responsive Web Design chapter to learn how to fix this!)<figure id="_idContainer910" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1420_exercise3.png" alt="" width="1068" height="1097"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-20.</span> The Black Goose Bakery home page after padding, borders, and margins are added.</figcaption></figure></li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-140" class="HeadA"><a id="_idTextAnchor198"></a>Assigning Display Types</h1>
+			<p class="body">As long as <a id="_idIndexMarker2708"></a><a id="_idIndexMarker2709"></a><a id="_idIndexMarker2710"></a>we’re talking about boxes and the CSS layout model, this is a good time to introduce the <span class="Literal-fc">display</span> property. You should already be familiar with the display behavior of block and inline elements. Although HTML assigns display behaviors (or <span class="FirstTerm">display types</span>, to use the latest CSS term) to the elements it defines, there are other XML-based languages that can use CSS that don’t do the same. For this reason, the <span class="Literal-fc">display</span> property was created to allow authors to specify how <a id="_idIndexMarker2711"></a>elements should behave in layouts. </p>
+			<p class="RefNameCode-Left">display</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">inline</span> | <span class="prop-code">block</span> | <span class="prop-code">run-in</span> | <span class="prop-code">flex</span> | <span class="prop-code">grid</span> | <span class="prop-code">flow</span> | <span class="prop-code">flow-root</span> | <span class="prop-code">list-item</span> | <span class="prop-code">table</span> | <span class="prop-code">table-row-group</span> | <span class="prop-code">table-header-group</span> | <span class="prop-code">table-footer-group</span> | <span class="prop-code">table-row</span> | <span class="prop-code">table-cell</span> | <span class="prop-code">table-column-group</span> | <span class="prop-code">table-column</span> | <span class="prop-code">table-caption</span> | <span class="prop-code">ruby</span> | <span class="prop-code">ruby-base</span> | <span class="prop-code">ruby-text</span> | <span class="prop-code">ruby-base-container</span> | <span class="prop-code">ruby-text-container</span> | <span class="prop-code">inline-block</span> | <span class="prop-code">inline-table</span> | <span class="prop-code">inline-flex</span> | <span class="prop-code">inline-grid</span> | <span class="prop-code">contents</span> | <span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">inline</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The <span class="Literal-fc">display</span> property defines the type of element box an element generates in the layout. In addition to the familiar <span class="Literal-fc">inline</span> and <span class="Literal-fc">block</span> display types, you can also make elements display as list items or the various parts of a table. There are also a number of values for ruby annotation for East Asian languages. As you can see from the list of values, there are a lot of display types, but there are only a few that are used in everyday practice. </p>
+			<p class="body">Display type assignment is useful for achieving layout effects while keeping the semantics of the HTML source intact. For example, it is common practice to make <span class="Literal-fc">li</span> elements (which usually display with the characteristics of block elements) display as inline elements to turn a list into a horizontal navigation bar. You may also make an otherwise inline <span class="Literal-fc">a</span> (anchor) element display as a block in order to give it a specific width and height: </p>
+			<pre class="CodeFirst">ul.navigation li { <code class="CodeColor">display: inline;</code> } <br/>ul.navigation li a { <code class="CodeColor">display: block;</code> }</pre>
+			<div>
+				<div id="_idContainer912" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Bear in mind that changing the presentation of an HTML element with the CSS <span class="Literal-Sidebar">display</span> property does <em class="Emphasis">not</em> change the definition of that element as block-level or inline in HTML. Putting a block-level element within an inline element will always be invalid, regardless of its display role.</p>
+				</div>
+			</div>
+			<p class="body">Another useful value for the <span class="Literal-fc">display</span> property is <span class="Literal-fc">none</span>, which removes the content from the normal flow entirely. Unlike <span class="Literal-fc">visibility: hidden</span>, which just makes the element invisible but keeps the space it would have occupied blank, <span class="Literal-fc">display: none</span> removes the content, and the space it would have occupied is closed up. </p>
+			<p class="body">One popular use of <span class="Literal-fc">display: none</span> is to prevent certain content in the source document from displaying in specific media, such as when the page is printed or displayed on devices with small screens. For example, you could display URLs for links in a document when it is printed, but not when it is displayed on a computer screen where the links are interactive. </p>
+			<p class="body">Be aware that content that has its <span class="Literal-fc">display</span> set to <span class="Literal-fc">none</span> still downloads with the document. Setting some content to <span class="Literal-fc">display:none</span> for devices with small screens may keep the page shorter, but it is not doing anything to reduce data usage or download times.</p>
+			<div>
+				<div id="_idContainer913" class="sidebar">
+					<h5 class="SidebarSeries">Further Reading</h5>
+					<p class="SidebarBody">“Five Ways to Hide Elements in CSS” by Baljeet <a id="_idIndexMarker2712"></a>Rathi (<a href="http://www.sitepoint.com/five-ways-to-hide-elements-in-css"><span class="URL-Email--Sidebar-">www.sitepoint.com/five-ways-to-hide-elements-in-css</span></a>) compares various methods for hiding content, including <span class="Literal-Sidebar">display: none</span>.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-141" class="HeadA"><a id="_idTextAnchor199"></a>Box Drop Shadows</h1>
+			<p class="body">We’ve <a id="_idIndexMarker2713"></a>arrived at the last stop on the element box tour. In <a href="lwd5_chapter12.xhtml#_idTextAnchor147"><span class="Xref">Chapter </span><span class="Xref">12</span><span class="Xref">, Formatting Text</span></a> you learned about the <span class="Literal-fc">text-shadow</span> property, which adds a drop shadow to text. The <span class="Literal-fc">box-shadow</span> property applies a drop shadow around the entire <a id="_idIndexMarker2714"></a>visible element box (excluding the margin).</p>
+			<p class="RefNameCode-Left">box-shadow </p>
+			<p class="property">Values: 	<span class="prop-replace">‘horizontal offset’</span>  <span class="prop-replace">‘vertical offset’</span>  <span class="prop-replace">‘blur distance’</span>   <span class="prop-replace">‘spread distance’</span>  <span class="prop-replace">color</span>  <span class="prop-code">inset</span> | <span class="prop-code">none<a id="_idTextAnchor200"></a></span></p>
+			<p class="property">Default: 	<span class="prop-code">none</span></p>
+			<p class="property">Applies to: 	all elements </p>
+			<p class="property">Inherits: 	no</p>
+			<div>
+				<div id="_idContainer914" class="note">
+					<h5 class="WarningHeader">Browser Support Note</h5>
+					<p class="note">Browsers released before 2011 require vendor <a id="_idIndexMarker2715"></a><a id="_idIndexMarker2716"></a>prefixes for <span class="Literal-Sidebar">box-shadow</span>. Box shadows are not supported at all in Internet Explorer versions 8 and earlier. This is a case for progressive enhancement—it is likely that a box without a shadow will be just fine for users clinging to old browser versions.</p>
+				</div>
+			</div>
+			<p class="body">The value of the <span class="Literal-fc">box-shadow</span> property should seem familiar to you after working with <span class="Literal-fc">text-shadow</span>: specify the horizontal and vertical offset distances, the amount the shadow should blur, and a color. For box shadows, you can also specify a <span class="FirstTerm">spread</span> amount, which increases (or decreases with negative values) the size of the shadow. By default, the shadow color is the same as the foreground color of the element, but specifying a color overrides it.</p>
+			<p class="body"><span class="Xref-Figure">Figure 14-21</span> shows the results of the following code examples. <span class="Circle-Frame-Neg">A</span> adds a simple box shadow 6 pixels to the right and 6 pixels down, without blur or spread. <span class="Circle-Frame-Neg">B</span> adds a blur value of 5 pixels, and <span class="Circle-Frame-Neg">C</span> shows the effect of a 10-pixel spread value. Box shadows are always applied to the area <em class="Emphasis">outside</em> the border of the element (or the place it would be if a border isn’t specified). If the element has a transparent or translucent background, you will not see the box shadow in the area behind the element.</p>
+			<ol>
+				<li class="listNumCircleAlpha" value="1"><code class="Code">box-shadow: 6px 6px gray;</code></li>
+				<li class="listNumCircleAlpha"><code class="Code">box-shadow: 6px 6px 5px gray; </code><span class="Code-Comment">/* 5 pixel blur */</span></li>
+				<li class="listNumCircleAlpha"><code class="Code">box-shadow: 6px 6px 5px 10px gray; </code><span class="Code-Comment">/* 5px blur, 10px spread */</span><figure id="_idContainer916" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1421_boxshadow-ebook.png" alt="" width="1338" height="520"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-21.</span> Adding drop shadows around an element with the <span class="Literal-Sidebar">box-shadow</span> property.</figcaption></figure></li>
+			</ol>
+			<p class="Figure_Holder">You can make the shadow render inside the edges of the visible element box by adding the <span class="Literal-fc">inset</span> keyword to the rule. This makes it look like the element is pressed into the screen (<span class="Xref-Figure">Figure 14-22</span>).</p>
+			<pre class="CodeFirst">box-shadow:<code class="CodeColor"> inset </code>6px 6px 5px gray;<code class="CodeColor"> </code></pre>
+			<div>
+				<figure id="_idContainer918" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1422_inset.png" alt="" width="990" height="450"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-22.</span> An inset box shadow renders on the inside of the element box.</figcaption>
+				</figure>
+			</div>
+			<p class="body">As for <span class="Literal-fc">text-shadow</span>, you can specify multiple box shadows on an element by providing the values in a comma-separated list. The values that come first get placed on top, and subsequent shadows are placed behind it in the order in which they appear in the list.</p>
+			<div>
+				<div id="_idContainer919" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Box shadows, text shadows, and <a id="_idIndexMarker2717"></a>gradients take a lot of processor power because you are shifting the burden of interpreting and rendering them onto the browser. The more you use, the slower performance will be, and as we all know, performance is everything on the web. So go easy on them.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-142" class="HeadA"><a id="_idTextAnchor201"></a>Test Yourself</h1>
+			<p class="body">At this point, you should have a good feel for element boxes and how to manipulate the space within and around them. In the next chapter, we’ll start moving the boxes around on the page, but first, why not get some practice at writing rules for padding, borders, and margins in the following test?</p>
+			<p class="body">In this test, your task is to write the declarations that create the effects shown in each example in <span class="Xref-Figure">Figure 14-23</span> (see <span class="Xref">Useful Hints</span>). All the paragraphs shown here share a rule that sets the dimensions and the background color for each paragraph. You just need to provide the box-related property declarations. Answers, as always, appear in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<div>
+				<div id="_idContainer920" class="sidebar">
+					<h5 class="SidebarSeries">useful hints </h5>
+					<ul>
+						<li class="SidebarListBullet">Outer margin edges are indicated by dotted blue lines. </li>
+						<li class="SidebarListBullet">All necessary measurements are provided in blue. </li>
+						<li class="SidebarListBullet">Borders are either <span class="Literal-Sidebar">black</span> or <span class="Literal-Sidebar">red</span>.</li>
+					</ul>
+				</div>
+			</div>
+			<ol>
+				<li class="ListNumber-Circle-Frame-Neg"><figure id="_idContainer922" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1423_test-ebook.png" alt="" width="1338" height="2080"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 14-23.</span> Write the declarations for these examples.</figcaption></figure></li>
+			</ol>
+			<h1 id="_idParaDest-143" class="HeadA"><a id="_idTextAnchor202"></a>CSS Review: Box Properties</h1>
+			<table id="table001-13" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Property</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A shorthand <a id="_idIndexMarker2718"></a><a id="_idIndexMarker2719"></a>property that combines border properties</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-top border-right border-bottom border-left</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody"><a id="_idIndexMarker2720"></a><a id="_idIndexMarker2721"></a><a id="_idIndexMarker2722"></a>Combines<a id="_idIndexMarker2723"></a> border properties for each side of the element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-color</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2724"></a>property for specifying the color of borders</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-top-color border-right-color border-bottom-color border-left-color</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies the<a id="_idIndexMarker2725"></a> <a id="_idIndexMarker2726"></a><a id="_idIndexMarker2727"></a><a id="_idIndexMarker2728"></a>border color for each side of the element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adds an <a id="_idIndexMarker2729"></a>image inside the border area</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image-outset</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">How far the border image should be positioned away from the border area.</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image-repeat</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">The manner in which the image fills the sides of the border</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image-slice</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">The points at which the border image should be divided into corners and sides</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image-source</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">The location of the image file to be used for the border image</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-image-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">The width of the space the border image should occupy</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-radius</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2730"></a>property for rounding the corners of the visible element box</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-top-left-radius </pre>
+							<pre class="cellCode">border-top-right-radius </pre>
+							<pre class="cellCode">border-bottom-right-radius border-bottom-left-radius</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies the <a id="_idIndexMarker2731"></a><a id="_idIndexMarker2732"></a><a id="_idIndexMarker2733"></a>radius curve for each individual corner<a id="_idIndexMarker2734"></a></p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-style</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2735"></a>property for specifying the style of borders</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-top-style border-right-style border-bottom-style border-left-style</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker2736"></a> <a id="_idIndexMarker2737"></a><a id="_idIndexMarker2738"></a>the<a id="_idIndexMarker2739"></a> border style for each side of the element </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2740"></a>property for specifying the width of borders</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-top-width border-right-width border-bottom-width border-left-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker2741"></a> <a id="_idIndexMarker2742"></a><a id="_idIndexMarker2743"></a>the<a id="_idIndexMarker2744"></a> border width for each side of the element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">box-sizing</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2745"></a>whether width and height dimensions apply to the content box or the border box</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">box-shadow</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adds a <a id="_idIndexMarker2746"></a>drop shadow around the visible element box</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">display</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Defines <a id="_idIndexMarker2747"></a>the type of element box an element generates</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">height</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker2748"></a> the height of the element’s content box or border box</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">margin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2749"></a>property for specifying margin space around an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">margin-top margin-right margin-bottom margin-left</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2750"></a><a id="_idIndexMarker2751"></a><a id="_idIndexMarker2752"></a><a id="_idIndexMarker2753"></a>the margin amount for each side of the element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">max-height</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2754"></a>the maximum height of an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">max-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2755"></a>the maximum width of an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">min-height</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies the <a id="_idIndexMarker2756"></a>minimum height of an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">min-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2757"></a>the minimum width of an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">outline</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand<a id="_idIndexMarker2758"></a> property for adding an outline around an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">outline-color</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Sets <a id="_idIndexMarker2759"></a>the color of the outline </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">outline-offset</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Sets <a id="_idIndexMarker2760"></a>space between an outline and the outer edge of the border</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">outline-style</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Sets the<a id="_idIndexMarker2761"></a> style of the outline</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">outline-width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Sets the <a id="_idIndexMarker2762"></a>width of the outline</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">overflow</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2763"></a>how to handle content that doesn’t fit in the content area</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">padding</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Shorthand <a id="_idIndexMarker2764"></a>property for specifying space between the content area and the border</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">padding-top padding-right padding-bottom padding-left</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody"><a id="_idIndexMarker2765"></a>Specifies<a id="_idIndexMarker2766"></a> <a id="_idIndexMarker2767"></a><a id="_idIndexMarker2768"></a>the padding amount for each side of the element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">width</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2769"></a>the width of an element’s content box or border box</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

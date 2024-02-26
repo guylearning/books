@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer573" class="ch11">
+			<p id="_idParaDest-96" class="Epub-TOC-Part-Title"><strong class="Emphasis_Bold"><a id="_idTextAnchor130"></a>Part III.</strong> CSS for Presentation</p>
+		</div>
+		<div id="_idContainer574" class="ch11">
+			<h1 class="partLabel"><a id="_idTextAnchor131"></a>III</h1>
+		</div>
+		<div id="_idContainer575" class="ch11">
+			<h1 class="partTitle"><a id="_idTextAnchor132"></a>CSS for Presentation</h1>
+		</div>
+		<div id="_idContainer576" class="ch11">
+			<p id="_idParaDest-97" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor133"></a>11. Introducing Cascading Style Sheets</p>
+		</div>
+		<div id="_idContainer577" class="ch11">
+			<h1 class="chapterLabel">11</h1>
+		</div>
+		<div id="_idContainer578" class="ch11">
+			<h1 class="chapterTitle"><a id="_idTextAnchor134"></a><a id="_idTextAnchor135"></a>Introducing Cascading Style Sheets</h1>
+		</div>
+		<div id="_idContainer579" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this Chapter</p>
+			<p class="chapterContents">The benefits and power of CSS</p>
+			<p class="chapterContents">How HTML markup creates a document structure</p>
+			<p class="chapterContents">Writing style rules</p>
+			<p class="chapterContents">Attaching styles to the HTML document</p>
+			<p class="chapterContents">Big concepts: inheritance, specificity, the cascade, rule order, and the box model</p>
+		</div>
+		<div id="_idContainer625" class="ch11">
+			<p class="body">You’ve heard style sheets mentioned quite a bit already, and now we’ll finally put them to work and start giving our pages some much-needed style. Cascading Style Sheets (CSS) is the W3C standard for defining the <span class="FirstTerm">presentation</span> of <a id="_idIndexMarker1846"></a>documents written in HTML, and in fact, any XML language. Presentation, again, refers to the way the document is delivered to the user, whether shown on a computer screen, displayed on a cell phone, printed on paper, or read aloud by a screen reader. With style sheets handling the presentation, HTML can handle the business of defining document structure and meaning, as intended.</p>
+			<p class="body">CSS is a separate language with its own syntax. This chapter covers CSS terminology and fundamental concepts that will help you get your bearings for the upcoming chapters, where you’ll learn how to change text and font styles, add colors and backgrounds, and even do basic page layout. By the end of <a href="lwd5_chapter11.xhtml#_idTextAnchor131"><span class="Xref">Part III</span></a>, I aim to give you a solid foundation for further reading on your own and lots of practice.</p>
+			<h1 id="_idParaDest-98" class="HeadA"><a id="_idTextAnchor136"></a>The Benefits of CSS</h1>
+			<p class="body">Not that you <a id="_idIndexMarker1847"></a>need further convincing that style sheets are the way to go, but here is a quick rundown of the benefits of using style sheets.</p>
+			<ul>
+				<li class="ListBullet"><span class="ListStartItem">Precise type and layout controls. </span>You can achieve print-like precision using CSS. There is even a set of properties aimed specifically at the printed page (but we won’t be covering them in this book). </li>
+				<li class="ListBullet"><span class="ListStartItem">Less work.</span> You can change the appearance of an entire site by editing one style sheet. This also ensures consistency of formatting throughout the site.</li>
+				<li class="ListBullet"><span class="ListStartItem">More accessible sites.</span> When all matters of presentation are handled by CSS, you can mark up your content meaningfully, making it more accessible for non-visual or mobile devices.</li>
+			</ul>
+			<p class="body">Come to think of it, there really aren’t any disadvantages to using style sheets. There are some lingering hassles from browser inconsistencies, but they can either be avoided or worked around if you know where to look for them. </p>
+			<h2 class="HeadB">The Power of CSS</h2>
+			<p class="body">We’re not talking about minor visual tweaks here, like changing the color of headlines or adding text indents. When used to its full potential, CSS is a robust and powerful design tool. My eyes were first opened to the possibilities of using CSS for design by the variety and richness of the designs at <a id="_idIndexMarker1848"></a>CSS Zen Garden (<a href="http://www.csszengarden.com"><span class="URL-Email">www.csszengarden.com</span></a>). </p>
+			<p class="body">In the misty days of yore (2003), when developers were still hesitant to give up their table-based layouts for CSS, <a id="_idIndexMarker1849"></a>David Shea’s CSS Zen Garden site demonstrated exactly what could be accomplished using CSS alone. David posted an HTML document and invited designers to contribute their own style sheets that gave the document a visual design. <span class="Xref-Figure">Figure 11-1</span> shows just a few of my favorites. All of these designs use the <em class="Emphasis">exact same</em> HTML source document. </p>
+			<div>
+				<figure id="_idContainer581" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1101_zengarden_square.png" alt="" width="1321" height="1480"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-1.</span><span class="FigureLabel"> </span>These pages from the CSS Zen Garden use the same HTML source document, but the design is changed with CSS alone (used with permission of CSS Zen Garden and the individual designers).</figcaption>
+				</figure>
+			</div>
+			<p class="body">Not only that, they don’t include a single <span class="Literal-fc">img</span> element (all of the images are in the background of elements). But look at how different each page looks—and how sophisticated. That’s all done with style sheets. It is proof of the power in keeping CSS separate from HTML, and presentation separate from structure.</p>
+			<p class="body">The CSS Zen Garden is no longer being updated and now is considered a historical document of a turning point in the adoption of web standards. Despite its age, I still find it to be a nice one-stop lesson for demonstrating exactly what CSS can do. </p>
+			<p class="body">Granted, it takes a lot of practice to be able to create CSS layouts like those shown in <span class="Xref-Figure">Figure 11-1</span>. Killer graphic design skills help too (unfortunately, you won’t get those in this book). I’m showing this to you up front because I want you to be aware of the potential of CSS-based design, particularly because the examples in this beginners’ book tend to be simple and straightforward. Take your time learning, but keep your eye on the prize.</p>
+			<h1 id="_idParaDest-99" class="HeadA"><a id="_idTextAnchor137"></a>How Style Sheets Work</h1>
+			<p class="body">It’s as <a id="_idIndexMarker1850"></a>easy as 1-2-3!</p>
+			<ol>
+				<li class="ListNumber">Start with a document that has been marked up in HTML. </li>
+				<li class="ListNumber">Write style rules for how you’d like certain elements to look.</li>
+				<li class="ListNumber">Attach the <a id="_idIndexMarker1851"></a>style rules to the document. When the browser displays the document, it follows your rules for rendering elements (unless the user has applied some mandatory styles, but we’ll get to that later).</li>
+			</ol>
+			<p class="body">OK, so there’s a bit more to it than that, of course. Let’s give each of these steps a little more consideration.</p>
+			<h2 class="HeadB">1. Marking Up the Document</h2>
+			<p class="body">You know a lot <a id="_idIndexMarker1852"></a>about marking up content from the previous chapters. For example, you know that it is important to choose elements that accurately describe the meaning of the content. You also heard me say that the markup creates the structure of the document, sometimes called <a id="_idIndexMarker1853"></a>the <span class="FirstTerm">structural layer</span>, upon which <a id="_idIndexMarker1854"></a>the <span class="FirstTerm">presentation layer</span> can be applied.</p>
+			<p class="body">In this and the upcoming chapters, you’ll see that having an understanding of your document’s structure and the relationships between elements is central to your work as a style sheet author. </p>
+			<p class="body">In the exercises throughout this chapter you will get a feel for how simple it is to change the look of a document with style sheets. The good news is that I’ve whipped up a little HTML document for you to play with. You can get acquainted with the page we’ll be working with in <span class="Xref-Figure">Exercise 11-1</span>. </p>
+			<div>
+				<div id="_idContainer584" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 11-1.</span> A first look</h6>
+					<p class="SidebarBody">In this chapter, we’ll add a few simple styles to a short article. The document, <span class="Filename--Sidebar-">cooking.html</span>, and its associated image, <span class="Filename--Sidebar-">salads.jpg</span>, are available at <a href="http://learningwebdesign.com/5e/materials/"><span class="URL-Email--Sidebar-">learningwebdesign.com/5e/materials/</span></a>. </p>
+					<p class="SidebarBody">For now, just open the document in a browser to see how it looks by default (it should look something like <span class="Xref-Figure">Figure 11-2</span>). You can also open the document in a text editor to get ready to follow along in the next two exercises.</p>
+					<div>
+						<figure id="_idContainer583" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1102_exerciseSS.png" alt="" width="1338" height="714"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-2.</span> This is what the article looks like without any style sheet instructions. Although we won’t be making it beautiful, you will get a feel for how style sheets work.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">2. Writing the Rules</h2>
+			<p class="body">A style sheet is made up of one or more style instructions (called <span class="FirstTerm">style rules</span>) that describe how an element or group of elements should be displayed. The first step in learning CSS is to get familiar with the parts of a rule. As you’ll see, they’re fairly intuitive to follow. Each rule <em class="Emphasis">selects </em>an element and <em class="Emphasis">declares</em> how it should look.</p>
+			<p class="body">The following example contains two rules. The first makes all the <span class="Literal-fc">h1</span> elements in the document green; the second specifies that the paragraphs should be in a large, sans-serif font. <span class="FirstTerm">Sans-serif</span> fonts do not have a little slab (a <span class="FirstTerm">serif</span>) at the ends of strokes and tend to look more sleek and modern. </p>
+			<pre class="CodeFirst">h1 { color: green; }<br/>p  { font-size: large; font-family: sans-serif; }</pre>
+			<p class="body">In CSS terminology, the two <a id="_idIndexMarker1855"></a>main sections of a rule are<a id="_idIndexMarker1856"></a> the <span class="FirstTerm">selector</span> that identifies the element or elements to be affected, and <a id="_idIndexMarker1857"></a>the <span class="FirstTerm">declaration</span> that provides the rendering instructions. The declaration, in turn, is made up of a <span class="FirstTerm">property</span> <a id="_idIndexMarker1858"></a>(such as <span class="Literal-fc">color</span>) and<a id="_idIndexMarker1859"></a> its <span class="FirstTerm">value</span> (<span class="Literal-fc">green</span>), separated by a colon and a space. One or more declarations are placed inside curly brackets, as shown in <span class="Xref-Figure">Figure 11-3</span>.</p>
+			<div>
+				<figure id="_idContainer586" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1103_stylerule.png" alt="" width="1338" height="371"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-3.</span><span class="FigureLabel">  </span>The parts of a style rule.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Selectors</h3>
+			<p class="body">In the previous small style sheet example, the <span class="Literal-fc">h1</span> and <span class="Literal-fc">p</span> elements are used as selectors. This is called <a id="_idIndexMarker1860"></a><a id="_idIndexMarker1861"></a>an <a id="_idTextAnchor138"></a><span class="FirstTerm">element type selector</span>, and it is the most basic type of selector. The properties defined for each rule will apply to every <span class="Literal-fc">h1</span> and <span class="Literal-fc">p</span> element in the document, respectively. </p>
+			<p class="body">Another type of selector is an <a id="_idIndexMarker1862"></a><a id="_idIndexMarker1863"></a>ID selector, which selects an element based on the value of an element’s <a id="_idIndexMarker1864"></a><a id="_idIndexMarker1865"></a><span class="Literal-fc">id</span> attribute. It is indicated with the <span class="Literal-fc">#</span> symbol. For example, the selector <span class="Literal-fc">#recipe</span> targets an element with <span class="Literal-fc">id="recipe"</span>.</p>
+			<p class="body">In upcoming chapters, I’ll introduce you to more sophisticated selectors that you can use to target elements, including ways to select groups of elements, and elements that appear in a particular context. See the <span class="Xref">“Selectors in this Book”</span> sidebar for details. </p>
+			<p class="body">Mastering selectors—that is, choosing the best type of selector and using it strategically—is an important step in mastering CSS.</p>
+			<div>
+				<div id="_idContainer587" class="sidebar">
+					<h5 class="SidebarTitle">Selectors in This Book</h5>
+					<p class="SidebarBody">Instead of throwing the selectors at you all at once, I’ve spread them out so you can master a few at a time. Here is where you will find them:</p>
+					<p class="SidebarBody">Chapter 11:</p>
+					<p class="SidebarListSimple">Element type selector (p.<a href="lwd5_chapter11.xhtml#_idTextAnchor138">243</a>)</p>
+					<p class="SidebarListSimple">Grouped selectors (p.<a href="lwd5_chapter11.xhtml#_idTextAnchor141">252</a>)</p>
+					<p class="SidebarBody">Chapter 12:</p>
+					<p class="SidebarListSimple">Descendent selectors (p.<a href="lwd5_chapter12.xhtml#_idTextAnchor153">281</a>)</p>
+					<p class="SidebarListSimple">ID and class selectors (p.<a href="lwd5_chapter12.xhtml#_idTextAnchor155">282</a>–6)</p>
+					<p class="SidebarListSimple">Child, next-sibling, and following-sibling selectors (p.<a href="lwd5_chapter12.xhtml#_idTextAnchor154">283</a>)</p>
+					<p class="SidebarListSimple">Universal selector (*) (p.<a href="lwd5_chapter12.xhtml#_idTextAnchor157">285</a>)</p>
+					<p class="SidebarBody">Chapter 13:</p>
+					<p class="SidebarListSimple">Pseudo-class selectors (p.<a href="lwd5_chapter13.xhtml#_idTextAnchor177">316</a>)</p>
+					<p class="SidebarListSimple">Pseudo-element selectors (p.<a href="lwd5_chapter13.xhtml#_idTextAnchor179">320</a>)</p>
+					<p class="SidebarListSimple">Attribute selectors (p.<a href="lwd5_chapter13.xhtml#_idTextAnchor181">323</a>)</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Declarations</h3>
+			<p class="body">The declaration is made up of a <a id="_idIndexMarker1866"></a>property/value pair. There can be more than one declaration in a single rule; for example, the rule for the <span class="Literal-fc">p</span> element shown earlier in the code example has both the <span class="Literal-fc">font-size</span> and <a id="_idIndexMarker1867"></a><span class="Literal-fc">font-family</span> properties. Each declaration must end with a semicolon to keep it separate from the following declaration (see <span class="Xref">Note</span>). If you omit the semicolon, the declaration and the one following it will be ignored. The <a id="_idIndexMarker1868"></a><a id="_idIndexMarker1869"></a>curly brackets and the declarations they contain are often referred to<a id="_idIndexMarker1870"></a> as the <span class="FirstTerm">declaration block</span> (<span class="Xref-Figure">Figure 11-3</span>).</p>
+			<div>
+				<div id="_idContainer588" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Technically, the<a id="_idIndexMarker1871"></a> semicolon is not required after the last declaration in the block, but it is recommended that you get into the habit of always ending declarations with a semicolon. It will make adding declarations to the rule later that much easier.</p>
+				</div>
+			</div>
+			<p class="body">Because CSS ignores <a id="_idIndexMarker1872"></a><a id="_idIndexMarker1873"></a>whitespace and line returns within the declaration block, authors typically write each declaration in the block on its own line, as shown in the following example. This makes it easier to find the properties applied to the selector and to tell when the style rule ends. </p>
+			<pre class="CodeFirst">p <code class="CodeColor">{<br/>   font-size: large;<br/>   font-family: sans-serif; <br/>}</code></pre>
+			<p class="body">Note that nothing has really changed here—there is still one set of curly brackets, semicolons after each declaration, and so on. The only difference is the insertion of line returns and some character spaces for alignment. </p>
+			<h4 class="HeadD">Properties</h4>
+			<p class="body">The heart of style sheets lies in the collection of standard properties that can be applied to selected elements. The complete CSS specification defines dozens of properties for everything from text indents to how table headers should be read aloud. This book covers the most common and best-supported properties that you can begin using right away.</p>
+			<h4 class="HeadD">Values</h4>
+			<p class="body">Values are<a id="_idIndexMarker1874"></a> dependent on the <a id="_idIndexMarker1875"></a>property. Some properties take length measurements, some take color values, and others have a predefined list of keywords. When you use a property, it is important to know which values it accepts; however, in many cases, simple common sense will serve you well. Authoring tools such as Dreamweaver or <a id="_idIndexMarker1876"></a><a id="_idIndexMarker1877"></a>Visual Studio provide hints of suitable values to choose from. Before we move on, why not get a little practice writing style rules yourself in <span class="Xref-Figure">Exercise 11-2</span>?</p>
+			<div>
+				<div id="_idContainer591" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 11-2.</span> Your first style sheet</h6>
+					<p class="SidebarBody">Open <span class="Filename--Sidebar-">cooking.html</span> in a text editor. In the <span class="Literal-Sidebar">head</span> of the document you will find that I have set up a <span class="Literal-Sidebar">style</span> element for you to type the rules into. The <a id="_idIndexMarker1878"></a><span class="Literal-Sidebar">style</span> element is used to embed a style sheet in an HTML document. To begin, we’ll simply add the small style sheet that we just looked at in this section. Type the following rules into the document, just as you see them here:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">&lt;style&gt;<br/>h1 {<br/>  color: green;<br/>}<br/>p {<br/>   font-size: large;<br/>   font-family: sans-serif; <br/>}<br/>&lt;/style&gt;</code></pre>
+					<p class="SidebarBody">Save the file, and take a look at it in the browser. You should notice some changes (if your browser already uses a sans-serif font, you may see only a size change). If not, go back and check that you included both the opening and closing curly bracket and semicolons. It’s easy to accidentally omit these characters, causing the style sheet not to work.</p>
+					<p class="SidebarBody">Now we’ll edit the style sheet to see how easy it is to write rules and see the effects of the changes. Here are a few things to try.  </p>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">IMPORTANT:</strong> Remember that you need to save the document after each change in order for the changes to be visible when you reload it in the browser.</p>
+					<ul>
+						<li class="SidebarListBullet">Make the <span class="Literal-Sidebar">h1</span> element “gray” and take a look at it in the browser. Then make it “blue”. Finally, make it “orange”. (We’ll run through the complete list of available color names in <span class="Xref--Sidebar-">Chapter 13, Colors and Backgrounds</span>.)</li>
+						<li class="SidebarListBullet">Add a new rule that makes the <span class="Literal-Sidebar">h2</span> elements orange as well.</li>
+						<li class="SidebarListBullet">Add a 100-pixel left margin to paragraph (<span class="Literal-Sidebar">p</span>) elements by using this declaration:<pre class="SidebarCodeFirst"><code class="CodeColor">margin-left: 100px;</code></pre></li>
+					</ul>
+					<p class="SidebarBody">Remember that you can add this new declaration to the existing rule for <span class="Literal-Sidebar">p</span> elements.</p>
+					<ul>
+						<li class="SidebarListBullet">Add a 100-pixel left margin to the <span class="Literal-Sidebar">h2</span> headings as well.</li>
+						<li class="SidebarListBullet">Add an orange, 1-pixel border to the bottom of the <span class="Literal-Sidebar">h1</span> element by using this declaration:<pre class="SidebarCodeFirst"><code class="CodeColor">border-bottom: 1px solid orange;</code></pre></li>
+						<li class="SidebarListBullet">Move the image to the right margin, and allow text to flow around it with the <span class="Literal-Sidebar">float</span> property. The shorthand <span class="Literal-Sidebar">margin</span> property shown in this rule adds zero pixels of space on the top and bottom of the image and 12 pixels of space on the left and right of the image (the values are mirrored in a manner explained in <span class="Xref--Sidebar-">Chapter 14, Thinking Inside the Box</span>):<pre class="SidebarCodeFirst"><code class="CodeColor">img {<br/>  float: right;<br/>   margin: 0 12px;<br/>}</code></pre></li>
+					</ul>
+					<p class="SidebarBody">When you are done, the document should look something like the one shown in <span class="Xref-Figure">Figure 11-4</span>.</p>
+					<div>
+						<figure id="_idContainer590" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1104_exercise2_halfwidth.png" alt="" width="988" height="748"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-4.</span><span class="FigureLabel"> </span>The article after we add a small style sheet. Not beautiful—just different.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">3. Attaching the Styles to the Document</h2>
+			<p class="body">In the previous exercise, we embedded the style sheet right in the document by using the <span class="Literal-fc">style</span> element. That is just one of three ways that style information can be applied to an HTML document. You’ll get to try out each of these soon, but it is helpful to have an overview of the methods and terminology up front.</p>
+			<p class="ListVariableTerm">External style sheets </p>
+			<p class="ListVariable">An external <a id="_idIndexMarker1879"></a><a id="_idIndexMarker1880"></a>style sheet is a separate, text-only document that contains a number of style rules. It must be named with the <span class="Filename">.css</span> suffix. The <span class="Filename">.css</span> document is then linked to (via the <span class="Literal-fc">link</span> element) or imported (via an <a id="_idIndexMarker1881"></a><span class="Literal-fc">@­import</span> rule in a style sheet) into one or more HTML documents. In this way, all the files in a website may share the same style sheet. This is the most powerful and preferred method for attaching style sheets to content. We’ll discuss external style sheets more and start using them in the exercises in <a href="lwd5_chapter13.xhtml#_idTextAnchor169"><span class="Xref">Chapter </span><span class="Xref">13</span></a>. </p>
+			<p class="ListVariableTerm">Embedded style sheets </p>
+			<p class="ListVariable">This is the <a id="_idIndexMarker1882"></a><a id="_idIndexMarker1883"></a>type of style sheet we worked with in the exercise. It is placed in a document via the <span class="Literal-fc">style</span> element, and its rules apply only to that document. The <span class="Literal-fc">style</span> element must be placed in the <a id="_idIndexMarker1884"></a><span class="Literal-fc">head</span> of the document. This example also includes a comment (see the <span class="Xref">“Comments in Style Sheets”</span> sidebar).</p>
+			<pre class="CodeFirst">&lt;head&gt;<br/>   &lt;title&gt;Required document title here&lt;/title&gt;<br/><code class="CodeColor">   &lt;style&gt;<br/>     </code><span class="Code-Comment">/* style rules go here */</span><br/><code class="CodeColor">    &lt;/style&gt;</code><br/>&lt;/head&gt;</pre>
+			<div>
+				<div id="_idContainer592" class="sidebar">
+					<h5 class="SidebarTitle">Comments in Style Sheets</h5>
+					<p class="SidebarBody">Sometimes it <a id="_idIndexMarker1885"></a><a id="_idIndexMarker1886"></a>is helpful to leave yourself or your collaborators comments in a style sheet. CSS has its own comment syntax, shown here:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">/* </code>comment goes here <code class="CodeColor">*/</code></pre>
+					<p class="SidebarBody">Content between the <span class="Literal-Sidebar">/*</span> and <span class="Literal-Sidebar">*/</span> will be ignored when the style sheet is parsed, which means you can leave comments anywhere in a style sheet, even within a rule:</p>
+					<pre class="SidebarCodeFirst">body {<br/>   font-size: small;<br/> /* change this later */ <br/>}</pre>
+					<p class="SidebarBody">One use for comments is to label sections of the style sheet to make things easier to find later; for example:</p>
+					<pre class="SidebarCodeFirst">/* FOOTER STYLES */ </pre>
+					<p class="SidebarBody">CSS comments are also useful for temporarily hiding style declarations in the design process. When I am trying out a number of styles, I can quickly switch styles off by enclosing them in <span class="Literal-Sidebar">/*</span> and <span class="Literal-Sidebar">*/</span>, check the design in a browser, then remove the comment characters to make the style appear again. It’s much faster than retyping the entire thing.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">Inline styles</p>
+			<p class="ListVariable">You can apply<a id="_idIndexMarker1887"></a> properties and <a id="_idIndexMarker1888"></a>values to a single element by using the <a id="_idIndexMarker1889"></a><span class="Literal-fc">style</span> <em class="Emphasis">attribute</em> in the element itself, as shown here:</p>
+			<pre class="CodeFirst">&lt;h1 <code class="CodeColor">style="color: red"</code>&gt;Introduction&lt;/h1&gt;</pre>
+			<p class="ListVariable">To add multiple properties, just separate them with <a id="_idIndexMarker1890"></a><a id="_idIndexMarker1891"></a>semicolons, like this:</p>
+			<pre class="CodeFirst">&lt;h1 <code class="CodeColor">style="color: red; margin-top: 2em"</code>&gt;Introduction&lt;/h1&gt;</pre>
+			<p class="ListVariable">Inline styles apply only to the particular element in which they appear. Inline styles should be avoided, unless it is absolutely necessary to override styles from an embedded or external style sheet. Inline styles are problematic in that they intersperse presentation information into the <a id="_idIndexMarker1892"></a>structural markup. They also make it more difficult to make changes because every <span class="Literal-fc">style</span> attribute must be hunted down in the source. </p>
+			<p class="body"><span class="Xref-Figure">Exercise 11-3</span> gives you an opportunity to write an inline style and see how it works. We won’t be working with inline styles after this point for the reasons listed earlier, so here’s your chance.</p>
+			<div>
+				<div id="_idContainer593" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 11-3.</span> Applying an inline style</h6>
+					<p class="SidebarBody">Open the article <span class="Filename--Sidebar-">cooking.html</span> in whatever state you last left it in <span class="Xref-Figure">Exercise 11-2</span>. If you worked to the end of the exercise, you will have a rule that makes the <span class="Literal-Sidebar">h2</span> elements orange.</p>
+					<p class="SidebarBody">Write an inline style that makes the second <span class="Literal-Sidebar">h2</span> gray. We’ll do that right in the opening <span class="Literal-Sidebar">h2</span> tag by using the <span class="Literal-Sidebar">style</span> attribute, as shown here:</p>
+					<pre class="SidebarCodeFirst">&lt;h2 <code class="CodeColor">style="color: gray"</code>&gt;The Main Course&lt;/h2&gt;</pre>
+					<p class="SidebarBody">Note that it must be gray-with-an-a (not grey-with-an-e) because that is the way the color is defined in the spec.</p>
+					<p class="SidebarBody">Save the file and open it in a browser. Now the second heading is gray, overriding the orange color set in the embedded style sheet. The other <span class="Literal-Sidebar">h2</span> heading is unaffected.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-100" class="HeadA"><a id="_idTextAnchor139"></a>The Big Concepts</h1>
+			<p class="body">There are a <a id="_idIndexMarker1893"></a>few big ideas that you need to get your head around to be comfortable with how Cascading Style Sheets behave. I’m going to introduce you to these concepts now so we don’t have to slow down for a lecture once we’re rolling through the style properties. Each of these ideas will be revisited and illustrated in more detail in the upcoming chapters. </p>
+			<h2 class="HeadB">Inheritance</h2>
+			<p class="body">Are your <a id="_idIndexMarker1894"></a><a id="_idIndexMarker1895"></a><a id="_idIndexMarker1896"></a><a id="_idIndexMarker1897"></a><a id="_idIndexMarker1898"></a><a id="_idIndexMarker1899"></a>eyes the same color as your parents’? Did you inherit their hair color? Well, just as parents pass down traits to their children, styled HTML elements pass down certain style properties to the elements they contain. Notice in <span class="Xref-Figure">Exercise 11-1</span>, when we styled the <span class="Literal-fc">p</span> elements in a large, sans-serif font, the <span class="Literal-fc">em</span> element in the second paragraph became large and sans-serif as well, even though we didn’t write a rule for it specifically (<span class="Xref-Figure">Figure 11-5</span>). That is because the <span class="Literal-fc">em</span> element <span class="FirstTerm">inherited</span> the styles from the paragraph it is in. Inheritance provides a mechanism for styling elements that don’t have any explicit styles rules of their own.</p>
+			<div>
+				<figure id="_idContainer595" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1105_inherit.png" alt="" width="1321" height="712"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-5.</span><span class="FigureLabel"> </span>The <span class="Literal-Sidebar">em</span> element inherits styles that were applied to the paragraph.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Document structure</h3>
+			<p class="body">This is where an <a id="_idIndexMarker1900"></a><a id="_idIndexMarker1901"></a><a id="_idIndexMarker1902"></a>understanding of your document’s structure becomes important. As I’ve noted before, HTML documents have an implicit structure, or hierarchy. For example, the sample article we’ve been playing with has an <span class="Literal-fc">html</span> root element that contains a <span class="Literal-fc">head</span> and a <span class="Literal-fc">body</span>, and the <span class="Literal-fc">body</span> contains heading and paragraph elements. A few of the paragraphs, in turn, contain inline elements such as images (<span class="Literal-fc">img</span>) and emphasized text (<span class="Literal-fc">em</span>). You can visualize the structure as an upside-down tree, branching out from the root, as shown in <span class="Xref-Figure">Figure 11-6</span>.</p>
+			<div>
+				<figure id="_idContainer597" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1106.png" alt="" width="1338" height="567"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-6.</span><span class="FigureLabel"> </span>The document tree structure of the sample document, <span class="Filename--Sidebar-">cooking.html</span><span class="Filename">.</span></figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Parents and children</h3>
+			<p class="body">The document <a id="_idIndexMarker1903"></a>tree becomes a family tree when it comes to referring to the relationship between elements. All the elements contained within a given element are said to be<a id="_idIndexMarker1904"></a> its <span class="FirstTerm">descendants</span>. For example, the <span class="Literal-fc">h1</span>, <span class="Literal-fc">h2</span>,<span class="Literal-fc"> p</span>, <span class="Literal-fc">em</span>, and <span class="Literal-fc">img</span> elements in the document in <span class="Xref-Figure">Figure 11-6</span> are all descendants of the <span class="Literal-fc">body</span> element. </p>
+			<p class="body">An element that is directly contained within another element (with no intervening hierarchical levels) is said to be<a id="_idIndexMarker1905"></a> the <span class="FirstTerm">child</span> of that element. Conversely, the containing element is<a id="_idIndexMarker1906"></a> the <span class="FirstTerm">parent</span>. For example, the <span class="Literal-fc">em</span> element is the child of the <span class="Literal-fc">p</span> element, and the <span class="Literal-fc">p</span> element is its parent.</p>
+			<p class="body">All of the elements higher than a particular element in the hierarchy are its <span class="FirstTerm">ancestors</span>. Two<a id="_idIndexMarker1907"></a> elements with the same parent <a id="_idIndexMarker1908"></a>are <span class="FirstTerm">siblings</span>. We don’t refer to “aunts” or “cousins,” so the analogy stops there. This may all seem academic, but it will come in handy when you’re writing CSS selectors.</p>
+			<h3 class="HeadC">Pass it on</h3>
+			<p class="body">When you <a id="_idIndexMarker1909"></a><a id="_idIndexMarker1910"></a>write a font-related style rule using the <span class="Literal-fc">p</span> element as a selector, the rule applies to all of the paragraphs in the document as well as the inline text elements they contain. We’ve seen the evidence of the <span class="Literal-fc">em</span> element inheriting the style properties applied to its parent (<span class="Literal-fc">p</span>) back in <span class="Xref-Figure">Figure 11-5</span>. <span class="Xref-Figure">Figure 11-7</span> demonstrates what’s happening in terms of the document structure diagram. Note that the <span class="Literal-fc">img</span> element is excluded because font-related properties do not apply to images. </p>
+			<div>
+				<figure id="_idContainer599" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1107.png" alt="" width="1338" height="621"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-7.</span><span class="FigureLabel"> </span>Certain properties applied to the <span class="Literal-Sidebar">p</span> element are inherited by their children.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Notice that I’ve been saying “certain” properties are inherited. It’s important to note that some style sheet properties inherit and others do not. In general, properties related to the styling of text—font size, color, style, and the like—are passed down. Properties such as borders, margins, backgrounds, and so on that affect the boxed area around the element tend not to be passed down. This makes sense when you think about it. For example, if you put a border around a paragraph, you wouldn’t want a border around every inline element (such as <span class="Literal-fc">em</span>, <span class="Literal-fc">strong</span>, or <span class="Literal-fc">a</span>) it contains as well.</p>
+			<div>
+				<div id="_idContainer600" class="sidebar">
+					<h5 class="SidebarSeries">CSS TIP</h5>
+					<p class="SidebarBody">When you learn a new property, it is a good idea to note whether it inherits. Inheritance is noted for every property listing in this book. For the most part, inheritance follows your expectations.</p>
+				</div>
+			</div>
+			<p class="body">You can use inheritance to your advantage when writing style sheets. For example, if you want all text elements to be blue, you could write separate style rules for every element in the document and set the <span class="Literal-fc">color</span> to “blue”. A <em class="Emphasis">better</em> way would be to write a single style rule that applies the <span class="Literal-fc">color</span> property to the <span class="Literal-fc">body</span> element, and let all the elements contained in the <span class="Literal-fc">body</span> inherit that style (<span class="Xref-Figure">Figure 11-8</span>).</p>
+			<p class="body">Any property applied to a specific element overrides the inherited values for that property. Going back to the article example, if we specify that the <span class="Literal-fc">em</span> element should be orange, that would override the inherited blue setting.</p>
+			<div>
+				<figure id="_idContainer602" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1108.png" alt="" width="1338" height="659"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-8.</span><span class="FigureLabel"> </span>All the elements in the document inherit certain properties applied to the <span class="Literal-Sidebar">body</span> element.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Conflicting Styles: The Cascade</h2>
+			<p class="body">Ever wonder why<a id="_idIndexMarker1911"></a><a id="_idIndexMarker1912"></a> <a id="_idIndexMarker1913"></a><a id="_idIndexMarker1914"></a>they are called “cascading” style sheets? CSS allows you to apply several style sheets to the same document, which means there are bound to be conflicts. For example, what should the browser do if a document’s imported style sheet says that <span class="Literal-fc">h1</span> elements should be red, but its embedded style sheet has a rule that makes <span class="Literal-fc">h1</span>s purple? The two style rules with <span class="Literal-fc">h1</span> selectors have equal weight, right?</p>
+			<p class="body">The folks who wrote the style sheet specification anticipated this problem and devised a hierarchical system that assigns different weights to the various sources of style information. The <span class="FirstTerm">cascade</span> refers <a id="_idIndexMarker1915"></a>to what happens when several sources of style information vie for control of the elements on a page: style information is passed down (“cascades” down) until it is overridden by a style rule with more<a id="_idIndexMarker1916"></a> weight. Weight is considered based on the <em class="Emphasis">priority</em> of the style rule source, the <em class="Emphasis">specificity</em> of the selector, and<em class="Emphasis"> rule order</em>.</p>
+			<div>
+				<div id="_idContainer603" class="callout">
+					<p class="callout">The “cascade” refers to what happens when several sources of style information vie for control of the elements on a page.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Priority</h3>
+			<p class="body">If you <a id="_idIndexMarker1917"></a>don’t <a id="_idIndexMarker1918"></a><a id="_idIndexMarker1919"></a>apply any style information to a web page, it renders according to the browser’s internal style sheet. We’ve been calling this the default rendering; the W3C calls it <a id="_idIndexMarker1920"></a>the <span class="FirstTerm">user agent style sheet</span>. Individual users can apply their own styles as <a id="_idIndexMarker1921"></a>well (the <span class="FirstTerm">user style sheet</span>, also called<a id="_idIndexMarker1922"></a> the <span class="FirstTerm">reader</span> style sheet), which override the default styles in their browser. However, if the author of the web page has attached a style sheet<a id="_idIndexMarker1923"></a> (the <span class="FirstTerm">author style sheet</span>), that overrides both the user and the user agent styles. The sidebar <span class="Xref">“Style Rule Hierarchy”</span> provides an overview of the cascading order from highest to lowest priority. </p>
+			<p class="body">The only exception is if the user has identified a style as “important,” in which case that style will override all competing styles (see the <span class="Xref">“Assigning Importance”</span> sidebar). This permits users to keep settings accommodating a disability such as extra large type for sight impairment.</p>
+			<div>
+				<div id="_idContainer604" class="sidebar">
+					<h5 class="SidebarTitle">Style Rule Hierarchy </h5>
+					<p class="SidebarBody">Style information can come from various origins, listed here from highest priority to lowest. In other words, items higher in the list override items below.</p>
+					<ul>
+						<li class="SidebarListBullet">Any style rule marked <span class="Literal-Sidebar">!important</span> by the reader (user)</li>
+						<li class="SidebarListBullet">Any style rule marked <span class="Literal-Sidebar">!important</span> by the author</li>
+						<li class="SidebarListBullet">Style sheets written by the author </li>
+						<li class="SidebarListBullet">Style sheets created by the reader (user)</li>
+						<li class="SidebarListBullet">Browser’s default style rules (“user agent style sheet”)</li>
+					</ul>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer605" class="sidebar">
+					<h5 class="SidebarTitle">Assigning Importance </h5>
+					<p class="SidebarBody">If you want a rule <a id="_idIndexMarker1924"></a>not to be overridden by a subsequent conflicting rule, include the<a id="_idIndexMarker1925"></a> <span class="Literal-Sidebar">!important</span> indicator just after the property value and before the semicolon for that rule. For example, to guarantee paragraph text will be blue, use the following rule: </p>
+					<pre class="SidebarCodeFirst">p {color: blue <code class="CodeColor">!important</code>;} </pre>
+					<p class="SidebarBody">Even if the browser encounters an inline style later in the document (which should override a document-wide style sheet), like this one: </p>
+					<pre class="SidebarCodeFirst">&lt;p style="color: red"&gt; </pre>
+					<p class="SidebarBody">that paragraph will still be blue because the rule with the <span class="Literal-Sidebar">!important</span> indicator cannot be overridden by other styles in the author’s style sheet. </p>
+					<p class="SidebarBody">The only way an <span class="Literal-Sidebar">!important</span> rule may be overridden is by a conflicting rule in a reader (user) style sheet that has also been marked <span class="Literal-Sidebar">!important</span>. This is to ensure that special reader requirements, such as large type or high-contrast text for the visually impaired, are never overridden.  </p>
+					<p class="SidebarBody">Based on the previous examples, if the reader’s style sheet includes this rule  </p>
+					<pre class="SidebarCodeFirst">p {color: black;} </pre>
+					<p class="SidebarBody">the text would still be blue because all author styles (even those not marked <span class="Literal-Sidebar">!important</span>) take precedence over the reader’s styles. However, if the conflicting reader’s style is marked <span class="Literal-Sidebar">!important</span>, like this </p>
+					<pre class="SidebarCodeFirst">p {color: black !important;} </pre>
+					<p class="SidebarBody">the paragraphs will be black and cannot be overridden by any author-provided style. </p>
+					<p class="SidebarBody">Beware that the <span class="Literal-Sidebar">!important</span> indicator is not a get-out-of-jail-free card. Best practices dictate that it should be used sparingly, if at all, and certainly never just to get yourself out of a sticky situation with inheritance and the cascade.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Specificity</h3>
+			<p class="body">It is <a id="_idIndexMarker1926"></a><a id="_idIndexMarker1927"></a><a id="_idIndexMarker1928"></a>possible <a id="_idIndexMarker1929"></a>for conflicts to arise in which an element is getting style instructions from more than one rule. For example, there may be a rule that applies to paragraphs and another rule for a paragraph that has the <a id="_idIndexMarker1930"></a><a id="_idIndexMarker1931"></a>ID “intro.” Which rule should the intro paragraph use?</p>
+			<p class="body">When two rules in a style sheet conflict, the type of selector is used to determine the winner. The more specific the selector, the more weight it is given to override conflicting declarations. In our example, the selector that includes the ID name (<span class="Literal-fc">#intro</span>) is more specific than a <a id="_idIndexMarker1932"></a><a id="_idIndexMarker1933"></a>general element selector (like <span class="Literal-fc">p</span>), so that rule would apply to the “intro” paragraph, overriding the rules set for all paragraphs.</p>
+			<div>
+				<div id="_idContainer606" class="callout">
+					<p class="callout">When two rules in a single style sheet conflict, the type of selector is used to determine the winner.</p>
+				</div>
+			</div>
+			<p class="body">It’s a little soon to be discussing specificity because we’ve looked at only two types of selectors. For now, put the term <span class="FirstTerm">specificity</span> and the concept that some selectors have more “weight,” and therefore override others, on your radar. We will revisit specificity in much more detail in <a href="lwd5_chapter12.xhtml#_idTextAnchor147"><span class="Xref">Chapter </span><span class="Xref">12</span><span class="Xref">, Formatting Text</span></a> when you have more selector types under your belt.</p>
+			<h3 class="HeadC">Rule order </h3>
+			<p class="body">After <a id="_idIndexMarker1934"></a><a id="_idIndexMarker1935"></a><a id="_idIndexMarker1936"></a>all the style sheet sources have been sorted by priority, and after all the linked and imported style sheets have been shuffled into place, there are likely to be conflicts in rules with equal weights. When that is the case, the order in which the rules appear is important. The cascade follows a “last one wins” rule. Whichever rule appears last has the last word. </p>
+			<p class="body">Within a style sheet, if there are conflicts within style rules of identical weight, whichever one comes last in the list “wins.” Take these three rules, for example:</p>
+			<pre class="CodeFirst">&lt;style&gt;<br/>  p { color: red; }<br/>  p { color: blue; }<br/>  p { color: green; }<br/>&lt;/style&gt;</pre>
+			<p class="body">In this scenario, paragraph text will be green because it is the last rule in the style sheet—that is, the one closest to the content in the document—overrides the earlier ones. Procedurally, the paragraph is assigned a color, then assigned a new one, and finally a third one (green) that gets used. The same thing happens when conflicting styles occur within a single declaration stack:</p>
+			<pre class="CodeFirst">&lt;style&gt;<br/>  p { color: red;<br/>        color: blue;<br/>       color: green; }<br/>&lt;/style&gt;</pre>
+			<p class="body">The resulting color will be green because the last declaration overrides the previous two. It is easy to accidentally override previous declarations within a rule when you get into compound properties, so this is an important behavior to keep in mind. That is a very simple example. What happens when style sheet rules from different sources come into play?</p>
+			<p class="body">Let’s consider an HTML document that has an <a id="_idIndexMarker1937"></a>embedded style sheet (added with the <span class="Literal-fc">style</span> element) that starts with an<a id="_idIndexMarker1938"></a> <span class="Literal-fc">@import</span> rule for importing an external <span class="Filename">.css</span> file. That same HTML document also has a <a id="_idIndexMarker1939"></a>few inline <span class="Literal-fc">style</span> attributes applied to particular <span class="Literal-fc">h1</span> elements.</p>
+			<p class="body"><span class="FigureLabel">Style document (</span><span class="Filename">external.css</span><span class="FigureLabel">)</span>:</p>
+			<pre class="CodeFirst">…<br/>h1 { color: red }<br/>…</pre>
+			<p class="body"><span class="FigureLabel">HTML document:</span></p>
+			<pre class="CodeFirst">&lt;!DOCT<a id="_idTextAnchor140"></a>YPE html&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;title&gt;…&lt;/title&gt;<br/>  &lt;style&gt;<br/>    <code class="CodeColor">@import url(external.css);  </code><span class="Code-Comment">/* set to red first */</span><br/><code class="CodeColor">    h1 { color: purple;}  </code><span class="Code-Comment">/* overridden by purple */</span> <br/>  &lt;/style&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;h1 <code class="CodeColor">style="color: blue"</code>&gt;Heading&lt;/h1&gt;  <span class="Code-Comment">/* blue comes last and wins */</span><br/>  …<br/>&lt;/body&gt;<br/>&lt;/html&gt;</pre>
+			<p class="body">When the browser parses the file, it gets to the imported style sheet first, which sets <span class="Literal-fc">h1</span>s to red. Then it finds a rule with equal weight in the embedded style sheet that overrides the imported rule, so <span class="Literal-fc">h1</span>s are set to purple. As it continues, it encounters a style rule right in an <span class="Literal-fc">h1</span> that sets its color to blue. Because that rule came last, it’s the winner, and that <span class="Literal-fc">h1</span> will be blue. That’s the effect we witnessed in <span class="Xref-Figure">Exercise 11-3</span>. Note that other <span class="Literal-fc">h1</span>s in this document without inline style rules would be purple, because that was the last <span class="Literal-fc">h1</span> color applied to the whole document.</p>
+			<div>
+				<div id="_idContainer607" class="sidebar">
+					<h5 class="SidebarTitle">Using Rule Order for Fallbacks</h5>
+					<p class="SidebarBody">Many<a id="_idIndexMarker1940"></a> CSS properties are tried and true and are supported by all browsers; however, there are always useful, new properties emerging that take a while to be implemented by browsers. It is common for just one or two browsers to support a new feature and for others to lag behind or never support it at all. It also takes a long time for some old browsers to completely fade from existence.</p>
+					<p class="SidebarBody">Fortunately, there are a number of ways to provide <span class="FirstTerm--Sidebar-">fallbacks</span> (alternative styles using better-supported properties) to non-supporting browsers. The most straightforward method takes advantage of browsers’ built-in behavior of ignoring any declaration they don’t understand and then using rule order strategically.</p>
+					<p class="SidebarBody">In this example, I have added a decorative border image to an element by using the<a id="_idIndexMarker1941"></a> <span class="Literal-Sidebar">border-image</span> property and provided a fallback solid border with the tried-and-true <span class="Literal-Sidebar">border</span> property. Supporting browsers use the image because it is the last rule in the stack. Non-supporting browsers set a solid border but stop there when they get to the <span class="Literal-Sidebar">border-image</span> property they don’t understand. They won’t crash or throw an error. They just ignore it. The border displays as the fallback solid red line on those browsers, which is fine, but users with supporting browsers will see the decorative border as intended. </p>
+					<pre class="SidebarCodeFirst">h1 {<br/><span class="Code-Comment">/* fallback first */</span> <br/>  border: 25px solid #eee <br/><span class="Code-Comment">/* newer technique */</span><br/> border-image: url(fancyframe.png) 55 fill / 55px / 25px;<br/>}</pre>
+					<p class="SidebarBody">You’ll see this method of providing fallbacks by putting newer properties last throughout this book. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">The Box Model</h2>
+			<p class="body">As long as <a id="_idIndexMarker1942"></a>we’re talking about Big CSS Concepts, it is only appropriate to introduce the cornerstone of the CSS visual formatting system: the box model. The easiest way to think of the box model is that browsers see every element on the page (both block and inline) as being contained in a little rectangular box. You can apply properties such as borders, margins, padding, and backgrounds to these boxes, and even reposition them on the page. </p>
+			<p class="body">We’re going to go into a lot more detail about the box model in <a href="lwd5_chapter14.xhtml#_idTextAnchor191"><span class="Xref">Chapter </span><span class="Xref">14</span></a>, but having a general feel for it will benefit you even as we discuss text and backgrounds in the following two chapters.</p>
+			<p class="body">To see the elements roughly the way the browser sees them, I’ve written style rules that add borders around every content element in our sample article: </p>
+			<pre class="CodeFirst">h1 { border: 1px solid blue; }<br/>h2 { border: 1px solid blue; }<br/>p { border: 1px solid blue; }<br/>em { border: 1px solid blue; }<br/>img { border: 1px solid blue; }</pre>
+			<p class="body"><span class="Xref-Figure">Figure 11-9</span> shows the results. The borders reveal the shape of each block element box. There are boxes around the inline elements (<span class="Literal-fc">em</span> and <span class="Literal-fc">img</span>) as well. If you look at the headings, you will see that block element boxes expand to fill the available width of the browser window, which is the nature of block elements in the normal document flow. Inline boxes encompass just the characters or image they contain.</p>
+			<div>
+				<figure id="_idContainer609" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1109_boxmodel.png" alt="" width="1338" height="888"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-9.</span><span class="FigureLabel"> </span>Rules around all the elements reveal their element boxes.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB"><a id="_idTextAnchor141"></a>Grouped Selectors</h2>
+			<p class="body"><em class="Emphasis">Hey!</em> This is a good <a id="_idIndexMarker1943"></a><a id="_idIndexMarker1944"></a>opportunity to show you a handy style rule shortcut. If you ever need to apply the same style property to a number of elements, you can group the selectors into one rule by separating them with commas. This one rule has the same effect as the five rules listed previously. Grouping them makes future edits more efficient and results in a smaller file size: </p>
+			<pre class="CodeFirst"><code class="CodeColor">h1, h2, p, em, img</code> { border: 1px solid blue; }</pre>
+			<p class="body">Now you have two selector types in your toolbox: a simple element selector and grouped selectors. </p>
+			<div>
+				<div id="_idContainer611" class="sidebar">
+					<h5 class="SidebarTitle">Pop Quiz</h5>
+					<p class="SidebarBody">Can you guess why I didn’t just add the <span class="Literal-Sidebar">border</span> property to the <span class="Literal-Sidebar">body</span> element and let it inherit to all the elements in the grouped selector?</p>
+					<h5 class="sbHead">Answer:</h5>
+					<div>
+						<div id="_idContainer610" class="upsideDown">
+							<p class="SidebarBody">Because <span class="Literal-Sidebar">border</span> is one of the properties that are not inherited.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer612" class="sidebar">
+					<h5 class="SidebarTitle">A Quick History of CSS</h5>
+					<p class="SidebarBody">The first official version of<a id="_idIndexMarker1945"></a> CSS (the <span class="Xref--Sidebar-">CSS Level 1 Recommendation</span>, a.k.a <span class="Xref--Sidebar-">CSS1</span>) was released in 1996, and included properties for adding font, color, and spacing instructions to page elements. Unfortunately, lack of browser support prevented the widespread adoption of CSS for several years. </p>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">CSS Level 2 (CSS2)</span>, released in 1998, most notably added properties for positioning that allowed CSS to be used for page layout. It also introduced styles for other media types (such as print and handheld) and more sophisticated methods for selecting elements. <span class="Xref--Sidebar-">CSS Level 2, Revision 1 (CSS2.1)</span> made some minor adjustments to CSS2 and became a Recommendation in 2011. </p>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">CSS Level 3 (CSS3)</span> is different from prior versions in that it is divided into individual modules, each addressing a feature such as animation, multiple column layouts, or borders. While some modules are being standardized, others remain experimental. In that way, browser developers can begin implementing (and we can begin using!) one feature at a time instead of waiting for an entire specification to be “ready.” </p>
+					<p class="SidebarBody">Now that each CSS module is on its own track, modules have their own Level numbers. No more big, all-encompassing CSS versions. Newly introduced modules, such as the Grid Layout Module, start out at Level 1. Modules that have been around a while may have already reached Level 4.  </p>
+					<p class="SidebarBody">You won’t believe how many individual specifications are in the works! For an overview of the specifications in their various states of “doneness,” see the W3C’s CSS current work page at <a href="http://www.w3.org/Style/CSS/current-work"><span class="URL-Email--Sidebar-">www.w3.org/Style/CSS/current-work</span></a>. </p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-101" class="HeadA"><a id="_idTextAnchor142"></a>CSS Units of Measurement</h1>
+			<p class="body">This chapter lays the groundwork for upcoming lessons, so it’s a good time to get familiar with the units of measurement used in CSS. You’ll be using them to set font size, the width and height of elements, margins, indents, and so on. The complete list is provided in the sidebar <span class="Xref">“CSS Units.”</span></p>
+			<p class="body">Some will look familiar (like inches and millimeters), but there are some units that bear more explanation: absolute units, rem, em, and vw/vh. Knowing how to use CSS units effectively is another one of those core CSS skills.</p>
+			<div>
+				<div id="_idContainer613" class="sidebar">
+					<h5 class="SidebarTitle">CSS Units </h5>
+					<p class="SidebarBody">CSS3 provides<a id="_idIndexMarker1946"></a><a id="_idIndexMarker1947"></a> a variety of units of measurement. They fall into two broad categories: <span class="FirstTerm--Sidebar-">absolute</span> and <span class="FirstTerm--Sidebar-">relative</span>.</p>
+					<h5 class="sbHead">Absolute units</h5>
+					<p class="SidebarBody"><a id="_idIndexMarker1948"></a>Absolute<a id="_idIndexMarker1949"></a> <a id="_idIndexMarker1950"></a>units have predefined meanings or real-world equivalents. With the exception of pixels, they are not appropriate for <a id="_idIndexMarker1951"></a><a id="_idIndexMarker1952"></a><a id="_idIndexMarker1953"></a><a id="_idIndexMarker1954"></a><a id="_idIndexMarker1955"></a><a id="_idIndexMarker1956"></a><a id="_idIndexMarker1957"></a><a id="_idIndexMarker1958"></a>web pages that appear on screens. </p>
+					<table id="table001-10" class="table_invisible">
+						<colgroup>
+							<col/>
+							<col/>
+						</colgroup>
+						<tbody>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">px</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">pixel, defined as equal to 1/96 of an inch in CSS3. </p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">in</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">inches.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">mm</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">millimeters.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">cm</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">centimeters.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">q</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">¼ millimeter.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">pt</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">points (1/72 inch). Points are a unit commonly used in print design.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">pc</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">picas (1 pica = 12 points or 1/6 inch). Points are a unit commonly used in print design.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<h5 class="sbHead">Relative units</h5>
+					<p class="SidebarBody"><a id="_idIndexMarker1959"></a><a id="_idIndexMarker1960"></a>Relative<a id="_idIndexMarker1961"></a><a id="_idIndexMarker1962"></a><a id="_idIndexMarker1963"></a><a id="_idIndexMarker1964"></a><a id="_idIndexMarker1965"></a><a id="_idIndexMarker1966"></a><a id="_idIndexMarker1967"></a><a id="_idIndexMarker1968"></a><a id="_idIndexMarker1969"></a> <a id="_idIndexMarker1970"></a><a id="_idIndexMarker1971"></a>units are based on the size of something else, such as the default text size or the size of the parent element. </p>
+					<table id="table002-7" class="table_invisible">
+						<colgroup>
+							<col/>
+							<col/>
+						</colgroup>
+						<tbody>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">em</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">a unit of measurement equal to the current font size.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">ex</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">x-height, approximately the height of a lowercase “x” in the font.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">rem</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">root em, equal to the em size of the root element (<span class="Literal-Sidebar">html</span>). </p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">ch</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">zero width, equal to the width of a zero (0) in the current font and size.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">vw</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">viewport width unit, equal to 1/100 of the current viewport (browser window) width.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">vh</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">viewport height unit, equal to 1/100 of the current viewport height.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">vmin</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">viewport minimum unit, equal to the value of <span class="Literal-Sidebar">vw</span> or <span class="Literal-Sidebar">vh</span>, whichever is smaller.</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody"><span class="Literal-Sidebar">vmax</span></p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">viewport maximum unit, equal to the value of <span class="Literal-Sidebar">vw</span> or <span class="Literal-Sidebar">vh</span>, whichever is larger.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<h5 class="noteHeader">NotES</h5>
+					<ul>
+						<li class="SidebarListBullet">Although not a “unit,” percentages<a id="_idIndexMarker1972"></a> <a id="_idIndexMarker1973"></a>are another common measurement value for web page elements. Percentages are calculated relative to another value, such as the value of a property applied to the current element or its parent or ancestor. The spec always says what a percentage value for a property is calculated on.<p class="SidebarListItem_cont">When used for page layouts, percentage values ensure that page elements stay proportional. </p></li>
+						<li class="SidebarListBullet">Child elements do not inherit the relative values of their parent, but rather the resulting <em class="Emphasis">calculated</em> value.</li>
+						<li class="SidebarListBullet">IE9 supports <span class="Literal-Sidebar">vm</span> instead of <span class="Literal-Sidebar">vmin</span>. IE and Edge (all versions as of 2017) do not support <span class="Literal-Sidebar">vmax</span>.</li>
+					</ul>
+				</div>
+			</div>
+			<h2 class="HeadB">Absolute Units</h2>
+			<p class="body">Absolute units have predefined meanings or real-world equivalents. They are always the same size, regardless of the context in which they appear. </p>
+			<p class="body">The most popular absolute unit for web design is the pixel, which CSS3 defines as 1/96 inch. Pixels are right at home on a pixel-based screen and offer precise control over the size of the text and elements on the page. For a while there, pixels were all we used. Then we realized they are too rigid for pages that need to adapt to a wide variety of screen sizes and user preferences. Relative measurements like rem, em, and % are more appropriate to the fluid nature of the medium. </p>
+			<p class="body">As long as we are kicking <span class="Literal-fc">px</span> to the curb, all of the absolute units—such as <span class="Literal-fc">pt</span>, <span class="Literal-fc">pc</span>, <span class="Literal-fc">in</span>, <span class="Literal-fc">mm</span>, and <span class="Literal-fc">cm</span>—are out because they are irrelevant on screens, although they may be useful for print style sheets. That narrows down your unit choices a bit.</p>
+			<p class="body">That said, pixels do still have their place in web design for elements that truly should stay the same size regardless of context. Border widths are appropriate in pixels, as are images that have inherent pixel dimensions. </p>
+			<h2 class="HeadB">Relative Units</h2>
+			<p class="body">As I just established, relative units are the way to go for most web measurements, and there are a few options: rem, em, and <span class="Literal-fc">vw</span>/<span class="Literal-fc">vh</span>.</p>
+			<h3 class="HeadC">The rem unit</h3>
+			<p class="body">CSS3 introduced a relative measurement called a <span class="FirstTerm">rem</span> (for <span class="FirstTerm">root em</span>) that is based on the font size of the root (<span class="Literal-fc">html</span>) element, whatever that happens to be. In modern browsers, the default root font size is 16 pixels; therefore, a rem is equivalent to a 16-pixel unit (unless  you set it explicitly to another value). An element sized to 10rem would measure 160 pixels. </p>
+			<p class="body">For the most part, you can use rem units like an absolute measurement in style rules; however, because it is relative, if the base font size changes, so does the size of a rem. If a user changes the base font size to 24 pixels for easier reading from a distance, or if the page is displayed on a device that has a default font size of 24 pixels, that 10rem element becomes 240 pixels. That seems dodgy, but rest assured that it is a feature, not a bug. There are many instances in which you want a layout element to expand should the text size increase. It keeps the page proportional with the font size, which can help maintain optimum line lengths.  </p>
+			<div>
+				<div id="_idContainer614" class="sidebar">
+					<h5 class="SidebarTitle">Rem Fallbacks for Old IE Browsers</h5>
+					<p class="SidebarBody">The drawback to rems is that IE8 and earlier do not support them at all, and you need to provide a fallback declaration with the equivalent measurement in pixels. There are production tools that can convert all your rem units to pixels automatically, which are discussed in <span class="Xref--Sidebar-">Chapter 20, Modern Development Tools</span>.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">The em unit</h3>
+			<p class="body">An <span class="FirstTerm">em</span> is a relative unit of measurement that, in traditional typography, is based on the width of the capital letter M (thus the name “em”). In the CSS specification, an em is calculated as the distance between baselines when the font is set without any extra space between the lines (also known as leading). For text with a font size of 16 pixels, an em measures 16 pixels; for 12-pixel text, an em equals 12 pixels; and so on, as shown in <span class="Xref-Figure">Figure 11-10</span>.</p>
+			<div>
+				<figure id="_idContainer616" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1110_em.png" alt="" width="1321" height="408"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-10.</span> An em is based on the size of the text.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer617" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Don’t confuse the em unit of measurement with the <span class="Literal-Sidebar">em</span> HTML element used to indicate emphasized text. They are totally different things.</p>
+				</div>
+			</div>
+			<p class="body">Once the dimension of an em for a text element is calculated by the browser, it can be used for all sorts of other measurements, such as indents, margins, the width of the element on the page, and so on. Basing measurements on text size helps keep everything in proportion should the text be resized. </p>
+			<p class="body">The trick to working with ems is to remember they are always relevant to the current font size of the element. To borrow an example from <a id="_idIndexMarker1974"></a>Eric Meyer and Estelle <a id="_idIndexMarker1975"></a>Weyl’s <span class="Citation">CSS: The Definitive Guide</span> (O’Reilly), if you set a 2em left margin on an <span class="Literal-fc">h1</span>, <span class="Literal-fc">h2</span>, and <span class="Literal-fc">p</span>, those elements will not line up nicely because the em units are based on their respective element’s sizes (<span class="Xref-Figure">Figure 11-11</span>).</p>
+			<div>
+				<figure id="_idContainer619" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1111_emmargin.png" alt="" width="1321" height="556"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-11.</span> Em measurements are always relevant to the element’s font size. An em for one element may not be the same for another.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Viewport percentage lengths (vw/vh) </h3>
+			<p class="body">The <a id="_idIndexMarker1976"></a><a id="_idIndexMarker1977"></a><a id="_idIndexMarker1978"></a><a id="_idIndexMarker1979"></a>viewport width (<span class="Literal-fc">vw</span>) and viewport height (<span class="Literal-fc">vh</span>) units are relative to the size of the viewport (browser window). A <span class="Literal-fc">vw</span> is equal to 1/100 the width of the viewport. Similarly, a <span class="Literal-fc">vh</span> is equal to 1/100 the height of the viewport. Viewport-based units are useful for making images and text elements stay the full width or height of the viewport:</p>
+			<pre class="CodeFirst">header {<br/>  width: 100vw;<br/>  height: 100vh; }</pre>
+			<p class="body">It's also easy to use vw and vh units to set the width and height of an element to a percentage of the display size, for example to the equivalent of 50%:</p>
+			<pre class="CodeFirst">img {<br/>  width: 50vw;<br/>  height: 50vh; }</pre>
+			<p class="body">Related are the <a id="_idIndexMarker1980"></a><span class="Literal-fc">vmin</span> unit (equal to the value of <span class="Literal-fc">vw</span> or <span class="Literal-fc">vh</span>, whichever is smaller) and <a id="_idIndexMarker1981"></a><span class="Literal-fc">vmax</span> (equal to the value of <span class="Literal-fc">vw</span> or <span class="Literal-fc">vh</span>, whichever is larger). </p>
+			<div>
+				<div id="_idContainer620" class="note">
+					<h5 class="WarningHeader">Browser support note</h5>
+					<p class="note">IE9 supports <span class="Literal-Sidebar">vm</span> instead of <span class="Literal-Sidebar">vmin</span>. IE and Edge (all versions as of 2017) do not support <span class="Literal-Sidebar">vmax</span>.</p>
+				</div>
+			</div>
+			<p class="body">That should give you a good introduction to the units you’ll be using in your style sheets. I recommend reading the full CSS Values and Units Module (<a href="http://www.w3.org/TR/css3-values/"><span class="URL-Email">www.w3.org/TR/css3-values/</span></a>) to deepen your knowledge and make the values listed for properties in this book easier to understand. In addition to length units, it includes text-based values (such as keywords, text strings, and URLs), numbers and percentage values, colors, and more.</p>
+			<h1 id="_idParaDest-102" class="HeadA"><a id="_idTextAnchor143"></a>Developer Tools Right in Your Browser</h1>
+			<p class="body">Because of the <a id="_idIndexMarker1982"></a>cascade, a single page element may have styles applied from a number of sources. This can make it tricky to debug a page when styles aren’t displaying the way you think they should. Fortunately, every major browser comes with developer tools that can help you sort things out. </p>
+			<p class="body">I’ve opened the simple <span class="Filename">cooking.html</span> document that we’ve been working on in the Chrome browser, then selected <span class="menu">View </span><span class="menu">→</span><span class="menu"> Developer </span><span class="menu">→</span><span class="menu"> Developer Tools</span> from the menu. The Developer Tools panel opens at the bottom of the document, as you can see in <span class="Xref-Figure">Figure 11-12</span>. You can also make it its own separate window by clicking the windows icon in the top left.</p>
+			<div>
+				<figure id="_idContainer622" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1112_devtools-ebook.png" alt="" width="1338" height="990"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-12.</span> The Chrome browser with the Developer Tools panel open. </figcaption>
+				</figure>
+			</div>
+			<p class="body">In the Elements tab on the left, I can see the HTML source for the document. The content is initially hidden so you can see the structure of the document more clearly, but clicking the arrows opens each section. When I click the element in the source (like the second <span class="Literal-fc">p</span> element shown in the figure), that element is also highlighted in the browser window view. </p>
+			<p class="body">In the Styles tab on the right, I can see all of the styles that are being applied to the selected element. In the example, I see the <span class="Literal-fc">font-size</span>, <span class="Literal-fc">font-family</span>, and <span class="Literal-fc">margin-left</span> properties from the <span class="Literal-fc">style</span> element in the document. If there were external CSS documents, they’d be listed too. I can also see the “User Agent Style Sheet,” which is the browser’s default styles. In this case, the browser style sheet adds the margin space around the paragraph. Chrome also provides a box model diagram for the selected element that shows the content dimensions, padding, border, and margins that are applied. This is a great tool for troubleshooting unexpected spacing in layouts. </p>
+			<p class="body">The <em class="Emphasis">cool</em> thing is that when you edit the style rules in the panel, the changes are reflected in the browser view of the page in real time! If I select the <span class="Literal-fc">h1</span> element and change the color from orange to green, it turns green in the window. It’s a great way to experiment with or troubleshoot a design; however, the changes are not being made to the document itself. It’s just a preview, so you’ll have to duplicate the changes in your source. </p>
+			<p class="body">You can inspect <em class="Emphasis">any</em> page on the web in this way, play around with turning styles off and on, and even add some of your own. Nothing you do has any effect on the actual site, so it is just for your education and amusement.</p>
+			<p class="body">The element and style inspectors are just the tip of the iceberg of what browser developer tools can do. You can also tweak and debug JavaScript, check performance, view the document in various device simulations, and much more. The good news is that all major browsers now have built-in tools with similar features. As a web developer, you’ll find they are your best friend.</p>
+			<ul>
+				<li class="ListBullet">Chrome DevTools  (<span class="menu">View </span><span class="menu">→</span><span class="menu"> Developer </span><span class="menu">→</span><span class="menu"> Developer Tools</span>)<a href="http://developer.chrome.com/devtools"><span class="URL-Email">developer.chrome.com/devtools</span></a></li>
+				<li class="ListBullet">Firefox (<span class="menu">Tools </span><span class="menu">→</span><span class="menu"> Web Developer</span>)<a href="http://developer.mozilla.org/en-US/docs/Tools"><span class="URL-Email">developer.mozilla.org/en-US/docs/Tools</span></a></li>
+				<li class="ListBullet">Microsoft <a id="_idIndexMarker1983"></a>Edge (open with F12 key)<a href="http://developer.microsoft.com/en-us/microsoft-edge/platform/documentation/f12-devtools-guide/"><span class="URL-Email">developer.microsoft.com/en-us/microsoft-edge/platform/documentation/f12-devtools-guide/</span></a></li>
+				<li class="ListBullet">Safari (<span class="menu">Develop </span><span class="menu">→</span><span class="menu"> Show Web Inspector)</span><a href="http://developer.apple.com/safari/tools/"><span class="URL-Email">developer.apple.com/safari/tools/</span></a></li>
+				<li class="ListBullet">Opera (<span class="menu">View </span><span class="menu">→</span><span class="menu"> Developer Tools </span><span class="menu">→</span><span class="menu"> Opera Dragonfly</span>)<a href="http://www.opera.com/dragonfly/"><span class="URL-Email">www.opera.com/dragonfly/</span></a></li>
+				<li class="ListBullet">Internet Explorer 9+ (open with F12 key)<a href="http://msdn.microsoft.com/en-us/library/gg589512(v=vs.85).aspx"><span class="URL-Email">msdn.microsoft.com/en-us/library/gg589512(v=vs.85).aspx</span></a></li>
+			</ul>
+			<h1 id="_idParaDest-103" class="HeadA"><a id="_idTextAnchor144"></a>Moving Forward with CSS</h1>
+			<p class="body">This chapter covered all the fundamentals of Cascading Style Sheets, including rule syntax, ways to apply styles to a document, and the central concepts of inheritance, the cascade (including priority, specificity, and rule order), and the box model. Style sheets should no longer be a mystery, and from this point on, we’ll merely be building on this foundation by adding properties and selectors to your arsenal and expanding on the concepts introduced here.</p>
+			<p class="body">CSS is a vast topic, well beyond the scope of this book. Bookstores and the web are loaded with information about style sheets for all skill levels. I’ve compiled a list of the resources I’ve found the most useful during my learning process. I’ve also provided a list of popular tools that assist in writing style sheets.</p>
+			<h2 class="HeadB">Books</h2>
+			<p class="body">There is no shortage of good books on CSS out there, but these are the ones that taught me, and I feel good recommending them.</p>
+			<ul>
+				<li class="ListBullet"><span class="Citation">CSS: The Definitive Guide, 4th Edition</span> by <a id="_idIndexMarker1984"></a>Eric A. Meyer and <a id="_idIndexMarker1985"></a>Estelle Weyl (O’Reilly)</li>
+				<li class="ListBullet"><span class="Citation">CSS Cookbook</span> by <a id="_idIndexMarker1986"></a>Christopher Schmitt (O’Reilly)</li>
+			</ul>
+			<h2 class="HeadB">Online Resources</h2>
+			<p class="body">The sites <a id="_idIndexMarker1987"></a>listed here are good starting points for online exploration of style sheets.</p>
+			<p class="ListVariableTerm">CSS-Tricks (<a href="http://css-tricks.com"><span class="URL-Email">css-tricks.com</span></a>) </p>
+			<p class="ListVariable">The is the blog <a id="_idIndexMarker1988"></a><a id="_idIndexMarker1989"></a>of CSS guru Chris Coyier. Chris <em class="Emphasis">loves</em> CSS and enthusiastically shares his research and tinkering on his site.</p>
+			<p class="ListVariableTerm">World Wide Web Consortium (<a href="http://www.w3.org/TR/CSS/"><span class="URL-Email">www.w3.org/TR/CSS/</span></a>)</p>
+			<p class="ListVariable">The <a id="_idIndexMarker1990"></a>World Wide Web Consortium oversees the development of web technologies, including CSS. This page is a “snapshot” of the CSS specifications. See also <a href="http://www.w3.org/Style/CSS/current-work"><span class="URL-Email">www.w3.org/Style/CSS/current-work</span></a>. </p>
+			<p class="ListVariableTerm">MDN Web Docs (<a href="http://developer.mozilla.org"><span class="URL-Email">developer.mozilla.org</span></a>)</p>
+			<p class="ListVariable">The CSS pages at <a id="_idIndexMarker1991"></a>MDN include detailed reference pages, step-by-step tutorials, and demos. It’s a great hub for researching any web technology.</p>
+			<p class="ListVariableTerm">A List Apart (<a href="http://alistapart.com/topics/code/css/"><span class="URL-Email">www.alistapart.com/topics/code/css/</span></a>)</p>
+			<p class="ListVariable">This online magazine features some of the best thinking and writing on cutting-edge, standards-based web design. It was founded in 1998 by <a id="_idIndexMarker1992"></a><a id="_idIndexMarker1993"></a>Jeffrey Zeldman and <a id="_idIndexMarker1994"></a>Brian Platz.</p>
+			<h1 id="_idParaDest-104" class="HeadA"><a id="_idTextAnchor145"></a>Test Yourself</h1>
+			<p class="body">Here are a few questions to test your knowledge of the CSS basics. Answers are provided in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber" value="1">Identify the various parts of this style rule:<pre class="listCode"><span class="Code1">blockquote { line-height: 1.5; }</span></pre><p class="ListNumber_cont">selector: ______________	value: ____________________</p><p class="ListNumber_cont">property: _____________	declaration: ________________</p></li>
+				<li class="ListNumber">What color will paragraphs be when this embedded style sheet is applied to a document? Why?<pre class="listCode"><code class="Code">&lt;style type="text/css"&gt;<br/>   p { color: purple; }<br/>   p { color: green; }<br/>   p { color: gray; }<br/>&lt;/style&gt;</code></pre></li>
+				<li class="ListNumber">Rewrite each of these CSS examples. Some of them are completely incorrect, and some could just be written more efficiently.<ol><li class="ListNumber_Indent"><code class="Code">p {font-family: sans-serif;}</code><br/><span class="Code-Inline"> </span><code class="Code">p {font-size: 1em;}<br/>p {line-height: 1.2em;}</code></li><li class="ListNumber_Indent"><code class="Code">blockquote { </code><br/><code class="Code">font-size: 1em <br/>line-height: 150%<br/>color: gray }</code></li><li class="ListNumber_Indent"><code class="Code">body </code><br/><code class="Code">{background-color: black;}<br/>{color: #666;}<br/>{margin-left: 12em;}<br/>{margin-right: 12em;}</code></li><li class="ListNumber_Indent"><code class="Code">p {color: white;}</code><br/><code class="Code">blockquote {color: white;}<br/>li {color: white;}</code></li><li class="ListNumber_Indent"><code class="Code">&lt;strong style="red"&gt;Act now!&lt;/strong&gt;</code></li></ol></li>
+				<li class="ListNumber">Circle all the elements that you would expect to appear in red when the following style rule is applied to a document with the structure diagrammed in <span class="Xref-Figure">Figure 11-13</span>. <pre class="CodeFirst">  div#intro { color: red;} </pre></li>
+			</ol>
+			<div>
+				<figure id="_idContainer624" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1113.png" alt="" width="1470" height="799"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 11-13.</span> The document structure of a sample document.</figcaption>
+				</figure>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

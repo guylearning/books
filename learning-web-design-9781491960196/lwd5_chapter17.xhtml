@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1173" class="ch17">
+			<p id="_idParaDest-159" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor223"></a>17. Responsive Web Design</p>
+		</div>
+		<div id="_idContainer1174" class="ch17">
+			<h1 class="chapterLabel">17</h1>
+		</div>
+		<div id="_idContainer1175" class="ch17">
+			<h1 class="chapterTitle"><a id="_idTextAnchor224"></a><a id="_idTextAnchor225"></a>Responsive Web Design</h1>
+		</div>
+		<div id="_idContainer1176" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">What RWD is and why it’s important</p>
+			<p class="chapterContents">Fluid layouts</p>
+			<p class="chapterContents">Media queries</p>
+			<p class="chapterContents">Design strategies and patterns</p>
+			<p class="chapterContents">Testing options</p>
+		</div>
+		<div id="_idContainer1238" class="ch17">
+			<p class="body">I first introduced you to the concept of Responsive Web Design way back in <a href="lwd5_chapter03.xhtml#_idTextAnchor030"><span class="Xref">Chapter </span><span class="Xref">3</span><span class="Xref">, Some Big Concepts You Need to Know</span></a>, and we’ve been addressing ways to keep all screen sizes in mind throughout this book. In this chapter, we get to do a deeper dive into responsive strategies and techniques.</p>
+			<p class="body">Just to recap, Responsive Web Design (or RWD) is a design and production approach that allows a website to be comfortably viewed and used on all manner of devices. The core principle is that all devices get the same HTML source, located at the same URL, but different styles are applied based on the viewport size to rearrange components and optimize usability. <span class="Xref-Figure">Figure 17-1</span> shows examples of responsive sites as they might appear on a smartphone, tablet, and desktop, but it is important to keep in mind that these sites are designed to work well on the continuum of every screen width in between.</p>
+			<div>
+				<figure id="_idContainer1178" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1701_examples-ebook.png" alt="" width="1338" height="1863"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-1.</span> Examples of responsive sites that adapt to fit small, medium, and large screens and all sizes in between.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1179" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Each site in <span class="Xref-Figure">Figure 17-1</span><span class="Xref--Sidebar-"> </span>has one morphing design, not three distinct layouts. Some sites do have a limited number of layouts aimed at specific devices, which is an approach known as <span class="FirstTerm--Sidebar-">Adaptive Design</span>.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-160" class="HeadA"><a id="_idTextAnchor226"></a>Why RWD?</h1>
+			<p class="body">Since the <a id="_idIndexMarker3179"></a><a id="_idIndexMarker3180"></a>iPhone shook things up in 2007, folks now view the web on phones of all sizes, tablets, “phablets,” touch-enabled laptops, wearables, televisions, video game consoles, refrigerators, and who knows what else that may be coming down the line. </p>
+			<p class="body">In 2016, mobile internet usage surpassed desktop usage—an important milestone. The percentage of web traffic that comes from devices other than desktop browsers is steadily increasing. For roughly 10% of Americans, a smartphone or tablet is their <em class="Emphasis">only</em> access to the internet because of lack of access to a computer or high-speed WiFi at work or home.<span id="footnote-002-backlink"><a class="_idFootnoteLink _idGenColorInherit" href="lwd5_chapter17.xhtml#footnote-002">*</a></span> Younger users may be mobile-only by choice. Furthermore, the vast majority of us access the web from a number of platforms (phone, tablet, computer) over the course of the day. And guess what—we expect to have a similar experience using your content or service regardless of how we access your site. </p>
+			<p class="body">That’s where RWD fits in. With one source, you ensure that mobile visitors receive the same content as other visitors (although it might be organized differently). Users are not penalized with stripped-down content or features just because they are using a smartphone. And for visitors who might start using your site on one device and finish it on another, you can ensure a consistent experience. </p>
+			<p class="body">In fact, for many web designers, “responsive design” is now just “web design.” Instead of a niche approach, it is becoming the default way to build a website that meets the demands of our current multidevice environment. </p>
+			<h1 id="_idParaDest-161" class="HeadA"><a id="_idTextAnchor227"></a>The Responsive Recipe</h1>
+			<p class="body">The deluge of web-enabled mobile devices initially sent shockwaves through the web design community. Accustomed to designing exclusively for large desktop screens, we were unclear about how we could accommodate screens that fit in the palm of your hand. </p>
+			<p class="body">One solution was to rely on the phone’s built-in web display functionality. By default, mobile devices display an entire web page shrunken down to fit on whatever screen real estate is available. Users can pinch to zoom into the details and scroll around to various parts of the page. While that technically works, it is far from an optimal experience. Another approach was to create a separate mobile site just for small screens and people “on the go.” There are still many companies and services that use dedicated mobile (“m-dot”) sites—Twitter and Facebook come to mind—but in general, m-dot sites are going away in favor of RWD. Google is helping the process along by favoring responsive sites with single URLs over <span class="Filename">m.</span> or <span class="Filename">mobile.</span> versions.</p>
+			<div>
+				<div id="_idContainer1180" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Mobile sites were discussed in the sidebar <span class="Xref--Sidebar-">“</span><a href="lwd5_chapter03.xhtml#_idTextAnchor036"><span class="Xref--Sidebar-">M-dot Sites</span></a><span class="Xref--Sidebar-">”</span> in <a href="lwd5_chapter03.xhtml#_idTextAnchor030"><span class="Xref--Sidebar-">Chapter </span><span class="Xref--Sidebar-">3</span><span class="Xref--Sidebar-">, Some Big Concepts You Need to Know</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">In 2010, <a id="_idIndexMarker3181"></a>Ethan Marcotte gave name to another, more flexible solution in his article “Responsive Web Design” (<a href="https://alistapart.com/article/responsive-web-design"><span class="URL-Email">alistapart.com/article/responsive-web-design</span></a>), which has since become a cornerstone of modern web design. In this chapter, I will follow the “ingredients” for RWD that Ethan outlines in his book <span class="Citation">Responsive Web Design</span> (A Book Apart). </p>
+			<p class="body">The technique has three core components:</p>
+			<p class="ListVariableTerm">A flexible grid</p>
+			<p class="ListVariable">Rather <a id="_idIndexMarker3182"></a>than remaining at a static width, responsive sites use methods that allow them to squeeze and flow into the available browser space. </p>
+			<p class="ListVariableTerm">Flexible images</p>
+			<p class="ListVariable">Images <a id="_idIndexMarker3183"></a>and other embedded media need to be able to scale to fit their containing elements.</p>
+			<p class="ListVariableTerm">CSS media queries</p>
+			<p class="ListVariable">Media <a id="_idIndexMarker3184"></a>queries give us a way to deliver sets of rules only to devices that meet certain criteria, such as width and orientation.</p>
+			<p class="body">To this list of ingredients, I would add the viewport <span class="Literal-fc">meta</span> element, which makes the width of the web page match the width of the screen. That’s where we’ll begin our tour of the mechanics of RWD.</p>
+			<h2 class="HeadB">Setting the Viewport</h2>
+			<p class="body">To fit standard websites onto small screens, mobile browsers render the page on a canvas called <a id="_idIndexMarker3185"></a><a id="_idIndexMarker3186"></a><a id="_idIndexMarker3187"></a>the <span class="FirstTerm">viewport</span> and then shrink that viewport down to fit the width of the <a id="_idIndexMarker3188"></a>screen (<span class="FirstTerm">device width</span>). For example, on iPhones, mobile Safari sets the viewport width to 980 points (see <span class="Xref">Note</span>), so a web page is rendered as though it were on a desktop browser window set to 980 pixels wide. That rendering gets shrunk down to the width of the screen (ranging from 320 to 414 points, depending on the iPhone model), cramming a lot of information into a tiny space.</p>
+			<div>
+				<div id="_idContainer1181" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">iOS layouts are measured in <a id="_idIndexMarker3189"></a>points, a unit of measurement that is independent from the number of pixels that make up the physical screen. Points and device pixels are discussed in more detail in <a href="lwd5_chapter23.xhtml#_idTextAnchor291"><span class="Xref--Sidebar-">Chapter </span><span class="Xref--Sidebar-">23</span><span class="Xref--Sidebar-">, Web Image Basics</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">Mobile Safari introduced the viewport <a id="_idIndexMarker3190"></a><span class="Literal-fc">meta</span> element, which allows us to define the size of that initial viewport. Soon, the other mobile browsers followed suit. The following <span class="Literal-fc">meta</span> element, which goes in the <span class="Literal-fc">head</span> of the HTML document, tells the browser to set the width of the viewport equal to the width of the device screen (<span class="Literal-fc">width=device-width</span>), whatever that happens to be (<span class="Xref-Figure">Figure 17-2</span>). The <a id="_idIndexMarker3191"></a><span class="Literal-fc">initial-scale</span> value sets the zoom level to 1 (100%).</p>
+			<pre class="CodeFirst">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</pre>
+			<div>
+				<div id="_idContainer1182" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">The viewport <span class="Literal-Sidebar">meta</span> element also allows the <a id="_idIndexMarker3192"></a><span class="Literal-Sidebar">maximum-scale</span> attribute. Setting it to 1 (<span class="Literal-Sidebar">maximum-scale=1</span>) prevents users from zooming the page, but it is strongly recommended that you avoid doing so because resizing is important for accessibility and usability.</p>
+				</div>
+			</div>
+			<p class="body">With the viewport <span class="Literal-fc">meta</span> element in place, if the device’s screen is 320 pixels wide, the rendering viewport on that device will also be 320 pixels across (not 980) and will appear on the screen at full size. That is the width we test for with media queries, so setting the viewport is a crucial first step.</p>
+			<div>
+				<figure id="_idContainer1184" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1702_viewportB.png" alt="" width="1321" height="1271"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-2.</span> The viewport <span class="Literal-Sidebar">meta</span> element matches the resolution of the device’s browser viewport to the resolution of its screen.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1185" class="sidebar">
+					<h5 class="SidebarSeries">Fun Fact</h5>
+					<p class="SidebarBody">Media <a id="_idIndexMarker3193"></a>queries are always at work, even after the page has initially loaded. If the viewport changes—for example, if a user turns a phone from portrait to landscape orientation or resizes a desktop browser window—the query runs again and applies the styles appropriate for the new width.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Flexible Grids (Fluid Layouts)</h2>
+			<p class="body">In the Flexbox <a id="_idIndexMarker3194"></a><a id="_idIndexMarker3195"></a><a id="_idIndexMarker3196"></a><a id="_idIndexMarker3197"></a>and Grid discussions in the previous chapter, we saw examples of items expanding and contracting to fill the available space of their containers. That fluidity is exactly the sort of behavior you need to make content neatly fit a wide range of viewport sizes. Fluid layouts (or “flexible grids,” as Ethan Marcotte calls them in his article and book) are the foundation of responsive design.</p>
+			<p class="body">In a <span class="FirstTerm">fluid layout</span>, the page area and its grid resize proportionally to fill the available width of the screen or window (<span class="Xref-Figure">Figure 17-3</span>, top). That is easily accomplished with <a id="_idIndexMarker3198"></a><a id="_idIndexMarker3199"></a><span class="Literal-fc">fr</span> and <span class="Literal-fc">minmax()</span> units in CSS Grid layouts and with <a id="_idIndexMarker3200"></a><span class="Literal-fc">flex</span> property settings in Flexbox. If you need to also target older browsers that don’t support CSS layout standards, you can use percentage values for horizontal measurements so elements remain proportional at varying sizes (see  the sidebar <span class="Xref">“Converting Pixels to Percentages”</span>). </p>
+			<div>
+				<div id="_idContainer1186" class="sidebar">
+					<h5 class="SidebarTitle">Converting Pixels to Percentages</h5>
+					<p class="SidebarBody">To convert measurements in your layout from<a id="_idIndexMarker3201"></a> <a id="_idIndexMarker3202"></a>pixels to percentages, use the following <a id="_idIndexMarker3203"></a>formula:</p>
+					<pre class="SidebarCodeFirst">target ÷ context = result</pre>
+					<p class="SidebarBody">The <span class="FirstTerm--Sidebar-">target</span> is the size of the element you are resizing. The <span class="FirstTerm--Sidebar-">context</span> is the size of the containing element. The <span class="FirstTerm--Sidebar-">result</span> is a percentage you can use in in your style rules. Don’t worry about rounding long decimal strings down. Browsers know what to do with them, and the extra precision doesn’t hurt.</p>
+				</div>
+			</div>
+			<p class="body">In the past, when we knew that everyone was looking at our sites on desktop monitors, fixed-width layouts were the norm. (Ahh, those simple pre-mobile days when we only needed to deal with radically incompatible browser support!) As the name <a id="_idIndexMarker3204"></a>implies, <span class="FirstTerm">fixed-width layouts</span> are created at a specific pixel width (<span class="Xref-Figure">Figure 17-3</span>, bottom), with 960 pixels being quite fashionable (see <span class="Xref">Note</span>). Specifying all measurements in pixel values gave designers control over the layout as they might have in print, and ensured that users across all platforms and browsers got similar, if not the same, rendering of the page. </p>
+			<div>
+				<div id="_idContainer1187" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Designers landed on 960 pixels wide as a standard<a id="_idIndexMarker3205"></a> page width because it filled the standard desktop width at the time (1,028 pixels) and it was easily divided into an equal columns. Page layout systems based on 12-column grids within the 960-pixel page were also popular. </p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1189" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1703_fixedfluid.png" alt="" width="1321" height="908"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-3.</span> Fluid and fixed layout examples.</figcaption>
+				</figure>
+			</div>
+			<p class="body">It didn’t take long to realize, however, that it would be impossible to create separate fixed-width designs tailored to every device size. Clearly, fluidity has the advantage. It is based on the intrinsic nature of the normal flow, so we’re working <em class="Emphasis">with</em> the medium here rather than against it. When the layout reflows to fill the available width, you don’t need to worry about horizontal scrollbars or awkward empty space in the browser. </p>
+			<p class="body">On the downside, fluid layouts may allow text line lengths to become uncomfortably long, so that is something to watch out for. We’ll go into more detail on layouts later in this chapter. </p>
+			<div>
+				<div id="_idContainer1190" class="sidebar">
+					<h5 class="SidebarSeries">Personal anecdote</h5>
+					<p class="SidebarBody">When I got started in web design in 1993, the most common PC monitor size was a measly 640 × 480 pixels, unless you were a fancy-pants designer type with a 800 × 600 screen. My earliest designs had a fixed width of an adorable 515 pixels. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Making Images Flexible</h2>
+			<p class="body">Every now <a id="_idIndexMarker3206"></a><a id="_idIndexMarker3207"></a>and then a solution is simple. Take, for example, the style rule required to make images scale down to fit the size of their container:</p>
+			<pre class="CodeFirst">img {  <code class="CodeColor">max-width: 100%;</code>}</pre>
+			<p class="body">That’s it! When the layout gets smaller, the images in it scale down to fit the width of their respective containers. If the container is larger than the image—for example, in the tablet or desktop layouts—the image does not scale larger; it stops at 100% of its original size (<span class="Xref-Figure">Figure 17-4</span>). When you apply the <a id="_idIndexMarker3208"></a><span class="Literal-fc">max-width</span> property, you can omit the<a id="_idIndexMarker3209"></a><a id="_idIndexMarker3210"></a><a id="_idIndexMarker3211"></a> <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes in the <span class="Literal-fc">img</span> elements in the HTML document. If you do set the <span class="Literal-fc">width</span> attribute, be sure the <span class="Literal-fc">height</span> attribute is set to <span class="Literal-fc">auto</span>; otherwise, the image won’t scale proportionately. </p>
+			<div>
+				<figure id="_idContainer1192" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1704_maxwidth.png" alt="" width="1321" height="658"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-4.</span> Setting the <span class="Literal-Sidebar">max-width</span> of inline images allows them to shrink to fit available space but not grow larger than actual size.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Responsive images</h3>
+			<p class="body">But wait—things are never that simple, right? If you think back to our discussion of responsive images in <a href="lwd5_chapter07.xhtml#_idTextAnchor088"><span class="Xref">Chapter </span><span class="Xref">7</span><span class="Xref">, Adding Images</span></a>, you’ll remember that there is some elbow grease required to avoid serving unnecessarily large images to small devices as well as making sure large, high-density monitors get high-resolution images that shine. Choosing the best image size for performance is part of the responsive design process, but we won’t be concentrating on that in this chapter. We’ve got bigger fish to fry!</p>
+			<h3 class="HeadC">Other embedded media</h3>
+			<p class="body">Videos <a id="_idIndexMarker3212"></a>and other embedded media (using <span class="Literal-fc">object</span> or <span class="Literal-fc">embed</span> elements) also need to scale down in a responsive environment. Unfortunately, videos do not retain their intrinsic ratios when the width is scaled down, so there are a few more hoops to jump through to get good results. <a id="_idIndexMarker3213"></a>Thierry Koblentz documents one strategy nicely in his article “Creating Intrinsic Ratios for Video” at <a href="http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video"><span class="URL-Email">www.alistapart.com/articles/creating-intrinsic-ratios-for-video</span></a>. There is also a JavaScript plug-in called <a id="_idIndexMarker3214"></a><a id="_idIndexMarker3215"></a>FitVids.js (created by Chris Coyier and the folks at Paravel) that automates Koblentz’s technique for fluid-width videos. It is available at <a href="http://fitvidsjs.com"><span class="URL-Email">fitvidsjs.com</span></a>.</p>
+			<h2 class="HeadB">Media Query Magic</h2>
+			<p class="body">Now we get <a id="_idIndexMarker3216"></a>to the real meat of responsive design—media queries! <span class="FirstTerm">Media queries</span> apply different styles based on characteristics of the browser: its width, whether it is vertically or horizontally oriented, its resolution, and more. They are what make it possible to send a one-column layout to small screens and a multicolumn layout to larger screens on the fly. </p>
+			<p class="body">The <a id="_idIndexMarker3217"></a>query itself includes a<a id="_idIndexMarker3218"></a><a id="_idIndexMarker3219"></a> media type followed by a particular feature and a value for which to test. The criteria are followed by a set of curly brackets that contain styles to apply if the test is passed. The structure of a media query as used within a style sheet goes like this:</p>
+			<pre class="CodeFirst"><code class="CodeColor">@media </code><code class="CodeColor">type</code><code class="CodeColor"> and (</code><code class="CodeColor">feature</code><code class="CodeColor">: </code><code class="CodeColor">value</code><code class="CodeColor">) {</code><br/><span class="Code-Comment">  /* styles for browsers that meet this criteria */</span> <br/><code class="CodeColor">}</code></pre>
+			<p class="body">Let’s clarify that with an example. The following media queries look at whether the viewport is on a screen and in <span class="Literal-fc">landscape</span> (horizontal) or <span class="Literal-fc">portrait</span> (vertical) orientation. When the query detects that the viewport is in landscape mode, the <a id="_idIndexMarker3220"></a>background color of the page is “skyblue”; when it is in portrait orientation, the background is “coral” (<span class="Xref-Figure">Figure 17-5</span>). If this were displayed on a smartphone that tips from vertical to horizontal and back again, the colors would change as it tilts. This isn’t a very practical design choice, but it does provide a very simple illustration of media queries at work.</p>
+			<pre class="CodeFirst">@media <code class="CodeColor">screen</code> and (<code class="CodeColor">orientation: landscape</code>) {<br/>  body {<br/>     background: skyblue;<br/>     }<br/>}<br/>@media <code class="CodeColor">screen</code> and (<code class="CodeColor">orientation: portrait</code>) {<br/>  body {<br/>    background: coral;<br/>    }<br/>}    </pre>
+			<div>
+				<figure id="_idContainer1194" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1705_mediaquery.png" alt="" width="1012" height="646"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-5.</span><span class="FigureLabel"> </span>Changing the background color based on the orientation of the viewport with media queries.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1195" class="note">
+					<h5 class="WarningHeader">Heads Up</h5>
+					<p class="note">Having style declaration curly brackets nested inside media query <a id="_idIndexMarker3221"></a><a id="_idIndexMarker3222"></a>curly brackets can get a little confusing. Be sure that you have the right number of curly brackets and<a id="_idIndexMarker3223"></a> nest them properly. Careful indenting is helpful. Many code-editing programs also use color coding to help you keep them straight.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Media types</h3>
+			<p class="body">Media types, as included in the first part of a query, were introduced in CSS2 as a way to target styles to particular media. For example, this<a id="_idIndexMarker3224"></a> <span class="Literal-fc">@media</span> rule delivers a set of styles only when the document is printed (it does not test for any specific features or values):</p>
+			<pre class="CodeFirst">@media <code class="CodeColor">print</code> {  <span class="Code-Comment">/* print-specific styles here */</span> }</pre>
+			<p class="body">The most current defined media types are <a id="_idIndexMarker3225"></a><a id="_idIndexMarker3226"></a><a id="_idIndexMarker3227"></a><a id="_idIndexMarker3228"></a><a id="_idIndexMarker3229"></a><span class="Literal-fc">all</span>, <span class="Literal-fc">print</span>, <span class="Literal-fc">screen</span>, and <span class="Literal-fc">speech</span> (see <span class="Xref">Note</span>). If you are designing for screen, the media type is optional, so you can omit it as shown in the syntax example shown here, but including it doesn’t hurt. I’ll be including the screen <span class="Literal-fc">media</span> type for the sake of clarity in my examples.</p>
+			<pre class="CodeFirst">@media (feature: value) {   }</pre>
+			<h5 class="noteHeader">Note</h5>
+			<p class="note">CSS2 also defined <span class="Literal-Sidebar">aural</span>, <span class="Literal-Sidebar">handheld</span>, <span class="Literal-Sidebar">braille</span>, <span class="Literal-Sidebar">embossed</span>, <span class="Literal-Sidebar">projection</span>, <span class="Literal-Sidebar">tty</span>, and <span class="Literal-Sidebar">tv</span>, but they have been deprecated in the latest Media Queries Level 4 spec (currently a Working Draft) and are discouraged from use.</p>
+			<h3 class="HeadC">Media feature queries</h3>
+			<p class="body">CSS3 media queries take targeting one step further by letting us test for a particular <em class="Emphasis">feature</em> of a viewport or device. We saw an example of testing the orientation of a device in <span class="Xref-Figure">Figure 17-5</span>. The most common feature to test for is the viewport width. You can also test for a minimum width (<a id="_idIndexMarker3230"></a><span class="Literal-fc">min-width</span>) and maximum width (<a id="_idIndexMarker3231"></a><span class="Literal-fc">max-width</span>). </p>
+			<div>
+				<div id="_idContainer1196" class="sidebar">
+					<h5 class="SidebarSeries">Authoring TIP</h5>
+					<p class="SidebarBody">Minimum-width queries are your go-to for creating mobile-first responsive design.</p>
+				</div>
+			</div>
+			<p class="body">Here is a simple example that displays headline fonts in a fancy cursive font only when the viewport is 40em or wider—that is, when there is enough space for the font to be legible. Viewports that do not match the query (because they are narrower than 40em) use a simple serif face.</p>
+			<pre class="CodeFirst">h1 {<br/>  font-family: Georgia, serif;<br/>  }</pre>
+			<pre class="CodeFirst"><code class="CodeColor">@media screen and (min-width: 40em) {<br/></code>  h1 {<br/>    font-family: 'Lobster', cursive;<br/>    }<br/><code class="CodeColor">}</code></pre>
+			<p class="body">The complete list of device features you can detect with media queries appears in <span class="Xref-Figure">Table 17-1</span>.</p>
+			<div>
+				<div id="_idContainer1197" class="contents">
+					<table id="table001-16" class="Table">
+						<colgroup>
+							<col/>
+							<col/>
+						</colgroup>
+						<thead>
+							<tr class="Table">
+								<td class="Table Table-Title Table-Head" colspan="2">
+									<p class="TableTitle"><span class="Table-Label"><span class="FigureLabel">Table 17-1.</span></span> Media features you can evaluate with media queries</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Head Table-Head">
+									<p class="TableHeader">Feature</p>
+								</td>
+								<td class="Table Table-Head Table-Head">
+									<p class="TableHeader">Description</p>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">width</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3232"></a>width of the display area (viewport). Also <span class="Literal-Sidebar">min-width</span> and <span class="Literal-Sidebar">max-width</span>.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">height</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The<a id="_idIndexMarker3233"></a> height of the display area (viewport). Also <span class="Literal-Sidebar">min-height</span> and <span class="Literal-Sidebar">max-height</span>.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">orientation</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether<a id="_idIndexMarker3234"></a> the device is in <span class="Literal-Sidebar">portrait</span> or <span class="Literal-Sidebar">landscape</span> orientation. </p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">aspect-ratio</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Ratio <a id="_idIndexMarker3235"></a>of the viewport’s width divided by height (width/height). Example: <span class="Literal-Sidebar">aspect-ratio: 16/9</span>.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">color</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3236"></a>bit depth of the display; for example, <span class="Literal-Sidebar">color: 8</span> tests for whether the device has at least 8-bit color.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">color-index</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3237"></a>number of colors in the color lookup table.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">monochrome</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3238"></a>number of bits per pixel in a monochrome device.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">resolution</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The<a id="_idIndexMarker3239"></a> density of pixels in the device. This is increasingly relevant for detecting high-resolution displays.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">scan</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3240"></a>a <span class="Literal-Sidebar">tv</span> media type uses progressive or interlace scanning. (Does not accept <span class="Literal-Sidebar">min-</span>/<span class="Literal-Sidebar">max-</span> prefixes.)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">grid</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3241"></a>the device uses a grid-based display, such as a terminal window. (Does not accept <span class="Literal-Sidebar">min-</span>/<span class="Literal-Sidebar">max-</span> prefixes.) </p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left" colspan="2">
+									<p class="TableSubhead">Deprecated features </p>
+									<p class="TableBody">The following features have been deprecated in Media Queries Level 4 Working Draft and are discouraged from use.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">device-width</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The width<a id="_idIndexMarker3242"></a> of the device’s rendering surface (the whole screen). (Deprecated in favor of <span class="Literal-Sidebar">width</span>.)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">device-height</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3243"></a>height of the device’s rendering surface (the whole screen). (Deprecated in favor of <span class="Literal-Sidebar">height</span>.)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">device-aspect-ratio</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Ratio<a id="_idIndexMarker3244"></a> of the whole screen’s (rendering surface) width to height. (Deprecated in favor of <span class="Literal-Sidebar">aspect-ratio</span>.)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left" colspan="2">
+									<p class="TableSubhead">New in Media Queries Level 4 </p>
+									<p class="TableBody">These features have been added in the Working Draft of MQ4. Some may gain browser support, and some may be dropped from future drafts. I include them here to show you where the W3C sees media queries going. For details, see <a href="http://drafts.csswg.org/mediaqueries-4"><span class="URL-Email--Sidebar-">drafts.csswg.org/mediaqueries-4</span></a>.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">update-frequency</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">How <a id="_idIndexMarker3245"></a>quickly (if at all) the output device modifies the appearance of the content.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">overflow-block</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">How<a id="_idIndexMarker3246"></a> the device handles content that overflows the viewport along the block axis.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">overflow-inline</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3247"></a>the content that overflows the viewport along the inline axis can be scrolled.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">color-gamut</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">The <a id="_idIndexMarker3248"></a>approximate range of colors that are supported by the user agent and output device.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">pointer</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3249"></a>the primary input mechanism is a pointing device and how accurate it is.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">hover</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether<a id="_idIndexMarker3250"></a> the input mechanism allows the user to hover over elements.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">any-pointer</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3251"></a>any available input mechanism is a pointing device, and how accurate it is.</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<pre class="cellCode">any-hover</pre>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">Whether <a id="_idIndexMarker3252"></a>any available input mechanism allows hovering.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<h3 class="HeadC">How to use media queries</h3>
+			<p class="body">You can use<a id="_idIndexMarker3253"></a> media queries within a style sheet or to conditionally load external style sheets. Media queries may not be used with inline styles. </p>
+			<h4 class="HeadD">Within a style sheet</h4>
+			<p class="body">The most common way to utilize media queries is to use an <span class="Literal-fc">@media</span> (“at-media”) rule right in the style sheet. The examples in this chapter so far are all <span class="Literal-fc">@media</span> rules. </p>
+			<p class="body">When you use media queries within a style sheet, the order of rules is very important. Because rules later in the style sheet override the rules that come before them, your media query needs to come <em class="Emphasis">after</em> any rules with the same declaration. </p>
+			<p class="body">The strategy is to specify the baseline styles that serve as a default, and then override specific rules as needed to optimize for alternate viewing environments. In RWD, the best practice is to set up styles for small screens and browsers that don’t support media queries, and then introduce styles for increasingly larger screens later in the style sheet.</p>
+			<p class="body">That’s exactly what I did in the headline font-switching example earlier. The <span class="Literal-fc">h1</span> sets a baseline experience with a local serif font, and then gets enhanced for larger screens with a media query.</p>
+			<h4 class="HeadD">With external style sheets</h4>
+			<p class="body">For large or <a id="_idIndexMarker3254"></a>complicated sites, developers may choose to put styles for different devices into separate style sheets and call in the whole <span class="Filename">.css</span> file when certain conditions are met. One method is to use the <a id="_idIndexMarker3255"></a><a id="_idIndexMarker3256"></a><span class="Literal-fc">media</span> attribute in the <span class="Literal-fc">link</span> element to conditionally load separate <span class="Filename">.css</span> files. In this example, the basic styles for a site are requested first, followed by a style sheet that will be used only if the device is more than 1,024 pixels wide (and if the browser supports media queries):</p>
+			<pre class="CodeFirst">&lt;head&gt;<br/>  &lt;link rel="stylesheet" href="styles.css"&gt;<br/>  &lt;link rel="stylesheet" href="2column-styles.css" <code class="CodeColor">media="screen and (min-width:1024px)"</code>&gt;<br/>&lt;/head&gt;</pre>
+			<p class="body">Some developers find this method helpful for managing modular style sheets, but it comes with the disadvantage of requiring extra HTTP requests for each additional <span class="Filename">.css</span> file. Be sure to provide only as many links as necessary (perhaps one for each major breakpoint), and rely on <span class="Literal-fc">@media</span> rules within style sheets to make minor adjustments for sizes in between.</p>
+			<p class="body">Similarly, you can carry out media queries with <span class="Literal-fc">@import</span> rules that pull in external style sheets from within a style sheet. Notice that the word “media” does not appear in this syntax, only the type and query.</p>
+			<pre class="CodeFirst">&lt;style&gt;<br/>  <code class="CodeColor">@import url("/default-styles.css");</code><br/>  <code class="CodeColor">@import url("/wide-styles.css") screen and (min-width: 1024px);</code><br/>  <span class="Code-Comment">/* other styles */</span><br/> &lt;/style&gt;</pre>
+			<h3 class="HeadC">Browser support</h3>
+			<p class="body">We can’t <a id="_idIndexMarker3257"></a>close out a discussion of media queries without a nod to browser support. The good news is that media queries are supported by virtually all desktop and mobile browsers in use today. The big exceptions are Internet Explorer versions 8 and earlier, which have no support. Because of the staying power of the <a id="_idIndexMarker3258"></a>Windows XP operating system, IE8 continues to show up in browser use statistics (at 1–2% as I write, ahead of IE 9 and 10). If your site has hundreds of thousands of users, that 1% ends up being a significant number of broken experiences. </p>
+			<p class="body">If you expect to have visitors using old versions of IE, you have a couple of options. First, you could use the<a id="_idIndexMarker3259"></a><a id="_idIndexMarker3260"></a> Respond.js polyfill, which adds support for <a id="_idIndexMarker3261"></a><a id="_idIndexMarker3262"></a><span class="Literal-fc">min-width</span> and <span class="Literal-fc">max-width</span> to non-supporting browsers. It was created by <a id="_idIndexMarker3263"></a>Scott Jehl and is available at <a href="http://github.com/scottjehl/Respond"><span class="URL-Email">github.com/scottjehl/Respond</span></a>. </p>
+			<p class="body">The other option is to create a separate style sheet with a no-frills desktop layout and deliver it only to users with IE8 or earlier by using a conditional comment. Other browsers ignore the content of this IE-specific comment:</p>
+			<pre class="CodeFirst">&lt;!-- [if lte IE 8]&gt;<br/>  <code class="CodeColor">  &lt;link rel="stylesheet" href="/path/IE_fallback.css"&gt;</code><br/>&lt;![endif]--&gt;</pre>
+			<p class="body">Depending on your site statistics and when you are reading this, you may not need to worry about media query support at all. Lucky you!</p>
+			<h1 id="_idParaDest-162" class="HeadA"><a id="_idTextAnchor228"></a>Choosing Breakpoints</h1>
+			<p class="body">A <span class="FirstTerm">breakpoint</span> is the <a id="_idIndexMarker3264"></a><a id="_idIndexMarker3265"></a><a id="_idIndexMarker3266"></a>point at which we use a media query to introduce a style change. When you specify <span class="Literal-fc">min-width: 800px</span> in a media query, you are saying that 800 pixels is the “breakpoint” at which those particular styles should be used. <span class="Xref-Figure">Figure 17-6</span> shows some of the breakpoints at which <a id="_idIndexMarker3267"></a>Etsy.com makes both major layout changes and subtle design tweaks on its home page. </p>
+			<div>
+				<figure id="_idContainer1199" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1706_breakpoints_tall.png" alt="" width="1321" height="2400"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-6.</span> A series of breakpoints used by Etsy’s responsive site (2017).</figcaption>
+				</figure>
+			</div>
+			<p class="body">Choosing breakpoints can be challenging, but there are a few best practices to keep in mind. </p>
+			<p class="body">When RWD was first introduced, there were only a handful of devices to worry about, so we tended to base our breakpoints on the common device sizes (320 pixels for smartphones, 768 pixels for iPads, and so on), and we created a separate design for each breakpoint. It didn’t take long until we had to deal with device widths at nearly every point from 240 to 3,000+ pixels. That device-based approach definitely didn’t scale.</p>
+			<h2 class="HeadB">Module-Based Breakpoints</h2>
+			<p class="body">A better approach <a id="_idIndexMarker3268"></a>is to create breakpoints for the individual parts of a page rather than switching out the entire page at once (although for some pages that may work just fine). A common practice is to create the design for narrow screens first, and then resize the browser wider and pay attention to the point at which each part of the page starts to become unacceptable. The navigation might become too awkward and need a breakpoint at 400 pixels wide, but the one-column layout might be OK until it reaches 800 pixels, at which point a two-column design could be introduced. </p>
+			<p class="body">In his book <span class="Citation">Responsive Design: Patterns &amp; Principles</span> (A Book Apart), <a id="_idIndexMarker3269"></a><a id="_idIndexMarker3270"></a>Ethan Marcotte calls this “content out” design and puts it like this:</p>
+			<div>
+				<div id="_idContainer1200" class="callout">
+					<p class="callout">It is common to create breakpoints for each component of the page rather than changing the entire page at once.</p>
+				</div>
+			</div>
+			<blockquote class="Quote">For me, that “content out” process begins by looking at the smallest version of a piece of content, then expanding that element until its seams begin to show and it starts to lose its shape. Once that happens, that’s an opportunity to make a change—to introduce a breakpoint that reshapes the element and preserves its integrity.</blockquote>
+			<p class="body">If you find that you have a lot of breakpoints within a few pixels or ems of one another, grouping them together may streamline your style sheet and process. And it doesn’t hurt to keep the screen sizes of the most popular devices in mind in case nudging your breakpoint down a little helps improve the experience for a whole class of users. The site <a id="_idIndexMarker3271"></a>Screen Sizes (<a href="http://screensiz.es"><span class="URL-Email">screensiz.es</span></a>) lists the dimensions of a wide range of popular devices. A web search will turn up similar resources.</p>
+			<div>
+				<div id="_idContainer1203" class="sidebar">
+					<h5 class="SidebarTitle">How Wide Is the Viewport?</h5>
+					<p class="SidebarBody">I’ve suggested<a id="_idIndexMarker3272"></a><a id="_idIndexMarker3273"></a> making your browser wider until you see that a breakpoint is needed, but how do you know how wide the window is? There are a number of tools that provide window measurements. </p>
+					<p class="SidebarBody">Firefox, Chrome, and Safari all have tools that can show you how a page looks at specific viewport dimensions. In Responsive Mode (or View), you get a resizable window-in-a-window that can be set to standard device sizes or resized manually. The pixel dimensions are displayed as the viewport resizes. </p>
+					<p class="SidebarBody">In Firefox, access Responsive Design Mode (<span class="Xref-Figure">Figure 17-7</span>) via the Web Developer Tools (<span class="menu">Tools </span><span class="menu">→</span><span class="menu"> Web Developer </span><span class="menu">→</span><span class="menu"> Responsive Design Mode</span>). Safari’s Responsive Design Mode is accessible via <span class="menu">Develop </span><span class="menu">→</span><span class="menu"> Enter Responsive Design Mode</span>. Chrome offers a Device Toolbar (<span class="menu">View </span><span class="menu">→</span><span class="menu"> Developer </span><span class="menu">→</span><span class="menu"> Developer Tools</span>, and then look for the Toggle Device Toolbar icon on the left of the menu bar).  They all work about the same, but you may find you prefer one browser’s user interface over another.</p>
+					<p class="SidebarBody">To find out how your browser window or device responds to media queries, go to <a id="_idIndexMarker3274"></a><a id="_idIndexMarker3275"></a>MQTest.io (<a href="http://mqtest.io"><span class="URL-Email--Sidebar-">mqtest.io</span></a>) by <a id="_idIndexMarker3276"></a>Viljami Salminen. In addition to viewport width and height, it reports on other device features such as device-pixel-ratio, aspect ratio, and more.</p>
+					<div>
+						<figure id="_idContainer1202" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1707_tools.png" alt="" width="1265" height="838"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-7.</span> Checking viewport size in Firefox’s Responsive Design Mode and MQTest.io.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Em-Based Breakpoints</h2>
+			<p class="body">The examples<a id="_idIndexMarker3277"></a> in this section have been based on breakpoints with pixel measurements. An alternative, and many would say better, method is to use ems instead of pixels in the media query. Remember that an em is equal to the current font size of an element. When used in a media query, an em is based on the base font size for the document (16 pixels by default, although that can be changed by the user or the page author).</p>
+			<div>
+				<div id="_idContainer1204" class="callout">
+					<p class="callout">Em-based media queries keep the layout proportional to the font size.</p>
+				</div>
+			</div>
+			<p class="body">Pixel-based media queries don’t adapt if the user changes their font size settings, which people do in order to be able to read the page more easily. But em-based media queries respond to the size of the text, keeping the layout of the page in proportion. </p>
+			<p class="body">For example, say you have a layout that switches to two columns when the page reaches 800 pixels. You’ve designed it so the main column has an optimum text line length when the base font size is the default 16 pixels. If the user changes their base font size to 32 pixels, that double-sized text will pour into a space intended for text half its size. Line lengths would be awkward.</p>
+			<p class="body">Using em-based queries, if the query targets browsers wider than 50em, when the base font size is 16 pixels, the switch happens at 800 pixels (as designed). However, should the base font size change to 32 pixels, the two-column layout would kick in at 1,600 pixels (50em × 32px = 1,600px), when there is plenty of room for the text to fill the main column with the same line lengths as the original design. </p>
+			<p class="body">This example used a whole-page layout switch, but media queries on individual components (as discussed earlier) can use ems as well. In the next section, I’ll introduce some of the aspects of web pages that require attention when you’re choosing breakpoints.</p>
+			<h1 id="_idParaDest-163" class="HeadA"><a id="_idTextAnchor229"></a>Designing Responsively</h1>
+			<p class="body">We’ve covered the<a id="_idIndexMarker3278"></a> RWD nuts and bolts—now let’s talk about some of the decisions designers make when creating responsive sites. I am only going to be able to scratch the surface here, but you’ll find much deeper explorations on these themes in the books and articles listed along the way. For now, I just want to raise your awareness of responsive strategies. At the end of the section, you will use some of these strategies to make the Black Goose Bakery page responsive. </p>
+			<p class="body">We’ve seen a few examples in our exercises of content looking wonky when the browser gets very narrow or very wide. A three-column layout just doesn’t fit, and text in an image may become unreadable when it is scaled down to fit a 320-pixel-wide screen. At the other end of the spectrum, the line length in single-column layouts becomes too long to read comfortably when the viewport fills a high-resolution desktop monitor. For many aspects of a web page, one size does not fit all. As designers, we need to pay attention to where things fall apart and set breakpoints to <a id="_idIndexMarker3279"></a>“preserve the integrity” of the elements (as Ethan Marcotte so nicely puts it).</p>
+			<p class="body">In the broadest of strokes, the tricky bits to keep<a id="_idIndexMarker3280"></a><a id="_idIndexMarker3281"></a> optimized over a wide range of viewport sizes include the following:</p>
+			<ul>
+				<li class="ListBullet">Content hierarchy </li>
+				<li class="ListBullet">Layout</li>
+				<li class="ListBullet">Typography</li>
+				<li class="ListBullet">Navigation</li>
+				<li class="ListBullet">Images</li>
+				<li class="ListBullet">Special content such as tables, forms, and interactive features</li>
+			</ul>
+			<h2 class="HeadB">Content Hierarchy</h2>
+			<p class="body">Content is <a id="_idIndexMarker3282"></a>king on the web, so it is critical that content is carefully considered and organized before any code gets written. These are tasks for Information Architects and Content Strategists who address the challenges of organizing, labeling, planning, and managing web content.</p>
+			<p class="body">Organization and hierarchy across various views of the site are a primary concern, with a particular focus on the small-screen experience. It is best to start with an inventory of potential content and pare it down to what is most useful and important for all browsing experiences. Once you know what the content modules are, you can begin deciding in what order they appear on various screen sizes. </p>
+			<p class="body">Keep in mind that you should strive <a id="_idIndexMarker3283"></a>for <span class="FirstTerm">content parity</span>—that is, the notion that the same content is accessible regardless of the device used to access the site. It might be that visitors need to follow a slightly different navigational path to that information, but dropping portions of your site on small screens because you think mobile users won’t need it is false thinking. People do bop between devices mid-task, and you want to be sure they have everything they need.</p>
+			<p class="body">This is a woefully brief introduction to what is perhaps the most important first step of creating a site, but it is just outside the focus of this book. To get up to speed properly with content strategy, particularly as it applies to RWD, I recommend the following books:</p>
+			<ul>
+				<li class="ListBullet"><span class="Citation">Content Strategy for the Web, 2nd Edition,</span> by <a id="_idIndexMarker3284"></a>Kristina Halvorson and <a id="_idIndexMarker3285"></a>Melissa Rich (New Riders)</li>
+				<li class="ListBullet"><span class="Citation">Content Strategy for Mobile</span> by <a id="_idIndexMarker3286"></a>Karen McGrane (A Book Apart)<div id="_idContainer1205" class="sidebar"><h5 class="SidebarTitle">Conditional Loading</h5><p class="SidebarBody">Content parity <a id="_idIndexMarker3287"></a>doesn’t mean that all of the content that fits on a large screen should be stuffed onto the small-screen layout. All that scrolling and extra data to download isn’t doing mobile users any favors.</p><p class="SidebarBody">A better approach is to use <span class="FirstTerm--Sidebar-">conditional loading</span>, in which small-screen users get the most important content with links to access supplemental content (comments, product details, ads, lists of links, etc.) when they want it. The information is available to them, just not all at once. Meanwhile, on larger screens, those supplemental pieces of content get displayed in sidebars automatically. </p><p class="SidebarBody">Conditional loading requires JavaScript to implement, so I won’t be giving you the specific how-tos here, but it is good to know that there are alternatives to cramming every little thing onto every device.</p></div></li>
+			</ul>
+			<h2 class="HeadB">Layout</h2>
+			<p class="body">Rearranging content into different layouts may be the first thing you think of when you picture responsive design, and with good reason. The layout helps form our first impression of a site’s content and usability. </p>
+			<p class="body">As mentioned earlier, responsive design is based on fluid layouts that expand and contract to fill the available space in the viewport. One fluid layout is usually not enough, however, to serve all screen sizes. More often, two or three layouts are produced to meet requirements across devices, with small adjustments between layout shifts.</p>
+			<p class="body">Designers typically start with a one-column layout that fits well on small handheld devices and rearrange elements into columns as more space is available. They may also have the design for the widest screens worked out early on so there is an end-point in mind. The design process may involve a certain amount of switching between views and making decisions about what happens along the way. </p>
+			<h3 class="HeadC">Layout and line length</h3>
+			<p class="body">A good trigger for deciding when to adjust the layout is to look at text line lengths. Lines of text that are too stubby or too long are difficult to read, so you should aim for optimal line lengths of 45 to 75 characters, including spaces. If your text lines are significantly longer, it’s time to make changes to the layout such as increasing the margins or introducing an additional column. You might also increase the font size of the text to keep the character count in the desired range.</p>
+			<p class="body">Clarissa <a id="_idIndexMarker3288"></a>Peterson introduces a neat trick for testing line lengths in her book <span class="Citation">Learning Responsive Web Design</span> (O’Reilly). Put a <span class="Literal-fc">span</span> around the 45th to 75th characters in the text and give it a background color (<span class="Xref-Figure">Figure 17-8</span>). That way, you can easily check whether the line breaks are happening in the safe zone at a glance. Of course, this line length hint would be removed before the site is made public.</p>
+			<div>
+				<figure id="_idContainer1207" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1708_linelength.png" alt="" width="753" height="242"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-8.</span> Highlight the 45th to 75th characters to test for optimal line lengths at a glance. </figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Responsive layout patterns</h3>
+			<p class="body">The manner in <a id="_idIndexMarker3289"></a>which a site transitions from a small-screen layout to a wide-screen layout must make sense for that particular site, but there are a few <span class="FirstTerm">patterns</span> (common and repeated approaches) that have emerged over the years. We can thank <a id="_idIndexMarker3290"></a>Luke Wroblewski (known for <a id="_idIndexMarker3291"></a>his “Mobile First” approach to web design, which has become the standard) for doing a survey of how responsive sites handle layout. The article detailing his findings, “Multi-Device Layout Patterns” (<a href="http://www.lukew.com/ff/entry.asp?1514"><span class="URL-Email">www.lukew.com/ff/entry.asp?1514</span></a>), is getting on in years, but the patterns persist today. Following are the top patterns Luke named in his article (<span class="Xref-Figure">Figure 17-9</span>):</p>
+			<div>
+				<figure id="_idContainer1209" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1709_layouts.png" alt="" width="2025" height="1129"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-9.</span> Examples of the responsive layout patterns identified by Luke Wroblewski.</figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm">Mostly fluid</p>
+			<p class="ListVariable">This pattern uses a single-column layout for small screens, and another fluid layout that covers medium and large screens, with a maximum width set to prevent it from becoming too wide. It generally requires less work than other solutions.</p>
+			<p class="ListVariableTerm">Column drop</p>
+			<p class="ListVariable">This solution shifts between one-, two-, and three-column layouts based on available space. When there isn’t room for extra columns, the sidebar columns drop below the other columns until everything is stacked vertically in the one-column view.</p>
+			<p class="ListVariableTerm">Layout shifter</p>
+			<p class="ListVariable">If you want to get really fancy, you can completely reinvent the layout for a variety of screen sizes. Although expressive and potentially cool, it is not necessary. In general, you can solve the problem of fitting your content to multiple environments without going overboard.</p>
+			<p class="ListVariableTerm">Tiny tweaks</p>
+			<p class="ListVariable">Some sites use a single-column layout and make tweaks to type, spacing, and images to make it work across a range of device sizes.</p>
+			<p class="ListVariableTerm">Off canvas</p>
+			<p class="ListVariable">As an alternative to stacking content vertically on small screens, you may choose to use an “off-canvas” solution. In this pattern, a page component is located just out of sight on the left or right of the screen and flies into view when requested. A bit of the main content screen remains visible on the edge to orient users as to the relationship of moving parts. This was made popular by Facebook, wherein Favorites and Settings were placed on a panel that slid in from the left when users clicked a menu icon.</p>
+			<p class="body">You can see working examples of these and additional layout patterns on the “Responsive Patterns” page assembled by Brad Frost (<a href="http://bradfrost.github.io/this-is-responsive/patterns.html"><span class="URL-Email">bradfrost.github.io/this-is-responsive/patterns.html</span></a>). </p>
+			<h2 class="HeadB">Typography</h2>
+			<p class="body">Typography <a id="_idIndexMarker3292"></a><a id="_idIndexMarker3293"></a>requires fine-tuning along the spectrum from small-screen to wide-screen views in order to keep it legible and pleasant to read. Here are a few typography-related pointers (<span class="Xref-Figure">Figure 17-10</span>): </p>
+			<div>
+				<figure id="_idContainer1211" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1710_typography.png" alt="" width="1321" height="721"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-10.</span> General typography guidelines for small and large screens.</figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm">Font face</p>
+			<p class="ListVariable">Be careful about using fancy fonts on small screens and be sure to test for legibility. At small sizes, some fonts become difficult to read because line strokes become too light or extra flourishes become little blobs. Consider also that small screens may be connecting over cellular, so taking advantage of locally available fonts may be better for performance than requiring a <a id="_idIndexMarker3294"></a>web font to download. If a strict brand identity requires font consistency on all devices, be sure to choose a font face that works well at all sizes. If that is not a concern, consider using a web font only on larger screens. We strive to serve the same design to all devices, but as with everything else in web design, <a id="_idIndexMarker3295"></a>flexibility is important.</p>
+			<div>
+				<div id="_idContainer1212" class="sidebar">
+					<h5 class="SidebarTitle">Variable Fonts</h5>
+					<p class="SidebarBody">In late 2016, OpenType released a new font technology called<a id="_idIndexMarker3296"></a> OpenType Font Variations, known less formally as “<a id="_idIndexMarker3297"></a><a id="_idIndexMarker3298"></a>variable fonts.” You can change the<a id="_idIndexMarker3299"></a> weight, width, style (italic), slant, and optical size of a variable font by using <span class="Literal-Sidebar">font-*</span> style properties. The marvel of this technology is that you can deliver one font file (that’s just one call to the server) and stretch and manipulate it to suit many purposes, such as to make it narrower to preserve height and line length on small screens. Browser support for variable fonts is due to start kicking in in 2018. For more information, see the article “Get Started with Variable Fonts” by <a id="_idIndexMarker3300"></a>Richard Rutter at <a href="http://medium.com/@clagnut/get-started-with-variable-fonts-c055fd73ecd7"><span class="URL-Email--Sidebar-">medium.com/@clagnut/get-started-with-variable-fonts-c055fd73ecd7</span></a>.</p>
+					<p class="SidebarBody">The <a href="http://axis-praxis.org"><span class="URL-Email--Sidebar-">axis-praxis.org </span></a>site allows you to play around with variable fonts using sliders to adjust the weight and other qualities. Note that you need a browser that supports variable fonts for it to work.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">Font size</p>
+			<p class="ListVariable">Varying viewport widths can wreak havoc on line lengths. You may find that you need to increase the font size of text elements for wider viewports to maintain a line length of between 45 and 75 characters. It also makes it easier to read from the distance users typically sit from their large screens. Conversely, you could use em-based media queries so that the layout stays proportional to the font size. With em-based queries, line lengths stay consistent.</p>
+			<div>
+				<div id="_idContainer1213" class="sidebar">
+					<h5 class="SidebarTitle">Fluid Typography with Viewport Units</h5>
+					<p class="SidebarBody">To make <a id="_idIndexMarker3301"></a><a id="_idIndexMarker3302"></a><a id="_idIndexMarker3303"></a><a id="_idIndexMarker3304"></a><a id="_idIndexMarker3305"></a><a id="_idIndexMarker3306"></a><a id="_idIndexMarker3307"></a>the size of text proportional to the size of the viewport, use the viewport-percentage lengths, <span class="Literal-Sidebar">vw</span> and <span class="Literal-Sidebar">vh</span>, for <span class="Literal-Sidebar">font-size</span>. A <span class="Literal-Sidebar">vw</span> (viewport width) unit is equal to 1% of the width of the viewport (or the “initial containing block,” as it is called in the specification). One <span class="Literal-Sidebar">vh</span> is 1% of the viewport height. The spec also defines a <span class="Literal-Sidebar">vmin</span> unit (the smaller of <span class="Literal-Sidebar">vw</span> or <span class="Literal-Sidebar">vh</span>) and <span class="Literal-Sidebar">vmax</span> (the larger of <span class="Literal-Sidebar">vw</span> or <span class="Literal-Sidebar">vh)</span>, but they are not as well supported. </p>
+					<p class="SidebarBody">Browser support is pretty good with the exception of IE9 and earlier and support for <span class="Literal-Sidebar">vmin</span> and <span class="Literal-Sidebar">vmax</span>. There are quite a few known bugs, so be sure to check the Known Issues tab on the <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> <a id="_idIndexMarker3308"></a>page for these values. </p>
+					<p class="SidebarBody">For an exploration of using viewport units for text, read “Responsive Font Size and Fluid Typography with vh and vw” by <a id="_idIndexMarker3309"></a><a id="_idIndexMarker3310"></a>Michael Riethmuller at <em class="Emphasis">Smashing Magazine</em> (<a href="http://www.smashingmagazine.com/2016/05/fluid-typography"><span class="URL-Email--Sidebar-">www.smashingmagazine.com/2016/05/fluid-typography</span></a>).</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">Line height</p>
+			<p class="ListVariable">Line height is another measurement that you may want to tweak as screens get larger. On average, line height should be about 1.5 (using a number value for the <span class="Literal-fc">line-height</span> property); however, slightly tighter line spacing (1.2 to 1.5) is easier to read with the shorter line lengths on small screens. Large screens, where the type is also likely to be larger, can handle more open line heights (1.4 to 1.6). </p>
+			<p class="ListVariableTerm">Margins</p>
+			<p class="ListVariable">On small <a id="_idIndexMarker3311"></a>screens, make the most of the available space by keeping left and right margins on the main column to a minimum (2–4%). As screens get larger, you will likely need to increase side margins to keep the line lengths under control and just to add some welcome whitespace to the layout. Remember to specify margins above and below text elements in em units so they stay proportional to the type.</p>
+			<h2 class="HeadB">Navigation </h2>
+			<p class="body">Navigation <a id="_idIndexMarker3312"></a><a id="_idIndexMarker3313"></a>feels a little like the Holy Grail of Responsive Web Design. It is critical to get it right. Because navigation at desktop widths has pretty much been conquered, the real challenges come in re-creating our navigation options on small screens. A number of successful patterns have emerged for small screens, which I will briefly summarize here (<span class="Xref-Figure">Figure 17-11</span>): </p>
+			<div>
+				<figure id="_idContainer1215" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1711_navpatterns.png" alt="" width="2025" height="2418"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-11.</span><span class="FigureLabel"> </span>Responsive navigation patterns.</figcaption>
+				</figure>
+			</div>
+			<p class="ListVariableTerm">Top navigation</p>
+			<p class="ListVariable">If your site has just a few navigation links, they may fit just fine in one or two rows at the top of the screen.</p>
+			<p class="ListVariableTerm">Priority +</p>
+			<p class="ListVariable">In this pattern, the most important navigation links appear in a line across the top of the screen alongside a More link that exposes additional options. The pros are that the primary links are in plain view, and the number of links shown can increase as the device width increases. The cons include the difficulty of determining which links are worthy of the prime small-screen real estate.</p>
+			<p class="ListVariableTerm">Select menu</p>
+			<p class="ListVariable">For a medium list of links, some sites use a <span class="Literal-fc">select</span> input form element. Tapping the menu opens the list of options using the select menu UI of the operating system, such as a scrolling list of links at the bottom of the screen or on an overlay. The advantage is that it is compact, but on the downside, forms aren’t typically used for navigation, and the menu may be overlooked.</p>
+			<p class="ListVariableTerm">Link to footer menu</p>
+			<p class="ListVariable">One straightforward approach places a Menu link at the top of the page that links to the full navigation located at the bottom of the page. The risk with this pattern is that it may be disorienting to users who suddenly find themselves at the bottom of the scroll.</p>
+			<p class="ListVariableTerm">Accordion sub-navigation</p>
+			<p class="ListVariable">When there are a lot of navigation choices with sub-navigation menus, the small-screen solution becomes more challenging, particularly when you can’t hover to get more options as you can with a mouse. Accordions that expand when you tap a small arrow icon are commonly used to reveal and hide sub-navigation. They may even be nested several levels deep. To avoid nesting navigation in accordion submenus, some sites simply link to separate landing pages that contain a list of the sub-navigation for that section.</p>
+			<p class="ListVariableTerm">Push and overlay toggles</p>
+			<p class="ListVariable">In toggle navigation, the navigation is hidden but expands downward when the menu link is tapped. It may push the main content down below it (push toggle) or slide down in front of the content (overlay toggle). </p>
+			<p class="ListVariableTerm">Off-canvas/fly-in</p>
+			<p class="ListVariable">This popular pattern puts the navigation in an off-screen panel to the left or right of the main content that slides into view when you tap the menu icon. </p>
+			<div>
+				<div id="_idContainer1216" class="sidebar">
+					<h5 class="SidebarTitle">Designing for Fingers</h5>
+					<p class="SidebarBody">Keep in mind that people use their fingers to get around on <a id="_idIndexMarker3314"></a><a id="_idIndexMarker3315"></a>touch devices, which these days include smartphones, tablets, and even desktop-sized screens like Microsoft Surface and iPad Pro. </p>
+					<p class="SidebarBody">Links in navigation should be big enough to easily target with thumbs and fingertips. Apple requires 44 pixels for its apps, and that’s a good ballpark to keep in mind for links on web pages as well. </p>
+					<p class="SidebarBody">Another consideration for touch devices is that there is no hover state. Hovering has become the convention for opening sub-navigation on web pages on the desktop, but with no mouse, that experience is very different with touch. Most devices open the submenu with a second click. If you use hover in your navigation and elsewhere on your site, you’ll need to do thorough device testing. Someday, we may be able to write a media query to test for hover, but in the meantime, either avoid it or test the alternatives.</p>
+					<p class="SidebarBody">A really great book about all of this stuff is <a id="_idIndexMarker3316"></a>Josh Clark’s <span class="Citation--Sidebar-">Designing for Touch</span> (A Book Apart).</p>
+				</div>
+			</div>
+			<p class="body">For a deeper dive into the pros and cons of navigation patterns, read <a id="_idIndexMarker3317"></a>Brad Frost’s article “Responsive Navigation Patterns” (<a href="http://bradfrost.com/blog/web/responsive-nav-patterns"><span class="URL-Email">bradfrost.com/blog/web/responsive-nav-patterns</span></a>). Brad also includes examples of these patterns and more on his Responsive Patterns page (<a href="https://bradfrost.github.io/this-is-responsive/patterns.html"><span class="URL-Email">bradfrost.github.io/this-is-responsive/patterns.html</span></a>). </p>
+			<p class="body">For working examples of these patterns with the code used to create them, see the “Adventures in Responsive Navigation” page assembled by <a id="_idIndexMarker3318"></a>Eric Arbé at <a href="http://responsivenavigation.net"><span class="URL-Email">responsivenavigation.net</span></a>.</p>
+			<h2 class="HeadB">Images</h2>
+			<p class="body">Images require special attention in responsive designs. Here is a quick rundown of some of the key issues, most of which should sound familiar:</p>
+			<ul>
+				<li class="ListBullet">Use responsive image markup techniques (covered in <a href="lwd5_chapter07.xhtml#_idTextAnchor088"><span class="Xref">Chapter </span><span class="Xref">7</span></a>) to provide multiple versions of key images for various sizes and resolutions. </li>
+				<li class="ListBullet">Serve the smallest version as the default to prevent unnecessary data downloads.</li>
+				<li class="ListBullet">Be sure that important image detail is not lost at smaller sizes. Consider substituting a cropped version of the image for small screens.</li>
+				<li class="ListBullet">Avoid putting text in graphics, but if it is necessary, provide alternate versions with larger text for small screens.</li>
+			</ul>
+			<h2 class="HeadB">Special Content</h2>
+			<p class="body">Without <a id="_idIndexMarker3319"></a>the luxury of wide-open, desktop viewports, some of our common page elements pose challenges when it comes to fitting on smaller screens: </p>
+			<p class="ListVariableTerm">Forms</p>
+			<p class="ListVariable">Forms <a id="_idIndexMarker3320"></a>often take a little finagling to fit the available space appropriately. Flexbox is a great tool for adding flexibility and conditional wrapping to form fields and their labels. A web search will turn up some fine tutorials. Also make sure that your form is as efficient as possible, with no unnecessary fields, which is good advice for any screen size. Finally, consider that form inputs will be used with fingertips, not mouse pointers, so increase the target size by adding ample padding or margins and by making labels tappable to select an input.</p>
+			<p class="ListVariableTerm">Tables</p>
+			<p class="ListVariable">One of the <a id="_idIndexMarker3321"></a>greatest challenges in small-screen design is how to deal with large data tables. Not surprisingly, because there are many types of tables, there are also many solutions. See the <span class="Xref">“The Trouble with Tables”</span> sidebar for more information and resources.</p>
+			<p class="ListVariableTerm">Interactive elements</p>
+			<p class="ListVariable">A big embedded map may be great on a desktop view of a site, but it is less useful when it is the size of a postage stamp. Consider whether some interactive features should be substituted for other methods for performing the same task. In the case of the map, adding a link to a map can trigger the device’s native mapping app to open, which is designed to provide a better small-screen experience. Other interactive components, such as carousels, can be adapted for smaller viewports. </p>
+			<div>
+				<div id="_idContainer1217" class="sidebar">
+					<h5 class="SidebarTitle">The Trouble with Tables</h5>
+					<p class="SidebarBody">Large tables, such as those shown back in <span class="Xref-Figure">Figure 8-1</span>, can be difficult to use on small-screen devices. By default, they are shrunk to fit the screen width, rendering the text in the cells too small to be read. Users can zoom in to read the cells, but then only a few cells may be visible at a time, and it is difficult to parse the organization of headings and columns. </p>
+					<p class="SidebarBody">Designers and developers have created a number of approaches for making tables responsive. To be honest, using tables on small devices is still relatively new, so right now what we’re seeing is a lot of experimentation and throwing solutions against the wall to see what sticks. Most solutions involve some advanced web development mojo (more than we can take on with only a few chapters under your belt), but I do want you to be familiar with responsive tables. There are three general approaches: scrolling, stacking, and hiding. </p>
+					<p class="SidebarBody">For scrolling solutions, the table stays as wide as it needs to be, and users can scroll to the right to see the columns that won’t fit. This can be accomplished with JavaScript or CSS alone. You can even anchor the left column to the window so that it stays put when the rest of the table scrolls. </p>
+					<p class="SidebarBody">Another approach is to stack up the entries in a long, narrow scroll. Each entry repeats the headers, so the data is always presented with the proper context. Again, you could do this with JavaScript or CSS alone. The downside is that the list can end up very long, and it makes it difficult to compare entries, but at least all of the information is visible without horizontal scrolling. </p>
+					<p class="SidebarBody">You may also choose to hide certain columns of information when the page first loads on small devices and give the user the option to click to see the whole table or to toggle on and off specific columns. That is a little more risky from an interaction design perspective. Those columns just might not be seen at all.</p>
+					<p class="SidebarBody">CSS Tables and Flexbox are other options for making tabular material responsive. The best approach entirely depends on the type of data you’re publishing and how the table is expected to be used. If you are interested in learning more, I recommend the following resources:</p>
+					<ul>
+						<li class="SidebarListBullet">“Accessible, Simple, Responsive Tables” by<a id="_idIndexMarker3322"></a> Davide Rizzo on CSS-Tricks (<a href="http://css-tricks.com/accessible-simple-responsive-tables/"><span class="URL-Email--Sidebar-">css-tricks.com/accessible-simple-responsive-tables/</span></a>): A roundup of solutions using CSS tables.</li>
+						<li class="SidebarListBullet">“CSS-only Responsive Tables” by <a id="_idIndexMarker3323"></a>David Bushell (<a href="http://dbushell.com/2016/03/04/css-only-responsive-tables/"><span class="URL-Email--Sidebar-">dbushell.com/2016/03/04/css-only-responsive-tables/</span></a>): A CSS-only scrolling approach using CSS shadows for improved usability.</li>
+						<li class="SidebarListBullet">“Picking a Responsive Tables Solution” by<a id="_idIndexMarker3324"></a> Jason Grigsby at Cloud Four (<a href="http://cloudfour.com/thinks/picking-responsive-tables-solution/"><span class="URL-Email--Sidebar-">cloudfour.com/thinks/picking-responsive-tables-solution/</span></a>).</li>
+						<li class="SidebarListBullet">Responsive Tables by <a id="_idIndexMarker3325"></a>ZURB Studios (<a href="http://zurb.com/playground/responsive-tables"><span class="URL-Email--Sidebar-">zurb.com/playground/responsive-tables</span></a>): A fixed-left-column scrolling solution using JavaScript and CSS.</li>
+						<li class="SidebarListBullet">Tablesaw<a id="_idIndexMarker3326"></a> <a id="_idIndexMarker3327"></a>by Filament Group (<a href="http://github.com/filamentgroup/tablesaw"><span class="URL-Email--Sidebar-">github.com/filamentgroup/tablesaw</span></a>): A group of JQuery (JavaScript) plug-ins for creating a variety of responsive table effects.</li>
+					</ul>
+				</div>
+			</div>
+			<p class="body">That should give you a feel for some of the aspects of a site that need special attention in a responsive design. We covered content hierarchy, various layout patterns, typography tweaks, responsive navigation patterns, and image strategies, and addressed tables, forms, and interactive features. I’d say that’s enough lecturing. Now you’ll get some hands-on time in <span class="Xref-Figure">Exercise 17-1</span>.</p>
+			<div>
+				<div id="_idContainer1229" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 17-1.</span> Making the bakery home page responsive</h6>
+					<p class="SidebarBody">We’ve done a lot of work on the Black Goose Bakery site over the last few chapters, but the resulting site works best on large screens. In this exercise, we’re going to back up a few steps and build it again using a small-screen-first strategy, making changes to layout, navigation, typography, and more at strategic breakpoints.</p>
+					<p class="SidebarBody">I’ve done the heavy lifting of writing the necessary styles for each breakpoint, but I will talk you through each step and share the reasoning for the changes. The starting style sheet (<span class="Filename--Sidebar-">bakery-rwd.css</span>) as well as the finished style sheet (<span class="Filename--Sidebar-">bakery-rwd-finished.css</span>) and the other files for the site are provided with the materials for this chapter. The HTML file, <span class="Filename--Sidebar-">bakery.html</span>, hasn’t changed since we added the container element to it in <span class="Xref--Sidebar-">Chapter 16, CSS Layout with Flexbox and Grid</span>, and we will not need to edit it again. </p>
+					<h5 class="sbHead">Getting Started</h5>
+					<p class="SidebarBody">Open the HTML file (<span class="Filename--Sidebar-">bakery.html</span>) in a browser with a Responsive View (see the previous sidebar, <span class="Xref--Sidebar-">“How Wide Is the Viewport?”</span>) so you can expand the viewport window and watch the changing pixel dimensions. <span class="Xref-Figure">Figure 17-12</span> shows the page at 320 pixels wide with the default, narrow-screen styles that will be the starting point for this design. </p>
+					<p class="SidebarBody">The content of the page is the same as in previous chapters, but if you worked on the exercises in <span class="Xref--Sidebar-">Chapter 16</span>, you’ll notice that I’ve changed a few styles to make the initial layout suitable for small screens. Allow me to point out the characteristics of this baseline design:</p>
+					<ul>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Layout</span>: The page has a one-column layout for small screens. There are no borders around the main text area, and the Hours section has a scalloped edge on the top instead of the side. That maintains the look and feel, but is more appropriate when the sections are stacked.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Navigation:</span> The navigation menu, which was created with Flexbox, couldn’t flex small enough to fit across a small screen. To make it fit, I turned on wrapping (<span class="Literal-Sidebar">flex-wrap: wrap;</span>) and set the width of each <span class="Literal-Sidebar">li</span> to 50% so there would be two on each row. I also made it so they can both grow and shrink as needed (<span class="Literal-Sidebar">flex: 1 1 50%</span>).</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Conditional header text:</span> The tagline was taking up a lot of vertical space, and I decided it wasn’t critical. I hid the paragraph (<span class="Literal-Sidebar">display: none;</span>) and I will make it visible again when there is more room.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Typography:</span> On small screens, I decided to use a legible sans-serif font for the text and not to employ my web font because it is likely to be difficult to read at small sizes. </li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Images:</span> I set the <span class="Literal-Sidebar">img</span> elements for the bread and muffin images to <span class="Literal-Sidebar">display: block</span> so they have the full width of the viewport to themselves with no text sneaking in next to them. Setting the side margins to <span class="Literal-Sidebar">auto</span> keeps <a id="_idIndexMarker3328"></a>them centered horizontally.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Miscellaneous:</span> <p class="SidebarListItem_cont">— The award appears at the bottom of the page because there is not enough space for it to be positioned at the top. </p><p class="SidebarListItem_cont">— I highlighted a <span class="Literal-Sidebar">span</span> from the 45th to 75th characters to reveal when the line lengths get too long. </p></li>
+					</ul>
+					<div>
+						<figure id="_idContainer1219" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1712_horiz.png" alt="" width="971" height="1058"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-12.</span><span class="FigureLabel"> </span>The small-screen design is our starting point. </figcaption>
+						</figure>
+					</div>
+					<h5 class="sbHead">Fixing the Navigation</h5>
+					<p class="SidebarBody">Now we <a id="_idIndexMarker3329"></a>can start tailoring the design for other screen sizes. Using a Responsive View tool, I can resize the viewport and get an instant readout of the dimensions of the window. Give it a try on your browser. Keep making it wider, and you’ll see that some things look OK, and some things start looking awkward pretty quickly. </p>
+					<p class="SidebarBody">One thing that looks awkward to me right away is the stacked navigation at the top. I’d like it to switch to one centered line as soon as there is room, which to my eye happens when the viewport is 400 pixels wide (<span class="Xref-Figure">Figure 17-13</span>).</p>
+					<div>
+						<figure id="_idContainer1221" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1713_navfix.png" alt="" width="988" height="812"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-13.</span> The navigation started to look awkward, so I add a breakpoint at 400 pixels to switch it to one line.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Are you ready to write your first media query? Open the style sheet (<span class="Filename--Sidebar-">bakery-rwd.css</span>) in a text editor. Remember that media queries need to come after other rules for the same declaration, so to keep this exercise simple, we’ll add them at the end of the style sheet, before <span class="Literal-Sidebar">&lt;/style&gt;</span>. Add this query as you see it here. Remember to make sure you have the right number of nesting curly brackets:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">@media screen and (min-width: 400px) {</code><br/>  nav ul li {<br/>    flex: none;<br/>  }<br/>  nav ul {<br/>    justify-content: center;<br/>  }<br/><code class="CodeColor">}</code></pre>
+					<p class="SidebarBody">This tells the browser that when the page is on a screen and the viewport is 400 pixels or wider, set the “flex” of menu list items to “none.” The <span class="Literal-Sidebar">none</span> keyword is equivalent to <span class="Literal-Sidebar">flex: 0 0 auto;</span>, so the items are not allowed to grow or shrink and will be sized based on their content. I’ve centered the flexbox container by setting <span class="Literal-Sidebar">justify-content: center</span>. </p>
+					<p class="SidebarBody">Save the style sheet and reload the page in the browser. Try resizing the viewport to see how it works at wider sizes. I think this centered arrangement will work for even the widest of screens, so navigation is all set. If you had navigation with additional elements such as an inline logo and a search box, you might find it best to create a few different arrangements over a number of breakpoints.</p>
+					<h5 class="sbHead">Floating Images</h5>
+					<p class="SidebarBody">As I continue to make the viewport gradually wider, I notice that the main images start looking very lonely on a line alone, and that there is room to start wrapping text around them again at about 480 pixels wide. Let’s take care of that awkward whitespace by floating the images to the left once the screen reaches 480 pixels (<span class="Xref-Figure">Figure 17-14</span>): </p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">@media screen and (min-width: 480px) {</code><br/>  main img {<br/>    float: left;<br/>    margin: 0 1em 1em 0;<br/>  }<br/><code class="CodeColor">}</code></pre>
+					<div>
+						<figure id="_idContainer1223" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1714_imgfloat.png" alt="" width="1000" height="804"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-14.</span> The images float left once there is enough width to accommodate wrapping text.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody"><strong class="Emphasis_Bold">NOTE</strong>: If you like, you can include the CSS shapes from <span class="Xref--Sidebar-">Chapter 15, Floating and Positioning,</span> for a more interesting text wrap. I’ve omitted them here for brevity and because of limited browser support.</p>
+					<h5 class="sbHead">Text and Typography</h5>
+					<p class="SidebarBody">Once the screen gets to be about 600 pixels wide, I feel like there is enough room to introduce some embellishments. There is room for the tagline in the header, so I’ll set that to display again. </p>
+					<p class="SidebarBody">Now some attention to typography. I like the Stint Ultra Expanded web font, but it isn’t key to the company’s brand, so I omitted it on the narrow layout because of line length issues. At this breakpoint, I can begin using it because I know it will be more legible and result in comfortable line lengths. I’ve also loosened up the line height a little. I’ll take advantage of the extra space to add a rounded border around the main text area to bring it closer to the original brand identity for the site. The result is an enhanced one-column layout that is well suited for tablet-sized devices (<span class="Xref-Figure">Figure 17-15</span>).</p>
+					<div>
+						<figure id="_idContainer1225" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1715_medium.png" alt="" width="600" height="1293"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-15.</span> This medium size layout is well suited for tablet-sized devices.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Here is the media query for the 600-pixel breakpoint. Add this to the bottom of the style sheet after the other two queries:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">@media screen and (min-width: 600px) {</code><br/>  header p {<br/>    display: block;<br/>    margin-top: -1.5em;<br/>    font-family: Georgia, serif;<br/>    font-style: italic;<br/>    font-size: 1.2em;<br/>  }<br/>   main, h2, h3 {<br/>    font-family: 'Stint Ultra Expanded', Georgia, serif;<br/>  }<br/>  h2, h3 {<br/>    font-weight: bold;<br/>  }<br/>   main {<br/>    line-height: 1.8em;<br/>    padding: 1em;<br/>    border: double 4px #EADDC4;<br/>    border-radius: 25px;<br/>    margin: 2.5%;<br/>  } <br/><code class="CodeColor">}</code></pre>
+					<h5 class="sbHead">Multicolumn Layout</h5>
+					<p class="SidebarBody">As I continue to make the viewport wider and pay attention to the yellow highlighted span of characters, I see that the text line is growing longer than 75 characters. I could increase the font size or the margins, but I think this is a good point to introduce a second column to the layout. If you aren’t targeting a specific device, the exact breakpoint is subjective. I’ve chosen 940 pixels as the point above which the page gets a columned layout.</p>
+					<p class="SidebarBody">I’ve simply taken the grid layout styles from the previous chapter and reapplied them here. On the <span class="Literal-Sidebar">aside</span> element, I moved the scalloped background graphic to the left edge. In addition, I set a maximum width of 1200px on the container and set its side margins to <span class="Literal-Sidebar">auto</span>, so if the browser window is wider than 1,200 pixels, the layout will stay a fixed width and get centered in the viewport. Finally, I absolutely positioned the award graphic at the top of the page now that there’s enough room (<span class="Xref-Figure">Figure 17-16</span>).</p>
+					<div>
+						<figure id="_idContainer1227" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1716_wide.png" alt="" width="1338" height="780"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-16.</span> The two-column grid layout is appropriate for viewports over 940 pixels. On very wide screens, as shown here, the container stops expanding at 1,200 pixels wide and is centered horizontally.</figcaption>
+						</figure>
+					</div>
+					<div>
+						<div id="_idContainer1228" class="note">
+							<h5 class="noteHeader">NOTE</h5>
+							<p class="note">The highlighted background on the length span should be turned off before you publish, but I’ve left it visible in the figures so you can see how our line length is faring across layouts.</p>
+						</div>
+					</div>
+					<p class="SidebarBody">Add this final media query at the end of the style sheet. You can copy and paste them from the final exercise in <span class="Xref--Sidebar-">Chapter 16</span> (that’s what I did) and make a few tweaks to the <span class="Literal-Sidebar">#container</span>  and <span class="Literal-Sidebar">#aside</span> rules as shown:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">@media screen and (min-width: 940px) {</code><br/>  #container {<br/>    display: grid;<br/>    grid-template-rows: auto min-height 5em;<br/>    grid-template-columns: minmax(25em, 1fr) 16em;<br/>    grid-template-areas:<br/>      "banner banner"<br/>      "main hours"<br/>      "footer footer";<br/>    max-width: 1200px;<br/>    margin: 0 auto;<br/>    position: relative;<br/>   }<br/>   header {<br/>    grid-area: banner;<br/>  }<br/>   main {<br/>    grid-area: main;<br/>   }<br/>   aside {<br/>    grid-area: hours;<br/>    background: url(images/scallop.png) repeat-y left top;<br/>    background-color: #F6F3ED;<br/>    padding: 1em;<br/>    padding-left: 45px;<br/>  }<br/>  footer {<br/>    grid-area: footer;<br/>  }<br/>  #award {<br/>     position: absolute;<br/>     top: 30px;<br/>    left: 50px;<br/>  }<br/><code class="CodeColor">} </code></pre>
+					<p class="SidebarBody">And we’re done! Is this the most sophisticated responsive site ever? Nope. Is there even more we could do to improve the design at various screen sizes? Certainly! But now you should have a feel for what it’s like to start with a small-screen design and make changes that optimize for increasingly larger sizes. Consider it a modest first step to future adventures in RWD.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-164" class="HeadA"><a id="_idTextAnchor230"></a>A Few Words About Testing</h1>
+			<p class="body">In the <a id="_idIndexMarker3330"></a><a id="_idIndexMarker3331"></a>previous exercise, we relied on the Responsive View in a modern browser to make decisions about style changes at various sizes, but although it’s a handy tool for creating an initial design, much more testing is required before the design can be considered ready for final launch. That is even more critical for sites that include features that rely on JavaScript or server-side functionality. </p>
+			<p class="body">There are three general options for testing sites: real devices, emulators, and third-party services. We’ll look at each in this section.</p>
+			<h2 class="HeadB">Real Devices</h2>
+			<p class="body">There is really no substitute for testing a site on a variety of real devices and operating systems. Beyond just seeing how the site looks, testing on real devices shows you how your site <em class="Emphasis">performs</em>. How fast does it load? Are the links easy to tap? Do all the interactive features work smoothly? Do they work at all? </p>
+			<p class="body">Web development companies may have a <span class="FirstTerm">device lab</span> comprising iPhones and iPads of various sizes, Android smartphones and tablets of various sizes, and Macs and PCs with recent operating systems (Windows and Linux) that can be used by designers and developers for testing sites (<span class="Xref-Figure">Figure 17-17</span>). The size of the device lab depends on the size of the budget, of course (electronic devices aren’t cheap!). </p>
+			<div>
+				<figure id="_idContainer1231" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1717_devicelab.png" alt="" width="1224" height="665"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-17.</span> The device lab at<a id="_idIndexMarker3332"></a> Filament Group in Boston, Massachusetts.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1232" class="sidebar">
+					<h5 class="SidebarTitle">Building a Device Lab</h5>
+					<p class="SidebarBody">If you <a id="_idIndexMarker3333"></a>want to set up your own device lab, I recommend reading the primer <span class="Citation--Sidebar-">Building a Device Lab</span> by <a id="_idIndexMarker3334"></a>Destiny Montague and <a id="_idIndexMarker3335"></a>Lara Hogan (Five Simple Steps Publishing). The book is a summary of everything the authors learned while creating a killer device lab for<a id="_idIndexMarker3336"></a> Etsy. It is available for free at <a href="http://buildingadevicelab.com"><span class="URL-Email--Sidebar-">buildingadevicelab.com</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">If you don’t have the luxury of working at a big company with a big lab, there are alternatives: </p>
+			<ul>
+				<li class="ListBullet">If you live in a big city, you may be near a device lab that is open for public use. Check the <a href="http://opendevicelab.com"><span class="URL-Email">opendevicelab.com</span></a> site to see if there is one near you.</li>
+				<li class="ListBullet">You can build your own lab with a collection of used devices. At minimum, you should have access to an iPhone, Android phone, iPad, 7" tablet (like iPad Mini), and computers running macOS and Microsoft Windows. The good news is that you generally don’t need a data plan for every device because you can test over WiFi.</li>
+				<li class="ListBullet">If buying devices is not feasible, you can ask friends and coworkers to borrow their phones and tablets briefly. Asking permission at a mobile retail store to load web pages on their devices is not unheard of.</li>
+			</ul>
+			<p class="body">If you do have multiple real devices for testing, using a synchronization tool makes the process a whole lot smoother. Software like <a id="_idIndexMarker3337"></a>BrowserSync (<a href="http://browsersync.io"><span class="URL-Email">browsersync.io</span></a>) and <a id="_idIndexMarker3338"></a>Ghostlab (<a href="http://www.vanamco.com/ghostlab/"><span class="URL-Email">www.vanamco.com/ghostlab/</span></a>) runs on your computer and beams whatever is on your screen to all your devices simultaneously so you don’t need to load the page on each one individually. It’s like magic! </p>
+			<h2 class="HeadB">Emulators</h2>
+			<p class="body">If a particular <a id="_idIndexMarker3339"></a><a id="_idIndexMarker3340"></a>device is out of your reach, you could use an <span class="FirstTerm">emulator</span>, a desktop application that emulates mobile device hardware and operating systems. The emulator presents a window that shows exactly how your site would behave on that particular device (<span class="Xref-Figure">Figure 17-18</span>). Emulators require a lot of space on your computer and they can be buggy, but it is certainly better than not testing on that device at all.</p>
+			<p class="body">A good starting point for exploring emulators is <a id="_idIndexMarker3341"></a>Maximiliano Firtman’s “Mobile Emulators &amp; Simulators: The Ultimate Guide” (<a href="http://www.mobilexweb.com/emulators"><span class="URL-Email">www.mobilexweb.com/emulators</span></a>).</p>
+			<div>
+				<figure id="_idContainer1234" class="figWCaption">
+					<div>
+						<div id="_idContainer1233" class="figure">
+							<img src="image/lwd5_1718_androidemulator.png" alt="" width="1355" height="885"/>
+						</div>
+					</div>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-18.</span> Examples of the Android Emulator (download at <a href="http://developer.android.com/studio/index.html"><span class="URL-Email--Sidebar-">developer.android.com/studio/index.html</span></a>).</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Third-Party Services</h2>
+			<p class="body">Another<a id="_idIndexMarker3342"></a> <a id="_idIndexMarker3343"></a>option for testing your site on over 1,000 devices is to subscribe to a service like <a id="_idIndexMarker3344"></a>BrowserStack (<a href="http://browserstack.com"><span class="URL-Email">browserstack.com</span></a>) or <a id="_idIndexMarker3345"></a>CrossBrowserTesting (<a href="http://crossbrowsertesting.com"><span class="URL-Email">crossbrowsertesting.com</span></a>). For a monthly fee, you get access to a huge variety of device simulators (<span class="Xref-Figure">Figure 17-19</span>). There are many such services available, some of which are free or offer free trials. They don’t give you the same insights as testing on actual devices, but it is another better-than-nothing alternative.</p>
+			<div>
+				<figure id="_idContainer1236" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1719_services.png" alt="" width="1321" height="583"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 17-19.</span> Screenshots generated by BrowserStack and CrossBrowserTesting (using free trial tools). Notice the variation in how the bakery page displays. This is why we test!</figcaption>
+				</figure>
+			</div>
+			<h1 id="_idParaDest-165" class="HeadA"><a id="_idTextAnchor231"></a>More RWD Resources</h1>
+			<p class="body">We’ve <a id="_idIndexMarker3346"></a>covered the mechanics of using fluid layouts, flexible images, and media queries to make a page that is usable across a wide range of screen sizes. We’ve looked at the design concerns and some common responsive patterns for layout, navigation, typography, and images. You even got a chance to try out creating a responsive page on your own. But this is really only the tip of the iceberg, and I encourage you to continue learning about RWD, particularly if you are considering web design or development as a career. Following is a list of RWD resources that I’ve found helpful and should point you in the right direction.</p>
+			<h2 class="HeadB">Books</h2>
+			<div>
+				<div id="_idContainer1237" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Most of these titles were written before CSS Grid Layout became a viable option. Keep in mind that you have advanced tools for flexible layouts not mentioned in these books.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Citation">Responsive Web Design, 2e</span>, by Ethan Marcotte (A Book Apart)</p>
+			<p class="ListVariable">This book is required reading. <a id="_idIndexMarker3347"></a><a id="_idIndexMarker3348"></a>Ethan goes into much greater detail than I was able to here on how to calculate flexible grids and how to use media queries. Plus, it’s just plain fun to read. </p>
+			<p class="ListVariableTerm"><span class="Citation">Learning Responsive Web Design: A Beginner’s Guide</span> by <a id="_idIndexMarker3349"></a>Clarissa Peterson (O’Reilly)</p>
+			<p class="ListVariable">Clarissa provides a comprehensive overview of all aspects of responsive design, from detailed code examples to broad strategies on workflow and mobile-first design.</p>
+			<p class="ListVariableTerm"><span class="Citation">Smashing Book #5: Real-Life Responsive Web Design</span>, various authors (<a id="_idIndexMarker3350"></a>Smashing Magazine)</p>
+			<p class="ListVariable">A collection of practical techniques and strategies from prominent web designers. </p>
+			<p class="ListVariableTerm"><span class="Citation">Atomic Design</span> by<a id="_idIndexMarker3351"></a> Brad Frost (self-published)</p>
+			<p class="ListVariable">Brad describes his modular approach to RWD, which has become quite popular for large site development. </p>
+			<p class="ListVariableTerm"><span class="Citation">Responsive Design Workflow</span> by <a id="_idIndexMarker3352"></a>Stephen Hay (New Riders)</p>
+			<p class="ListVariable">Stephen Hay introduces his “design in the browser” method to creating responsive sites. This book is jam-packed with suggestions on how to approach web design and development.</p>
+			<p class="ListVariableTerm"><span class="Citation">Implementing Responsive Design</span> by <a id="_idIndexMarker3353"></a>Tim Kadlec (New Riders)</p>
+			<p class="ListVariable">Tim Kadlec is a leader in the mobile web design community, and his book is a comprehensive guide to designing and building a responsive site. </p>
+			<h2 class="HeadB">Online Resources</h2>
+			<p class="ListVariableTerm">Responsive Web Design Is… (<a href="http://responsivedesign.is"><span class="URL-Email">responsivedesign.is</span></a>)</p>
+			<p class="ListVariable">A collection of articles and podcasts about web design. You can also sign up for the “RWD Weekly” newsletter and keep your finger on the pulse of RWD. The site is a side project of <a href="https://justinavery.me/"><span id="_idIndexMarker3354"></span>Justin Avery</a> and <a href="https://simplethin.gs/"><span id="_idIndexMarker3355"></span>Simple Things</a>.</p>
+			<p class="ListVariableTerm">Responsive Resources (<a href="https://bradfrost.github.io/this-is-responsive/resources.html"><span class="URL-Email">bradfrost.github.io/this-is-responsive/resources.html</span></a>)</p>
+			<p class="ListVariable">For one-stop shopping for everything you could possibly want to know about RWD, look no further than Brad Frost’s Responsive Resources. He has gathered hundreds of links to resources related to strategy, design tools, layout, media queries, typography, images, components, development, testing, content management systems, email, tutorials, and more. Seriously, there is enough here to keep you busy for months.</p>
+			<p class="ListVariableTerm">Media Queries (<a href="http://mediaqueri.es"><span class="URL-Email">mediaqueri.es</span></a>)</p>
+			<p class="ListVariable">A gallery of exceptional examples of responsive websites curated by <a id="_idIndexMarker3356"></a>Eivind Uggedal.</p>
+			<h1 id="_idParaDest-166" class="HeadA"><a id="_idTextAnchor232"></a>Test Yourself</h1>
+			<p class="body">Here we are at the end of another chapter, so you know what that means… <em class="Emphasis">quiz time</em>! Get the answers in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a><span class="Xref"> </span>if you’re stumped.</p>
+			<ol>
+				<li class="ListNumber">What makes a responsive site different from a mobile (m-dot) site?</li>
+				<li class="ListNumber">What does this do?<pre class="CodeFirst">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</pre></li>
+				<li class="ListNumber">How do you make sure an image gets smaller when its container gets smaller in the layout?</li>
+				<li class="ListNumber">What does this do?<pre class="CodeFirst">@media screen and (min-width: 60em) {<br/>   body {<br/>    margin: 0 10%;<br/>  }<br/>} </pre></li>
+				<li class="ListNumber">What are some strategies for creating a layout that adjusts to the available width of the viewport?</li>
+				<li class="ListNumber">What is the advantage of using ems as a measurement in media queries?</li>
+				<li class="ListNumber">List three ways in which a media query may be used.</li>
+				<li class="ListNumber">Name three tweaks you may make to typography to make it work well on small screens.</li>
+				<li class="ListNumber">How might you handle navigation with a lot of submenus on a small screen?</li>
+				<li class="ListNumber">List three options for testing websites on multiple devices.</li>
+			</ol>
+			<hr class="HorizontalRule-1"/>
+			<div class="_idFootnotes">
+				<div id="footnote-002" class="_idFootnote" epub:type="footnote">
+					<p class="Footnote"><a class="_idFootnoteAnchor _idGenColorInherit" href="lwd5_chapter17.xhtml#footnote-002-backlink">*</a>	Pew Research Center, “Smartphone Use in 2015,” <a href="http://www.pewinternet.org/2015/04/01/us-smartphone-use-in-2015/"><span class="URL-Email--Sidebar-">www.pewinternet.org/2015/04/01/us-smartphone-use-in-2015/</span></a>.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1582" class="ch25">
+			<p id="_idParaDest-222" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor310"></a>25. SVG </p>
+		</div>
+		<div id="_idContainer1583" class="ch25">
+			<h1 class="chapterLabel">25</h1>
+		</div>
+		<div id="_idContainer1584" class="ch25">
+			<h1 class="chapterTitle"><a id="_idTextAnchor311"></a><a id="_idTextAnchor312"></a>SVG </h1>
+			<p class="ChapterTitleSub">(Scalable Vector Graphics)</p>
+		</div>
+		<div id="_idContainer1585" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">Shapes in SVG</p>
+			<p class="chapterContents">Clipping and masking</p>
+			<p class="chapterContents">Filter effects</p>
+			<p class="chapterContents">Styling SVGs</p>
+			<p class="chapterContents">Interactivity and animation</p>
+			<p class="chapterContents">SVG tools</p>
+			<p class="chapterContents">Production tips</p>
+			<p class="chapterContents">Responsive SVGs</p>
+		</div>
+		<div id="_idContainer1652" class="ch25">
+			<p class="body">SVGs<a id="_idIndexMarker4384"></a> (<span class="FirstTerm">Scalable Vector Graphics</span>) have made several guest appearances in this book, but in this chapter they finally get to be the star.</p>
+			<p class="body">When rendered in a browser window, an SVG graphic may look like an image in any other format, but it’s what’s under the hood that makes it truly unique and versatile. First, as the name says, it is a vector format, meaning shapes within SVGs are defined by coordinates and lines, not grids of pixels. That’s what makes them scalable—they can resize infinitely without loss of quality. </p>
+			<p class="body"><span class="Xref-Figure">Figure 25-1</span> shows the same tiger image saved as an SVG and a PNG. The SVG can scale very large without any change in quality. Lines and text stay sharp, regardless of whether the image is viewed at 100 pixels or 10,000 pixels—try doing that with a bitmapped image! Now that our web pages and interfaces must work on all devices of all scales, from smartphones to high-density monitors and large-screen televisions, the ability to create a single image that looks great in all contexts is an epic win. </p>
+			<div>
+				<figure id="_idContainer1587" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2501_svgvspng.png" alt="" width="1321" height="1000"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-1.</span> Vector-based SVG images scale without loss of quality.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The vector nature of SVG makes it a good choice for icons, logos, charts, and other line drawings (<span class="Xref-Figure">Figure 25-2</span>). And because these drawings are made up of shapes and paths, the file size is often significantly smaller than the same image made up of a grid of pixels. </p>
+			<div>
+				<figure id="_idContainer1589" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2502_samples.png" alt="" width="2021" height="1071"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-2.</span> SVG format is appropriate for line-style illustrations. </figcaption>
+				</figure>
+			</div>
+			<p class="body">SVGs may contain raster image content as well—in fact, you can do some pretty cool effects with them, but you miss out on the file size savings. SVGs are also an attractive choice for adding animation and interactivity to an interface. We’ll review all of these capabilities throughout this chapter.</p>
+			<div>
+				<div id="_idContainer1590" class="sidebar">
+					<h5 class="SidebarSeries">Free stuff </h5>
+					<p class="SidebarBody">You can find freely available vector artwork in SVG format (or formats easily converted to SVG) at these sites:</p>
+					<ul>
+						<li class="SidebarListBullet">The Open Clip Art library (<a href="http://openclipart.org"><span class="URL-Email--Sidebar-">openclipart.org</span></a>)</li>
+						<li class="SidebarListBullet">Freepik (<a href="http://freepik.com"><span class="URL-Email--Sidebar-">freepik.com</span></a>)</li>
+						<li class="SidebarListBullet">IcoMoon (<a href="http://icomoon.io"><span class="URL-Email--Sidebar-">icomoon.io</span></a>)</li>
+					</ul>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer1591" class="sidebar">
+					<h5 class="SidebarTitle">SVG History and Browser Support</h5>
+					<p class="SidebarBody">SVG has had a long<a id="_idIndexMarker4385"></a> <a id="_idIndexMarker4386"></a>ramp-up over 20 years. It was first introduced by <a id="_idIndexMarker4387"></a>the<a id="_idIndexMarker4388"></a> W3C SVG Working Group in 1998, and SVG 1.0 finally achieved Recommendation status in 2001. SVG 1.1 (a more modularized version) was released in 2003, then cleaned up and republished again in 2011 (<a href="http://www.w3.org/TR/SVG11/"><span class="URL-Email--Sidebar-">www.w3.org/TR/SVG11/</span></a>). </p>
+					<p class="SidebarBody">Browser support for SVG 1.1 is excellent, but not quite ubiquitous. Browsers began supporting SVG natively (without plug-ins) between 2004 and 2006. The good news is that all modern browsers now support SVG placed as a standalone image and as inline code. The notable holes in support are Internet Explorer 8 and earlier and Android 2.x, which thankfully are on the verge of being obsolete (but check your own stats). There are other inconsistencies in browser support when you get down to the property level and other syntax minutiae. These are the growing pains all promising web standards go through. For an overview of feature support, see the Comparison of Layout Engines (SVG) page on Wikipedia at <a href="http://en.wikipedia.org/wiki/Comparison_of_layout_engines_(Scalable_Vector_Graphics)"><span class="URL-Email--Sidebar-">en.wikipedia.org/wiki/Comparison_of_layout_engines_(Scalable_Vector_Graphics)</span></a>.</p>
+					<p class="SidebarBody">The W3C also released SVG Tiny 1.2 (<a href="http://www.w3.org/TR/SVGTiny12"><span class="URL-Email--Sidebar-">www.w3.org/TR/SVGTiny12</span></a>), a subset of SVG 1.1 aimed at pre-smartphone mobile devices. It is not supported on regular desktop or smartphone browsers. </p>
+					<p class="SidebarBody">SVG 2 (<a href="http://www.w3.org/TR/SVG2/"><span class="URL-Email--Sidebar-">www.w3.org/TR/SVG2/</span></a>) is under development with the aim to be more integrated with HTML5, CSS, and WOFF (Web Open Font Format). Browsers are already beginning to roll out support for individual modules from the SVG 2 spec, which you can begin using with testing and fallbacks.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-223" class="HeadA"><a id="_idTextAnchor313"></a>Drawing with XML</h1>
+			<p class="body">That takes care of the “scalable” and “vector” aspects of SVG. What really sets SVG apart from other formats, though, is that it is an XML language (see the sidebar <span class="Xref">“A Quick Introduction to XML”</span>) for describing two-dimensional graphics, including shapes, paths, text, and even special filter effects. Bitmapped graphics are stored as largely unintelligible code (should you care to peek inside), but SVG images are generated by text files that are fairly human-readable. In fact, it is possible to create SVG graphics by typing out the code directly in a <a id="_idIndexMarker4389"></a>code editor instead of using a graphics program. </p>
+			<div>
+				<div id="_idContainer1592" class="sidebar">
+					<h5 class="SidebarTitle">A Quick Introduction to XML</h5>
+					<p class="SidebarBody"><span class="FirstTerm--Sidebar-">XML</span> (which<a id="_idIndexMarker4390"></a> <a id="_idIndexMarker4391"></a>stands for <span class="FirstTerm--Sidebar-">eXtensible Markup Language</span>) is not a specific language in itself, but rather a robust set of rules for creating other markup languages. It is a meta-language. </p>
+					<p class="SidebarBody">To use a simplified example, if you were publishing recipes, you might use XML to create a custom Recipe Markup Language (RML) that includes the elements <span class="Literal-Sidebar">&lt;ingredient&gt;</span>, <span class="Literal-Sidebar">&lt;instructions&gt;</span>, and <span class="Literal-Sidebar">&lt;servings&gt;</span> to accurately describe the types of information in your recipe documents. Once labeled correctly, that information can be treated as data. In fact, XML has proven to be a powerful tool for sharing data between applications. Despite the fact that XML was developed with the web in mind, it has had a larger impact outside the web environment because of its data-handling capabilities. There are XML files working behind the scenes in an increasing number of software applications, such as Microsoft Office and Apple iTunes.</p>
+					<p class="SidebarBody">A few of the XML languages that are used on the web are as follows: </p>
+					<ul>
+						<li class="SidebarListBullet"><strong class="Emphasis_Bold">XHTML</strong>: HTML <a id="_idIndexMarker4392"></a><a id="_idIndexMarker4393"></a>rewritten according to the stricter rules of XML</li>
+						<li class="SidebarListBullet"><strong class="Emphasis_Bold">RSS</strong> (Really <a id="_idIndexMarker4394"></a><a id="_idIndexMarker4395"></a>Simple Syndication, or RDF Site Summary): allows your content to be shared as data and read with RSS feed readers</li>
+						<li class="SidebarListBullet"><strong class="Emphasis_Bold">MathML</strong>: Used <a id="_idIndexMarker4396"></a>to describe mathematical notation</li>
+						<li class="SidebarListBullet"><strong class="Emphasis_Bold">SVG</strong>: The image description language that you’ll learn all about in this chapter</li>
+					</ul>
+					<h5 class="sbHead">XML Syntax Requirements</h5>
+					<p class="SidebarBody"><a id="_idIndexMarker4397"></a>Because<a id="_idIndexMarker4398"></a><a id="_idIndexMarker4399"></a> it is possible for multiple XML languages to appear in the same document, it is important that the syntax be very strict to keep things straight. Shortcuts that are fine in HTML (such as omitting end tags) won’t fly in XML languages.</p>
+					<p class="SidebarBody">SVG follows the stricter XML syntax, so it is important to follow these code requirements when you’re writing SVG:</p>
+					<ul>
+						<li class="SidebarListBullet">Element and <a id="_idIndexMarker4400"></a><a id="_idIndexMarker4401"></a>attribute names must be lowercase. </li>
+						<li class="SidebarListBullet">All elements must be closed (terminated), which means they must have a closing tag. To close elements without content (a.k.a. empty elements), you add a slash before the closing bracket (for example, <span class="Literal-Sidebar">&lt;rect/&gt;</span>).</li>
+						<li class="SidebarListBullet">Attribute values must be in quotation marks. Single or double quotation marks are acceptable as long as they are used consistently. Furthermore, there should be no extra whitespace (character spaces or line returns) before or after the attribute value inside the quotation marks.</li>
+						<li class="SidebarListBullet">All attributes must have explicit attribute values. XML does not support <span class="FirstTerm--Sidebar-">attribute minimization</span>, the practice in which certain attributes can be reduced to just the attribute value. This is best explained with an example from XHTML, a stricter version of HTML rewritten in XML. In HTML, you can write <span class="Literal-Sidebar">checked</span> to indicate that a form button should be checked when the form loads, but in XHTML you need to explicitly write out <span class="Literal-Sidebar">checked="checked"</span>. </li>
+						<li class="SidebarListBullet">Proper <a id="_idIndexMarker4402"></a><a id="_idIndexMarker4403"></a>nesting of elements is strictly enforced. </li>
+						<li class="SidebarListBullet">Special<a id="_idIndexMarker4404"></a> characters must always be represented by character entities (e.g., <span class="Literal-Sidebar">&amp;amp;</span> for the &amp; symbol). Note that most HTML named entities do not work in XML. Use the numeric Unicode code point reference instead.</li>
+						<li class="SidebarListBullet">Scripts <a id="_idIndexMarker4405"></a>must be contained in a <a id="_idIndexMarker4406"></a><a id="_idIndexMarker4407"></a><a id="_idIndexMarker4408"></a>CDATA section so they will be treated as simple text characters and not parsed as XML markup. There is an example in the <span class="Xref--Sidebar-">“Interactivity with JavaScript”</span> section later in this chapter.</li>
+					</ul>
+				</div>
+			</div>
+			<h2 class="HeadB">SVG Elements</h2>
+			<p class="body">SVG is a<a id="_idIndexMarker4409"></a><a id="_idIndexMarker4410"></a> markup language, just like HTML, only it includes elements for two-dimensional graphics, such as the following:</p>
+			<ul>
+				<li class="ListBullet">Elements for drawing lines and <a id="_idIndexMarker4411"></a><a id="_idIndexMarker4412"></a><a id="_idIndexMarker4413"></a><a id="_idIndexMarker4414"></a><a id="_idIndexMarker4415"></a><a id="_idIndexMarker4416"></a><a id="_idIndexMarker4417"></a>shapes: <span class="Literal-fc">circle</span>, <span class="Literal-fc">rect</span>, <span class="Literal-fc">ellipse</span>, <span class="Literal-fc">path</span>, <span class="Literal-fc">line</span>, <span class="Literal-fc">polyline</span>, and <span class="Literal-fc">polygon </span></li>
+				<li class="ListBullet">A <span class="Literal-fc">text</span> <a id="_idIndexMarker4418"></a>element for adding text content</li>
+				<li class="ListBullet">Elements for organization, such<a id="_idIndexMarker4419"></a> as <span class="Literal-fc">g</span> for grouping shapes together, and <span class="Literal-fc">use</span> and <span class="Literal-fc">symbol</span> <a id="_idIndexMarker4420"></a><a id="_idIndexMarker4421"></a>for reusing drawings</li>
+				<li class="ListBullet">Elements for <a id="_idIndexMarker4422"></a>clipping (<span class="Literal-fc">clipPath</span>) and <a id="_idIndexMarker4423"></a><a id="_idIndexMarker4424"></a>masking (<span class="Literal-fc">mask</span>) image areas into interesting shapes</li>
+				<li class="ListBullet">Elements for raster effects such as <a id="_idIndexMarker4425"></a><a id="_idIndexMarker4426"></a><span class="Literal-fc">linearGradient</span> and <span class="Literal-fc">filter</span> for Photoshop-like filter effects</li>
+			</ul>
+			<p class="body">Of course, this is by no means an exhaustive list (see <span class="Xref">Note</span>), but it should give you the general idea of what SVG is about. A simple example should make it even clearer. <span class="Xref-Figure">Figure 25-3</span> shows an SVG image, <span class="Filename">simple.svg</span>, that contains a sampling of simple SVG elements. It’s not a masterpiece, I know, but it will introduce you to some common SVG elements.</p>
+			<div>
+				<div id="_idContainer1593" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Lists of all the SVG elements and attributes can be found at <a href="http://www.w3.org/TR/SVG11/"><span class="URL-Email--Sidebar-">www.w3.org/TR/SVG11/</span></a>.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1595" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2503_simple.png" alt="" width="1337" height="805"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-3.</span> A basic SVG image, <span class="Filename--Sidebar-">simple.svg</span>. The dotted line has been added to indicate the edges of the viewport but is not part of the SVG code.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Here are the contents of the <span class="Filename">simple.svg</span> file that generates the image in <span class="Xref-Figure">Figure 25-3</span>. If you read through it closely, I think you’ll find it’s fairly intuitive, but my annotations follow.</p>
+			<pre class="CodeFirst">&lt;?xml version="1.0" encoding="utf-8"?&gt;  <span class="Circle-Frame-Neg">A</span><br/> &lt;svg version="1.1" <span class="Circle-Frame-Neg">B</span><br/>   xmlns="http://www.w3.org/2000/svg"<br/>  xmlns:xlink="http://www.w3.org/1999/xlink"<br/>   width="150" height="200" viewBox="0 0 150 200"&gt;  <span class="Circle-Frame-Neg">C</span><br/> <br/>&lt;defs&gt; <span class="Circle-Frame-Neg">D</span><br/>   &lt;<code class="CodeColor">radialGradient</code> <code class="CodeColor">id="fade"</code>&gt; <span class="Circle-Frame-Neg">E</span><br/>     &lt;stop offset="0" stop-color="white"/&gt;<br/>    &lt;stop offset="1" stop-color="orange"/&gt;<br/>  &lt;/radialGradient&gt;<br/>&lt;/defs&gt; <br/><br/>&lt;g id="greenbox"&gt; <span class="Circle-Frame-Neg">F</span><br/>   &lt;<code class="CodeColor">rect</code> x="25" y="25" width="100" height="100" fill="#c6de89"<br/>    stroke-width="2" stroke="green"/&gt; <span class="Circle-Frame-Neg">G</span><br/>   &lt;<code class="CodeColor">circle</code> cx="75" cy="75" r="40" fill="url(<code class="CodeColor">#fade</code>)"/&gt;<br/>  &lt;<code class="CodeColor">path</code> d="M 13 100 L 60 50 L 90 90 L 140 30" stroke="black" stroke-width="2" fill="none"/&gt; <span class="Circle-Frame-Neg">H</span><br/> &lt;/g&gt; <br/><br/>&lt;<code class="CodeColor">text</code> x="25" y="150" fill="#000000" font-family="Helvetica" font-size="16"&gt;A Simple SVG&lt;/text&gt; <span class="Circle-Frame-Neg">I</span>  <br/><br/>&lt;/svg&gt;</pre>
+			<p class="body">Let’s take a closer look at the various parts of <span class="Filename">simple.svg</span>: </p>
+			<ol>
+				<li class="ListNumber-Circle-Frame-Neg">Because this is an XML file, it starts off with some XML business. The first line is an XML declaration that identifies the file as XML. For web SVGs, this declaration is not necessary unless you are using a character encoding other than the default UTF-8, but you are likely to see it in code exported by graphics programs.</li>
+				<li class="ListNumber-Circle-Frame-Neg">The entire document is contained in the <span class="Literal-fc">svg</span> root element. Drawing programs generally include the version number (1.1), although it is not necessary. The two <span class="Literal-fc">xmlns</span> attributes declare the XML namespace, which tells the browser to interpret this document by using the vocabulary defined in SVG (see <span class="Xref">Note</span>). The <a id="_idIndexMarker4427"></a><a id="_idIndexMarker4428"></a><span class="Literal-fc">xmlns:xlink</span> attribute allows you to put links and references to external files in the SVG document. <a id="_idIndexMarker4429"></a>Namespaces help keep element names straight, especially when there is more than one XML language used in a document.<div id="_idContainer1596" class="note"><h5 class="noteHeader">Note</h5><p class="note">The <span class="Literal-Sidebar">xmlns</span> and <span class="Literal-Sidebar">xmlns:xlink</span> attributes are not required when the SVG is placed inline in an HTML5 document.</p></div></li>
+				<li class="ListNumber-Circle-Frame-Neg">The <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> <a id="_idIndexMarker4430"></a><a id="_idIndexMarker4431"></a><a id="_idIndexMarker4432"></a><a id="_idIndexMarker4433"></a><a id="_idIndexMarker4434"></a>attributes in the root <span class="Literal-fc">svg</span> element establish a drawing area (<span class="FirstTerm">viewport</span>) that is 150 pixels wide by 200 pixels tall. The viewport is indicated in <span class="Xref-Figure">Figure 25-3</span> by a dotted line, but this is for illustration purposes only and wouldn’t appear in the browser. Pixels are the default measurement unit in SVG, so you don’t need the “px.” The <span class="Literal-fc">viewBox</span> <a id="_idIndexMarker4435"></a><a id="_idIndexMarker4436"></a>attribute controls the size of the drawing itself and enables the graphic to scale neatly if you change the width and height later. (See <span class="Xref">Note</span>.) <div id="_idContainer1597" class="note"><h5 class="noteHeader">Note</h5><p class="note">The viewport and viewbox are discussed in more detail in the section <span class="Xref--Sidebar-">“Responsive SVGs”</span> later in this chapter.</p></div></li>
+				<li class="ListNumber-Circle-Frame-Neg">Next we get to the <a id="_idIndexMarker4437"></a><span class="Literal-fc">defs</span> element, which defines elements and effects that will be referenced later in the document by their <span class="Literal-fc">id</span> values. Elements in the <span class="Literal-fc">defs</span> section are created but not immediately rendered. Here we are using <span class="Literal-fc">defs</span> to store a radial gradient pattern, but it could also be used for shapes (like <span class="Literal-fc">circle</span>) or symbols that get rendered in the document via the <span class="Literal-fc">use</span> element. Defining a shape, drawing, or effect once, then reusing it, is a good way to eliminate redundancy in your SVG code.</li>
+				<li class="ListNumber-Circle-Frame-Neg">This <a id="_idIndexMarker4438"></a><span class="Literal-fc">radialGradient</span> element is made up of two color <span class="Literal-fc">stop</span> elements, one for white, and one for orange. It is given an <span class="Literal-fc">id</span> of <span class="Literal-fc">"fade"</span>.</li>
+				<li class="ListNumber-Circle-Frame-Neg">Finally, we get to the elements that describe the drawing itself. The <a id="_idIndexMarker4439"></a>rectangle<a id="_idIndexMarker4440"></a><a id="_idIndexMarker4441"></a> (<span class="Literal-fc">rect</span>), circle (<span class="Literal-fc">circle</span>), and path (<span class="Literal-fc">path</span>) that make up the drawing are grouped together with the <span class="Literal-fc">g</span> element and given the name <span class="Literal-fc">"</span><span class="Literal-fc">greenbox"</span>. This makes it easy to access in CSS or a script later.</li>
+				<li class="ListNumber-Circle-Frame-Neg">The square is created using the <span class="Literal-fc">rect</span> (for “rectangle”) element with its width and height set to 100 pixels. Notice that this and other empty element are closed (terminated) with a slash (<span class="Literal-fc">/</span>) before the closing bracket, as is required in XML languages.<p class="ListNumber_cont">The <span class="Literal-fc">x</span> and <span class="Literal-fc">y</span> attributes position it on the pixel grid within the viewport (see <span class="Xref-Figure">Figure 25-4</span> in the <span class="Xref">“SVG Coordinates”</span> sidebar). You can see that attributes are used to provide the dimensions, fill color, stroke width, and stroke color (see <span class="Xref">Note</span>). The center of the <span class="Literal-fc">circle</span> element is positioned with the <span class="Literal-fc">cx</span> and <span class="Literal-fc">cy</span> attributes, and its radius is set with <span class="Literal-fc">r</span>. This <span class="Literal-fc">circle</span> is filled with the radial gradient we defined earlier, which is called by its <span class="Literal-fc">id</span> “fade” in the <span class="Literal-fc">url()</span> notation. </p><div id="_idContainer1600" class="sidebar"><h5 class="SidebarTitle">SVG Coordinates</h5><p class="SidebarBody">The coordinates in <a id="_idIndexMarker4442"></a><a id="_idIndexMarker4443"></a>SVGs start at the top-left corner and increase down and to the right (<span class="Xref-Figure">Figure 25-4</span>). The square created with the <span class="Literal-Sidebar">rect</span> element in the example has the coordinates <span class="Literal-Sidebar">x="25" y="25"</span>, which means its top-left corner is positioned 25 pixels from the left edge of the viewport/viewbox and 25 pixels down from the top edge. Some elements, like circles and ellipses, may be positioned based by their center points (<span class="Literal-Sidebar">cx</span> and <span class="Literal-Sidebar">cy</span>).</p><div><figure id="_idContainer1599" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_2504_coordinates.png" alt="" width="560" height="653"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-4.</span> In SVG, x coor­dinates start on the left and increase to the right, and y coordinates start at the top and increase downward. The 0,0 origin point is in the top-left corner of the viewport. </figcaption></figure></div></div><div id="_idContainer1601" class="note"><h5 class="noteHeader">Note</h5><p class="note">“Stroke” is what SVG calls the line or border around a shape.</p></div></li>
+				<li class="ListNumber-Circle-Frame-Neg">The crooked line is defined by a <span class="Literal-fc">path</span> element. The <span class="Literal-fc">d</span> (data) attribute provides a series of x, y coordinates that make up the points along the path. All paths start with <span class="Literal-fc">M</span> (“moveto”), which sets the starting position. Each <span class="Literal-fc">L</span> draws a “lineto” the next set of coordinates. Coordinates can be separated by a character space (as shown) or a comma.</li>
+				<li class="ListNumber-Circle-Frame-Neg">Finally, we have a bit of text defined with the <a id="_idIndexMarker4444"></a><span class="Literal-fc">text</span> element. You can see that it is styled with attributes like <span class="Literal-fc">font-size</span> and <span class="Literal-fc">font-family</span>, which should look familiar now that you’ve learned about CSS. There are many similarities between SVG attributes and CSS styles.</li>
+			</ol>
+			<h2 class="HeadB">Beyond Simple Shapes</h2>
+			<p class="body">SVGs have some cool image features in addition to drawing lines and shapes.</p>
+			<h3 class="HeadC">Embedded bitmap images </h3>
+			<p class="body">SVGs <a id="_idIndexMarker4445"></a>aren’t limited to vector drawings; you can embed bitmap images in them too. You might do this in order to apply special effects or add some sort of behavior or interactivity that a PNG or JPEG can’t do on its own. Images are embedded with the <span class="Literal-fc">image</span> element.</p>
+			<pre class="CodeFirst">&lt;image <code class="CodeColor">xlink:href="kangaroo.jpg"</code> x="45" y="0" width="100" height="150"/&gt;</pre>
+			<p class="body">Note that because SVG is an XML format, it requires the <span class="Literal-fc">xlink:href</span> attribute to point to the external image file. </p>
+			<div>
+				<div id="_idContainer1602" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">External images won’t display for <span class="Filename--Sidebar-">.svg</span> files added to the HTML page with the <span class="Literal-Sidebar">img</span> <a id="_idIndexMarker4446"></a>element. All external files are blocked for <span class="Literal-Sidebar">img</span> element SVGs for security reasons.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Clipping and masking</h3>
+			<p class="body">SVG lets you <a id="_idIndexMarker4447"></a><a id="_idIndexMarker4448"></a><a id="_idIndexMarker4449"></a>selectively show parts of an image and hide others by clipping and masking.</p>
+			<p class="body">In clipping, a vector path is used to “cut out” a section of an image. The parts of the image that fall outside the clipping path are hidden completely. <span class="Xref-Figure">Figure 25-5</span> uses a path in the shape of a star to clip the starry sky image. Clipping paths are defined with the <span class="Literal-fc">clipPath</span> element. </p>
+			<pre class="CodeFirst">&lt;defs&gt;<br/>  <code class="CodeColor">&lt;clipPath id="star"&gt;</code><br/>      &lt;polygon points="390,12 440,154 590,157 470,250 513,393 390,307 266,393 310,248 189,157 340,154 390,12" style="fill: none"/&gt;<br/>  <code class="CodeColor">&lt;/clipPath&gt;</code><br/>&lt;/defs&gt;  <br/><br/>&lt;image xlink:href="starrysky_600.jpg" width="600" height="400" style="<code class="CodeColor">clip-path: url(#star)</code>"/&gt;</pre>
+			<div>
+				<figure id="_idContainer1604" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2505_clipping.png" alt="" width="1321" height="592"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-5.</span> The star-shaped path is used as a clipping path that reveals part of the underlying image.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Masking works similarly but is a pixel-based effect. Varying levels of darkness in the mask result in varying amounts of transparency at each point, similar to an alpha channel. In SVG masks, pure white areas correspond to 100% opacity, and pure black corresponds to 0% opacity (fully transparent). Levels of gray in between result in levels of semitransparency. </p>
+			<p class="body">You can play with the fill color of the mask to reveal more or less of the object it is masking. The effect is more interesting when the mask contains gradients rather than solid fill colors. You can even use an image as a mask (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer1605" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">If the mask is a color image, it is converted to grayscale based on its luminance (brightness) using a formula that interprets yellows and greens as lighter than reds and blues.</p>
+				</div>
+			</div>
+			<p class="body"><span class="Xref-Figure">Figure 25-6</span> shows the same star shape filled with a gradient and used as a mask over the starry sky photograph. Note that the areas of the image that fall outside the mask object are completely transparent, just like the clipping path. </p>
+			<pre class="CodeFirst">&lt;defs&gt;<br/>  &lt;linearGradient <code class="CodeColor">id="blend"</code>&gt;<br/>    &lt;stop offset="0%" stop-color="#ffffff"/&gt;<br/>    &lt;stop offset="100%" stop-color="#000000"/&gt;<br/>  &lt;/linearGradient&gt;<br/><br/>  <code class="CodeColor">&lt;mask id="star"</code> x="0" y="0" width="400" height="381"&gt;<br/>    &lt;polygon points="390,12 440,154 590,157 470,250 513,393 390,307 266,393 310,248 189,157 340,154 390,12" <code class="CodeColor">style="fill: url(#blend)"</code>/&gt;<br/><code class="CodeColor">  &lt;/mask&gt;</code><br/>&lt;/defs&gt;<br/><br/>&lt;image xlink:href="starrysky_600.jpg" width="600" height="400" <code class="CodeColor">style="mask: url(#star);"</code>/&gt;</pre>
+			<div>
+				<figure id="_idContainer1607" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2506_masking.png" alt="" width="1321" height="613"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-6.</span> The star shape has a gradient fill that affects the transparency of the masked image.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1608" class="sidebar">
+					<h5 class="SidebarSeries">COOL TRICK</h5>
+					<p class="SidebarBody">It is possible to simulate transparency in a <a id="_idIndexMarker4450"></a><a id="_idIndexMarker4451"></a>JPEG by embedding it in an SVG and using a clipping path or mask to make certain areas within the image transparent. That lets you take advantage of the small file size of JPEGs for full-color images while gaining the transparency effects available only with PNG-24. On the downside, there are browser support issues that you don’t run into with PNG-24.</p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer1609" class="note">
+					<h5 class="WarningHeader">WARning</h5>
+					<p class="note">Masking is not supported in Android versions 4.3 and earlier.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Filter effects</h3>
+			<p class="body">You might be surprised to learn that a vector-based graphic format includes Photoshop-like filters for manipulating images. SVG features more than a dozen filter effects that can be used alone or layered and combined for all sorts of effects, such as simple <a id="_idIndexMarker4452"></a><a id="_idIndexMarker4453"></a><a id="_idIndexMarker4454"></a>Gaussian blurs, color shifting, mosaic-like patterns, and good ol’ drop shadows.</p>
+			<p class="body">The nice thing about filters is that the original image is untouched; all the messing around happens when the browser renders the image with the filters applied. <span class="Xref-Figure">Figure 25-7</span> shows just a few SVG filters to give you an idea of what can be done.</p>
+			<div>
+				<figure id="_idContainer1611" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2507_filters-ebook.png" alt="" width="1337" height="1510"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-7.</span> Examples of SVG filters.</figcaption>
+				</figure>
+			</div>
+			<p class="body">To give you a brief taste of how filters work, here is an example that puts a blur effect on an ellipse element. The filter is defined with a <span class="Literal-fc">filter</span> element, which contains one or <a id="_idIndexMarker4455"></a>more <span class="FirstTerm">filter primitives</span> (a very specific effect that can be combined with other effects). The filter is given an <span class="Literal-fc">id</span> and then is called in as a style on the element that uses it. <span class="Xref-Figure">Figure 25-8</span> shows the ellipse without and with the blur filter.</p>
+			<div>
+				<figure id="_idContainer1613" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2508_blur.png" alt="" width="441" height="594"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-8.</span> A Gaussian blur filter applied to <a id="_idIndexMarker4456"></a>an <span class="Literal-Sidebar">ellipse</span> element.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1614" class="note">
+					<h5 class="noteHeader">Note </h5>
+					<p class="note">This example and the next use the <span class="Literal-Sidebar">style</span> attribute (the same one we use in HTML) to add inline styles to elements. We’ll talk about options for styling SVGs in the next section.</p>
+				</div>
+			</div>
+			<pre class="CodeFirst">&lt;defs&gt;<br/>  <code class="CodeColor">&lt;filter id="blurry"&gt;<br/>    &lt;feGaussianBlur in="SourceGraphic" stdDeviation="4"/&gt;<br/>  &lt;/filter&gt;</code><br/>&lt;/defs&gt; <br/><br/>&lt;ellipse cx="200" cy="50" rx="150" ry="100" style="fill: orange;"/&gt; <br/><br/>&lt;ellipse cx="200" cy="300" rx="150" ry="100" style="fill: orange;<code class="CodeColor"> filter: url(#blurry);</code>"/&gt;</pre>
+			<p class="body">To make a drop shadow, the blur filter is defined and then merged with an offset that moves it down and to the right. <span class="Xref-Figure">Figure 25-9</span> shows the result.  </p>
+			<div>
+				<figure id="_idContainer1616" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2509_dropshadow.png" alt="" width="1070" height="429"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-9.</span> A drop shadow created with SVG filters.</figcaption>
+				</figure>
+			</div>
+			<pre class="CodeFirst">&lt;defs&gt;<br/>&lt;filter id="shadow"&gt;<br/>  &lt;<code class="CodeColor">feGaussianBlur</code> in="SourceAlpha" stdDeviation="4" result="blur"/&gt;<br/>  &lt;<code class="CodeColor">feOffset</code> in="blur" dx="7" dy="5" result="offsetBlur" /&gt;<br/>  &lt;<code class="CodeColor">feMerge</code>&gt;<br/>    &lt;feMergeNode in="offsetBlur"/&gt;<br/>    &lt;feMergeNode in="SourceGraphic"/&gt;<br/>  &lt;/feMerge&gt;<br/>&lt;/filter&gt;<br/>&lt;/defs&gt;<br/>&lt;polygon points="390,12 440,154 590,157 470,250 513,393 390,307 266,393 310,248 189,157 340,154 390,12" style="fill: pink; <code class="CodeColor">filter: url(#shadow)</code>"/&gt;</pre>
+			<div>
+				<div id="_idContainer1617" class="sidebar">
+					<h5 class="SidebarSeries">Fun Fact</h5>
+					<p class="SidebarBody">The masking, filter, and transform features in CSS are extensions of SVG. The standards bodies are aiming to make them work together as seamlessly as possible and to bring some of the best aspects of SVG into CSS and standard browser behavior.</p>
+				</div>
+			</div>
+			<p class="body">Of course, there is a <em class="Emphasis">lot</em> more to SVG filters than I can cover here, but I hope that I’ve provided a good introduction. </p>
+			<h3 class="HeadC">Reuse and recycle</h3>
+			<p class="body">A powerful<a id="_idIndexMarker4457"></a><a id="_idIndexMarker4458"></a> feature in SVG is the ability to define a shape or effect once and then reuse it wherever you need it, as many times as you need it. This keeps the file small by removing redundant code and is a good example of <a id="_idIndexMarker4459"></a><a id="_idIndexMarker4460"></a><span class="FirstTerm">DRY</span> (<span class="FirstTerm">Don’t Repeat Yourself</span>) coding. </p>
+			<p class="body">The trick is defining the element you want to repeat, such as an icon, in a <span class="Literal-fc">symbol</span>. The <span class="Literal-fc">symbol</span> element does not get rendered; it just sets up a drawing for future use (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer1618" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Because symbols won’t render, you don’t need to put them in a <span class="Literal-Sidebar">defs</span> section, but it’s a good practice because it is a logical container for elements you’re defining for later use.</p>
+				</div>
+			</div>
+			<pre class="CodeFirst">&lt;symbol <code class="CodeColor">id="iconA"</code> viewBox="0 0 44 44"&gt;<br/>  <span class="Code-Comment">&lt;!-- all the paths and shapes that make up the icon --&gt;</span><br/> &lt;/symbol&gt;</pre>
+			<p class="body">When you want to use the symbol on the page, call it up with the <span class="Literal-fc">use</span> element, which triggers the symbol to render. The following is a minimal <span class="Literal-fc">use</span> element example. The reused symbol scales to whatever dimensions are set on <span class="Literal-fc">svg.icon</span> in the web page’s style sheet.</p>
+			<pre class="CodeFirst">&lt;svg class="icon"&gt;<br/>  &lt;use <code class="CodeColor">xlink:href="#iconA"</code> /&gt;<br/>&lt;/svg&gt;</pre>
+			<p class="body">You could include other attributes with instructions such as x,y coordinates for positioning, width and height dimensions, and styles that override styles inherited by the copy of the symbol.</p>
+			<p class="body">The <span class="Literal-fc">use</span> element <a id="_idIndexMarker4461"></a><a id="_idIndexMarker4462"></a>doesn’t work only with <span class="Literal-fc">symbol</span>. You can use it to reuse any basic SVG shape, image, or group in a similar manner. The advantage to making the initial SVG a symbol is you can include the <span class="Literal-fc">viewBox</span> attribute to enable proportional scaling.</p>
+			<p class="body">The <span class="Literal-fc">symbol</span> and <span class="Literal-fc">use</span> elements are the tools behind <a id="_idIndexMarker4463"></a>SVG <span class="FirstTerm">sprites</span>. Sprites are a technique in which multiple SVG drawings (such as an icon set, to use the most popular example) are defined in one SVG, either in the HTML document or as an external <span class="Filename">.svg</span> file. In the HTML document, the <span class="Literal-fc">use</span> element (inside an inline <span class="Literal-fc">svg</span>) pulls a particular icon symbol onto the page. It is a powerful tool for managing SVG icons. You will find plenty of tutorials for SVG sprites online, and <a id="_idIndexMarker4464"></a>Chris Coyier includes a nice how-to in his book <span class="Citation">Practical SVG</span> (A Book Apart).</p>
+			<p class="body">So far you’ve seen SVG used to draw basic shapes, embed images, clip and mask selected areas, and add some pretty groovy special effects. The SVG drawing features are core to the SVG format; however, if we focus only on what gets drawn in the browser window, we would be missing out on some of the best features of SVG. Let’s look at them now.</p>
+			<h1 id="_idParaDest-224" class="HeadA"><a id="_idTextAnchor314"></a>Features of SVG as XML</h1>
+			<p class="body">Now you know<a id="_idIndexMarker4465"></a><a id="_idIndexMarker4466"></a> that behind every SVG that renders on a screen is a structured text document. In that respect, it’s pretty much the same as HTML. Furthermore, SVG, as a structured document language, has a DOM that includes objects, properties, and methods related to manipulating graphic elements. This opens up some really exciting possibilities that make SVG more flexible and useful than its static-image counterparts. </p>
+			<div>
+				<div id="_idContainer1619" class="sidebar">
+					<h5 class="SidebarTitle">Adding SVG to a Page: A Refresher</h5>
+					<p class="SidebarBody"><span class="Xref--Sidebar-">Chapter 7, Adding Images</span>, <a id="_idIndexMarker4467"></a>went<a id="_idIndexMarker4468"></a><a id="_idIndexMarker4469"></a> <a id="_idIndexMarker4470"></a>into detail about the ways to add an SVG to a page, but I thought it would be good to have a little refresher now in the context of our SVG deep-dive. See the original discussion in <span class="Xref--Sidebar-">Chapter 7</span> for more markup details. SVGs can be added to an HTML document in the following ways:</p>
+					<h5 class="sbHead">As an image</h5>
+					<p class="SidebarBody">You can add a <a id="_idIndexMarker4471"></a>self-contained <span class="Filename--Sidebar-">.svg</span> file to a page with the <span class="Literal-Sidebar">img</span> element as you would any other graphic: </p>
+					<pre class="SidebarCodeFirst">&lt;img src="star.svg" alt="star icon"&gt;</pre>
+					<p class="SidebarBody">An SVG can also be used in any CSS property that accepts images, such as <span class="Literal-Sidebar">background-image</span>. </p>
+					<p class="SidebarBody">When standalone SVGs are added to pages like simple graphics, they behave as simple graphics. You can no longer style or script the elements in the SVG, it won’t be interactive (i.e., won’t register user events like clicks or hover), and it won’t load any external files like embedded images, style sheets, or scripts. if a static image is all you need, this is a reliable option.</p>
+					<h5 class="sbHead">As an embedded object</h5>
+					<p class="SidebarBody">You can use <a id="_idIndexMarker4472"></a>the <span class="Literal-Sidebar">object</span> element to embed an SVG on a page. This method’s advantage is that it allows scripts to run and external files to load. You can also provide a fallback image for non-supporting browsers (although there aren’t many):</p>
+					<pre class="SidebarCodeFirst">&lt;object data="star.svg" type="image/svg+xml"&gt;<br/>  &lt;img src="fallback.png" alt=""&gt;<br/>&lt;/object&gt;</pre>
+					<h5 class="sbHead">As inline SVG code</h5>
+					<p class="SidebarBody">The entire SVG file can be pasted right into the HTML source as an <span class="Literal-Sidebar">svg</span> element. This option gives you total access to the SVG’s DOM for styling and scripting, which is a big advantage. On the downside, the code for an SVG can get very long.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Styling</h2>
+			<p class="body">You can <a id="_idIndexMarker4473"></a>target elements in an SVG (or the <span class="Literal-fc">svg</span> element itself if it’s inline) to change their presentation with CSS—for example, applying the same color or border style to HTML elements on the page as well as shapes within the SVG. </p>
+			<p class="body">Styles are added to SVG in four ways:</p>
+			<p class="ListVariableTerm">Presentation attributes</p>
+			<p class="ListVariable">The earlier “Simple SVG” example in <span class="Xref-Figure">Figure 25-3</span> uses presentational attributes defined in the SVG language, such as <a id="_idIndexMarker4474"></a><a id="_idIndexMarker4475"></a><span class="Literal-fc">fill</span> and <span class="Literal-fc">stroke-width</span>, to control how shapes should appear. Presentation attributes are always overridden by styles applied with CSS rules. </p>
+			<pre class="CodeFirst">&lt;rect x="25" y="25" width="100" height="100" <code class="CodeColor">fill=</code>"#c6de89"  <code class="CodeColor">stroke-width=</code>"2" <code class="CodeColor">stroke=</code>"green"/&gt;</pre>
+			<p class="ListVariableTerm">Inline styles</p>
+			<p class="ListVariable">SVG elements may <a id="_idIndexMarker4476"></a>use the inline <span class="Literal-fc">style</span> attribute, which works the same as it does in HTML elements. Many developers prefer this approach. The same <span class="Literal-fc">rect</span> element could also be written as follows: </p>
+			<pre class="CodeFirst">&lt;rect x="25" y="25" width="100" height="100" <code class="CodeColor">style="</code>fill:#c6de89; stroke-width:2; stroke:green;<code class="CodeColor">"</code> /&gt;<code class="CodeColor"> </code></pre>
+			<p class="ListVariableTerm">Internal style sheet</p>
+			<p class="ListVariable">As in HTML, you can include a <span class="Literal-fc">style</span> element at the top of the <span class="Literal-fc">svg</span> (or in the <span class="Literal-fc">defs</span> section if there is one) that contains all the styles used in the SVG document: </p>
+			<pre class="CodeFirst">&lt;svg&gt; <span class="Code-Comment">&lt;!-- XML business omitted for brevity --&gt;</span> <br/>  <code class="CodeColor">&lt;style&gt;</code><br/>   <span class="Code-Comment"> /* styles here */</span><br/><code class="CodeColor">  &lt;/style&gt;</code><br/><span class="Code-Comment">  &lt;!--drawing here --&gt;</span><br/>&lt;/svg&gt;</pre>
+			<p class="ListVariableTerm">External style sheet</p>
+			<p class="ListVariable_cont">If your SVG is <a id="_idIndexMarker4477"></a>inline or placed on the page with the <span class="Literal-fc">object</span> or <span class="Literal-fc">iframe</span> elements, you can import an external style sheet with the <span class="Literal-fc">@import</span> rule in the <span class="Literal-fc">style</span> element. Remember that external files won’t work for standalone SVGs embedded with the <span class="Literal-fc">img</span> element. That includes the style sheet itself as well as references to external resources using the <a id="_idIndexMarker4478"></a><span class="Literal-fc">url()</span> notation within style rules.  </p>
+			<pre class="CodeFirst">&lt;svg&gt;<br/>  &lt;style type="text/css"&gt;<br/>    <code class="CodeColor">@import "svg-style.css";</code><br/>  <span class="Code-Comment">  /* more styles */</span><br/>  &lt;/style&gt;<br/><span class="Code-Comment">  &lt;!-- drawing here --&gt;</span><br/>&lt;/svg&gt;</pre>
+			<p class="ListVariable_cont">For inline SVGs, you can also style elements with a style sheet linked to the HTML document with the <span class="Literal-fc">link</span> element:</p>
+			<pre class="CodeFirst">&lt;head&gt;<br/>  <span class="Code-Comment">&lt;!-- additional head elements --&gt;</span><br/>   <code class="CodeColor">&lt;link href="svg-style.css" rel="stylesheet" type="text/css"&gt;</code><br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;svg&gt;<br/>  <span class="Code-Comment">&lt;!-- drawing here --&gt;</span> <br/>  &lt;/svg&gt;<br/>&lt;/body&gt;</pre>
+			<h2 class="HeadB">Interactivity with JavaScript</h2>
+			<p class="body">SVGs aren’t just<a id="_idIndexMarker4479"></a><a id="_idIndexMarker4480"></a><a id="_idIndexMarker4481"></a> pretty pictures—SVGs are images you can <em class="Emphasis">program</em>! You can add interactivity to the elements in an SVG with JavaScript because all of its element and attribute nodes are accessible in the DOM. It is worth noting that SVGs may also include simple <span class="Literal-fc">a</span> links, are a basic kind of interactivity.</p>
+			<p class="body">For example, because an SVG can listen for mouseovers, you can create fun hover effects that add personality to UI elements. You can also trigger changes in the SVG on a click or a tap. JavaScript can do everything from adding a little motion to an icon to creating whole Flash-like game interfaces and multimedia presentations, as shown in <span class="Xref-Figure">Figure 25-10</span>.</p>
+			<div>
+				<figure id="_idContainer1621" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2510_game.png" alt="" width="1337" height="753"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-10.</span> An example of an SVG game interface created with the Snap.svg JavaScript library. When you put the pointer over each dot, a funny little worm pops up. See more interactive SVG demos at <a href="http://snapsvg.io/demos"><span class="URL-Email--Sidebar-">snapsvg.io/demos</span></a>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">If your SVG is inline, scripts in the HTML document can access elements within the SVG. For standalone SVGs, you can use SVG’s <a id="_idIndexMarker4482"></a><span class="Literal-fc">script</span> element. Because it is an XML document, the code needs to be wrapped in<a id="_idIndexMarker4483"></a><a id="_idIndexMarker4484"></a><a id="_idIndexMarker4485"></a> an <span class="FirstTerm">XML Character Data Block</span> (<span class="Literal-fc">&lt;![CDATA[  ]]&gt;</span>) so &lt;, &gt;, and &amp; symbols are parsed correctly, as shown in this example:</p>
+			<pre class="CodeFirst">&lt;script&gt;<code class="CodeColor">&lt;![CDATA[ </code><br/><br/><span class="Code-Comment">  //script here</span><br/><br/><code class="CodeColor">]]&gt;</code>&lt;/script&gt;</pre>
+			<div>
+				<div id="_idContainer1622" class="sidebar">
+					<h5 class="SidebarTitle">SVG Versus Canvas</h5>
+					<p class="SidebarBody">In <span class="Xref--Sidebar-">Chapter 10, Embedded Media</span>, we <a id="_idIndexMarker4486"></a>looked at the HTML5 <span class="Literal-Sidebar">canvas</span> element and API that creates a space for a two-dimensional, dynamic drawing on a web page. The difference is that an SVG image is drawn with a structural markup language and a canvas is drawn with JavaScript commands. Both can contain images, videos, animation, and dynamic updates in real time. </p>
+					<p class="SidebarBody"><span class="Literal-Sidebar">canvas</span> is better for quick redraws on the fly (it’s only pixels, after all), making it better suited for designing games, editing images, and saving images to bitmapped formats. SVG offers advantages in the ease of scripting, animation, and accessibility; however, complicated SVG documents require more processing power than <span class="Literal-Sidebar">canvas</span> elements.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Animation</h2>
+			<p class="body">SVG is a popular <a id="_idIndexMarker4487"></a><a id="_idIndexMarker4488"></a>choice for adding animated elements to a web page. <span class="Xref-Figure">Figure 25-11</span> is my attempt to capture some charming animation in a still image. For more inspiration, I recommend going to <a href="http://codepen.io"><span class="URL-Email">codepen.io</span></a> and searching for “SVG animation.”</p>
+			<div>
+				<figure id="_idContainer1624" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2511_animation.png" alt="" width="1321" height="329"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-11</span><span class="FigureLabel">.</span> An example of an animated SVG by<a id="_idIndexMarker4489"></a> Chris Gannon. You can see it in action <a id="_idIndexMarker4490"></a>at <a href="http://codepen.io/chrisgannon/pen/emVgMg"><span class="URL-Email--Sidebar-">codepen.io/chrisgannon/pen/emVgMg</span></a>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">There are a number of ways to animate an SVG: animation elements in SVG, CSS animation, and JavaScript:</p>
+			<p class="ListVariableTerm">SVG/SMIL</p>
+			<p class="ListVariable">The SVG specification includes animation effects based <a id="_idIndexMarker4491"></a><a id="_idIndexMarker4492"></a>on <span class="FirstTerm">SMIL</span> (<span class="FirstTerm">Synchronized Multimedia Integration Language</span>), an XML language for creating synchronized audio, video, and animated elements. Each animation effect is defined by an element, with attributes for fine-tuning. Although the built-in SVG/SMIL animation elements provide good tools for all sorts of animation tasks, lack of browser support means that it’s not a great option if animation is critical to your message.</p>
+			<div>
+				<div id="_idContainer1625" class="note">
+					<h5 class="WarningHeader">Browser support note</h5>
+					<p class="note">No Microsoft browser (Internet Explorer or Edge) supports SVG/SMIL animation. Chrome temporarily deprecated it, which sent a message to other browser vendors to stop active development of SVG/SMIL support. With CSS and JavaScript offering better animation options, this part of the SVG spec may wither on the vine.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">CSS animation</p>
+			<p class="ListVariable">SVG elements can also be animated with CSS transitions and keyframes. It should be noted that CSS can animate only CSS properties, not attribute values, which may be limiting for SVG, which uses attributes for most of the geometry and layout. This technique is also hampered by limited browser support (see <span class="Xref">Note</span>), although that continues to improve. CSS animation is good for simple, non-critical animation effects.</p>
+			<div>
+				<div id="_idContainer1626" class="note">
+					<h5 class="WarningHeader">Browser support note</h5>
+					<p class="note">CSS animation is not supported in Internet Explorer 9 and earlier (at all, not just for SVGs), and there is no SVG support (at all) in IE8 and earlier. IE 10 and 11 support animation of CSS properties, but not SVG-specific properties (<span class="Literal-Sidebar">fill</span>, <span class="Literal-Sidebar">stroke</span>, etc.). In MSEdge and Firefox browsers released prior to 2017, CSS animation won’t work if the SVG is added with the <span class="Literal-Sidebar">img</span> element. Older Chrome and Safari browsers require the <span class="Literal-Sidebar">-webkit-</span> prefix.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">JavaScript</p>
+			<p class="ListVariable">With JavaScript, you can create complex, interactive animations that compete with the functionality Flash once offered. There is much better browser support, although there is always the possibility that some users don’t have JavaScript enabled and will miss out. If you don’t want to reinvent the wheel, you can take advantage of the many SVG Animation JavaScript libraries (see the <span class="Xref">“SVG Animation JS Libaries”</span> sidebar). </p>
+			<p class="body">If you’d like to learn more about SVG animation, I recommend <span class="Citation">SVG Animations</span> by <a id="_idIndexMarker4493"></a>Sarah Drasner (O’Reilly) and <span class="Citation">Creating Web Animations</span> by Kirupa <a id="_idIndexMarker4494"></a>Chinnathambi (O’Reilly).</p>
+			<div>
+				<div id="_idContainer1627" class="sidebar">
+					<h5 class="SidebarTitle">SVG Animation JS Libraries</h5>
+					<p class="SidebarBody">These <a id="_idIndexMarker4495"></a>are just a few of the JavaScript libraries available to help you add animation effects to your SVGs more efficiently: </p>
+					<p class="SidebarListVariableTerm">Snap.svg (<a href="http://snapsvg.io"><span class="URL-Email--Sidebar-">snapsvg.io</span></a>)</p>
+					<p class="SidebarListVariable">This is a<a id="_idIndexMarker4496"></a> multipurpose SVG building and animating library created by<a id="_idIndexMarker4497"></a> Dmitry Baranovskiy. It is open source and freely available.</p>
+					<p class="SidebarListVariableTerm">SVG.js (<a href="http://svgjs.com"><span class="URL-Email--Sidebar-">svgjs.com</span></a>)</p>
+					<p class="SidebarListVariable">SVG.js is <a id="_idIndexMarker4498"></a>an extremely lightweight library (just 11 KB!) for basic SVG animation. It is modular, too, so you can use just what you need.</p>
+					<p class="SidebarListVariableTerm">Velocity (<a href="http://velocityjs.org"><span class="URL-Email--Sidebar-">velocityjs.org</span></a>)</p>
+					<p class="SidebarListVariable">As the<a id="_idIndexMarker4499"></a> name says, Velocity makes animations render very quickly, and it has a jQuery-like syntax that makes it easy to use. </p>
+					<p class="SidebarListVariableTerm">Bonsai (<a href="http://bonsaijs.org"><span class="URL-Email--Sidebar-">bonsaijs.org</span></a>)</p>
+					<p class="SidebarListVariable">Bonsai is <a id="_idIndexMarker4500"></a>a robust SVG animation library that includes support for fonts, audio, video, and images. </p>
+					<p class="SidebarListVariableTerm">Path animators</p>
+					<p class="SidebarListVariable">Have<a id="_idIndexMarker4501"></a><a id="_idIndexMarker4502"></a> you ever seen a graphic on a web page that appears to get drawn before your eyes? It was likely an SVG animated with a path animator. There are a number of one-trick-pony JS libraries that can animate the lines in your SVG:  <a id="_idIndexMarker4503"></a>Walkway (<a href="http://connoratherton.com/walkway"><span class="URL-Email--Sidebar-">connoratherton.com/walkway</span></a>), <a id="_idIndexMarker4504"></a><strong class="Emphasis_Bold">LazyLinePainter</strong> (<a href="http://lazylinepainter.info"><span class="URL-Email--Sidebar-">lazylinepainter.info</span></a>), and<a id="_idIndexMarker4505"></a> <strong class="Emphasis_Bold">Vivus</strong> (<a href="http://maxwellito.github.io/vivus"><span class="URL-Email--Sidebar-">maxwellito.github.io/vivus</span></a>).</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Data Visualization</h2>
+			<p class="body">SVGs <a id="_idIndexMarker4506"></a><a id="_idIndexMarker4507"></a>have become a go-to tool of the data visualization (“dataviz”) world because they can be generated dynamically with real data. For example, you could make the temperature level on an SVG thermometer illustration rise and fall with real weather data gathered in the user’s location, or you could change progress bars or pie charts as data updates in real time. <span class="Xref-Figure">Figure 25-12</span> shows examples of SVG used for dataviz from the <a id="_idIndexMarker4508"></a>D3.js Gallery. D3.js is a JavaScript library created specifically for “data-driven documents.” Find out more at <a href="http://d3js.org"><span class="URL-Email">d3js.org</span></a>.</p>
+			<div>
+				<figure id="_idContainer1629" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2512_dataviz.png" alt="" width="1337" height="1106"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-12.</span> Examples of data-generated SVGs on the D3js.org site. See more at <a href="http://github.com/d3/d3/wiki/Gallery"><span class="URL-Email--Sidebar-">github.com/d3/d3/wiki/Gallery</span></a>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The methods for generating SVGs with data are dependent on the type of data and the programming language used. One option is to translate the XML document that contains the data into the SVG by using <a id="_idIndexMarker4509"></a><a id="_idIndexMarker4510"></a>XSLT. <span class="FirstTerm">XSLT</span> (<span class="FirstTerm">eXtensible Stylesheet Language Transformations</span>) is an XML language that provides structured instructions for translating one XML language into another. Clearly, that is some advanced XML mojo that we will not be delving into here, but I thought you ought to know. Other options include JavaScript and server-side template languages (also more than we’ll take on here).</p>
+			<p class="body">If you are eager to know more about data-generated SVGs, the book <span class="Citation">Interactive Data Visualization for the Web</span> by <a id="_idIndexMarker4511"></a>Scott Murray (O’Reilly) is a good place to start.</p>
+			<h2 class="HeadB">Accessibility</h2>
+			<p class="body">Unlike text <a id="_idIndexMarker4512"></a><a id="_idIndexMarker4513"></a>in bitmapped image formats, the text in SVGs can be accessed by search engines and read by screen readers when labeled properly. There are a few things you can do to make your SVGs more accessible to screen readers:</p>
+			<ul>
+				<li class="ListBullet">Use the SVG <span class="Literal-fc">title</span> element to provide a short name for the <span class="Literal-fc">svg</span> element itself or any container (such as <span class="Literal-fc">g</span>) or element it contains. The <span class="Literal-fc">title</span> element should be the first child element of its parent.</li>
+				<li class="ListBullet">Use the SVG <span class="Literal-fc">desc</span> element to provide long text descriptions for elements. </li>
+				<li class="ListBullet">Add <a id="_idIndexMarker4514"></a><a id="_idIndexMarker4515"></a><a id="_idIndexMarker4516"></a>ARIA roles to the <span class="Literal-fc">svg</span> element and its components to ensure that screen readers interpret them correctly and efficiently. Recommendations include the following:<ul><li class="ListBullet_Indent">Add <span class="Literal-fc">role=</span>"<span class="Literal-fc">img</span>" to the <span class="Literal-fc">svg</span> element, but only if you want it to be treated as a single, non-interactive image. The child elements will not be accessible separately.</li><li class="ListBullet_Indent">Add <span class="Literal-fc">aria-labelledby=</span>"<span class="Literal-fc">title desc</span>" to the <span class="Literal-fc">svg</span> element to improve support for <span class="Literal-fc">title</span> and <span class="Literal-fc">desc</span>. </li><li class="ListBullet_Indent">If parts of the SVG should be accessible (text, links, interactive elements, etc.), do not set a role on <span class="Literal-fc">svg</span>, but add <span class="Literal-fc">role=</span>"<span class="Literal-fc">presentation</span>" to shapes (such as <span class="Literal-fc">circle</span>) and paths to prevent<a id="_idIndexMarker4517"></a> screen readers from announcing the occurrence of every shape in the graphic. </li></ul></li>
+			</ul>
+			<h1 id="_idParaDest-225" class="HeadA"><a id="_idTextAnchor315"></a>SVG Tools</h1>
+			<p class="body">Technically, <a id="_idIndexMarker4518"></a>all you need to create SVG graphics is a text editor (and genius visualization skills plus heroic patience!), but you’ll be much happier having a graphics program do the heavy lifting for you. It is also common for designers to create the complex illustrations in a graphics program, and then bring them into a text editor to clean up the code and add scripts and styles manually. It’s a matter of preference based on your skills and interests. </p>
+			<h2 class="HeadB">Vector Illustration Tools</h2>
+			<p class="body">The most <a id="_idIndexMarker4519"></a>appropriate tool for creating SVGs is a vector drawing tool such as Adobe Illustrator, although even <a id="_idIndexMarker4520"></a>image editors like Photoshop and GIMP use shapes that can be exported as SVG. These days, there are many vector software options, ranging from pricey to free, and full-featured to bare-bones. </p>
+			<h3 class="HeadC">Adobe Illustrator</h3>
+			<p class="body">Illustrator is <a id="_idIndexMarker4521"></a><a id="_idIndexMarker4522"></a>the granddaddy of vector illustration tools and is available today as part of Adobe’s Creative Suite for a monthly fee. Illustrator is a vector tool, but it uses PostScript natively and needs to translate those vectors to SVG. Although it is possible to “Save” a drawing in SVG format, the better option is to “Export As” because the resulting SVG will be web-optimized. If you use Illustrator, it is worth doing a search for how to create optimized SVGs in Illustrator because people have published all sorts of tips that will help your design and production process.</p>
+			<div>
+				<div id="_idContainer1630" class="sidebar">
+					<h5 class="SidebarSeries">Tool Tip</h5>
+					<p class="SidebarBody">If you copy a shape in Illustrator, you can paste it as code into a <a id="_idIndexMarker4523"></a>text editor. This is a sweet shortcut if you are doing most of your SVG work in code.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Inkscape</h3>
+			<p class="body">Inkscape (<a href="http://inkscape.org"><span class="URL-Email">inkscape.org</span></a>) is<a id="_idIndexMarker4524"></a> an open source image editor made specifically for SVG (SVG is its native format). It is available for<a id="_idIndexMarker4525"></a><a id="_idIndexMarker4526"></a><a id="_idIndexMarker4527"></a> Windows, Mac (see <span class="Xref">Note</span>), and Linux. Inkscape’s interface has evolved quite a bit over the last few years (<span class="Xref-Figure">Figure 25-13</span>), but if you are accustomed to Adobe tools, it may take a little getting used to. You definitely can’t beat the price (free)!</p>
+			<div>
+				<div id="_idContainer1631" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The macOS version of Inkscape runs on XQuartz, so Mac users need to download and run that first (available at <a href="http://www.xquartz.org"><span class="URL-Email--Sidebar-">www.xquartz.org</span></a>). XQuartz is a version of the X11 Unix windowing system for the Mac. </p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1633" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2513_inkscape.png" alt="" width="1205" height="842"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-13.</span> Inkscape was created for SVGs, so its interface features are SVG-centric, including menu items for Fill and Stroke, Symbols, Clip, and Mask.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1634" class="sidebar">
+					<h5 class="SidebarSeries">Tool Tip</h5>
+					<p class="SidebarBody">When saving an SVG in Inkscape, choose Plain or Optimized. The Inkscape SVG option contains a lot of proprietary code that unnecessarily drives up the file size. Be aware that the Optimized version may strip out more than you want it to, depending on what you intend to do with the graphic.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">SVG-specific tools</h3>
+			<p class="body">There are a number of nifty little SVG-specific drawing tools available for little or no investment. Because they are designed just for SVG, they have a manageable number of tools and settings that map to SVG capabilities (no wading through hundreds of tools you don’t need). Some of them allow you to view and edit the underlying SVG code as well. Here are a couple of SVG editors of note:</p>
+			<p class="ListVariableTerm">Boxy (<a href="https://boxy-svg.com"><span class="URL-Email">boxy-svg.com</span></a>)</p>
+			<p class="ListVariable">Boxy is a <a id="_idIndexMarker4528"></a>full-featured graphics program available for Mac, Windows, and Linux for a modest US$10 (as of this writing). It has an easy-to-use interface as well as a code inspector (<span class="Xref-Figure">Figure 25-14</span>).</p>
+			<p class="ListVariableTerm">SVG-Edit (<a href="http://github.com/SVG-Edit/svgedit"><span class="URL-Email">github.com/SVG-Edit/svgedit</span></a>)</p>
+			<p class="ListVariable">SVG-Edit <a id="_idIndexMarker4529"></a>works right in the browser (<a href="http://svg-edit.github.io/svgedit/releases/svg-edit-2.8.1/svg-editor.html"><span class="URL-Email">svg-edit.github.io/svgedit/releases/svg-edit-2.8.1/svg-editor.html</span></a>) or as a downloaded program. It provides all the basic drawing tools, layers, and the ability to view and edit the SVG source (<span class="Xref-Figure">Figure 25-14</span>). You can also export to PNG, JPEG, <a id="_idIndexMarker4530"></a>BMP, and WebP. And it’s free, so there’s no reason not to give it a try.</p>
+			<div>
+				<figure id="_idContainer1636" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2514_boxysvgedit.png" alt="" width="1321" height="538"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-14</span><span class="FigureLabel">.</span> SVG-creation tools Boxy and SVG-Edit.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Interface design tools </h3>
+			<p class="body">A whole slew of tools have recently emerged for designing web page and app interfaces, such as<a id="_idIndexMarker4531"></a><a id="_idIndexMarker4532"></a> Sketch, AdobeXD, and Affinity Designer. All of them are vector-based and make it easy to export components in SVG format. As with many visual design tools that export code, the results are not always as well constructed as you might like, particularly if you intend to use the SVG programmatically with JavaScript, CSS, and animation.</p>
+			<h2 class="HeadB">Code Editors</h2>
+			<p class="body">If writing SVG <a id="_idIndexMarker4533"></a>by hand is your thing, or if you need to tinker with preexisting SVGs, you should look to see if your code editor of choice has an SVG preview extension that renders your code as you write. SVG previews are available for these editors: </p>
+			<ul>
+				<li class="ListBullet">Atom Editor<a id="_idIndexMarker4534"></a> (free from GitHub): Get the SVG Preview package at <a href="http://atom.io/packages/svg-preview"><span class="URL-Email">atom.io/packages/svg-preview</span></a>.</li>
+				<li class="ListBullet">Brackets<a id="_idIndexMarker4535"></a> (free from Adobe): Get the SVG extension by <a id="_idIndexMarker4536"></a>Peter Flynn at <a href="http://github.com/peterflynn/svg-preview"><span class="URL-Email">github.com/peterflynn/svg-preview</span></a>.</li>
+			</ul>
+			<h1 id="_idParaDest-226" class="HeadA"><a id="_idTextAnchor316"></a>SVG Production Tips</h1>
+			<p class="body">When you create an SVG drawing in a graphical tool, keep in mind that the end result is a text file. As with any file that is being delivered on a web page, you want that file to be as small as possible. If you have plans to style the SVG with CSS or manipulate it with JavaScript, you want the markup to be structured as well as possible.</p>
+			<p class="body">The downside to using graphical tools is that you don’t have much control over the code they output. Most of them export SVG code that is inefficient, redundant, and full of proprietary cruft. There are measures you can take while designing and after you export the SVG to ensure it is as lean and mean as possible. Many a blog post has been written about SVG optimization, but the following tips, although not comprehensive, should point you in the right direction. In the end, you will need to get familiar with your chosen tool’s quirks to anticipate and correct its shortcomings. </p>
+			<h2 class="HeadB">Pre-Export Best Practices</h2>
+			<p class="body">Decisions you make in the design space can improve your SVG output in terms of organization and file size. Again, keeping in mind that the final product is a text file is useful for optimization. Here are some production tips that will help you create SVGs with the best quality at smallest file sizes:</p>
+			<p class="ListVariableTerm">Define the artboard or drawing <a id="_idIndexMarker4537"></a>size in pixels</p>
+			<p class="ListVariable">The artboard dimensions correspond to the viewport (<span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes) of the <span class="Literal-fc">svg</span> element.</p>
+			<p class="ListVariableTerm">Use layers to group elements logically</p>
+			<p class="ListVariable">If you plan on animating or scripting your SVG, keeping your design document well organized as you work will help with accessing the pieces you need later. In Illustrator and most other tools, layers are converted to group (<span class="Literal-fc">g</span>) elements, and nested layers are stored as nested groups. </p>
+			<p class="ListVariableTerm">Give elements and layers meaningful names</p>
+			<p class="ListVariable">The names you give elements and layers are used as <span class="Literal-fc">class</span> and <span class="Literal-fc">id</span> values in the SVG code, so make sure they are descriptive. Names should be all lowercase and with no character spaces so they are appropriate as attribute values. </p>
+			<p class="ListVariableTerm">Simplify paths</p>
+			<p class="ListVariable">The more points and handles used to define a path, the more coordinates appear in the SVG source. More coordinates means more characters and a larger file size. Take advantage of any “simplify path” function your tool offers. Also consider using methods that reduce the number of elements in the file, such as merging objects that always appear as one unit and using one wide stroke instead of two strokes and a fill. If possible, ensure your tool uses shape elements like <span class="Literal-fc">circle</span> and <span class="Literal-fc">rect</span> instead of multipoint paths for simple shapes. If your tool does not provide a way to do this, it is possible to replace the path code with the simple shape element manually.</p>
+			<p class="ListVariableTerm">Be aware of decimal places</p>
+			<p class="ListVariable">Keeping in mind that more characters results in a larger file size, you can shave bytes off your file by limiting the number of characters after the decimal points in your designs. For example, an x, y coordinate “100.3004598, 248.9998765” requires more data than simply “100.3, 249”. Many tools allow you to limit the number of decimal places on export. You may also choose to “snap to pixels” when you set up the document so that points always fall on even integers. The general rule of thumb is that the smaller the image, the more decimal places are required to accurately define the points in objects. Large images can tolerate lower accuracy without compromising quality. You may need to experiment to find the right balance of decimal places and quality for the type of image.</p>
+			<p class="ListVariableTerm">Avoid raster effects inside the SVG</p>
+			<p class="ListVariable">SVG’s efficiency lies in the fact that it is vector-based. When you introduce raster (bitmapped) image material to the SVG, that file size advantage is lost. In some cases, you may be adding a raster image deliberately for manipulation in the SVG, which is fine. But be aware that certain effects in drawing programs—such as blurs, drop shadows, glows, and so on—often generate a raster image area when you may not be expecting it, adding greatly to the file size. Some filter effects, such as drop shadows, can be done in code after export more efficiently. If you find that your <span class="Filename">.svg</span> file is unusually large, unexpected raster image material is a likely suspect. </p>
+			<p class="ListVariableTerm">Pay attention to fonts</p>
+			<p class="ListVariable">Like any font style suggestion on the web, there is no guarantee that your chosen font will be available on the user’s machine, so the font you use in your SVG may not display. Be sure to test and provide fallbacks. If there is a small amount of text, and it doesn't need to be searchable or read aloud by an assistive device, consider whether converting the text to paths is a better option.</p>
+			<p class="ListVariableTerm">Use centered strokes</p>
+			<p class="ListVariable">Although not related to file size, you will achieve better results if you design with strokes set to be centered over the path because that is how SVG handles strokes natively. Some tools, like Sketch, make adjustments to compensate for an outside or inside stroke, but just centering your strokes is a better starting point.</p>
+			<p class="body">Of course, there are many tool-specific tips that I am not able to cover here. Adobe offers tips for optimizing SVGs in Illustrator on its “About SVG” page (<a href="http://helpx.adobe.com/illustrator/using/svg.html"><span class="URL-Email">helpx.adobe.com/illustrator/using/svg.html</span></a>). If you use Sketch, you may want to invest in Peter Nowell’s “SVG Workflows in Sketch” video course at <a href="http://Sketchmaster.com"><span class="URL-Email">Sketchmaster.com</span></a>. </p>
+			<h2 class="HeadB">Post-Export Optimization </h2>
+			<p class="body">Even <a id="_idIndexMarker4538"></a>with careful planning up front, exported SVGs have a lot of redundant code, unnecessary metadata, hidden elements, and other fluff that can be safely removed without affecting the way the SVG renders. It is a good idea to run your SVGs through an optimizer to strip all that out and slim down the file size.</p>
+			<h3 class="HeadC">SVGO</h3>
+			<p class="body">The best <a id="_idIndexMarker4539"></a>SVG optimizer in town as of this writing is SVGO (<a href="http://github.com/svg/svgo"><span class="URL-Email">github.com/svg/svgo</span></a>). It uses <a id="_idIndexMarker4540"></a><a id="_idIndexMarker4541"></a>plug-ins that affect individual tweaks—such as removing empty attributes, removing the <span class="Literal-fc">xmlns</span> attribute (just fine if the SVG is used inline), removing comments, and dozens more—so you can pick and choose how you want to squeeze down the file depending on its end use.</p>
+			<p class="body">The best thing about SVGO is that there are so many ways to use it! It is Node.js-based, so you can use it as a <a id="_idIndexMarker4542"></a>Node.js module or incorporate it in a Grunt or Gulp task. There are SVGO plug-ins for Illustrator (SVGNow), Inkscape (SVGO-Inkscape), and Sketch (SVGO Compressor). It’s also available as a macOS folder action, whereby optimization is performed when you drag files into it. The full list of options is listed on the SVGO site.</p>
+			<p class="body">The easiest way to see SVGO in action is to use the web-based SVGOMG tool, created by Jake Archibald, which provides a graphical user interface (GUI) for SVGO (<a href="http://jakearchibald.github.io/svgomg/"><span class="URL-Email">jakearchibald.github.io/svgomg/</span></a>). SVGOMG lets you toggle the various optimization plug-ins individually and view the results in the live preview (<span class="Xref-Figure">Figure 25-15</span>), which is a handy feature during development. </p>
+			<div>
+				<figure id="_idContainer1638" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2515_svgomg.png" alt="" width="1337" height="858"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-15.</span> SVGOMG provides a GUI for the SVGO optimizing tool (<a href="http://jakearchibald.github.io/svgomg"><span class="URL-Email--Sidebar-">jakearchibald.github.io/svgomg</span></a>). You can toggle optimization methods to see the resulting image quality and file size. </figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">File compression</h3>
+			<p class="body">Because <a id="_idIndexMarker4543"></a>they are text files, SVGs can be compressed with tools such as <a id="_idIndexMarker4544"></a><a id="_idIndexMarker4545"></a><a id="_idIndexMarker4546"></a><a id="_idIndexMarker4547"></a>Gzip or Brotli. </p>
+			<p class="body"><span class="FirstTerm">Gzip</span> is a utility on the server that compresses text files with fancy algorithms. Gzipped SVGs may result in files that are a mere 16–25% of their original size. A gzipped SVG file uses the suffix <span class="Filename">.svgz</span>. In order to use Gzip for SVG, you must configure it on the server, which is beyond the scope of this chapter, but you can find plenty of tutorials online. The file savings are well worth the effort. </p>
+			<p class="body"><span class="FirstTerm">Brotli</span> is an open source compression algorithm released by <a id="_idIndexMarker4548"></a>Google in 2015 that is giving Gzip a run for its money in terms of compression and performance. Like Gzip, Brotli must be configured on the server. Browsers began supporting Brotli content encoding in 2017. There is a nice explanation of Brotli on the <a id="_idIndexMarker4549"></a>MaxCDN site at <a href="https://www.maxcdn.com/one/visual-glossary/brotli/"><span class="URL-Email">www.maxcdn.com/one/visual-glossary/brotli/</span></a>. The official Brotli GitHub page is at <a href="http://github.com/google/brotli"><span class="URL-Email">github.com/google/brotli</span></a>. </p>
+			<h1 id="_idParaDest-227" class="HeadA"><a id="_idTextAnchor317"></a>Responsive SVGs</h1>
+			<p class="body">I’ve talked a lot <a id="_idIndexMarker4550"></a><a id="_idIndexMarker4551"></a>about how the scalable nature of SVGs makes them great for use in responsive layouts, where they can scale to fit changing element widths with no loss of quality. Although that is absolutely true, the reality is that there are a few hoops to jump through to ensure SVGs scale predictably across all browsers. </p>
+			<p class="body">In Responsive Web Design, we often want graphics to stretch or shrink to fit the width of a text container. With bitmap images, this is easy. Just set the width of the <span class="Literal-fc">img</span> to <span class="Literal-fc">100%</span>, and its height is set to <span class="Literal-fc">auto</span> by default. The browser automatically calculates the auto height based on the width you specify and determines the <span class="FirstTerm">aspect ratio</span> (the ratio of its width to height) of the image based on its dimensions in pixels.  That allows the image to scale proportionally, without being stretched or distorted.</p>
+			<p class="body">With SVG, it’s a little more complicated. First, you have to give your graphic an explicit aspect ratio. SVGs can be drawn at any size, and do not have intrinsic aspect ratios by default. Second (in some cases), you have to work around browser bugs involving automatic height calculations.</p>
+			<h2 class="HeadB">The Viewport and Viewbox</h2>
+			<p class="body">To understand how SVGs scale, you need to have a good grasp of the SVG viewport and its viewbox. <a id="_idIndexMarker4552"></a>The <span class="FirstTerm">viewport</span>, defined by the <a id="_idIndexMarker4553"></a><a id="_idIndexMarker4554"></a><a id="_idIndexMarker4555"></a><a id="_idIndexMarker4556"></a><span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes on the <span class="Literal-fc">svg</span> element (see <span class="Xref">Note</span>), is like a window through which you can see the drawing area. You can think of the viewport as a little browser window (which we’ve also been referring to as the “viewport” throughout this book) or an <span class="Literal-fc">iframe</span> element displaying an HTML document. Just as there is no guarantee that the <em class="Emphasis">entire</em> HTML document will fit inside the browser window or iframe, there is no guarantee that the entire SVG drawing will fit perfectly within its viewport. It might be smaller; it might be bigger and get cropped off. The dimensions of the drawing space (also <a id="_idIndexMarker4557"></a>called <span class="FirstTerm">user space</span>) and the viewport dimensions are independent of one another.</p>
+			<div>
+				<div id="_idContainer1639" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">When the SVG is embedded with <span class="Literal-Sidebar">img</span>, <span class="Literal-Sidebar">object</span>, or <span class="Literal-Sidebar">iframe</span>, the <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes on those elements set up the viewport size.</p>
+				</div>
+			</div>
+			<p class="body">Earlier in this chapter, we saw that the viewport uses a set of coordinates (the <span class="FirstTerm">viewport coordinate system</span>) <a id="_idIndexMarker4558"></a><a id="_idIndexMarker4559"></a>that start at 0 in the top-left corner and increase to the right and downward. The drawing space has its own set of coordinates, <a id="_idIndexMarker4560"></a>the <span class="FirstTerm">user coordinate system</span>, which is established with the <span class="Literal-fc">viewBox</span> attribute in the <span class="Literal-fc">svg</span> element and works the same way. This<a id="_idIndexMarker4561"></a><a id="_idIndexMarker4562"></a><a id="_idIndexMarker4563"></a> <span class="Literal-fc">viewBox</span> attribute is the key to making responsive scaling possible while preserving the aspect ratio of the drawing. </p>
+			<p class="body">The syntax for the <span class="Literal-fc">viewBox</span> attribute is as follows:</p>
+			<pre class="CodeFirst">viewBox="<span class="Replaceable">x y width height</span>"</pre>
+			<p class="body">The x and y values determine the position of the top-left corner of the viewbox within the viewport. The <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes give it dimensions and establish its aspect ratio. Values may be separated by space characters, as shown, or by commas. The x and y coordinates may have negative values, but width and height must always be positive integers.</p>
+			<p class="body">The SVG in this example has both its viewport (<span class="Literal-fc">width</span> and <span class="Literal-fc">height</span>) and its viewbox (<span class="Literal-fc">viewBox</span>) <a id="_idIndexMarker4564"></a>set to 400×500 pixels:</p>
+			<pre class="CodeFirst">&lt;svg <code class="CodeColor">width="400" height="500" viewBox="0 0 400 500"</code>&gt;<br/><span class="Code-Comment">  &lt;!-- drawing content here --&gt;</span><br/>&lt;/svg&gt;</pre>
+			<p class="body">The viewbox matches the viewport in this example (this is the default behavior if <span class="Literal-fc">viewBox</span> is omitted), but let’s see what happens when we change the viewbox dimensions. Keeping the viewport the same size, we can reduce the size of the viewbox by half (<span class="Literal-fc">viewBox="0 0 200 250"</span>). The result is the drawing scales up in the viewport by twice its size (<span class="Xref-Figure">Figure 25-16</span>). The two coordinate systems (user and viewport), which are the same by default, now have different scales: one user unit is now equal to two viewport units. The point of this example is merely to demonstrate that the dimensions and coordinate systems of the viewport and the viewbox work independently of one another and can be used to adjust scale.</p>
+			<div>
+				<figure id="_idContainer1641" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2516_viewbox.png" alt="" width="1321" height="1004"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-16.</span> The viewport (<span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span>) and the viewbox (<span class="Literal-Sidebar">viewBox</span>).</figcaption>
+				</figure>
+			</div>
+			<p class="body">I could fill half a chapter describing the full capabilities and effects of the <span class="Literal-fc">viewBox</span> attribute. I want you to know everything about it, but for the sake of space, I will refer you to this wonderful tutorial by Sara Soueidan: “Understanding SVG Coordinate Systems and Transformations (Part 1)—The viewport, viewBox, and preserveAspectRatio” (<a href="http://www.sarasoueidan.com/blog/svg-coordinate-systems/"><span class="URL-Email">www.sarasoueidan.com/blog/svg-coordinate-systems/</span></a>). You will also find thorough explanations in the SVG books recommended at the end of the chapter.</p>
+			<p class="body">For the purposes of this responsive SVG discussion, however, just keep in mind that the <span class="Literal-fc">viewBox</span> attribute is the key to establishing the width and height and the resulting user coordinate system of the SVG drawing itself, independent of the viewport “window” it will be displayed in.</p>
+			<h2 class="HeadB">The preserveAspectRatio Attribute</h2>
+			<p class="body">The <span class="Literal-fc">preserveAspectRatio</span><span class="Literal-fc"><a id="_idIndexMarker4565"></a><a id="_idIndexMarker4566"></a></span> attribute in the <span class="Literal-fc">svg</span> element is responsible for making sure the drawing maintains its aspect ratio, so it is important to our goal of creating a proportional responsive SVG. Conveniently, it is turned on by default, which means you don’t need to include it if that is your desired effect. Setting it to <span class="Literal-fc">none</span> means you can stretch and squish the drawing however you like, just as you can a bitmapped image. </p>
+			<p class="body">The <span class="Literal-fc">preserveAspectRatio</span> attribute also takes keyword values for how the viewbox should be aligned in its viewport. They work a lot like <a id="_idIndexMarker4567"></a>percentage values for the <span class="Literal-fc">background-image-position</span> CSS property. </p>
+			<pre class="CodeFirst">&lt;svg viewBox="0 0 300 200"  <code class="CodeColor">preserveAspectRatio="xMaxYMax meet"</code>&gt;</pre>
+			<p class="body">In this example, <span class="Literal-fc">xMaxYMax</span> places the viewbox all the way to the right and against the bottom axis of the viewport  (“Max” is equivalent to 100%). The <span class="Literal-fc">meet</span> keyword says to size it until it meets either the height or the width of the viewport (similar to <span class="Literal-fc">contain</span> for background images). The alternative is <span class="Literal-fc">slice</span>, which sizes the drawing so that it covers the entire viewport, even if some of the drawing is cut off (like <span class="Literal-fc">cover</span> for background images).</p>
+			<p class="body">Again, I recommend you get to know the capabilities of <span class="Literal-fc">preserveAspectRatio</span> on your own, but for now, know that it is the attribute that does the work of keeping the aspect ratio intact, even if we take advantage of the default setting and don’t include it explicitly.</p>
+			<p class="body">Now that you have some familiarity with the SVG scaling mechanisms at work behind the scenes, let’s look at the techniques for making SVGs in web pages scale proportionally within a changing container size.</p>
+			<h2 class="HeadB">Responsive SVGs Embedded with img and object</h2>
+			<p class="body">If you embed your SVG in the source document with the <span class="Literal-fc">img</span> or <span class="Literal-fc">object</span> elements, the process for making it scale automatically is pretty straightforward.</p>
+			<p class="body">First, in the SVG file itself, make sure the <span class="Literal-fc">svg</span> element includes the <span class="Literal-fc">viewBox</span> attribute to establish the dimensions of the drawing. By default, the aspect ratio will be preserved even if you don’t include the <span class="Literal-fc">preserveAspectRatio</span> attribute. If you want the graphic to completely fill the width of its container, omit the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes for the <span class="Literal-fc">svg</span> element because they default to 100%, which is the behavior we are after (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer1642" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes should be included when you want to set an initial size for the SVG, such as for icons that should stay icon-sized regardless of the layout. </p>
+				</div>
+			</div>
+			<p class="body">Now let’s look at the <span class="Literal-fc">img</span> or <span class="Literal-fc">object</span> element that embeds it. The width and height applied to the embedding element determines the size at which the SVG appears in the layout. Because <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> properties are <span class="Literal-fc">auto</span> by default, if you omit them, the dimensions of the SVG (100%) will be used. If you specify just <span class="Literal-fc">width</span> or just <span class="Literal-fc">height</span>, the browser uses the aspect ratio of the viewbox to calculate the unspecified dimension. </p>
+			<p class="body">Relying on the default sizing of the <span class="Literal-fc">img</span> or <span class="Literal-fc">object</span> elements works in current browsers, but you’ll get better results in older browsers (particularly Internet Explorer; see <span class="Xref">Warning</span>) if you explicitly set the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> of the embedding element. For example:</p>
+			<pre class="CodeFirst">img {<br/>  <code class="CodeColor">width: 100%;<br/>  height: auto;</code><br/>}</pre>
+			<div>
+				<div id="_idContainer1643" class="note">
+					<h5 class="WarningHeader">warning</h5>
+					<p class="note">When <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> values for the embedding object are omitted, Internet Explorer makes the SVG fill the container width, but gives it a height of 150 pixels. The HTML5 specification defines the default size of embedded media such as <span class="Literal-Sidebar">img</span>, <span class="Literal-Sidebar">object</span>, and <span class="Literal-Sidebar">iframe</span><span class="Literal-Sidebar"><a id="_idIndexMarker4568"></a></span> <a id="_idIndexMarker4569"></a><a id="_idIndexMarker4570"></a>elements to be 300 pixels wide by 150 pixels high. So IE’s 150-pixel height on SVGs is not entirely random; they honored the <span class="Literal-Sidebar">height</span> value from the HTML5 spec.</p>
+				</div>
+			</div>
+			<p class="body">This approach leaves nothing to chance. The result is an SVG file with its default width and height of 100% filling an <span class="Literal-fc">img</span> element set to fill the width of its container proportionally.</p>
+			<p class="body">In the following example, I embedded an SVG with an <span class="Literal-fc">img</span> element in a <span class="Literal-fc">div</span> that is always set to 50% of the browser window width, as might occur in a responsive layout (<span class="Xref-Figure">Figure 25-17</span>). Note that there are no <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes in the SVG source, and the <span class="Literal-fc">viewBox</span> defines the aspect ratio. As the window gets larger and smaller, the SVG scales with it, maintaining that crisp, vector quality at all scales. An outline on the <span class="Literal-fc">div</span> reveals its boundaries, and I’ve set its side margins to <span class="Literal-fc">auto</span> to keep it centered in the browser window:</p>
+			<p class="body"><span class="FigureLabel">The SVG markup </span><span class="Filename">(</span><span class="Filename">flowers.svg)</span></p>
+			<pre class="CodeFirst">&lt;?xml version="1.0" encoding="utf-8"?&gt;<br/>&lt;svg version="1.1" <code class="CodeColor">viewBox="0 0 160 120"</code>&gt;<br/><span class="Code-Comment">  &lt;!-- flower drawing --&gt;</span><br/> &lt;/svg&gt;</pre>
+			<p class="body"><span class="FigureLabel">The HTML markup</span></p>
+			<pre class="CodeFirst">&lt;div class="container"&gt;<br/><code class="CodeColor">  </code>&lt;img <code class="CodeColor">src="flowers.svg"</code> alt="flowers"&gt;<br/>&lt;/div&gt;  </pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">.container {<br/>   <code class="CodeColor">width: 50%; </code><br/>  outline: 1px solid gray;<br/>   margin: 2em auto; <br/>} <br/><br/><span class="Code-Comment">/* IE fix */</span> <br/>img {<br/>    width: 100%;<br/>  height: auto;<br/>}</pre>
+			<div>
+				<figure id="_idContainer1645" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2517_imgscale.png" alt="" width="1321" height="579"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-17.</span> The SVG scales automatically and proportionally with the size of its container.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Responsive Inline SVGs</h2>
+			<p class="body">I’ll just let you know up front that preserving the aspect ratio of inline SVGs placed in the source with the <span class="Literal-fc">svg</span> element is not as simple as the previous example. You need to employ an interesting hack to get many browsers to comply. I will explain the technique here as efficiently as possible.</p>
+			<p class="body">First, as with embedded media, include the <span class="Literal-fc">viewBox</span> attribute and omit the <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes on the <span class="Literal-fc">svg</span> element if you want the width to be 100% of the container (taking advantage of their default values).  </p>
+			<p class="body">In the absence of a style rule specifically overriding the <span class="Literal-fc">svg</span> defaults, the width will be 100%, and its aspect ratio will be preserved. Current browser versions support this as expected—scaling the SVG in its container proportionally. However, older browsers (including all versions of Internet Explorer) do not, so we need to employ the “padding hack” to maintain the proportions of the inline SVG.</p>
+			<p class="body">The padding hack is a little tricky, but the steps are as follows (<span class="Xref-Figure">Figure 24-18</span>):</p>
+			<ol>
+				<li class="ListNumber" value="1">Put the <span class="Literal-fc">svg</span> in a container <span class="Literal-fc">div</span>.</li>
+				<li class="ListNumber">Set the <span class="Literal-fc">height</span> of that <span class="Literal-fc">div</span> to 0 or 1 pixel.</li>
+				<li class="ListNumber">Apply an amount of padding to the top of the <span class="Literal-fc">div</span> that gives it the same aspect ratio as the SVG (there is a bit of math involved here).</li>
+				<li class="ListNumber">Once the <span class="Literal-fc">div</span> is expanded to the proper proportions with padding, absolutely position the <span class="Literal-fc">svg</span> element in the top-left corner of the container <span class="Literal-fc">div</span>.</li>
+			</ol>
+			<div>
+				<figure id="_idContainer1647" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2518_paddinghack.png" alt="" width="1321" height="1163"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-18.</span> How the padding hack works to make inline SVGs maintain their aspect ratio on all browsers that support SVG.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1648" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">Both the padding hack and normal aspect ratio auto-height scaling can break inside Grid and Flexbox layouts. As of early 2018, there are important differences between browsers, so be sure to test your designs thoroughly.</p>
+				</div>
+			</div>
+			<p class="body">It’s a little convoluted (they don’t call it a “hack” for nothing!), but it works. The foundation of this hack is the defined behavior of <a id="_idIndexMarker4571"></a><a id="_idIndexMarker4572"></a>padding. Padding, when specified in percentage values, is always based on the <em class="Emphasis">width</em> of the element (even top and bottom values). That means that as the width of the container <span class="Literal-fc">div</span> changes, so too does the amount of padding, always maintaining the same relationship. That sets up a constant aspect ratio for the SVG to fill.</p>
+			<p class="body">Here’s an example that shows how the padding hack works: </p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;div class="container"&gt;<br/>  &lt;svg version="1.1" viewBox="0 0 160 120"&gt;   <br/><span class="Code-Comment">  /* drawing contents */</span> <br/>  &lt;/svg&gt;<br/>&lt;/div&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">.container {<br/>  width: 100%;<br/>  height: 0;<br/>  <code class="CodeColor">padding-top: 75%; </code><span class="Code-Comment">/* (120/160)*100% */</span><code class="CodeColor"> </code><br/>  position: relative;<br/>}<br/>svg {<br/>  <code class="CodeColor">position: absolute;<br/>  top: 0;<br/>  left: 0;</code><br/>  width: 100%;<br/>  height: 100%;<br/>}</pre>
+			<p class="body">In the markup, you see the <span class="Literal-fc">svg</span> element in its <span class="Literal-fc">#container div</span> and its viewbox dimensions set to 160 × 120 pixels. The width of the container is set to 100% (it could also be set to a different percentage) with a 0 height. The <span class="Literal-fc">padding-top</span> declaration expands the <span class="Literal-fc">div</span> to the proper aspect ratio, which is calculated by dividing the height of the SVG by its width, and multiplying the result by the percentage width of the <span class="Literal-fc">div</span>:</p>
+			<pre class="CodeFirst">(<span class="Replaceable">svg-height</span> / <span class="Replaceable">svg-width</span>) * <span class="Replaceable">div-width</span>%</pre>
+			<p class="body">In our example, the padding is set to 75% [(120 / 160) × 100% = 75%], which matches the 4:3 aspect ratio of the SVG. Notice also that the container is relatively positioned to create the positioning context for the <span class="Literal-fc">svg</span> child element (do you remember turning elements into positioning contexts with <span class="Literal-fc">position: relative</span> from <a href="lwd5_chapter15.xhtml#_idTextAnchor204"><span class="Xref">Chapter </span><span class="Xref">15</span><span class="Xref">, Floating and Positioning</span></a>?)</p>
+			<h2 class="HeadB">Additional Resources</h2>
+			<p class="body">This section cut to the chase and provided just what you need to know to make SVGs scale in responsive layouts. Of course, there is a lot more to the story, so I recommend these articles for additional background information and techniques:</p>
+			<ul>
+				<li class="ListBullet">“How to Scale SVG” by <a id="_idIndexMarker4573"></a>Amelia Bellamy-Royds for <a id="_idIndexMarker4574"></a>CSS-Tricks (<a href="http://css-tricks.com/scale-svg/"><span class="URL-Email">css-tricks.com/scale-svg/</span></a>)</li>
+				<li class="ListBullet">“Making SVGs Responsive with CSS” by <a id="_idIndexMarker4575"></a>Sara Soueidan for Codrops (<a href="http://tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/"><span class="URL-Email">tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/</span></a>)</li>
+			</ul>
+			<p class="body">To provide an even more customized SVG experience in your user interface, go beyond simple scaling and change the design of the icon with an adaptive SVG (see the sidebar <span class="Xref">“Adaptive Icons”</span>).</p>
+			<div>
+				<div id="_idContainer1651" class="sidebar">
+					<h5 class="SidebarTitle">Adaptive Icons</h5>
+					<p class="SidebarBody">The problem <a id="_idIndexMarker4576"></a><a id="_idIndexMarker4577"></a>with simply scaling SVGs (or any image, really) smaller is that details may get lost at small sizes. One approach to solving that problem is to provide simplified versions of icons or logos when the image is very small. Adaptive (or responsive) icons use media queries to test the viewport size and some clever styling in the SVG to deliver the appropriate amount of detail at various sizes. <span class="Xref-Figure">Figure 25-19</span> shows a set of icons created by Joe Harrison, with an explanation at <a href="http://responsiveicons.co.uk/"><span class="URL-Email--Sidebar-">responsiveicons.co.uk</span></a>.</p>
+					<p class="SidebarBody">There are several methods for achieving the effect. Joe’s house icon was done with an SVG <a id="_idIndexMarker4578"></a>sprite. You could also reveal and hide groups of drawing elements in the SVG based on viewport size. These articles provide some how-tos:</p>
+					<ul>
+						<li class="SidebarListBullet">“Making SVGs Responsive with CSS” by Sara Soueidan includes a section at the end on making adaptive SVGs with media queries  (<a href="http://tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/"><span class="URL-Email--Sidebar-">tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/</span></a>).</li>
+						<li class="SidebarListBullet">“Rethinking Responsive SVG” by Ilya Pukhalski outlines several adaptive SVG approaches (<a href="http://www.smashingmagazine.com/2014/03/rethinking-responsive-svg/"><span class="URL-Email--Sidebar-">www.smashingmagazine.com/2014/03/rethinking-responsive-svg/</span></a>).</li>
+					</ul>
+					<div>
+						<figure id="_idContainer1650" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_2519_respicons.png" alt="" width="948" height="231"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 25-19.</span> An example of adaptive icons by Joe Harrison.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h1 id="_idParaDest-228" class="HeadA"><a id="_idTextAnchor318"></a>Further SVG Exploration</h1>
+			<p class="body">Obviously, I could only scratch the surface of Scalable Vector Graphics in this chapter. When you are ready to use SVG on your site, you’ll have more brushing up to do. There are many volumes and online tutorials written about SVG, but these are the resources that helped me the most in my own exploration. I recommend them heartily. </p>
+			<ul>
+				<li class="ListBullet"><span class="Citation">SVG Essentials, 2nd Edition</span> by <a id="_idIndexMarker4579"></a>J. David Eisenberg and Amelia Bellamy-Royds (O’Reilly)</li>
+				<li class="ListBullet"><span class="Citation">Using SVG with CSS3 and HTML5</span> by Amelia Bellamy-Royds, <a id="_idIndexMarker4580"></a>Kurt Cagle, and <a id="_idIndexMarker4581"></a>Dudley Storey (O’Reilly)</li>
+				<li class="ListBullet"><span class="Citation">Practical SVG</span> by <a id="_idIndexMarker4582"></a><a id="_idIndexMarker4583"></a>Chris Coyier (A Book Apart)</li>
+				<li class="ListBullet">Developer and SVG expert Sara Soueidan has written many useful SVG articles on her blog at <a href="http://www.sarasoueidan.com"><span class="URL-Email">www.sarasoueidan.com</span></a>.</li>
+			</ul>
+			<h1 id="_idParaDest-229" class="HeadA"><a id="_idTextAnchor319"></a>Test Yourself </h1>
+			<p class="body">I just threw a lot of SVG info at you. Try taking this quiz to see what stuck. The answers appear in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<p class="body">The first four questions refer to this SVG element:</p>
+			<pre class="CodeFirst">&lt;rect x="0" y="0" width="600" height="400" /&gt;</pre>
+			<ol>
+				<li class="ListNumber" value="1">What is <span class="Literal-fc">rect</span>?</li>
+				<li class="ListNumber">What do <span class="Literal-fc">x</span> and <span class="Literal-fc">y</span> do?</li>
+				<li class="ListNumber">What do <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> do?</li>
+				<li class="ListNumber">Explain the <span class="Literal-fc">/</span> character.<p class="body">Now back to our regularly scheduled questions:</p></li>
+				<li class="ListNumber">What is the primary difference between SVG clipping and masking?</li>
+				<li class="ListNumber">Name three ways to reduce the file size of an SVG.</li>
+				<li class="ListNumber">What is the most widely supported version of SVG? <ol><li class="ListNumber_Indent">SVGTiny</li><li class="ListNumber_Indent">SVG 1.1</li><li class="ListNumber_Indent">SVG 2</li><li class="ListNumber_Indent">SVG, Electric Boogaloo</li></ol></li>
+				<li class="ListNumber">Name three of the five ways you can style elements in an SVG.</li>
+				<li class="ListNumber">Which of the following can be used to animate elements in an SVG?<ol><li class="ListNumber_Indent" value="1">Special SVG elements for animation</li><li class="ListNumber_Indent">JavaScript</li><li class="ListNumber_Indent">CSS transitions and keyframe animation</li><li class="ListNumber_Indent">All of the above</li></ol></li>
+			</ol>
+			<h1 id="_idParaDest-230" class="HeadA"><a id="_idTextAnchor320"></a>And...We’re Done!</h1>
+			<p class="body"><em class="Emphasis">Hey!</em> Here we are at the end of the book! I hope that you’ve enjoyed this detailed tour through HTML, CSS, JavaScript, and image production. I know the content here is pretty dense, but remember that you don’t have to learn it all at once, and you don’t need to keep it all in your head. Heck, I <em class="Emphasis">wrote</em> this book, and I still go back to it to look up attributes, properties, and values. With practice, however, a lot of it will become second-nature to you. </p>
+			<p class="body">I hope that you will find plenty of opportunities to put your new knowledge to use. Best of luck in your web endeavors!</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1302" class="ch19">
+			<p id="_idParaDest-174" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor242"></a>19. More CSS Techniques</p>
+		</div>
+		<div id="_idContainer1303" class="ch19">
+			<h1 class="chapterLabel">19</h1>
+		</div>
+		<div id="_idContainer1304" class="ch19">
+			<h1 class="chapterTitle"><a id="_idTextAnchor243"></a><a id="_idTextAnchor244"></a>More CSS Techniques</h1>
+		</div>
+		<div id="_idContainer1305" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">Styling forms</p>
+			<p class="chapterContents">Style properties for tables</p>
+			<p class="chapterContents">Using a CSS reset or normalizer</p>
+			<p class="chapterContents">Image replacement techniques</p>
+			<p class="chapterContents">CSS sprites</p>
+			<p class="chapterContents">CSS feature detection</p>
+		</div>
+		<div id="_idContainer1339" class="ch19">
+			<p class="body">By now you have a solid foundation in writing style sheets. You can style text and element boxes, float and position objects, create responsive page layouts using Flexbox and Grid, and even add subtle animation effects to your designs. But there are a few more common techniques that you should know about.</p>
+			<p class="body">If you look over at the <span class="Xref">“In This Chapter”</span> list, you’ll see that this chapter is a grab bag of sorts. It starts with general approaches to styling forms and the special properties for table formatting. We’ll cover other tricks of the trade including clearing out browser styles with a CSS reset, using images in place of text (only when necessary!), reducing the number of server requests with CSS sprites, and checking whether a browser supports a particular CSS feature. Let’s dig in!</p>
+			<h1 id="_idParaDest-175" class="HeadA"><a id="_idTextAnchor245"></a>Styling Forms</h1>
+			<p class="body">Web forms <a id="_idIndexMarker3547"></a>can look a bit hodgepodge right out of the box with no styles applied (<span class="Xref-Figure">Figure 19-1</span>), so you’ll certainly want to give them a more professional appearance using CSS. Not only do they look better, but studies show that forms are much easier and faster to use when the labels and inputs are lined up nicely. In this section, we’ll look at how various form elements can be styled.</p>
+			<div>
+				<figure id="_idContainer1307" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1901_badform.png" alt="" width="1237" height="708"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-1.</span><span class="FigureLabel"> </span>Forms tend to be ugly and difficult to use with HTML alone. Don’t worry—this one gets spiffed up in <span class="Xref-Figure">Figure 19-2</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Now, I’m not going to lie: styling forms is somewhat of a dark art because of the variety of ways in which browsers handle form elements. And for really slick, custom forms, you will generally need to turn to JavaScript. But the efforts are well worth it to improve usability.</p>
+			<p class="body">There aren’t any special CSS properties for styling forms; just use the standard color, background, font, border, margin, and padding properties that you’ve learned in the previous chapters. The following is a quick rundown of the types of things you can do for each form control type.</p>
+			<p class="ListVariableTerm">Text inputs (<span class="Literal-fc">text</span>, <span class="Literal-fc">password</span>, <span class="Literal-fc">email</span>, <span class="Literal-fc">search</span>, <span class="Literal-fc">tel</span>, <span class="Literal-fc">url</span>)</p>
+			<p class="ListVariable">Change <a id="_idIndexMarker3548"></a><a id="_idIndexMarker3549"></a><a id="_idIndexMarker3550"></a><a id="_idIndexMarker3551"></a><a id="_idIndexMarker3552"></a><a id="_idIndexMarker3553"></a>the appearance of the box itself with <span class="Literal-fc">width</span>, <span class="Literal-fc">height</span>, <span class="Literal-fc">background-color</span>, <span class="Literal-fc">background-image</span>, <span class="Literal-fc">border</span>, <span class="Literal-fc">border-radius</span>, <span class="Literal-fc">margin</span>, <span class="Literal-fc">padding</span>, and <span class="Literal-fc">box-shadow</span>. You can also style the text inside the entry field with the <span class="Literal-fc">color</span> property and the various font properties.</p>
+			<p class="ListVariableTerm">The <span class="Literal-fc">textarea</span> element</p>
+			<p class="ListVariable">This <a id="_idIndexMarker3554"></a>can be styled in the same way as text-entry fields. <span class="Literal-fc">textarea</span> elements use a monospace font by default, so you may want to change that to match your other text-entry fields. Because there are multiple lines, you may also specify the line height. Note that some browsers display a handle on the lower-right corner of the <span class="Literal-fc">textarea</span> box that makes it resizable, but you can turn it off by adding the style <span class="Literal-fc">resize: none</span>. Text areas display as <span class="Literal-fc">inline-block</span> by default, but you can change them to <span class="Literal-fc">block</span> with the <span class="Literal-fc">display</span> property.</p>
+			<p class="ListVariableTerm">Button inputs (<span class="Literal-fc">submit</span>, <span class="Literal-fc">reset</span>, <span class="Literal-fc">button</span>) </p>
+			<p class="ListVariable">Apply <a id="_idIndexMarker3555"></a><a id="_idIndexMarker3556"></a><a id="_idIndexMarker3557"></a><a id="_idIndexMarker3558"></a><a id="_idIndexMarker3559"></a>any of the box properties to submit and reset buttons (<span class="Literal-fc">width</span>, <span class="Literal-fc">height</span>, <span class="Literal-fc">border</span>, <span class="Literal-fc">background</span>, <span class="Literal-fc">margin</span>, <span class="Literal-fc">padding</span>, and <span class="Literal-fc">box-shadow</span>). It is worth noting that buttons are set to the <a id="_idIndexMarker3560"></a><a id="_idIndexMarker3561"></a>border-box sizing model by default. Most browsers also add a bit of padding by default, which can be overridden by your own padding value. You can also style the text that appears on the buttons.</p>
+			<p class="ListVariableTerm">Radio and checkbox buttons</p>
+			<p class="ListVariable">The<a id="_idIndexMarker3562"></a><a id="_idIndexMarker3563"></a><a id="_idIndexMarker3564"></a> <a id="_idIndexMarker3565"></a>best practice for radio and checkbox buttons is to leave them alone. If you are tenacious, you can use JavaScript to change the buttons altogether. </p>
+			<p class="ListVariableTerm">Drop-down and select menus (<span class="Literal-fc">select</span>)</p>
+			<p class="ListVariable">You can specify <a id="_idIndexMarker3566"></a><a id="_idIndexMarker3567"></a>the width and height for a <span class="Literal-fc">select</span> element, but note that it uses the border-box box-sizing model by default. Some browsers allow you to apply <span class="Literal-fc">color</span>, <span class="Literal-fc">background-color</span>, and font properties to <span class="Literal-fc">option</span> elements, but it’s probably best to leave them alone to be rendered by the browser and operating system.</p>
+			<p class="ListVariableTerm">Fieldsets and legends</p>
+			<p class="ListVariable">You can treat a <a id="_idIndexMarker3568"></a><span class="Literal-fc">fieldset</span> as any other element box, adjusting the border, background, margin, and padding. Turning the border off entirely is one way to keep your form looking tidy while preserving semantics and accessibility. By default, <a id="_idIndexMarker3569"></a><span class="Literal-fc">legend</span> elements are above the top border of the <span class="Literal-fc">fieldset</span>, and, unfortunately, browsers make them very difficult to change. Some developers use a <span class="Literal-fc">span</span> or <span class="Literal-fc">b</span> element within the <span class="Literal-fc">legend</span> and apply styles to the contained element for more predictable results. Some choose to hide it in a way that it will still be read by screen readers (<span class="Literal-fc">legend {width: 1px; height: 1px; overflow: hidden;}</span>).</p>
+			<div>
+				<div id="_idContainer1308" class="note">
+					<h5 class="WarningHeader">Heads up</h5>
+					<p class="note">The following form elements cannot be changed with CSS alone: inputs for range, color, date <a id="_idIndexMarker3570"></a><a id="_idIndexMarker3571"></a><a id="_idIndexMarker3572"></a><a id="_idIndexMarker3573"></a><a id="_idIndexMarker3574"></a>pickers, file picker, <span class="Literal-Sidebar">option</span>, <span class="Literal-Sidebar">optgroup</span>, <span class="Literal-Sidebar">datalist</span>, <span class="Literal-Sidebar">progress</span>, and <span class="Literal-Sidebar">meter</span>. It is possible to customize them by using JavaScript, which is beyond the scope of this book.</p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer1309" class="sidebar">
+					<h5 class="SidebarTitle">Coordinated Fonts</h5>
+					<p class="SidebarBody">By default, a browser may use different fonts at different sizes for various input types. For example, it may use the system font on buttons and a constant-width font like Courier for <span class="Literal-Sidebar">textarea</span> inputs. If you’d like all inputs to use the same font as the surrounding text on the page, you can force the form elements to inherit font settings: </p>
+					<pre class="SidebarCodeFirst">button, input, select, textarea {</pre>
+					<pre class="SidebarCode"><code class="CodeColor">  font-family: inherit;</code></pre>
+					<pre class="SidebarCode"><code class="CodeColor">  font-size: 100%</code></pre>
+					<pre class="SidebarCode">}</pre>
+				</div>
+			</div>
+			<p class="body">Now we <a id="_idIndexMarker3575"></a>know what we can do to style individual controls, but the grander goal is to make the form more organized and easier to use. <span class="Xref-Figure">Figure 19-2</span> shows the “after” shots of the unstyled form from <span class="Xref-Figure">Figure 19-1</span>. There color, font, border, and spacing changes, and the labels and input elements are nicely aligned as well. And not only that, the form is responsive! I’ve used Flexbox to make the labels stack on top of their respective inputs and fieldsets on narrow screens so there is no wasted space. </p>
+			<div>
+				<figure id="_idContainer1311" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1902_formafter.png" alt="" width="1321" height="1100"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-2.</span><span class="FigureLabel"> </span>This responsive form uses Flexbox to allow text inputs to resize and to shift the position of the labels on small screens.</figcaption>
+				</figure>
+			</div>
+			<p class="body">If you’d like to take a look at the actual markup and styles, the document <span class="Filename">sneakerform.html</span> is available with the materials for this chapter (<a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email">learningwebdesign.com/5e/materials</span></a>). I’ve left careful and thorough comments throughout that explain exactly what each style is for. My approach to styling the Custom Sneaker Order Form can be summarized as follows:</p>
+			<ul>
+				<li class="ListBullet">Set the <span class="Literal-fc">box-sizing</span> to <span class="Literal-fc">border-box</span> for the whole document. This makes sizing form elements more predictable.</li>
+				<li class="ListBullet">Give the <span class="Literal-fc">form</span> a <span class="Literal-fc">max-width</span> (so it can shrink to fit smaller viewports) and optional decorative styling like the green background and rounded border in the example.</li>
+				<li class="ListBullet">Get rid of the bullets and spacing around the unordered lists that were used to mark up the form semantically.</li>
+				<li class="ListBullet">Turn list items (each containing a label and some sort of input or fieldset) into flex containers by setting their <span class="Literal-fc">display</span> to <span class="Literal-fc">flex</span> (see <span class="Xref">Note</span>). Turn on wrapping, which is what allows the input to shift below the labels on small screens. <div id="_idContainer1312" class="note"><h5 class="noteHeader">Note</h5><p class="note">If you don’t want to use Flexbox, you can line up labels by using floats. Set labels <a id="_idIndexMarker3576"></a>to <span class="Literal-Sidebar">display: block</span>, give them a width and height, and float them to the left. You need to clear the <span class="Literal-Sidebar">li</span> elements (<span class="Literal-Sidebar">clear: both</span>) so they start below the previous floated pair.</p></div></li>
+				<li class="ListBullet">Give the labels fixed widths (<span class="Literal-fc">flex: 0 0 8em;</span>) so they are sized the same regardless of screen size. Because labels on checkboxes and radio buttons work differently, set them to override the 8em width (<span class="Literal-fc">flex: 1 1 auto;</span>).</li>
+				<li class="ListBullet">Allow the <span class="Literal-fc">input</span>, <span class="Literal-fc">textarea</span>, and <span class="Literal-fc">fieldset</span>s to grow to fill the remaining space (<span class="Literal-fc">flex: 1 1 20em;</span>). When the screen is too narrow for them to fit next to the labels, they wrap below. </li>
+				<li class="ListBullet">Set the text input fields’ <span class="Literal-fc">font-family</span> to <span class="Literal-fc">inherit</span> so they use the same font as the rest of the document instead of whatever font the browser uses for forms. Text inputs also get heights, borders, and a little padding.</li>
+				<li class="ListBullet">Fieldsets and legends are tricky to style. Turn off the border and padding on the <span class="Literal-fc">fieldset</span>, and then hide the <span class="Literal-fc">legend</span> in a way that it will still be read aloud before each checkbox or radio button option. Because there is both a label and a legend for each fieldset, I made sure they are not exactly the same so they won’t be redundant when read aloud by a screen reader. The legend should be shorter because it is repeated for each option.</li>
+				<li class="ListBullet">The submit button has a rounded border, background color, and font styling. Set the side margins to <span class="Literal-fc">auto</span> so it will always be centered in the width of the form.</li>
+			</ul>
+			<p class="body">This is a very simple example, but it should give you a general idea of how forms can be styled. You may also want to add highlight styles for interactivity, such as <span class="Literal-fc">:hover</span> styles on the buttons and <span class="Literal-fc">:focus</span> styles for text inputs when they are selected. </p>
+			<h1 id="_idParaDest-176" class="HeadA"><a id="_idTextAnchor246"></a>Styling Tables</h1>
+			<p class="body">Like any other text content on a web page, content within table cells can be formatted with various font, text, and background properties. </p>
+			<p class="body">You will probably <a id="_idIndexMarker3577"></a>want to adjust the spacing in and around tables. To adjust the amount of space within a cell (<span class="FirstTerm">cell padding</span>), apply the <span class="Literal-fc">padding</span> property to the <span class="Literal-fc">td</span> or <span class="Literal-fc">th</span> element. Spacing between cells (<span class="FirstTerm">cell spacing</span>) is a little more complicated and is related to how CSS handles cell borders. CSS provides two methods for displaying borders between table cells: <span class="FirstTerm">separated</span> or <span class="FirstTerm">collapsed</span>. These options are specified with the table-specific <span class="Literal-fc">border-collapse</span> property with <a id="_idIndexMarker3578"></a><span class="Literal-fc">separate</span> and <span class="Literal-fc">collapse</span> values, respectively.</p>
+			<p class="RefNameCode-Left">border-collapse</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">separate</span> | <span class="prop-code">collapse</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">separate</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	table and inline-table elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<div>
+				<div id="_idContainer1313" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">In the past, cell padding and spacing were handled by the <span class="Literal-Sidebar">cellpadding</span> and <span class="Literal-Sidebar">cellspacing</span> attributes in the <span class="Literal-Sidebar">table</span> element, respectively, but they have been made obsolete in HTML5 because of their presentational nature. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Separated Borders</h2>
+			<p class="body">By default, <a id="_idIndexMarker3579"></a><a id="_idIndexMarker3580"></a>borders are separated, and a border is drawn on all four sides of each cell. The <span class="Literal-fc">border-spacing</span> property lets you specify the space between  cell borders. </p>
+			<p class="refNameCode">border-spacing</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">horizontal-length</span>  <span class="prop-replace">vertical-length</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	table and inline-table elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The values <a id="_idIndexMarker3581"></a>for <span class="Literal-fc">border-spacing</span> are two length measurements. The horizontal value comes first and applies between columns. The second measurement is applied between rows. If you provide one value, it will be used both horizontally and vertically. The default setting is 0, causing the borders to double up on the inside grid of the table (see <span class="Xref">Note</span>).</p>
+			<p class="body">The table in <span class="Xref-Figure">Figure 19-3</span> is set to <span class="Literal-fc">separate</span> with 15 pixels of space between columns and 5 pixels of space between rows. A purple border has been applied to the cells to make their boundaries clear.</p>
+			<div>
+				<div id="_idContainer1314" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Although the <span class="Literal-Sidebar">border-spacing</span> default is 0, browsers generally add 2 pixels of space for the obsolete <span class="Literal-Sidebar">cellspacing</span> attribute by default. If you want to see the borders double up, you need to set the <span class="Literal-Sidebar">cellspacing</span> attribute to 0 in the <span class="Literal-Sidebar">table</span> element.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1316" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1903_separated.png" alt="" width="1321" height="346"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-3.</span> The separated table border model.</figcaption>
+				</figure>
+			</div>
+			<p class="body">For tables with separated borders, you can indicate whether you want empty cells to display their backgrounds and borders by using the <span class="Literal-fc">empty-cells</span> property. For a cell to be “empty,” it may not contain any text, images, or non-breaking spaces.<a id="_idIndexMarker3582"></a> It may contain carriage returns and space characters.</p>
+			<p class="RefNameCode-Left">empty-cells</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">show</span> | <span class="prop-code">hide</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">show</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	table cell elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body"><span class="Xref-Figure">Figure 19-4</span> shows the previous separated table-border example with its empty cells (what would be Cell 14 and Cell 15) set to <span class="Literal-fc">hide</span>.</p>
+			<div>
+				<figure id="_idContainer1318" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1904_emptycells.png" alt="" width="1321" height="254"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-4.</span> Hiding empty cells with the <span class="Literal-Sidebar">empty-cells</span> property.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Collapsed Borders</h2>
+			<p class="body">In the<a id="_idIndexMarker3583"></a><a id="_idIndexMarker3584"></a><a id="_idIndexMarker3585"></a> collapsed border model, the borders of adjacent borders “collapse” so that only one of the borders is visible and the space is removed (<span class="Xref-Figure">Figure 19-5</span>). In the example, although each table cell has a 3-pixel border, the borders between cells measure a total of 3 pixels, not 6. In instances where neighboring cells have different border styles, a complicated pecking order is called in to determine which border will display, which you can read in the spec.</p>
+			<div>
+				<figure id="_idContainer1320" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1905_collapsed.png" alt="" width="1321" height="273"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-5.</span><span class="FigureLabel"> </span>The collapsed border model.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The advantage to using the collapsed table-border model is that you can style the borders for <span class="Literal-fc">tr</span>, <span class="Literal-fc">col</span>, <span class="Literal-fc">rowgroup</span>, and <span class="Literal-fc">colgroup</span> elements. With the separated model, you can’t. Strategic use of horizontal and vertical borders improves the readability of complicated tables, making the collapsed model an attractive choice. </p>
+			<div>
+				<div id="_idContainer1321" class="sidebar">
+					<h5 class="SidebarTitle">Pick a Side</h5>
+					<p class="SidebarBody">When you use the <span class="Literal-Sidebar">caption</span> element in a table, it will appear above the table by default. If you’d prefer it to be below the table, you can use the  <span class="Literal-Sidebar">caption-side</span> property to position it there.</p>
+					<p class="refNameCode">caption-side</p>
+					<p class="property"><span class="prop-label">Values:</span>  <span class="prop-code">top</span> | <span class="prop-code">bottom</span> </p>
+					<p class="property"><span class="prop-label">Default:</span>  <span class="prop-code">top</span></p>
+					<p class="property"><span class="prop-label">Applies to:</span>  table caption element</p>
+					<p class="property"><span class="prop-label">Inherits:</span>  yes</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Table Layout</h2>
+			<p class="RefNameCode-Left">table-layout</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">auto</span> | <span class="prop-code">fixed</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	table or inline-table elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The <span class="Literal-fc">table-layout</span> <a id="_idIndexMarker3586"></a>property allows authors to specify one of two methods of calculating the width of a table. The <span class="Literal-fc">fixed</span> value bases the table width on <span class="Literal-fc">width</span> values provided for the table, columns, or cells. The <span class="Literal-fc">auto</span> value bases the width of the table on the minimum width of the contents of the table. Auto layout may display nominally more slowly because the browser must calculate the default width of every cell before arriving at the width of the table.</p>
+			<div>
+				<div id="_idContainer1322" class="sidebar">
+					<h5 class="SidebarTitle">Table Display Properties</h5>
+					<p class="SidebarBody">CSS 2.1 includes a<a id="_idIndexMarker3587"></a><a id="_idIndexMarker3588"></a> number of values for the <span class="Literal-Sidebar">display</span> property that allow authors to attach table display behaviors to elements. The table-related <span class="Literal-Sidebar">display</span> values are <span class="Literal-Sidebar">table</span>, <span class="Literal-Sidebar">inline-table</span>, <span class="Literal-Sidebar">table-row-group</span>, <span class="Literal-Sidebar">table-header-group</span>, <span class="Literal-Sidebar">table-footer-group</span>, <span class="Literal-Sidebar">table-row</span>, <span class="Literal-Sidebar">table-column-group</span>, <span class="Literal-Sidebar">table-column</span>, <span class="Literal-Sidebar">table-cell</span>, and <span class="Literal-Sidebar">table-caption</span>.</p>
+					<p class="SidebarBody">The original intent for these values was to provide a mechanism for applying table display behaviors to XML languages that may not have elements like <span class="Literal-Sidebar">table</span>, <span class="Literal-Sidebar">tr</span>, or <span class="Literal-Sidebar">td</span> in their vocabularies. </p>
+					<p class="SidebarBody">In recent years, table display values have become another method for achieving page layout effects such as vertical centering and flexible column widths. CSS table layout may be useful as a fallback design for older browsers that do not support CSS Grid or Flexbox. Note that this is not the same as using table-based layout with HTML markup. With CSS table layout, the semantics of the source document stay intact. If you’d like to learn more, I recommend the article “Layout Secret #1: The CSS Table Property” by Massimo Cassandro (<a href="http://www.sitepoint.com/solving-layout-problems-css-table-property/"><span class="URL-Email--Sidebar-">www.sitepoint.com/solving-layout-problems-css-table-property/</span></a>). </p>
+					<p class="SidebarBody">Now that Flexbox and Grid are gaining momentum, I suspect the table layout methods will eventually go by the wayside.</p>
+				</div>
+			</div>
+			<p class="body">That covers basic form and table formatting. I know this is a beginner’s book, but in the next section, I’m going to introduce you to a few intermediate CSS techniques that may make your work easier and your pages faster.</p>
+			<h1 id="_idParaDest-177" class="HeadA"><a id="_idTextAnchor247"></a>A Clean Slate (Reset and Normalize.css)</h1>
+			<p class="body">As you know, browsers have their own built-in style sheets <a id="_idIndexMarker3589"></a>(called <span class="FirstTerm">user agent </span>style sheets) for rendering HTML elements. If you don’t supply styles for an <span class="Literal-fc">h1</span>, you can be certain that it will display as large, bold text with space above and below. But just how much larger and how much space may vary from browser to browser, giving inconsistent results. Furthermore, even if you do provide your own style sheet, elements in your document may be secretly inheriting certain styles from the user agent style sheets, causing unexpected results.</p>
+			<p class="body">There are two methods for getting a consistent starting point for applying your own styles: a CSS reset or normalize.css. They take different approaches, so one or the other may be the best solution for what you need to achieve.</p>
+			<h2 class="HeadB">CSS Reset</h2>
+			<p class="body">The older approach is a<a id="_idIndexMarker3590"></a><a id="_idIndexMarker3591"></a> <span class="FirstTerm">CSS reset</span>, a collection of style rules that overrides <em class="Emphasis">all</em> user agent styles and creates a starting point that is as neutral as possible. With this method, you need to specify all the font and spacing properties for every element you use. It’s a truly from-scratch starting point. </p>
+			<p class="body">The most popular reset was written by <a id="_idIndexMarker3592"></a>Eric Meyer (the author of too many CSS books to list). It is presented here, and I’ve also included a copy of it in the <span class="Filename">materials</span> folder for this chapter for your copy-and-paste pleasure (see <span class="Xref">Note</span>). If you look through the code, you’ll see that the margins, border, and padding have been set to 0 for a long list of block elements. There are also styles that get typography to a neutral starting point, clear out styles on lists, and prevent browsers from adding quotation marks to quotes and blockquotes.</p>
+			<div>
+				<div id="_idContainer1323" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">You can get the CSS reset on the web at <a href="http://meyerweb.com/eric/tools/css/reset/"><span class="URL-Email--Sidebar-">meyerweb.com/eric/tools/css/reset/</span></a>.</p>
+				</div>
+			</div>
+			<pre class="CodeFirst">/* <a href="http://meyerweb.com/eric/tools/css/reset/"><code class="CodeColor">http://meyerweb.com/eric/tools/css/reset/</code><br/></a><code class="CodeColor"> </code> v2.0 | 20110126 License: none (public domain)*/<br/>html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,figure, figcaption, footer,header, hgroup,menu, nav, output, ruby, section, summary, time, mark, audio, video {<br/>  margin: 0;<br/>  padding: 0;<br/>  border: 0;<br/>  font-size: 100%;<br/>  font: inherit;<br/>  vertical-align: baseline; <br/>} </pre>
+			<pre class="Code"><span class="Code-Comment">/* HTML5 display-role reset for older browsers */</span> <br/>article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {<br/>  display: block; <br/>} <br/>body {<br/>  line-height: 1; <br/>} <br/>ol, ul {<br/>  list-style: none; <br/>} <br/>blockquote, q {<br/>  quotes: none; <br/>} <br/>blockquote:before, blockquote:after, q:before, q:after {<br/>  content: '';<br/>  content: none; <br/>}<br/>table {<br/>  border-collapse: collapse;<br/>  border-spacing: 0; <br/>}</pre>
+			<p class="body">To use the reset, place these styles at the top of your own style sheet so your own styles override them. You can use them exactly as you see them here or customize them as your project requires. I also recommend reading Eric’s posts about the thinking that went into his settings at <a href="http://meyerweb.com/eric/tools/css/reset/"><span class="URL-Email">meyerweb.com/eric/tools/css/reset/</span></a> and <a href="http://meyerweb.com/eric/thoughts/2007/04/18/reset-reasoning/"><span class="URL-Email">meyerweb.com/eric/thoughts/2007/04/18/reset-reasoning/</span></a>. A web search will reveal other, potentially smaller, CSS reset options.</p>
+			<h2 class="HeadB">Normalize.css</h2>
+			<p class="body">A more <a id="_idIndexMarker3593"></a>nuanced approach is to use Normalize.css, created by <a id="_idIndexMarker3594"></a>Nicolas Gallagher and <a id="_idIndexMarker3595"></a>Jonathan Neal. They painstakingly combed through the user agent styles of every modern browser (desktop and mobile) and created a style sheet that tweaks their styles for consistency, rather than just turning them all off. Normalize.css gives you a reasonable starting point: paragraphs still have some space above and below, headings are bold in descending sizes, lists have markers and indents as you would expect. It also includes styles that make form widgets consistent, which is a nice service. <span class="Xref-Figure">Figure 19-6</span> shows the difference between CSS reset and Normalize.css starting points.</p>
+			<div>
+				<figure id="_idContainer1325" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1906_resetnormalize.png" alt="" width="2025" height="933"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-6.</span> The difference between CSS reset (left) and Normalize.css (right). (Credit: screenshot of a Codepen created by <a id="_idIndexMarker3596"></a>Zach Wolf.)</figcaption>
+				</figure>
+			</div>
+			<p class="body">You can download Normalize.css at <a href="https://necolas.github.io/normalize.css/"><span class="URL-Email">necolas.github.io/normalize.css/</span></a> and include it before your own styles. It is too long to print here, but you will find that it is well organized and includes comments with clear explanations for each section. For Nicolas’s thoughts on the project, see <a href="http://nicolasgallagher.com/about-normalize-css/"><span class="URL-Email">nicolasgallagher.com/about-normalize-css/</span></a>.</p>
+			<p class="body">Normalize.css is considered a superior successor to the cruder CSS reset, but I think it is important to be aware of both options. Or, if slight differences from browser to browser are just fine with you (as they are for a lot of professional developers), you don’t need to use either.</p>
+			<h1 id="_idParaDest-178" class="HeadA"><a id="_idTextAnchor248"></a>Image Replacement Techniques</h1>
+			<p class="body">Before web fonts were a viable option, we needed to use an image anytime we wanted text in a font fancier than Times or Helvetica. Fortunately, that is no longer the case, but every now and then, it may still be necessary to replace a text element with an image in a way that is still accessible to screen readers. One common scenario is using a stylized logo in place of a company name in a heading (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer1326" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Before going through the effort of an image replacement technique, consider whether the <a id="_idIndexMarker3597"></a><a id="_idIndexMarker3598"></a><span class="Literal-Sidebar">alt</span> text in an <span class="Literal-Sidebar">img</span> element is all you need. In the case of a logo, the <span class="Literal-Sidebar">alt</span> text could represent the company name should the image of the logo not be seen. Frankly, the logo example in this section could probably be handled that way. That said, there may be instances in which you need to replace an actual string of text with an image, in which case an image replacement technique might be a good thing to have in your CSS toolbox. </p>
+				</div>
+			</div>
+			<p class="body">Removing the text altogether and replacing it with an <span class="Literal-fc">img</span> element is a bad idea because the text content is gone forever. The solution is to use a CSS-based <span class="FirstTerm">image replacement technique</span> that <a id="_idIndexMarker3599"></a>uses the image as a background in the element, then shifts the text out of the way so that it is not rendered on the page. Visual browsers see the background image, while the text content stays in the file for the benefit of search engines, screen readers, and other assistive devices. Everybody wins!</p>
+			<p class="body">Many image replacement techniques have been developed over the years (see <span class="Xref">Note</span>), but the most popular is the<a id="_idIndexMarker3600"></a> Phark technique created by <a id="_idIndexMarker3601"></a>Mike Rundle. It uses a large negative indent to move the text off to the left of the visible page. </p>
+			<div>
+				<div id="_idContainer1327" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">You can view a gallery of old techniques at “The Image Replacement Museum,” assembled by<a id="_idIndexMarker3602"></a> Marie Mosley (<a href="http://css-tricks.com/the-image-replacement-museum/"><span class="URL-Email--Sidebar-">css-tricks.com/the-image-replacement-museum/</span></a>).</p>
+				</div>
+			</div>
+			<p class="body">In the example in <span class="Xref-Figure">Figure 19-7</span>, I use the Phark technique to display the Jenware logo in place of the <span class="Literal-fc">h1</span> “Jenware” text in the HTML source. The markup is simple:</p>
+			<pre class="CodeFirst">&lt;h1 id="logo"&gt;Jenware&lt;/h1&gt;</pre>
+			<p class="body">The style rule is as follows:</p>
+			<pre class="CodeFirst">#logo {<br/>  width: 450px;<br/>  height: 80px;<br/>  background: url(jenware.png) no-repeat;<br/><code class="CodeColor">  text-indent: -9999px;</code><br/>}</pre>
+			<div>
+				<figure id="_idContainer1329" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1907_phark.png" alt="" width="1321" height="633"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-7.</span> The Phark image replacement technique hides the HTML text by pushing it out of the visible element box with a large negative text indent so only the background image displays.</figcaption>
+				</figure>
+			</div>
+			<p class="body">There are a few things of note here. First, the <span class="Literal-fc">h1</span> element displays as a block by default, so we can just specify its <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> to match the dimensions of the image used as a background. The<a id="_idIndexMarker3603"></a> <span class="Literal-fc">text-indent</span> property pushes the word <em class="Emphasis">Jenware</em> over to the left by 9,999 pixels. This requires the browser to render a very wide element box, but the performance hit is minimal.</p>
+			<p class="body">The downside to any image replacement approach is that it means an extra request to the server for every image used. It can also be more work creating graphics every time a heading changes. Again, before you reach for an image replacement, consider whether a web font or inline image with <span class="Literal-fc">alt</span> text may do the trick. In the next section, we’ll look at a way to curb unnecessary server requests.</p>
+			<h1 id="_idParaDest-179" class="HeadA"><a id="_idTextAnchor249"></a>CSS Sprites</h1>
+			<p class="body">When I talked <a id="_idIndexMarker3604"></a><a id="_idIndexMarker3605"></a><a id="_idIndexMarker3606"></a>about performance back in <a href="lwd5_chapter03.xhtml#_idTextAnchor030"><span class="Xref">Chapter </span><span class="Xref">3</span><span class="Xref">, Some Big Concepts You Need to Know</span></a>, I noted that you can improve site performance by reducing the number of requests your page makes to the server (a.k.a. HTTP requests). One strategy for reducing the number of image requests is to combine all your little images into one big image file so that only one image gets requested. The large image that contains multiple images is known as a <span class="FirstTerm">sprite</span>, a term coined by the early computer graphic and video game industry. That image gets positioned in the element via the <a id="_idIndexMarker3607"></a><span class="Literal-fc">background-position</span> property in such a way that only the relevant portion of it is visible. An example should make this clear.</p>
+			<p class="body">If I want to show a collection of six social media icons on my page, I can turn those six graphics into one sprite and reduce the number of HTTP requests accordingly (<span class="Xref-Figure">Figure 19-8</span>). You can see in the figure that the icons have been stacked into one tall graphic (<span class="Filename">social.png</span>). This example also uses an image replacement technique so the text for each link is still available to screen readers.</p>
+			<div>
+				<figure id="_idContainer1331" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1908_sprites.png" alt="" width="1321" height="1012"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-8.</span> Replacing separate graphic files with one sprite image cuts down on the number of HTTP requests to the server and improves site performance.</figcaption>
+				</figure>
+			</div>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;ul&gt;<br/>   &lt;li&gt;&lt;a href="" class="<code class="CodeColor">hide twitter</code>"&gt;Twitter&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href="" class="hide fb"&gt;Facebook&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href="" class="hide gplus"&gt;Google+&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href="" class="hide linkedin"&gt;LinkedIn&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href="" class="hide dropbox"&gt;Dropbox&lt;/a&gt;&lt;/li&gt;<br/>  &lt;li&gt;&lt;a href="" class="hide pinterest"&gt;Pinterest&lt;/a&gt;&lt;/li&gt;<br/>&lt;/ul&gt; </pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst"><code class="CodeColor">.hide</code> {<br/>  text-indent: 100%;<br/>  white-space: nowrap;<br/>  overflow: hidden; <br/>}<br/>li a {<br/>  display: block;<br/>  width: 40px;<br/>  height: 40px;<br/>  <code class="CodeColor">background-image: url(social.png); </code><br/>} <br/>li a.twitter { background-position: <code class="CodeColor">0 0; </code>}<br/>li a.fb { background-position: <code class="CodeColor">0 -40px; </code>} <br/>li a.gplus { background-position: <code class="CodeColor">0 -80px; </code>}<br/>li a.linkedin { background-position: <code class="CodeColor">0 -120px;</code> }<br/>li a.dropbox { background-position: <code class="CodeColor">0 -160px;</code> }<br/>li a.pinterest { background-position: 0 <code class="CodeColor">-200px;</code> }</pre>
+			<p class="body">In the markup, each item has two <span class="Literal-fc">class</span> values. The <span class="Literal-fc">hide</span> class is used as a selector to apply an image replacement technique. This one was developed by<a id="_idIndexMarker3608"></a> Scott Kellum and uses a left indent of 100% to move the text out of sight. The other <span class="Literal-fc">class</span> name is particular to each social network link. The unique <span class="Literal-fc">class</span> values allow us to position the sprite appropriately for each link.</p>
+			<p class="body">At the top of the style sheet you’ll see the image replacement styles. Notice in the next rule that all link (<span class="Literal-fc">a</span>) elements use <span class="Filename">social.png</span> as their background image. </p>
+			<p class="body">Finally, we get to the styles that do the heavy lifting. The <span class="Literal-fc">background-position</span> is set differently for each link in the list, and the visible element box works like a little window revealing a portion of the background image. The first item has the value <span class="Literal-fc">0,0</span>; this positions the top-left corner of the image in the top-left corner of the element box. To make the Facebook icon visible, we need to move the image <em class="Emphasis">up</em> by 40 pixels, so its vertical position is set to –40px (its horizontal position of 0 is fine). The image is moved up by 40-pixel increments for each link, revealing image areas farther and farther down the sprite stack.</p>
+			<p class="body">In this example, all of the icons have the same dimensions and stack up nicely, but that is not a requirement. You can combine images with a variety of dimensions on one sprite. The process of setting a size for the element and then lining the sprite up perfectly with the <span class="Literal-fc">background-position</span> property is the same. </p>
+			<div>
+				<div id="_idContainer1332" class="sidebar">
+					<h5 class="SidebarTitle">Sprite Generators</h5>
+					<p class="SidebarBody">There are many online tools that create sprite image files and their respective styles automatically. Just upload or drag-and-drop your individual graphics to the page, and the tool does the rest. One that I find easy to use is<a id="_idIndexMarker3609"></a> CSSsprites (<a href="http://css.spritegen.com"><span class="URL-Email--Sidebar-">css.spritegen.com</span></a>). If you need your sprites to be responsive, use their responsive version at <a href="http://responsive-css.spritegen.com"><span class="URL-Email--Sidebar-">responsive-css.spritegen.com</span></a>.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-180" class="HeadA"><a id="_idTextAnchor250"></a>CSS Feature Detection</h1>
+			<p class="body">One of the <a id="_idIndexMarker3610"></a><a id="_idIndexMarker3611"></a><a id="_idIndexMarker3612"></a>dominant challenges facing web designers and developers is dealing with uneven browser support. Useful new CSS properties emerge regularly, but it takes a while for them find their way into browsers, and it takes much longer for the old non-supporting browsers to fade into extinction. </p>
+			<p class="body">Fortunately, we have a few methods for checking to see if a browser supports a particular feature so we can take advantage of cutting-edge CSS while also providing thoughtful fallbacks for non-supporting browsers. Using feature detection with fallbacks sure beats the alternatives of a) not using a property until it is universally supported, or b) using it and letting users with non-supporting browsers have a broken experience. </p>
+			<p class="body">We’ll look at two ways to detect whether a feature is supported: feature queries with a new CSS at-rule (<span class="Literal-fc">@supports</span>) and a JavaScript-based tool called Modernizr.  </p>
+			<h2 class="HeadB">CSS Feature Queries (@supports)</h2>
+			<p class="body">The CSS3 Conditional Rules Module Level 3 (<a href="http://www.w3.org/TR/css3-conditional/"><span class="URL-Email">www.w3.org/TR/css3-conditional/</span></a>) introduces the<a id="_idIndexMarker3613"></a> <span class="Literal-fc">@supports</span> rule for checking browser support of a particular property and value declaration. Commonly referred to as a <span class="FirstTerm">feature query</span>, it works like a media query in that it runs a test, and if the browser passes that test, it applies the styles contained in the brackets of the <a id="_idIndexMarker3614"></a>at-rule. The syntax for <span class="Literal-fc">@supports</span> is as follows:</p>
+			<pre class="CodeFirst"><code class="CodeColor">@supports (</code><code class="CodeColor">property</code><code class="CodeColor">: </code><code class="CodeColor">value</code><code class="CodeColor">) {<br/></code>  <span class="Code-Comment">/* Style rules for supporting browsers here */</span><br/><code class="CodeColor">}</code></pre>
+			<p class="body">Note that the query is for an entire declaration, both the property and a value. It was designed this way because sometimes you may test for a new property (such as <span class="Literal-fc">initial-letter</span>), and sometimes you may need to test for a new value for an existing property. For example, the <span class="Literal-fc">display</span> property is universally supported, but the newer <span class="Literal-fc">grid</span> keyword value is not. Note also that there is no semicolon at the end. </p>
+			<p class="body">Let’s look at a more specific example. I think it would be cool to use the new <span class="Literal-fc">mix-blend-mode</span><span class="Literal-fc"><a id="_idIndexMarker3615"></a></span> property to make a photo of watermelons blend in with the background (similar to a Layer Blending Mode in <a id="_idIndexMarker3616"></a>Photoshop). As of this writing, it is supported only in Firefox, Chrome, and Safari. As a fallback for non-supporting browsers, I create a somewhat less interesting blended effect using the <span class="Literal-fc">opacity</span> property (<span class="Xref-Figure">Figure 19-9</span>). </p>
+			<div>
+				<figure id="_idContainer1334" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1909_atsupports.png" alt="" width="2025" height="508"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-9.</span> The original image (left), the result using the <span class="Literal-Sidebar">mix-blend-mode</span> property with <span class="Literal-Sidebar">multiply</span> keyword (center), and the fallback style using <span class="Literal-Sidebar">opacity</span> (right).</figcaption>
+				</figure>
+			</div>
+			<p class="body">As of this writing, the best practice is to specify the fallback styles first, and then override them with a set of styles targeted at browsers that support the feature. Note that I also need to set the <span class="Literal-fc">opacity</span> back to 1 so it overrides my fallback style.</p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;div id="container"&gt;<br/>  &lt;figure class="blend"&gt;<br/>    &lt;img src="watermelon.jpg" alt=""&gt;<br/>  &lt;/figure&gt; <br/>&lt;/div&gt; </pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">#container {<br/>  background-color: #96D4E7;<br/>  padding: 5em;<br/> } <br/>.blend img {<br/>   opacity: .5;<br/>}<br/><code class="CodeColor">@supports (mix-blend-mode: multiply) {<br/>  .blend img {<br/>     mix-blend-mode: multiply;<br/>    opacity: 1;  <br/>}<br/>}</code></pre>
+			<div>
+				<div id="_idContainer1335" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">The browser has to report for itself whether it has implemented the feature. If the feature is implemented in a buggy way, you may still encounter problems even when using feature queries.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Operators</h3>
+			<p class="body">The <span class="Literal-fc">@supports</span> rule can be used with three operators to refine the feature test: <span class="Literal-fc">not</span>, <span class="Literal-fc">and</span>, and <span class="Literal-fc">or</span>:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">not</span></p>
+			<p class="ListVariable">The <span class="Literal-fc">not</span> <a id="_idIndexMarker3617"></a>operator lets us test for when a specific property/value pair is <em class="Emphasis">not</em> supported. </p>
+			<pre class="CodeFirst">@supports <code class="CodeColor">not</code> (mix-blend-mode: hue) {<br/>  <span class="Code-Comment">/* styles for non-supporting browsers */</span> <br/>}</pre>
+			<p class="body">Someday, this will be useful for supplying fallback styles, but with the current browser support, you risk non-supporting browsers skipping everything in the <span class="Literal-fc">@supports</span> rules, including the fallbacks. That’s why I used the override method in the previous example. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">and</span></p>
+			<p class="ListVariable">Applies <a id="_idIndexMarker3618"></a>styles only when all of the conditions in a series of two or more are met. </p>
+			<pre class="CodeFirst">@supports (border-radius: 10em) <code class="CodeColor">and</code> (shape-outside: circle()) {<br/>  <span class="Code-Comment">/* styles that apply only when the browser supports shape-outside AND border-radius */</span> <br/>}</pre>
+			<p class="ListVariableTerm"><span class="Literal-fc">or</span></p>
+			<p class="ListVariable">Use the <span class="Literal-fc">or</span> <a id="_idIndexMarker3619"></a>operator to apply styles when any of a series of conditions are met. This one is particularly useful for vendor-prefixed properties.</p>
+			<pre class="CodeFirst">@supports (-webkit-transform: rotate(10deg)) <code class="CodeColor">or</code><br/>          (-ms-transform: rotate(10deg)) <code class="CodeColor">or</code><br/>          (transform: rotate(10deg))<br/>  <span class="Code-Comment">/* transform styles */</span><br/> }</pre>
+			<div>
+				<div id="_idContainer1336" class="sidebar">
+					<h5 class="SidebarSeries">Authoring Tip</h5>
+					<p class="SidebarBody">Not every new feature needs a feature query. Some features, such as <span class="Literal-Sidebar">border-radius</span>, <a id="_idIndexMarker3620"></a>simply don’t render on non-supporting browsers, and that is just fine.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Browser support</h3>
+			<p class="body">Feature queries began working in Chrome, Firefox, and Opera back in 2013, and they are supported by every version of Microsoft Edge. Safari added support in version 9 in 2015. Unfortunately, no version of Internet Explorer supports feature queries, which leaves a big hole in the support picture until those old browsers go away.</p>
+			<p class="body">Non-supporting browsers use your fallback design, so make sure that it is usable at the very least. Beware, however, of browsers that do not support ­<span class="Literal-fc">@supports</span> but may support newer CSS features that you might be inclined to test. Flexbox is a great example. Safari 8 recognizes the Flexbox properties, but does not recognize <span class="Literal-fc">@supports</span>, so if all of your Flexbox layout rules are tucked away inside a feature query, Safari 8 won’t see them. That’s why feature queries aren’t the best tool for detecting Flexbox or any property that has better support than <span class="Literal-fc">@supports</span> itself. Grid Layout, on the other hand, is a great place to put feature queries to work because every browser that supports <span class="Literal-fc">display: grid</span> also supports <span class="Literal-fc">@supports</span>. Again, <a href="http://CanIUse.com"><span class="URL-Email">CanIUse.com</span></a> is a good resource for comparing support.</p>
+			<h3 class="HeadC">Pros and cons</h3>
+			<p class="body">Feature queries are an exciting new tool for web development. They allow us to take advantage of new CSS properties sooner in a way that doesn’t rely on JavaScript (we’ll look at Modernizr, a JavaScript solution, next). Downloading and running a script (even a small one) is slower than using CSS alone. </p>
+			<p class="body">On the downside, limited browser support (for now) means <span class="Literal-fc">@supports</span> is not as far-reaching as Modernizr. However, if it accomplishes your goals, it should be your first choice. Fortunately, the browser environment will only continue to improve, giving CSS feature queries the advantage over a script-based solution in the long run.</p>
+			<p class="body">So what is this “Modernizr” you’re hearing so much about?</p>
+			<h2 class="HeadB">Modernizr</h2>
+			<p class="body"><span class="FirstTerm">Modernizr</span> is a <a id="_idIndexMarker3621"></a><a id="_idIndexMarker3622"></a>lightweight JavaScript library that runs behind the scenes and tests for a long list of HTML5 and CSS3 features when the page is loaded in the browser. For each feature it tests, it stores the result (supports/doesn’t support) in a JavaScript object that can be accessed with scripts and optionally as a class name in the <span class="Literal-fc">html</span> root element that can be used in CSS selectors. I’m going to focus on the latter CSS method.</p>
+			<h3 class="HeadC">How it works</h3>
+			<p class="body">When Modernizr runs, it appends the <span class="Literal-fc">html</span> element with a class name for each feature it detects. For example, if it is configured to test for Flexbox, when it runs on a browser that <em class="Emphasis">does</em> support Flexbox, it adds the <span class="Literal-fc">.flexbox</span> class name to the <span class="Literal-fc">html</span> element:</p>
+			<pre class="CodeFirst">&lt;html class="js <code class="CodeColor">flexbox</code>"&gt;</pre>
+			<p class="body">If the feature is not supported, it adds the feature name with a <span class="Literal-fc">.no-</span> prefix. On a non-supporting browser, the Flexbox test would be reported like this:</p>
+			<pre class="CodeFirst">&lt;html class="js <code class="CodeColor">no-flexbox</code>"&gt;</pre>
+			<p class="body">With the class name in place on the root element, everything on the page becomes part of that class. We can use the class name as part of a selector to provide different sets of styles depending on feature support:</p>
+			<pre class="CodeFirst"><code class="CodeColor">.flexbox</code> nav {<br/>  <span class="Code-Comment">/* flexbox styles for the nav element here */</span><br/> } <br/><code class="CodeColor">.no-flexbox</code> nav {<br/>  <span class="Code-Comment">/* fallback styles for the nav element here */</span><br/> }</pre>
+			<p class="body">This example is short and sweet for demonstration purposes. Typically, you’ll use Modernizr to test for many features, and the <span class="Literal-fc">html</span> tag gets filled with a long list of class names.</p>
+			<h3 class="HeadC">How to use it</h3>
+			<p class="body">First, you need to download the <span class="Filename">Modernizr.js</span> script. Go to <a href="http://Modernizr.com"><span class="URL-Email">Modernizr.com</span></a> and find the Download link. From there you can customize the script to contain just the HTML and CSS features you want to test, a nice way to keep the file size of the script down. Click the Build button, and you will be given several options for how it can be saved. A simple click on Download saves the script in a <span class="Filename">.js</span> file on your computer. </p>
+			<p class="body">Once you have your script, put it in the directory with the rest of the files for your project. Add it to the <span class="Literal-fc">head</span> of your HTML document, before any linked style sheets or other scripts that need to use it:</p>
+			<pre class="CodeFirst">&lt;head&gt;<br/><code class="CodeColor">  &lt;script src="modernizr-custom.js"&gt;&lt;/script&gt;</code><br/>  <span class="Code-Comment">&lt;!--other scripts and style sheets --&gt;</span><br/> &lt;/head&gt;</pre>
+			<p class="body">Finally, open your HTML document and assign the <span class="Literal-fc">no-js</span> class name to the <span class="Literal-fc">html</span> element. </p>
+			<pre class="CodeFirst">&lt;html <code class="CodeColor">class="no-js"</code>&gt;</pre>
+			<p class="body">Modernizr will change it to <span class="Literal-fc">js</span> once it detects that the browser supports JavaScript. If JavaScript (and therefore Modernizr) fails to run, you will not know whether or not features are supported. </p>
+			<h3 class="HeadC">Pros and cons</h3>
+			<p class="body">Modernizr is one of the most popular tools in web developers’ arsenals because it allows us to design for particular features rather than whole browsers. It is easy to use, and the Modernizr site has thorough and clear documentation to help you along. Because it’s JavaScript, it works on the vast majority of browsers. The flip side to that, however, is that because it relies on JavaScript, you can’t be 100% certain that it will run, which is its main disadvantage. It will also be slightly slower than using CSS alone for feature detection. </p>
+			<h1 id="_idParaDest-181" class="HeadA"><a id="_idTextAnchor251"></a>Wrapping Up Style Sheets</h1>
+			<p class="body">That concludes our whirlwind tour of Cascading Style Sheets. You’ve come a long way since styling an <span class="Literal-fc">h1</span> and a <span class="Literal-fc">p</span> back in <a href="lwd5_chapter11.xhtml#_idTextAnchor134"><span class="Xref">Chapter </span><span class="Xref">11</span><span class="Xref">, Introducing Cascading Style Sheets</span></a>. By now, you should be comfortable formatting text and even doing basic page layout. While CSS is easy to learn, it takes a lot of time and practice to master. If you get stuck, you will find that there are many resources online to help you find the answers you need. The nice thing about CSS is that you can start with just the basics and then build on that knowledge as you gain proficiency in your web development skills.</p>
+			<p class="body">In the next chapter, I’ll introduce you to tools that web developers use to improve their workflow, including tools for writing CSS more efficiently and optimizing the results. But if you’re feeling overwhelmed with CSS properties, you can breathe a sigh of relief. We’re <em class="Emphasis">done</em>!</p>
+			<h1 id="_idParaDest-182" class="HeadA"><a id="_idTextAnchor252"></a>Test Yourself</h1>
+			<p class="body">See how well you picked up the CSS techniques in this chapter with these questions. As you may have guessed, the answers are available in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber">What is the purpose of a CSS reset?<ol><li class="ListNumber_Indent">To override browser defaults</li><li class="ListNumber_Indent">To make presentation more predictable across browsers</li><li class="ListNumber_Indent">To prevent elements from inheriting unexpected styles</li><li class="ListNumber_Indent">All of the above</li></ol></li>
+				<li class="ListNumber">What is the purpose of a CSS sprite?<ol><li class="ListNumber_Indent" value="1">To improve site performance</li><li class="ListNumber_Indent">To use small images in place of large ones, reducing file size</li><li class="ListNumber_Indent">To reduce the number of HTTP requests</li><li class="ListNumber_Indent">a and c</li><li class="ListNumber_Indent">All of the above</li></ol></li>
+				<li class="ListNumber">What is the purpose of an image replacement technique?<ol><li class="ListNumber_Indent" value="1">To achieve really big text indents</li><li class="ListNumber_Indent">To use a decorative graphic in place of text </li><li class="ListNumber_Indent">To remove the text from the document and replace it with a decorative image</li><li class="ListNumber_Indent">To maintain the semantic content of the document</li><li class="ListNumber_Indent">b and d</li><li class="ListNumber_Indent">All of the above</li></ol></li>
+				<li class="ListNumber">Name two approaches to aligning form controls and their respective labels without tables. A general description will do here.</li>
+				<li class="ListNumber">Match the style rules with their respective tables in <span class="Xref-Figure">Figure 19-10</span>.<figure id="_idContainer1338" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1910_tabletest-ebook.png" alt="" width="1338" height="458"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 19-10.</span> Match these tables with the code examples in Question 5.</figcaption></figure><ol><li class="ListNumber_Indent" value="1"><code class="Code">table { border-collapse: collapse;}</code><br/><code class="Code">td { border: 2px black solid; }</code></li><li class="ListNumber_Indent"><code class="Code">table { border-collapse: separate; }</code><br/><code class="Code">td { border: 2px black solid; }</code></li><li class="ListNumber_Indent"><code class="Code">table {<br/>  </code><code class="Code">border-collapse: separate;<br/>  border-spacing: 2px 12px; }<br/></code><code class="Code">td { border: 2px black solid; }</code></li><li class="ListNumber_Indent"><code class="Code">table {<br/>  </code><code class="Code">border-collapse: separate;<br/>  border-spacing: 5px;<br/>  </code><code class="Code">border: 2px black solid; }<br/>td { background-color: #99f; }</code></li><li class="ListNumber_Indent"><code class="Code">table {<br/>  </code><code class="Code">border-collapse: separate;</code><br/>   <code class="Code">border-spacing: 5px; }<br/>td { background-color: #99f;<br/>border: 2px black solid; }</code></li></ol></li>
+				<li class="ListNumber">Using Modernizr to test <a id="_idTextAnchor253"></a>for <span class="Literal-fc">border-radius</span>, say whether the <span class="Literal-fc">div</span> will display with rounded corners based on the following generated class results:<pre class="CodeFirst">.border-radius div {<code class="Code">  </code>border: 1px solid green;<code class="Code">  </code>border-radius: .5em;}</pre><ol><li class="ListNumber_Indent" value="1"><code class="Code">&lt;html class="js .no-border-radius"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;html class="js .border-radius"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;html class="no-js"&gt;</code></li></ol></li>
+				<li class="ListNumber">As of this writing, what advantage does Modernizr have over CSS feature detection? What long-term advantage will CSS feature detection have over Modernizr?</li>
+			</ol>
+			<h1 id="_idParaDest-183" class="HeadA"><a id="_idTextAnchor254"></a>CSS Review: Table Properties</h1>
+			<p class="body">The following is a summary of the properties covered in this chapter. </p>
+			<table id="table001-18" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Property</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-collapse</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker3623"></a>whether borders between cells are separate or collapsed</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">border-spacing</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Denotes<a id="_idIndexMarker3624"></a> the space between cells set to render as separate</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">caption-side</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies the position of a table caption relative to the table (top or bottom) </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">empty-cells</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker3625"></a> whether  borders and backgrounds should render for empty cells</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">table-layout</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies how table widths are calculated</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

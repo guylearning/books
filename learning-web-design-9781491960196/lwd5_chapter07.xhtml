@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer337" class="ch07">
+			<p id="_idParaDest-62" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor087"></a>7. Adding Images</p>
+		</div>
+		<div id="_idContainer338" class="ch07">
+			<h1 class="chapterLabel">7</h1>
+		</div>
+		<div id="_idContainer339" class="ch07">
+			<h1 class="chapterTitle"><a id="_idTextAnchor088"></a><a id="_idTextAnchor089"></a>Adding Images</h1>
+		</div>
+		<div id="_idContainer340" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this Chapter</p>
+			<p class="chapterContents">Adding images with the img element</p>
+			<p class="chapterContents">Image accessibility</p>
+			<p class="chapterContents">Adding SVG images</p>
+			<p class="chapterContents">Responsive images</p>
+		</div>
+		<div id="_idContainer401" class="ch07">
+			<p class="body">The web’s <a id="_idIndexMarker942"></a><a id="_idIndexMarker943"></a><a id="_idIndexMarker944"></a>explosion into mass popularity was due in part to the fact that there were images on the page. Before images, the internet was a text-only tundra. </p>
+			<p class="body">Images appear on web pages in two ways: embedded in the inline content or as background images. If the image is part of the editorial content, such as product shots, gallery images, ads, illustrations, and so on, then it should be placed in the flow of the HTML document. If the image is purely decorative, such as a stunning image in the background of the header or a patterned border around an element, then it should be added through Cascading Style Sheets. Not only does it make sense to put images that affect presentation in a style sheet, but it makes the document cleaner and more accessible and makes the design much easier to update later. I will talk about CSS background images at length in <a href="lwd5_chapter13.xhtml#_idTextAnchor169"><span class="Xref">Chapter </span><span class="Xref">13</span><span class="Xref">, Colors and Backgrounds</span></a>. </p>
+			<p class="body">This chapter focuses on embedding image content into the flow of the document, and it is divided into three parts. First, we’ll look at the tried-and-true <span class="Literal-fc">img</span> element for adding basic images to a page the way we’ve been doing it since 1992. It has worked just fine for over 25 years, and as a beginner, you’ll find it meets most of your needs as well. </p>
+			<p class="body">The second part of this chapter introduces some of the methods available for embedding SVG images (<span class="FirstTerm">Scalable Vector Graphics</span>) in HTML documents. SVGs are a special case and demand special attention. </p>
+			<p class="body">Finally, we’ll look at the way image markup has had to adapt to the wide variety of mobile devices with an introduction to new<a id="_idIndexMarker945"></a> responsive image elements (<span class="Literal-fc">picture</span> and <span class="Literal-fc">source</span>) and attributes (<span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span>). As the number of types of devices used to view the web began to skyrocket, we realized that a single image may not meet the needs of all viewing environments, from palm-sized screens on slow cellular networks to high-density cinema displays. We needed a way to make images “responsive”—that is, to serve images appropriate for their browsing environments. After a few years of back and forth between the W3C and the development community, responsive image features were added to the HTML 5.1 specification and are beginning to see widespread browser support.  </p>
+			<p class="body">I want to point out up front that responsive image markup is not as straightforward as the examples we’ve seen so far in this book. It’s based on more advanced web development concepts, and the syntax may be tricky for someone just getting started writing HTML (heck, it’s a challenge for seasoned professionals!). I’ve included it in this chapter because it is relevant to adding inline images, but frankly, I wouldn’t blame you if you’d like to skip the “<span class="Xref">Responsive Image Markup”</span> section and come back to it after we’ve done more work with Responsive Web Design and you have more HTML and CSS experience under your belt. </p>
+			<h1 id="_idParaDest-63" class="HeadA"><a id="_idTextAnchor090"></a>First, a Word on Image Formats</h1>
+			<p class="body">We’ll get <a id="_idIndexMarker946"></a><a id="_idIndexMarker947"></a>to the <span class="Literal-fc">img</span> element and other markup examples in a moment, but first it’s important to know that you can’t put just any image on a web page; it needs to be in one of the web-supported formats.</p>
+			<p class="body">In general, images that are made up of a grid of colored pixels (called <span class="FirstTerm">bitmapped</span> or <span class="FirstTerm">raster images</span>, as shown in <span class="Xref-Figure">Figure 7-1</span>, top) must be <a id="_idIndexMarker948"></a><a id="_idIndexMarker949"></a><a id="_idIndexMarker950"></a>saved in the PNG, JPEG, or GIF file formats in order to be placed inline in the content. Newer, more optimized <a id="_idIndexMarker951"></a><a id="_idIndexMarker952"></a>WebP and JPEG-XR <a id="_idIndexMarker953"></a>bitmapped image formats are slowly gaining in popularity, particularly now that we have markup to make them available to browsers that support them. </p>
+			<div>
+				<figure id="_idContainer342" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0701_vectorbitmap.png" alt="" width="1321" height="1083"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-1.</span> A comparison of circles saved in bitmapped and vector formats.</figcaption>
+				</figure>
+			</div>
+			<p class="body">For <a id="_idIndexMarker954"></a>vector images (<span class="Xref-Figure">Figure 7-1</span>, bottom), such as the kind of icons and illustrations you create with drawing tools such as Adobe Illustrator, we have the SVG <a id="_idIndexMarker955"></a>format. There is so much to say about SVGs and their features that I’ve given them their own chapter (<a href="lwd5_chapter25.xhtml#_idTextAnchor311"><span class="Xref">Chapter </span><span class="Xref">25</span><span class="Xref">, SVG</span></a>), but we’ll look at how to add them to HTML documents later in this chapter. </p>
+			<p class="body">If you have a source image that is in another popular format, <a id="_idIndexMarker956"></a><a id="_idIndexMarker957"></a><a id="_idIndexMarker958"></a>such as TIFF, BMP, or EPS, you’ll need to convert it to a web format before you can add it to the page. If, for some reason, you must keep your graphic file in its original format (for example, a file for a CAD program), you can make it available as an <span class="FirstTerm">external image</span> by <a id="_idIndexMarker959"></a><a id="_idIndexMarker960"></a>making a <a id="_idIndexMarker961"></a><a id="_idIndexMarker962"></a>link directly to the image file, like this:</p>
+			<pre class="CodeFirst">&lt;a <code class="CodeColor">href="architecture.eps"</code>&gt;Get the drawing&lt;/a&gt;</pre>
+			<p class="body">You should name your image files with the proper suffixes—<span class="Filename">.png</span>, <span class="Filename">.jpg</span> (or <span class="Filename">.jpeg</span>),<span class="Filename"> .gif</span>, <span class="Filename">.webp</span>, and <span class="Filename">.jxr</span>, respectively. In addition, your server must be configured to recognize and serve these various image types properly. All web server <a id="_idIndexMarker963"></a>software today is configured to handle PNG, JPEG, and GIF out of the box, but if you are using SVG or one of the newer formats, you may need to deliberately add that media type to the server’s official list. </p>
+			<p class="body">A little background information may be useful here. Image files, and indeed any media files that may reside on a server, have an official media type (also called a <span class="FirstTerm"><a id="_idIndexMarker964"></a></span><span class="FirstTerm">MIME type</span>) and suffixes. For example, SVG has the MIME type <span class="Filename">image/svg+xml</span> and the suffixes <span class="Filename">.svg</span> and <span class="Filename">.svgz</span>. </p>
+			<p class="body">Server packages have different ways of handling MIME information. The popular<a id="_idIndexMarker965"></a> Apache server software uses a file in the root directory called <a id="_idIndexMarker966"></a><a id="_idIndexMarker967"></a><span class="Filename">htaccess</span> that contains a list of all the file types and their acceptable suffixes. Be sure to add (or ask your server administrator to add) the MIME types of new image formats so they may be served correctly. The server looks up the suffix (<span class="Filename">.webp</span>, for example) of requested files in the list and matches it with the <a id="_idIndexMarker968"></a>Content-Type (<span class="Filename">image/webp</span>) that it includes in its <a id="_idIndexMarker969"></a>HTTP response to the browser. That tells the browser what kind of data is coming and how to parse it.</p>
+			<p class="body">Browsers use helper applications to display media they can’t handle alone. The browser matches the suffix of the file in the link to the appropriate helper application. The external image may open in a separate application window or within the browser window if the helper application is a browser plug-in. The browser may also ask the user to save the file or open an application manually. It is also possible that it won’t be able to be opened at all.</p>
+			<p class="body">Without further ado, let’s take a look at the <span class="Literal-fc">img</span> element and its required and recommended attributes.</p>
+			<h1 id="_idParaDest-64" class="HeadA"><a id="_idTextAnchor091"></a>The img Element</h1>
+			<div>
+				<div id="_idContainer343" class="ref">
+					<p class="refNameCode">&lt;img&gt;</p>
+					<p class="refPurpose">Adds an inline image</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">img</span> element <a id="_idIndexMarker970"></a>tells the <a id="_idIndexMarker971"></a>browser, “Place an image here.” You’ve already gotten a glimpse of it used to place banner graphics in the examples in <a href="lwd5_chapter04.xhtml#_idTextAnchor044"><span class="Xref">Chapter </span><span class="Xref">4</span><span class="Xref">, Creating a Simple Page</span></a>. You can also place an image element right in the flow of the text at the point where you want the image to appear, as in the following example. Images stay in the flow of text, aligned with the baseline of the text, and do not cause any line breaks (HTML5 calls this<a id="_idIndexMarker972"></a> a <span class="FirstTerm">phrasing element</span>), as shown in <span class="Xref-Figure">Figure 7-2</span>:</p>
+			<pre class="CodeFirst">&lt;p&gt;This summer, try making pizza <code class="CodeColor">&lt;img src="pizza.png" alt=""&gt;</code> on your grill.&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer345" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0702_img.png" alt="" width="632" height="235"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-2.</span> By default, images are aligned with the baseline of the surrounding text and do not cause a line break.</figcaption>
+				</figure>
+			</div>
+			<p class="body">When the browser sees the <span class="Literal-fc">img</span> element, it makes a request to the server and retrieves the image file before displaying it on the page. On a fast network with a fast computer or device, even though a separate request is made for each image file, the page usually appears to arrive instantaneously. On mobile devices with slow network connections, we may be well aware of the wait for images to be fetched one at a time. The same is true for users using dial-up internet connections or other slow networks, like the expensive WiFi at luxury hotels.</p>
+			<p class="body">The <span class="Literal-fc">src</span> and <span class="Literal-fc">alt</span> attributes <a id="_idIndexMarker973"></a><a id="_idIndexMarker974"></a><a id="_idIndexMarker975"></a><a id="_idIndexMarker976"></a>shown in the sample are required. The <span class="Literal-fc">src</span> (source) attribute provides the location of the image file (its URL). The <span class="Literal-fc">alt</span> attribute provides alternative text that displays if the image is not available. We’ll talk about <span class="Literal-fc">src</span> and <span class="Literal-fc">alt</span> a little more in upcoming sections.</p>
+			<p class="body">There are a few other things of note about the <span class="Literal-fc">img</span> element: </p>
+			<ul>
+				<li class="ListBullet">It is an <a id="_idIndexMarker977"></a><a id="_idIndexMarker978"></a><a id="_idIndexMarker979"></a>empty element, which means it doesn’t have any content. You just place it in the flow of text where the image should go. </li>
+				<li class="ListBullet">It is an inline element, so it behaves like any other inline element in the text flow. <span class="Xref-Figure">Figure 7-3</span> demonstrates the inline nature of image elements. When the browser window is resized, a line of images reflows to fill the new width. <figure id="_idContainer347" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_0703_wrap-ebook.png" alt="" width="1338" height="895"/></p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-3.</span><span class="FigureLabel"> </span>Inline images are part of the normal document flow. They reflow when the browser window is resized.</figcaption></figure></li>
+				<li class="ListBullet">The <span class="Literal-fc">img</span> element is what’s known <a id="_idIndexMarker980"></a><a id="_idIndexMarker981"></a><a id="_idIndexMarker982"></a>as a <span class="FirstTerm">replaced element</span> because it is replaced by an external file when the page is displayed. This makes it different from text elements that have their content right there in the source (and thus<a id="_idIndexMarker983"></a><a id="_idIndexMarker984"></a><a id="_idIndexMarker985"></a> are <span class="FirstTerm">non-replaced</span>).</li>
+				<li class="ListBullet">By default, the bottom edge of an image<a id="_idIndexMarker986"></a> aligns with the baseline of text, as shown in <span class="Xref-Figure">Figure 7-2</span>. Using CSS, you can float the image to the right or left margin and allow text to flow around it, crop it to a shape, control the space and borders around the image, and change its vertical alignment. We’ll talk about those styles in <a href="lwd5_chapter11.xhtml#_idTextAnchor131"><span class="Xref">Part III</span></a>.</li>
+			</ul>
+			<h2 class="HeadB">Providing the Location with src</h2>
+			<div>
+				<div id="_idContainer348" class="ref">
+					<p class="refNameCode">src="<span class="Replaceable">URL</span>"</p>
+					<p class="refPurpose">Source (location) of the image</p>
+				</div>
+			</div>
+			<p class="body">The value of the <span class="Literal-fc">src</span> attribute is the URL of the image file. In most cases, the images you use on your pages will reside on your own server, so you will use relative URLs to point to them. </p>
+			<p class="body">If you just read <a href="lwd5_chapter06.xhtml#_idTextAnchor076"><span class="Xref">Chapter </span><span class="Xref">6</span><span class="Xref">, Adding Links</span></a>, <a id="_idIndexMarker987"></a>you should be pretty handy with writing <a id="_idIndexMarker988"></a><a id="_idIndexMarker989"></a>relative URLs. In short, if the image is in the same directory as the HTML document, you can refer to the image by name in the <span class="Literal-fc">src</span> attribute:</p>
+			<pre class="CodeFirst">&lt;img <code class="CodeColor">src="icon.gif"</code> alt=""&gt;</pre>
+			<p class="body">Developers usually organize the images for a site into a directory called <span class="Filename">images</span> or <span class="Filename">img</span> (in fact, it helps search engines when you do it that way). There may even be separate image directories for each section of the site. If an image is not in the same directory as the document, you need to provide the pathname to the image file:</p>
+			<pre class="CodeFirst">&lt;img <code class="CodeColor">src="/images/arrow.gif"</code> alt=""&gt;</pre>
+			<p class="body">Of course, you could place images from other websites by using a full <a id="_idIndexMarker990"></a><a id="_idIndexMarker991"></a><a id="_idIndexMarker992"></a><a id="_idIndexMarker993"></a>URL, like this, but it is not recommended (see <span class="Xref">Warning</span>):</p>
+			<pre class="CodeFirst">&lt;img <code class="CodeColor">src="http://www.example.com/images/smile.gif"</code> alt=""&gt;</pre>
+			<div>
+				<div id="_idContainer349" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">Before you use any image on your web page, be sure that you own the image, that you have explicit written permission by the copyright holder, or that it is in the public domain. Linking to an image on another server <a id="_idIndexMarker994"></a>(called <span class="FirstTerm--Sidebar-">hotlinking</span>) is considered seriously uncool, so don’t do it unless there is a specific use case in which you have <a id="_idIndexMarker995"></a><a id="_idIndexMarker996"></a>permission. Even then, be aware that you cannot control the image and risk having it moved or renamed, which would break your link.</p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer350" class="sidebar">
+					<h5 class="SidebarSeries">Performance Tip</h5>
+					<h5 class="SidebarTitle">Take Advantage of Caching</h5>
+					<p class="SidebarBody">When a browser downloads an<a id="_idIndexMarker997"></a><a id="_idIndexMarker998"></a><a id="_idIndexMarker999"></a> image, it stores the file in the disk <span class="FirstTerm--Sidebar-">cache</span> (a space for temporarily storing files on the hard disk). That way, if it needs to redisplay the page, it can just pull up a local copy of the image without making a new server request.</p>
+					<p class="SidebarBody">If you use the same image repeatedly, be sure that the <span class="Literal-Sidebar">src</span> attribute for each <span class="Literal-Sidebar">img</span> element points to the same URL on the server. The image downloads once, then gets called from cache for subsequent uses. That means less traffic for the server and faster display for the user.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Providing Alternative Text with alt</h2>
+			<p class="refNameCode">alt="text"</p>
+			<p class="refPurpose">Alternative text</p>
+			<p class="body">Every <span class="Literal-fc">img</span> element must <a id="_idIndexMarker1000"></a><a id="_idIndexMarker1001"></a><a id="_idIndexMarker1002"></a><a id="_idIndexMarker1003"></a><a id="_idIndexMarker1004"></a><a id="_idIndexMarker1005"></a><a id="_idIndexMarker1006"></a><a id="_idIndexMarker1007"></a>also contain an <span class="Literal-fc">alt</span> attribute that provides a text alternative to the image for those who are not able to see it. <span class="FirstTerm">Alternative</span><span class="FirstTerm"> text </span>(also called <span class="FirstTerm">alt text</span>) should serve as a substitute for the image content—conveying the same information and function. Alternative text is used by screen readers, search engines, and graphical browsers when the image doesn’t load (<span class="Xref-Figure">Figure 7-4</span>). </p>
+			<div>
+				<figure id="_idContainer352" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0704-ebook.png" alt="" width="1333" height="969"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-4.</span><span class="FigureLabel"> </span>Most browsers display alternative text in place of the image if the image is not available. Safari for macOS is a notable exception. Firefox’s substitution is the most seamless. </figcaption>
+				</figure>
+			</div>
+			<p class="body">In this example, a PDF icon indicates that the linked text downloads a file in PDF format. In this case, the image is conveying valuable content that would be missing if the image cannot be seen. Providing the alt text “PDF file” replicates the purpose of the image:</p>
+			<pre class="CodeFirst">&lt;a href="application.pdf"&gt;High school application&lt;/a&gt; &lt;img src="images/pdflogo.png <code class="CodeColor">alt="PDF file"</code>&gt;</pre>
+			<p class="body">A screen reader might indicate the image by reading its <span class="Literal-fc">alt</span> value this way:</p>
+			<blockquote class="Quote">“High school application. Image: PDF file”</blockquote>
+			<p class="body">Sometimes images function as links, in which case providing alternative text is critical because the screen reader needs something to read for the link. In the next example, an image of a book cover is used as a link to the book’s website. Its alt text does not describe the cover itself, but rather performs the same function as the cover image on the page (indicating a link to the site):</p>
+			<pre class="CodeFirst">&lt;a href="http://learningwebdesign.com"&gt;&lt;img src="/images/LWD_cover.png" <code class="CodeColor">alt="Learning Web Design site"</code>&gt;&lt;/a&gt;</pre>
+			<p class="body">If an image does not add anything meaningful to the text content of the page, it is recommended that you leave the value of the <span class="Literal-fc">alt</span> attribute <a id="_idIndexMarker1008"></a>empty (<span class="FirstTerm">null</span>). In the following example, a decorative floral accent is not contributing to the content of the page, so its <span class="Literal-fc">alt</span> value is null. (You may also consider whether it is more appropriately handled as a background image in CSS, but I digress.) Note that there is no character space between the quotation marks:</p>
+			<pre class="CodeFirst">&lt;img src="/images/floralembellishment.png" <code class="CodeColor">alt=""</code>&gt;</pre>
+			<p class="body">For each inline image on your page, consider what the alternative text would sound like when read aloud and whether that enhances the experience or might be obtrusive to a user with assistive technology. </p>
+			<div>
+				<div id="_idContainer353" class="sidebar">
+					<h5 class="SidebarSeries">Accessibility TIP</h5>
+					<p class="SidebarBody">Avoid using “image of” or “graphic of” in alt text values. It will be clear that it is an image. If the medium of the image, for example painting, photograph, or illustration, is relevant to the content, then it is fine to include the descriptive term.</p>
+				</div>
+			</div>
+			<p class="body">Alternative text may benefit users with graphical browsers as well. If the user has opted to turn images off in the browser preferences or if the image simply fails to load, the browser may display the alternative text to give the user an idea of what is missing. The handling of alternative text is inconsistent among modern browsers, however, as shown in <span class="Xref-Figure">Figure 7-4</span>.</p>
+			<div>
+				<div id="_idContainer354" class="sidebar">
+					<h5 class="SidebarSeries">Further Reading </h5>
+					<h5 class="SidebarTitle">Image Accessibility</h5>
+					<p class="SidebarBody">Some types of images, such as data charts and diagrams, require long descriptions that aren’t practical as <span class="Literal-Sidebar">alt</span> values. These cases require alternate accessibility strategies, which you will find in these resources:</p>
+					<ul>
+						<li class="SidebarListBullet">“Accessible Images” at WebAIM (<a href="http://webaim.org/techniques/images/"><span class="URL-Email--Sidebar-">webaim.org/techniques/images/</span></a>)</li>
+						<li class="SidebarListBullet">“Alternative Text” at <a id="_idIndexMarker1009"></a>WebAIM (<a href="http://webaim.org/techniques/alttext/"><span class="URL-Email--Sidebar-">webaim.org/techniques/alttext/</span></a>) </li>
+						<li class="SidebarListBullet">The Web <a id="_idIndexMarker1010"></a><a id="_idIndexMarker1011"></a>Content Accessibility Guidelines (WCAG 2.0) at the W3C (<a href="http://www.w3.org/TR/WCAG20-TECHS/"><span class="URL-Email--Sidebar-">www.w3.org/TR/WCAG20-TECHS/</span></a>) include techniques for improving accessibility across all web content. Warning: this one is pretty dense.</li>
+					</ul>
+				</div>
+			</div>
+			<h2 class="HeadB">Providing the Dimensions with width and height </h2>
+			<div>
+				<div id="_idContainer355" class="ref">
+					<p class="refNameCode">width="<span class="Replaceable">number</span>"</p>
+					<p class="refPurpose">Image width in pixels</p>
+					<p class="refNameCode">height="<span class="Replaceable">number</span>"</p>
+					<p class="refPurpose">Image height in pixels</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span><span class="Literal-fc"><a id="_idIndexMarker1012"></a><a id="_idIndexMarker1013"></a><a id="_idIndexMarker1014"></a></span> attributes indicate the dimensions of the image in number of pixels. Browsers use the specified dimensions to hold the right amount of space in the layout while the images are loading rather than reconstructing the page each time a new image arrives, resulting in faster page display. If only one dimension is set, the image will scale proportionally.</p>
+			<p class="body">These attributes have become less useful in the age of modern web development. They should never be used to <a id="_idIndexMarker1015"></a>resize an image (use your image-editing program or CSS for that), and they should be omitted entirely when you’re using one of the responsive image techniques introduced later in this chapter. They may be used with images that will appear at the same fixed size across all devices, such as a logo or an icon, to give the browser a layout hint. </p>
+			<p class="body">Be sure that the<a id="_idIndexMarker1016"></a><a id="_idIndexMarker1017"></a> pixel dimensions you specify are the actual dimensions of the image. If the pixel values differ from the actual dimensions of your image, the browser resizes the image to match the specified values (<span class="Xref-Figure">Figure 7-5</span>). If you are using <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes and your image looks distorted or even slightly blurry, check to make sure that the values are in sync.</p>
+			<div>
+				<figure id="_idContainer357" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0705.png" alt="" width="1315" height="494"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-5.</span> Browsers resize images to match the provided <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> values, but you should not resize images this way.</figcaption>
+				</figure>
+			</div>
+			<p class="Figure_Holder"> </p>
+			<p class="body">Now that you know the basics of the <span class="Literal-fc">img</span> element, you should be ready to add a few photos to the Black Goose Bistro Gallery site in <span class="Xref-Figure">Exercise 7-1</span>.</p>
+			<div>
+				<div id="_idContainer361" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 7-1.</span> Adding and linking images</h6>
+					<p class="SidebarBody">In this exercise, you’ll add images to pages and use them as links. All of the full-size photos and<a id="_idIndexMarker1018"></a> thumbnails (small versions of the images) you need have been created for you, and I’ve given you a head start on the HTML files with basic styles as well. The starter files and the resulting code are available at <a href="http://www.learningwebdesign.com/"><span class="URL-Email--Sidebar-">learningwebdesign.com/</span></a><span class="URL-Email--Sidebar-">5e/materials. </span>Put a copy of the <span class="Filename--Sidebar-">gallery</span> folder on your hard drive, making sure to keep it organized as you find it. </p>
+					<p class="SidebarBody">This little site is made up of a main page (<span class="Filename--Sidebar-">index.html</span>) and three separate HTML documents containing each of the larger image views (<span class="Xref-Figure">Figure 7-6</span>). First, we’ll add the thumbnails, and then we’ll add the full-size versions to their respective pages. Finally, we’ll make the thumbnails link to those pages. Let’s get started. </p>
+					<div>
+						<figure id="_idContainer359" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0706_ex1-ebook.png" alt="" width="1338" height="1100"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-6.</span> Photo gallery pages. </figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Open the file <span class="Filename--Sidebar-">index.html</span>, and add the small thumbnail images to this page to accompany the text. I’ve done the first one for you:</p>
+					<pre class="SidebarCodeFirst">&lt;p&gt;<code class="CodeColor">&lt;img src="thumbnails/bread-200.jpg" alt="close-up of sliced rustic bread" width="200" height="200"&gt;&lt;br&gt;</code>We start our day at the…</pre>
+					<p class="SidebarBody">I’ve put the image at the beginning of the paragraph, just after the opening <span class="Literal-Sidebar">&lt;p&gt;</span> tag. Because all of the thumbnail images are located in the <span class="Filename--Sidebar-">thumbnails</span> directory, I provided the pathname in the URL. I added a description of the image with the <span class="Literal-Sidebar">alt</span> attribute, and because I know these thumbnails will appear at exactly 200 pixels wide and high on all devices, I’ve included the <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes as well to tell the browser how much space to leave in the layout. Now it’s your turn.</p>
+					<ol>
+						<li class="SidebarListNumber">Add the thumbnail images <span class="Filename--Sidebar-">burgers-200.jpg</span> and <span class="Filename--Sidebar-">fish-200.jpg</span> at the beginning of the paragraphs in their respective sections, following my example. Be sure to include the pathnames and thoughtful alternative text descriptions. Finally, add a line break (<span class="Literal-Sidebar">&lt;br&gt;</span>) after the <span class="Literal-Sidebar">img</span> element.<p class="SidebarListItem_cont">When you are done, save the file and open it in the browser to be sure that the images are visible and appear at the right size.</p></li>
+						<li class="SidebarListNumber">Next, add the images to the individual HTML documents. I’ve done <span class="Filename--Sidebar-">bread.html</span> for you:<pre class="SidebarCodeFirst">&lt;h1&gt;Gallery: Baked Goods&lt;/h1&gt;<br/>&lt;p&gt;<code class="CodeColor">&lt;img src="photos/bread-800.jpg"</code> <code class="CodeColor">alt="close-up of sliced rustic bread"</code> <code class="CodeColor">width="800" height="600"&gt;</code>&lt;/p&gt; </pre><p class="SidebarListItem_cont">Notice that the full-size images are in a directory called <span class="Filename--Sidebar-">photos</span>, so that needs to be reflected in the pathnames. Notice also that because this page is not designed to be responsive, and the images will be a fixed size across devices, I went ahead and included the <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes here as well.</p><p class="SidebarListItem_cont">Add images to <span class="Filename--Sidebar-">burgers.html</span> and <span class="Filename--Sidebar-">fish.html</span>, following my example. Hint: all of the images are 800 pixels wide and 600 pixels high.</p><p class="SidebarListItem_cont">Save each file, and check your work by opening them in the browser window.</p></li>
+						<li class="SidebarListNumber">Back in <span class="Filename--Sidebar-">index.html</span>, link the thumbnails to their respective files. I’ve done the first one:<pre class="SidebarCodeFirst">&lt;p&gt;<code class="CodeColor">&lt;a href="bread.html"&gt;</code>&lt;img src="thumbnails/bread-200.jpg" alt="close-up of sliced rustic bread" width="200" height="200"&gt;<code class="CodeColor">&lt;/a&gt;</code>&lt;br&gt;We start our day at the crack of dawn…</pre><p class="SidebarListItem_cont">Notice that the URL is relative to the current document (<span class="Filename--Sidebar-">index.html</span>), not to the location of the image (the <span class="Filename--Sidebar-">thumbnails</span> directory).</p><p class="SidebarListItem_cont">Make the remaining thumbnail images link to each of the documents. If all the images are visible and you are able to link to each page and back to the home page again, then congratulations, you’re done!</p><div id="_idContainer360" class="sidebar"><h5 class="SidebarTitle">Like more practice?</h5><p class="SidebarBody">If you’d like more practice, you’ll find three additional images (<span class="Filename--Sidebar-">chicken-800.jpg</span>, <span class="Filename--Sidebar-">fries-800.jpg</span>, and <span class="Filename--Sidebar-">tabouleh-800.jpg</span>) with their thumbnail versions (<span class="Filename--Sidebar-">chicken-200.jpg</span>, <span class="Filename--Sidebar-">fries-200.jpg</span>, and <span class="Filename--Sidebar-">tabouleh-200.jpg</span>) in their appropriate directories. This time, you’ll need to add your own descriptions to the home page and create the HTML documents for the full-size images from scratch.</p></div></li>
+					</ol>
+				</div>
+			</div>
+			<p class="body">That takes care of the basics of adding images to a page. Next we’ll take on adding SVG images, which are a special case, both in terms of the underlying format and the ways they can be added to HTML.</p>
+			<h1 id="_idParaDest-65" class="HeadA"><a id="_idTextAnchor092"></a>Adding SVG Images</h1>
+			<p class="body">No lesson <a id="_idIndexMarker1019"></a><a id="_idIndexMarker1020"></a><a id="_idIndexMarker1021"></a>on adding images to web pages would be complete without an introduction to adding SVGs (Scalable Vector Graphics). After all, the popularity of SVG images has been gaining momentum thanks to nearly ubiquitous browser support and the need for images that can resize without loss of quality. For illustration-style images, they are a responsive dream come true. I’m saving my deep-dive into all things SVG for <a href="lwd5_chapter25.xhtml#_idTextAnchor311"><span class="Xref">Chapter </span><span class="Xref">25</span></a>, but for now I’ll give you a quick peek at what they’re made of so that the embedding markup makes sense.</p>
+			<p class="body">As I mentioned at the beginning of this chapter, SVGs are an appropriate format for storing vector images (<span class="Xref-Figure">Figure 7-1</span>). Instead of a grid of pixels, vectors are made up of shapes and paths that are defined mathematically. And even more interesting, in SVGs those shapes and paths are specified by instructions written out in a text file. Let that sink in: they are <em class="Emphasis">images</em> that are written out in <em class="Emphasis">text</em>! All of the shapes and paths as well as their properties are written out in the standardized SVG markup language (see <span class="Xref">Note</span>). As HTML has elements for paragraphs (<span class="Literal-fc">p</span>) and tables (<span class="Literal-fc">table</span>), SVG has elements that define shapes like rectangle <a id="_idIndexMarker1022"></a>(<span class="Literal-fc">rect</span>),<a id="_idIndexMarker1023"></a> circle (<span class="Literal-fc">circle</span>), and<a id="_idIndexMarker1024"></a> paths (<span class="Literal-fc">path</span>).</p>
+			<div>
+				<div id="_idContainer362" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">SVG is an example, or <span class="FirstTerm--Sidebar-">application</span>, of XML (Extensible Markup Language), which provides the rules and standards for how markup languages should be written and work together. As a result, SVG plays well alongside HTML content. </p>
+				</div>
+			</div>
+			<p class="body">A simple example will give you the general idea. Here is the SVG code that describes a rectangle (<span class="Literal-fc">rect</span>) with rounded corners (<span class="Literal-fc">rx</span> and <span class="Literal-fc">ry</span>, for x-radius and y-radius) and the word “hello” set as <span class="Literal-fc">text</span> with attributes for the font and color (<span class="Xref-Figure">Figure 7-7</span>). Browsers that support SVG read the instructions and draw the image exactly as I designed it:</p>
+			<pre class="CodeFirst">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 180"&gt;<br/>  &lt;rect width="300" height="180" fill="purple" rx="20" ry="20"/&gt;<br/>  &lt;text x="40" y="114" fill="yellow" font-family="'Verdana-Bold'" font-size="72"&gt;<br/>    hello!<br/>  &lt;/text&gt;<br/>&lt;/svg&gt;</pre>
+			<div>
+				<figure id="_idContainer364" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0707_hellosvg.png" alt="" width="1321" height="450"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-7.</span> A simple SVG made up of a rectangle and text.</figcaption>
+				</figure>
+			</div>
+			<p class="body">SVGs offer some significant advantages over their bitmapped counterparts for certain image types:</p>
+			<ul>
+				<li class="ListBullet">Because they save only instructions for what to draw, they generally require less data than an image saved in a bitmapped format. That means faster downloads and better performance.</li>
+				<li class="ListBullet">Because they are<a id="_idIndexMarker1025"></a> vectors, they can resize as needed in a responsive layout without loss of quality. An SVG is always nice and crisp. No fuzzy edges.</li>
+				<li class="ListBullet">Because they are <a id="_idIndexMarker1026"></a>text, they integrate well with HTML/XML and can be compressed with tools like Gzip and Brotli, just like HTML files.</li>
+				<li class="ListBullet">They can be <a id="_idIndexMarker1027"></a><a id="_idIndexMarker1028"></a>animated.</li>
+				<li class="ListBullet">You can change how they look with Cascading Style Sheets.</li>
+				<li class="ListBullet">You can add interactivity with <a id="_idIndexMarker1029"></a><a id="_idIndexMarker1030"></a>JavaScript so things happen when users hover their mouse over or click the image.</li>
+			</ul>
+			<p class="body">Again, all of the ins and outs of creating SVGs, as well as their many features, are discussed in detail in <a href="lwd5_chapter25.xhtml#_idTextAnchor311"><span class="Xref">Chapter </span><span class="Xref">25</span></a>. For now, I’d like to focus on the HTML required to place them in the flow of a web page. You have a few options: embedded with the <span class="Literal-fc">img</span> element, written out in code as an inline <span class="Literal-fc">svg</span> element, embedded with <span class="Literal-fc">object</span>, and used as a background image with CSS. </p>
+			<h2 class="HeadB">Embedded with the img Element</h2>
+			<p class="body">SVG text files <a id="_idIndexMarker1031"></a><a id="_idIndexMarker1032"></a>saved with the <span class="Filename">.svg</span> suffix (sometimes referred to <a id="_idIndexMarker1033"></a><a id="_idIndexMarker1034"></a>as a <span class="FirstTerm">standalone SVG</span>) can be treated as any other image, including placing it in the document by using the <span class="Literal-fc">img</span> element. You’re an expert on the <span class="Literal-fc">img</span> element by now, so the following example should be clear:</p>
+			<pre class="CodeFirst">&lt;img src="/images/<code class="CodeColor">circle.svg</code>" alt=""&gt;</pre>
+			<h3 class="HeadC">Pros and cons</h3>
+			<p class="body">The advantage to embedding an SVG with <span class="Literal-fc">img</span> is that it is universally supported in <a id="_idIndexMarker1035"></a>browsers that support SVG. </p>
+			<p class="body">This approach works fine when you are using a standalone SVG as a simple substitute for a GIF or a PNG, but there are a few disadvantages to embedding SVGs with <span class="Literal-fc">img</span>:</p>
+			<ul>
+				<li class="ListBullet">You cannot apply styles to the items within the SVG by using an external style sheet, such as a <span class="Filename">.css</span> file applied to the whole page. The <span class="Filename">.svg</span> file may include its own internal style sheet using the <a id="_idIndexMarker1036"></a><span class="Literal-fc">style</span> element, however, for styling the elements within it. You can also apply styles to the <span class="Literal-fc">img</span> element itself.  </li>
+				<li class="ListBullet">You cannot manipulate the elements within the SVG with JavaScript, so you lose the option for interactivity. Scripts in your web document can’t see the content of the SVG, and scripts in the SVG file do not run at all. Other interactive effects, like links <a id="_idIndexMarker1037"></a>or <span class="Literal-fc">:hover</span> styles, are never triggered inside an SVG embedded with <span class="Literal-fc">img</span> as well.</li>
+				<li class="ListBullet">You can’t use <em class="Emphasis">any</em> external files, such as embedded images or web fonts, within the SVG.</li>
+			</ul>
+			<p class="body">In other words, standalone SVGs behave as though they are in their own little, self-contained bubble. But for static illustrations, that is just fine.</p>
+			<h3 class="HeadC">Browser support for SVG with img</h3>
+			<p class="body">The good news is that all modern browsers support SVGs embedded with the <span class="Literal-fc">img</span> element. The two notable exceptions are Internet Explorer versions 8 and earlier, and the Android browser prior to version 3. As of this writing, users with those browsers may still show up in small but significant numbers in your user logs. If you see a reason for your site to support these older browsers, there are workarounds, which I address briefly in the upcoming <span class="Xref">“SVG Fallbacks”</span> section.</p>
+			<div>
+				<div id="_idContainer365" class="sidebar">
+					<h5 class="SidebarTitle">SVG Server Configuration</h5>
+					<p class="SidebarBody">If you are using SVGs and they are not showing up correctly when your site is uploaded, you may need to configure the server to recognize the SVG image type, as discussed at the beginning of this chapter. Here’s how to do it on the<a id="_idIndexMarker1038"></a> Apache server, but similar configurations can be done in other server languages:</p>
+					<pre class="SidebarCodeFirst">AddType image/svg+xml .svg</pre>
+				</div>
+			</div>
+			<h2 class="HeadB">Inline in the HTML Source</h2>
+			<div>
+				<div id="_idContainer366" class="ref">
+					<p class="refNameCode">&lt;svg&gt; </p>
+					<p class="refPurpose">An inline SVG image</p>
+				</div>
+			</div>
+			<p class="body">Another option <a id="_idIndexMarker1039"></a><a id="_idIndexMarker1040"></a><a id="_idIndexMarker1041"></a>for putting an SVG on a web page is to copy the content of the SVG file and paste it directly into the HTML document. This is called using the SVG <span class="FirstTerm">inline</span>. Here is an example that looks a lot like the inline <span class="Literal-fc">img</span> example that we saw way back in <span class="Xref-Figure">Figure 7-2</span>, only this time our pizza is a vector image drawn with circles and inserted with the <span class="Literal-fc">svg</span> element (<span class="Xref-Figure">Figure 7-8</span>). Each<a id="_idIndexMarker1042"></a> <span class="Literal-fc">circle</span> element has attributes that describe the fill color, the position of its center point (<a id="_idIndexMarker1043"></a><span class="Literal-fc">cx</span> and <span class="Literal-fc">cy</span>), and the length of its radius (<span class="Literal-fc">r</span>):</p>
+			<pre class="CodeFirst">&lt;p&gt;This summer, try making pizza<br/><br/><code class="CodeColor">&lt;svg</code> xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="100" height="100"<br/>  &lt;circle fill="#D4AB00" cx="36" cy="36" r="36"/&gt;<br/>  &lt;circle opacity=".7" fill="#FFF" stroke="#8A291C" cx="36.1" cy="35.9" r="31.2"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="38.8" cy="13.5" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="22.4" cy="20.9" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="32" cy="37.2" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="16.6" cy="39.9" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="26.2" cy="53.3" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="42.5" cy="27.3" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="44.3" cy="55.2" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="54.7" cy="42.9" r="4.8"/&gt;<br/>  &lt;circle fill="#A52C1B" cx="56" cy="28.3" r="4.8"/&gt;<br/><code class="CodeColor">&lt;/svg&gt;</code>  <br/><br/>on your grill.&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer368" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0708_inlinesvg.png" alt="" width="967" height="283"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-8.</span> This pizza image is an SVG made up of 11 <span class="Literal-Sidebar">circle</span> elements. Instead of an <span class="Literal-Sidebar">img</span> element, the SVG source code is placed right in the HTML document with an <span class="Literal-Sidebar">svg</span> element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">This code was generated by <a id="_idIndexMarker1044"></a><a id="_idIndexMarker1045"></a>Adobe Illustrator, where I created the illustration and saved it in SVG format. I also optimized it to strip out a lot of cruft that Illustrator adds in there. We’ll discuss SVG optimization in <a href="lwd5_chapter25.xhtml#_idTextAnchor311"><span class="Xref">Chapter </span><span class="Xref">25</span></a>.</p>
+			<h3 class="HeadC">Pros and cons</h3>
+			<p class="body">Inline SVGs allow developers to take full advantage of SVG features. When the SVG markup is alongside the HTML markup, all of its elements are part of the main DOM tree. That means you can access and manipulate SVG objects with JavaScript, making them respond to user interaction or input. There are similar benefits for style sheets because the elements in the SVG can inherit styles from HTML elements. That makes it easy to apply the same styles to elements on the page and within the SVG graphic.</p>
+			<p class="body">On the downside, the code for SVG illustrations can get extremely long and unwieldy, resulting in bloated HTML documents that are difficult to read. Even that little pepperoni pizza requires a serious block of code. It also makes the images for a site more difficult to maintain, since they are tucked away in the HTML documents. Another disadvantage is that inline SVGs are not cached by the browser separate from the HTML file, so avoid this method for large images that are reused across many HTML pages. </p>
+			<h3 class="HeadC">Browser support </h3>
+			<p class="body">The good news is that all modern browsers support SVG images placed inline with the <span class="Literal-fc">svg</span> element. The following older browser versions lack support: Internet Explorer versions 8 and earlier, Safari versions 5 and earlier, Android mobile browser prior to version 3, and iOS prior to version 5. </p>
+			<h2 class="HeadB">Embedded with the object Element</h2>
+			<p class="body">HTML has an <a id="_idIndexMarker1046"></a><a id="_idIndexMarker1047"></a>all-purpose media embedding element called <span class="Literal-fc">object</span>. We’ll talk about it more in <a href="lwd5_chapter10.xhtml#_idTextAnchor122"><span class="Xref">Chapter </span><span class="Xref">10</span><span class="Xref">, Embedded Media</span></a>, but for now, know that <span class="Literal-fc">object</span> is another option for embedding an SVG in a web page. It is a good compromise between <span class="Literal-fc">img</span> and inline SVG, allowing a fully functional SVG that is still encapsulated in a separate, cacheable file. </p>
+			<p class="body">The opening <span class="Literal-fc">object</span> tag specifies the media type (an <span class="Literal-fc">svg+xml</span> image) and points to the file to be used with the <span class="Literal-fc">data</span> attribute. The <span class="Literal-fc">object</span> element comes with its own fallback mechanism—any content within the <span class="Literal-fc">object</span> gets rendered if the media specified with <span class="Literal-fc">data</span> can’t be displayed. In this case, a PNG version of the image will be placed with an <span class="Literal-fc">img</span> if the <span class="Filename">.svg</span> is not supported or fails to load:</p>
+			<pre class="CodeFirst">&lt;object type="<code class="CodeColor">image/svg+xml</code>" data="<code class="CodeColor">pizza.svg</code>"&gt;<br/>  &lt;img src="<code class="CodeColor">pizza.png</code>" alt="pizza"&gt;<br/>&lt;/object&gt;</pre>
+			<p class="body">There is one catch, however. Some browsers download the fallback image even if they support SVG and don’t need it. Useless downloads are not ideal. The workaround is to make the fallback image a CSS background image in an empty <span class="Literal-fc">div</span> container. Unfortunately, it is not as flexible for scaling and sizing, but it does solve the extra download issue.</p>
+			<pre class="CodeFirst">&lt;object type="image/svg+xml" data="pizza.svg"&gt;<br/>  &lt;div <code class="CodeColor">style="background-image: url(pizza.png); width 100px; height: 100px;</code>" role="img" aria-label="pizza"&gt;<br/>&lt;/object&gt;</pre>
+			<h3 class="HeadC">Pros and cons</h3>
+			<p class="body">The main advantage to embedding SVGs with the <span class="Literal-fc">object</span> element is that they can be scripted and load external files. They can also use scripts to access the parent HTML document (with some security restrictions). However, because they are separate files and not part of the DOM for the page, you can’t use a style sheet in the HTML document to<a id="_idIndexMarker1048"></a> style elements within the SVG. Embedded SVGs may also have some buggy behaviors in browsers, so be sure to test thoroughly.</p>
+			<div>
+				<div id="_idContainer369" class="sidebar">
+					<h5 class="SidebarTitle">Other Embedding Options</h5>
+					<p class="SidebarBody">Older techniques for adding SVGs involve using two other HTML elements for embedding media: <span class="Literal-Sidebar">embed</span> and <span class="Literal-Sidebar">iframe</span> (<a id="_idIndexMarker1049"></a><a id="_idIndexMarker1050"></a>we’ll talk about them in <span class="Xref--Sidebar-">Chapter 10</span>). You may still see these in use with SVGs out there, and they work fine for browsers that support SVG, but most developers consider them to be outdated methods. Stick with <span class="Literal-Sidebar">img</span>, inline <span class="Literal-Sidebar">svg</span>, <span class="Literal-Sidebar">object</span>, and CSS <span class="Literal-Sidebar">background-image</span>. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Used as a Background Image with CSS</h2>
+			<p class="body">I know that this is an HTML chapter, but I’d be remiss if I didn’t at least mention that SVGs can be used as background images with CSS. This style rule example puts a<a id="_idIndexMarker1051"></a><a id="_idIndexMarker1052"></a> decorative image in the background of a <span class="Literal-fc">header</span>:</p>
+			<pre class="CodeFirst">header {<br/>  background-image: url(<code class="CodeColor">/images/decorative.svg</code>);<br/>}</pre>
+			<h2 class="HeadB">SVG Fallbacks</h2>
+			<p class="body">As mentioned earlier, all modern browsers support SVGs either embedded as an <span class="Literal-fc">img</span>, embedded as an <span class="Literal-fc">object</span>, or included inline, which is very good news. However, if your server logs show significant traffic from Internet Explorer 8 and earlier, Android version 3 and earlier, or Safari 5 and earlier, or if your client just requires support for those browsers, you may need to use a fallback technique. One option is to use the <span class="Literal-fc">object</span> element to embed the SVG on the page and take advantage of its fallback content feature shown earlier. </p>
+			<p class="body">If you are using SVG as an image with <a id="_idIndexMarker1053"></a>the <span class="Literal-fc">img</span> element, another option is to use the <a id="_idIndexMarker1054"></a><a id="_idIndexMarker1055"></a><span class="Literal-fc">picture</span> element (it’s discussed as part of the <span class="Xref">“Responsive Image Markup”</span> section later in this chapter). The <span class="Literal-fc">picture</span> element can be used to provide several versions of an image in different formats. Each version is suggested with the<a id="_idIndexMarker1056"></a> <span class="Literal-fc">source</span> element, which in the following example points to the <span class="Filename">pizza.svg</span> image and defines its media type. The <span class="Literal-fc">picture</span> element also has a built-in fallback mechanism. If the browser doesn’t support the suggested <span class="Literal-fc">source</span> files, or if it does not support the <span class="Literal-fc">picture</span> element, users will see the PNG image provided with the good old <span class="Literal-fc">img</span> element instead:</p>
+			<pre class="CodeFirst">&lt;picture&gt;<br/>  &lt;source <code class="CodeColor">type="image/svg+xml"</code> srcset="pizza.svg"&gt;<br/>  &lt;img srcset="pizza.png" alt="No SVG support"&gt;<br/>&lt;/picture&gt;</pre>
+			<p class="body">If you Google for “SVG fallbacks,” you’ll likely get quite a few hits, many of which use JavaScript to detect support. For more detailed information on SVG fallbacks, I recommend reading<a id="_idIndexMarker1057"></a> Amelia Bellamy-Royd’s article, “A Complete Guide to SVG Fallbacks” (<a href="http://css-tricks.com/a-complete-guide-to-svg-fallbacks/"><span class="URL-Email">css-tricks.com/a-complete-guide-to-svg-fallbacks/</span></a>) or <a id="_idIndexMarker1058"></a>Chris Coyier’s book, <span class="Citation">Practical SVG</span> (A Book Apart) when you are ready. Ideally, you will be reading this in a world where old Internet Explorer and Android versions are no longer an issue.</p>
+			<p class="body">Are you ready to give SVGs a spin? Try out some of the embedding techniques we discussed in <span class="Xref-Figure">Exercise 7-2</span>.</p>
+			<div>
+				<div id="_idContainer372" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 7-2.</span> Adding an SVG to a page</h6>
+					<p class="SidebarBody">In this exercise<a id="_idIndexMarker1059"></a>, we’ll add some SVG images to the Black Goose Bistro page that we worked on in <span class="Xref--Sidebar-">Chapter 4</span>. The materials for this exercise are available online at <a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">learningwebdesign.com/5e/materials</span></a>. You will find everything in a directory called <span class="Filename--Sidebar-">svg</span>. The resulting code is provided with the materials.</p>
+					<p class="SidebarBody">This exercise has two parts: first, we’ll replace the logo with an SVG version, and second, we’ll add a row of social media icons at the bottom of the page (<span class="Xref-Figure">Figure 7-9</span>).</p>
+					<div>
+						<figure id="_idContainer371" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0709_exercise2.png" alt="" width="1073" height="717"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-9.</span> The Black Goose Bistro page with SVG images.</figcaption>
+						</figure>
+					</div>
+					<h5 class="sbHead">Part I: Replacing the logo</h5>
+					<ol>
+						<li class="SidebarListNumber" value="1">Open <span class="Filename--Sidebar-">blackgoosebistro.html</span> in a text editor. It should look just like we left it in <span class="Xref--Sidebar-">Chapter 4</span>. </li>
+						<li class="SidebarListNumber">Just for fun, let’s see what happens when you make the current PNG logo really large. Add <span class="Literal-Sidebar">width="500"</span><span class="Literal-fc"> </span><span class="Literal-Sidebar">height="500"</span> to the <span class="Literal-Sidebar">img</span> tag. Save the file and open it in the browser to see how blurry bitmapped images get when you size them larger. Yuck.</li>
+						<li class="SidebarListNumber">Let’s replace it with an SVG version of the same logo by using the inline SVG method. In the <span class="Filename--Sidebar-">svg</span> folder, you will find a file called <span class="Filename--Sidebar-">blackgoose-logo.svg</span>. Open it in your text editor and copy all of the text (from <span class="Literal-Sidebar">&lt;svg&gt;</span> to <span class="Literal-fc">&lt;/svg&gt;</span>).</li>
+						<li class="SidebarListNumber">Go back to the <span class="Filename--Sidebar-">blackgoosebistro.html</span> file and delete the entire <span class="Literal-Sidebar">img</span> element (be careful not to delete the surrounding markup). Paste the SVG text in its place. If you look closely, you will see that the SVG contains two circles, a gradient definition, and two paths (one for the starburst shape and one for the goose).</li>
+						<li class="SidebarListNumber">Next, set the size the SVG should appear on the page. In the opening <span class="Literal-Sidebar">svg</span> tag, add <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes set to 200px each.<pre class="SidebarCodeFirst">&lt;h1&gt;&lt;svg <code class="CodeColor">width="200px" height="200px"</code> …</pre><p class="SidebarListItem_cont">Save the file and open the page in the browser. You should see the SVG logo in place, looking a lot like the old one. </p></li>
+						<li class="SidebarListNumber">Try seeing what happens when you make the SVG logo really big! Change the width and height to 500 pixels, save the file, and reload the page in the browser. It should be big and <em class="Emphasis">sharp</em>! No blurry edges like the PNG. OK, now put the size back to 200 × 200 or whatever looks good to you.<h5 class="sbHead">Part II: Adding icons</h5></li>
+						<li class="SidebarListNumber">Next we’re going to create a footer at the bottom of the page for social media icons. Below the Location &amp; Hours section, add the following (the empty paragraph is where we’ll add the logos):<pre class="SidebarCodeFirst">&lt;footer&gt;<br/>  &lt;p&gt;Please visit our social media pages&lt;/p&gt;<br/>  &lt;p&gt; &lt;/p&gt;<br/> &lt;/footer&gt;</pre></li>
+						<li class="SidebarListNumber">Use the <span class="Literal-Sidebar">img</span> element to place three SVG icons: <span class="Filename--Sidebar-">twitter.svg</span>, <span class="Filename--Sidebar-">facebook.svg</span>, and <span class="Filename--Sidebar-">instagram.svg</span>. Note that they are located in the <span class="Filename--Sidebar-">icons</span> directory. There are also icons for Tumblr and GitHub if you’d like extra practice. Here’s a head start on the first one:<pre class="SidebarCodeFirst">&lt;p&gt;&lt;img src="icons/twitter.svg" alt="twitter"&gt;&lt;/p&gt;</pre></li>
+						<li class="SidebarListNumber">Save the file and open it in the browser. The icons should be there, but they are <em class="Emphasis">huge</em>. Let’s write a couple of style rules to make the footer look nice. We haven’t done much with style rules yet, so just copy exactly what you see here inside the <span class="Literal-Sidebar">style</span> element in the <span class="Literal-Sidebar">head</span> of the document: <pre class="SidebarCodeFirst">footer {<br/>  border-top: 1px solid #57b1dc;<br/>  text-align: center;<br/>  padding-top: 1em;<br/>}<br/>footer img {<br/>  width: 40px;<br/>  height: 40px;<br/>  margin-left: .5em;<br/>  margin-right: .5em;<br/> } </pre></li>
+						<li class="SidebarListNumber">Save the file again and open it in the browser (you should see a page that looks like <span class="Xref-Figure">Figure 7-9</span>). Go ahead and play around with the style settings, or even the code in the inline SVG, if you’d like to get a feel for how they affect the appearance of the images. It’s kinda fun.</li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-66" class="HeadA"><a id="_idTextAnchor093"></a>Responsive Image Markup</h1>
+			<p class="body">Pretty quickly after<a id="_idIndexMarker1060"></a><a id="_idIndexMarker1061"></a><a id="_idIndexMarker1062"></a> smartphones, tablets, “phablets,” and other devices hit the scene, it became clear that large images that look great on a large screen were overkill on smaller screens. All that image data…downloaded and wasted. Forcing huge images onto small devices slows down page display and may cost real money too, depending on the user’s data plan (and your server costs). Conversely, small images that download quickly may be blurry on large, high-resolution screens. Just as we need a way to make whole web pages respond and adapt to various screen sizes, we need a way to make images on those page “responsive” as well. Our trusty <span class="Literal-fc">img</span> element with its single <span class="Literal-fc">src</span> attribute just doesn’t cut it in most cases.</p>
+			<p class="body">It took a couple of years of proposals, experimentation, and discussion between browser makers and the web development community, but we now have a way to suggest alternate images by using HTML markup alone. No complicated JavaScript or server-side hacks. The resulting responsive image features (<span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> attributes as well as the <span class="Literal-fc">picture</span> element) have been incorporated into the HTML 5.1 specification, and browser support is growing steadily, led by the Chrome browser in September 2014. </p>
+			<p class="body">Thanks to a foolproof fallback and scripts that add support to older browsers, you can start using these techniques right away. That said, none of this is set in stone. Responsive image solutions are likely to be tweaked and improved, or perhaps one day even made obsolete. If you are going to include them in your sites, a good starting place for getting up-to-speed is the <a id="_idIndexMarker1063"></a>Responsive Images Community Group (<a href="http://responsiveimages.org"><span class="URL-Email">responsiveimages.org</span></a>). RICG is a group of developers who worked together to hammer out the current spec with the browser creators. They are on top of this stuff. You should also look for recent articles and perhaps even crack open the spec.</p>
+			<h2 class="HeadB">How It Works</h2>
+			<p class="body">When we say “responsive images,” we are talking about providing images that are tailored to the user’s viewing environment. First and foremost, responsive image techniques prevent browsers on small screens from downloading more image data than they need. They also include a mechanism to give high-resolution displays on fast networks images large enough to look extra-gorgeous. In addition, they provide a way for developers to take advantage of new, more efficient image formats.</p>
+			<p class="body">In short, responsive images work this way: you provide multiple images, sized or cropped for different screen sizes, and the browser picks the most appropriate one based on what it knows about the current viewing environment. Screen dimensions are one factor, but resolution, network speed, what’s already in its cache, user preferences, and other considerations may also be involved. </p>
+			<div>
+				<div id="_idContainer373" class="callout">
+					<p class="callout">You provide multiple images, sized or cropped for different screen sizes, and the browser picks the most appropriate one based on what it knows about the current viewing environment.</p>
+				</div>
+			</div>
+			<p class="body">The responsive image attributes and elements address the following four basic scenarios:</p>
+			<ul>
+				<li class="ListBullet">Providing extra-large images that look crisp on <strong class="Emphasis_Bold">high-resolution screens</strong></li>
+				<li class="ListBullet">Providing a set of images of various dimensions for use on <strong class="Emphasis_Bold">different screen sizes</strong></li>
+				<li class="ListBullet">Providing versions of the image with varying amount of detail based on the device size and orientation (known as the <strong class="Emphasis_Bold">art direction</strong> use case)</li>
+				<li class="ListBullet">Providing <strong class="Emphasis_Bold">alternative image formats</strong> that store the same image at much smaller file sizes</li>
+			</ul>
+			<p class="body">Let’s take a look at each of these common use cases. </p>
+			<h2 class="HeadB">High-Density Displays (x-descriptor)</h2>
+			<p class="body">Everything that <a id="_idIndexMarker1064"></a>you <a id="_idIndexMarker1065"></a>see on a screen display is made up of little squares of colored light <a id="_idIndexMarker1066"></a>called <span class="FirstTerm">pixels</span>. We call the pixels that make up the screen itself <span class="FirstTerm">device pixels</span> (you’ll<a id="_idIndexMarker1067"></a><a id="_idIndexMarker1068"></a><a id="_idIndexMarker1069"></a> <a id="_idIndexMarker1070"></a>also sometimes see them referred to<a id="_idIndexMarker1071"></a> as <span class="FirstTerm">hardware pixels</span> or <span class="FirstTerm">physical pixels</span>). <a id="_idIndexMarker1072"></a>Until recently, screens commonly fit 72 or 96 device pixels in an inch (now 109 to 160 is the norm). The number of <a id="_idIndexMarker1073"></a>pixels per inch (<span class="FirstTerm">ppi</span>) is the <span class="FirstTerm">resolution</span> of <a id="_idIndexMarker1074"></a><a id="_idIndexMarker1075"></a>the screen. </p>
+			<p class="body">Bitmapped <a id="_idIndexMarker1076"></a>images, like <a id="_idIndexMarker1077"></a>JPEG, PNG, and GIF, are made up of a grid of pixels too. It used to be that the pixels in images as well as pixel dimensions specified in our style sheets mapped one-to-one with the device pixels. An image or box element that was 100 pixels wide would be laid out across 100 device pixels. Nice and straightforward.</p>
+			<h3 class="HeadC">Device-pixel-ratios</h3>
+			<p class="body">It should <a id="_idIndexMarker1078"></a>come as no surprise that it’s not so straightforward today. Manufacturers have been pushing screen resolutions higher and higher in an effort to improve image quality. The result is that device pixels have been getting smaller and smaller, so small that our images and text would be illegibly tiny if they were mapped one-to-one. </p>
+			<div>
+				<div id="_idContainer374" class="callout">
+					<p class="callout">Devices use a measurement called a reference pixel for layout purposes.</p>
+				</div>
+			</div>
+			<p class="body">To compensate, devices use a measurement called <a id="_idIndexMarker1079"></a><a id="_idIndexMarker1080"></a>a <span class="FirstTerm">reference pixel</span> for layout purposes. Reference pixels are also known<a id="_idIndexMarker1081"></a> as <span class="FirstTerm">points</span> (PT) in <a id="_idIndexMarker1082"></a><a id="_idIndexMarker1083"></a><a id="_idIndexMarker1084"></a>iOS, <span class="FirstTerm">Device Independent Pixels</span> (DP or DiP) in Android, <a id="_idIndexMarker1085"></a>or <span class="FirstTerm">CSS pixels</span> because they are the unit of measurement we use in style sheets. The iPhone 8 has a screen that is made up of 750 <span lang="ar-SA" xml:lang="ar-SA">×</span> 1334 device pixels, but it uses a layout grid of 375 <span lang="ar-SA" xml:lang="ar-SA">×</span> 667 points or CSS pixels (a ratio of 2 device pixels to 1 layout pixel—2:1 or 2x). A box sized to 100 pixels wide in CSS would be laid out across 200 device pixels on the iPhone8. The iPhone X has a screen that is made up of 1125 <span lang="ar-SA" xml:lang="ar-SA">×</span> 2436 pixels, but it uses a layout grid of 375 <span lang="ar-SA" xml:lang="ar-SA">×</span> 812 points (a ratio of 3 device pixels to one point—or 3x). A box sized to 100 pixels is laid out across 300 device pixels on the iPhone X.</p>
+			<p class="body">The ratio of the number of device pixels to CSS pixels is called the <span class="FirstTerm">device-pixel-ratio</span> (<span class="Xref-Figure">Figure 7-10</span>). Common device-pixel-ratios on handheld devices are 1.325x, 1.5x, 1.7x, 2x, 2.4x, 3x, and even 4x (the “x” is the convention for indicating a device-pixel-ratio). Even large desktop displays are featuring ratios of 2x, 3x, and 4x.</p>
+			<div>
+				<figure id="_idContainer376" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0710_pixeldensity.png" alt="" width="977" height="977"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-10.</span> Device pixels compared to CSS/reference pixels. </figcaption>
+				</figure>
+			</div>
+			<p class="body">Let’s say you have an image that you want to appear 200 pixels wide on all displays. You can make the image exactly 200px wide (<span class="FirstTerm">px</span> is short for pixels), and it will look fine on standard-resolution displays, but it might be a little blurry on high-resolution displays. To get that image to look sharp on a display with a device-pixel-ratio of 2x, you’d need to make that same image 400 pixels wide. It would need to be 600 pixels wide to look sharp on a 3x display. Unfortunately, the larger images may have file sizes that are four or more times the size of the original. Who wants to send all that extra data to a 1x device that really only needs the smaller image?</p>
+			<h3 class="HeadC">Introducing srcset</h3>
+			<p class="body">We now <a id="_idIndexMarker1086"></a><a id="_idIndexMarker1087"></a>have a way to serve larger images just to the browsers on displays that benefit from them. We do it using the new <span class="Literal-fc">srcset</span> attribute with our old friend the <span class="Literal-fc">img</span> element. <span class="Literal-fc">srcset</span> allows developers to specify a list of image source options for the browser to choose from. </p>
+			<p class="body">The value of <span class="Literal-fc">srcset</span> is a comma-separated list of options. Each item in that list has two parts: the URL of an image and an <span class="FirstTerm">x-descriptor</span> that specifies the target device-pixel-ratio. Note that the whole list is the value of <span class="Literal-fc">srcset</span> and goes inside a single set of quotation marks. This sample shows the structure of a <span class="Literal-fc">srcset</span> value:</p>
+			<pre class="CodeFirst"><code class="CodeColor">srcset="</code><code class="CodeColor">image-URL</code><code class="CodeColor"> </code><code class="CodeColor">#</code><code class="CodeColor">x, </code><code class="CodeColor">image-URL</code><code class="CodeColor"> </code><code class="CodeColor">#</code><code class="CodeColor">x"</code> </pre>
+			<p class="body">The <span class="Literal-fc">src</span> attribute is<a id="_idIndexMarker1088"></a><a id="_idIndexMarker1089"></a> still required, and is generally used to specify the default 1x image for browsers that don’t support <span class="Literal-fc">srcset</span>. Make sure there is an <a id="_idIndexMarker1090"></a><a id="_idIndexMarker1091"></a><span class="Literal-fc">alt</span> attribute as well:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;img src="</code><code class="CodeColor">image-URL</code><code class="CodeColor">" alt="" srcset="</code><code class="CodeColor">image-URL</code><code class="CodeColor"> </code><code class="CodeColor">#</code><code class="CodeColor">x, </code><code class="CodeColor">image-URL</code><code class="CodeColor"> </code><code class="CodeColor">#</code><code class="CodeColor">x"&gt;</code></pre>
+			<p class="body">Let’s look at an example. I have an image of a turkey that I’d like to appear 200 pixels wide. For standard resolution, I created the image at 200 pixels wide and named it <span class="Filename">turkey-200px.jpg</span>. I’d also like it to look crisp in high-resolution displays, so I have two more versions: <span class="Filename">turkey-400px.jpg</span> (for 2x) and <span class="Filename">turkey-600px.jpg</span> (for 3x). Here is the markup for adding the image and indicating its high-density equivalents with x-descriptors: </p>
+			<pre class="CodeFirst">&lt;img src="/images/turkey-200px.jpg" alt="" <br/><code class="CodeColor">srcset="/images/turkey-400px.jpg 2x, /images/turkey-600px.jpg 3x"</code> &gt;</pre>
+			<p class="body">Because browsers ignore line returns and spaces in the source document, I can also write that same element stacked in this way to make it a little easier to read, as I will be doing throughout this chapter:</p>
+			<pre class="CodeFirst">&lt;img<br/>   src="/images/turkey-200px.jpg" alt=""<br/>   <code class="CodeColor">srcset="/images/turkey-400px.jpg 2x,<br/>          /images/turkey-600px.jpg 3x"</code> &gt;</pre>
+			<p class="body">That makes the options and structure more clear at a glance, don’t you think?</p>
+			<p class="body">Browsers that recognize the <span class="Literal-fc">srcset</span> attribute check the screen resolution and download what they believe to be the most appropriate image. If the browser is on a Mac with a 2x Retina display, it may download <span class="Filename">image-400px.jpg</span>. If the device-pixel-ratio is 1.5x, 2.4x, or something else, it checks the overall viewing environment and makes the best selection. It is important to know that when we use <span class="Literal-fc">srcset</span> with the <span class="Literal-fc">img</span> element, we are handing the keys to the browser to make the final image selection. </p>
+			<div>
+				<div id="_idContainer377" class="callout">
+					<p class="callout">When we use srcset with the img element, we are allowing the browser to make the best image selection.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">When to use x-descriptors</h3>
+			<p class="body"><span class="FirstTerm">X-descriptors</span> tell the browser to make a selection based on screen resolution only, with no regard for the dimensions of the screen or viewport. For this reason, x-descriptors are best used for images that stay the same pixel dimensions regardless of the screen size, such as logos, social media badges, or other fixed-width images.</p>
+			<p class="body">It is much more likely that you’ll want images to resize based on the size of the screen and to be able to serve small images to small handheld devices, and large images to desktops (that’s kind of the crux of this responsive image thing, after all). Now that you are familiar with using the <span class="Literal-fc">srcset</span> attribute, let’s see how it can be used to deliver images targeted to various screen sizes. Here’s where <span class="Literal-fc">srcset</span> really shines.</p>
+			<h2 class="HeadB">Variable-Width Images (w-descriptor)</h2>
+			<p class="body">When you’re <a id="_idIndexMarker1092"></a><a id="_idIndexMarker1093"></a>designing a responsive web page, chances are you’ll want image sizes to change based on the size of the<a id="_idIndexMarker1094"></a><a id="_idIndexMarker1095"></a><a id="_idIndexMarker1096"></a><a id="_idIndexMarker1097"></a> browser <span class="FirstTerm">viewport</span> (see <span class="Xref">Note</span>). This is known as a <span class="FirstTerm">viewport-based selection</span>. And because you are the type of web developer who cares about how fast pages display, you’ll want to limit unnecessary data downloads by providing appropriately sized images. </p>
+			<div>
+				<div id="_idContainer378" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">On a mobile device, the viewport fills the whole screen. On a desktop browser, the viewport is the area where the page displays, not including the scrollbars and other browser “chrome.”</p>
+				</div>
+			</div>
+			<p class="body">To achieve this goal, use the <span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> attributes with the <span class="Literal-fc">img</span> element. As we saw in previous examples, the <span class="Literal-fc">srcset</span> gives the browser a set of image file options, but this time, it uses a <span class="FirstTerm">w-descriptor</span> (width descriptor) that provides the <em class="Emphasis">actual pixel width</em> of each image. Using <span class="Literal-fc">srcset</span> with a w-descriptor is appropriate when the images are identical except for their dimensions (in other words, they differ only in scale). Here’s an example of a <span class="Literal-fc">srcset</span> attribute that provides four image options and specifies their respective pixel widths via w-descriptors. Note again that the whole list is in a single set of quotation marks:</p>
+			<pre class="CodeFirst">srcset="strawberries-480.jpg <code class="CodeColor">480w</code>,<br/>       strawberries-960.jpg <code class="CodeColor">960w</code>,<br/>       strawberries-1280.jpg <code class="CodeColor">1280w</code>,<br/>       strawberries-2400.jpg <code class="CodeColor">2400w</code>"</pre>
+			<h3 class="HeadC">Using the sizes attribute</h3>
+			<p class="body">That’s a good <a id="_idIndexMarker1098"></a>start, but whenever you use w-descriptors, you also need to use the <span class="Literal-fc">sizes</span> attribute to tell the browser the approximate size that the image will appear in the page’s layout. There is a very good reason (in addition to being required in the spec), and it is worth understanding.</p>
+			<div>
+				<div id="_idContainer379" class="callout">
+					<p class="callout">The sizes attribute is required when you use width descriptors.</p>
+				</div>
+			</div>
+			<p class="body">When a browser downloads the HTML document for a web page, the first thing it does is look through the whole document and establish its outline structure (<a id="_idIndexMarker1099"></a>its <span class="FirstTerm">Document Object Model</span>, or <span class="FirstTerm">DOM</span>). Then, almost immediately, a <span class="FirstTerm">preloader</span> goes <a id="_idIndexMarker1100"></a>out to get all the images from the server so they are ready to go. Finally, the CSS and the JavaScript are downloaded. It is likely that the style sheet has instructions for layout and image sizes, but by the time the browser sees the styles, the images are already downloaded. For that reason, we have to give the browser a good hint with the <span class="Literal-fc">sizes</span> attribute whether the image will fill the whole viewport width or only a portion of it. That allows the preloader to pick the correct image file from the <span class="Literal-fc">srcset</span> list. </p>
+			<p class="body">We’ll start with the simplest scenario in which the image is a banner and always appears at 100% of the viewport width, regardless of the device (<span class="Xref-Figure">Figure 7-11</span>). Here’s the complete <span class="Literal-fc">img</span> element:</p>
+			<pre class="CodeFirst">&lt;img src="strawberries-640.jpg"<br/>     alt="baskets of ripe strawberries"<br/>     srcset="strawberries-480.jpg 480w,<br/>            strawberries-960.jpg 960w,<br/>            strawberries-1280.jpg 1280w,<br/>            strawberries-2400.jpg 2400w"<br/>     <code class="CodeColor">sizes="100vw"</code>&gt;</pre>
+			<div>
+				<figure id="_idContainer381" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0711_100vw.png" alt="" width="1321" height="717"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-11.</span> The image fills 100% of the viewport width, regardless of its size.</figcaption>
+				</figure>
+			</div>
+			<p class="body">In this example, the <span class="Literal-fc">sizes</span> attribute tells the browser that the image fills the full viewport by <a id="_idIndexMarker1101"></a><a id="_idIndexMarker1102"></a>using <span class="FirstTerm">viewport width</span> units (<span class="Literal-fc">vw</span>), the most common unit for the <span class="Literal-fc">sizes</span> attribute, so the browser can pick the best image for the job. For example, <span class="Literal-fc">100vw</span> translates to 100% of the viewport width, <span class="Literal-fc">50vw</span> would be 50%, and so on. You can also use <span class="Literal-fc">em</span>, <span class="Literal-fc">px</span>, and a few other CSS units, but you cannot use percentages. Browsers that do not support <span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> simply use the image specified in the <span class="Literal-fc">src</span> attribute. </p>
+			<p class="body">Sizing an image to fill the whole width of the browser is a pretty specific case. More likely, your images will be one component in a responsive page layout that resizes and rearranges to make best use of the available screen width. <span class="Xref-Figure">Figure 7-12</span> shows a sidebar of food photos that take up the full width of the screen on small devices, take up a portion of the width on larger devices, and appear three across in a layout for large browser windows.</p>
+			<div>
+				<figure id="_idContainer383" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0712_sizes.png" alt="" width="1982" height="771"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-12.</span> The width of the images changes based on the width of the viewport. </figcaption>
+				</figure>
+			</div>
+			<p class="body">For cases like these, use the <span class="Literal-fc">sizes</span> attribute to tell the browser something about how the image will be sized for each layout. The <span class="Literal-fc">sizes</span> value is a comma-separated list in which each item has two parts. The first part in parentheses is <a id="_idIndexMarker1103"></a>a <span class="FirstTerm">media condition</span> that describes a parameter such as the width of the viewport. The second part is a length that indicates the width that image will occupy in the layout if the media condition is met. Here’s how that syntax looks:</p>
+			<pre class="CodeFirst">sizes="(<span class="Replaceable">media-feature</span><code class="CodeColor">: </code><span class="Replaceable">condition</span>)<code class="CodeColor"> </code><span class="Replaceable">length</span>, <br/>       (<span class="Replaceable">media-feature</span><code class="CodeColor">: </code><span class="Replaceable">condition</span>)<code class="CodeColor"> </code><span class="Replaceable">length</span>, <br/>       (<span class="Replaceable">media-feature</span><code class="CodeColor">: </code><span class="Replaceable">condition</span>)<code class="CodeColor"> </code><span class="Replaceable">length</span>"</pre>
+			<p class="body">I’ve added some media conditions to the previous example, and now we have a complete valid <span class="Literal-fc">img</span> element for one of the photo images in <span class="Xref-Figure">Figure 7-12</span>:</p>
+			<pre class="CodeFirst">&lt;img src="strawberries-640.jpg" alt="baskets of ripe strawberries"<br/>    srcset="strawberries-240.jpg 240w,<br/>            strawberries-480.jpg 480w,<br/>            strawberries-672.jpg 672w"<br/>     sizes="<code class="CodeColor">(max-width: 480px) 100vw,<br/>           (max-width: 960px) 70vw,<br/>            240px</code>"&gt;</pre>
+			<p class="body">The <span class="Literal-fc">sizes</span> attribute tells the browser the following: </p>
+			<ul>
+				<li class="ListBullet">If the viewport is 480 pixels wide or smaller (maximum width is 480 pixels), the image fills 100% of the viewport width.</li>
+				<li class="ListBullet">If the viewport is wider than 480 pixels but no larger than 960 pixels (<span class="Literal-fc">max-width: 960px</span>), <a id="_idIndexMarker1104"></a>then the image will appear at 70% of the viewport. (This layout has 15% margins on the left and the right of the images, or 30% total.)</li>
+				<li class="ListBullet">If the viewport is larger than 960 pixels and doesn’t meet any of the prior media conditions, the image gets sized to exactly 240 pixels.</li>
+			</ul>
+			<p class="body">Now that the browser knows the width of the viewport and how big the image will appear within it, it can select the most appropriate image from the <span class="Literal-fc">srcset</span> list <a id="_idIndexMarker1105"></a><a id="_idIndexMarker1106"></a>to download. </p>
+			<div>
+				<div id="_idContainer384" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">The <span class="Literal-fc">sizes</span> attribute will resize an image even if there is no CSS applied to it. If there is a CSS rule specifying image size that conflicts with the value of the <span class="Literal-fc">sizes</span> attribute, the style rule wins (i.e., it overrides the <span class="Literal-fc">sizes</span> value).</p>
+				</div>
+			</div>
+			<p class="body">There’s a bit more to using <span class="Literal-fc">sizes</span> than shown here—other media conditions, additional length units, even the ability to ask the browser to calculate widths for you. If you plan on using viewport-width-based images in your designs, I recommend reading the spec to take full advantage of the possibilities.</p>
+			<div>
+				<div id="_idContainer385" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Strategies and tools for producing the image sets for responsive layouts are introduced in <span class="Xref--Sidebar-">Chapter 24, Image Asset Production</span>.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Art Direction (picture Element) </h2>
+			<div>
+				<div id="_idContainer386" class="ref">
+					<p class="refNameCode">&lt;picture&gt;…&lt;/picture&gt;</p>
+					<p class="refPurpose">Specifies a number of image options </p>
+					<p class="refNameCode">&lt;source&gt;…&lt;/source&gt;</p>
+					<p class="refPurpose">Specifies alternate image sources</p>
+				</div>
+			</div>
+			<p class="body">So far, we’ve looked at image selection based on the resolution of the screen and the size of the viewport. In both of these scenarios, the content of the image does not change but merely resizes.</p>
+			<p class="body">But sometimes, resizing isn’t enough. You might want to crop into important details of an image when it is displayed on a small screen. You may want to change or remove text from the image if it gets too small to be legible. Or you might want to provide both landscape (wide) and portrait (tall) versions of the same image for different layouts. </p>
+			<div>
+				<div id="_idContainer387" class="callout">
+					<p class="callout">Use the picture element when simply resizing the image is not enough.</p>
+				</div>
+			</div>
+			<p class="body">For example, in <span class="Xref-Figure">Figure 7-13</span>, the whole image of the table as well as the dish reads fine on larger screens, but at smartphone size, it gets difficult to see the delicious detail. It would be nice to provide alternate versions of the image that make sense for the browsing conditions.</p>
+			<div>
+				<figure id="_idContainer389" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0713_cropping.png" alt="" width="1321" height="1167"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-13.</span> Some images are illegible when resized smaller for mobile devices.</figcaption>
+				</figure>
+			</div>
+			<p class="body">This scenario is known as <a id="_idIndexMarker1107"></a><a id="_idIndexMarker1108"></a>an <span class="FirstTerm">art-direction-based selection</span> and it is accomplished with <a id="_idIndexMarker1109"></a>the <span class="Literal-fc">picture</span> element. The <span class="Literal-fc">picture</span> element has no attributes; it is just a wrapper for some number<a id="_idIndexMarker1110"></a> of <span class="Literal-fc">source</span> elements and an <span class="Literal-fc">img</span> element. The <span class="Literal-fc">img</span> element is required and must be the last element in the list. If the <span class="Literal-fc">img</span> is left out, no image will display at all because it is the piece that is actually placing the image on the page. Let’s look at a sample <span class="Literal-fc">picture</span> element and then pick it apart:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;picture&gt;</code><br/>  <code class="CodeColor">&lt;source</code> <code class="CodeColor">media=</code>"(min-width: 1024px)" <code class="CodeColor">srcset=</code>"icecream-large.jpg"<code class="CodeColor">&gt;</code><br/>  <code class="CodeColor">&lt;source</code> <code class="CodeColor">media=</code>"(min-width: 760px)" <code class="CodeColor">srcset=</code>"icecream-medium.jpg"<code class="CodeColor">&gt;</code><br/>  &lt;img src="icecream-small.jpg" alt="hand holding ice cream cone and text that reads Savor the Summer"&gt;<br/><code class="CodeColor">&lt;/picture&gt;</code></pre>
+			<p class="body">This example tells the browser that if the viewport is 1024 pixels wide or larger, use the large version of the ice cream cone image. If it is wider than 760 pixels (but smaller than 1024, such as on a tablet), use the medium version. Finally, for viewports that are smaller than 760 pixels and therefore don’t match any of the media queries in the previous <span class="Literal-fc">source</span> elements, the small version should be used (<span class="Xref-Figure">Figure 7-14</span>). The small version, as specified in the <span class="Literal-fc">img</span> element, will be used for browsers that do not recognize <span class="Literal-fc">picture</span> and <span class="Literal-fc">source</span>. </p>
+			<div>
+				<figure id="_idContainer391" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_0714_picture-ebook.png" alt="" width="1338" height="1575"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-14.</span> The <span class="Literal-Sidebar">picture</span> element provides different image versions to be sourced at various screen sizes.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Each <span class="Literal-fc">source</span> element<a id="_idIndexMarker1111"></a><a id="_idIndexMarker1112"></a> includes a <span class="Literal-fc">media</span> attribute and a <span class="Literal-fc">srcset</span> attribute. It can also use <a id="_idIndexMarker1113"></a>the <span class="Literal-fc">sizes</span> attribute, although that is not shown in the previous example. The <span class="Literal-fc">media</span> attribute supplies a media query for checking the current browsing conditions. It is similar to the media conditions we saw in the earlier <span class="Literal-fc">srcset</span> example, but the <span class="Literal-fc">media</span> attribute specifies a full-featured CSS media query (we’ll talk more about media queries in <a href="lwd5_chapter17.xhtml#_idTextAnchor224"><span class="Xref">Chapter </span><span class="Xref">17</span><span class="Xref">, Responsive Web Design</span></a>). The <span class="Literal-fc">srcset</span> attribute supplies the URL for the image to use if the media query is a match. In the previous example, there is just one image specified, but it could also be a comma-separated list if you wanted to provide several options using x- or w-descriptors. </p>
+			<p class="body">Browsers download the image from the first <span class="Literal-fc">source</span> that matches the current conditions, so the order of the <span class="Literal-fc">source</span> elements is important. The URL provided in the <span class="Literal-fc">srcset</span> attribute gets passed to the <span class="Literal-fc">src</span> attribute in the <span class="Literal-fc">img</span> element. Again, it’s the <span class="Literal-fc">img</span> that places the image on the page, so don’t omit it. The <span class="Literal-fc">alt</span> attribute for the <span class="Literal-fc">img</span> element is required, but <span class="Literal-fc">alt</span> is not permitted in the <span class="Literal-fc">source</span> element. </p>
+			<p class="body">Art direction is the primary use of the <span class="Literal-fc">picture</span> element, but let’s look at one more thing it can do to round out our discussion on responsive images.</p>
+			<h2 class="HeadB">Alternative Image Formats (type Attribute)</h2>
+			<p class="body">Once upon a time, <a id="_idIndexMarker1114"></a><a id="_idIndexMarker1115"></a>in the early 1990s, the only image type you could put on a web page was a GIF. JPEGs came along not long after, and we waited nearly a <em class="Emphasis">decade</em> for reliable browser support for the more feature-rich PNG format. It takes a notoriously long time for new image formats to become universally supported. In the past, that meant simply avoiding newer formats. </p>
+			<p class="body">In an effort to reduce image file sizes, more efficient image formats have been developed—such as <a id="_idIndexMarker1116"></a>WebP, JPEG 2000, and JPEG XR—that can compress images significantly smaller than their JPEG and PNG counterparts (see <span class="Xref">Note</span>). And once again, some browsers support them and some don’t. The difference is that today we can use the<a id="_idIndexMarker1117"></a><a id="_idIndexMarker1118"></a> <span class="Literal-fc">picture</span> element to serve the newer image formats to browsers that can handle them, and a standard image format to browsers that can’t. We no longer have to wait for universal browser support.</p>
+			<div>
+				<div id="_idContainer392" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The bitmapped image formats, including WebP, JPEG 2000, and JPEG XR, are discussed in more detail in <span class="Xref--Sidebar-">Chapter 23, Web Image Basics</span>.</p>
+				</div>
+			</div>
+			<p class="body">In the following example, the <span class="Literal-fc">picture</span> element specifies two image alternatives before the fallback JPEG listed in the <span class="Literal-fc">img</span> element: </p>
+			<pre class="CodeFirst">&lt;picture&gt;<br/>  &lt;source <code class="CodeColor">type="image/webp"</code> srcset="pizza.webp"&gt;<br/>  &lt;source <code class="CodeColor">type="image/jxr"</code> srcset="pizza.jxr"&gt;<br/>  &lt;img src="pizza.jpg" alt=""&gt;<br/>&lt;/picture&gt;</pre>
+			<p class="body">For image-format-based selections, each <span class="Literal-fc">source</span> element has two attributes: the <span class="Literal-fc">srcset</span> attribute that we’ve seen before, and the <span class="Literal-fc">type</span> attribute for specifying the type of file (also known as <a id="_idIndexMarker1119"></a>its <span class="FirstTerm">MIME type</span>, see the <span class="Xref">“File (MIME) Types”</span> sidebar). In this example, the first <span class="Literal-fc">source</span> points to an image that is in the WebP format, and the second specifies a JPEG XR. Again, the browser uses the image from the first source that matches the browser’s image support, so it makes sense to put them in order from smallest to largest file size.</p>
+			<div>
+				<div id="_idContainer393" class="sidebar">
+					<h5 class="SidebarTitle">File (MIME) Types</h5>
+					<p class="SidebarBody">The web uses a standardized system to communicate the type of media files being transferred between the server and browser. It is based on MIME (Multipurpose Internet Mail Extension), which was originally developed for sending attachments via email. Every file format has a standardized type (such as <span class="Literal-Sidebar">image</span>, <span class="Literal-Sidebar">application</span>, <span class="Literal-Sidebar">audio</span>, or <span class="Literal-Sidebar">video</span>), subtype that identifies the specific format, and one or more file extensions. In our example, the <span class="Literal-Sidebar">type</span> attribute specifies the WebP option with its type/subtype (<span class="Literal-Sidebar">image/webp</span>) and uses the proper file extension (<span class="Filename--Sidebar-">.webp</span>). Other examples of media MIME types are <span class="Literal-Sidebar">image/jpeg</span> (extensions <span class="Filename--Sidebar-">.jpg</span>, <span class="Filename--Sidebar-">.jpeg</span>), <span class="Literal-Sidebar">video/mpeg</span> (extensions <span class="Filename--Sidebar-">.mpg</span>, <span class="Filename--Sidebar-">.mpe</span>, <span class="Filename--Sidebar-">.mpeg</span>, <span class="Filename--Sidebar-">.m1v</span>, <span class="Filename--Sidebar-">.mp2</span>, <span class="Filename--Sidebar-">.mp3</span>, and <span class="Filename--Sidebar-">.mpa</span>), and <span class="Literal-Sidebar">application/pdf</span> (<span class="Filename--Sidebar-">.pdf</span>). The complete listing of registered MIME types is published by the IANA (Internet Assigned Numbers Authority) at <a href="http://www.iana.org/assignments/media-types"><span class="URL-Email--Sidebar-">www.iana.org/assignments/media-types</span></a>.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Browser Support</h2>
+			<p class="body">As I write this <a id="_idIndexMarker1120"></a>section, it seems like a new browser is adding support for <span class="Literal-fc">picture</span>, <span class="Literal-fc">srcset</span>, and <span class="Literal-fc">sizes</span> every day, but of course, old browser versions have a bad habit of sticking around for years. This is not a reason to avoid using responsive images, however. First of all, all of these features are designed to include the <span class="Literal-fc">img</span> element as a built-in fallback for browsers that don’t recognize the newer markup. In the worst case, the browser grabs the image specified in the <span class="Literal-fc">img</span> element.</p>
+			<p class="body">If that isn’t good enough, try including <a id="_idIndexMarker1121"></a>Picturefill with your web pages. Picturefill is an example of <a id="_idIndexMarker1122"></a><a id="_idIndexMarker1123"></a>a <span class="FirstTerm">polyfill</span>, a script that makes older browsers behave as though they support a new technology—in this case, responsive images. It was created by <a id="_idIndexMarker1124"></a>Scott Jehl of Filament Group, creators of many fine responsive design and frontend development tools. Go to <a href="http://scottjehl.github.io/picturefill/"><span class="URL-Email">scottjehl.github.io/picturefill/</span></a> to download the script and read the very thorough tutorial on how it works and how to use it.</p>
+			<h2 class="HeadB">Responsive Images Summary</h2>
+			<p class="body">This has been a long discussion about responsive images, and we’ve really only scratched the surface. We’ve looked at how to use the <span class="Literal-fc">img</span> element with <span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> to make <em class="Emphasis">pixel-ratio-based</em> and <em class="Emphasis">viewport-size-based</em> selections (you can try them yourself in <span class="Xref-Figure">Exercise 7-3</span>). We also saw how the <span class="Literal-fc">picture</span> element can be used for <em class="Emphasis">art-direction-based</em> and <em class="Emphasis">image-type-based</em> selections.</p>
+			<div>
+				<div id="_idContainer394" class="sidebar">
+					<h5 class="SidebarSeries">Browser Support TIP</h5>
+					<p class="SidebarBody">The <a id="_idIndexMarker1125"></a>site <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> is a great tool for checking on the browser support for<a id="_idIndexMarker1126"></a> HTML, CSS, and other frontend web technologies. Type in <span class="Literal-Sidebar">picture</span>, <span class="Literal-Sidebar">srcset</span>, or <span class="Literal-Sidebar">sizes</span> to see where browser support stands. </p>
+				</div>
+			</div>
+			<p class="body">I’ve kept my examples short and sweet, but know that it is possible to combine techniques in different ways, often resulting in a tower of code for each image. To see some examples of how these responsive image techniques might be combined to target more than one condition, I recommend Andreas Bovens’s article “Responsive Images: Use Cases and Documented Code Snippets to Get You Started” on the Dev.Opera site (<a href="http://dev.opera.com/articles/responsive-images/"><span class="URL-Email">dev.opera.com/articles/responsive-images/</span></a>). </p>
+			<p class="body">I also recommend the 10-part “Responsive Images 101” tutorial by Jason Grigsby at Cloud Four. He goes into a bit more detail than I was able to here and provides links to other good resources. Start with “Part 1: Definitions” (<a href="http://cloudfour.com/thinks/responsive-images-101-definitions/"><span class="URL-Email">cloudfour.com/thinks/responsive-images-101-definitions/</span></a>).</p>
+			<div>
+				<div id="_idContainer395" class="sidebar">
+					<h5 class="SidebarTitle">Alternatives to Responsive Images</h5>
+					<p class="SidebarBody">Although it is terrific to have an HTML solution for getting the right images to the right browsers, the current system is cumbersome with stacks of code and the need to produce multiple images. If you work on an image-heavy site, it could prove to be unmanageable. Image processing is a task that begs to be automated. The solution: let <a id="_idIndexMarker1127"></a><a id="_idIndexMarker1128"></a>the <em class="Emphasis">server</em> do it!</p>
+					<p class="SidebarBody">Fortunately, there are many tools and services, both open source and for pay, that let the server do the work of creating appropriate image versions on the fly. You upload the largest available size of the image and let the server handle the rest—no need to create and store multiple versions of every image. In general, image-generation services address only resizing, and not art direction or alternative image types; however, at least one service (<a href="http://Cloudinary.com"><span class="URL-Email--Sidebar-">Cloudinary.com</span></a>) uses face detection as a basis for image cropping.</p>
+					<p class="SidebarBody">Some <a id="_idIndexMarker1129"></a><a id="_idIndexMarker1130"></a>content management systems (CMSs) have image resizing features built in. Another option is to install software on your own server. Bear in mind, however, that requiring JavaScript to be running is less than ideal. There are also many third-party solutions that provide image-resizing services (like <a id="_idIndexMarker1131"></a><a id="_idIndexMarker1132"></a>Cloudinary.com and Kraken.io), usually for a fee. For large, image-heavy sites, they are worth looking into. </p>
+					<p class="SidebarBody">Jason <a id="_idIndexMarker1133"></a>Grigsby of Cloud Four has compiled a spreadsheet of image-resizing software and services that serves as a good jumping-off point. You can get to it from his article, “Image Resizing Services” (<a href="http://cloudfour.com/thinks/image-resizing-services/"><span class="URL-Email--Sidebar-">cloudfour.com/thinks/image-resizing-services/</span></a>) or at <a href="http://tinyurl.com/pmpbyzj"><span class="URL-Email--Sidebar-">tinyurl.com/pmpbyzj</span></a>.</p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer399" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 7-3.</span> Adding responsive images</h6>
+					<p class="SidebarBody">Ready to try out <a id="_idIndexMarker1134"></a>some of this responsive image stuff? I recommend downloading the latest version of Google Chrome (<a href="http://google.com/chrome/"><span class="URL-Email--Sidebar-">google.com/chrome/</span></a>) or Firefox (<a href="http://firefox.com"><span class="URL-Email--Sidebar-">firefox.com</span></a>) so you are certain it supports the responsive image HTML features. The materials for this exercise are provided at <a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">learningwebdesign.com/5e/materials</span></a>. Use the <span class="Filename--Sidebar-">responsivegallery</span> directory that contains a starter HTML file and <span class="Filename--Sidebar-">images</span> directory.</p>
+					<p class="SidebarBody">We’re going to give the Black Goose Bistro Gallery page a makeover using responsive images. Now, instead of the user clicking a thumbnail and going to a separate page, the large images appear right on the page and resize to fill the available space. Small devices and browsers that don’t support <span class="Literal-Sidebar">picture</span> get a 400-pixel-square version of each image (<span class="Xref-Figure">Figure 7-15</span>).</p>
+					<div>
+						<figure id="_idContainer397" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_0715_ex3.png" alt="" width="1925" height="1867"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 7-15.</span> The Black Goose Bistro Gallery with responsive images in place. Smaller devices see a square cropped version of the image. Larger browsers get the full image that resizes to fill the content width. </figcaption>
+						</figure>
+					</div>
+					<ol>
+						<li class="SidebarListNumber" value="1">Open the file <span class="Filename--Sidebar-">index.html</span> located in the <span class="Filename--Sidebar-">responsivegallery</span> directory in a text or HTML editor. I’ve added a <span class="Literal-Sidebar">meta</span> element that sets the viewport to the same size as the device width, which is required to make this page responsive. I also added a style for <span class="Literal-Sidebar">img</span> elements that sets their maximum width to 100% of the available space. That is the bit that makes the images scale down for smaller screen widths. We’ll talk a lot more about responsive design in <span class="Xref--Sidebar-">Chapter 17</span>, so don’t worry about it too much now. I just wanted to point out changes from our previous exercise.</li>
+						<li class="SidebarListNumber">Because we want to change between horizontal and square versions of the image on this page, we’ll need to use the <span class="Literal-Sidebar">picture</span> element. Start by adding the bare bones of a <span class="Literal-Sidebar">picture</span> element in the first paragraph after “Our Baked Goods,” including the <span class="Literal-Sidebar">picture</span> wrapper and its required <span class="Literal-Sidebar">img</span> element. The <span class="Literal-Sidebar">img</span> element points to the default square version of the image (<span class="Filename--Sidebar-">bread-400.jpg</span>). Add a line break element after the <span class="Literal-Sidebar">picture</span> element to start the text on the next line:<pre class="SidebarCodeFirst">&lt;p&gt;<br/><code class="CodeColor">&lt;picture&gt;<br/>  &lt;img src="images/bread-400.jpg" alt="close-up of sliced rustic bread"&gt;<br/>&lt;/picture&gt;<br/>&lt;br&gt;</code>We start our day…</pre></li>
+						<li class="SidebarListNumber">That takes care of small devices and the fallback for non-supporting devices. Now add a <span class="Literal-Sidebar">source</span> element that tells browser to use a 1200-pixel-wide landscape version of the image when the viewport is larger than 480 pixels:<pre class="SidebarCodeFirst">&lt;p&gt;<br/>&lt;picture&gt;<br/>  <code class="CodeColor">&lt;source media="(min-width: 480px)"<br/>           srcset="images/bread-1200.jpg"&gt;</code><br/>  &lt;img src="images/bread-400.jpg" alt="close-up of sliced rustic bread"&gt;<br/>&lt;/picture&gt;<br/>&lt;br&gt;We start our day…</pre><p class="SidebarListItem_cont">Note that because there is only one image specified in the <span class="Literal-Sidebar">source</span>, we could have used a simple <span class="Literal-Sidebar">src</span> attribute here, but we have more work to do, so the <span class="Literal-Sidebar">srcset</span> gets us ready for the next step.</p></li>
+						<li class="SidebarListNumber">Because we don’t want to force such a large image on everyone, let’s give the browser an 800-pixel-wide version as well. (Even more versions would be useful, but for the sake of keeping this exercise manageable, we’ll stop at two.) Remember that the <span class="Literal-Sidebar">srcset</span> attribute specifies a comma-separated list of images and their respective pixel widths with w-descriptors. I’ve added the <span class="Literal-Sidebar">1200w</span> descriptor to the original image and added the 800-pixel option to the <span class="Literal-Sidebar">srcset</span>. Finally, use the <span class="Literal-Sidebar">sizes</span> attribute to let the browser know that the image will occupy 80% of the viewport width (the style sheet adds a 10% margin on the left and right sides, leaving 80% for the content). Now the browser can choose the most appropriate size.<pre class="SidebarCodeFirst">&lt;p&gt;<br/>&lt;picture&gt;<br/>  &lt;source media="(min-width: 480px)"<br/> <code class="CodeColor">          srcset="images/bread-1200.jpg 1200w,<br/>                   images/bread-800.jpg 800w"<br/>          sizes="80vw"</code>&gt;<br/>  &lt;img src="images/bread-400.jpg" alt="close-up of sliced rustic bread"&gt;<br/>&lt;/picture&gt;<br/>&lt;br&gt;We start our day…</pre></li>
+						<li class="SidebarListNumber">Save the file. Launch the Chrome or Firefox desktop browser and resize the window to as narrow as it will go. Open<span class="Filename--Sidebar-"> index.html</span> and you should see the square cropped version of the bread photo. Slowly drag the corner of the browser window to make the window wider. When it gets wider than 480 pixels, it should switch to the full version of the photo. If you see a little “800” in the corner of the image, that means the browser has downloaded <span class="Filename--Sidebar-">bread-800.jpg</span> for this task. Keep expanding the window, and the image should keep getting larger. If you see “1200,” it means it is using <span class="Filename--Sidebar-">bread-1200.jpg</span><span class="Filename">.</span> Once the larger image is in the browser’s cache, you won’t see the 800-pixel version again. Try making the window narrow and wide again and watch what changes. Congratulations! You are now an official responsive web designer! Making windows narrow and wide is how we spend a good portion of our workday.  <div id="_idContainer398" class="note"><h5 class="noteHeader">NOTE</h5><p class="SidebarBody">If you don’t see the images at all, it could be that your pathnames are incorrect or the <span class="Filename--Sidebar-">images</span> directory hasn’t copied to your computer.</p></div></li>
+						<li class="SidebarListNumber">Add the remaining two images to the page, following my example. Try experimenting with different min- and max-widths in the <span class="Literal-Sidebar">media</span> attribute. </li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-67" class="HeadA"><a id="_idTextAnchor094"></a>Whew! We’re Finished</h1>
+			<p class="body">That wraps up <a id="_idTextAnchor095"></a>our exploration of images. We’ve seen how to place images with the <span class="Literal-fc">img</span> element and its required <span class="Literal-fc">src</span> and <span class="Literal-fc">alt</span> attributes. We’ve talked about the importance of good alternative text for accessibility. We also looked at a few ways to embed SVG images into a web page. Finally, we took on the newly minted responsive image features, including <span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> for the <span class="Literal-fc">img</span> element to target high-density displays or to provide a variety of image sizes for the browser to choose from, and the <span class="Literal-fc">picture</span> and <span class="Literal-fc">source</span> elements for art direction and alternative image formats. Now try answering a few questions to test your knowledge.</p>
+			<h1 id="_idParaDest-68" class="HeadA"><a id="_idTextAnchor096"></a>Test Yourself</h1>
+			<p class="body">Images are a big part of the web experience. Answer these questions to see how well you’ve absorbed the key concepts of this chapter. The correct answers can be found in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber">Which attributes must be included in every <span class="Literal-fc">img</span> element?</li>
+				<li class="ListNumber">Write the markup for adding an image called <span class="Filename">furry.jpg</span> that is in the same directory as the current document.</li>
+				<li class="ListNumber">Name two reasons to include alternative text for an <span class="Literal-fc">img</span> element. </li>
+				<li class="ListNumber">What might be going wrong if your images don’t appear when you view the page in a browser? There are three possible explanations.</li>
+				<li class="ListNumber">What is the difference between an x-descriptor and a w-descriptor?</li>
+				<li class="ListNumber">What is the difference between a device pixel and a CSS (reference) pixel? </li>
+				<li class="ListNumber">Match the responsive image scenarios with the HTML solutions:<ol><li class="ListNumber_Indent"><code class="Code">&lt;img src="" alt="" srcset="</code><code class="Code">URL x-descriptor</code><code class="Code">"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;img src="" alt=" srcset="</code><code class="Code">URL w-descriptor</code><code class="Code">" sizes="</code><code class="Code">#</code><code class="Code">"&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;picture&gt;</code><br/><code class="Code">  &lt;source type="</code><code class="Code">…" srcset=""&gt;<br/>  &lt;img src="" alt=""&gt;<br/>&lt;/picture&gt;</code></li><li class="ListNumber_Indent"><code class="Code">&lt;picture&gt;</code><br/><code class="Code">  &lt;source media="()" srcset=""&gt;<br/>  &lt;img src="" alt=""&gt;<br/>&lt;/picture&gt;</code></li></ol><p class="ListNumber_cont">____	You want the image to always fill the width of the browser window.</p><p class="ListNumber_cont">____	You want to take advantage of the file savings of the WebP image format.</p><p class="ListNumber_cont">____	You want to remove the text from an image when it is on small screens.</p><p class="ListNumber_cont">____	You want your product images to look as sharp as possible on high-resolution screens.</p><p class="ListNumber_cont">____	You want to show a close-up of the action in a news image on small screens.</p><p class="ListNumber_cont">____	You want the image to resize smaller when it is part of the layout on a large screen.</p></li>
+				<li class="ListNumber">Challenge question: Describe what this example tells the browser to do:<pre class="CodeFirst">&lt;picture&gt;<br/>  &lt;source sizes="(min-width: 480px) 80vw,<br/>                 100vw"<br/>           srcset="photo-200.webp 200w<br/>                  photo-400.webp 400w,<br/>                  photo-800.webp 800w,<br/>                 photo-1200.webp 1200w"<br/>           type="image/webp"&gt;<br/>  &lt;img src=" photo-400.jpg" alt=""<br/>        sizes="(min-width: 480px) 80vw,<br/>               100vw"<br/>        srcset="photo-200.jpg 200w,<br/>              photo-400.jpg 400w,<br/>              photo-800.jpg 800w,<br/>              photo-1200.jpg 1200w"&gt;<br/>&lt;/picture&gt; </pre></li>
+				<li class="ListNumber">What is cache and how does it affect web page performance?</li>
+				<li class="ListNumber">Name one advantage and one disadvantage of adding an SVG to a page with the <span class="Literal-fc">img</span> element.</li>
+				<li class="ListNumber">Name one advantage and one disadvantage of inline SVG.</li>
+				<li class="ListNumber">When would it be appropriate to add an SVG to a page as a background image with CSS?</li>
+				<li class="ListNumber">What is this bit of code describing, and when might you need to use it?<pre class="CodeFirst">image/svg+xml</pre></li>
+				<li class="ListNumber">What is this bit of code describing, and where would you find it?<pre class="CodeFirst">http://www.w3.org/2000/svg</pre><div id="_idContainer400" class="sidebar"><h5 class="SidebarSeries"><strong class="Emphasis_Bold">Photo Credits</strong></h5><p class="SidebarBody">Many of the images in this chapter are from the fabulous royalty-free photo site, <a href="http://Unsplash.com"><span class="URL-Email--Sidebar-">Unsplash.com</span></a>: ravioli by Davide <a id="_idIndexMarker1135"></a>Ragusa, burgers by Niklas <a id="_idIndexMarker1136"></a>Rhöse, ice cream cone by Alex <a id="_idIndexMarker1137"></a>Jones, dinner table by Jay <a id="_idIndexMarker1138"></a>Wennington, strawberries by <a id="_idIndexMarker1139"></a>Priscilla Fong. From Flickr’s “No Rights Restrictions” collection: fish dish by Renata <a id="_idIndexMarker1140"></a>Maia, muffins by Hasma <a id="_idIndexMarker1141"></a>Kanouni. All others are uncredited public domain images.</p></div></li>
+			</ol>
+			<h1 id="_idParaDest-69" class="HeadA"><a id="_idTextAnchor097"></a>Element Review: Images </h1>
+			<p class="body">Following are the elements you learned in your exploration of image markup.</p>
+			<table id="table001-6" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Element and attributes</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">img</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Inserts an inline image</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">alt="<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Alternative <a id="_idIndexMarker1142"></a><a id="_idIndexMarker1143"></a>text</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">src="<span class="Replaceable-Sidebar">url</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The<a id="_idIndexMarker1144"></a><a id="_idIndexMarker1145"></a> location of the image file</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">srcset="<span class="Replaceable-Sidebar">list of urls with descriptors</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Images<a id="_idIndexMarker1146"></a><a id="_idIndexMarker1147"></a> to use in different situations</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">sizes="<span class="Replaceable-Sidebar">list media conditions and layout sizes</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Image <a id="_idIndexMarker1148"></a>sizes for different layouts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">width="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Width <a id="_idIndexMarker1149"></a><a id="_idIndexMarker1150"></a>of the graphic</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">height="<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Height of <a id="_idIndexMarker1151"></a>the graphic</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">usemap="<span class="Replaceable-Sidebar">usemap</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1152"></a><a id="_idIndexMarker1153"></a>the client-side image map to use</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">picture</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Container <a id="_idIndexMarker1154"></a>that provides multiple sources to its contained <span class="Literal-Sidebar">img</span> element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode">source</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Provides alternate sources for the <span class="Literal-Sidebar">img</span> element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">src="<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address<a id="_idIndexMarker1155"></a> of the image resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">srcset="<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Images <a id="_idIndexMarker1156"></a>to use in different situations</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">sizes="<span class="Replaceable-Sidebar">source size list</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Image <a id="_idIndexMarker1157"></a>sizes for different page layouts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent">media="<span class="Replaceable-Sidebar">media query</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Query to <a id="_idIndexMarker1158"></a>determine applicable media </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent">type="<span class="Replaceable-Sidebar">media type</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Media <a id="_idIndexMarker1159"></a>(MIME) type of embedded image file</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">svg</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adds an inline SVG image</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

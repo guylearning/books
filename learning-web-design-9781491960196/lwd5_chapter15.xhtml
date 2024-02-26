@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer924" class="ch15">
+			<p id="_idParaDest-144" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor203"></a>15. Floating and Positioning</p>
+		</div>
+		<div id="_idContainer925" class="ch15">
+			<h1 class="chapterLabel">15</h1>
+		</div>
+		<div id="_idContainer926" class="ch15">
+			<h1 class="chapterTitle"><a id="_idTextAnchor204"></a><a id="_idTextAnchor205"></a>Floating and Positioning</h1>
+		</div>
+		<div id="_idContainer927" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">Floating elements to the left and right</p>
+			<p class="chapterContents">Clearing floated elements</p>
+			<p class="chapterContents">Containing floated elements</p>
+			<p class="chapterContents">Creating text-wrap shapes</p>
+			<p class="chapterContents">Relative positioning</p>
+			<p class="chapterContents">Absolute positioning and containing blocks</p>
+			<p class="chapterContents">Fixed positioning</p>
+		</div>
+		<div id="_idContainer1007" class="ch15">
+			<p class="body">At this point, you’ve learned dozens of CSS properties that let you change the appearance of text elements and the boxes they generate. But so far, we’ve merely been formatting elements as they appear in the flow of the document. </p>
+			<p class="body">In this chapter, we’ll look at floating and positioning, the CSS methods for breaking out of the normal flow and arranging elements on the page.<span class="Literal-fc"> </span><span class="FirstTerm">Floating</span> an <a id="_idIndexMarker2770"></a><a id="_idIndexMarker2771"></a>element moves it to the left or right and allows the following text to wrap around it. <span class="FirstTerm">Positioning</span> is a way to specify the location of an element anywhere on the page with pixel precision. </p>
+			<p class="body">Before we start moving elements around, let’s be sure we are well acquainted with how they behave in the normal flow.</p>
+			<h1 id="_idParaDest-145" class="HeadA"><a id="_idTextAnchor206"></a>Normal Flow</h1>
+			<p class="body">We’ve covered the normal flow in previous chapters, but it’s worth a refresher. In the CSS layout model, text elements are laid out from top to bottom in the order in which they appear in the source, and from left to right in left-to-right reading languages (see <span class="Xref">Note</span>). Block elements stack up on top of one another and fill the available width of the browser window or other containing element. Inline elements and text characters line up next to one another to fill the block elements. </p>
+			<div>
+				<div id="_idContainer928" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">For right-to-left reading languages such as Arabic and Hebrew, the normal flow is top to bottom and right to left.</p>
+				</div>
+			</div>
+			<p class="body">When the window or containing element resizes, the block elements expand or contract to the new width, and the inline content reflows to fit as shown in <span class="Xref-Figure">Figure 15-1</span>.</p>
+			<p class="body">Objects in the normal flow affect the layout of the objects around them. This is the behavior you’ve come to expect in web pages—elements don’t overlap or bunch up. They make room for one another.</p>
+			<div>
+				<figure id="_idContainer930" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1501_normalflow.png" alt="" width="1342" height="638"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-1.</span> One more example of the normal flow behavior.</figcaption>
+				</figure>
+			</div>
+			<p class="body">We’ve seen all of this before, but in this chapter we’ll be paying attention to whether elements are in the flow or removed from the flow. Floating and positioning change the relationship of elements to the normal flow in different ways. Let’s first look at the special behavior of floated elements (or “floats” for short).</p>
+			<h1 id="_idParaDest-146" class="HeadA"><a id="_idTextAnchor207"></a>Floating </h1>
+			<p class="body">Simply stated, the <span class="Literal-fc">float</span> property moves an element as far as possible to the left or right, allowing the following content to wrap around it. It is a unique feature built into <a id="_idIndexMarker2772"></a>CSS with some interesting behaviors.</p>
+			<p class="RefNameCode-Left">float</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">left</span> | <span class="prop-code">right</span> | <span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The best way to explain floating is to demonstrate it. In this example, the <span class="Literal-fc">float</span> property is applied to an <span class="Literal-fc">img</span> element to float it to the right. <span class="Xref-Figure">Figure 15-2</span> shows how the paragraph and the contained image are rendered by default (top) and how it looks when the <span class="Literal-fc">float</span> property is applied (bottom).  </p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;p&gt;<code class="CodeColor">&lt;img src="icecreambowl.png" alt=""&gt;</code> After the cream is frozen rather stiff,…</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst"><code class="CodeColor">img {<br/>   float: right; <br/>}</code></pre>
+			<div>
+				<figure id="_idContainer932" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1502_floatright.png" alt="" width="1321" height="1142"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-2.</span> The layout of an image in the normal flow (top), and with the <span class="Literal-Sidebar">float</span> property applied (bottom).</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer933" class="callout">
+					<p class="callout">Floating an element moves it to the left or right and allows the following text to wrap around it.</p>
+				</div>
+			</div>
+			<p class="body">That’s a nice effect. We’ve gotten rid of a lot of wasted space on the page, but now the text is bumping right up against the image. How do you think you would add some space between the image element and the surrounding text? If you guessed “add a margin,” you’re absolutely right. I’ll add 1em of space on all sides of the image with the <a id="_idIndexMarker2773"></a><span class="Literal-fc">margin</span> property (<span class="Xref-Figure">Figure 15-3</span>). You can begin to see how the box properties work together to improve page layout.</p>
+			<pre class="CodeFirst">img {<br/>   float: right;<br/> <code class="CodeColor">  margin: 1em;</code><br/>}</pre>
+			<div>
+				<figure id="_idContainer935" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1503_margin.png" alt="" width="1321" height="496"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-3.</span> Adding a 1em margin around the floated image.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The previous two figures demonstrate some key behaviors of floated elements:</p>
+			<p class="ListVariableTerm">A floated element is like an island in a stream.</p>
+			<p class="ListVariable">First and foremost, you can see that the image is removed from its position in the normal flow yet continues to influence the surrounding content. The subsequent paragraph text reflows to make room for the floated <span class="Literal-fc">img</span> element. One popular analogy compares floats to islands in a stream—they are not in the flow, but the stream has to flow around them. This behavior is unique to floated elements. </p>
+			<p class="ListVariableTerm">Floats stay in the content area of the containing element.</p>
+			<p class="ListVariable">It is also important to note that the floated image is placed within the <em class="Emphasis">content area</em> (the inner edges) of the paragraph that contains it. It does not extend into the padding area of the paragraph.</p>
+			<p class="ListVariableTerm">Margins are maintained.</p>
+			<p class="ListVariable">In addition, margins are held on all sides of the floated image, as indicated in <span class="Xref-Figure">Figure 15-3</span> by the dotted line. In other words, the entire element box, from outer edge to outer edge, is floated. </p>
+			<h2 class="HeadB">Floating Inline and Block elements</h2>
+			<p class="body">Those are the basics, so now let’s look at more examples and explore additional floating behaviors. It is possible to float any HTML element, both inline and block-level, as we’ll see in the following examples. </p>
+			<h3 class="HeadC">Floating an inline text element</h3>
+			<p class="body">In the previous <a id="_idIndexMarker2774"></a><a id="_idIndexMarker2775"></a>example, we floated an inline image element. This time, let’s look at what happens when you float an inline <a id="_idIndexMarker2776"></a><a id="_idIndexMarker2777"></a><a id="_idIndexMarker2778"></a>text (non-replaced) element—in this case, a span of text (<span class="Xref-Figure">Figure 15-4</span>).</p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;p&gt;<code class="CodeColor">&lt;span class="tip"&gt;TIP: Make sure that your packing tub or bucket has a hole below the top of the mold so  the  water will drain off.&lt;/span&gt;</code>After the cream is frozen rather stiff, prepare a tub or bucket of…&lt;/p&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">span.tip {<br/>   <code class="CodeColor">float: right;<br/>  margin: 1em;<br/>  width: 200px;</code><br/>  color: #fff;<br/>  background-color: lightseagreen;<br/>  padding: 1em;<br/>}</pre>
+			<div>
+				<figure id="_idContainer937" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1504_span.png" alt="" width="1321" height="408"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-4.</span><span class="FigureLabel"> </span>Floating an inline text (non-replaced) element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">At a glance, it is behaving the same as the floated image, which is what we’d expect. But there are some subtle things at work here that bear pointing out:</p>
+			<p class="ListVariableTerm">Always provide a width for floated text elements.</p>
+			<p class="ListVariable">First, you’ll <a id="_idIndexMarker2779"></a>notice that the style rule that floats the <span class="Literal-fc">span</span> includes the <span class="Literal-fc">width</span> property. It is necessary to specify a width for a floated text element because without one, its box is sized wide enough to fit its content (<span class="Literal-fc">auto</span>). For short phrases that are narrower than the container, that might not be an issue. However, for longer, wrapped text, the box expands to the width of the container, making it so wide that there wouldn’t be room to wrap anything around it. Images have an inherent width, so we didn’t need to specify a width in the previous example (although we certainly could have). </p>
+			<div>
+				<div id="_idContainer938" class="callout">
+					<p class="callout">It is necessary to specify the width for floated text elements.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">Floated inline elements behave as block elements.</p>
+			<p class="ListVariable">Notice that <a id="_idIndexMarker2780"></a>the margin is held on all four sides of the floated <span class="Literal-fc">span</span> text, even though top and bottom margins are usually not rendered on inline elements (see <span class="Xref-Figure">Figure 14-20</span> in the previous chapter). That is because all floated elements behave like block elements. Once you float an inline element, it follows the display rules for block-level elements, and margins are rendered on all four sides. </p>
+			<p class="ListVariableTerm">Margins on floated elements do not collapse.</p>
+			<p class="ListVariable">In the normal flow, abutting top and bottom margins collapse (overlap), but margins for floated elements are maintained on all sides as specified.</p>
+			<h3 class="HeadC">Floating block elements</h3>
+			<p class="body">Let’s look at <a id="_idIndexMarker2781"></a>what happens when you float a block within the normal flow. In this example, the whole second paragraph element is floated to the left (<span class="Xref-Figure">Figure 15-5</span>).</p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;p&gt;If you wish to pack ice cream...&lt;/p&gt;<br/>&lt;p <code class="CodeColor">id="float"</code>&gt;After the ice cream is rather stiff,...&lt;/p&gt;<br/>&lt;p&gt;Remove the lid from the mold,...&lt;/p&gt;<br/>&lt;p&gt;Make sure that your packing tub or bucket...&lt;/p&gt;<br/>&lt;p&gt;As cold water is warmer than the ordinary...&lt;/p&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styleS</span></p>
+			<pre class="CodeFirst">p { 	<br/>  border: 2px red solid; <br/>}<br/>.#float {<br/>  <code class="CodeColor">float: left;<br/>  width: 300px;</code><br/>  margin: 1em;<br/>  background: white;<br/>}</pre>
+			<div>
+				<figure id="_idContainer940" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1505_block.png" alt="" width="1321" height="1172"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-5.</span> Floating a block-level element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">I’ve added a red border around all <span class="Literal-fc">p</span> elements to reveal their boundaries. In addition, I’ve made the background of the floated paragraph white so it stands out and added a 1em margin on all sides (indicated with a blue dotted line). The bottom view in <span class="Xref-Figure">Figure 15-5</span> shows how it looks with all the extra stuff turned off, as it would more likely appear on a real page.</p>
+			<p class="body">Just as we saw with the image, the paragraph moves off to the side (left this time), and the following content wraps around it, even though blocks normally stack on top of one another. There are a few things I want to point out in this example:</p>
+			<p class="ListVariableTerm">You must provide a width for floated block elements.</p>
+			<p class="ListVariable">If you do not provide a <span class="Literal-fc">width</span> value, the width of the floated block will be set to <span class="Literal-fc">auto</span>, which fills the available width of the browser window or other containing element. There’s not much sense in having a full-width floated box, because the idea is to wrap text next to the float, not start below it. </p>
+			<p class="ListVariableTerm">Elements do not float higher than their reference in the source. </p>
+			<p class="ListVariable">A floated block will float to the left or right relative to where it occurs in the source, allowing the following elements in the flow to wrap around it. It stays below any block elements that precede it in the flow (in effect, it is “blocked” by them). That means you can’t float an element up to the top corner of a page, even if its nearest ancestor is the <span class="Literal-fc">body</span> element. If you want a floated element to start at the top of the page, it must appear first in the document source (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer941" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Absolute <a id="_idIndexMarker2782"></a>positioning is the CSS method for placing elements on a page regardless of how they appear in the source. We’ll get to absolute positioning later in this chapter. You can also change the order in which elements display by using Flexbox and Grid as discussed in <span class="Xref--Sidebar-">Chapter 16, CSS Layout with Flexbox and Grid</span>.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm">Non-floated elements maintain the normal flow.</p>
+			<p class="ListVariable">The red borders in the top image reveal that the element boxes for the surrounding paragraphs still extend the full width of the normal flow. Only the content of those elements wraps around the float. This is a good model to keep in mind. </p>
+			<p class="ListVariable">For example, adding a left margin to the surrounding paragraphs would add space on the left edge of the page, not between the text and the floated element. If you want space between the float and the wrapped text, you need to apply the margin to the float itself.</p>
+			<h2 class="HeadB">Clearing Floated Elements</h2>
+			<p class="body">If you’re <a id="_idIndexMarker2783"></a><a id="_idIndexMarker2784"></a>going to be floating elements around, it’s important to know how to turn the text wrapping <em class="Emphasis">off</em> and get back to normal flow as usual. You do this by <span class="FirstTerm">clearing</span> the element that you want to start below the float. Applying the <span class="Literal-fc">clear</span> property to an element prevents it from appearing next to a floated element and forces it to start against the next available “clear” space below the float.</p>
+			<p class="RefNameCode-Left">clear</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">left</span> | <span class="prop-code">right</span> | <span class="prop-code">both</span> | <span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	block-level elements only</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">Keep in mind that you apply the <span class="Literal-fc">clear</span> property to the element you want to start below the floated element, not the floated element itself. The <span class="Literal-fc">left</span> value starts the element below any elements that have been floated to the left. Similarly, the <span class="Literal-fc">right</span> value makes the element clear all floats on the right edge of the containing block. If there are multiple floated elements, and you want to be sure an element starts below all of them, use the <span class="Literal-fc">both</span> value to clear floats on both sides.</p>
+			<p class="body">In this example, the <span class="Literal-fc">clear</span> property has been used to make <span class="Literal-fc">h2</span> elements start below left-floated elements. <span class="Xref-Figure">Figure 15-6</span> shows how the <span class="Literal-fc">h2</span> heading starts at the next available clear edge below the float.</p>
+			<pre class="CodeFirst">img {<br/>  float: left;<br/>  margin-right: .5em;<br/>}<br/>h2 {<br/><code class="CodeColor">  clear: left;</code><br/>  margin-top: 2em;<br/>}</pre>
+			<div>
+				<figure id="_idContainer943" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1506_clear.png" alt="" width="1337" height="549"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-6.</span><span class="FigureLabel"> </span>Clearing a left-floated element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Notice in <span class="Xref-Figure">Figure 15-6</span> that although there is a 2em top margin applied to the <span class="Literal-fc">h2</span> element, it is not rendered between the heading and the floated image. That’s the result of collapsing vertical margins in the flow. If you want to make sure space is held between a float and the following text, apply a bottom margin to the floated element itself.</p>
+			<p class="body">By now you have enough float know-how to give it a try in <span class="Xref-Figure">Exercise 15-1</span>.</p>
+			<div>
+				<div id="_idContainer946" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 15-1.</span> Floating images</h6>
+					<p class="SidebarBody">In the exercises in this<a id="_idIndexMarker2785"></a> chapter, we’ll make further improvements to the Black Goose Bakery home page that we worked on in <a href="lwd5_chapter14.xhtml#_idTextAnchor191"><span class="Xref--Sidebar-">Chapter </span><span class="Xref--Sidebar-">14</span><span class="Xref--Sidebar-">, Thinking Inside the Box</span></a>. If you did not follow along in the last chapter, or if you would just like a fresh start, there is a copy of the document in its most recent state (<span class="Filename--Sidebar-">bakery_ch15.html</span>) in the <span class="Xref--Sidebar-">Chapter 15</span> materials (<a href="http://www.learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">learningwebdesign.com/5e/materials</span></a>).</p>
+					<ol>
+						<li class="SidebarListNumber">Open the CSS file <span class="Filename">bakery-styles.css</span> in a text editor and the HTML document in the browser. We’ll start by removing wasted vertical space next to the baked good images by floating those images to the left. We’ll create a new style rule with a contextual selector to target only the images in the <span class="Literal-Sidebar">main</span> section: <pre class="SidebarCodeFirst"><code class="CodeColor">main img {<br/>  float: left;<br/>}</code></pre><p class="SidebarListItem_cont">Save the CSS file and refresh the page in the browser, and you’ll see that we have some post-float tidying up to do.</p></li>
+						<li class="SidebarListNumber">I want the “Learn more” links to always appear below the images so they are clearly visible and consistently on the left side of the page. Fortunately, the paragraphs with those links are marked up with the class “more” and there is already a style rule for them using a class selector. Make those paragraphs clear any floats on the left edge.<pre class="SidebarCodeFirst">p.more {<br/>  …<br/>  <code class="CodeColor">clear: left;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">Lastly, we’ll adjust the spacing around the floated images. Give both images a 1em margin on the right and bottom sides by using the shorthand <span class="Literal-Sidebar">margin</span> property:<pre class="SidebarCodeFirst">main img {<br/>  float: left;<br/><code class="CodeColor">  margin: 0 1em 1em 0;</code><br/>} </pre><p class="SidebarListItem_cont">I feel like the muffin image could use extra space on the left side so it lines up better with the bread. Use this nifty attribute selector to grab any image whose <span class="Literal-Sidebar">src</span> attribute contains the word <em class="Emphasis">muffin</em> (there’s only one):</p><pre class="SidebarCodeFirst"><code class="CodeColor">img[src*="muffin"] {<br/>  margin-left: 50px;<br/>} </code></pre></li>
+					</ol>
+					<p class="SidebarBody"><span class="Xref-Figure">Figure 15-7</span> shows the new and improved “Fresh from the Oven” section.</p>
+					<div>
+						<figure id="_idContainer945" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1507_ex1.png" alt="" width="1009" height="803"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-7.</span> The product section with floated images and wrapped text has less wasted space.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Floating Multiple Elements</h2>
+			<p class="body">It’s perfectly <a id="_idIndexMarker2786"></a><a id="_idIndexMarker2787"></a>fine to float multiple elements on a page or even within a single element. In fact, for years, floats have been the primary method for lining up elements like navigation menus and even for creating whole page layouts (please take time to read the sidebar <span class="Xref">“Float-Based Layouts”</span>).</p>
+			<div>
+				<div id="_idContainer947" class="sidebar">
+					<h5 class="SidebarTitle">Float-Based Layouts</h5>
+					<p class="SidebarBody">Curiously, there were no tools for true page layout in CSS1 or CSS2. Some clever designers realized we could use the CSS float behavior to line up elements horizontally, and floats started being used to turn lists into navigation bars and even turn whole sections of a document into columned layouts. </p>
+					<p class="SidebarBody">Float-based layouts are still prevalent on the web as I write this, but now that better CSS layout tools like Flexbox and Grid are gaining browser support, we are recognizing our float-based layouts for the hacks they are. Float-based layouts will eventually vanish like the table-based layouts of the 1990s.</p>
+					<p class="SidebarBody">That said, we are in a time of transition. Not all browsers in use today support newer standards like Flexbox and Grid, so depending on the browsers you need to support, you may still need to provide a fallback design that is universally supported. Floats will get the job done.</p>
+					<p class="SidebarBody">If you need to support older browsers that do not support Flexbox and Grid, <a id="_idIndexMarker2788"></a>you can download my article <span class="Xref--Sidebar-">“Page Layout with Floats and Positioning”</span> (PDF), which is available at <a href="http://learningwebdesign.com/articles/"><span class="URL-Email--Sidebar-">learningwebdesign.com/articles/</span></a>. It contains lessons on how to create navigation bars with floats and a number of templates for creating multicolumn layouts with floats and positioning. You may never need to know these techniques, but the information is there if you do.</p>
+				</div>
+			</div>
+			<p class="body">When you float multiple elements, there is a complex system of behind-the-scenes rendering rules that ensures floated elements do not overlap. You can consult the CSS specification for details, but the upshot of it is that floated elements will be placed as far left or right (as specified) and as high up as space allows.</p>
+			<p class="body"><span class="Xref-Figure">Figure 15-8</span> shows what happens when a series of sequential paragraphs is floated to the same side. The first three floats start stacking up from the left edge, but when there isn’t enough room for the fourth, it moves down and to the left until it bumps into something—in this case, the edge of the browser window. However, if one of the floats, such as P2, had been very long, it would have bumped up against the edge of the long float instead. Notice that the next paragraph in the normal flow (P6) starts wrapping at the highest point it can find, just below P1.</p>
+			<div>
+				<figure id="_idContainer949" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1508_multifloats.png" alt="" width="1321" height="621"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-8.</span><span class="FigureLabel"> </span>Multiple floated elements line up and do not overlap.</figcaption>
+				</figure>
+			</div>
+			<p class="body"><span class="FigureLabel">The Markup</span></p>
+			<pre class="CodeFirst">&lt;p&gt;[PARAGRAPH 1] ONCE upon a time…&lt;/p&gt;<br/>&lt;p <code class="CodeColor">class="float"</code>&gt;[P2]…&lt;/p&gt;<br/>&lt;p <code class="CodeColor">class="float"</code>&gt;[P3]…&lt;/p&gt;<br/>&lt;p <code class="CodeColor">class="float"</code>&gt;[P4]…&lt;/p&gt;<br/>&lt;p <code class="CodeColor">class="float"</code>&gt;[P5]…&lt;/p&gt;<br/>&lt;p&gt;[P6]…&lt;/p&gt;<br/>&lt;p&gt;[P7]…&lt;/p&gt;<br/>&lt;p&gt;[P8]…&lt;/p&gt;<br/>&lt;p&gt;[P9]…&lt;/p&gt;<br/>&lt;p&gt;[P10]…&lt;/p&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">p.float {<br/>  <code class="CodeColor">float: left;<br/>  width: 200px;</code><br/>  margin: 0px;<br/>  background: #F2F5d5;<br/>  color: #DAEAB1;<br/>}</pre>
+			<h2 class="HeadB">Containing Floats</h2>
+			<p class="body">This is a <a id="_idIndexMarker2789"></a><a id="_idIndexMarker2790"></a>good time to address a quirky float behavior: <span class="FirstTerm">float containment</span>. By default, floats are designed to hang out of the element they are contained in. That’s just fine for allowing text to flow around a floated image, but sometimes it can cause some unwanted behaviors. </p>
+			<p class="body">Take a look at the example in <span class="Xref-Figure">Figure 15-9</span>. It would be nicer if the border expanded around all the content, but the floated image hangs out the bottom.</p>
+			<div>
+				<figure id="_idContainer951" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1509_nocontain.png" alt="" width="1327" height="394"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-9.</span> The containing element does not expand to accommodate the floated image as indicated by its blue border.</figcaption>
+				</figure>
+			</div>
+			<p class="body">If you float <em class="Emphasis">all</em> the elements in a container element, there will be no elements remaining in the flow to hold the containing element open. This phenomenon is illustrated in <span class="Xref-Figure">Figure 15-10</span>. The <span class="Literal-fc">#container</span> <span class="Literal-fc">div</span> contains two paragraphs. The view of the normal flow (top) shows that the <span class="Literal-fc">#container</span> has a background color and border that wraps around the content. </p>
+			<pre class="CodeFirst">&lt;div id="container"&gt;<br/>  &lt;p&gt;…&lt;/p&gt;<br/>  &lt;p&gt;…&lt;/p&gt;<br/>&lt;/div&gt; <br/><br/>#container {<br/>  background: #f2f5d5;<br/>  border: 2px dashed green;<br/>}</pre>
+			<p class="body">However, when both paragraphs (that is, all of the content within the <span class="Literal-fc">div</span>) are floated, as shown in the figure on the bottom), the element box for the <span class="Literal-fc">#container</span> closes up to a height of zero, leaving the floats hanging down below (you can still see the empty border at the top). There’s no content left in the normal flow to give the containing <span class="Literal-fc">div</span> height. This clearly is not the effect we are after. </p>
+			<pre class="CodeFirst">p {<br/>  float: left;<br/>  width: 44%;<br/>  padding: 2%;<br/>}</pre>
+			<div>
+				<figure id="_idContainer953" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1510_container_vert.png" alt="" width="950" height="1200"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-10.</span> The container box disappears entirely when all its contents are floated.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Fortunately, there are a few fixes to this problem, and they are pretty straightforward. The most popular and foolproof solution is the “clearfix” technique. It uses the <span class="Literal-fc">:</span><span class="Literal-fc"><a id="_idIndexMarker2791"></a></span><span class="Literal-fc">after</span> pseudo-element to insert a character space after the container, set its display to “block,” and clear it on both sides. For more information on this version of clearfix, see<a id="_idIndexMarker2792"></a> Thierry Koblentz’s article “The very latest clearfix reloaded” (<a href="http://cssmojo.com/the-very-latest-clearfix-reloaded"><span class="URL-Email">cssmojo.c<span id="_idTextAnchor208"></span>om/the-very-latest-clearfix-reloaded</span></a>). Here it is applied to the <span class="Literal-fc">#container</span> <span class="Literal-fc">div</span> in <span class="Xref-Figure">Figure 15-10</span>:</p>
+			<pre class="CodeFirst">#container<code class="CodeColor">:after</code> {<br/><code class="CodeColor">  content: " ";<br/>  display: block;<br/>  clear: both;</code><br/>  background-color: #f2f5d5;<span class="Code-Comment"> /*light green*/</span><br/>   border: 2px dashed green;<br/>  padding: 1em;<br/>  }</pre>
+			<p class="body">Another option is to float the containing element as well and give it a width of 100%:</p>
+			<pre class="CodeFirst">#container {<br/><code class="CodeColor">  float: left;<br/>  width: 100%;</code><br/>  …<br/>  }</pre>
+			<p class="body"><span class="Xref-Figure">Figure 15-11</span> shows the result of applying a containment technique to the previous examples. Either will do the trick. </p>
+			<div>
+				<figure id="_idContainer955" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1511_fixed.png" alt="" width="1321" height="917"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-11.</span> Our hanging floats are now contained.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer956" class="sidebar">
+					<h5 class="SidebarTitle">The Future of Clearfix</h5>
+					<p class="SidebarBody">A new<a id="_idIndexMarker2793"></a> display value, <span class="Literal-Sidebar">flow-root</span>, may make the clearfix hack obsolete once and for all. Setting the <span class="Literal-Sidebar">display</span> of a container element to <a id="_idIndexMarker2794"></a><span class="Literal-Sidebar">flow-root</span> makes the element automatically expand to contain its floats. As of this writing, it is still in an experimental phase, but it’s worth keeping an eye on. A potential disadvantage is that it disables collapsing margins between the element and its first/last child, which can produce unpredictable results. You can read more about the <span class="Literal-Sidebar">flow-root</span> method in<a id="_idIndexMarker2795"></a> Rachel Andrew’s post “The end of the clearfix hack?” (<a href="http://rachelandrew.co.uk/archives/2017/01/24/the-end-of-the-clearfix-hack"><span class="URL-Email--Sidebar-">rachelandrew.co.uk/archives/2017/01/24/the-end-of-the-clearfix-hack</span></a>).</p>
+				</div>
+			</div>
+			<p class="body">That covers the fundamentals of floating. If you are thinking that rectangular text wraps are a little <em class="Emphasis">ho-hum</em>, you could add some pizzazz (or just eliminate extra whitespace) by using CSS Shapes. </p>
+			<h1 id="_idParaDest-147" class="HeadA"><a id="_idTextAnchor209"></a>Fancy Text Wrap with CSS Shapes </h1>
+			<p class="body">Look at the previous<a id="_idIndexMarker2796"></a><a id="_idIndexMarker2797"></a><a id="_idIndexMarker2798"></a> float examples, and you will see that the text always wraps in a rectangular shape around a floated image or element box. However, you can change the <a id="_idIndexMarker2799"></a>shape of the wrapped text to a circle, ellipse, polygon, or any image shape by using the <span class="Literal-fc">shape-outside</span> property. This is an up-and-coming <a id="_idIndexMarker2800"></a><a id="_idIndexMarker2801"></a>CSS feature, so be sure to check the <span class="Xref">Browser Support Note</span>. Following is a quick introduction to CSS Shapes, which should inspire and prepare you for more<a id="_idIndexMarker2802"></a> exploration on your own. </p>
+			<div>
+				<div id="_idContainer957" class="note">
+					<h5 class="WarningHeader">Browser Support Note</h5>
+					<p class="note">As of this writing in 2018, text wrap shapes are supported only by Chrome 37+, Opera 24+, Safari 7.1+ (with prefix; without starting in 10.1), iOS Safari 8+ (with prefix; without in 10.3+), and Android 56+. The feature is under consideration at Microsoft Edge and in development at Firefox, so the support situation may be better by the time you are reading this. <a id="_idIndexMarker2803"></a>Check <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> for the current state of support.</p>
+					<p class="note">For the time being, feel free to use it as a progressive enhancement for designs in which a rectangular text wrap would be perfectly acceptable. Another alternative is to use a feature query<a id="_idIndexMarker2804"></a> (<span class="Literal-Sidebar">@supports</span>) to serve a fallback set of styles to non-supporting browsers. Feature queries are introduced in <span class="Xref--Sidebar-">Chapter 19, More CSS Techniques</span>. </p>
+				</div>
+			</div>
+			<p class="RefNameCode-Left">shape-outside</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none</span> | <span class="prop-code">circle()</span> | <span class="prop-code">ellipse()</span> | <span class="prop-code">polygon()</span> | <span class="prop-code">url()</span> | [<span class="prop-code">margin-box</span> | <span class="prop-code">padding-box</span> | <span class="prop-code">content-box</span> ] </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	floats</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body"><span class="Xref-Figure">Figure 15-12</span> shows the default text wrap around a floated image (left) and the same wrap with <span class="Literal-fc">shape-outside</span> applied (right). This is the kind of thing you’d expect to see in a print magazine, but now we can do it on the web! </p>
+			<div>
+				<figure id="_idContainer959" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1512_shape_horiz.png" alt="" width="2025" height="575"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-12.</span> Example of text wrapping around an image with <span class="Literal-fc">shape-outside</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">It is worth noting that you can change the text wrap shape around any floated element (see <span class="Xref">Note</span>), but I will focus on images in this discussion, as text elements are generally boxes that fit nicely in the default rectangular wrap.</p>
+			<div>
+				<div id="_idContainer960" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note"><span class="Literal-Sidebar">shape-outside</span> works only on floated elements for now, but it is believed that this will change in the future.</p>
+				</div>
+			</div>
+			<p class="body">There are two approaches to making text wrap around a shape. One way is to provide the path coordinates of the wrap shape with<a id="_idIndexMarker2805"></a><a id="_idIndexMarker2806"></a><a id="_idIndexMarker2807"></a> <span class="Literal-fc">circle()</span>, <span class="Literal-fc">ellipse()</span>, or <span class="Literal-fc">polygon()</span>. Another way is to use <a id="_idIndexMarker2808"></a><span class="Literal-fc">url()</span> to specify an image that has transparent areas (such as a GIF or a PNG). With the image method, text flows into the transparent areas of the image and stops at the opaque areas. This is the shape method shown in <span class="Xref-Figure">Figure 15-12</span> and the method I’ll introduce first.</p>
+			<h2 class="HeadB">Using a Transparent Image</h2>
+			<p class="body">In the<a id="_idIndexMarker2809"></a><a id="_idIndexMarker2810"></a> example in <span class="Xref-Figure">Figure 15-12</span>, I placed the <em class="Emphasis">sundae.png</em> image in the HTML document to display on the page, and I’ve specified the same image in the style rule using <span class="Literal-fc">url()</span> so that its transparent areas define the wrap shape (see important Warning). It makes sense to use the same image in the document and for the CSS shape, but it is not required. You could apply a wrap shape derived from one image to another image on the page. </p>
+			<div>
+				<div id="_idContainer961" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">There is a security <a id="_idIndexMarker2811"></a>setting in Chrome and Opera that makes image-based text wraps a little tricky to use. Without getting into too much sys-admin detail, the browser restricts the use of the image used to create the CSS shape if it isn’t on the same domain as the file requesting it. This is not a bug; they are following the rules set out in the specification.  </p>
+					<p class="note">The rule also means that compliant browsers won’t allow images to be used for shapes when the files are served locally (i.e., on your computer). They need to be uploaded to a server to work, which makes the design process a little more cumbersome, especially for beginners.</p>
+					<p class="note">If you use image-based text wraps, you know your CSS is written correctly, but you aren’t seeing wrapping in the browser, this security setting (related to Cross-Origin Resource Sharing, or <a id="_idIndexMarker2812"></a><a id="_idIndexMarker2813"></a><a id="_idIndexMarker2814"></a>CORS, if you’re curious) is probably the culprit. </p>
+				</div>
+			</div>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;p&gt;&lt;img <code class="CodeColor">src="sundae.png"</code> class="wrap" alt=""&gt; In places…&lt;/p&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">img.wrap {<br/>  float: left;<br/>  width: 300px;<br/>  height: 300px;<br/>  <code class="CodeColor">-webkit-shape-outside: url(sundae.png); </code><span class="Code-Comment">/* prefix required in 2018 */</span> <code class="CodeColor"><br/>  shape-outside: url(sundae.png);</code></pre>
+			<p class="body">Notice that the wrapped text is now bumping right into the image. How about we give it a little extra space with <span class="Literal-fc">shape-margin</span>?</p>
+			<p class="RefNameCode-Left">shape-margin</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	floats</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <a id="_idIndexMarker2815"></a><span class="Literal-fc">shape-margin</span> property specifies an amount of space to hold between the shape and the wrapped text. In <span class="Xref-Figure">Figure 15-13</span>, you can see the effect of adding 1em of space between the opaque image areas and the wrapped text lines. It gives it a little breathing room the way any good margin should. </p>
+			<pre class="CodeFirst">-webkit-shape-margin: 1em; shape-margin: 1em;</pre>
+			<div>
+				<figure id="_idContainer963" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1513_margin.png" alt="" width="1321" height="495"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-13.</span> Adding a margin between the shape and the wrapped text.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer964" class="sidebar">
+					<h5 class="SidebarTitle">Opacity Threshold</h5>
+					<p class="SidebarBody">If you have a source image with multiple levels of transparency, such as the gradient shadow, <a id="_idIndexMarker2816"></a>the <span class="Literal-Sidebar">shape-image-threshold</span> property allows text to creep into the image but stop when it encounters a specific transparency level. The value of this property is a number between 0 and 1, representing a percentage of transparency. For example, if you set the threshold to .2, text will wrap into areas that are up to 20% transparent, but stop when it gets to more opaque levels.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Using a Path</h2>
+			<p class="body">The other method for creating a text wrap shape is to define it using one of the path keywords: <a id="_idIndexMarker2817"></a><a id="_idIndexMarker2818"></a><a id="_idIndexMarker2819"></a><span class="Literal-fc">circle()</span>, <span class="Literal-fc">ellipse()</span>, and <span class="Literal-fc">polygon()</span>. </p>
+			<p class="body">The <span class="Literal-fc">circle()</span> notation creates a circle shape for the text to wrap around. The value provided within the parentheses represents the length of the radius of the circle:</p>
+			<pre class="CodeFirst">circle(radius)</pre>
+			<p class="body">In this example, the radius is 150px, half of the image width of 300 pixels. By default, the circle is centered vertically and horizontally on the float:  </p>
+			<pre class="CodeFirst">img.round {<br/>   float: left;<code class="CodeColor"><br/>  -webkit-shape-outside: circle(150px);<br/>  shape-outside: circle(150px);</code><br/>} </pre>
+			<p class="body"><span class="Xref-Figure">Figure 15-14</span> shows this style rule applied to different images. Notice that the transparency of the image is not at play here. It’s just a path overlaid on the image that sets the boundaries for text wrap. Any path can be applied to any image or other floated element. </p>
+			<div>
+				<figure id="_idContainer966" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1514_circle.png" alt="" width="1875" height="548"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-14.</span> The same <span class="Literal-Sidebar">circle()</span> shape applied to different images in the source.</figcaption>
+				</figure>
+			</div>
+			<p class="body">This is a good point to demonstrate a critical behavior of wrap shapes. They allow text to flow <em class="Emphasis">into</em> the floated image or element, but they cannot hold space free beyond it. </p>
+			<p class="body">In the example in <span class="Xref-Figure">Figure 15-15</span>, I’ve increased the diameter of the circle path from 150px to 200px. Notice that the text lines up along the right edge of the image, even though the circle is set 50 pixels beyond the edge. The path does not push text away from the float. If you need to keep wrapped text away from the outside edge of the floated image or element, apply a margin to the element itself (it will be the standard rectangular shape, of course). </p>
+			<pre class="CodeFirst">img.round {<br/>   float: left;<code class="CodeColor"><br/>  -webkit-shape-outside: circle(200px);<br/>  shape-outside: circle(200px);</code><br/>} </pre>
+			<div>
+				<figure id="_idContainer968" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1515_200radius.png" alt="" width="1321" height="549"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-15.</span> CSS shapes allow text to wrap into the floated element but do not hold space beyond it.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Elliptical shapes are created with the <span class="Literal-fc">ellipse()</span> notation, which provides the horizontal and vertical radius lengths followed by the word <span class="Literal-fc">at</span> and then the x,y coordinates for the center of the shape. Here is the syntax:</p>
+			<pre class="CodeFirst">ellipse(<span class="Replaceable">rx</span> <span class="Replaceable">ry</span> at <span class="Replaceable">x y</span>);</pre>
+			<p class="body">The position coordinates can be listed as a specific measurement or a percentage. Here I’ve created an ellipse with a 100-pixel horizontal radius and a 150-pixel vertical radius, centered in the floated element it is applied to (<span class="Xref-Figure">Figure 15-16</span>):</p>
+			<pre class="CodeFirst">img.round {<br/>  float: left;<code class="CodeColor"><br/>  -webkit-shape-outside: ellipse(150px 100px at 50% 50%);  shape-outside: ellipse(150px 100px at 50% 50%);</code><br/>} </pre>
+			<div>
+				<figure id="_idContainer970" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1516_ellipse.png" alt="" width="1321" height="583"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-16.</span> An elliptical text wrap created with <span class="Literal-Sidebar">ellipse()</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Finally, we come to <a id="_idIndexMarker2820"></a><span class="Literal-fc">polygon()</span>, which lets you create a custom path using a series of comma-separated x,y coordinates along the path. This style rule creates the wrap effect shown in <span class="Xref-Figure">Figure 15-17</span>:</p>
+			<pre class="CodeFirst">img.wrap {<br/>  float: left;<br/>  width: 300px;<br/>  height: 300px;<br/>  <code class="CodeColor">shape-outside: polygon(0px 0px, 186px 0px, 225px 34px, 300px 34px, 300px 66px, 255px 88px, 267px 127px, 246px 178px, 192px 211px, 226px 236px, 226px 273px, 209px 300px, 0px 300px);</code><br/>} </pre>
+			<div>
+				<figure id="_idContainer972" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1517_polygon.png" alt="" width="1321" height="583"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-17.</span> A custom path created with <span class="Literal-Sidebar">polygon()</span>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Holy coordinates! That’s a lot of numbers, and my path was fairly simple. I’d like to be able to point you to a great tool for drawing and exporting polygon paths, but sadly, as of this writing I have none to recommend (see <span class="Xref">Note</span>). I got the coordinates for my polygon examples by opening the image in Photoshop and gathering them manually, which, although possible, is not ideal. </p>
+			<div>
+				<div id="_idContainer973" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">A CSS Shapes Editor will be included in a future version of Firefox that will likely be available by the time you are reading this (<a href="http://developer.mozilla.org/en-US/docs/Tools/Page_Inspector/How_to/Edit_CSS_shapes"><span class="URL-Email--Sidebar-">developer.mozilla.org/en-US/docs/Tools/Page_Inspector/How_to/Edit_CSS_shapes</span></a>).</p>
+				</div>
+			</div>
+			<h2 class="HeadB">CSS Shapes Resources</h2>
+			<p class="body">There are some finer points regarding CSS Shapes that I must leave to you to research further. Here are a few resources to get you started:</p>
+			<ul>
+				<li class="ListBullet">CSS Shapes Module, Level 1 (<a href="http://www.w3.org/TR/css-shapes-1/"><span class="URL-Email">www.w3.org/TR/css-shapes-1/</span></a>)</li>
+				<li class="ListBullet">“Getting Started with CSS Shapes” by <a id="_idIndexMarker2821"></a>Razvan Caliman (<a href="http://www.html5rocks.com/en/tutorials/shapes/getting-started"><span class="URL-Email">www.html5rocks.com/en/tutorials/shapes/getting-started</span></a>)</li>
+				<li class="ListBullet">CSS Shapes at the Experimental Layout Lab of<a id="_idIndexMarker2822"></a> Jen Simmons (<a href="http://labs.jensimmons.com/#shapes"><span class="URL-Email">labs.jensimmons.com/#shapes</span></a>)</li>
+				<li class="ListBullet">“A Redesign with CSS Shapes” by <a id="_idIndexMarker2823"></a>Eric Meyer (<a href="http://alistapart.com/article/redesign-with-css-shapes"><span class="URL-Email">alistapart.com/article/redesign-with-css-shapes</span></a>)<div id="_idContainer974" class="sidebar"><h5 class="SidebarSeries">Web Search TIP</h5><p class="SidebarBody">If you search for “CSS Shapes” you will certainly come across that term used for a technique that uses CSS to draw geometric shapes such as triangles, arrows, circles, and so on. It’s a little confusing, although those other “CSS shapes” are pretty nifty and something you might want to tinker with. I introduce them briefly in <span class="Xref--Sidebar-">Chapter 23, Web Image Basics</span>.</p></div></li>
+			</ul>
+			<p class="body">Why don’t we make the text wrap around the images in the Black Goose Bakery page in a more interesting way for users with browsers that support  it (<span class="Xref-Figure">Exercise 15-2</span><span class="Xref">)</span>?</p>
+			<div>
+				<div id="_idContainer977" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 15-2.</span> Adding shapes around floats</h6>
+					<p class="SidebarBody">The bread and muffin images <a id="_idIndexMarker2824"></a>on the Black Goose Bakery page provide a nice opportunity to try out CSS Shapes. You will need to use a supporting browser such as a recent version of Chrome, Safari, or Opera to see the wrapping effect.</p>
+					<p class="SidebarBody">Open the latest version of the bakery style sheet and look for the section labeled <span class="Literal-Sidebar">/* main "products" styles */</span>. We’ll put the image wrap styles there to keep our style sheet organized.</p>
+					<p class="SidebarBody">Target each image individually using an attribute selector (there is one set up for “muffin” already). Start out simply and make the text wrap around a circle. Set the radius of the circle to 125px for the bread image and 110px for the muffin.</p>
+					<pre class="SidebarCodeFirst">img[src*="bread"] {<br/><code class="CodeColor">  -webkit-shape-outside: circle(125px);<br/>  shape-outside: circle(125px);</code><br/> } </pre>
+					<pre class="SidebarCode">img[src*="muffin"] {<br/>  margin-left: 50px;<br/>    <code class="CodeColor">-webkit-shape-outside: circle(110px);<br/>   shape-outside: circle(110px);</code><br/>}</pre>
+					<p class="SidebarBody">Save the styles and take a look at the page in a supporting browser. The circles look pretty good, but I think I could improve the wrap around the bread by making it an ellipse. Add these after the circle declarations, and the ellipse wrap will override the previous styles (or delete and replace):</p>
+					<pre class="SidebarCodeFirst">img[src*="bread"] {<br/>  -webkit-shape-outside: <code class="CodeColor">ellipse(130px 95px at 50% 50%)</code>;<br/>  shape-outside: <code class="CodeColor">ellipse(130px 95px at 50% 50%)</code>; <br/>}</pre>
+					<p class="SidebarBody">If you’re feeling ambitious, you could add a polygon wrap shape around the muffin image instead of the circle. You’ll need to copy these coordinates or just copy and paste from the finished exercise provided in the materials for this chapter. Or just stick with the circle, and nobody will judge you.</p>
+					<pre class="SidebarCodeFirst">img[src*="muffin"] {   <br/>…<br/>shape-outside: <code class="CodeColor">polygon(0px 0px, 197px 0px, 241px 31px, 241px 68px, 226px 82px, 219px 131px, 250px 142px, 250px 158px, 0px 158px)</code>;<br/>}</pre>
+					<p class="SidebarBody">The final result is shown in <span class="Xref-Figure">Figure 15-18</span>. It is most apparent when the browser window is sufficiently narrow that enough lines wrap to reveal the shape. For browsers that don’t support shapes, the rectangular whitespace is just fine.  </p>
+					<div>
+						<figure id="_idContainer976" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1518_ex2_wraps.png" alt="" width="977" height="850"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-18.</span> The bakery page with text wrapping around images in an ellipse (bread) and polygon (muffin) using CSS Shapes.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<p class="body">Well, that covers floating! You’ve learned how to float elements left and right, clear the following elements so they start below the floats, and even make fancy text wrapping shapes. Now let’s move on to the other approach to moving elements around on the page—positioning. </p>
+			<h1 id="_idParaDest-148" class="HeadA"><a id="_idTextAnchor210"></a>Positioning Basics</h1>
+			<p class="body">CSS provides <a id="_idIndexMarker2825"></a>several methods for positioning elements on the page. They can be positioned relative to where they would normally appear in the flow, or removed from the flow altogether and placed at a particular spot on the page. You can also position an element relative to the <a id="_idIndexMarker2826"></a>viewport, and it will stay put while the rest of the page scrolls.</p>
+			<div>
+				<div id="_idContainer978" class="sidebar">
+					<h5 class="SidebarSeries">Terminology</h5>
+					<h5 class="SidebarTitle">Viewport</h5>
+					<p class="SidebarBody">I’ll be sticking with the more formal term <em class="Emphasis">viewport</em> throughout the positioning discussions, but keep in mind it could be a browser window on a desktop computer, the full screen of a mobile device, or the frame of an <span class="Literal-Sidebar">iframe</span> element from the perspective of the web page loaded in that frame. It is any space that visually displays a web page.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Types of Positioning</h2>
+			<p class="RefNameCode-Left">position</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">static</span> | <span class="prop-code">relative</span> | <span class="prop-code">absolute</span> | <span class="prop-code">fixed</span> | <span class="prop-code">sticky</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">static</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The <span class="Literal-fc">position</span> <a id="_idIndexMarker2827"></a><a id="_idIndexMarker2828"></a>property indicates that an element is to be positioned and specifies which positioning method to use. I’ll introduce each keyword value briefly here, and then we’ll take a more detailed look at each method in the remainder of this chapter. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">static</span></p>
+			<p class="ListVariable">This is the normal <a id="_idIndexMarker2829"></a><a id="_idIndexMarker2830"></a>positioning scheme in which elements are positioned as they occur in the normal document flow.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">relative</span></p>
+			<p class="ListVariable"><span class="FirstTerm">Relative positioning</span> moves<a id="_idIndexMarker2831"></a><a id="_idIndexMarker2832"></a> the element box relative to its original position in the flow. The distinctive behavior of relative positioning is that the space the element would have occupied in the normal flow is preserved as empty space.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">absolute</span></p>
+			<p class="ListVariable"><span class="FirstTerm">Absolutely positioned</span> elements <a id="_idIndexMarker2833"></a><a id="_idIndexMarker2834"></a>are removed from the document flow entirely and positioned with respect to the viewport or a containing element (we’ll talk more about this later). Unlike relatively positioned elements, the space they would have occupied is closed up. In fact, they have no influence at all on the layout of surrounding elements.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">fixed</span></p>
+			<p class="ListVariable">The distinguishing<a id="_idIndexMarker2835"></a><a id="_idIndexMarker2836"></a> characteristic of <span class="FirstTerm">fixed positioning</span> is that the element stays in one position in the viewport even when the document scrolls. Fixed elements are removed from the document flow and positioned relative to the viewport rather than another element in the document. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">sticky</span></p>
+			<p class="ListVariable">Sticky positioning <a id="_idIndexMarker2837"></a><a id="_idIndexMarker2838"></a>is a combination of relative and fixed in that it behaves as though it is relatively positioned, until it is scrolled into a specified position relative to the viewport, at which point it remains fixed. </p>
+			<p class="ListVariable_cont">The <a id="_idIndexMarker2839"></a>MDN Web Docs site has this description for a potential use case:</p>
+			<blockquote class="Quote">Sticky positioning is commonly used for the headings in an alphabetized listing. The B heading will appear just below the items that begin with A until they are scrolled offscreen. Rather than sliding offscreen with the rest of the content, the B heading will then remain fixed to the top of the viewport until all the B items have scrolled offscreen, at which point it will be covered up by the C heading.</blockquote>
+			<p class="ListVariable_cont">The <span class="Literal-fc">sticky</span> position value is supported by current versions of Chrome, Firefox, Opera, MS Edge, Android, as well as Safari and iOS Safari with the <span class="Literal-fc">-webkit-</span> prefix. No version of IE supports it. Happily, <span class="Literal-fc">sticky</span> positioning degrades gracefully, as the element simply stays inline and scrolls with the document if it is not supported.</p>
+			<p class="body">Each positioning method has its purpose, but absolute positioning is the most versatile. With absolute positioning, you can place an object anywhere in the viewport or within another element. Absolute positioning has been used to create multicolumn layouts, but it is more commonly used for small tasks, like positioning a search box in the top corner of a header. It’s a handy tool when used carefully and sparingly.</p>
+			<h2 class="HeadB">Specifying Position</h2>
+			<p class="body">Once you’ve <a id="_idIndexMarker2840"></a>established the positioning method, the actual position is specified with some <a id="_idIndexMarker2841"></a><a id="_idIndexMarker2842"></a><a id="_idIndexMarker2843"></a><a id="_idIndexMarker2844"></a>combination of up to <a id="_idIndexMarker2845"></a>four <span class="FirstTerm">offset</span> properties.</p>
+			<p class="RefNameCode-Left">top<span class="COMMA">,</span> right<span class="COMMA">,</span> bottom<span class="COMMA">,</span> left</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	positioned elements (where <span class="prop-code">position</span> value is <span class="prop-code">relative</span>, <span class="prop-code">absolute</span>, or <span class="prop-code">fixed</span>)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The value provided for each offset property defines the distance the element should be moved <em class="Emphasis">away</em> from that respective edge. For example, the value of <span class="Literal-fc">top</span> defines the distance the top outer edge of the positioned element should be offset from the top edge of the browser or other containing element. A positive value for <span class="Literal-fc">top</span> results in the element box moving <em class="Emphasis">down</em> by that amount (see <span class="Xref">Note</span>). Similarly, a positive value for <span class="Literal-fc">left</span> would move the positioned element to the right (toward the center of the containing block) by that amount. </p>
+			<div>
+				<div id="_idContainer979" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Negative values are acceptable and move the element in the opposite direction of positive values. For example, a negative value for <span class="Literal-Sidebar">top</span> would have the effect of moving the element up. </p>
+				</div>
+			</div>
+			<p class="body">Further explanations and examples of the offset properties will be provided in the discussions of each positioning method. We’ll start our exploration of positioning with the fairly straightforward <span class="Literal-fc">relative</span> method.</p>
+			<h1 id="_idParaDest-149" class="HeadA"><a id="_idTextAnchor211"></a>Relative Positioning</h1>
+			<p class="body">As mentioned previously,<a id="_idIndexMarker2846"></a><a id="_idIndexMarker2847"></a> relative positioning moves an element relative to its original spot in the flow. The space it would have occupied is preserved and continues to influence the layout of surrounding content. This is easier to understand with a simple example.</p>
+			<p class="body">Here I’ve positioned an inline <span class="Literal-fc">em</span> element. A bright background color on the <span class="Literal-fc">em</span> and a border on the containing paragraph make their boundaries apparent. First, I used the <span class="Literal-fc">position</span> property to set the method to <span class="Literal-fc">relative</span>, and then I used the <span class="Literal-fc">top</span> offset property to move the element 2em down from its initial position, and the <span class="Literal-fc">left</span> property to move it 3em to the right. Remember, offset property values move the element <em class="Emphasis">away</em> from the specified edge, so if you want something to move to the right, as I did here, you use the <span class="Literal-fc">left</span> offset property. The results are shown in <span class="Xref-Figure">Figure 15-19</span>.</p>
+			<pre class="CodeFirst">em {<code class="CodeColor"><br/>  position: relative;<br/>  top: 2em; </code><span class="Code-Comment">/* moves element down */</span> <br/><code class="CodeColor">  left: 3em;</code> <span class="Code-Comment">/* moves element right */</span> <br/>  background-color: fuchsia;<br/>}</pre>
+			<div>
+				<figure id="_idContainer981" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1519_relative.png" alt="" width="1321" height="767"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-19.</span><span class="FigureLabel"> </span>When an element is positioned with the relative method, the space it would have occupied is preserved.</figcaption>
+				</figure>
+			</div>
+			<p class="body">I want to point out a few things that are happening here: </p>
+			<p class="ListVariableTerm">The original space in the document flow is preserved.</p>
+			<p class="ListVariable">You can see that there is a blank space where the emphasized text would have been if the element had not been positioned. The surrounding content is laid out as though the element were still there, and therefore we say that the element still “influences” the surrounding content.</p>
+			<p class="ListVariableTerm">Overlap happens.</p>
+			<p class="ListVariable">Because this is a positioned element, it can potentially overlap other elements, as happens in <span class="Xref-Figure">Figure 15-19</span>. </p>
+			<p class="body">The empty space left behind by relatively positioned objects can be a little awkward, so this method is not used as often as absolute positioning. However, relative positioning is commonly used to create a “positioning context” for an absolutely positioned element. Remember that term <em class="Emphasis">positioning context</em>—I’ll explain it in the next section. </p>
+			<h1 id="_idParaDest-150" class="HeadA"><a id="_idTextAnchor212"></a>Absolute Positioning</h1>
+			<p class="body">Absolute <a id="_idIndexMarker2848"></a>positioning works a bit differently and is a more flexible method for accurately placing items on the page than relative positioning.</p>
+			<div>
+				<div id="_idContainer982" class="sidebar">
+					<h5 class="SidebarTitle">Columns with Absolute Positioning</h5>
+					<p class="SidebarBody">Like floats, <a id="_idIndexMarker2849"></a><a id="_idIndexMarker2850"></a>absolute positioning can be used to create columned layouts. These days, columned layouts should be created with CSS Grid, but you may use positioned columns as a fallback if you need to support old browsers that don’t support Grid.</p>
+					<p class="SidebarBody">Should you like to learn how absolute positioning can be used for whole page layout, I have included instructions and templates in the supplemental article <span class="Xref--Sidebar-">“Page Layout with Floats and Positioning”</span> (PDF), available at <a href="http://learningwebdesign.com/articles/"><span class="URL-Email--Sidebar-">learningwebdesign.com/articles/</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">Now that you’ve seen how relative positioning works, let’s take the same example as shown in <span class="Xref-Figure">Figure 15-19</span>, only this time we’ll change the value of the <span class="Literal-fc">position</span> property to <span class="Literal-fc">absolute</span> (<span class="Xref-Figure">Figure 15-20</span>): </p>
+			<pre class="CodeFirst">em {<br/><code class="CodeColor">  position: absolute;<br/>  </code>top: 2em;<br/>  left: 3em;<br/>  background-color: fuchsia;<br/>}</pre>
+			<div>
+				<figure id="_idContainer984" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1520_absolute.png" alt="" width="1321" height="683"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-20.</span><span class="FigureLabel"> </span>When an element is absolutely positioned, it is removed from the flow and the space is closed up.</figcaption>
+				</figure>
+			</div>
+			<p class="body">As you can see in <span class="Xref-Figure">Figure 15-20</span>, the space once occupied by the <span class="Literal-fc">em</span> element is now closed up, as is the case for all absolutely positioned elements. In its new position, the element box overlaps the surrounding content. In the end, absolutely positioned elements have no influence whatsoever on the layout of surrounding elements.</p>
+			<p class="body">The most significant difference here, however, is the location of the positioned element. This time, the offset values position the <span class="Literal-fc">em</span> element 2em down and 3em to the right of the top-left corner of the <em class="Emphasis">viewport</em> (browser window).</p>
+			<p class="body">But wait—before you start thinking that absolutely positioned elements are always placed relative to the viewport, I’m afraid that there’s more to it than that. </p>
+			<p class="body">What actually happens in absolute positioning is that the element is positioned relative to its nearest <em class="Emphasis">containing block</em>. It just so happens that the nearest containing block in <span class="Xref-Figure">Figure 15-20</span> is the root (<span class="Literal-fc">html</span>) element, also known as the <span class="FirstTerm">initial containing block</span>, <a id="_idIndexMarker2851"></a>so the offset values position the <span class="Literal-fc">em</span> element relative to the whole document.</p>
+			<p class="body">Getting a handle on the containing block concept is the first step to tackling absolute positioning.</p>
+			<h2 class="HeadB">Containing Blocks</h2>
+			<p class="body">The CSS Positioned <a id="_idIndexMarker2852"></a><a id="_idIndexMarker2853"></a>Layout Module, Level 3, states, “The position and size of an element’s box(es) are sometimes computed relative to a certain rectangle, called the <span class="FirstTerm">containing block</span> of the element.” It is critical to be aware of the containing block of the element you want to position. We sometimes refer to this as the <span class="FirstTerm">positioning context</span>.</p>
+			<p class="body">The spec lays out a number of intricate rules for determining the containing block of an element, but it basically boils down to this:</p>
+			<ul>
+				<li class="ListBullet">If the positioned element is <em class="Emphasis">not</em> contained within another positioned element, then it will be placed relative to the initial containing block (created by the <span class="Literal-fc">html</span> element).</li>
+				<li class="ListBullet">But if the element has an ancestor (i.e., is contained within an element) that has its position set to <span class="Literal-fc">relative</span>, <span class="Literal-fc">absolute</span>, or <span class="Literal-fc">fixed</span>, the element will be positioned relative to the edges of <em class="Emphasis">that </em>element instead.</li>
+			</ul>
+			<p class="body"><span class="Xref-Figure">Figure 15-20</span> is an example of the first case: the <span class="Literal-fc">p</span> element that contains the absolutely positioned <span class="Literal-fc">em</span> element is <em class="Emphasis">not</em> positioned itself, and there are no other positioned elements higher in the hierarchy. Therefore, the <span class="Literal-fc">em</span> element is positioned relative to the initial containing block, which is equivalent to the viewport area.</p>
+			<p class="body">Let’s deliberately turn the <span class="Literal-fc">p</span> element into a containing block and see what happens. All we have to do is apply the <a id="_idIndexMarker2854"></a><span class="Literal-fc">position</span> property to it; we don’t have to actually move it. The most common way to make an element into a containing block is to set its <span class="Literal-fc">position</span> to <a id="_idIndexMarker2855"></a><span class="Literal-fc">relative</span>, but not move it with any offset values. This is what I was talking about earlier when I said that relative positioning is used to create a <em class="Emphasis">positioning context</em> for an absolutely positioned element.</p>
+			<p class="body">In this example, we’ll keep the style rule for the <span class="Literal-fc">em</span> element the same, but we’ll add a <span class="Literal-fc">position</span> property to the <span class="Literal-fc">p</span> element, thus making it the containing block for the positioned <span class="Literal-fc">em</span> element. <span class="Xref-Figure">Figure 15-21</span> shows the results.</p>
+			<pre class="CodeFirst">p { <br/><code class="CodeColor">  position: relative;</code><br/>  padding: 15px;<br/>  background-color: #F2F5D5;<br/>  border: 2px solid purple;<br/>}</pre>
+			<div>
+				<figure id="_idContainer986" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1521_containingblock.png" alt="" width="1321" height="748"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-21.</span> The relatively positioned <span class="Literal-Sidebar">p</span> element acts as a containing block for the <span class="Literal-Sidebar">em</span> element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">You can see that the <span class="Literal-fc">em</span> element is now positioned 2em down and 3em from the top-left corner of the paragraph box, not the browser window. Notice also that it is positioned relative to the <em class="Emphasis">padding edge</em> of the paragraph (just inside the border), not the content area edge. This is the normal behavior when block elements are used as containing blocks (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer987" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">When inline <a id="_idIndexMarker2856"></a>elements are used as containing blocks (and they can be), the positioned element is placed relative to the content area edge, not the padding edge.</p>
+				</div>
+			</div>
+			<p class="body">I’m going to poke around at this some more to reveal additional aspects of absolutely positioned objects. This time, I’ve added <span class="Literal-fc">width</span> and <span class="Literal-fc">margin</span> properties to the positioned <span class="Literal-fc">em</span> element (<span class="Xref-Figure">Figure 15-22</span>): </p>
+			<pre class="CodeFirst">em {<br/><code class="CodeColor">  width: 200px;<br/>  margin: 25px;</code><br/>  position: absolute;<br/>  top: 2em;<br/>  left: 3em;<br/>  background-color: fuchsia;<br/>}</pre>
+			<div>
+				<figure id="_idContainer989" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1522_withmargin.png" alt="" width="1321" height="713"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-22.</span> Adding a width and margins to the positioned element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Here we can see that:</p>
+			<ul>
+				<li class="ListBullet">The <a id="_idIndexMarker2857"></a>offset values apply to the outer edges of the element box (the outer margin edge) for absolutely positioned elements (see <span class="Xref">Note</span>).<div id="_idContainer990" class="note"><h5 class="noteHeader">Note</h5><p class="note">For relatively positioned elements, the offset is measured to the box itself (not the outer margin edge).</p></div></li>
+				<li class="ListBullet">Absolutely positioned elements always behave as block-level elements. For example, the margins on all sides are maintained, even though this is an inline element. It also permits a width to be set for the element.</li>
+			</ul>
+			<p class="body">It is important to keep in mind that once you’ve positioned an element, it becomes the new containing block for all the elements it contains. Say you position a narrow <span class="Literal-fc">div</span> at the top-left corner of a page, creating a column. If you were to absolutely position an image within that <span class="Literal-fc">div</span> with offset values that place it in the top-right corner, it appears in the top-right corner of that <span class="Literal-fc">div</span>, not the entire page. Once the parent element is positioned, it acts as the containing block for the <span class="Literal-fc">img</span> and any other contained elements.</p>
+			<h2 class="HeadB">Specifying Position</h2>
+			<p class="body">Now that you <a id="_idIndexMarker2858"></a>have a better feel for the containing block concept, let’s take some time to get better acquainted with the offset properties. So far, we’ve only seen an element moved a few ems down and to the right, but that’s not all you can do, of course.</p>
+			<h3 class="HeadC">Pixel measurements</h3>
+			<p class="body">As mentioned previously, positive offset values push the positioned element box <em class="Emphasis">away</em> from the specified edge and toward the center of the containing block. If there is no value provided for a side, it is set to <span class="Literal-fc">auto</span>, and the browser adds enough space to make the layout work. In this example, <span class="Literal-fc">div#B</span> is contained within <span class="Literal-fc">div#A</span>, which has been given the dimensions 600 pixels wide by 300 pixels high. I’ve used pixel lengths for all four offset properties to place the positioned element (#B) at a particular spot in its containing element (#A) (<span class="Xref-Figure">Figure 15-23</span>).</p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;div id="A"&gt;<br/>  &lt;div id="B"&gt;&amp;nbsp;&lt;/div&gt;<br/>&lt;/div&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">div#A {<br/><code class="CodeColor">  position: relative;   </code><span class="Code-Comment">/* creates the containing block */</span><br/> <code class="CodeColor">  width: 600px;<br/>  height: 300px;</code><br/>  background-color: #C6DE89; <span class="Code-Comment">/* green */</span> <br/>}</pre>
+			<pre class="Code"> div#B {<br/>  <code class="CodeColor">position: absolute;<br/>  top: 25px;<br/>  right: 50px;<br/>  bottom: 75px;<br/>  left: 100px;</code><br/>  background-color: steelblue;<br/>}</pre>
+			<div>
+				<figure id="_idContainer992" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1523_positions.png" alt="" width="1321" height="738"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-23.</span><span class="FigureLabel"> </span>Setting offset values for all four sides of a positioned element.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Notice that by setting offsets on all four sides, I have indirectly set the dimensions of the positioned <span class="Literal-fc">div#B.</span> It fills the 450 × 200 pixel space that is left over within the containing block after the offset values are applied. If I had also specified a width and other box properties for <span class="Literal-fc">div#B</span>, there is the potential for conflicts if the total of the values for the positioned box and its offsets does not match the available space within the containing block. </p>
+			<p class="body">The CSS specification provides a daunting set of rules for handling conflicts, but the upshot is that you should just be careful not to over-specify box properties and offsets. In general, a width (factoring in margins as well as padding and border if you are using the <a id="_idIndexMarker2859"></a><a id="_idIndexMarker2860"></a><span class="Literal-fc">content-box</span> box-sizing model) and one or two offset properties are all that are necessary to achieve the layout you’re looking for. Let the browser take care of the remaining calculations.</p>
+			<h3 class="HeadC">Percentage values</h3>
+			<p class="body">You can <a id="_idIndexMarker2861"></a>also specify positions with percentage values. In the first example in <span class="Xref-Figure">Figure 15-24</span>, the image is positioned halfway (50%) down the left edge of the containing block. In the second example on the right, the <span class="Literal-fc">img</span> element is positioned so that it always appears in the bottom-right corner of the containing block.</p>
+			<pre class="CodeFirst">img#A {<br/><code class="CodeColor">  position: absolute;<br/>  top: 50%;<br/>  left: 0%;<br/>  </code><br/>}<br/>img#B {<br/><code class="CodeColor">  position: absolute;<br/>  bottom: 0%;<br/>  right: 0%;<br/>  </code><br/>} </pre>
+			<div>
+				<div id="_idContainer993" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The % symbol <a id="_idIndexMarker2862"></a><a id="_idIndexMarker2863"></a>could be omitted for a 0 value, which essentially turns it into a 0 length but achieves an equivalent result. </p>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer994" class="note">
+					<h5 class="WarningHeader">WARNING</h5>
+					<p class="note">Be careful when positioning elements at the bottom of the initial containing block (the <span class="Literal-Sidebar">html</span> element). Although you may expect it to be positioned at the bottom of the whole page, browsers actually place the element at the bottom of the browser window. Results may be unpredictable. If you want something positioned at the bottom of your page, put it in a containing block element at the end of the document source, and go from there. </p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer996" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1524_percentages.png" alt="" width="1875" height="642"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-24.</span> Using percentage values to position an element in a containing block.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Although the examples here specify both a vertical and horizontal offset, it is common to provide just one offset for a positioned element—for example, to move it left or right into a margin using either <span class="Literal-fc">left</span> or <span class="Literal-fc">right</span> properties.</p>
+			<p class="body">In <span class="Xref-Figure">Exercise 15-3</span>, we’ll make further changes to the Black Goose Bakery home page, this time using absolute positioning. </p>
+			<div>
+				<div id="_idContainer999" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 15-3.</span> Absolute positioning</h6>
+					<p class="SidebarBody">In this exercise, we’ll use absolute positioning to add an award graphic to the home page. Open the version of the site you saved in <span class="Xref-Figure">Exercise 15-2</span>.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">Good news! Black Goose Bakery won the Farmers’ Market Award, and we have the privilege of displaying an award medal on the home page. Because this is new content, we’ll need to add it to the markup in <span class="Filename--Sidebar-">bakery.html</span>. Because it is nonessential information, add the image in a new <span class="Literal-Sidebar">div</span> in the <span class="Literal-Sidebar">footer</span> of the document:<pre class="SidebarCodeFirst">&lt;footer&gt;<br/>   &lt;p&gt;All content copyright &amp;copy; 2017, Black Goose Bistro.&lt;/p&gt;<br/> <code class="CodeColor">  &lt;div id="award"&gt;&lt;img src="images/award.png" alt="Farmers' Market Award"&gt;&lt;/div&gt; </code><br/>&lt;/footer&gt;</pre></li>
+						<li class="SidebarListNumber">Just because the award is at the end of the source document doesn’t mean it needs to display there. We can use absolute positioning to place the award in the top-left corner of the viewport by adding a new rule to the style sheet that positions the <span class="Literal-Sidebar">div</span>, like so (I put mine in the <span class="Literal-Sidebar">/* misc styles */</span> section):<pre class="SidebarCodeFirst"><code class="CodeColor">#award { 	<br/>  position: absolute;<br/>   top: 30px;<br/>   left: 50px;<br/>}</code></pre><p class="SidebarListItem_cont">Save the document and take a look (<span class="Xref-Figure">Figure 15-25</span>). Resize the browser window very narrow, and you will see that the positioned award image overlaps the header content. Notice also that when you scroll the document, the image scrolls with the rest of the page. Try playing around with other offset properties to get a feel for positioning in the viewport (or the “initial containing block” to be precise).</p><p class="SidebarListItem_cont">P.S. I know that the navigation list still looks bad, but we’ll fix it up in <span class="Xref--Sidebar-">Chapter 16</span>.</p></li>
+					</ol>
+					<div>
+						<figure id="_idContainer998" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1525_ex3_position.png" alt="" width="620" height="365"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-25.</span><span class="FigureLabel"> </span>An absolutely positioned award graphic.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Stacking Order</h2>
+			<p class="body">Before <a id="_idIndexMarker2864"></a>we close the book on absolute positioning, there is one last related concept that I want to introduce. As we’ve seen, absolutely positioned elements overlap other elements, so it follows that multiple positioned elements have the potential to stack up on one another. </p>
+			<p class="body">By default, elements stack up in the order in which they appear in the document, but you can change the stacking order with the<a id="_idIndexMarker2865"></a> <span class="Literal-fc">z-index</span> property (see <span class="Xref">Note</span>). Picture the <a id="_idIndexMarker2866"></a><span class="FirstTerm">z-axis</span> as a line that runs perpendicular to the page, as though from the tip of your nose, through this page, and out the other side.</p>
+			<div>
+				<div id="_idContainer1000" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The <span class="Literal-Sidebar">z-index</span> property is also useful for items in a grid, which also have the potential to overlap, as discussed in <span class="Xref--Sidebar-">Chapter 16</span>.</p>
+				</div>
+			</div>
+			<p class="RefNameCode-Left">z-index</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">number</span> | <span class="prop-code">auto</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">auto</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	positioned elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no</p>
+			<p class="body">The value of the <span class="Literal-fc">z-index</span> property is a number (positive or negative). The higher the number, the higher the element will appear in the stack (that is, closer to your nose). Lower numbers and negative values move the element lower in the stack. Let’s look at an example to make this clear (<span class="Xref-Figure">Figure 15-26</span>).</p>
+			<div>
+				<figure id="_idContainer1002" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1526_zindex.png" alt="" width="1321" height="763"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-26.</span><span class="FigureLabel"> </span>Changing the stacking order with the <span class="Literal-Sidebar">z-index</span> property.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Here are three paragraph elements, each containing a letter image (A, B, and C, respectively) that have been absolutely positioned in such a way that they overlap on the page. By default, paragraph C would appear on top because it appears last in the source. However, by assigning higher <span class="Literal-fc">z-index</span> values to paragraphs A and B, we can force them to stack in our preferred order. </p>
+			<p class="body">Note that the values of <span class="Literal-fc">z-index</span> do not need to be sequential, and they do not relate to anything in particular. All that matters is that higher number values position the element higher in the stack. </p>
+			<p class="body"><span class="FigureLabel">The markup</span></p>
+			<pre class="CodeFirst">&lt;p id="A"&gt;&lt;img src="A.gif" alt="A"&gt;&lt;/p&gt;<br/>&lt;p id="B"&gt;&lt;img src="B.gif" alt="B"&gt;&lt;/p&gt;<br/>&lt;p id="C"&gt;&lt;img src="C.gif" alt="C"&gt;&lt;/p&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">#A {<br/> <code class="CodeColor">  z-index: 100;</code><br/>  position: absolute;<br/>  top: 175px;<br/>  left: 200px;<br/>} <br/><br/>#B {<br/><code class="CodeColor">  z-index: 5;</code><br/>  position: absolute;<br/>  top: 275px;<br/>  left: 100px;<br/>} <br/><br/>#C {<br/> <code class="CodeColor">  z-index: 1;</code><br/>  position: absolute;<br/>  top: 325px;<br/>  left: 250px;<br/>} </pre>
+			<p class="body">To be honest, the <span class="Literal-fc">z-index</span> property is not often required for most page layouts, but you should know it’s there if you need it. If you want to guarantee that a positioned element always ends up on top, assign it a very high <span class="Literal-fc">z-index</span> value, such as 100 or 1000. If you want to make sure it’s at the bottom, give it a negative value. The number itself doesn’t actually matter.</p>
+			<h1 id="_idParaDest-151" class="HeadA"><a id="_idTextAnchor213"></a>Fixed Positioning</h1>
+			<p class="body">We’ve <a id="_idIndexMarker2867"></a><a id="_idIndexMarker2868"></a>covered relative and absolute positioning, so now it’s time to take on fixed positioning.</p>
+			<p class="body">For the most part, fixed positioning works just like absolute positioning. The significant difference is that the offset values for fixed elements are <em class="Emphasis">always</em> relative to the viewport, which means the positioned element stays put even when the rest of the page scrolls. By contrast, you may remember that when you scrolled the Black Goose Bakery page in <span class="Xref-Figure">Exercise 15-3</span>, the award graphic scrolled along with the document—even though it was positioned relative to the initial containing block (equivalent to the viewport). Not so with fixed positioning, where the position is, well, <em class="Emphasis">fixed</em>.</p>
+			<p class="body">Fixed elements are often used for menus that stay in the same place at the top, bottom, or side of a screen so they are always available, even when the content scrolls (see <span class="Xref">Warning</span>). Bear in mind that if you fix an element to the bottom of the viewport, you’ll need to leave enough space at the end of the document so the content doesn’t get hidden behind the fixed element. Fixed elements are also problematic when the document is printed because they will print on every page without reserving any space for themselves. It’s best to turn off fixed elements when printing the document. (Targeting print with <span class="Literal-fc">@media</span> is addressed in <a href="lwd5_chapter17.xhtml#_idTextAnchor224"><span class="Xref">Chapter </span><span class="Xref">17</span><span class="Xref">, Responsive Web Design</span></a>.)</p>
+			<div>
+				<div id="_idContainer1003" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">The <span class="Literal-Sidebar">position: fixed</span> property causes some buggy behaviors on old versions of mobile Safari (5, 6, and 7) and Android (&lt;4.4). Fortunately, these mobile browsers are nearly obsolete as of this writing, but it is a reminder to do thorough testing on a range of mobile devices if you have fixed elements.</p>
+				</div>
+			</div>
+			<p class="body">Let’s switch the award graphic on the Black Goose Bakery page to a fixed position in <span class="Xref-Figure">Exercise 15-4</span> to see the difference. </p>
+			<div>
+				<div id="_idContainer1006" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 15-4.</span> Fixed positioning</h6>
+					<p class="SidebarBody">This should be simple. Open the bakery style sheet as you left it in <span class="Xref-Figure">Exercise 15-3</span> and edit the style rule for the <span class="Literal-Sidebar">#award</span> <span class="Literal-Sidebar">div</span> to make it <span class="Literal-Sidebar">fixed</span> rather than <span class="Literal-Sidebar">absolute</span>:</p>
+					<pre class="SidebarCodeFirst">#award {<br/><code class="CodeColor">  position: fixed;</code><br/>  top: 30px;<br/>  left: 50px; <br/>}</pre>
+					<p class="SidebarBody">Save the styles and open the page in a browser. When you scroll the page, you will see that the award now stays put where we positioned it in the browser window (<span class="Xref-Figure">Figure 15-27</span>). You can see that fixed positioned elements have the potential to hide content as the page scrolls. Test well to see the potential pitfalls and weigh them against the benefits.</p>
+					<div>
+						<figure id="_idContainer1005" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1527_ex4_fixed.png" alt="" width="975" height="725"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 15-27.</span><span class="FigureLabel"> </span>The award stays in the same place in the top-left corner of the browser when the document scrolls.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<p class="body">That does it for floating and positioning. In the next chapter, you’ll learn about flexible boxes and grid layout, which are powerful tools for designing the overall structure of a page and specific page features. But first, try your hand at a few questions about floating and positioning.</p>
+			<h1 id="_idParaDest-152" class="HeadA"><a id="_idTextAnchor214"></a>Test Yourself</h1>
+			<p class="body">Before we move on, take a moment to see how well you absorbed the principles in this chapter. You’ll find the answers in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber" value="1">Which of the following is <em class="Emphasis">not</em> true of floated elements?<ol><li class="ListNumber_Indent">All floated elements behave as block elements.</li><li class="ListNumber_Indent">Floats are positioned against the padding edge of the containing element.</li><li class="ListNumber_Indent">The contents of inline elements flow around a float, but the element box is unchanged.</li><li class="ListNumber_Indent">You must provide a <span class="Literal-fc">width</span> property for floated block elements.</li></ol></li>
+				<li class="ListNumber">Which of these style rules is incorrect? Why?<ol><li class="ListNumber_Indent" value="1"><code class="Code">img { float: left; margin: 20px;}</code></li><li class="ListNumber_Indent"><code class="Code">img { float: right; width: 120px; height: 80px; }</code></li><li class="ListNumber_Indent"><code class="Code">img { float: right; right: 30px; }</code></li><li class="ListNumber_Indent"><code class="Code">img { float: left; margin-bottom: 2em; }</code></li></ol></li>
+				<li class="ListNumber">How do you make sure a <span class="Literal-fc">footer</span> element always starts below any floated sidebars on the page?</li>
+				<li class="ListNumber">Write the name of the positioning method or methods (static, relative, absolute, or fixed) that best matches each of the following descriptions.<ol><li class="ListNumber_Indent" value="1">Positions the element relative to a containing block.</li><li class="ListNumber_Indent">Removes the element from the normal flow.</li><li class="ListNumber_Indent">Always positions the element relative to the viewport.</li><li class="ListNumber_Indent">The positioned element may overlap other content.</li><li class="ListNumber_Indent">Positions the element in the normal flow.</li><li class="ListNumber_Indent">The space the element would have occupied in the normal flow is preserved.</li><li class="ListNumber_Indent">The space the element would have occupied in the normal flow is closed up.</li><li class="ListNumber_Indent">You can change the stacking order with <span class="Literal-fc">z-index</span>.</li><li class="ListNumber_Indent">Positions the element relative to its original position in the normal flow.</li></ol></li>
+			</ol>
+			<h1 id="_idParaDest-153" class="HeadA"><a id="_idTextAnchor215"></a>CSS Review: Floating and Positioning Properties</h1>
+			<p class="body">Here is a <a id="_idIndexMarker2869"></a><a id="_idIndexMarker2870"></a>summary of the properties covered in this chapter.</p>
+			<table id="table001-14" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Property</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">clear</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Prevents <a id="_idIndexMarker2871"></a>an element from being laid out next to a float</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">float</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Moves<a id="_idIndexMarker2872"></a> the element to the right or left and allows the following text to flow around it</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">position</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2873"></a>the positioning method to be applied</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">top<span class="COMMA_8-5">,</span> bottom<span class="COMMA_8-5">,</span>  right<span class="COMMA_8-5">,</span> left</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2874"></a><a id="_idIndexMarker2875"></a><a id="_idIndexMarker2876"></a><a id="_idIndexMarker2877"></a>the offset amount from each respective edge</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">shape-outside</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Causes <a id="_idIndexMarker2878"></a>content to wrap around a shape instead of the float’s bounding box.</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">shape-margin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adds a <a id="_idIndexMarker2879"></a>margin to <span class="Literal-Sidebar">shape-outside</span></p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">shape-image-threshold</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Defines <a id="_idIndexMarker2880"></a>the alpha channel threshold used to create the wrap shape</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">z-index</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies the<a id="_idIndexMarker2881"></a> order of appearance within a stack of overlapping positioned elements</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

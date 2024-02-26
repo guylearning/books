@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1340" class="ch20">
+			<p id="_idParaDest-184" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor255"></a>20. Modern Web Development Tools</p>
+		</div>
+		<div id="_idContainer1341" class="ch20">
+			<h1 class="chapterLabel">20</h1>
+		</div>
+		<div id="_idContainer1342" class="ch20">
+			<h1 class="chapterTitle"><a id="_idTextAnchor256"></a><a id="_idTextAnchor257"></a>Modern Web Development Tools</h1>
+		</div>
+		<div id="_idContainer1343" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">Introduction to the command line</p>
+			<p class="chapterContents">CSS preprocessors and postprocessors</p>
+			<p class="chapterContents">Build tools and task runners</p>
+			<p class="chapterContents">Git version control</p>
+		</div>
+		<div id="_idContainer1383" class="ch20">
+			<p class="body">In the exercises in this book, you’ve been writing static HTML pages with embedded style sheets, saving them, and opening them in your browser. Although that is a perfectly valid approach, it is likely not the way you would work if you were doing web development for a living. I figure if you are learning web design and development, you should be familiar with how things are done in a professional environment. </p>
+			<p class="body">This chapter introduces you to some of the tools used by web developers to make their work easier and their code more robust: </p>
+			<ul>
+				<li class="ListBullet">CSS processors for writing CSS more efficiently and optimizing the resulting code so it works across all browsers</li>
+				<li class="ListBullet">Build tools that automate the sorts of repetitive tasks you encounter when producing code </li>
+				<li class="ListBullet">Git, a version control program that keeps track of your previous versions and makes it easy for teams to work together on the same code </li>
+			</ul>
+			<p class="body">What these advanced tools have in common is that they are generally used with a <span class="FirstTerm">command-line interface</span> (<span class="FirstTerm">CLI</span>). So, before we look at specific tools, let’s first get up to speed with the command line.</p>
+			<h1 id="_idParaDest-185" class="HeadA"><a id="_idTextAnchor258"></a>Getting Cozy with the Command Line</h1>
+			<p class="body">You <a id="_idIndexMarker3626"></a><a id="_idIndexMarker3627"></a><a id="_idIndexMarker3628"></a>probably use a computer with a graphical user Interface (GUI), with icons that stand for files and folders, pull-down menus full of options, and intuitive actions like dragging files from folder to folder or into the trash. </p>
+			<p class="body">Computer users in the ’60s and ’70s didn’t have that luxury. The only way to get a computer to perform a task was to type in a command. Despite our fancy GUIs, typing commands into a command-line terminal is far from obsolete. In fact, the more experienced you become at web development, the more likely it is you’ll dip into the command line for certain tasks. If you are already a programmer, the command line will be nothing new.</p>
+			<p class="body">The command line is still popular for a number of reasons. First, it is useful for accessing remote computers, and developers often need to access and manage files on remote web servers. In addition, it is easier to write a program for the command line than a standalone application with a GUI, so many of the best tools for optimizing our workflow exist as command-line programs only. A lot of those tools can be used together in a pipeline for accomplishing complex tasks.</p>
+			<p class="body">The time- and sanity-saving benefits are powerful incentives to take on the command line. Trust me: if you can learn all those elements and style properties, you can get used to typing a few commands. </p>
+			<h2 class="HeadB">The Command-Line Terminal</h2>
+			<p class="body">The program that<a id="_idIndexMarker3629"></a><a id="_idIndexMarker3630"></a><a id="_idIndexMarker3631"></a><a id="_idIndexMarker3632"></a> interprets the commands you type is called a <span class="FirstTerm">shell</span> (visual interfaces are also technically a shell; they’re just fancier). Every <a id="_idIndexMarker3633"></a><a id="_idIndexMarker3634"></a>Mac and Linux machine comes installed with Terminal, which uses a shell <a id="_idIndexMarker3635"></a>program called <span class="FirstTerm">bash</span>. On macOS, you will find the Terminal program in <span class="menu">Applications </span><span class="menu">→</span><span class="menu"> Utilities</span> (<span class="Xref-Figure">Figure 20-1</span>). </p>
+			<div>
+				<figure id="_idContainer1345" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2001_terminal.png" alt="" width="1321" height="746"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-1.</span> The Terminal window in macOS.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Windows <a id="_idIndexMarker3636"></a>users have a few more hoops to jump through to get set up. The default command-line tool on Windows is Command Prompt (most easily accessed with Search), which can perform many of the functions you may want to do as a developer; however, it does not use bash. Because so many tools use bash, it is better to install a bash-based shell emulator like Cygwin<a id="_idIndexMarker3637"></a><a id="_idIndexMarker3638"></a> (<a href="http://cygwin.com"><span class="URL-Email">cygwin.com</span></a>) or cmder (<a href="http://cmder.net"><span class="URL-Email">cmder.net</span></a>). If you use Windows 10, it is recommended that you install a Linux environment on your machine by using Windows Subsystem (<a href="http://msdn.microsoft.com/en-us/commandline/wsl/about"><span class="URL-Email">msdn.microsoft.com/en-us/commandline/wsl/about</span></a>) or Ubuntu, available in the Windows store (<a href="http://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6"><span class="URL-Email">www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6</span></a>). </p>
+			<h2 class="HeadB">Getting Started with Commands</h2>
+			<p class="body">When you <a id="_idIndexMarker3639"></a>launch a Terminal w<a id="_idTextAnchor259"></a>indow, the first thing you see is a command-line <span class="FirstTerm">prompt</span>, <a id="_idIndexMarker3640"></a>which is a string of characters that indicates the computer is ready to receive your command: </p>
+			<pre class="CodeFirst">$: _</pre>
+			<p class="body">The <a id="_idIndexMarker3641"></a><a id="_idIndexMarker3642"></a>dollar sign is common, but you may see another symbol in your terminal program (see <span class="Xref">Terminal </span><span class="Xref">Tip</span>). The <a id="_idIndexMarker3643"></a><a id="_idIndexMarker3644"></a>underscore in this example stands for the cursor position, which may appear as a little rectangle or a flashing line. </p>
+			<div>
+				<div id="_idContainer1346" class="sidebar">
+					<h5 class="SidebarSeries">Terminal TIP</h5>
+					<p class="SidebarBody">You can customize the appearance of Terminal by selecting <span class="menu">Preferences </span><span class="menu">→</span><span class="menu"> Profile</span> and changing the settings. If you want to keep yourself amused, you can change the prompt character from $ to the character of your choice, including an emoji (<a href="http://osxdaily.com/2013/04/08/add-emoji-command-line-bash-prompt/"><span class="URL-Email--Sidebar-">osxdaily.com/2013/04/08/add-emoji-command-line-bash-prompt/</span></a>).</p>
+				</div>
+			</div>
+			<p class="body">The complete prompt that I see in Terminal begins with my computer’s name (“JensAir”) and an indication of the working directory—that is, the directory the shell is currently looking at. In GUI terms, the working directory is the folder you are “in.” In this example, the tilde (<span class="Literal-fc">~</span>) indicates that I am looking at my root User directory. The “jen” before the prompt character is my username. In future examples, I will abbreviate the prompt to simply <span class="Literal-fc">$:</span>.</p>
+			<pre class="CodeFirst">JensAir:~ jen$: _</pre>
+			<p class="body">When you see the prompt, type in a command, and hit Enter. The computer executes the command and gives you a new prompt when it is finished. It is very no-nonsense about it. For some commands, there may be feedback or information displayed before the next prompt appears. Sometimes everything happens behind the scenes, and all you see is a fresh prompt.</p>
+			<p class="body">When you’re learning about the command line, it is common to start with the built-in commands for navigating the file system, tasks typically handled by the Finder on the Mac and My Computer on Windows. Because they are fairly intuitive, that’s where I’m going to start my simple command-line lesson as well.</p>
+			<p class="body">A nice little utility to try as a beginner is <a id="_idIndexMarker3645"></a><span class="Literal-fc">pwd</span> (for “print working directory”), which displays the complete path of the working (current) directory. To use it, simply type <span class="Literal-fc">pwd</span> after the prompt. It’s a good one to try first because you can’t break anything with it, but for seasoned users, it is useful for figuring out exactly where you’ve landed if you’re disoriented. The forward slash indicates that this path starts at the <a id="_idIndexMarker3646"></a>root directory for the entire computer. </p>
+			<pre class="CodeFirst">$: <code class="CodeColor">pwd </code><br/>/Users/jen</pre>
+			<div>
+				<div id="_idContainer1347" class="note">
+					<h5 class="noteHeader">Note </h5>
+					<p class="note">Your <a id="_idIndexMarker3647"></a><a id="_idIndexMarker3648"></a>user directory is the default root directory in Terminal and is represented by a <a id="_idIndexMarker3649"></a><a id="_idIndexMarker3650"></a>tilde (~) in the prompt, as we saw in the previous example.</p>
+				</div>
+			</div>
+			<p class="body">Here’s another easy (and low-risk!) example. Typing the<a id="_idIndexMarker3651"></a> <span class="Literal-fc">ls</span> command at the prompt returns a list of the files and directories in the <a id="_idIndexMarker3652"></a>working directory (<span class="Filename">/</span><span class="Filename"><a id="_idIndexMarker3653"></a></span><span class="Filename">Users/jen</span>). You can compare it to the Finder view of the same folder in <span class="Xref-Figure">Figure 20-2</span>. They are two ways of looking at the same thing, just as <em class="Emphasis">directory</em> and <em class="Emphasis">folder</em> are two terms for the same thing depending on your view.</p>
+			<table id="table001-19" class="table_invisible">
+				<colgroup>
+					<col/>
+					<col/>
+					<col/>
+					<col/>
+				</colgroup>
+				<tbody>
+					<tr class="table_invisible">
+						<td class="table_invisible" colspan="4">
+							<pre class="Code">JensAir:~ jen$ <code class="CodeColor">ls</code></pre>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="Code">Applications</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Downloads</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Movies</pre>
+						</td>
+						<td class="table_invisible">
+							<pre class="Code">Public</pre>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="Code">Desktop</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Dropbox</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Music</pre>
+						</td>
+						<td class="table_invisible">
+							<pre class="Code">Sites</pre>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="Code">Documents</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Library</pre>
+						</td>
+						<td class="table_invisible invisible">
+							<pre class="Code">Pictures</pre>
+						</td>
+						<td class="table_invisible"></td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible" colspan="4">
+							<pre class="Code">JensAir:~ jen$ </pre>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<figure id="_idContainer1349" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2002_finder.png" alt="" width="1321" height="792"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-2.</span> Finder view of the <span class="Filename">jen</span> home folder.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1350" class="sidebar">
+					<h5 class="SidebarTitle">Dotfiles</h5>
+					<p class="SidebarBody">There are some files on your computer that are kept hidden in the Finder view. These files, known as <span class="FirstTerm--Sidebar-">dotfiles</span>, start <a id="_idIndexMarker3654"></a><a id="_idIndexMarker3655"></a><a id="_idIndexMarker3656"></a>with (you guessed it) a dot, and they tend to handle information that is intended to function behind the scenes. If you type <span class="Literal-Sidebar">ls -a</span> (<span class="Literal-Sidebar">-a</span> is shorthand for “all”), you can reveal the dotfiles lurking in a directory. In macOS, it is possible to configure Finder to show dotfiles as well, but for most users’ purposes, hidden is a good thing.  </p>
+				</div>
+			</div>
+			<p class="body">Some utilities, like <span class="Literal-fc">pwd</span>, require only their name at the prompt to run, but it is more common that you’ll need to provide additional information in the form of flags and arguments. A <span class="FirstTerm">flag</span> changes<a id="_idIndexMarker3657"></a> how the utility operates, like an option or a preference. It follows the command name and is indicated by a single or double dash (<span class="Literal-fc">-</span>). In many cases, flags can be abbreviated to just their first letter because they are used in context with a particular utility. For example, I can modify the <span class="Literal-fc">ls</span> utility with the <span class="Literal-fc">–l</span> flag, which instructs the computer to display my directory contents in “long” format, including permission settings and creation dates:</p>
+			<pre class="CodeFirst">JensAir:~ jen$ <code class="CodeColor">ls -l </code><br/>total 0 <br/>drwxr-xr-x    5 jen  staff   170 Jul  8  2016 Applications <br/>drwx------   57 jen  staff  1938 Sep 11 09:47 Desktop <br/>drwx------   26 jen  staff   884 May 18 11:34 Documents <br/>drwx------+ 151 jen  staff  5134 Sep  3 15:47 Downloads <br/>drwx------@  48 jen  staff  1632 Aug 16 16:34 Dropbox <br/>drwx------@  72 jen  staff  2448 Jul 15 11:21 Library <br/>drwx------   22 jen  staff   748 Oct  6  2016 Movies <br/>drwx------   12 jen  staff   408 Sep 29  2016 Music <br/>drwx------   14 jen  staff   476 Oct 13  2016 Pictures <br/>drwxr-xr-x    6 jen  staff   204 May  6  2015 Public <br/>drwxr-xr-x   11 jen  staff   374 Jul 10  2016 Sites <br/>JensAir:~ jen$</pre>
+			<p class="body">An <span class="FirstTerm">argument</span> provides <a id="_idIndexMarker3658"></a>the specific information required for a particular function. For example, if I want to change to another directory, I type <a id="_idIndexMarker3659"></a><a id="_idIndexMarker3660"></a><span class="Literal-fc">cd</span> (for “change directory”) as well as the name of the directory I want to go to (see <span class="Xref">Mac Terminal Tip</span>). To make my Dropbox directory the new working directory, I type this:</p>
+			<pre class="CodeFirst">JensAir:~ jen$: <code class="CodeColor">cd Dropbox</code></pre>
+			<div>
+				<div id="_idContainer1351" class="sidebar">
+					<h5 class="SidebarSeries">Mac Terminal Tip</h5>
+					<p class="SidebarBody">On the Mac, Terminal is well connected to Finder. If you need to enter a pathname to a directory or a file, you can drag the icon for that file or folder from Finder to Terminal, and it will fill in the pathname for you.  </p>
+				</div>
+			</div>
+			<p class="body">After I hit Enter, my prompt changes to <span class="Literal-fc">JensAir:Dropbox jen$</span>, indicating that I am now in the Dropbox directory. If I entered <span class="Literal-fc">ls</span> now, I’d get a list of the files and folders contained in the Dropbox folder (definitely way too long to show here). </p>
+			<p class="body">To go up a level, and get back to my home <a id="_idIndexMarker3661"></a><a id="_idIndexMarker3662"></a>user directory (<span class="Literal-fc">~</span>), I can use the Unix shorthand for “go up a level”: <span class="Literal-fc">..</span> (remember that from your URL path lesson?). The returned prompt shows I’m back at my root directory (<span class="Literal-fc">~</span>).</p>
+			<pre class="CodeFirst">JensAir:Dropbox jen$ <code class="CodeColor">cd ..</code><br/>JensAir:~ jen$</pre>
+			<div>
+				<div id="_idContainer1352" class="sidebar">
+					<h5 class="SidebarSeries">Command-line TIP</h5>
+					<p class="SidebarBody">Typing <span class="Literal-Sidebar">cd</span> followed by a space always takes you back to your <a id="_idIndexMarker3663"></a>home directory.</p>
+				</div>
+			</div>
+			<p class="body">Some other useful file-manipulation commands include<a id="_idIndexMarker3664"></a> <span class="Literal-fc">mv</span> (moves files and folders), <a id="_idIndexMarker3665"></a><span class="Literal-fc">cp</span> (copies files), and <a id="_idIndexMarker3666"></a><span class="Literal-fc">mkdir</span> (creates a new empty directory). The <a id="_idIndexMarker3667"></a><span class="Literal-fc">rm</span> command removes a file or folder in the working directory. Be careful with this command, however, because it doesn’t just move files to the Trash; it removes them from your computer entirely (see the <span class="Xref">“A Word of Caution”</span> note). </p>
+			<div>
+				<div id="_idContainer1353" class="note">
+					<h5 class="WarningHeader">A word of caution</h5>
+					<p class="note">The command<a id="_idIndexMarker3668"></a> line allows you to muck around in critical parts of your computer that your GUI graciously protects from you. It’s best not to type in a command if you don’t know exactly what it does and how it works. Make a complete backup of your computer before you start playing around with command line so you have the peace of mind that your files are still available if something goes horribly wrong.</p>
+				</div>
+			</div>
+			<p class="body">Another handy command is <span class="Literal-fc">man</span> (short for <em class="Emphasis">manual</em>), which displays documentation for any command you pass to it. For example, <a id="_idIndexMarker3669"></a><span class="Literal-fc">man ls</span> shows a description of the <span class="Literal-fc">ls</span> (list) command and all of its available flags. Some man pages are long. To move down in the scroll, hitting the Return key moves you down one line at a time. To move down a page at a time, hit fn+down arrow on a Mac or Shift+Page Down on Linux. To go back up a page, it’s fn+up arrow or Shift+Page Up, respectively. Finally, to quit out of the man page, type <span class="Literal-fc">q</span> to <a id="_idIndexMarker3670"></a>return to the prompt.</p>
+			<h2 class="HeadB">Learning More</h2>
+			<p class="body">Not surprisingly, these commands are just the tip of the tip of the iceberg when it comes to command-line utilities. For a complete list of commands that can be used with bash, see “An A–Z Index of the Bash Command Line for Linux” at <a href="http://ss64.com/bash/"><span class="URL-Email">ss64.com/bash/</span></a>. You’ll pick these up on an as-needed basis, so don’t get overwhelmed. In addition, as you start installing and using new tools like the ones listed in this chapter, you’ll gradually learn the commands, flags, and arguments for those too. All part of a day’s work!</p>
+			<p class="body">Clearly, I don’t have the space (and if I’m being honest, the experience) to write a comprehensive tutorial on the command line in this chapter, but you will find books and plenty of tutorials online that can teach you. I found Michael <a id="_idIndexMarker3671"></a>Hartl’s tutorial “Learn Enough Command Line to Be Dangerous” to be thorough and accessible if you are starting from square one (<a href="http://www.learnenough.com/command-line-tutorial#sec-basics"><span class="URL-Email">www.learnenough.com/command-line-tutorial#sec-basics</span></a>). I also recommend the series of tutorials from <a id="_idIndexMarker3672"></a>Envato Tuts+, “The Command Line for Web Design” (<a href="https://webdesign.tutsplus.com/series/the-command-line-for-web-design--cms-777"><span class="URL-Email">webdesign.tutsplus.com/series/the-command-line-for-web-design--cms-777</span></a>). If you enjoy video tutorials, try the “Command Line for Non-Techies” course by Remy <a id="_idIndexMarker3673"></a>Sharp (<a href="http://terminal.training"><span class="URL-Email">terminal.training</span></a>). </p>
+			<p class="body">Now that you have a basic familiarity with the command line, let’s look at tools you might use it for, beginning with tools for writing and optimizing CSS.</p>
+			<h1 id="_idParaDest-186" class="HeadA"><a id="_idTextAnchor260"></a>CSS Power Tools (Processors)</h1>
+			<div>
+				<div id="_idContainer1354" class="sidebar">
+					<h5 class="SidebarTitle">Here’s the Thing About Development Tools</h5>
+					<p class="SidebarBody">Be aware that the development tool landscape is ever-shifting. Tools come and go in rapid-fire fashion, with the whole development community jumping on one framework bandwagon, then moving on to the next new thing. It’s difficult to write about specific tools in a book that has to last a couple of years. I have made an effort to present the most established and stable tools as of early 2018, but you should know that there are many more niche tools out there, and by the time you read this, some new tool may be all the rage. As you read this chapter, focus on the functions the tools perform, start with the ones mentioned here when you’re ready, and keep your ear to the ground for newer options.  </p>
+				</div>
+			</div>
+			<p class="body">I know that<a id="_idIndexMarker3674"></a> you are just getting used to writing CSS, but I would be negligent if I didn’t introduce you to some advanced CSS power tools that have become central to the professional web developer workflow. They fall into two general categories: </p>
+			<ul>
+				<li class="ListBullet">Languages built on top of CSS that employ time-saving syntax characteristics of traditional programming languages. These are traditionally known as <span class="FirstTerm">preprocessors</span>. <a id="_idIndexMarker3675"></a>The most popular preprocessors as of this writing are <a id="_idIndexMarker3676"></a><a id="_idIndexMarker3677"></a><a id="_idIndexMarker3678"></a>Sass, LESS, and Stylus. When you write your styles in one of these languages, you have to use a program or script to convert the resulting file into a standard CSS document that browsers can understand. </li>
+				<li class="ListBullet">CSS optimization tools take your clean, standard CSS and make it even better by improving cross-browser consistency, reducing file size for better performance, and enhancing many other tasks. Tools that optimize browser-ready CSS are commonly <a id="_idIndexMarker3679"></a>known as <span class="FirstTerm">postprocessors</span>. </li>
+			</ul>
+			<p class="body">Before you get too comfortable with the terms <em class="Emphasis">preprocessor</em> and <em class="Emphasis">postprocessor</em>, you should know that the distinction is not exactly clear-cut. Preprocessors have always been able to do some of the optimization tasks that postprocessors are good for, and postprocessors are starting to allow some functions typically found in preprocessors. The lines are blurring, so some folks refer to all of these tools simply as <span class="FirstTerm">CSS processors</span>, including souped-up special syntaxes for authoring as well as CSS optimizers. Many CSS processor functions are also built in to third-party tools such as <a id="_idIndexMarker3680"></a>CodeKit (<a href="http://codekitapp.com"><span class="URL-Email">codekitapp.com</span></a>, <em class="Emphasis">Mac only</em>) for one-stop shopping. I think it is beneficial for you to be familiar with the traditional terms as they are still in widespread use, and I’m going to use them here for the sake of simplicity. </p>
+			<div>
+				<div id="_idContainer1355" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Hat tips to <a id="_idIndexMarker3681"></a>Stefan Baumgartner, whose article “Deconfusing Pre- and Post-Processing” (<a href="https://medium.com/@ddprrt/deconfusing-pre-and-post-processing-d68e3bd078a3"><span class="URL-Email--Sidebar-">medium.com/@ddprrt/deconfusing-pre-and-post-processing-d68e3bd078a3</span></a>) helped me sort out all this CSS processing stuff, and <a id="_idIndexMarker3682"></a>David Clark for his clarifying article “It’s Time for Everyone to Learn About <a id="_idIndexMarker3683"></a>PostCSS” (<a href="http://davidtheclark.com/its-time-for-everyone-to-learn-about-postcss/"><span class="URL-Email--Sidebar-">davidtheclark.com/its-time-for-everyone-to-learn-about-postcss/</span></a>).</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Introduction to Preprocessors (Especially Sass)</h2>
+			<p class="body">Preprocessors consist of an authoring syntax and a program that translates (or <span class="FirstTerm">compiles</span>, to use the proper term) files written in that syntax to plain old CSS files that browsers can use (<span class="Xref-Figure">Figure 20-3</span>). For example, in Sass, you write in the Sass syntax language and save your files with the <span class="Filename">.scss</span> suffix, indicating it is in that language and not a CSS file. The Sass program, originally written in the Ruby language (see <span class="Xref">Technical</span> <span class="Xref">Note</span>), converts the SCSS syntax to standard CSS syntax and saves the resulting file with the <span class="Filename">.css</span> suffix. LESS and Stylus work the same way, but they use JavaScript for conversion. All of these tools are installed and run via the <a id="_idIndexMarker3684"></a>command line.</p>
+			<div>
+				<div id="_idContainer1356" class="sidebar">
+					<h5 class="SidebarSeries">Technical Note</h5>
+					<p class="SidebarBody">The Sass project wrote a newer version in C++ that can be used with other languages. Most developers now compile <span class="Filename--Sidebar-">.scss</span> files with Node Sass because it integrates more smoothly into a workflow with other Node.js <a id="_idIndexMarker3685"></a>tools.</p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer1358" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2003_preprocessor.png" alt="" width="1321" height="554"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-3.</span> A simplified view of the role of a preprocessor.</figcaption>
+				</figure>
+			</div>
+			<p class="body">By far, the most popular preprocessor is Sass (<span class="FirstTerm">“Syntactically awesome style sheets”</span>), created by <a id="_idIndexMarker3686"></a>Hampton Catlin and <a id="_idIndexMarker3687"></a>Nathan Weizenbaum, who were tired of the repetitiveness of normal CSS. Their new syntax allowed CSS authors to use the type of shortcuts typical in scripting. Originally, it used an indented, bracket-free syntax (which is still an option), but a later release known as<a id="_idIndexMarker3688"></a> <span class="FirstTerm">SCSS</span> (for <span class="FirstTerm">“Sassy CSS”</span>) is based on the <a id="_idIndexMarker3689"></a><a id="_idIndexMarker3690"></a>bracketed (<span class="Literal-fc">{ }</span>) CSS format we know and love. In fact, a valid CSS document would also be a valid SCSS document. This makes it much easier to get started with Sass, because it is familiar, and you can use just a little bit of Sass in style sheets written the way you’ve learned in this book. </p>
+			<p class="body">I’m going to show you a few examples of Sass syntax to give you the general idea. When you are ready to take on learning Sass, a great first step is <a id="_idIndexMarker3691"></a>Dan Cederholm’s book <span class="Citation">Sass for Web Designers</span> (A Book Apart). I’ve listed additional resources at the end of the section. In the meantime, let’s look at three of the most popular Sass features: nesting, variables, and mixins. </p>
+			<h3 class="HeadC">Nesting</h3>
+			<p class="body">Let’s say you <a id="_idIndexMarker3692"></a>have an HTML document with a <span class="Literal-fc">nav</span> element that contains an unordered list for several menu options. Sass lets you nest the style rules for the <span class="Literal-fc">nav</span>, <span class="Literal-fc">ul</span>, and <span class="Literal-fc">li</span> elements to reflect the structure of the HTML markup. That alleviates the need to type out the selectors multiple times—the Sass compiler does that for you. The following example shows nested styles as they can be written in Sass syntax:</p>
+			<pre class="CodeFirst"><code class="CodeColor">nav</code> {<br/>  margin: 1em 2em;<br/><br/>   <code class="CodeColor">ul</code> {<br/>    list-style: none;<br/>    padding: 0;<br/>    margin: 0;<br/><br/>    <code class="CodeColor">li</code> {<br/>      display: block;<br/>      width: 6em;<br/>      height: 2em;<br/>    }<br/>  }<br/>}</pre>
+			<p class="body">When Sass converts the SCSS file to standard CSS, it compiles to this:</p>
+			<pre class="CodeFirst"><code class="CodeColor">nav</code> {<br/>  margin: 1em 2em;<br/>} <br/><br/><code class="CodeColor">nav ul</code> {<br/>  list-style: none;<br/>  padding: 0;<br/>  margin: 0;<br/>}  <br/><br/><code class="CodeColor">nav ul li</code> {<br/>  display: block;<br/>  width: 6em;<br/>  height: 2em;<br/>}</pre>
+			<h3 class="HeadC">Variables</h3>
+			<p class="body">A <span class="FirstTerm">variable</span> is a <a id="_idIndexMarker3693"></a>value you can define once, and then use multiple times throughout the style sheet. For example, O’Reilly uses the same shade of red repeatedly on its site, so their developers could create a variable named “oreilly-red” and use the variable name for color values. That way, if they needed to tweak the shade later, they need to change the variable<a id="_idIndexMarker3694"></a> value (the actual RGB color) only in one place. Here’s what setting up and using a variable looks like in Sass:</p>
+			<pre class="CodeFirst"><code class="CodeColor">$oreilly-red</code>: #900;<br/> a {<br/>   border-color: <code class="CodeColor">$oreilly-red</code>; <br/>}</pre>
+			<p class="body">When it compiles to standard CSS, the variable value is plugged into the place where it is called: </p>
+			<pre class="CodeFirst">a {<br/>  <code class="CodeColor">border-color: #900;</code><br/>}</pre>
+			<p class="body">The advantage of using a variable is that you can change the value in one place instead of searching and replacing through the whole document. When teams use variable names, it also helps keep styles consistent across the site.</p>
+			<h3 class="HeadC">Mixins</h3>
+			<p class="body">Sass allows<a id="_idIndexMarker3695"></a> you to reuse whole sets of styles by using a convention called <span class="FirstTerm">mixins</span>. The following example saves a combination of background, color, and border styles as a mixin named “special.” To apply that combination of styles, <span class="Literal-fc">@­include</span> it in the declaration and call it by name:</p>
+			<pre class="CodeFirst"><code class="CodeColor">@mixin special</code> {<br/>  color: #fff;<br/>  background-color: #befc6d;<br/>  border: 1px dotted #59950c;<br/>}<br/>a.nav {<br/>  <code class="CodeColor">@include special;</code><br/>}<br/>a.nav: hover {<br/>  <code class="CodeColor">@include special;</code><br/>  border: 1px yellow solid; <br/>}</pre>
+			<p class="body">When compiled, the final CSS looks like this:</p>
+			<pre class="CodeFirst">a.nav {<br/>  <code class="CodeColor">color: #fff;<br/>  background-color: #befc6d;<br/>  border: 1px dotted #59950c;</code><br/>}</pre>
+			<pre class="Code">a.nav: hover {<br/>  <code class="CodeColor">color: #fff;<br/>  background-color: #befc6d;<br/>  border: 1px dotted #59950c;</code><br/>  border: 1px yellow solid; <br/>}</pre>
+			<p class="body">Notice that the hover state has a second border declaration that overrides the values in the mixin, and that’s just fine. Mixins are a popular solution for dealing with <a id="_idIndexMarker3696"></a>vendor prefixes. Here is a mixin for <a id="_idIndexMarker3697"></a><span class="Literal-fc">border-radius</span> that includes<a id="_idIndexMarker3698"></a> an <span class="FirstTerm">argument</span> (a placeholder for a value you provide indicated with a <span class="Literal-fc">$</span>):</p>
+			<pre class="CodeFirst"><code class="CodeColor">@mixin rounded($radius)</code> {<br/>  -webkit-border-radius: $radius;<br/>     -moz-border-radius: $radius;<br/>          border-radius: $radius;<br/>}</pre>
+			<p class="body">When including the mixin in a style rule, provide the value for <span class="Literal-fc">$radius</span>, and it gets plugged into each instance in the declarations: </p>
+			<pre class="CodeFirst">aside {<br/>  <code class="CodeColor">@include rounded(.5em);</code><br/>  background: #f2f5d5;<br/>}</pre>
+			<p class="body">This compiles to the following:</p>
+			<pre class="CodeFirst">aside {<br/><code class="CodeColor">  -webkit-border-radius: .5em;<br/>     -moz-border-radius: .5em;<br/>          border-radius: .5em;</code><br/>  background: #f2f5d5;<br/>}</pre>
+			<p class="body">Building a mixin around fill-in-the-blank arguments makes them reusable and even shareable. Many developers create their own mixin libraries to use on multiple projects. You can also take advantage of existing mixin libraries in tools like<a id="_idIndexMarker3699"></a> Compass (an open source CSS authoring framework at <a href="http://compass-style.org"><span class="URL-Email">compass-style.org</span></a>) or <a id="_idIndexMarker3700"></a>Bourbon (<a href="http://bourbon.io"><span class="URL-Email">bourbon.io</span></a>). By the time you read this, there may be others, so search around to see what’s available.</p>
+			<h3 class="HeadC">Sass resources</h3>
+			<p class="body">Nesting, variables, and mixins are only a tiny fraction of what Sass can do. It can handle math operations, “darken” and “lighten” colors mathematically on the fly, and process <span class="Literal-fc">if</span>/<span class="Literal-fc">else</span> statements, just to name a few features. </p>
+			<p class="body">Once you get some practice under your belt and feel that you are ready to take your style sheets to the next level, explore some of these Sass and LESS articles and resources:</p>
+			<ul>
+				<li class="ListBullet">The Sass site (<a href="http://sass-lang.com"><span class="URL-Email">sass-lang.com</span></a>)</li>
+				<li class="ListBullet">“Getting Started with Sass,” by <a id="_idIndexMarker3701"></a>David Demaree (<a href="http://alistapart.com/articles/getting-started-with-sass"><span class="URL-Email">alistapart.com/articles/getting-started-with-sass</span></a>)</li>
+				<li class="ListBullet">“An Introduction to LESS, and LESS Vs. Sass,” by <a id="_idIndexMarker3702"></a>Jeremy Hixon (<a href="http://www.smashingmagazine.com/2011/09/an-introduction-to-less-and-comparison-to-sass/"><span class="URL-Email">www.smashingmagazine.com/2011/09/an-introduction-to-less-and-comparison-to-sass/</span></a>)<div id="_idContainer1359" class="sidebar"><h5 class="SidebarTitle">LESS and Stylus</h5><p class="SidebarBody">Sass is the most widely used preprocessor, but it’s not the only game in town for nesting, variables, mixins, and more. </p><p class="SidebarBody">LESS (<a href="http://lesscss.org"><span class="URL-Email--Sidebar-">lesscss.org</span></a>) is<a id="_idIndexMarker3703"></a><a id="_idIndexMarker3704"></a> another CSS extension with scripting-like abilities. It is very similar to Sass, but it lacks advanced programming logic features  (such as <span class="Literal-Sidebar">if</span>/<span class="Literal-Sidebar">else</span> statements) and has minor differences in syntax. For example, <a id="_idIndexMarker3705"></a>variables in LESS are indicated by the <span class="Literal-Sidebar">@</span> symbol instead of <span class="Literal-Sidebar">$</span>. The other major difference is that a LESS file is processed into regular CSS with JavaScript (<span class="Filename--Sidebar-">less.js</span>) instead of Ruby. Note that compiling a LESS file into CSS is processor-intensive and would bog down a browser. For that reason, it is best to do the conversion to CSS before sending it to the server. LESS offers a very active developer community and the “LESShat” mixin library.</p><p class="SidebarBody">Stylus (<a href="http://stylus-lang.com"><span class="URL-Email--Sidebar-">stylus-lang.com</span></a>) is the relative new kid on the preprocessor block. It combines the logic features of Sass with the convenience of a JavaScript-based compiler (<span class="Filename--Sidebar-">stylus.js</span>). It also offers the most flexible syntax: you can include as much CSS “punctuation” (brackets, colons, and semicolons) as you like, prepend variables with a <span class="Literal-Sidebar">$</span> or not, and treat mixin names like regular properties. Developers who use Stylus like how easy it is to write and compile. Nib and Axis are two mixin libraries available for Stylus. </p><p class="SidebarBody">When you are ready to take your CSS authoring to the next level, you can give each of these a try. The one you choose is a matter of personal preference; however, if you are working on a professional development team, one may be chosen for you.</p></div></li>
+			</ul>
+			<h2 class="HeadB">Introduction to Postprocessors (Mostly PostCSS)</h2>
+			<p class="body">As I mentioned <a id="_idIndexMarker3706"></a><a id="_idIndexMarker3707"></a>earlier, <a id="_idIndexMarker3708"></a>postprocessors are scripts that optimize standard CSS code to make it better (<span class="Xref-Figure">Figure 20-4</span>). “Better” usually means consistent and bug-free browser support, but there are hundreds of postprocessing scripts that do a wide variety of cool things. We’ll look at some examples in a moment.</p>
+			<div>
+				<figure id="_idContainer1361" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2004_postprocessor.png" alt="" width="1321" height="554"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-4.</span> Postprocessors optimize existing, standard CSS files.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The poster child for postprocessing is <a id="_idIndexMarker3709"></a>Autoprefixer, which takes the CSS styles you write, scans them for properties that require vendor prefixes, and then inserts the prefixed properties automatically. What a time- and headache-saver! </p>
+			<p class="body">Back in <a href="lwd5_chapter16.xhtml#_idTextAnchor217"><span class="Xref">Chapter </span><span class="Xref">16</span><span class="Xref">, CSS Layout with Flexbox and Grid</span></a>, we used Autoprefixer via a web page interface (<a href="http://autoprefixer.github.io"><span class="URL-Email">autoprefixer.github.io</span></a>) to generate the required prefixes. Although the web page is handy (especially while you are learning), it is more common for postprocessors to be implemented with<a id="_idIndexMarker3710"></a> a <span class="FirstTerm">task runner</span> such as <a id="_idIndexMarker3711"></a><a id="_idIndexMarker3712"></a>Grunt or Gulp. We’ll take a quick look at them later in this chapter.</p>
+			<p class="body">As of this writing, the postprocessing scene is dominated by PostCSS (<a href="http://postcss.org"><span class="URL-Email">postcss.org</span></a>). PostCSS is “a tool for transforming CSS with JavaScript” created by <a id="_idIndexMarker3713"></a>Andrey Sitnik, who also created Autoprefixer. PostCSS is both a JavaScript-based program <a id="_idIndexMarker3714"></a>(a <span class="FirstTerm">Node.js</span> module, to be precise) and an ecosystem of community-created plug-ins that solve all sorts of CSS problems.</p>
+			<p class="body">PostCSS parses the CSS (or a CSS-like syntax such as Sass or LESS), analyzes its structure, and makes the resulting “tree” available for plug-ins to manipulate the code (see <span class="Xref">Note</span>).</p>
+			<div>
+				<div id="_idContainer1362" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The “tree” is formally known as the <span class="FirstTerm--Sidebar-">Abstract Syntax Tree</span> (AST) <a id="_idIndexMarker3715"></a><a id="_idIndexMarker3716"></a>and is the API for PostCSS plug-ins.</p>
+				</div>
+			</div>
+			<p class="body">This open <a id="_idIndexMarker3717"></a><a id="_idIndexMarker3718"></a>API makes it easy for anyone to create a PostCSS plug-in, and as a result, there are literally hundreds of <a id="_idIndexMarker3719"></a><a id="_idIndexMarker3720"></a>plug-ins created and shared by developers (see them at <a href="http://www.postcss.parts"><span class="URL-Email">www.postcss.parts</span></a>). They range from the life-saving to the esoteric, but because it is a modular system, you can pick and choose just the tools that you find useful or even create your own. Here are just a few: </p>
+			<ul>
+				<li class="ListBullet">Stylelint (<a href="http://stylelint.io"><span class="URL-Email">stylelint.io</span></a>) checks <a id="_idIndexMarker3721"></a>your CSS file for syntax errors (a process called <span class="FirstTerm">linting</span>) and redundancies.</li>
+				<li class="ListBullet">CSSNext (<a href="http://cssnext.io"><span class="URL-Email">cssnext.io</span></a>) <a id="_idIndexMarker3722"></a>allows you to use future CSS Level 4 features today by generating fallbacks that work across browsers that haven’t implemented those features yet.</li>
+				<li class="ListBullet">PreCSS (<a href="http://github.com/jonathantneal/precss"><span class="URL-Email">github.com/jonathantneal/precss</span></a>) is a <a id="_idIndexMarker3723"></a>bundle of plug-ins that lets you write Sass-like syntax (loops, conditionals, variables, mixins, and so on) and converts it to standard CSS. This is an example of a postprocessor being used to aid authoring, which is where the line between pre- and postprocessing gets blurred.</li>
+				<li class="ListBullet">Fixie (<a href="http://github.com/tivac/fixie"><span class="URL-Email">github.com/tivac/fixie</span></a>) <a id="_idIndexMarker3724"></a>inserts hacks that are required to make effects work in old versions of Internet Explorer (“Fix-IE,” get it?).</li>
+				<li class="ListBullet">Color format converters translate alternative color formats (such as HWB, HCL, and hex + alpha channel) to standard RGB or hexadecimal.</li>
+				<li class="ListBullet">The Pixrem <a id="_idIndexMarker3725"></a>plug-in converts rem units to pixels for non-supporting browsers. </li>
+				<li class="ListBullet">The <a id="_idIndexMarker3726"></a>List-selectors plug-in lists and categorizes the selectors you’ve used in your style sheet for code review. It is an example of a plug-in that does not alter your file but gives you useful information about it. <div id="_idContainer1363" class="note"><h5 class="noteHeader">Note</h5><p class="note">PostCSS is not the only postprocessor out there. Other frameworks include <a id="_idIndexMarker3727"></a>Rework (<a href="http://github.com/reworkcss/rework"><span class="URL-Email--Sidebar-">github.com/reworkcss/rework</span></a>) and Pleeease<a id="_idIndexMarker3728"></a> (<a href="http://pleeease.io"><span class="URL-Email--Sidebar-">pleeease.io</span></a>), but they are not as full featured. By the time you read this, there may be many more. So goes the world of web development tools.</p></div></li>
+			</ul>
+			<p class="body">From that short list, you can probably see why postprocessors have become so popular. They free you up to write CSS with the syntax you want, taking advantage of cutting-edge properties and values, but with the peace of mind that everything will work well across browsers. They also eliminate the need to know about every browser idiosyncrasy, past and present, in order to do your job. It’s definitely worth knowing about even if you aren’t quite ready to take it on right away. Check out these resources for more information:</p>
+			<ul>
+				<li class="ListBullet"><a id="_idIndexMarker3729"></a>Drew Minns’ article “PostCSS: A Comprehensive Introduction” for <span class="Citation">Smashing Magazine</span> (<a href="http://www.smashingmagazine.com/2015/12/introduction-to-postcss/"><span class="URL-Email">www.smashingmagazine.com/2015/12/introduction-to-postcss/</span></a>)</li>
+				<li class="ListBullet">The <a id="_idIndexMarker3730"></a>Envato Tuts+ tutorial “PostCSS Deep Dive” (<a href="http://webdesign.tutsplus.com/series/postcss-deep-dive--cms-889"><span class="URL-Email">webdesign.tutsplus.com/series/postcss-deep-dive--cms-889</span></a>)</li>
+			</ul>
+			<h1 id="_idParaDest-187" class="HeadA"><a id="_idTextAnchor261"></a>Build Tools (Grunt and Gulp)</h1>
+			<p class="body">In the world of software, a <span class="FirstTerm">build</span> <a id="_idIndexMarker3731"></a>process is required to test source code and compile it into a piece of executable software. As websites evolved from a collection of static HTML files to complex JavaScript-reliant applications, often generated from templates, <a id="_idIndexMarker3732"></a>build tools have become integral to the web development workflow as well. Some web build tools like Grunt and Gulp are commonly referred to as <span class="FirstTerm">task runners</span>. You use them to define and run various<a id="_idIndexMarker3733"></a><a id="_idIndexMarker3734"></a> <span class="FirstTerm">tasks</span> (anything you might do manually from the command line) on your working HTML, JavaScript, CSS, and image files to get them ready to publish. </p>
+			<h2 class="HeadB">Automation</h2>
+			<p class="body">You can automate your tasks, too, so they happen in the background without your needing to type commands. To do this, you tell the build tool to “watch” your files and folders for changes. When a change is detected, it triggers the relevant tasks to run automatically as you’ve configured them. </p>
+			<p class="body">Once you have the task runner configured and set to watch your files, you can go about your business writing CSS, and all that command-line stuff happens for you without ever touching a terminal appplication. Here’s how that might look. Imagine making a change to your Sass file and saving it. Grunt instantly sees that the <span class="Filename">.scss</span> file has changed, automatically converts it to <span class="Filename">.css</span> (see <span class="Xref">Note</span>), and then reloads the browser to reflect your change. </p>
+			<div>
+				<div id="_idContainer1364" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">There is a Grunt plug-in for converting SCSS files, but it is not as full featured as Ruby.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Some Common Tasks</h2>
+			<p class="body">The previous section on CSS processors should have given you an idea of some things that would be nice to automate. Allow me to list several more to give you a solid view of the ways task runners make your job easier.</p>
+			<ul>
+				<li class="ListBullet">Concatenation. It is common for web teams to divide style sheets and scripts into small, specialized chunks of .<span class="Filename">css</span> and <span class="Filename">.js</span>. When it’s time to publish, however, you want as few calls to the server as possible for performance purposes, so those little chunks get <a id="_idIndexMarker3735"></a><span class="FirstTerm">concatenated</span> (put together) into master files. </li>
+				<li class="ListBullet">Compression and “minification.” Another way to improve performance is to make your files as small as possible by removing unnecessary spaces and line returns. Build tools can compress your CSS and minify JavaScript.</li>
+				<li class="ListBullet">Checking your HTML, CSS, and JavaScript for errors (linting).</li>
+				<li class="ListBullet">Optimizing images with tools that squeeze down the file size of all the images in a directory.</li>
+				<li class="ListBullet">Help committing or pushing changes to a version control repository (Git).</li>
+				<li class="ListBullet">Refreshing your browser to reflect whatever changes you just made to a file (<a id="_idIndexMarker3736"></a>LiveReload plug-in).</li>
+				<li class="ListBullet">Building final HTML files from templates and content data (see the sidebar <span class="Xref">“Building Sites with Data and Templates”</span>). </li>
+				<li class="ListBullet">Running CSS pre- and postprocessors. </li>
+			</ul>
+			<h2 class="HeadB">Grunt and Gulp</h2>
+			<p class="body">The first and most established web build tool is Grunt (<a href="http://gruntjs.com"><span class="URL-Email">gruntjs.com</span></a>), presumably named for handling all of the “grunt work” for you. It is a JavaScript tool built on the open source<a id="_idIndexMarker3737"></a> Node.js framework, and you operate it using the command line. The compelling thing about Grunt is that the development community has created literally thousands of plug-ins that perform just about any task you can think of. Just download one, configure it, and start using it. You do not have to be a JavaScript master to get started. </p>
+			<p class="body">Another popular option is Gulp (<a href="http://gulpjs.com"><span class="URL-Email">gulpjs.com</span></a>), which has the advantage of running a little faster but also requires more technical knowledge than Grunt because you configure it with actual JS code. Other contenders as of this writing are Webpack (quite popular!), Brunch, Browserify, and Broccoli. New tools with amusing names pop up on a regular basis. Some developers simply use Node.js-based scripts without using a task-runner program as a go-between. The point is, there are plenty of options.</p>
+			<p class="body">You will find many online tutorials for learning how to download and configure the build tool of your choice when you are ready to automate your workflow. I hope that I have made you aware of the possibilities, and when a job interviewer mentions Grunt and Gulp, you’ll know they aren’t just suffering from indigestion.</p>
+			<div>
+				<div id="_idContainer1367" class="sidebar">
+					<h5 class="SidebarTitle">Building Sites with Data and Templates</h5>
+					<p class="SidebarBody">Throughout this <a id="_idIndexMarker3738"></a><a id="_idIndexMarker3739"></a>book, we’ve been writing the HTML for our pages manually, wrapping tags around content elements in a logical source order. All of the content for the page is contained right there in the <span class="Filename--Sidebar-">.html</span> document. Of course, it is completely acceptable to build whole sites out of static web pages such as these, but in the real world—where sites might have thousands of pages with content tailored to individual users—a more robust solution is required.</p>
+					<p class="SidebarBody">It is more common these days to use a template system or framework to generate web pages from content stored as data. The templates use regular HTML markup, so everything you’ve learned so far will serve you well, but instead of specific content between the tags, special data markers are placed to pull in content from a database or data file.</p>
+					<p class="SidebarBody">There are a vast number of tool options for site generation, all of which are well beyond the scope of this book. However, as usual, I’d like to give you a taste of what the templating process might look like.</p>
+					<p class="SidebarBody">I once worked on a site that used a template tool called <a id="_idIndexMarker3740"></a>Handlebars (<a href="http://handlebarsjs.com"><span class="URL-Email--Sidebar-">handlebarsjs.com</span></a>) to pull content in from data files written in the<a id="_idIndexMarker3741"></a> YAML (<a href="http://www.yaml.org/start.html"><span class="URL-Email--Sidebar-">www.yaml.org/start.html</span></a>) language. These are just two options for doing this sort of thing. Let’s look at a small example of how a template and data were used to assemble the web content shown in <span class="Xref-Figure">Figure 20-5</span>.</p>
+					<div>
+						<figure id="_idContainer1366" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_2005_template.png" alt="" width="950" height="321"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-5.</span> A small portion of a speaker web page that was created with Handlebars and YAML.</figcaption>
+						</figure>
+					</div>
+					<p class="SidebarBody">Here is a small snippet of the data as it appears in the YAML (<span class="Filename--Sidebar-">.yml</span>) file: </p>
+					<pre class="SidebarCodeFirst">speaker--name: "Jennifer Robbins" <br/>speaker--description: "Designer, Author, ARTIFACT Co-founder" <br/>speaker--photo: "/img/speakers/jennifer-robbins.jpg" <br/>#HTML <br/><code class="CodeColor">speaker--biography:</code> |<br/>  &lt;p&gt;Jennifer has been designing for the web since 1993 when she worked on the first commercial web site, GNN, from O'Reilly Media. Since then she has gone on to write several books on web design for O'Reilly, including &lt;i&gt;Web Design in a Nutshell&lt;/i&gt;, &lt;i&gt;Learning Web Design&lt;/i&gt;, and the &lt;i&gt;HTML5 Pocket Reference&lt;/i&gt;. More recently, Jennifer's days are filled with organizing the ARTIFACT Conference. …&lt;/p&gt; <br/><code class="CodeColor">speaker--links:</code><br/>  <code class="CodeColor">- link--label:</code> "Website"<br/>     <code class="CodeColor">link--target:</code> "http://www.jenville.com"<br/>     <code class="CodeColor">link--title:</code> "jenville.com"<br/>  <code class="CodeColor">- link--label:</code> "Twitter"<br/> <code class="CodeColor">    link--target: </code>"http://www.twitter.com/jenville"<br/>     <code class="CodeColor">link--title:</code> "@jenville" </pre>
+					<p class="SidebarBody">And here is the markup from the Handlebars template document, <span class="Filename--Sidebar-">speakers.hbs</span>. (I’ve edited it slightly for brevity.) If you look at the highlighted code, you see that instead of actual content, there are the same data labels used in the YAML file between curly brackets. (If you turn a curly bracket on its side, it looks like a handlebar mustache, thus the name!). Notice also that the template has markup for one label/link pair, but it loops through and displays all the <span class="Literal-Sidebar">speaker--links</span> in the data file:  </p>
+					<pre class="SidebarCodeFirst">&lt;div class="layout--container"&gt;<br/>&lt;div class="speaker--photo-container"&gt;<br/>  &lt;img src="<code class="CodeColor">{{page-data.speaker--photo}}</code>"&gt;<br/>&lt;/div&gt;<br/>&lt;article class="speaker--content"&gt;<br/>   &lt;div class="speaker--biography"&gt;<br/>    <code class="CodeColor">{{{page-data.speaker--biography}}}</code><br/>  &lt;/div&gt;<br/>  &lt;ul class="speaker--links"&gt;<br/>    {{#each page-data.speaker--links}}<br/>    &lt;li class="speaker--link-item"&gt;<code class="CodeColor">{{link--label}}</code>: <br/>&lt;a href="http://<code class="CodeColor">{{link--target}}</code>" class="speaker--link"&gt;<code class="CodeColor">{{link--title}}</code>&lt;/a&gt;&lt;/li&gt;<br/>     {{/each}}<br/>  &lt;/ul&gt;<br/>&lt;/article&gt;<br/>&lt;/div</pre>
+					<p class="SidebarBody">This is just one example of how templates cut down on redundancy in markup. The Handlebars site (<a href="http://handlebarsjs.com"><span class="URL-Email--Sidebar-">handlebarsjs.com</span></a>) has a nice description of semantic templates right on the home page if you’d like more information on how it works. </p>
+					<p class="SidebarBody">Of course, browsers have no idea what to do with these file formats, so before the site can be published, it needs to be built or assembled, merging all the data into the template modules and all the modules into whole web pages. That is the job of scripts and build tools like the ones introduced in this section. Hopefully, this brief example gives you an inkling of how generated sites work.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-188" class="HeadA"><a id="_idTextAnchor262"></a>Version Control with Git and GitHub</h1>
+			<p class="body">If you’ve done any sort of work on a computer, you’ve probably used some sort of system for keeping track of the versions of your work. You might have come up with a system of naming drafts until you get to the “final” version (and the “final-final” version, and the “final-final-no-really” version, and so on). You might take advantage of macOS’s Time Machine to save versions that you can go back to in an emergency. Or you might have used one of the professional version control systems that have been employed by teams for decades.</p>
+			<p class="body">The king <a id="_idIndexMarker3742"></a>of <span class="FirstTerm">version control systems</span> (VCS) for web development is a robust program called <a id="_idIndexMarker3743"></a>Git (<a href="http://git-scm.com"><span class="URL-Email">git-scm.com</span></a>). At this point, knowing your way around Git is a requirement if you are working on a team and is a good skill to have even for your own projects.</p>
+			<div>
+				<div id="_idContainer1368" class="sidebar">
+					<h5 class="SidebarSeries">Fun fact</h5>
+					<p class="SidebarBody">Git was created by <a id="_idIndexMarker3744"></a>Linus Torvalds, the creator of the <a id="_idIndexMarker3745"></a>Linux operating system, when he needed a way to allow an enormous community to contribute to the Linux project. </p>
+				</div>
+			</div>
+			<p class="body">In this section, I’ll introduce you to the terminology and mental models that will make it easier to get started with Git. Teaching all the ins and outs of how to configure and use Git from the command line is a job for another book and online tutorials (I list a few at the end of the section), but I wish someone had explained the difference between a “branch” and a “fork” to me when I was starting out, so that’s what I’ll do for you. </p>
+			<p class="body">We’ll begin with a basic distinction: Git is the version control program that you run on your computer; <a id="_idIndexMarker3746"></a><a id="_idIndexMarker3747"></a>GitHub (<a href="http://github.com"><span class="URL-Email">github.com</span></a>) is a service that hosts Git projects, either free or for a fee. You interact with GitHub by using Git, either from the command line, with the user interface on the GitHub website, or using a standalone application that offers a GUI interface for Git commands. This was not obvious to me at first, and I want it to be clear to you from the get-go.</p>
+			<p class="body">GitHub and services like it (see <span class="Xref">Note</span>) are mainly web-based wrappers around Git, offering features like issue tracking, a code review tool, and a web UI for browsing files and history. They are convenient, but keep in mind that you can also set up Git on your own server and share it with your team members with no third-party service like GitHub involved at all. </p>
+			<div>
+				<div id="_idContainer1369" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note"><a id="_idIndexMarker3748"></a>Beanstalk (<a href="http://beanstalkapp.com"><span class="URL-Email--Sidebar-">beanstalkapp.com</span></a>), GitLab (<a href="http://gitlab.com"><span class="URL-Email--Sidebar-">gitlab.com</span></a>), and <a id="_idIndexMarker3749"></a>Bitbucket (<a href="http://bitbucket.org"><span class="URL-Email--Sidebar-">bitbucket.org</span></a>) are other Git hosting services aimed at enterprise-scale projects. GitLab has a free option for public projects, similar to GitHub, and because it is open source, you can host it yourself.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Why Use Git</h2>
+			<p class="body">There are <a id="_idIndexMarker3750"></a>several advantages to making Git (and GitHub) part of your workflow. First, you can easily roll back to an earlier version of your project if problems show up down the line. Because every change you make is logged and described, it helps you determine at which point things might have gone wrong. </p>
+			<p class="body">Git also makes it easy to collaborate on a shared code source. You may tightly collaborate with one or more developers on a private project, merging all of your changes into a primary copy. As an added benefit, the sharing process is a way to get an extra set of eyes on your work before it is incorporated. You may also encourage loose collaboration on a public project by welcoming contributions of people you don’t even know in a way that is safe and managed. Git is a favorite tool for this type of collaboration on all sorts of open source projects.</p>
+			<p class="body">Getting up to speed with GitHub in particular is important because it’s what everyone is using. If your project is public (accessible to anyone), the hosting is free. For private and commercial projects, GitHub charges a fee for hosting. In addition to hosting projects, they provide collaboration tools such as issue tracking. You may have already found that some of the links to tools I mentioned in this book go to GitHub repositories. I want you to know what you can do when you get there.</p>
+			<h2 class="HeadB">How Git Works</h2>
+			<p class="body">Git keeps a <a id="_idIndexMarker3751"></a>copy of every revision of your files and folders as you go along, with every change (called a<a id="_idIndexMarker3752"></a> <span class="FirstTerm">commit</span>) logged in with a unique ID (generated by Git), a message (written by you) describing the change, and other <a id="_idIndexMarker3753"></a>metadata. All of those versions and the commit log are stored in <a id="_idIndexMarker3754"></a>a <span class="FirstTerm">repository</span>, often referred to as a “repo.”</p>
+			<p class="body">Once you have Git installed on your computer, every time you create a new repository or clone an existing one, Git adds a directory and files representing the repo’s metadata alongside other files in the project’s folder. Once the Git repository is initialized, you can commit changes and take advantage of the “time machine” feature if you need to get back to an earlier version. In this way, Git is a good tool for a solo workflow.</p>
+			<p class="body">More likely you’ll be working with a team of other folks on a project. In that case, <a id="_idIndexMarker3755"></a>a <span class="FirstTerm">hub</span> model is used in which there is an official repository on a central server that each team member makes a local copy of to work on. Each team member works on their own machine, committing to their local repo, and at logical intervals, uploads their work back to the central repository. </p>
+			<p class="body">That’s what makes <a id="_idIndexMarker3756"></a>Git a <span class="FirstTerm">distributed version control system</span> compared to other systems, like <a id="_idIndexMarker3757"></a>SVN, that require you to commit every change directly to the server. With Git, you can work locally and offline.</p>
+			<p class="body">The first part of mastering Git is mastering its <a id="_idIndexMarker3758"></a>vocabulary. Let’s run through some of the terminology that will come in handy when you’re learning Git and the GitHub service. <span class="Xref-Figure">Figure 20-6</span> is a simplified diagram that should help you visualize how the parts fit together.</p>
+			<div>
+				<figure id="_idContainer1371" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2006_gitstructure.png" alt="" width="1321" height="450"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-6.</span> Visualization of Git structure.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1372" class="sidebar">
+					<h5 class="SidebarTitle">Git Visualization Resources</h5>
+					<p class="SidebarBody">Need <a id="_idIndexMarker3759"></a>more help picturing how all these pieces and commands work together? Try these visualization resources:</p>
+					<ul>
+						<li class="SidebarListBullet">The Git Cheatsheet from NDP Software provides a thorough interactive mapping of how various Git commands correspond to the workspace and local and remote repositories. It’s worth checking out at <a href="http://ndpsoftware.com/git-cheatsheet.html#loc=workspace;"><span class="URL-Email--Sidebar-">ndpsoftware.com/git-cheatsheet.html#loc=workspace;</span></a>.</li>
+						<li class="SidebarListBullet">A Visual Git Reference (<a href="http://marklodato.github.io/visual-git-guide/index-en.html"><span class="URL-Email--Sidebar-">marklodato.github.io/visual-git-guide/index-en.html</span></a>) is a collection of diagrams that demonstrate most common Git commands.</li>
+						<li class="SidebarListBullet">“Understanding the GitHub Flow” (<a href="http://guides.github.com/introduction/flow/"><span class="URL-Email--Sidebar-">guides.github.com/introduction/flow/</span></a>) explains a typical workflow in GitHub.</li>
+					</ul>
+				</div>
+			</div>
+			<h3 class="HeadC">Working directory</h3>
+			<p class="body">The <a id="_idIndexMarker3760"></a><a id="_idIndexMarker3761"></a><span class="FirstTerm">working directory</span> is the directory of files on your computer in which you do your actual work. Your working copy of a file is the one that you can make changes to, or to put it another way, it’s the file you can open from the hard drive by using Finder or My Computer.</p>
+			<h3 class="HeadC">Repository</h3>
+			<p class="body">Your local Git <span class="FirstTerm">repository</span> lives alongside the files in your working directory. It contains copies, or snapshots, of all the files in a single project at every step in its development, although these are kept hidden. It also contains the metadata stored with each change. There may also be a central repository for the project that lives on a remote server like GitHub. </p>
+			<h3 class="HeadC">Commit</h3>
+			<p class="body">A commit is the smallest unit of Git interaction and the bulk of what you will do with Git. Git uses “commit” as a verb and a noun. You may “save” your working document frequently as you work, but you <span class="FirstTerm">commit</span> (v.) a change when you want to deliberately add that version to the repository. Usually you commit at a logical pause in the workflow—for example, when you’ve fixed a bug or finished changing a set of styles. </p>
+			<p class="body">When you commit, Git records the state of all the project files and assigns metadata to the change, including the username, email, date and time, a unique multidigit ID number (see the <span class="Xref">“Hashes”</span> sidebar), and a message that describes the change. These stored records are referred to as <span class="FirstTerm">commits</span> (n.). A commit is like a snapshot of your entire repository—every file it contains—at the moment in time you made the commit.</p>
+			<div>
+				<div id="_idContainer1373" class="sidebar">
+					<h5 class="SidebarTitle">Hashes</h5>
+					<p class="SidebarBody">The unique ID that Git generates for each commit is technically called a <a id="_idIndexMarker3762"></a><span class="FirstTerm--Sidebar-">SHA-1 hash</span>, more affectionately known as simply<a id="_idIndexMarker3763"></a> a <span class="FirstTerm--Sidebar-">hash</span> in the developer world. It is a 40-character string written in hexadecimal (0–9 and A–F are used), so the odds of having a duplicate hash are astronomical. It is common to use short hashes on projects instead of the full 40 characters. For example, on GitHub, short hashes are seven characters long, and you’ll see them in places like a project’s Commits page. Even with just seven characters, the chances of collision are tiny.</p>
+				</div>
+			</div>
+			<p class="body">Commits are additive, so even when you delete a file, Git adds a commit to the stack. The list of commits is available for your perusal at any time. On GitHub, use the History button to see the list of commits for a file or folder.  </p>
+			<p class="body">The level of granularity in commits allows you to view the repository (project) at any state it’s ever been at, ever. You <em class="Emphasis">never</em> lose work, even as you proceed further and further. It’s a great safety net. Indirectly this also means that there’s nothing you can do with Git that you can’t undo—you can’t ever get yourself into an impossible situation.</p>
+			<h3 class="HeadC">Staging</h3>
+			<p class="body">Before you can commit a change, you first have to make Git aware of the file (or to <span class="FirstTerm">track</span> it, to use the proper term). This is <a id="_idIndexMarker3764"></a><a id="_idIndexMarker3765"></a>called <span class="FirstTerm">staging</span> the file, accomplished by <span class="FirstTerm">adding</span> it to Git. In the command line, it’s <span class="Literal-fc">git add </span><span class="Replaceable">filename</span>, but other tools may provide an Add button to stage files. This creates a local <span class="FirstTerm">index</span> of <a id="_idIndexMarker3766"></a><a id="_idIndexMarker3767"></a>files that you intend to commit to your local repository but haven’t been committed yet. It is worth noting that you need to “add” any file that you’ve changed, not just new files, before committing them. Staging as a concept may take a little while to get used to at first because it isn’t especially intuitive.</p>
+			<h3 class="HeadC">Branch</h3>
+			<p class="body">A <span class="FirstTerm">branch</span> is a sequential series of commits, also sometimes referred to as a <span class="FirstTerm">stack</span> of <a id="_idIndexMarker3768"></a>commits. The most recent commit on any given <a id="_idIndexMarker3769"></a>branch is the <span class="FirstTerm">head</span> (see <span class="Xref">Note</span>). You can also think of a branch as a thread of development. Projects usually have a primary or default branch, typically (although not necessarily)<a id="_idIndexMarker3770"></a> called <span class="FirstTerm">master</span>, which is the official version of the project. To work on a branch, you need to <a id="_idIndexMarker3771"></a>have it <span class="FirstTerm">checked out</span>.</p>
+			<div>
+				<div id="_idContainer1374" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">There are exceptions, as it is possible to reorder commits; however, it is almost always true that the head commit is also the most recent.</p>
+				</div>
+			</div>
+			<p class="body">When working in a branch, at any point you can start a new branch to do a little work without affecting the source branch. You might start a new branch to experiment with a new feature, or to do some debugging, or to play around with presentation. Branches are often used for small, specific tasks like that, but you can create a new branch for any purpose you want.</p>
+			<p class="body">For example, if you are working on “master,” but want to fix a bug, you can create a new branch off master and give the branch a new descriptive name, like “bugfix.” You can think of the bugfix branch as a copy of master at the point at which bugfix was created (<span class="Xref-Figure">Figure 20-7</span>), although that’s not exactly what is happening under the hood. </p>
+			<p class="body">To work on the bugfix branch, you first need to check it out (<span class="Literal-fc">git checkout bugfix</span>), and then you can go about your business of making changes, saving them, adding them to Git, and committing them. Eventually, the new branch ends up with a commit history that is different from the source branch. </p>
+			<div>
+				<figure id="_idContainer1376" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2007_branch.png" alt="" width="1321" height="250"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-7.</span> Creating and merging a new branch.</figcaption>
+				</figure>
+			</div>
+			<p class="body">When you are done working on your new branch, you can merge the changes you made back into the source branch and delete the branch. If you don’t like what’s happening with the new branch, delete it without merging, and no one’s the wiser.</p>
+			<h3 class="HeadC">Merging</h3>
+			<p class="body">Merging is Git’s<a id="_idIndexMarker3772"></a> killer feature for sharing code. You can merge commits from one branch into another (such as all of the commits on a feature branch into master) or you might merge different versions of the same branch that are on different computers. According to the Git documentation, merging “incorporates changes from the named commits (since the time their histories diverged from the current branch) into the current branch.” Put another way, Git sees merging as “joining two histories together,” so it useful to think of merging happening at the commit level. </p>
+			<p class="body">Git attempts to merge each commit, one by one, into the target branch. If only one branch has changed, the other branch can simply <span class="FirstTerm">fast-forward</span> to catch up with the changes. If both branches have commits that are not in the other branch—that is, if both branches have changes—Git walks through each of those commits and, on a line-by-line basis, attempts to merge the differences. Git actually changes the code inside files for you automatically so you don’t have to hunt for what’s changed.</p>
+			<p class="body">However, if Git <a id="_idIndexMarker3773"></a><a id="_idIndexMarker3774"></a>finds <span class="FirstTerm">conflicts</span>, such as two different changes made to the same line of code, it gives you a report of the conflicts instead of trying to change the code itself. Conflicts are pointed out in the source files between ======= and &lt;&lt;&lt;&lt;&lt;&lt;&lt; characters (<span class="Xref-Figure">Figure 20-8</span>). When conflicts arise, a real person needs to read through the list and manually edit the file by keeping the intended change and deleting the other. Once the conflicts are resolved, the files need to be added and committed again.</p>
+			<div>
+				<figure id="_idContainer1378" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2008_conflicts.png" alt="" width="1700" height="664"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-8.</span> GitHub conflict report.</figcaption>
+				</figure>
+			</div>
+			<h3 class="HeadC">Remotes</h3>
+			<p class="body">All of the features we’ve looked at so far (commits, branches, merges) can be done on your local computer, but it is far more common to use Git with one or more <span class="FirstTerm">remote</span> <a id="_idIndexMarker3775"></a>repositories. The remote repo could be on another computer within your organization, but it is likely to be hosted on a remote server like GitHub. Coordinating with a remote repository opens up a few other key Git features.</p>
+			<h3 class="HeadC">Clone</h3>
+			<p class="body"><span class="FirstTerm">Cloning</span> is <a id="_idIndexMarker3776"></a><a id="_idIndexMarker3777"></a>making an exact replica of a repository and everything it contains. It’s common to clone a repo from a remote server to your own computer, but it is also possible to clone to another directory locally. If you are getting started on an existing project, making a clone of project’s repo is a logical first step. </p>
+			<h3 class="HeadC">Push/pull</h3>
+			<p class="body">If you are working with a remote repository, you will no doubt need to upload and download your changes to the server. The process of moving data from your local repository to a remote repository is known <a id="_idIndexMarker3778"></a>as <span class="FirstTerm">pushing</span>. When you push commits to the remote, they are automatically merged with the current version on the server. To update your local version with the version that is on the server, <a id="_idIndexMarker3779"></a>you <span class="FirstTerm">pull</span> it, which retrieves the metadata about the changes and applies the changes to your working files. You can think of pushing and pulling as the remote version of merging.</p>
+			<p class="body">It is a best practice to pull the remote master frequently to keep your own copy up-to-date. That helps eliminate conflicts, particularly if there are a lot of other people working on the code. Many GUI Git tools provide a Sync button that pulls and pushes in one go.</p>
+			<div>
+				<div id="_idContainer1379" class="sidebar">
+					<h5 class="SidebarSeries">Git TIP</h5>
+					<p class="SidebarBody">Always pull before you push to avoid conflicts.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Fork</h3>
+			<p class="body">You may hear <a id="_idIndexMarker3780"></a>talk of “forking” a repo on GitHub. Forking makes a copy of a GitHub repository to your GitHub account so you have your own copy to play around with. Having the repo in your account is not the same as having a working copy on your computer, so once you’ve forked it, you need to clone (copy) it to your own computer (<span class="Xref-Figure">Figure 20-9</span>). </p>
+			<div>
+				<figure id="_idContainer1381" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2009_fork.png" alt="" width="1321" height="675"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 20-9.</span> Once you fork a repository on GitHub, you need to clone it to get a local working copy. (Based on a diagram by Kevin Markham.)</figcaption>
+				</figure>
+			</div>
+			<p class="body">People fork projects for all sorts of reasons (see <span class="Xref">Note</span>). You might just want to have a look under the hood. You may want to iterate and turn it into something new. You may want to contribute to that project in the form of pull requests. In any scenario, forking is a safeguard for repository owners so they can make the project available to the public while also controlling what gets merged back into it. </p>
+			<div>
+				<div id="_idContainer1382" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Forking is most often used for contributing to an open source project. For commercial or personal projects, you generally commit directly to the repository shared by your team.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Pull request</h3>
+			<p class="body">It is important to keep in mind that your forked copy is no longer directly connected to the original repository it was forked from. You will not be able to push to the original. If you come up with something you think is valuable to the original project, you can do what is called<a id="_idIndexMarker3781"></a> a <span class="FirstTerm">pull request</span>—that is, asking the owner to pull your changes into the original master. </p>
+			<p class="body">You can also do a pull request for a repo that you have access to, not just one that you’ve forked. For example, if you’ve made a branch off the main project branch, you can do a pull request to get your team to review what you’ve done and give you feedback before merging your changes back in. In fact, pull requests may be used earlier in the process to start a discussion about a possible feature. </p>
+			<h2 class="HeadB">Git Tools and Resources</h2>
+			<p class="body">Most Git users <a id="_idIndexMarker3782"></a>will tell you that the best way to use Git is with the command line. As David Demaree says in his book <span class="Citation">Git for Humans</span>, “Git’s command-line interface is its native tongue.” He recommends typing commands and seeing what happens as the best way to learn Git. The downside of the command line, of course, is that you need to learn all the Git commands and perhaps also tackle the command-line interface hurdle itself. The following resources will help get you up to speed:</p>
+			<ul>
+				<li class="ListBullet"><span class="Citation">Git for Humans</span> by <a id="_idIndexMarker3783"></a>David Demaree (A Book Apart) is a great place to start learning Git via the command line (or however you intend to use it!).</li>
+				<li class="ListBullet"><span class="Citation">Pro Git</span> by <a id="_idIndexMarker3784"></a>Scott Chacon and <a id="_idIndexMarker3785"></a>Ben Straub (Apress) is available free online (<a href="http://git-scm.com/book/en/v2"><span class="URL-Email">git-scm.com/book/en/v2</span></a>).</li>
+				<li class="ListBullet">“Git Cheat Sheet” from <a id="_idIndexMarker3786"></a>GitHub is a list of the most common commands (<a href="http://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf"><span class="URL-Email">services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf</span></a>).</li>
+				<li class="ListBullet">The Git Reference Manual on the official Git site provides a thorough listing of commands and features (<a href="http://git-scm.com/docs"><span class="URL-Email">git-scm.com/docs</span></a>).</li>
+			</ul>
+			<p class="body">There are also several graphical Git applications available for those who prefer icons, buttons, and menus for interacting with their repositories, and there’s no shame in it. I know many developers who use a graphical app and Terminal side by-side, choosing the tool that most easily allows them to do the task they need to do. If you feel more comfortable getting started with a graphical Git tool, I recommend the following:</p>
+			<ul>
+				<li class="ListBullet">GitHub <a id="_idIndexMarker3787"></a>Desktop (from GitHub) is free and available for Mac and Windows (<a href="http://desktop.github.com"><span class="URL-Email">desktop.github.com</span></a>).</li>
+				<li class="ListBullet">Git Tower 2 (<a id="_idIndexMarker3788"></a><a id="_idIndexMarker3789"></a>Mac and Windows) costs money, but it is more powerful and offers a thoughtfully designed interface, including visualizations of branches and merges (<a href="http://www.git-tower.com"><span class="URL-Email">www.git-tower.com</span></a>).</li>
+			</ul>
+			<p class="body">Many <a id="_idIndexMarker3790"></a>code editors have built-in Git support or Git/GitHub plug-ins as well.</p>
+			<p class="body">If you go to the GitHub.com site, they do a good job of walking you through the setup process with easy-to-follow tutorials. You can set up an account and gain some basic GitHub skills in a matter of minutes. Their online documentation is top-notch, and they even have a YouTube channel with video tutorials aimed at beginners (<a href="http://www.youtube.com/githubguides"><span class="URL-Email">www.youtube.com/githubguides</span></a>).</p>
+			<p class="body">And speaking of GitHub, for a good introduction to the ins and outs of the GitHub interface, I recommend the book <span class="Citation">Introducing GitHub: A Non-Technical Guide</span> by <a id="_idIndexMarker3791"></a>Brent Beer (O’Reilly).</p>
+			<p class="body">When you are ready to get started using Git for version control, you’ll find all the support you need.</p>
+			<h1 id="_idParaDest-189" class="HeadA"><a id="_idTextAnchor263"></a>Conclusion</h1>
+			<p class="body">This concludes the web developer “power tools” chapter. We began with an introduction to the command line, and looked at some strong incentives for learning to use it. You can write CSS faster and make it more cross-browser compliant. You can take advantage of task runners and build tools that automate a lot of the repetitive grunt work you come across as a developer. Finally, although the command line is not required to use Git, it may make learning Git easier and will give you repo superpowers as you begin to master it.</p>
+			<p class="body">We’ve talked a fair amount about JavaScript in this chapter. In <a href="lwd5_chapter21.xhtml#_idTextAnchor266"><span class="Xref">Part IV</span></a>, I hand over the keyboard to JavaScript master Mat Marquis, who will introduce you to JavaScript and its syntax (also somehow managing to make it very entertaining). I’ll be back in <a href="lwd5_chapter23.xhtml#_idTextAnchor288"><span class="Xref">Part V</span></a> to talk about web images.</p>
+			<h1 id="_idParaDest-190" class="HeadA"><a id="_idTextAnchor264"></a>Test Yourself</h1>
+			<p class="body">It’s time to test your knowledge of the topics introduced in this chapter. See <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a> for the answers.</p>
+			<ol>
+				<li class="ListNumber">In the computer world, what is a <em class="Emphasis">shell</em>?</li>
+				<li class="ListNumber">Why might you want to learn to use the command line?<ol><li class="ListNumber_Indent">It is a good way to manipulate files and folders on your own computer.</li><li class="ListNumber_Indent">It is a good way to manipulate files and folders on a remote server.</li><li class="ListNumber_Indent">It is required for many useful web development tools.</li><li class="ListNumber_Indent">All of the above.</li></ol></li>
+				<li class="ListNumber">What is a <em class="Emphasis">prompt</em>?</li>
+				<li class="ListNumber">What would you expect to happen if you type <span class="Literal-fc">mkdir newsite</span> after a command-line prompt?</li>
+				<li class="ListNumber">Name the two primary functions of CSS processors.</li>
+				<li class="ListNumber">Name one advantage of learning Sass.</li>
+				<li class="ListNumber">Name two features you might use a CSS postprocessor for.</li>
+				<li class="ListNumber">What is a task (in relation to a build tool/task runner)?</li>
+				<li class="ListNumber">What does “Grunt is watching this file” mean?</li>
+				<li class="ListNumber">What makes Git a <em class="Emphasis">distributed</em> version control system?</li>
+				<li class="ListNumber">In Git, what does it mean if a file is <em class="Emphasis">staged</em>?</li>
+				<li class="ListNumber">What is the difference between a <em class="Emphasis">branch</em> and a <em class="Emphasis">fork</em>?</li>
+				<li class="ListNumber">Why should you pull before you push?</li>
+				<li class="ListNumber">What is a pull request?</li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

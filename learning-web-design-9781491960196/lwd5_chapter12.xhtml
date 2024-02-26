@@ -1,0 +1,1534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer626" class="ch12">
+			<p id="_idParaDest-105" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor146"></a>12. Formatting Text</p>
+		</div>
+		<div id="_idContainer627" class="ch12">
+			<h1 class="chapterLabel">12</h1>
+		</div>
+		<div id="_idContainer628" class="ch12">
+			<h1 class="chapterTitle"><a id="_idTextAnchor147"></a><a id="_idTextAnchor148"></a>Formatting Text</h1>
+		</div>
+		<div id="_idContainer629" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In this chapter</p>
+			<p class="chapterContents">Font properties</p>
+			<p class="chapterContents">Web fonts</p>
+			<p class="chapterContents">Advanced typography with CSS3</p>
+			<p class="chapterContents">Text line settings</p>
+			<p class="chapterContents">Text effects</p>
+			<p class="chapterContents">Selectors: descendent, ID, and class</p>
+			<p class="chapterContents">Specificity overview</p>
+			<p class="chapterContents">List styles</p>
+		</div>
+		<div id="_idContainer716" class="ch12">
+			<p class="body">Now that you’ve gotten your feet wet formatting text, are you ready to jump into the deep end? By the end of this chapter, you’ll pick up over 40 additional CSS properties used to manipulate the appearance of text. Along the way, you’ll also learn how to use more powerful selectors for targeting elements in a particular context and with a specific <span class="Literal-fc">id</span> or <span class="Literal-fc">class</span> name.</p>
+			<p class="body">The nature of the web makes specifying type tricky, if not downright frustrating, particularly if you have experience designing for print or even formatting text in a word processing program. There is no way to know for sure whether the font you specify will be available or how large or small the type will appear when it hits your users’ browsers. We’ll address the best practices for dealing with these challenges as we go along.</p>
+			<p class="body">Throughout this chapter, we’ll be sprucing up a Black Goose Bistro online menu similar to the one we marked up back in <a href="lwd5_chapter05.xhtml#_idTextAnchor059"><span class="Xref">Chapter </span><span class="Xref">5</span><span class="Xref">, Marking Up Text</span></a> I encourage you to work along with the exercises to get a feel for how the properties work. <span class="Xref-Figure">Figure 12-1</span> shows how the menu looks before and after we’re done. It’s not a masterpiece, because we’re just scratching the surface of CSS here, but at least the text has more personality.</p>
+			<div>
+				<figure id="_idContainer631" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1201_beforeafter.png" alt="" width="1338" height="862"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-1.</span> Before and after views of the Black Goose Bistro menu that we’ll be working on in this chapter.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer632" class="sidebar">
+					<h5 class="SidebarTitle">A Word About Property Listings</h5>
+					<p class="SidebarBody">Each CSS property <a id="_idIndexMarker1995"></a>listing in this book is accompanied by information on how it behaves and how to use it. Property listings include:</p>
+					<p class="SidebarListVariableTerm"><span class="prop-label">Values:</span></p>
+					<p class="SidebarListVariable">These are the accepted values for the property. Predefined keyword values appear in code font (for example, <span class="Literal-Sidebar">small</span>, <span class="Literal-Sidebar">italic</span>, or <span class="Literal-Sidebar">small-caps</span>) and must be typed in exactly as shown.</p>
+					<p class="SidebarListVariableTerm"><span class="prop-label">Default:</span></p>
+					<p class="SidebarListVariable">This is the value that will be used for the property by default (its <span class="FirstTerm--Sidebar-">initial value</span>)—that is, if no other value is specified. Note that the default browser style sheet values may vary from the defaults defined in CSS. </p>
+					<p class="SidebarListVariableTerm"><span class="prop-label">Applies to:</span></p>
+					<p class="SidebarListVariable">Some properties apply only to certain types of elements.</p>
+					<p class="SidebarListVariableTerm"><span class="prop-label">Inherits:</span></p>
+					<p class="SidebarListVariable">This indicates whether the property is passed down to the element’s descendants. </p>
+					<h5 class="sbHead">CSS-wide keywords</h5>
+					<p class="SidebarBody">All CSS properties accept the three CSS-wide keywords: <span class="Literal-Sidebar">initial</span>, <span class="Literal-Sidebar">inherit</span>, and <span class="Literal-Sidebar">unset</span>. Because they are shared by all properties, they are not listed with the values for individual property listings.</p>
+					<ul>
+						<li class="SidebarListBullet">The <span class="Literal-Sidebar">initial</span> keyword explicitly sets the property to its default (initial) value. </li>
+						<li class="SidebarListBullet">The <span class="Literal-Sidebar">inherit</span> keyword allows you to explicitly force an element to inherit a style property from its parent. This may come in handy to override other styles applied to that element and to guarantee that the element always matches its parent. </li>
+						<li class="SidebarListBullet">Finally, <span class="Literal-Sidebar">unset</span> erases declared values occurring earlier in the cascade, setting the property to either <span class="Literal-Sidebar">inherit</span> or <span class="Literal-Sidebar">initial</span>, depending on whether it inherits or not.</li>
+					</ul>
+				</div>
+			</div>
+			<h1 id="_idParaDest-106" class="HeadA"><a id="_idTextAnchor149"></a>Basic Font Properties</h1>
+			<p class="body">When I design a <a id="_idIndexMarker1996"></a><a id="_idIndexMarker1997"></a>text document (for print or the web), one of the first things I do is specify a font. In CSS, fonts are specified using a set of font-related properties for typeface, size, weight, font style, and special characters. There are also shortcut properties that let you specify multiple font attributes in a single rule.</p>
+			<div>
+				<div id="_idContainer633" class="sidebar">
+					<h5 class="SidebarSeries">AT A GLANCE</h5>
+					<h5 class="SidebarTitle">Font Properties</h5>
+					<p class="SidebarBody">The CSS2.1 font-related properties are universally supported:</p>
+					<pre class="SidebarCodeFirst">font-family <br/>font-size <br/>font-weight <br/>font-style <br/>font-variant <br/>font</pre>
+					<p class="SidebarBody">The CSS Font Module Level 3 adds these properties for more sophisticated font handling, although browser support is inconsistent as of <a id="_idIndexMarker1998"></a><a id="_idIndexMarker1999"></a><a id="_idIndexMarker2000"></a><a id="_idIndexMarker2001"></a><a id="_idIndexMarker2002"></a><a id="_idIndexMarker2003"></a>this<a id="_idIndexMarker2004"></a><a id="_idIndexMarker2005"></a><a id="_idIndexMarker2006"></a><a id="_idIndexMarker2007"></a><a id="_idIndexMarker2008"></a><a id="_idIndexMarker2009"></a><a id="_idIndexMarker2010"></a><a id="_idIndexMarker2011"></a> <a id="_idIndexMarker2012"></a>writing: </p>
+					<pre class="SidebarCodeFirst">font-stretch <br/>font-variant-ligatures <br/>font-variant-position <br/>font-variant-caps <br/>font-variant-numeric <br/>font-variant-alternates <br/>font-variant-east-asian <br/>font-size-adjust <br/>font-kerning <br/>font-feature-settings <br/>font-language-override</pre>
+				</div>
+			</div>
+			<h2 class="HeadB">Specifying the Font Name</h2>
+			<p class="body">Choosing a<a id="_idIndexMarker2013"></a> typeface, or <span class="FirstTerm">font family</span> as it is called in CSS, for your text is a good place to start. Let’s begin with the <span class="Literal-fc">font-family</span> property and its values. </p>
+			<p class="RefNameCode-Left">font-family</p>
+			<p class="property"><span class="prop-label">Values:</span><em class="Emphasis"> 	</em><span class="prop-replace">one or more font or generic font family names, separated by commas</span> </p>
+			<p class="property"><span class="prop-label">Default:</span><em class="Emphasis"> 	</em>depends on the browser</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">Use the <span class="Literal-fc">font-family</span> <a id="_idIndexMarker2014"></a><a id="_idIndexMarker2015"></a>property to specify a font or list of fonts (known as a <span class="FirstTerm">font stack</span>) by <a id="_idIndexMarker2016"></a>name, as shown in these examples:</p>
+			<pre class="CodeFirst">body { <code class="CodeColor">font-family: Arial;</code> }<br/>var { <code class="CodeColor">font-family: Courier, monospace;</code> }<br/>p { <code class="CodeColor">font-family: "Duru Sans", Verdana, sans-serif;</code> }</pre>
+			<p class="body">Here are some important syntax requirements:</p>
+			<ul>
+				<li class="ListBullet">All font names, with the exception of generic font families, must be <a id="_idIndexMarker2017"></a>capitalized. For example, use <span class="Literal-fc">Arial</span> instead of <span class="Literal-fc">arial</span>.</li>
+				<li class="ListBullet">Use <a id="_idIndexMarker2018"></a><a id="_idIndexMarker2019"></a>commas to separate multiple font names, as shown in the second and third examples.  </li>
+				<li class="ListBullet">Notice that font names that contain a character space (such as Duru Sans in the third example) must appear within <a id="_idIndexMarker2020"></a>quotation marks. </li>
+			</ul>
+			<p class="body">You might be asking, “Why specify more than one font?” That’s a good question, and it brings us to one of the challenges of specifying fonts for the web. </p>
+			<h3 class="HeadC">Font limitations</h3>
+			<p class="body">Browsers are limited to displaying fonts they have access to. Traditionally, that meant the fonts that were already installed on the user’s hard drive. In 2010, however, there was a boom in browser support for embedded web fonts using the CSS<a id="_idIndexMarker2021"></a> <span class="Literal-fc">@font-face</span> rule, so it became possible for designers to provide their own fonts. See the sidebar <span class="Xref">“Say Hello to Web Fonts”</span> for more information.</p>
+			<p class="body">But back to our <span class="Literal-fc">font-family</span> rule. Even when you specify that the font should be Futura in a style rule, if the browser can’t find it (for example, if that font is not installed on the user’s computer or the provided web font fails to load), the browser uses its default font instead.</p>
+			<p class="body">Fortunately, CSS allows us to provide a list of back-up fonts (that font stack we saw earlier) should our first choice not be available. If the first specified font is not found, the browser tries the next one, and down through the list until it finds one that works. In the third <span class="Literal-fc">font-family</span> rule shown in the previous code example, if the browser does not find Duru Sans, it will use Verdana, and if Verdana is not available, it will substitute some other sans-serif font. </p>
+			<div>
+				<div id="_idContainer634" class="sidebar">
+					<h5 class="SidebarTitle">Say Hello to Web Fonts</h5>
+					<p class="SidebarBody">The ability to<a id="_idIndexMarker2022"></a> <a id="_idIndexMarker2023"></a>provide your own font for use on a web page has been around since 1998, but it was never feasible because of browser inconsistencies. Fortunately, that story has changed, and now web fonts are a perfectly viable option. The web has never looked better!</p>
+					<p class="SidebarBody">There is a lot to say about web fonts, so this sidebar is merely an introduction, starting with the challenges.  </p>
+					<h5 class="sbHead">Web font formats</h5>
+					<p class="SidebarBody">There have been two main hurdles to including fonts with web pages. First, there is the problem that different browsers support different font formats. Most fonts come in <a id="_idIndexMarker2024"></a><a id="_idIndexMarker2025"></a><a id="_idIndexMarker2026"></a>OpenType (OTF) or <a id="_idIndexMarker2027"></a>TrueType (TTF) format, but older versions of Internet Explorer accept only its proprietary <a id="_idIndexMarker2028"></a><a id="_idIndexMarker2029"></a>Embedded Open Type (EOT). </p>
+					<p class="SidebarBody">The good news is that there is a new standard for packaging fonts for delivery to web pages that all browser vendors, even IE, are implementing. The new format,<a id="_idIndexMarker2030"></a><a id="_idIndexMarker2031"></a> <span class="FirstTerm--Sidebar-">WOFF/WOFF2</span> (for <span class="FirstTerm--Sidebar-">Web Open Font Format </span>versions 1 and 2), is a container that packages font files for web delivery. Now that IE9 supports WOFF, one day it may be all we need. As of this writing, however, it is still a best practice to provide the same font in a number of different formats (more on that in just a moment).</p>
+					<p class="SidebarBody">The other issue with providing fonts on web pages is that the font companies, or <span class="FirstTerm--Sidebar-">foundries</span>, are concerned (a polite way to say “freaked out”) that their fonts will be sitting vulnerably on servers and available for download. Fonts cost a lot to create and are very valuable. Most come with licenses that cover very specific uses by a limited number of machines, and “free to download for whatever” is usually not included. </p>
+					<p class="SidebarBody">So, to link to a web <a id="_idIndexMarker2032"></a>font, you need to use the font legally and provide it in a way that all browsers support. There are two general approaches to providing fonts: host them yourself or use a web font service. Let’s look at both options.</p>
+					<h5 class="sbHead">Host your own</h5>
+					<p class="SidebarBody">In the “host your own” option, you find the font you want, put it on your server in all the required formats, and link it to your web page by using the CSS3 <span class="Literal-Sidebar">@font-face</span> rule. It is worth noting that each font file corresponds to a single weight or variant of a typeface. So if you want to use regular, bold, and italic versions, you have to host three different font files and reference each in your CSS.</p>
+					<p class="SidebarBody"><span class="ListStartItem--Sidebar-">Step 1: Find a font.</span> This can be a bit of a challenge because the <a id="_idIndexMarker2033"></a><a id="_idIndexMarker2034"></a>End User License Agreement (EULA) for virtually all commercial fonts does not cover web usage. Be sure to purchase the additional web license if it is available. However, thanks to demand, some foundries are opening fonts up for web use, and there are a growing number of open source fonts that you can use for free. The service <a id="_idIndexMarker2035"></a>Fontspring (<a href="http://fontspring.com"><span class="URL-Email--Sidebar-">fontspring.com</span></a>), by Ethan Dunham, is a great place to purchase fonts that have a web license that you can use on your site or your own computer. The site <a id="_idIndexMarker2036"></a>Font Squirrel (<a href="http://fontsquirrel.com"><span class="URL-Email--Sidebar-">fontsquirrel.com</span></a>), also by <a id="_idIndexMarker2037"></a>Ethan Dunham, is a great source for open source fonts that can be used for commercial purposes for free. </p>
+					<p class="SidebarBody"><span class="ListStartItem--Sidebar-">Step 2: Save it in multiple formats. </span>As of this writing, providing multiple formats (EOT, WOFF, TTF, SVG) is a reality. The recommended source for the various formats is the font vendor where you purchased the font, as they will be the best quality and approved under the EULA. If you have an open source font (one that is free from licensing restrictions) and you need alternative formats, there is a service that will take your font and make everything you need for you—the <a id="_idIndexMarker2038"></a>“@font-face Generator” from Font Squirrel (<a href="http://www.fontsquirrel.com/fontface/generator"><span class="URL-Email--Sidebar-">www.fontsquirrel.com/fontface/generator</span></a>). Go to that page and upload your font, and it gives back the font in TTF, EOT, WOFF, WOFF2, and SVG, as well as the CSS code you need to make it work. </p>
+					<p class="SidebarBody"><span class="ListStartItem--Sidebar-">Step 3: Upload to the server. </span>Developers typically keep their font files in the same directory as the CSS files, but that’s just a matter of preference. If you download a package from Font Squirrel, be sure to keep the pieces together as you found them.</p>
+					<p class="SidebarBody"><span class="ListStartItem--Sidebar-">Step 4: Write the code.</span> Link the font to your site by using the <span class="Literal-Sidebar">@­font-face</span> rule in your <span class="Filename--Sidebar-">.css</span> document. The <a id="_idIndexMarker2039"></a>“at-rule” gives the font a <span class="Literal-Sidebar">font-family</span> name that you can then reference later in your style sheet. It also lists the locations of the font files in their various formats. This cross-browser code example was developed by Ethan Dunham (yep, him again!) to address a bug in IE. I recommend reading the full article at <a href="http://blog.fontspring.com/2011/02/further-hardening-of-the-bulletproof-syntax/"><span class="URL-Email--Sidebar-">blog.fontspring.com/2011/02/further-hardening-of-the-bulletproof-syntax/</span></a>. See also Paul Irish’s updated version at <a href="http://paulirish.com/2009/bulletproof-font-face-implementation-syntax/"><span class="URL-Email--Sidebar-">paulirish.com/2009/bulletproof-font-face-implementation-syntax/</span></a>.</p>
+					<pre class="SidebarCodeFirst">@font-face {<br/>  font-family: '<span class="Replaceable">MyWebFont</span>';<br/>  src: url('webfont.eot'); <span class="Code-Comment">/* IE9 Compat Modes */</span><br/>   src: url('webfont.eot?#iefix') format('embedded-opentype'), <span class="Code-Comment">/* IE6-IE8 */</span><br/>   url('webfont.woff') format('woff'),<br/>     <span class="Code-Comment">/* Modern Browsers */</span> <br/>  url('webfont.ttf')  format('truetype'),<br/>    <span class="Code-Comment">/* Safari, Android, iOS */</span> <br/>  url('webfont.svg#svgFontName') format('svg');<br/>     <span class="Code-Comment">/* Legacy iOS */</span><br/>   }</pre>
+					<p class="SidebarBody">Then you just refer to the established font name in your font rules, like so:</p>
+					<pre class="SidebarCodeFirst">p {font-family: <span class="Replaceable">MyWebFont</span>; }</pre>
+					<h5 class="sbHead">Use a font embedding service</h5>
+					<p class="SidebarBody">If that <a id="_idIndexMarker2040"></a>seems like a lot of work, you may want to sign up with one of the font embedding services that do all the heavy lifting for you. For a fee, you get access to high-quality fonts, and the service handles font licensing and font protection for the foundries. They also generally provide an interface and tools that make embedding a font as easy as copy and paste. </p>
+					<p class="SidebarBody">The services have a variety of fee structures. Some charge monthly fees; some charge by the font. Some have a surcharge for bandwidth as well. There are generally tiered plans that range from free to hundreds of dollars per month.</p>
+					<p class="SidebarBody">Here are some font embedding services that are popular as of this writing, but it’s worth doing a web search to see what’s currently offered.</p>
+					<p class="SidebarListVariableTerm">Google Web Fonts (<a href="http://www.google.com/webfonts"><span class="URL-Email--Sidebar-">www.google.com/webfonts</span></a>)</p>
+					<p class="SidebarListVariable">Google<a id="_idIndexMarker2041"></a> <a id="_idIndexMarker2042"></a>Web Fonts is a free service that provides access to hundreds of open source fonts that are free for commercial use. All you have to do is choose a font, and then copy and paste the code they generate for you. If you don’t have a font budget and you aren’t too particular about fonts, this is a wonderful way to go. We’ll use it in the first exercise in this chapter. </p>
+					<p class="SidebarListVariableTerm">Typekit, from Adobe (<a href="http://www.typekit.com"><span class="URL-Email--Sidebar-">www.typekit.com</span></a>)</p>
+					<p class="SidebarListVariable">Typekit <a id="_idIndexMarker2043"></a><a id="_idIndexMarker2044"></a>was the first web font service and is now part of Adobe. Their service uses JavaScript to link the fonts to your site in a way that improves performance and quality in all browsers. I also recommend their blog for excellent articles on how type works (see <a href="http://blog.typekit.com"><span class="URL-Email--Sidebar-">blog.typekit.com</span></a>).</p>
+					<p class="SidebarListVariableTerm">Fonts.com (<a href="http://fonts.com"><span class="URL-Email--Sidebar-">fonts.com</span></a>)</p>
+					<p class="SidebarListVariable">Fonts.com <a id="_idIndexMarker2045"></a>boasts the largest font collection from the biggest font foundries. If you need a particular font, they are likely to have it. </p>
+					<p class="SidebarBody">Other services include <a id="_idIndexMarker2046"></a>Cloud Typography by Hoefler &amp; Co. (<a href="http://www.typography.com/cloud/welcome/"><span class="URL-Email--Sidebar-">www.typography.com/cloud/welcome/</span></a>), <a id="_idIndexMarker2047"></a>Typotheque (<a href="http://www.typotheque.com/webfonts"><span class="URL-Email--Sidebar-">www.typotheque.com/webfonts</span></a>), and <a id="_idIndexMarker2048"></a>Fonts Live (<a href="http://www.fontslive.com/"><span class="URL-Email--Sidebar-">www.fontslive.com</span></a>). They differ in the number of fonts they offer and their fee structures, so you may want to shop around. Fontstand (<a href="https://fontstand.com/"><span class="URL-Email--Sidebar-">fontstand.com/</span></a>) allows you to rent fonts on a monthly basis, which, depending on your use, could work out to be a fraction of the cost of buying the font outright.</p>
+					<h5 class="sbHead">Summing up web fonts</h5>
+					<p class="SidebarBody">Which method you use to add fonts to your site is up to your discretion. If you like total control, hosting your own font (legally, of course) may be a good way to go. If you need a very particular, well-known font because your client’s brand depends on it, you will probably find it on one of the web font services for a price. If you want to experiment with web fonts and are happy to choose from what’s freely available, then Google Web Fonts is for you.</p>
+					<p class="SidebarBody">You now have a good foundation in including web fonts on your web pages. The landscape is likely to change quickly over the next few years, so be sure to do your own research when you are ready to get started.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Generic font families</h3>
+			<p class="body">That last <a id="_idIndexMarker2049"></a><a id="_idIndexMarker2050"></a><a id="_idIndexMarker2051"></a><a id="_idIndexMarker2052"></a><a id="_idIndexMarker2053"></a><a id="_idIndexMarker2054"></a><a id="_idIndexMarker2055"></a><a id="_idIndexMarker2056"></a><a id="_idIndexMarker2057"></a><a id="_idIndexMarker2058"></a><a id="_idIndexMarker2059"></a>option, “some other sans-serif font,” bears more discussion. “Sans-serif” is just one of five generic font families that you can specify with the <span class="Literal-fc">font-family</span> property. When you specify a generic font family, the browser chooses an available font from that stylistic category. <span class="Xref-Figure">Figure 12-2</span> shows examples from each family. </p>
+			<div>
+				<figure id="_idContainer636" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1202.png" alt="" width="1338" height="1525"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-2.</span><span class="FigureLabel"> </span>Examples of the five generic font families. </figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer637" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">Generic font family names do not need to be capitalized in the style rule.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-Sidebar">serif</span><span class="ListStartItem"> </span></p>
+			<p class="ListVariable"><em class="Emphasis">Examples: Times, Times New Roman, Georgia</em></p>
+			<p class="ListVariable">Serif typefaces have decorative slab-like appendages (serifs) on the ends of certain letter strokes. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">sans-serif</span> </p>
+			<p class="ListVariable"><em class="Emphasis">Examples: Arial, Arial Black, Verdana, Trebuchet MS, Helvetica, Geneva</em></p>
+			<p class="ListVariable">Sans-serif typefaces have straight letter strokes that do not end in serifs.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">monospace</span></p>
+			<p class="ListVariable"><em class="Emphasis">Examples: Courier, Courier New, and Andale Mono</em></p>
+			<p class="ListVariable">In monospace (also called constant width) typefaces, all characters take up the same amount of space on a line. For example, a capital W will be no wider than a lowercase i. Compare this to proportional typefaces (such as the one you’re reading now) that allot different widths to different characters.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">cursive</span></p>
+			<p class="ListVariable"><em class="Emphasis">Examples: Apple Chancery, Zapf-Chancery, and Comic Sans</em></p>
+			<p class="ListVariable">Cursive fonts emulate a script or handwritten appearance. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">fantasy</span></p>
+			<p class="ListVariable"><em class="Emphasis">Examples: Impact, Western, or other decorative font</em></p>
+			<p class="ListVariable">Fantasy fonts are purely decorative and would be appropriate for headlines and other display type. </p>
+			<h3 class="HeadC">Font stack strategies</h3>
+			<p class="body">The best <a id="_idIndexMarker2060"></a>practice for specifying fonts for web pages is to start with your first choice, provide some similar alternatives, and then end with a generic font family that at least gets users in the right stylistic ballpark. For example, if you want an upright, sans-serif font, you might start with a web font if you are providing one (Oswald), list a few that are more common (Univers, Tahoma, Geneva), and finish with the generic sans-serif. There is no limit to the number of fonts you can include, but many designers strive to keep it under 10.</p>
+			<pre class="CodeFirst">font-family: Oswald, Univers, Tahoma, Geneva, sans-serif;</pre>
+			<p class="body">A good font stack should include stylistically related fonts that are known to be installed on most computers. Sticking with fonts that come with the Windows, <a id="_idIndexMarker2061"></a>macOS, and Linux operating systems, as well as fonts that get installed with popular software packages such as Microsoft Office and Adobe Creative Suite, gives you a solid list of “web-safe” fonts to choose from. A good place to look for stylistically related web-safe fonts is <a id="_idIndexMarker2062"></a>CSS Font Stack (<a href="http://www.cssfontstack.com"><span class="URL-Email">www.cssfontstack.com</span></a>). There are many articles on font stack strategies that are just a Google search away. I recommend <a id="_idIndexMarker2063"></a>Michael Tuck’s “8 Definitive Font Stacks” (<a href="http://www.sitepoint.com/eight-definitive-font-stacks"><span class="URL-Email">www.sitepoint.com/eight-definitive-font-stacks</span></a>), which is an oldie but goodie.</p>
+			<p class="body">So, as you see, specifying fonts for the web is more like merely suggesting them. You don’t have absolute control over which font your users will see. You might get your first choice; you might get the generic fallback. It’s one of those web design quirks you learn to live with. </p>
+			<p class="body">Now seems like a good time to get started formatting the Black Goose Bistro menu. We’ll add new style rules one at a time as we learn new properties, staring with <span class="Xref-Figure">Exercise 12-1</span>.</p>
+			<div>
+				<div id="_idContainer640" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 12-1.</span> Formatting a menu</h6>
+					<p class="SidebarBody">In this exercise, we’ll change <a id="_idIndexMarker2064"></a>the fonts for the body and main heading of the Black Goose Bistro menu document, <span class="Filename--Sidebar-">menu.html</span>, which is available at<a href="http://learningwebdesign.com/5e/materials"><span class="URL-Email--Sidebar-">.learningwebdesign.com/5e/materials</span></a>. Open the document in a text editor. You can also open it in a browser to see its “before” state. It should look something like <span class="Xref-Figure">Figure 12-1</span>. Hang on to this document, because this exercise will continue as we pick up additional font properties.</p>
+					<p class="SidebarBody">I’ve included an embedded font in this exercise to show you how easy it is to do with a service like<a id="_idIndexMarker2065"></a> Google Web Fonts.</p>
+					<ol>
+						<li class="SidebarListNumber">Use an embedded style sheet for this exercise. Start by adding a <span class="Literal-Sidebar">style</span> element in <a id="_idIndexMarker2066"></a>the <span class="Literal-Sidebar">head</span> of the document, like this:<pre class="SidebarCodeFirst">&lt;head&gt;<br/>  &lt;title&gt;Black Goose Bistro&lt;/title&gt;<br/>  <code class="CodeColor">&lt;style&gt;</code></pre><pre class="SidebarCode"> <br/><code class="CodeColor">  &lt;/style&gt;</code><br/>&lt;/head&gt;</pre></li>
+						<li class="SidebarListNumber">I would like the main text to appear in Verdana or some other sans-serif font. Instead of writing a rule for every element in the document, we will write one rule for the <span class="Literal-Sidebar">body</span> element that will be inherited by all the elements it contains. Add this rule to the embedded style sheet:<pre class="SidebarCodeFirst">&lt;style&gt;<br/><code class="CodeColor">  body {font-family: Verdana, sans-serif;}</code><br/>&lt;/style&gt;</pre></li>
+						<li class="SidebarListNumber">I want a fancy font for the “Black Goose Bistro • Summer Menu” headline, so I chose a free display font called Marko One from <a id="_idIndexMarker2067"></a><a id="_idIndexMarker2068"></a>Google Web Fonts (<a href="http://www.google.com/webfonts"><span class="URL-Email--Sidebar-">www.google.com/webfonts</span></a>). Google gave me the code for linking the font file on their server to my HTML file (it’s actually a link to an external style sheet). It must be placed in the <span class="Literal-Sidebar">head</span> of the document, so copy it exactly as it appears, but keep it on one line. Put it after the <span class="Literal-Sidebar">title</span> and before the <span class="Literal-Sidebar">style</span> element.<pre class="SidebarCodeFirst">&lt;head&gt;<br/>  &lt;title&gt;Black Goose Bistro Summer Menu&lt;/title&gt;<br/><code class="CodeColor">  &lt;link href="http://fonts.googleapis.com/css?family=Marko+One" rel="stylesheet"&gt;<br/>  </code>&lt;style&gt;<br/>…</pre></li>
+						<li class="SidebarListNumber">Now write a rule that applies it to the <span class="Literal-Sidebar">h1</span> element. Notice I’ve specified Georgia or another serif font as fallbacks:<pre class="SidebarCodeFirst">&lt;style&gt;<br/>  body {font-family: Verdana, sans-serif;}<br/>  <code class="CodeColor">h1 {font-family: "Marko One", Georgia, serif;}</code><br/>&lt;/style&gt;</pre></li>
+						<li class="SidebarListNumber">Save the document and reload the page in the browser. It should look like <span class="Xref-Figure">Figure 12-3</span>. Note that you’ll need to have an internet connection and a current browser to view the Marko One headline font. We’ll work on the text size in the next exercise.<figure id="_idContainer639" class="figWCaption"><p class="Figure_Holder"><img src="image/lwd5_1203_ex1.png" alt="" width="1027" height="804"/> </p><figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-3.</span><span class="FigureLabel"> </span>The menu after we change only the font family.</figcaption></figure></li>
+					</ol>
+				</div>
+			</div>
+			<h2 class="HeadB">Specifying Font Size</h2>
+			<p class="body">Use the aptly <a id="_idIndexMarker2069"></a>named <span class="Literal-fc">font-size</span> property to specify the size of the text. </p>
+			<p class="RefNameCode-Left">font-size</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length unit</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">xx-small</span> | <span class="prop-code">x-small</span> | <span class="prop-code">small</span> | <span class="prop-code">medium</span> | <span class="prop-code">large</span> |   <span class="prop-code">x-large</span> | <span class="prop-code">xx-large</span> | <span class="prop-code">smaller</span> | <span class="prop-code">larger</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">medium</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span>  	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span>  	yes</p>
+			<p class="body">You can specify text size in several ways:</p>
+			<ul>
+				<li class="ListBullet">Using one of the CSS length units, as shown here:<pre class="CodeFirst">h1 { <code class="CodeColor">font-size: 1.5em;</code> }</pre><p class="ListBullet_cont">When specifying a number of units, be sure the unit abbreviation immediately follows the number, with no extra character space in between (see the sidebar <span class="Xref">“Providing Measurement Values”</span>).</p><p class="ListBullet_cont">CSS length units are discussed in <a href="lwd5_chapter11.xhtml#_idTextAnchor134"><span class="Xref">Chapter </span><span class="Xref">11</span><span class="Xref">, Introducing Cascading Style Sheets</span></a>. See also the <span class="Xref">“CSS Units Cheat Sheet”</span> sidebar.</p><div id="_idContainer641" class="sidebar"><h5 class="SidebarTitle">Providing Measurement Values</h5><p class="SidebarBody">When you’re <a id="_idIndexMarker2070"></a><a id="_idIndexMarker2071"></a>providing measurement values, the unit must immediately follow the number, like this:</p><pre class="SidebarCodeFirst">margin: 2em;</pre><p class="SidebarBody">Adding a space before the unit will cause the property not to work:</p><pre class="SidebarCodeFirst">INCORRECT: margin: 2 em;</pre><p class="SidebarBody">It is acceptable to omit the unit of measurement for zero values:</p><pre class="SidebarCodeFirst">margin: 0;</pre></div><div id="_idContainer642" class="sidebar"><h5 class="SidebarSeries">At a Glance</h5><h5 class="SidebarTitle">CSS Units Cheat Sheet</h5><p class="SidebarBody">As a quick reference, here are the CSS length units again:</p><h5 class="sbHead">Relative units</h5><table id="table001-11" class="table_invisible"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr class="table_invisible"><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">em</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">ex</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">rem</span></p></td><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">ch</span></p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">vw</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">vh</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">vmin</span></p></td><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">vmax</span></p></td></tr></tbody></table><h5 class="sbHead">Absolute units</h5><table id="table002-8" class="table_invisible"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr class="table_invisible"><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">px</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">in</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">mm </span></p></td><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">cm</span></p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="SidebarBody"><span class="Literal-Sidebar">q</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">pt</span></p></td><td class="table_invisible invisible"><p class="SidebarBody"><span class="Literal-Sidebar">pc </span></p></td><td class="table_invisible"></td></tr></tbody></table></div></li>
+				<li class="ListBullet">As a percentage value, sized up or down from the element’s inherited font size:<pre class="CodeFirst">h1 { <code class="CodeColor">font-size: 150%;</code> }</pre></li>
+				<li class="ListBullet">Using one of the absolute <a id="_idIndexMarker2072"></a><a id="_idIndexMarker2073"></a>keywords (<span class="Literal-fc">xx-small</span>, <span class="Literal-fc">x-small</span>, <span class="Literal-fc">small</span>, <span class="Literal-fc">medium</span>, <span class="Literal-fc">large</span>, <span class="Literal-fc">x-large</span>, <span class="Literal-fc">xx-large</span>). On most current browsers, <span class="Literal-fc">medium</span> corresponds to the default font size.<pre class="CodeFirst">h1 { <code class="CodeColor">font-size: x-large;</code> }</pre></li>
+				<li class="ListBullet">Using a <a id="_idIndexMarker2074"></a><a id="_idIndexMarker2075"></a><a id="_idIndexMarker2076"></a>relative keyword (<span class="Literal-fc">larger</span> or <span class="Literal-fc">smaller</span>) to nudge the text larger or smaller than the surrounding text:<pre class="CodeFirst">strong { <code class="CodeColor">font-size: larger;</code> }</pre></li>
+			</ul>
+			<p class="body">I’m going to cut to the chase and tell you that, despite all these options, the preferred values for <a id="_idIndexMarker2077"></a><span class="Literal-fc">font-size</span> in contemporary web design are the relative length units <span class="Literal-fc">em</span> and <a id="_idIndexMarker2078"></a><span class="Literal-fc">rem</span>, as well as <a id="_idIndexMarker2079"></a>percentage values. You can specify font size in pixels (<span class="Literal-fc">px</span>), but in general, they do not provide the flexibility required in web page design. All of the other absolute units (<span class="Literal-fc">pt</span>, <span class="Literal-fc">pc</span>, <span class="Literal-fc">in</span>, etc.) are out too, unless you are creating a style sheet specifically for print.</p>
+			<div>
+				<div id="_idContainer643" class="callout">
+					<p class="callout">The preferred font-size values are em, rem, and %.</p>
+				</div>
+			</div>
+			<p class="body">I’ll explain the keyword-based <span class="Literal-fc">font-size</span> values in a moment, but let’s start our discussion with the best practice using relative values.</p>
+			<h3 class="HeadC">Sizing text with relative values</h3>
+			<p class="body">The best <a id="_idIndexMarker2080"></a>practice for setting the font size of web page elements is to do it in a way that respects the user’s preference. Relative sizing values %, rem, and em allow you to use the default font size as the basis for proportional sizing of other text elements. It’s usually not important that the headlines are exactly 24 pixels; it is important that they are 1.5 times larger than the main text so they stand out. If the user changes their preferences to make their default font size larger, the headlines appear larger, too.</p>
+			<p class="body">To maintain the browser’s default size, set the <span class="Literal-fc">font-size</span> of the root element to 100% (see <span class="Xref">Note</span>):</p>
+			<pre class="CodeFirst">html {<br/>  font-size: 100%;<br/>}</pre>
+			<div>
+				<div id="_idContainer644" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">It is also common practice to set the <span class="Literal-Sidebar">body</span> to 100%, but setting it on the <span class="Literal-Sidebar">html</span> element is a more flexible approach. </p>
+				</div>
+			</div>
+			<p class="body">That sets the basis for relative sizing. Because the default font size for all modern browsers is 16 pixels, we’ll assume our base size is 16 pixels going forward (we’ll also keep in mind that it could be different). </p>
+			<h4 class="HeadD">Rem values</h4>
+			<p class="body">The rem unit, which stands for “root em,” is always relative to the size of the root (<span class="Literal-fc">html</span>) element. If the root size is 16 pixels, then a rem equals 16 pixels. What’s nice about rem units is, because they are always relative to the same element, they are the same size wherever you use them throughout the document. In that way, they work like an absolute unit. However, should the root size be something other than 16 pixels, elements specified in rem values will resize accordingly and proportionally. It’s the best of both worlds.</p>
+			<p class="body">Here is that same heading sized with rem values:</p>
+			<pre class="CodeFirst">h1 { font-size: 1.5rem; }  <span class="Code-Comment">/* 1.5 x 16 = 24 */</span></pre>
+			<div>
+				<div id="_idContainer645" class="note">
+					<h5 class="WarningHeader">Browser support note</h5>
+					<p class="note">Note that rem units are not supported in Internet Explorer 8 and earlier. If for some reason you need to support old browsers, you’ll need to provide a fallback declaration set in pixels. There are also tools that change all your rem units to pixels automatically, as discussed in <span class="Xref--Sidebar-">Chapter 20, Modern Web Development Tools</span>.</p>
+				</div>
+			</div>
+			<h4 class="HeadD">Em measurements</h4>
+			<p class="body">Em units are based on the font size of the current element. When you specify <span class="Literal-fc">font-size</span> in ems, it will be relative to the inherited size for that element. Once the em is calculated for an element, it can be used for other measurements as well, such as margins, padding, element widths, and any other setting you want to always be relative to the size of the font.</p>
+			<p class="body">Here I’ve used em units to specify the size of an <span class="Literal-fc">h1</span> that has inherited the default 16-pixel font size from the root: </p>
+			<pre class="CodeFirst">h1 { font-size: 1.5em; }  <span class="Code-Comment">/* 1.5 x 16 = 24 */</span></pre>
+			<p class="body">There are a few snags to working with ems. One is that because of rounding errors, there is some inconsistency in how browsers and platforms render text set in ems. </p>
+			<p class="body">The other tricky aspect to using ems is that they are based on the <em class="Emphasis">inherited</em> size of the element, which means that their size is based on the context in which they are applied. </p>
+			<p class="body">The <span class="Literal-fc">h1</span> in the previous example was based on an inherited size of 16 pixels. But if this <span class="Literal-fc">h1</span> had appeared in an <span class="Literal-fc">article</span> element that had its font size set to 14 pixels, it would inherit the 14-pixel size, and its resulting size would be just 21 pixels (1.5 × 14 = 21). <span class="Xref-Figure">Figure 12-4</span> shows the results. </p>
+			<p class="body"><span class="FigureLabel">The markup</span><span class="FigureLabel">	</span></p>
+			<pre class="CodeFirst">&lt;h1&gt;Headline in Body&lt;/h1&gt;<br/>&lt;p&gt;Pellentesque ligula leo,…&lt;/p&gt;<br/>&lt;article&gt;<br/>  &lt;h1&gt;Headline in Article&lt;/h1&gt;<br/>  &lt;p&gt;Vivamus …&lt;/p&gt;<br/>&lt;/article&gt;</pre>
+			<p class="body"><span class="FigureLabel">The styles</span></p>
+			<pre class="CodeFirst">h1 {<br/>  font-size: 1.5em;   <span class="Code-Comment">/* sets all h1s to 1.5em */</span> <br/>}<br/>article {<br/>  font-size: .875em   <span class="Code-Comment">/* 14 pixels based on 16px default */</span><br/> }</pre>
+			<div>
+				<figure id="_idContainer647" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1204_emheading.png" alt="" width="1257" height="454"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-4.</span> All <span class="Literal-Sidebar">h1</span> elements are sized at 1.5em, but they are different sizes because of the context in which they appear.</figcaption>
+				</figure>
+			</div>
+			<p class="body">From this example, you can see that an element set in ems might appear at different sizes in different parts of the document. If you wanted the <span class="Literal-fc">h1</span> in the article to be 24 pixels as well, you could calculate the em value by dividing the target size by its context: 24 / 14 = 1.71428571 em. (No need to round that figure down…the browser knows what to do with it.)</p>
+			<div>
+				<div id="_idContainer648" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">Ethan <a id="_idIndexMarker2081"></a><a id="_idIndexMarker2082"></a>Marcotte introduced the <strong class="Emphasis_Bold">target</strong><strong class="Emphasis_Bold"> </strong><strong class="Emphasis_Bold">÷ context = result</strong> formula in his book <span class="Citation--Sidebar-">Responsive Web Design</span> (A Book Apart). It is useful for converting pixel values into percentages and ems.</p>
+				</div>
+			</div>
+			<p class="body">If you have elements nested several layers deep, the size increase or decrease compounds, which can create problems. With many layers of nesting, text may end up being way too small. When working with ems, pay close attention and write style rules in a way that takes the context into account. </p>
+			<p class="body">This compounding nature of the em is what has driven the popularity of the predictable rem unit.</p>
+			<h4 class="HeadD">Percentage values </h4>
+			<p class="body">We saw a <a id="_idIndexMarker2083"></a>percentage value (100%) used to preserve the default font size, but you can use percentage values for any element. They are pretty straightforward.</p>
+			<p class="body">In this example, the <span class="Literal-fc">h1</span> inherits the default 16px size from the <span class="Literal-fc">html</span> element, and applying the 150% value multiplies that <em class="Emphasis">inherited</em> value, resulting in an <span class="Literal-fc">h1</span> that is 24 pixels: </p>
+			<pre class="CodeFirst">h1 { font-size: 150%; }  <span class="Code-Comment">/* 150% of 16 = 24 */</span></pre>
+			<h3 class="HeadC">Working with keywords</h3>
+			<p class="body">An alternative <a id="_idIndexMarker2084"></a>way to specify <span class="Literal-fc">font-size</span> is by using one of the predefined absolute <a id="_idIndexMarker2085"></a>keywords: <span class="Literal-fc">xx-small</span>, <span class="Literal-fc">x-small</span>, <span class="Literal-fc">small</span>, <span class="Literal-fc">medium</span>, <span class="Literal-fc">large</span>, <span class="Literal-fc">x-large</span>, and <span class="Literal-fc">xx-large</span>. The keywords do not correspond to particular measurements, but rather are scaled consistently in relation to one another. The default size is <span class="Literal-fc">medium</span> in current browsers. <span class="Xref-Figure">Figure 12-5</span> shows how each of the absolute keywords renders in a browser when the default text is set at 16 pixels. I’ve included samples in Verdana and Times to show that, even with the same base size, there is a big difference in legibility at sizes <span class="Literal-fc">small</span> and below. Verdana was designed to be legible on screens at small font sizes; Times was designed for print so is less legible in that context.</p>
+			<div>
+				<figure id="_idContainer650" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1205_keywords.png" alt="" width="1150" height="435"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-5.</span><span class="FigureLabel"> </span>Text sized with absolute keywords.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The relative keywords, <span class="Literal-fc">larger</span> and <span class="Literal-fc">smaller</span>, are used to shift the size of text relative to the size of the parent element text. The exact amount of the size change is determined by each browser and is out of your control. Despite that limitation, it is an easy way to nudge type a bit larger or smaller if the exact proportions are not critical.</p>
+			<p class="body">You can apply your new CSS font knowledge in <span class="Xref-Figure">Exercise 12-2</span>.</p>
+			<div>
+				<div id="_idContainer653" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 12-2.</span> Setting font size</h6>
+					<p class="SidebarBody">Let’s refine the size of some of the text elements to give the online menu a more sophisticated appearance. Open <span class="Filename--Sidebar-">menu.html</span> in a text editor and follow the steps. You can save the document at any point and take a peek in the browser to see the results of your work. You should also feel free to try out other size values along the way.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">There are many approaches to sizing text on web pages. In this example, start by putting a stake in the ground and setting the <span class="Literal-Sidebar">font-size</span> of the <span class="Literal-Sidebar">body</span> element to 100%, thus clearing the way for em measurements thereafter: <pre class="SidebarCodeFirst">body {<br/>  font-family: Verdana, sans-serif;<br/>  <code class="CodeColor">font-size: 100%;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">The browser default of 16 pixels is a fine size for the main page text, but I would like to improve the appearance of the heading levels. I’d like the main heading to be 24 pixels, or one and a half times larger than the body text [target (24) ÷ context (16) = 1.5]. I’ll add a new rule that sets the size of the <span class="Literal-Sidebar">h1</span> to 1.5em. I could have used 150% to achieve the same thing.<pre class="SidebarCodeFirst"><code class="CodeColor">h1 {<br/>  font-size: 1.5em;<br/>}</code></pre></li>
+						<li class="SidebarListNumber">Now make the <span class="Literal-Sidebar">h2</span>s the same size as the body text so they blend in with the page better:<pre class="SidebarCodeFirst"><code class="CodeColor">h2 {<br/>  font-size: 1em;<br/>}</code></pre></li>
+					</ol>
+					<p class="SidebarBody"><span class="Xref-Figure">Figure 12-6</span> shows the result of our font-sizing efforts.</p>
+					<div>
+						<figure id="_idContainer652" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1206_ex2.png" alt="" width="959" height="528"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-6.</span><span class="FigureLabel"> </span>The online menu after a few minor font-size changes to the headings.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Font Weight (Boldness)</h2>
+			<p class="body">After font <a id="_idIndexMarker2086"></a>families and size, the remaining font properties are straightforward. For example, if you want a text element to appear in bold, use the <span class="Literal-fc">font-weight</span> property to adjust the boldness of type.</p>
+			<p class="RefNameCode-Left">font-weight</p>
+			<p class="property"><span class="prop-label">Values: </span>	<span class="prop-code">normal</span> | <span class="prop-code">bold</span> | <span class="prop-code">bolder</span> | <span class="prop-code">lighter</span> | <span class="prop-code">100</span> | <span class="prop-code">200</span> | <span class="prop-code">300</span> | <span class="prop-code">400</span> | <span class="prop-code">500</span> | <span class="prop-code">600</span> | <span class="prop-code">700</span> | <span class="prop-code">800</span> | <span class="prop-code">900</span> </p>
+			<p class="property"><span class="prop-label">Default: </span>	<span class="prop-code">normal</span></p>
+			<p class="property"><span class="prop-label">Applies to: </span>	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">As you can see, the <span class="Literal-fc">font-weight</span> property has many predefined values, including descriptive terms (<span class="Literal-fc">normal</span>, <span class="Literal-fc">bold</span>, <span class="Literal-fc">bolder</span>, and <span class="Literal-fc">lighter</span>) and nine numeric values (<span class="Literal-fc">100</span> to <span class="Literal-fc">900</span>) for targeting various weights of a font if they are available. Because most fonts commonly used on the web have only two weights, normal (or Roman) and bold, the only font weight value you will use in most cases is <span class="Literal-fc">bold</span>. You may also use <span class="Literal-fc">normal</span> to make text that would otherwise appear in bold (such as strong text or headlines) appear at a normal weight.</p>
+			<p class="body">The numeric chart may come in handy when using web fonts with a large range of weights (I’ve seen a few Google web fonts that require numeric size values). If multiple weights are not available, numeric settings of 600 and higher generally result in bold text, as shown in <span class="Xref-Figure">Figure 12-7</span> (although even that can vary by browser).</p>
+			<p class="body">If a separate bold face is not available, the browser may “synthesize” a bold font by beefing up the available normal face (see <span class="Xref">Note</span>).  </p>
+			<div>
+				<div id="_idContainer654" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The CSS Fonts Module Level 3 introduced the <a id="_idIndexMarker2087"></a><span class="Literal-Sidebar">font-synthesis</span> property, which allows authors to turn off (with a value of <span class="Literal-Sidebar">none</span>) or allow synthesized bold fonts (value of <span class="Literal-Sidebar">weight</span>); however, it is still considered experimental at this time. </p>
+				</div>
+			</div>
+			<div>
+				<figure id="_idContainer656" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1207_fontweight.png" alt="" width="915" height="613"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-7.</span><span class="FigureLabel"> </span>The effect (and lack thereof!) of <span class="Literal-fc">font-weight</span> values. </figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">Font Style (Italics)</h2>
+			<p class="body">The <span class="Literal-fc">font-style</span> <a id="_idIndexMarker2088"></a>property affects the <span class="FirstTerm">posture</span> of the text—that is, whether the letter shapes are vertical (<span class="Literal-fc">normal</span>) or slanted (<span class="Literal-fc">italic</span> and <span class="Literal-fc">oblique</span>). </p>
+			<p class="RefNameCode-Left">font-style</p>
+			<p class="property"><span class="prop-label">Values: </span>	<span class="prop-code">normal</span> | <span class="prop-code">italic</span> | <span class="prop-code">oblique</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span></p>
+			<p class="property"><span class="prop-label">Applies to: </span>	all elements</p>
+			<p class="property"><span class="prop-label">Inherits: </span>	yes</p>
+			<p class="body">Use the <span class="Literal-fc">font-style</span> property to make text <span class="Literal-fc">italic</span>. Another common use is to make text that is italicized in the browser’s default styles (such as emphasized text) display as <span class="Literal-fc">normal</span>. There is an <span class="Literal-fc">oblique</span> value that specifies a slanted version of the font; however, browsers generally display <span class="Literal-fc">oblique</span> exactly the same as <span class="Literal-fc">italic</span>.  </p>
+			<p class="body">Try out weight and style in <span class="Xref-Figure">Exercise 12-3</span>.</p>
+			<div>
+				<div id="_idContainer659" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 12-3.</span> Making text bold and italic</h6>
+					<p class="SidebarBody">Back to the menu. <a id="_idIndexMarker2089"></a>I’ve decided that I’d like all of the menu item names to be in bold text. What I’m not going to do is wrap each one in <span class="Literal-Sidebar">&lt;b&gt;</span> tags…that would be so 1996! I’m also not going to mark them up as <span class="Literal-Sidebar">strong</span> elements…that is not semantically accurate. Instead, the right thing to do is simply apply a style to the semantically correct <span class="Literal-Sidebar">dt</span> (definition term) elements to make them all bold at once. Add this rule to the end of the style sheet, save the file, and try it out in the browser:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">dt { font-weight: bold; }</code></pre>
+					<p class="SidebarBody">Now that all the menu item names are bold, some of the text I’ve marked as <span class="Literal-Sidebar">strong</span> isn’t standing out very well, so I think I’ll make them italic for further emphasis. To do this, simply apply the <span class="Literal-Sidebar">font-style</span> property to the <span class="Literal-Sidebar">strong</span> element:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">strong { font-style: italic;}</code></pre>
+					<p class="SidebarBody">Once again, save and reload. It should look like the detail shown in <span class="Xref-Figure">Figure 12-8</span>.</p>
+					<div>
+						<figure id="_idContainer658" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1208_ex3.png" alt="" width="999" height="673"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-8.</span><span class="FigureLabel"> </span>Applying the <span class="Literal-Sidebar">font-weight</span> and <span class="Literal-Sidebar">font-style</span> properties.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h2 class="HeadB">Font Variant in CSS2.1 (Small Caps)</h2>
+			<p class="RefNameCode-Left">font-variant</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">normal</span> | <span class="prop-code">small-caps</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">Some typefaces <a id="_idIndexMarker2090"></a><a id="_idIndexMarker2091"></a><a id="_idIndexMarker2092"></a>come in a “small caps” variant. This is a separate font design that uses small uppercase-style letters in place of lowercase letters. Small caps characters are designed to match the size and density of lowercase text so they blend in. </p>
+			<p class="body">Small caps should be used for strings of three or more capital letters appearing in the flow of text, such as acronyms and abbreviations, that may look jarring as full-sized capitals. Compare NASA and USA in the standard font to <span class="Birka-SC">nasa</span> and <span class="Birka-SC">usa</span> in small caps. Small caps are also recommended for times, like 1<span class="Birka-SC">am</span> or 2017<span class="Birka-SC">ad</span>. </p>
+			<p class="body">When the <span class="Literal-fc">font-variant</span> property was introduced in CSS2.1, it was a one-trick pony that allowed designers to specify a small-caps font for text elements. CSS3 has greatly expanded the role of <span class="Literal-fc">font-variant</span>, as I will cover in the upcoming section <span class="Xref">“Advanced Typography with CSS3</span>.<span class="Xref">”</span> For now, we’ll look at only the CSS2.1 version of <span class="Literal-fc">font-variant</span>.</p>
+			<p class="body">In most cases, browsers simulate small caps by scaling down uppercase letters in the current font. To typography sticklers, this is less than ideal and results in inconsistent stroke weights, but you may find it an acceptable option for adding variety to small amounts of text. You will see an example of small caps when we use the <span class="Literal-fc">font-variant</span> property in <span class="Xref-Figure">Exercise 12-5</span>. </p>
+			<h2 class="HeadB">Font Stretch (Condensed and Extended)</h2>
+			<p class="RefNameCode-Left">font-stretch</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">normal</span> | <span class="prop-code">ultra-condensed</span> | <span class="prop-code">extra-condensed</span> | <span class="prop-code">condensed</span> | <span class="prop-code">semi-condensed</span> | <span class="prop-code">semi-expanded</span> | <span class="prop-code">expanded</span> | <span class="prop-code">extra-expanded</span> | <span class="prop-code">ultra-expanded</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The CSS3 <span class="Literal-fc">font-stretch</span> <a id="_idIndexMarker2093"></a>property tells the browser to select a normal, condensed, or extended font in the font family (<span class="Xref-Figure">Figure 12-9</span>). If the browser cannot find a matching font, it will <em class="Emphasis">not</em> try to synthesize the width by stretching or squeezing text; it may just substitute a font of a different width. Browser support is just beginning to kick in for this property. As of this writing, it works on IE11+, Edge, Firefox, Chrome 48+, Opera, and Android 52+, but it is not yet supported on Safari or iOS Safari; however, that may change.</p>
+			<div>
+				<figure id="_idContainer661" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1209_stretch.png" alt="" width="1337" height="800"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-9.</span> Examples of condensed, normal, and extended versions of the Universe typeface.</figcaption>
+				</figure>
+			</div>
+			<h2 class="HeadB">The Shortcut font Property</h2>
+			<p class="body">Specifying multiple <a id="_idIndexMarker2094"></a><a id="_idIndexMarker2095"></a>font properties for each text element can get repetitive and lengthy, so the creators of CSS provided the shorthand <span class="Literal-fc">font</span> property, which compiles all the font-related properties into one rule.</p>
+			<div>
+				<div id="_idContainer662" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">Be careful when using shorthand properties like <span class="Literal-Sidebar">font</span>. <strong class="Emphasis_Bold">Any omitted property resets to its default value.</strong><strong class="Emphasis_Bold"> </strong>On the flip side, the shorthands are a good way to get a blank slate if you need one.</p>
+				</div>
+			</div>
+			<p class="RefNameCode-Left">font</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">font-style</span>  <span class="prop-replace">font-weight</span>  <span class="prop-replace">font-variant  f</span><span class="prop-replace">ont-stretch</span>  <span class="prop-replace">font-size</span>/<span class="prop-replace">line-height font-family</span> | <span class="prop-code">caption</span> | <span class="prop-code">icon</span> | <span class="prop-code">menu</span> | <span class="prop-code">message-box</span> | <span class="prop-code">small-caption</span> | <span class="prop-code">status-bar</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	depends on default value for each property listed</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The value of the <span class="Literal-fc">font</span> property is a list of values for all the font properties we just looked at, separated by character spaces. It is important to note that only the CSS2.1 version of <span class="Literal-fc">font-variant</span> (<span class="Literal-fc">small-caps</span>) can be used in the <span class="Literal-fc">font</span> shortcut (which is one reason I kept it separate). In this property, the order of the values is important:</p>
+			<pre class="CodeFirst">{ font: <span class="Replaceable">style weight stretch variant size/line-height font-family;</span> }</pre>
+			<p class="body">At minimum, the <span class="Literal-fc">font</span> property <em class="Emphasis">must</em> include a <span class="Literal-fc">font-size</span> value and a <a id="_idIndexMarker2096"></a><span class="Literal-fc">font-family</span> value, in that order. Omitting one or putting them in the wrong order causes the entire rule to be invalid. This is an example of a minimal font property value:</p>
+			<pre class="CodeFirst">p { <code class="CodeColor">font: 1em sans-serif;</code> }</pre>
+			<p class="body">Once you’ve met the size and family requirements, the other values are optional and may appear in any order <em class="Emphasis">prior</em> to the <a id="_idIndexMarker2097"></a><span class="Literal-fc">font-size</span>. When style, weight, stretch, or variant is omitted, its value is set to <span class="Literal-fc">normal</span>. That makes it easy to accidentally override a previous setting with the shorthand property, so be careful when you use it. </p>
+			<p class="body">There is one value in there<a id="_idIndexMarker2098"></a>, <span class="Literal-fc">line-height</span>, that we have not seen yet. As it sounds, it adjusts the height of the text line and is used to add space between lines of text. It appears just after <span class="Literal-fc">font-size</span>, separated by a slash, as shown in these examples. The <span class="Literal-fc">line-height</span> property is covered in more detail later in this chapter.</p>
+			<pre class="CodeFirst">h3 { font: oblique bold small-caps 1.5em<code class="CodeColor">/1.8em</code><span class="Literal-fc"> </span>Verdana, sans-serif; }h2 { font: bold 1.75em<code class="CodeColor">/2</code> sans-serif; }</pre>
+			<p class="body">In <span class="Xref-Figure">Exercise 12-4</span>, we’ll use the shorthand <span class="Literal-fc">font</span> property to make some changes to the <span class="Literal-fc">h1</span> headings in the bistro menu.</p>
+			<div>
+				<div id="_idContainer663" class="sidebar">
+					<h5 class="SidebarSeries">Cross-Browser support tip</h5>
+					<p class="SidebarBody">If you include values for the newer <span class="Literal-Sidebar">font-stretch</span> property in the <span class="Literal-Sidebar">font</span> shorthand, first list a version that omits stretch for browsers that don’t support it. You will end up with two declarations like this:</p>
+					<pre class="SidebarCodeFirst">h3 {<br/>   font: bold 1.25em Helvetica;<br/>   font: bold <code class="CodeColor">extended</code> 1.25em Helvetica;<br/>}</pre>
+				</div>
+			</div>
+			<h3 class="HeadC">System font keywords</h3>
+			<p class="body">The <span class="Literal-fc">font</span> <a id="_idIndexMarker2099"></a>property also has a number of keyword values (<span class="Literal-fc">caption</span>, <span class="Literal-fc">icon</span>, <span class="Literal-fc">menu</span>, <span class="Literal-fc">message-box</span>, <span class="Literal-fc">small-caption</span>, and <span class="Literal-fc">status-bar</span>) that <a id="_idIndexMarker2100"></a>represent <span class="FirstTerm">system fonts</span>, the fonts used by operating systems for things like labels for icons and menu items. These may be useful when you’re designing a web application so that it matches the environment the user is working on. These are considered shorthand values because they encapsulate the font, <a id="_idIndexMarker2101"></a>size, style, and weight of the font used for each purpose with only one keyword.</p>
+			<p class="body">Like the shorthand <span class="Literal-fc">font</span> property, <span class="Xref-Figure">Exercise 12-4</span> is short and sweet.</p>
+			<div>
+				<div id="_idContainer664" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">Exercise 12-4.</span> Using the shorthand font property</h6>
+					<p class="SidebarBody">One last tweak to the menu, and then we’ll take a brief break. To save space, we can replace all the font properties we’ve specified for the <span class="Literal-Sidebar">h1</span> element with one declaration with the shorthand <span class="Literal-Sidebar">font</span> property: </p>
+					<pre class="SidebarCodeFirst">h1 {<br/><code class="CodeColor">  font: bold 1.5em "Marko One", Georgia, serif;</code><br/>}</pre>
+					<p class="SidebarBody">You might find it redundant that I included the bold font weight value in this rule. After all, the <span class="Literal-Sidebar">h1</span> element was already bold by default, right? The thing about shorthand properties is that if you omit a value, it is reset to the default value for that <em class="Emphasis">property</em>, not the browser’s default value. </p>
+					<p class="SidebarBody">In this case, the default <span class="Literal-Sidebar">font-weight</span> value within a <span class="Literal-Sidebar">font</span> declaration is <span class="Literal-Sidebar">normal</span>. Because our style sheet overrides the browser’s default bold heading style, the <span class="Literal-Sidebar">h1</span> would appear in normal-weight text if we don’t explicitly make it bold in the <span class="Literal-Sidebar">font</span> property. Shorthand properties can be tricky that way…pay attention so you don’t leave something out and override a default or inherited value you were counting on.</p>
+					<p class="SidebarBody">You can save this and look at it in the browser. If you’ve done your job right, it should look exactly the same as in the previous step.</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-107" class="HeadA"><a id="_idTextAnchor150"></a>Advanced Typography with CSS3</h1>
+			<p class="body">Now you <a id="_idIndexMarker2102"></a>have a<a id="_idIndexMarker2103"></a> good basic toolkit for formatting fonts with CSS. If you want to get fancy, you should read up on all the properties in the CSS Fonts Module Level 3, which give you far more control over character selection and position. I’m going to keep my descriptions brief because of space restraints and the fact that many of these features are still experimental or have very limited browser support. But if nice typography is your thing, I urge you to do more research, starting with the specification at <a href="http://www.w3.org/TR/css-fonts-3"><span class="URL-Email">www.w3.org/TR/css-fonts-3</span></a>.</p>
+			<h2 class="HeadB">Font Variant in CSS3 </h2>
+			<p class="body">The collection of <span class="Literal-fc">font-variant-</span> prefixed properties in CSS3 aims to give designers and developers access to special characters (<span class="FirstTerm">glyphs</span>) in fonts that can make the typography on a page more sophisticated. </p>
+			<p class="body">As I mentioned earlier, the CSS3 Font Module greatly expanded the definition of <span class="Literal-fc">font-variant</span>. Now it can serve as a shorthand property for a number of <span class="Literal-fc">font-variant-</span> prefixed properties. These properties are still considered experimental, although browser support is starting to pick up. Still, it’s interesting to see how font control in web design is evolving, so let’s take a look. </p>
+			<div>
+				<div id="_idContainer665" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">With the exception of <span class="Literal-Sidebar">font-variant-position</span>, which has a specific purpose, the other <span class="Literal-Sidebar">font-variant</span> properties are great opportunities to practice progressive enhancement. They are nice to have but OK to lose. </p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-ligatures</span></p>
+			<p class="ListVariable">A <span class="FirstTerm">ligature</span> is a <a id="_idIndexMarker2104"></a><a id="_idIndexMarker2105"></a>glyph that combines two or more characters into one symbol. One common example is the combination of a lowercase f and i, where the dot on the i becomes part of the f (). Ligatures can smooth out the appearance of known awkward letter pairings, and ligature glyphs are included in many fonts. The <span class="Literal-fc">font-variant-ligatures</span> property provides a way to control the use of ligatures on web pages. This one is better supported than the others, and already works in IE10+, Chrome 34+, as well as Safari and Opera (with the <span class="Literal-fc">-webkit-</span> prefix). I would expect browser support to steadily improve.  </p>
+			<div>
+				<div id="_idContainer666" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">The <span class="Literal-Sidebar">font-variant-ligatures</span> property has a long list of values, which you can find at <a href="http://www.w3.org/TR/css-fonts-3/#propdef-font-variant-ligatures"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-fonts-3/#propdef-font-variant-ligatures</span></a>.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-caps</span></p>
+			<p class="ListVariable">Allows the <a id="_idIndexMarker2106"></a>selection of <a id="_idIndexMarker2107"></a>small-cap glyphs (<span class="Literal-fc">small-caps</span>) from the font’s character set rather than simulating them in the browser. The <span class="Literal-fc">all-small-caps</span> value uses small caps for upper- and lowercase letters. <span class="Literal-fc">unicase</span> uses small caps for uppercase only, and lowercase letters in the word stay the same. <span class="Literal-fc">titling-caps</span> is used for all-caps titles but is designed to be less strong. Other options are <span class="Literal-fc">petite-caps</span> and <span class="Literal-fc">all-petite-caps</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-position</span></p>
+			<p class="ListVariable">Selects<a id="_idIndexMarker2108"></a> superscript (<a id="_idIndexMarker2109"></a><a id="_idIndexMarker2110"></a><span class="Literal-fc">super</span>) or subscript (<span class="Literal-fc">sub</span>) glyphs from the font’s character set when they are available. Otherwise, the browser creates superscript or subscript text for the <span class="Literal-fc">sup</span> and <span class="Literal-fc">sub</span> elements by shrinking the character and moving it above or below the baseline. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-numeric</span></p>
+			<p class="ListVariable">Allows the <a id="_idIndexMarker2111"></a>selection of various number character styles if they are available. For example, you can pick numerals that are proportional or line up in columns as for a spreadsheet (<span class="Literal-fc">proportional-numbers</span>/<span class="Literal-fc">tabular-numbers</span>) opt for old-style <a id="_idIndexMarker2112"></a>numerals (<span class="Literal-fc">old-style-nums</span>) where some characters dip below the baseline, and specify whether fractions should be on a diagonal or stacked (<span class="Literal-fc">diagonal-fractions</span>/<span class="Literal-fc">stacked-fractions</span>). It also allows you to make ordinal numbers look like 2<span class="Superscript-7">nd</span> instead of 2nd (<span class="Literal-fc">ordinal</span>) and gives you a way to use zeros with slashes through them as is preferred in some contexts (<span class="Literal-fc">slashed-zero</span>). </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-alternates</span></p>
+			<p class="ListVariable">Fonts sometimes offer more than one glyph for a particular character—for example, a few swash designs for the letter S, or an old-fashioned s that looks more like an f. <span class="Literal-fc">font-variant-alternates</span> provides a way to specify swashes and other alternative characters. Many of its values are font-specific and must be defined first with the <a id="_idIndexMarker2113"></a><span class="Literal-fc">@font-features-values</span> at-rule. I’ll leave a deeper explanation to the spec.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-variant-east-asian</span></p>
+			<p class="ListVariable">Allows selection of particular Asian glyphs. </p>
+			<p class="body">Finally, the <a id="_idIndexMarker2114"></a>old<a id="_idIndexMarker2115"></a> <a id="_idIndexMarker2116"></a><span class="Literal-fc">font-variant</span> property that has been around since the beginning of CSS has been upgraded to be a shorthand property for all of the properties listed here. You can use it today with the original <span class="Literal-fc">small-caps</span> value, and it will be perfectly valid. Once these properties gain traction, it will be able to do a whole lot more.</p>
+			<h2 class="HeadB">Other CSS3 Properties</h2>
+			<p class="body">It’s time to finish up our review of the font properties in the Fonts Module Level 3. I’ll give you a general idea of what is available (or will be, after browser support catches up) and you can dig deeper in the spec on your own:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-size-adjust</span></p>
+			<p class="ListVariable">The size<a id="_idIndexMarker2117"></a> text <em class="Emphasis">looks</em> on the page often has more to do with the height of the lowercase x (its <span class="FirstTerm">x-height</span>) than the specified size of the text. For example, 10-point type with relatively large x-height is likely easier to read than 10-point type with dainty little lowercase letters. The <span class="Literal-fc">font-size-adjust</span> property allows the browser to adjust the size of a fallback font until its x-height matches the x-height of the first-choice font. This can ensure better legibility even when a fallback font needs to be used. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-kerning</span></p>
+			<p class="ListVariable">Kerning is <a id="_idIndexMarker2118"></a><a id="_idIndexMarker2119"></a>the space between character glyphs. Fonts typically contain metadata about which letter pairs need to be cozied up together to make the spacing in a word look consistent. The <span class="Literal-fc">font-kerning</span> property allows the font’s kerning information to be applied (<span class="Literal-fc">normal</span>), turned off (<span class="Literal-fc">none</span>), or left to the browser’s discretion (<span class="Literal-fc">auto</span>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-feature-settings</span></p>
+			<p class="ListVariable">This <a id="_idIndexMarker2120"></a>property gives authors the ability to control advanced typographic features in OpenType fonts that are not widely used, such as swashes, small caps, ligatures, automatic fractions, and more. Those features should look familiar, as many of them can be controlled with various <span class="Literal-fc">font-variant</span> properties. In fact, the spec recommends you use <span class="Literal-fc">font-variant</span> whenever possible and reserve <span class="Literal-fc">font-feature-settings</span> for edge cases. As of this writing, however, the <span class="Literal-fc">font-feature-settings</span> property has better browser support, so for the time being it may be a better option. Just be aware that it cascades poorly, meaning it is easy to undo a setting when you use it later to set something else. <a id="_idIndexMarker2121"></a>CSS-Tricks provides a good overview by <a id="_idIndexMarker2122"></a>Robin Rendle (<a href="http://css-tricks.com/almanac/properties/f/font-feature-settings"><span class="URL-Email">css-tricks.com/almanac/properties/f/font-feature-settings</span></a>).</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font-language-override</span></p>
+			<p class="ListVariable">This <a id="_idIndexMarker2123"></a>experimental property controls the use of language-specific glyphs. </p>
+			<p class="body">We’ve finally made our way through the various ways to control fonts in CSS (it took a while!), but that is just one aspect of text presentation. Changing the color of text is another common design choice. </p>
+			<div>
+				<div id="_idContainer667" class="sidebar">
+					<h5 class="SidebarSeries">Further Reading</h5>
+					<p class="SidebarBody">For a nice overview of OpenType features and why they are worthwhile, read “Caring about OpenType Features” by<a id="_idIndexMarker2124"></a> Tim Brown at <a id="_idIndexMarker2125"></a><a id="_idIndexMarker2126"></a>Adobe Typekit (<a href="http://practice.typekit.com/lesson/caring-about-opentype-features/"><span class="URL-Email--Sidebar-">practice.typekit.com/lesson/caring-about-opentype-features/</span></a>).</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-108" class="HeadA"><a id="_idTextAnchor151"></a>Changing Text Color</h1>
+			<p class="body">You got a glimpse<a id="_idIndexMarker2127"></a> <a id="_idIndexMarker2128"></a><a id="_idIndexMarker2129"></a><a id="_idIndexMarker2130"></a>of how to change text color in <a href="lwd5_chapter11.xhtml#_idTextAnchor134"><span class="Xref">Chapter </span><span class="Xref">11</span><span class="Xref">, Introducing Cascading Style Sheets</span></a>, and to be honest, there’s not a lot more to say about it here. You change the color of text with the <span class="Literal-fc">color</span> property.</p>
+			<p class="RefNameCode-Left">color</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">color value (name or numeric)</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	depends on the browser and user’s preferences</p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">Using the <span class="Literal-fc">color</span> property is very straightforward. The value of the <span class="Literal-fc">color</span> property can be a predefined color name (see the <span class="Xref">“Color Names”</span> sidebar) or a numeric value describing a specific <a id="_idIndexMarker2131"></a>RGB color. Here are a few examples, all of which make the <span class="Literal-fc">h1</span> elements in a document gray:</p>
+			<pre class="CodeFirst">h1 { <code class="CodeColor">color: gray;</code> }<br/>h1 { <code class="CodeColor">color: #666666; </code>}<br/>h1 { <code class="CodeColor">color: #666;</code> }<br/>h1 { <code class="CodeColor">color: rgb(102,102,102);</code> }</pre>
+			<div>
+				<div id="_idContainer668" class="sidebar">
+					<h5 class="SidebarSeries">AT A GLANCE</h5>
+					<h5 class="SidebarTitle">Color Names</h5>
+					<p class="SidebarBody">CSS2.1 defines 17<a id="_idIndexMarker2132"></a> standard color names:</p>
+					<table id="table003-2" class="table_invisible">
+						<colgroup>
+							<col/>
+							<col/>
+							<col/>
+						</colgroup>
+						<tbody>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">black</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">white</p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">purple</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">lime</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">navy</p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">aqua</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">silver</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">maroon</p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">fuchsia</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">olive</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">blue</p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">orange</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">gray</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">red</p>
+								</td>
+								<td class="table_invisible">
+									<p class="SidebarBody">green</p>
+								</td>
+							</tr>
+							<tr class="table_invisible">
+								<td class="table_invisible">
+									<p class="SidebarBody">yellow</p>
+								</td>
+								<td class="table_invisible invisible">
+									<p class="SidebarBody">teal</p>
+								</td>
+								<td class="table_invisible"></td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="SidebarBody">The updated CSS Color Module Level 3 allows names from a larger set of 140 color names to be specified in style sheets. You can see samples of each in <span class="Xref-Figure">Figure 13-2</span> and at <a href="http://www.learningwebdesign.com/colornames.html"><span class="URL-Email--Sidebar-">learningwebdesign.com/colornames.html</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">Don’t worry about the numeric values for now; I just wanted you to see what they look like. RGB color is discussed in detail in <a href="lwd5_chapter13.xhtml#_idTextAnchor169"><span class="Xref">Chapter </span><span class="Xref">13</span><span class="Xref">, Colors and Backgrounds</span></a> so in this chapter, we’ll just stick with color names for demonstration purposes. </p>
+			<p class="body">Color is <a id="_idIndexMarker2133"></a><a id="_idIndexMarker2134"></a>inherited, so you can change the color of all the text in a document by applying the <span class="Literal-fc">color</span> property to the <span class="Literal-fc">body</span> element, as shown here:</p>
+			<pre class="CodeFirst">body { <code class="CodeColor">color: fuchsia;</code> } </pre>
+			<p class="body">OK, so you probably wouldn’t want all your text to be fuchsia, but you get the idea. </p>
+			<p class="body">For the sake of accuracy, I want to point out that the <span class="Literal-fc">color</span> property is not strictly a text-related property. In fact, according to the CSS specification, it is used to change the <span class="FirstTerm">foreground</span> (as opposed to the background) color of an element. The <a id="_idIndexMarker2135"></a>foreground of an element consists of both the text it contains as well as its border. So, when you apply a color to an element (including image elements), know that color will be used for the border as well, unless there is a specific <a id="_idIndexMarker2136"></a><span class="Literal-fc">border-color</span> property that overrides it. We’ll talk more about borders and border color in <a href="lwd5_chapter14.xhtml#_idTextAnchor191"><span class="Xref">Chapter </span><span class="Xref">14</span><span class="Xref">, Thinking Inside the Box</span></a>Before we add color to the online menu, I want to take a little side trip and introduce you to a few more types of selectors that will give us more flexibility in targeting elements in the document for styling. </p>
+			<h1 id="_idParaDest-109" class="HeadA"><a id="_idTextAnchor152"></a>A Few More Selector Types</h1>
+			<p class="body">So far, we’ve been <a id="_idIndexMarker2137"></a>using element names as selectors. In the last chapter, you saw how to group selectors together in a comma-separated list so you can apply properties to several elements at once. Here are examples of the selectors you already <a id="_idIndexMarker2138"></a><a id="_idIndexMarker2139"></a><a id="_idIndexMarker2140"></a><a id="_idIndexMarker2141"></a>know:</p>
+			<pre class="CodeFirst">Element selector	p { color: navy; }</pre>
+			<pre class="CodeFirst">Grouped selectors	p, ul, td, th { color: navy; }</pre>
+			<p class="body">The disadvantage of selecting elements this way, of course, is that the property (in this case, navy blue text) is applied to every paragraph and other listed elements in the document. Sometimes you want to apply a rule to a particular paragraph or paragraphs. In this section, we’ll look at three selector types that allow us to do just that: descendant selectors, ID selectors, and class selectors.</p>
+			<h2 class="HeadB"><a id="_idTextAnchor153"></a>Descendant Selectors</h2>
+			<p class="body">A <span class="FirstTerm">descendant selector</span> <a id="_idIndexMarker2142"></a><a id="_idIndexMarker2143"></a>targets elements that are contained within (and therefore are descendants of) another element. It is an example of <a id="_idIndexMarker2144"></a><a id="_idIndexMarker2145"></a>a <span class="FirstTerm">contextual selector</span> because it selects the element based on its context or relation to another element. The sidebar <span class="Xref">“Other Contextual Selectors”</span> lists some more.</p>
+			<p class="body">Descendant selectors are indicated in a list separated by a character space. This example targets emphasized text (<span class="Literal-fc">em</span>) elements, but <em class="Emphasis">only</em> when they appear in list items (<span class="Literal-fc">li</span>). Emphasized text in paragraphs and other elements would be unaffected (<span class="Xref-Figure">Figure 12-10</span>).</p>
+			<pre class="CodeFirst"><code class="CodeColor">li em</code> { color: olive; }</pre>
+			<div>
+				<figure id="_idContainer670" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1210_descendant.png" alt="" width="1321" height="771"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-10.</span> Only <span class="Literal-Sidebar">em</span> elements within <span class="Literal-Sidebar">li</span> elements are selected. The other <span class="Literal-Sidebar">em</span> elements are unaffected.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Here’s another example that shows how contextual selectors can be grouped in a comma-separated list, just as we saw earlier. This rule targets <span class="Literal-fc">em</span> elements, but only when they appear in <span class="Literal-fc">h1</span>, <span class="Literal-fc">h2</span>, and <span class="Literal-fc">h3</span> headings: </p>
+			<pre class="CodeFirst"><code class="CodeColor">h1 em, h2 em, h3 em</code> { color: red; }</pre>
+			<p class="body">It is also possible to nest descendant selectors several layers deep. This example targets <span class="Literal-fc">em</span> elements that appear in anchors (<span class="Literal-fc">a</span>) in ordered lists (<span class="Literal-fc">ol</span>):</p>
+			<pre class="CodeFirst"><code class="CodeColor">ol a em</code> { font-variant: small-caps; }</pre>
+			<div>
+				<div id="_idContainer671" class="sidebar">
+					<h5 class="SidebarTitle">Other Contextual Selectors</h5>
+					<p class="SidebarBody">Descendant selectors are one of four types of <a id="_idIndexMarker2146"></a><a id="_idIndexMarker2147"></a>contextual selectors (called <span class="FirstTerm--Sidebar-">combinators</span> in the Selectors specifications Level 3 and Level 4). The other three are <span class="FirstTerm--Sidebar-">child selectors</span>, <span class="FirstTerm--Sidebar-">next-sibling selectors</span>, and <span class="FirstTerm--Sidebar-">subsequent-sibling selectors</span>.</p>
+					<h5 class="sbHead"><a id="_idTextAnchor154"></a>Child selector</h5>
+					<p class="SidebarBody">A <span class="FirstTerm--Sidebar-">child selector</span> is<a id="_idIndexMarker2148"></a><a id="_idIndexMarker2149"></a> similar to a descendant selector, but it targets only the direct children of a given element. There may be no other hierarchical levels in between. They are indicated with the greater-than symbol (<span class="Literal-Sidebar">&gt;</span>). The following rule affects emphasized text, but only when it is directly contained in a <span class="Literal-Sidebar">p</span> element. An <span class="Literal-Sidebar">em</span> element inside a link (<span class="Literal-Sidebar">a</span>) within the paragraph would not be affected.</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">p &gt; em</code> {font-weight: bold;}</pre>
+					<h5 class="sbHead">Next-sibling selector</h5>
+					<p class="SidebarBody">A <span class="FirstTerm--Sidebar-">next-sibling selector </span><span class="FirstTerm--Sidebar-"><a id="_idIndexMarker2150"></a></span>targets an element that comes directly after another element with the same parent. It is indicated with a plus (<span class="Literal-Sidebar">+</span>) sign. This rule gives special treatment to paragraphs that follow an <span class="Literal-Sidebar">h1</span>. Other paragraphs are unaffected.</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">h1 + p</code> {font-style: italic;}</pre>
+					<h5 class="sbHead">Subsequent-sibling selectors</h5>
+					<p class="SidebarBody">A <span class="FirstTerm--Sidebar-">subsequent-sibling selector </span>selects an <a id="_idIndexMarker2151"></a>element that shares a parent with the specified element and occurs after it in the source order. They do not need to follow one another directly. This type of selector is new in CSS3 and is not supported by Internet Explorer 8 and earlier. The following rule selects any <span class="Literal-Sidebar">h2</span> that both shares a parent element (such as a <span class="Literal-Sidebar">section</span> or <span class="Literal-Sidebar">article</span>) with an <span class="Literal-Sidebar">h1</span> and appears after it in the document. </p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">h1 ~ h2</code> {font-weight: normal;}</pre>
+				</div>
+			</div>
+			<h2 class="HeadB"><a id="_idTextAnchor155"></a>ID Selectors</h2>
+			<p class="body">Back in <a id="_idIndexMarker2152"></a><a id="_idIndexMarker2153"></a><a href="lwd5_chapter05.xhtml#_idTextAnchor059"><span class="Xref">Chapter </span><span class="Xref">5</span><span class="Xref">, Marking Up Text</span></a>, we learned about the <span class="Literal-fc">id</span> <a id="_idIndexMarker2154"></a>attribute, which gives an element a unique identifying name<a id="_idIndexMarker2155"></a> (its <span class="FirstTerm">id reference</span>). The <span class="Literal-fc">id</span> attribute can be used with any element, and it is commonly used to give meaning to the generic <span class="Literal-fc">div</span> and <span class="Literal-fc">span</span> elements. ID selectors allow you to target elements by their <span class="Literal-fc">id</span> values. The symbol that identifies ID selectors is the octothorpe (<span class="Literal-fc">#</span>), also known as a hash or pound symbol. </p>
+			<div>
+				<div id="_idContainer672" class="callout">
+					<p class="callout">The # symbol <a id="_idIndexMarker2156"></a><a id="_idIndexMarker2157"></a>identifies an ID selector.</p>
+				</div>
+			</div>
+			<p class="body">Here is an example of a list item with an <span class="Literal-fc">id</span> reference:</p>
+			<pre class="CodeFirst">&lt;li <code class="CodeColor">id="sleestak"</code>&gt;Sleestak T-shirt&lt;/li&gt;</pre>
+			<p class="body">Now you can write a style rule just for that list item using an ID selector, like so (notice the <span class="Literal-fc">#</span> preceding the <span class="Literal-fc">id</span> reference):</p>
+			<pre class="CodeFirst"><code class="CodeColor">li#sleestak</code> { color: olive; }</pre>
+			<p class="body">Because <span class="Literal-fc">id</span> values must be unique in the document, it is acceptable to omit the element name. The following rule is equivalent to the last one:</p>
+			<pre class="CodeFirst"><code class="CodeColor">#sleestak</code> { color: olive; }</pre>
+			<p class="body">You can also use an ID selector as part of a contextual selector. In this example, a style is applied only to <span class="Literal-fc">a</span> elements that appear within the element identified as “resources.” In this way, you can treat links in the element named “resources” differently than all the other links on the page without any additional markup. </p>
+			<pre class="CodeFirst"><code class="CodeColor">#resources a</code> { text-decoration: none; }</pre>
+			<p class="body">You should be beginning to see the power of selectors and how they can be used strategically along with well-planned semantic markup.</p>
+			<h2 class="HeadB"><a id="_idTextAnchor156"></a>Class Selectors</h2>
+			<p class="body">One last <a id="_idIndexMarker2158"></a><a id="_idIndexMarker2159"></a>selector type, and then we can get back to text style properties. The other element identifier you learned about in <a href="lwd5_chapter05.xhtml#_idTextAnchor059"><span class="Xref">Chapter </span><span class="Xref">5</span></a> is the <span class="Literal-fc">class</span> identifier, used to classify elements into a conceptual group. Unlike the <span class="Literal-fc">id</span> attribute, multiple elements may share a <span class="Literal-fc">class</span> name. Not only that, but an element may belong to more than one class. </p>
+			<p class="body">You can target elements belonging to the same class with—you guessed it—a <span class="FirstTerm">class selector</span>. Class names are indicated with a period (<span class="Literal-fc">.</span>) at the beginning of the selector. For example, to select all paragraphs with <span class="Literal-fc">class="special"</span>, use this selector (the period indicates the following word is a class selector):</p>
+			<pre class="CodeFirst"><code class="CodeColor">p.special</code> { color: orange; }</pre>
+			<p class="body">To apply a property to <em class="Emphasis">all</em> elements of the same class, omit the element name in the selector (be sure to leave the period; it’s the character that indicates a class). This example targets all paragraphs and any other element that has been marked up with <span class="Literal-fc">class="special"</span>:</p>
+			<pre class="CodeFirst"><code class="CodeColor">.special</code> { color: orange; }</pre>
+			<div>
+				<div id="_idContainer673" class="sidebar">
+					<h5 class="SidebarTitle"><a id="_idTextAnchor157"></a>The Universal Selector</h5>
+					<p class="SidebarBody">The universal <a id="_idIndexMarker2160"></a><a id="_idIndexMarker2161"></a><a id="_idIndexMarker2162"></a><a id="_idIndexMarker2163"></a>element selector (<span class="Literal-Sidebar">*</span>) matches any element , like a wildcard in programming languages. The style rule</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">*</code> { border: 1px solid gray; }</pre>
+					<p class="SidebarBody">puts a 1-pixel gray border around every element in the document. It is also useful as a contextual selector, as shown in this example that selects all elements in an “intro” section:</p>
+					<pre class="SidebarCodeFirst"><code class="CodeColor">#intro *</code> { color: gray; }</pre>
+					<p class="SidebarBody">Be aware that every element will be selected with the universal selector, including some that you might not be expecting to style. For example, some styles might mess up your form controls, so if your page contains form inputs, the safest bet is to avoid the universal selector. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Specificity 101</h2>
+			<p class="body">In <a href="lwd5_chapter11.xhtml#_idTextAnchor134"><span class="Xref">Chapter </span><span class="Xref">11</span></a>, <a id="_idIndexMarker2164"></a>I introduced you to the <a id="_idIndexMarker2165"></a>term <span class="FirstTerm">specificity</span>, which refers to the fact that more specific selectors have more weight when it comes to handling style rule conflicts. Now that you know a few more selectors, it is a good time to revisit this very important concept.</p>
+			<p class="body">This list of selector types from most to least specific should serve you well in most scenarios:</p>
+			<ul>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Inline </strong><strong class="Emphasis_Bold"><a id="_idIndexMarker2166"></a></strong><strong class="Emphasis_Bold">styles</strong> with the <span class="Literal-fc">style</span> attribute are more specific than (and will override…)</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">ID selectors</strong>, which<span class="ListStartItem"> </span>are more specific than (and will override…)</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Class selectors</strong>, which are more specific than (and will override…)</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Individual</strong><strong class="Emphasis_Bold"><a id="_idIndexMarker2167"></a><a id="_idIndexMarker2168"></a></strong><strong class="Emphasis_Bold"> element selectors</strong></li>
+			</ul>
+			<p class="body">The full story is a little more complicated, but here it is in a nutshell. To calculate specificity, start by drawing three boxes:</p>
+			<pre class="CodeFirst">[  ]   [  ]   [  ]</pre>
+			<p class="body">Now count up the number of IDs in the selector, and put that number in the first box. Next count up the number of classes and pseudo-classes in the selector, and put that number in the second box. Third, count up the element names, and put that number in the third box.</p>
+			<p class="body">Specificity is compared box by box. The first box that is not a tie determines which selector wins. Here is a simple example of two conflicting rules for the <span class="Literal-fc">h1</span> element:</p>
+			<pre class="CodeFirst"><code class="CodeColor">h1</code> { color: red;}            [0] [0] [1]  <br/><code class="CodeColor">h1.special</code> { color: lime; }   [0] [1] [1]</pre>
+			<p class="body">The second one has a class selector and the first one doesn’t; therefore, the second one is more specific and has more weight.</p>
+			<p class="body">How about something more complicated? </p>
+			<pre class="CodeFirst">article#main aside.sidebar:hover &gt; h1:first-of-type  [1] [3] [3] <br/>.x.x.x.x.x.x.x.x  a:link      [0] [8] [1]</pre>
+			<p class="body">The second selector targets a link in an element with a string of class names (represented by “.x”). But the first selector has an ID (<span class="Literal-fc">#main</span>) and is therefore more specific. </p>
+			<p class="body">You may need to do this full specificity calculation, but in most cases you’ll have a feel for which selector is more specific by following previously listed general guidelines.</p>
+			<p class="body">You can use specificity strategically to keep your style sheets simple and your markup minimal. For example, it is possible to set a style for an element (<span class="Literal-fc">p</span>, in this example), and then override when necessary by using more specific selectors.</p>
+			<pre class="CodeFirst"><code class="CodeColor">p</code> { line-height: 1.2em; }            [0] [0] [1]<br/><code class="CodeColor">blockquote p</code> { line-height: 1em; }    [0] [0] [2]<br/><code class="CodeColor">p.intro</code> { line-height: 2em; }         [0] [1] [1]</pre>
+			<p class="body">In these examples, <span class="Literal-fc">p</span> elements that appear within a <span class="Literal-fc">blockquote</span> have a smaller line height than ordinary paragraphs. However, all paragraphs with a <span class="Literal-fc">class</span> of “intro” will have a 2em line height, even if it appears within a <span class="Literal-fc">blockquote</span>, because class selectors are more specific.</p>
+			<p class="body">Understanding the concepts of <a id="_idIndexMarker2169"></a>inheritance and specificity is critical to mastering CSS, and there is a lot more to be said about specificity. The <span class="Xref">“More About Specificity”</span> sidebar provides useful references.</p>
+			<div>
+				<div id="_idContainer674" class="sidebar">
+					<h5 class="SidebarTitle">More About Specificity</h5>
+					<p class="SidebarBody">The <a id="_idIndexMarker2170"></a>specificity overview in this chapter is enough to get you started, but when you get more experienced and your style sheets become more complicated, you may find that you need a more thorough understanding of the inner workings.</p>
+					<p class="SidebarBody">For the technical explanation of exactly how specificity is calculated, see the CSS Selectors Module Level 4 specification at <a href="http://www.w3.org/TR/selectors4/#specificity"><span class="URL-Email--Sidebar-">www.w3.org/TR/selectors4/#specificity</span></a>.</p>
+					<p class="SidebarBody">Eric <a id="_idIndexMarker2171"></a>Meyer provides a thorough, yet more digestible, description of this system in his book<span class="Citation--Sidebar-"> Selectors, Specificity, and the Cascade: Applying CSS to Documents </span>(O’Reilly). This material is also included in his book co-authored with <a id="_idIndexMarker2172"></a>Estelle Weyl, <span class="Citation--Sidebar-">CSS: The Definitive Guide, 4e </span>(O’Reilly).</p>
+					<p class="SidebarBody">If you are looking for help online, I recommend the <span class="Citation--Sidebar-">Smashing Magazine</span> article “CSS Specificity: Things You Should Know” (<a href="http://coding.smashingmagazine.com/2007/07/27/css-specificity-things-you-should-know/"><span class="URL-Email--Sidebar-">coding.smashingmagazine.com/2007/07/27/css-specificity-things-you-should-know/</span></a>) by <a id="_idIndexMarker2173"></a><a id="_idIndexMarker2174"></a>Vitaly Friedman. It’s over a decade old, but the concepts hold true.</p>
+					<p class="SidebarBody">As for most web design topics, the MDN Web Docs site provides a comprehensive explanation: <a href="http://developer.mozilla.org/en-US/docs/Web/CSS/Specificity"><span class="URL-Email--Sidebar-">developer.mozilla.org/en-US/docs/Web/CSS/Specificity</span></a>.</p>
+				</div>
+			</div>
+			<p class="body">Now, back to the menu. Fortunately, our Black Goose Bistro page has been marked up thoroughly and semantically, so we have a lot of options for selecting specific elements. Give these new selectors a try in <span class="Xref-Figure">Exercise 12-5</span>.</p>
+			<div>
+				<div id="_idContainer677" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 12-5.</span> Using selectors</h6>
+					<p class="SidebarBody">This time, we’ll add a few more style rules using descendant, ID, and class selectors combined with the <span class="Literal-Sidebar">font</span> and <span class="Literal-Sidebar">color</span> properties we’ve learned about so far.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">I’d like to add some attention-getting color to the “new item!” elements next to certain menu item names. They are marked up as <span class="Literal-Sidebar">strong</span>, so we can apply the <span class="Literal-Sidebar">color</span> property to the <span class="Literal-Sidebar">strong</span> element. Add this rule to the embedded style sheet, save the file, and reload it in the browser:<pre class="SidebarCodeFirst">strong {<br/>   font-style: italic;<br/> <code class="CodeColor">  color: tomato;</code> <br/>}</pre><p class="SidebarListItem_cont">That worked, but now the <span class="Literal-Sidebar">strong</span> element “Very spicy” in the description is “tomato” red too, and that’s not what I want. The solution is to use a contextual selector that targets only the <span class="Literal-Sidebar">strong</span> elements that appear in <span class="Literal-Sidebar">dt</span> elements. Remove the <span class="Literal-Sidebar">color</span> declaration you just wrote from the <span class="Literal-Sidebar">strong</span> rule, and create a new rule that targets only the <span class="Literal-Sidebar">strong</span> elements within definition list terms: </p><pre class="SidebarCodeFirst"><code class="CodeColor">dt strong</code> { color: tomato; }</pre></li>
+						<li class="SidebarListNumber">Look at the document source, and you will see that the content has been divided into three unique <span class="Literal-Sidebar">div</span>s: <span class="Literal-Sidebar">info</span>, <span class="Literal-Sidebar">appetizers</span>, and <span class="Literal-Sidebar">entrees</span>. We can use these to our advantage when it comes to styling. For now, let’s do something simple and apply a teal color to the text in the <span class="Literal-Sidebar">div</span> with the ID “info”. Because color inherits, we need to apply the property only to the <span class="Literal-Sidebar">div</span> and it will be passed down to the <span class="Literal-Sidebar">h1</span> and <span class="Literal-Sidebar">p</span>:<pre class="SidebarCodeFirst"><code class="CodeColor">#info</code> { color: teal; }</pre></li>
+						<li class="SidebarListNumber">Now let’s get a little fancier and make the paragraph inside the “info” section italic in a way that doesn’t affect the other paragraphs on the page. Again, a contextual selector is the answer. This rule selects only paragraphs contained within the <span class="Literal-Sidebar">info</span> section of the document:<pre class="SidebarCodeFirst"><code class="CodeColor">#info p </code>{ font-style: italic; }</pre></li>
+						<li class="SidebarListNumber">I want to give special treatment to all of the prices on the menu. Fortunately, they have all been marked up with <span class="Literal-Sidebar">span</span> elements:<pre class="SidebarCodeFirst">&lt;span class="price"&gt;$3.95&lt;/span&gt;</pre><p class="SidebarListItem_cont">So now all we have to do is write a rule using a class selector to change the font to Georgia or some serif font, make the prices italic, and gray them back:</p><pre class="SidebarCodeFirst"><code class="CodeColor">.price</code> {<br/>  font-family: Georgia, serif;<br/>  font-style: italic;<br/>  color: gray;<br/>}</pre></li>
+						<li class="SidebarListNumber">Similarly, in the “info” <span class="Literal-Sidebar">div</span>, I can change the appearance of the spans that have been marked up as belonging to the “label” class to make the labels stand out:<pre class="SidebarCodeFirst"><code class="CodeColor">.label</code> {<br/>  font-weight: bold;<br/>  font-variant: small-caps;<br/>  font-style: normal;<br/>}</pre></li>
+						<li class="SidebarListNumber">Finally, there is a warning at the bottom of the page that I want to make small and red. It has been given the class “warning,” so I can use that as a selector to target just that paragraph for styling. While I’m at it, I’m going to apply the same style to the <span class="Literal-Sidebar">sup</span> element (the footnote asterisk) earlier on the page so they match. Note that I’ve used a grouped selector, so I don’t need to write a separate rule.<pre class="SidebarCodeFirst"><code class="CodeColor">p.warning, sup</code> {<br/>  font-size: small;<br/>  color: red;<br/>}</pre></li>
+					</ol>
+					<p class="SidebarBody"><span class="Xref-Figure">Figure 12-11</span> shows the results of all these changes. We now have some touches of color and special typography treatments.</p>
+					<div>
+						<figure id="_idContainer676" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1211_ex5.png" alt="" width="987" height="809"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-11</span><span class="FigureLabel">.</span> The current state of the bistro menu.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h1 id="_idParaDest-110" class="HeadA"><a id="_idTextAnchor158"></a>Text Line Adjustments</h1>
+			<p class="body">The next <a id="_idIndexMarker2175"></a>batch of text properties has to do with the treatment of whole lines of text rather than the shapes of characters. They allow web authors to format web text with indents, extra space between lines (leading), and different horizontal alignments, similar to print.</p>
+			<h2 class="HeadB">Line Height </h2>
+			<p class="RefNameCode-Left">line-height</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">number</span> | <span class="prop-replace">length measurement</span> | <span class="prop-replace">percentage</span> | <span class="prop-code">normal</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The <span class="Literal-fc">line-height</span> <a id="_idIndexMarker2176"></a>property defines the minimum distance from baseline to baseline in text. We saw it earlier as part of the shorthand <span class="Literal-fc">font</span> property.  The <span class="Literal-fc">line-height</span> property is said to specify a “minimum” distance because if you put a tall image or large characters on a line, the height of that line expands to accommodate it.</p>
+			<p class="body">A <span class="FirstTerm">baseline</span> is the <a id="_idIndexMarker2177"></a>imaginary line upon which the bottoms of characters sit. Setting a line height in CSS is similar to adding leading in traditional typesetting; however, instead of space being added between lines, the extra space is split above and below the text. The result is that <span class="Literal-fc">line-height</span> defines the height of a <span class="FirstTerm">line-box</span><span class="FirstTerm"><a id="_idIndexMarker2178"></a></span> in which the text line is vertically centered (<span class="Xref-Figure">Figure 12-12</span>).</p>
+			<div>
+				<figure id="_idContainer679" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1212_lineheight.png" alt="" width="1342" height="483"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-12.</span> Text lines are centered vertically in the line height.</figcaption>
+				</figure>
+			</div>
+			<p class="body">These examples show three different ways to make the line height twice the height of the font size:</p>
+			<pre class="CodeFirst">p { <code class="CodeColor">line-height: 2;</code> } <br/>p { <code class="CodeColor">line-height: 2em;</code> } <br/>p { <code class="CodeColor">line-height: 200%;</code> }</pre>
+			<p class="body">When a number is specified alone, as shown in the first example, it acts as a scaling factor that is multiplied by the current font size to calculate the <span class="Literal-fc">line-height</span> value. </p>
+			<p class="body">Line heights can also be specified in one of the CSS length units. Ems and percentage values are based on the current font size of the element. In the three examples, if the font size is 16 pixels, the calculated line height would be 32 pixels (see <span class="Xref-Figure">Figure 12-12</span>).</p>
+			<p class="body">The difference between using a <a id="_idIndexMarker2179"></a>scaling factor (number value) and a <a id="_idIndexMarker2180"></a><a id="_idIndexMarker2181"></a>relative value (<a id="_idIndexMarker2182"></a><a id="_idIndexMarker2183"></a>em or %) is how they inherit. If you set the line height with a scaling factor for a whole document on the <span class="Literal-fc">body</span> element, its descendants inherit the multiplier. If the scaling factor is set to 2 for the <span class="Literal-fc">body</span>, a 24-pixel headline will end up with a line height of 48 pixels.</p>
+			<p class="body">If you set the <span class="Literal-fc">line-height</span> on the <span class="Literal-fc">body</span> element using ems or percentages, its descendants inherit the <em class="Emphasis">calculated</em> size based on the body’s font size. For example, if the line height is set to <span class="Literal-fc">1em</span> for the <span class="Literal-fc">body</span> element (calculated at 16 pixels), a 24-pixel headline inherits the calculated 16-pixel line height, not the 1em value. This is likely not the effect you are after, making number values a more intuitive option.</p>
+			<h2 class="HeadB">Indents </h2>
+			<p class="body">The <span class="Literal-fc">text-indent</span> property <a id="_idIndexMarker2184"></a>indents the first line of text by a specified amount. </p>
+			<p class="RefNameCode-Left">text-indent</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length measurement</span> | <span class="prop-replace">percentage</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">0</span></p>
+			<p class="property"><span class="prop-label">Applies to: </span>	block containers</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<div>
+				<div id="_idContainer680" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">The <span class="Literal-Sidebar">text-indent</span> property indents just the first line of a block. If you want space along the whole side of the text block, use one of the <span class="Literal-Sidebar">margin</span> or <span class="Literal-Sidebar">padding</span> properties to add it.</p>
+					<p class="note">Designers may be accustomed to specifying indents and margins in tandem, but to be consistent with how CSS handles them, margins will be discussed as part of the box model in <span class="Xref--Sidebar-">Chapter 14</span>.</p>
+				</div>
+			</div>
+			<p class="body">You can specify a length measurement or a <a id="_idIndexMarker2185"></a>percentage value for <span class="Literal-fc">text-indent</span>. The results are shown in <span class="Xref-Figure">Figure 12-13</span>. Here are a few examples: </p>
+			<pre class="CodeFirst">p#1 { <code class="CodeColor">text-indent: 2em;</code> } <br/>p#2 { <code class="CodeColor">text-indent: 25%;</code> } <br/>p#3 { <code class="CodeColor">text-indent: -35px;</code> }</pre>
+			<p class="body">Percentage values are calculated based on the width of the <em class="Emphasis">parent</em> element, and they are passed down to their descendant elements as percentage values (not calculated values). So if a <span class="Literal-fc">div</span> has a <span class="Literal-fc">text-indent</span> of 10%, so will all of its descendants.</p>
+			<p class="body">In the third example, notice that a negative value was specified, and that’s just fine. It will cause the first line of text to hang out to the left of the left text edge (also called<a id="_idIndexMarker2186"></a> a <span class="FirstTerm">hanging indent</span>).</p>
+			<div>
+				<figure id="_idContainer682" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1213_indent.png" alt="" width="1338" height="663"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-13.</span><span class="FigureLabel"> </span>Examples of the <span class="Literal-Sidebar">text-indent</span> property.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer683" class="sidebar">
+					<h5 class="SidebarSeries">DESIGN TIP</h5>
+					<p class="SidebarBody">If you use a hanging indent, be sure that there is also a left padding applied to the element. Otherwise, the hanging text may disappear off the left edge of the browser window.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">Horizontal Text Alignment </h2>
+			<p class="body">You can align text <a id="_idIndexMarker2187"></a><a id="_idIndexMarker2188"></a><a id="_idIndexMarker2189"></a>for web pages just as you would in a word processing or desktop publishing program with the <span class="Literal-fc">text-align</span> property.</p>
+			<p class="RefNameCode-Left">text-align</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">left</span> | <span class="prop-code">right</span> | <span class="prop-code">center</span> | <span class="prop-code">justify</span> | <span class="prop-code">start</span> | <span class="prop-code">end</span> </p>
+			<p class="property"><span class="prop-label">Default:</span>  	<span class="prop-code">start</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	block containers</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">This is a fairly straightforward property to use. The results of the various CSS2.1 <span class="Literal-fc">text-align</span> values are shown in <span class="Xref-Figure">Figure 12-14</span>.</p>
+			<div>
+				<figure id="_idContainer685" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1214_align.png" alt="" width="1342" height="818"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-14.</span><span class="FigureLabel"> </span>Examples of CSS2.1 <span class="Literal-Sidebar">text-align</span> values. </figcaption>
+				</figure>
+			</div>
+			<table id="table004-2" class="table_invisible _idGenTablePara-1">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<tbody>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">text-align: left</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="body">Aligns text on the left margin</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">text-align: right</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="body">Aligns text on the right margin</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">text-align: center</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="body">Centers the text in the text block</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">text-align: justify</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="body">Aligns text on both right and left margins</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="body">The CSS Text Module Level 3 added the <span class="Literal-fc">start</span> and <span class="Literal-fc">end</span> values, which specify the side of the line box the text should align to (see <span class="Xref">Note</span>). This accommodates languages that are written vertically and right to left. For left-to-right reading languages, <span class="Literal-fc">start</span> corresponds to <span class="Literal-fc">left</span>. </p>
+			<div>
+				<div id="_idContainer686" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">The CSS Text Module Level 3 also defines two new properties related to text alignment—<span class="Literal-Sidebar">text-align-last</span> (for aligning the last line of text) and <span class="Literal-Sidebar">text-justify</span> (for more fine-tuned control over how space is inserted in justified text).</p>
+				</div>
+			</div>
+			<p class="body">Good news—only five more text properties to go! Then we’ll be ready to try a few of them in the Black Goose Bistro menu.</p>
+			<p class="Figure_Holder"><a id="_idTextAnchor159"></a></p>
+			<h1 id="_idParaDest-111" class="HeadA"><a id="_idTextAnchor160"></a>Underlines and Other “Decorations”</h1>
+			<p class="body">If you want to put a <a id="_idIndexMarker2190"></a><a id="_idIndexMarker2191"></a><a id="_idIndexMarker2192"></a>line under, over, or through text, or if you’d like to turn off the underline <a id="_idIndexMarker2193"></a>under links, then <span class="Literal-fc">text-decoration</span> is the property for you.</p>
+			<p class="refNameCode">text-decoration</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none </span>| <span class="prop-code">underline</span> | <span class="prop-code">overline</span> | <span class="prop-code">line-through</span> | <span class="prop-code">blink</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements </p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	no, but since lines are drawn across child elements, they may look like they are “decorated” too</p>
+			<p class="body">The values for <span class="Literal-fc">text-decoration</span> are intuitive and are shown in <span class="Xref-Figure">Figure 12-15</span>.</p>
+			<table id="table005-1" class="table_invisible _idGenTablePara-1">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<tbody>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">underline</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Underlines the element</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">overline</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Draws a line over the text</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">line-through</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Draws a line through the text</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<figure id="_idContainer688" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1215_decoration.png" alt="" width="1337" height="679"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-15.</span><span class="FigureLabel"> </span>Examples of <span class="Literal-Sidebar">text-decoration</span> values.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The most popular use of the <span class="Literal-fc">text-decoration</span> property is turning off the underlines that appear automatically under linked text, as shown here:</p>
+			<pre class="CodeFirst">a { <code class="CodeColor">text-decoration: none;</code> }</pre>
+			<p class="body">There are a few cautionary words to be said regarding <span class="Literal-fc">text-decoration</span>: </p>
+			<ul>
+				<li class="ListBullet">First, if you get rid of the underlines under links, be sure there are other cues to compensate, such as color and weight. </li>
+				<li class="ListBullet">On the flip side, because underlines are such a strong visual cue to “click here,” underlining text that is <em class="Emphasis">not</em> a link may be misleading and frustrating. Consider whether italics may be an acceptable alternative.</li>
+				<li class="ListBullet">Finally, there is no reason to make your text blink. Browser makers agree and therefore have dropped support for blinking text. IE never supported it in the first place.<div id="_idContainer689" class="note"><h5 class="noteHeader">NOTE</h5><p class="note">The CSS3 Text Module includes enhancements to <span class="Literal-Sidebar">text-decoration</span>, including <span class="Literal-Sidebar">text-decoration-line</span>, <span class="Literal-Sidebar">text-decoration-color</span>, <span class="Literal-Sidebar">text-decoration-style</span>, <span class="Literal-Sidebar">text-decoration-skip</span>, and <span class="Literal-Sidebar">text-underline-position</span>. No version of IE or Edge supports these properties, but with the exception of <span class="Literal-Sidebar">-skip</span>, they are supported in other modern browsers. See <a href="http://CanIUse.com"><span class="URL-Email--Sidebar-">CanIUse.com</span></a> for specifics.</p></div></li>
+			</ul>
+			<h1 id="_idParaDest-112" class="HeadA"><a id="_idTextAnchor161"></a>Changing Capitalization</h1>
+			<p class="body">I remember when <a id="_idIndexMarker2194"></a><a id="_idIndexMarker2195"></a>desktop publishing programs introduced a feature that let me change the capitalization of text on the fly (OK, I’m dating myself here). This made it easy to see how my headlines might look in all capital letters without needing to retype them. CSS includes this feature as well with the <span class="Literal-fc">text-transform</span> <a id="_idIndexMarker2196"></a>property.</p>
+			<p class="refNameCode">text-transform</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none</span> | <span class="prop-code">capitalize</span> | <span class="prop-code">lowercase</span> | <span class="prop-code">uppercase</span> | <span class="prop-code">full-width</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements </p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">When you apply the <span class="Literal-fc">text-transform</span> property to a text element, it changes its capitalization when it renders without changing the way it is typed in the source. The values are as follows (<span class="Xref-Figure">Figure 12-16</span>):</p>
+			<table id="table006-1" class="table_invisible">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<tbody>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">none</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">As it is typed in the source</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">capitalize</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Capitalizes the first letter of each word</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">lowercase</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Makes all letters lowercase</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">uppercase</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Makes all letters uppercase</p>
+						</td>
+					</tr>
+					<tr class="table_invisible">
+						<td class="table_invisible">
+							<pre class="cellCode"><span class="Literal-fc">full-width</span></pre>
+						</td>
+						<td class="table_invisible">
+							<p class="TableBody">Chooses a “full-width” version of a character if one exists (not well supported)</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<figure id="_idContainer691" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1216_transform.png" alt="" width="1321" height="431"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-16.</span><span class="FigureLabel"> </span>The <span class="Literal-Sidebar">text-transform</span> property changes the capitalization of characters when they are displayed, regardless of how they are typed in the source.</figcaption>
+				</figure>
+			</div>
+			<h1 id="_idParaDest-113" class="HeadA"><a id="_idTextAnchor162"></a>Spaced Out</h1>
+			<p class="body">The next two<a id="_idIndexMarker2197"></a><a id="_idIndexMarker2198"></a><a id="_idIndexMarker2199"></a><a id="_idIndexMarker2200"></a> text properties are used to insert space between letters (<span class="Literal-fc">letter-spacing</span>) or words (<span class="Literal-fc">word-spacing</span>) when the text is displayed.</p>
+			<p class="RefNameCode-Left">letter-spacing</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length measurement</span> | <span class="prop-code">normal</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span> </p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements </p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="RefNameCode-Left">word-spacing</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">length measurement</span> | <span class="prop-code">normal</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">normal</span> </p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements </p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The <span class="Literal-fc">letter-spacing</span> and <span class="Literal-fc">word-spacing</span> properties do what they say: add space between the letters of the text or words in a line, respectively. </p>
+			<p class="body"><span class="Xref-Figure">Figure 12-17</span> shows the results of letter spacing and word spacing applied to the simple paragraph shown here:</p>
+			<pre class="CodeFirst">&lt;p&gt;Black Goose Bistro Summer Menu&lt;/p&gt;</pre>
+			<div>
+				<figure id="_idContainer693" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1217_spacing.png" alt="" width="1321" height="388"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-17.</span> <span class="Literal-Sidebar">letter-spacing</span> (top) and <span class="Literal-Sidebar">word-spacing</span> (bottom).</figcaption>
+				</figure>
+			</div>
+			<p class="body">It is worth noting that when you specify em measurements, the calculated size is passed down to child elements, even if they have a smaller font size than the parent.</p>
+			<p class="body">In <span class="Xref-Figure">Exercise 12-6</span> later in this chapter, we’ll make one last trip back to the Black Goose Bistro menu and use the <span class="Literal-fc">letter-spacing</span> property on <span class="Literal-fc">h2</span>s. </p>
+			<h1 id="_idParaDest-114" class="HeadA"><a id="_idTextAnchor163"></a>Text Shadow</h1>
+			<p class="body">The <span class="Literal-fc">text-shadow</span> property <a id="_idIndexMarker2201"></a><a id="_idIndexMarker2202"></a>adds a “shadow” below your text that makes it seem to hover or pop out above the page. Since flat-color design has become the fashion, drop shadows have gone out of style, but they can still be a useful visual tool, particularly when your text is in front of a patterned or photographic background. </p>
+			<p class="body">Text shadows are drawn behind the text but in front of the background and border if there is one. Text shadows are supported by all current browsers. Internet Explorer versions 9 and earlier lack support.  </p>
+			<p class="RefNameCode-Left">text-shadow </p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-replace">‘horizontal offset’</span> <span class="prop-replace">‘vertical offset’</span> <span class="prop-replace">‘blur radius’</span> <span class="prop-replace">‘color’</span> | <span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	all elements </p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The value for the <span class="Literal-fc">text-shadow</span> property is two or three measurements (a horizontal offset, vertical offset, and an optional blur radius) and a color. <span class="Xref-Figure">Figure 12-18</span> shows an example of a minimal text shadow declaration. </p>
+			<pre class="CodeFirst">h1 {<br/>  color: darkgreen;<br/>    <code class="CodeColor">text-shadow: .2em .2em silver;</code><br/>} <br/>h1 {<br/>  color: darkgreen;<br/><code class="CodeColor">  text-shadow: -.3em -.3em silver; </code><br/>}</pre>
+			<div>
+				<figure id="_idContainer695" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1218_shadow.png" alt="" width="604" height="407"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-18.</span> A minimal text drop shadow.</figcaption>
+				</figure>
+			</div>
+			<p class="body">The first value is a horizontal offset that positions the shadow to the right of the text (a negative value pulls the shadow to the <em class="Emphasis">left</em> of the text). The second measurement is a vertical offset that moves the shadow down by the specified amount (a<a id="_idIndexMarker2203"></a> negative value moves the shadow <em class="Emphasis">up</em>). The declaration ends with the color specification (silver). If the color is omitted, the text color will be used.</p>
+			<p class="body">That should give you an idea for how the first two measurements work, but that sharp shadow doesn’t look very…well…shadowy. What it needs is a blur radius measurement. Zero (0) is no blur, and the blur gets softer with higher values (<span class="Xref-Figure">Figure 12-19</span>). Usually, you just have to fiddle with values until you get the effect you want.</p>
+			<div>
+				<figure id="_idContainer697" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1219_blur.png" alt="" width="600" height="410"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-19.</span> Adding a blur radius to a text drop shadow.</figcaption>
+				</figure>
+			</div>
+			<p class="body">It is possible to apply several text shadows to the same element. If you vary the position and blur amounts, you can give the text the appearance of multiple light sources. </p>
+			<p class="body">So go have some fun with text shadows, but be careful not to overdo it. Not only can drop shadows make text difficult to read, but adding a shadow to everything can slow down page performance (scrolling, mouse interactions, etc.) as well, which is particularly problematic for mobile browsers without much processing power. In addition, be careful that your text doesn’t require a shadow in order to be visible. Folks with non-supporting browsers won’t see a thing. My advice is to use drop shadows as an enhancement in a way that isn’t critical if they don’t appear.</p>
+			<div>
+				<div id="_idContainer698" class="sidebar">
+					<h5 class="SidebarTitle">The Other Text Properties</h5>
+					<p class="SidebarBody">In the<a id="_idIndexMarker2204"></a> <a id="_idIndexMarker2205"></a>interest of saving space and keeping this an introductory-level book, I haven’t given these properties the full treatment, but they are worth mentioning. Each is labeled with the CSS Level in which it was introduced. </p>
+					<p class="SidebarBody">For even more text-related properties in development, see the following CSS Text Modules:</p>
+					<ul>
+						<li class="SidebarListBullet">CSS Text Module Level 3:<a href="http://www.w3.org/TR/css-text-3"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-text-3</span></a></li>
+						<li class="SidebarListBullet">CSS Text Decoration Module Level 3: <a href="http://www.w3.org/TR/css-text-decor-3"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-text-decor-3</span></a></li>
+						<li class="SidebarListBullet">CSS Text Module Level 4 (still in Working Draft and considered experimental): <a href="http://www.w3.org/TR/css-text-4"><span class="URL-Email--Sidebar-">www.w3.org/TR/css-text-4</span></a><p class="Sidebar-ListItem"><span class="Literal-Sidebar">white-space </span>(<em class="Emphasis">CSS2</em>) <a id="_idIndexMarker2206"></a>Specifies how whitespace in the element source is handled in layout. For example, the <span class="Literal-Sidebar">pre</span> value preserves the character spaces and returns found in the source, similar to the <span class="Literal-Sidebar">pre</span> HTML element.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">vertical-align </span>(<em class="Emphasis">CSS2</em>) <a id="_idIndexMarker2207"></a>Specifies the vertical alignment of an inline element’s baseline relative to the baseline of the surrounding text. It is also used to set the vertical alignment of content in a table cell (<span class="Literal-Sidebar">td</span>).</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">word-break </span>and<span class="Literal-Sidebar"> line-break </span>(<em class="Emphasis">CSS3</em>)<a id="_idIndexMarker2208"></a><a id="_idIndexMarker2209"></a> Affects how text wrapping is calculated within words and lines, respectively, in various languages, including East Asian (Chinese, Japanese, Korean).</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">text-justify </span>(<em class="Emphasis">CSS3</em>) <a id="_idIndexMarker2210"></a>Specifies the manner in which space is to be added within and between words when the <span class="Literal-Sidebar">text-align</span> property on the element is set to <span class="Literal-Sidebar">justify</span>.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">text-align-last </span>(<em class="Emphasis">CSS3</em>)<a id="_idIndexMarker2211"></a> Specifies how the last line of a block of text should be justified when the <span class="Literal-Sidebar">text-align</span> <a id="_idIndexMarker2212"></a>property on the element is set to <span class="Literal-Sidebar">justify</span>. For example, it is often preferable to have the last line left-justified for justified text to avoid awkwardly spaced words.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">tab-size </span>(<em class="Emphasis">CSS3</em>) <a id="_idIndexMarker2213"></a>Specifies the length of the tab character (Unicode point 0009) in number of characters or a length measurement.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">hyphens </span>(<em class="Emphasis">CSS3</em>)<a id="_idIndexMarker2214"></a> Provides control over how text is hyphenated. <span class="Literal-Sidebar">manual</span> means hyphenation happens only when there is a hyphen added in the source. <span class="Literal-Sidebar">auto</span> gives control to the browser, and <span class="Literal-Sidebar">none</span> turns off hyphenation completely.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">overflow-wrap </span>(<em class="Emphasis">CSS3</em>) <a id="_idIndexMarker2215"></a>Specifies whether browsers are allowed to break words to fit text in its bounding box.</p><p class="Sidebar-ListItem"><span class="Literal-Sidebar">hanging-punctuation </span>(<em class="Emphasis">CSS3</em>) <a id="_idIndexMarker2216"></a>Determines whether the punctuation mark may be outside the element’s line box at the start or end of a line. Hanging punctuation can make margins appear more tidy.</p></li>
+					</ul>
+					<p class="SidebarBody">The following properties are in the spec, but should not be used. Use the <span class="Literal-Sidebar">dir</span> HTML attribute instead.</p>
+					<p class="Sidebar-ListItem"><span class="Literal-Sidebar">direction </span>(<em class="Emphasis">CSS3</em>) <a id="_idIndexMarker2217"></a>Specifies the direction in which the text reads: left to right (<span class="Literal-Sidebar">ltr</span>) or right to left (<span class="Literal-Sidebar">rtl</span>).</p>
+					<p class="Sidebar-ListItem"><span class="Literal-Sidebar">unicode-bidi </span>(<em class="Emphasis">CSS2</em>) <a id="_idIndexMarker2218"></a>Related to bidirectional features of Unicode. The Recommendation states that it allows the author to generate levels of embedding within the Unicode embedding algorithm. If you have no idea what this means, don’t worry. Neither do I. </p>
+				</div>
+			</div>
+			<p class="body"><span class="Xref-Figure">Exercise 12-6</span> gives you a chance to try out more text formatting properties to put a little polish on the Black Goose Bistro menu. </p>
+			<div>
+				<div id="_idContainer701" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 12-6.</span> Finishing touches</h6>
+					<p class="SidebarBody">Let’s add a few finishing touches to the online menu, <span class="Filename--Sidebar-">menu.html</span>. It might be useful to save the file and look at it in the browser after each step to see the effect of your edits and to make sure you’re on track. The finished style sheet is provided in the <span class="Filename--Sidebar-">materials</span> folder for this chapter.</p>
+					<ol>
+						<li class="SidebarListNumber" value="1">First, I have a few global changes to the <span class="Literal-Sidebar">body</span> element in mind. I’ve had a change of heart about the <span class="Literal-Sidebar">font-family</span>. I think that a serif font such as Georgia would be more sophisticated and appropriate for a bistro menu. Let’s also use the <span class="Literal-Sidebar">line-height</span> property to open up the text lines and make them easier to read. Make these updates to the <span class="Literal-Sidebar">body</span> style rule, as shown:<pre class="SidebarCodeFirst">body {<br/>   font-family: <code class="CodeColor">Georgia, serif;</code><br/>  font-size: 100%;<br/>  <code class="CodeColor">line-height: 1.75em;</code><br/>}</pre></li>
+						<li class="SidebarListNumber">I also want to redesign the “info” section of the document. Remove the teal color setting by deleting that whole rule. Once that is done, make the <span class="Literal-Sidebar">h1</span> olive green and the paragraph in the header gray. Add color declarations to the existing rules:<pre class="SidebarCodeFirst"><span class="strikethrough">#info { color: teal; } </span><span class="Code-Comment"> /* delete */</span><br/> h1 {<br/>   font: bold 1.5em "Marko One", Georgia, serif;<br/>  <code class="CodeColor">color: olive;</code>}<br/>#info p {<br/>   font-style: italic;<br/>  <code class="CodeColor">color: gray;</code>}</pre></li>
+						<li class="SidebarListNumber">Next, to imitate a fancy restaurant menu, I’m going to center a few key elements on the page with the <span class="Literal-Sidebar">text-align</span> property. Write a rule with a grouped selector to center the headings and the “info” section: <pre class="SidebarCodeFirst"><code class="CodeColor">h1, h2, #info {<br/>   text-align: center;}</code></pre></li>
+						<li class="SidebarListNumber">I want to make the “Appetizer” and “Main Courses” <span class="Literal-Sidebar">h2</span> headings more eye-catching. Instead of large, bold type, I’m going to use all uppercase letters, extra letter spacing, and color to call attention to the headings. Here’s the new rule for <span class="Literal-Sidebar">h2</span> elements that includes all of these changes:<pre class="SidebarCodeFirst">h2 {<br/>   font-size: 1em;<br/><code class="CodeColor">  text-transform: uppercase;<br/>  letter-spacing: .5em;<br/>  color: olive;</code>}</pre></li>
+						<li class="SidebarListNumber">We’re really close now; just a few more tweaks to those paragraphs right after the <span class="Literal-Sidebar">h2</span> headings. Let’s center those too and make them italic: <pre class="SidebarCodeFirst"><code class="CodeColor">h2 + p</code> <code class="CodeColor">{<br/>   text-align: center;<br/>  font-style: italic;}</code></pre><p class="SidebarListItem_cont">Note that I’ve used a next-sibling selector (<span class="Literal-Sidebar">h2 + p</span>) to select any paragraph that follows an <span class="Literal-Sidebar">h2</span>. </p></li>
+						<li class="SidebarListNumber">Next, add a softer color to the menu item names (in <span class="Literal-Sidebar">dt</span> elements). I’ve chosen “sienna,” one of the names from the CSS3 color module. Note that the <span class="Literal-Sidebar">strong</span> elements in those <span class="Literal-Sidebar">dt</span> elements stay “tomato” red because the color applied to the <span class="Literal-Sidebar">strong</span> elements overrides the color inherited by their parents.<pre class="SidebarCodeFirst">dt {<br/>   font-weight: bold;<br/>   <code class="CodeColor">color: sienna;</code>}</pre></li>
+						<li class="SidebarListNumber">Finally, for kicks, add a drop shadow under the <span class="Literal-Sidebar">h1</span> heading. You can play around with the values a little to see how it works. I find it to look a little clunky against a white background, but when you have a patterned background image, sometimes a drop shadow provides the little punch you need to make the text stand out. Notice how small the shadow values are—a little goes a long way!<pre class="SidebarCodeFirst">h1 {<br/>   font: bold 1.5em "Marko One", Georgia, serif;<br/>   color: olive;<br/>  <code class="CodeColor">text-shadow: .05em .05em .1em lightslategray;</code>}</pre></li>
+					</ol>
+					<p class="SidebarBody">And we’re done! <span class="Xref-Figure">Figure 12-20</span> shows how the menu looks now—an improvement over the unstyled version, and we used only text and color properties to do it. Notice that we didn’t touch a single character of the document markup in the process. That’s the beauty of keeping style separate from structure. </p>
+					<div>
+						<figure id="_idContainer700" class="figWCaption">
+							<p class="Figure_Holder"><img src="image/lwd5_1220_after.png" alt="" width="988" height="951"/></p>
+							<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-20.</span> The formatted Black Goose Bistro menu.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+			<h1 id="_idParaDest-115" class="HeadA"><a id="_idTextAnchor164"></a>Changing List Bullets and Numbers</h1>
+			<p class="body">Before we close <a id="_idIndexMarker2219"></a><a id="_idIndexMarker2220"></a><a id="_idIndexMarker2221"></a><a id="_idIndexMarker2222"></a>out this chapter on text properties, I want to show you a few tweaks you can make to bulleted and numbered lists. As you know, browsers automatically insert bullets before unordered list items, and numbers before items in ordered lists (the <span class="FirstTerm">list markers</span>). For the most part, the rendering of these markers is determined by the browser. However, CSS provides a few properties that allow authors to choose the type and position of the marker, or turn them off entirely. </p>
+			<h2 class="HeadB">Choosing a Marker</h2>
+			<p class="body">Apply the <span class="Literal-fc">list-style-type</span> <a id="_idIndexMarker2223"></a>property to the <span class="Literal-fc">ul</span>, <span class="Literal-fc">ol</span>, or <span class="Literal-fc">li</span> element select the type of marker that appears before each list item (see <span class="Xref">Note</span>). </p>
+			<p class="RefNameCode-Left">list-style-type</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">none</span> | <span class="prop-code">disc</span> | <span class="prop-code">circle</span> | <span class="prop-code">square</span> | <span class="prop-code">decimal</span> | <span class="prop-code">decimal-leading-zero</span> | <span class="prop-code">lower-alpha</span> | <span class="prop-code">upper-alpha</span> | <span class="prop-code">lower-latin</span> | <span class="prop-code">upper-latin</span> | <span class="prop-code">lower-roman</span> | <span class="prop-code">upper-roman</span> | <span class="prop-code">lower-greek</span>  </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">disc</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	<span class="Literal-Sidebar">ul</span>, <span class="Literal-Sidebar">ol</span>, and <span class="Literal-Sidebar">li</span> (or elements whose display value is <span class="Literal-Sidebar">list-item</span>)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">More often than not, developers use the <span class="Literal-fc">list-style-type</span> property with its value set to <span class="Literal-fc">none</span> to remove bullets or numbers altogether. This is handy when you’re using list markup as the foundation for a horizontal navigation menu or the entries in a web form. You can keep the semantics but get rid of the pesky markers.  </p>
+			<div>
+				<div id="_idContainer702" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">This section documents the CSS2.1 <span class="Literal-Sidebar">list-style</span> types that are well supported on current browsers. CSS3 extends the marker functionality shown here, including a method for authors to define their own list styles, allowing for numbering in many languages (<a href="http://www.w3.org/TR/css3-lists/"><span class="URL-Email--Sidebar-">www.w3.org/TR/css3-lists/</span></a>).</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">disc</span>, <span class="Literal-fc">circle</span>, and <span class="Literal-fc">square</span> values generate bullet shapes just as browsers have been doing since the beginning of the web itself (<span class="Xref-Figure">Figure 12-21</span>). Unfortunately, there is no way to change the appearance (size, color, etc.) of generated bullets, so you’re stuck with the browser’s default rendering. </p>
+			<div>
+				<figure id="_idContainer704" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1221_liststyle.png" alt="" width="1321" height="367"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-21.</span><span class="FigureLabel"> </span>The <span class="Literal-Sidebar">list-style-type</span> values <span class="Literal-Sidebar">disc</span>, <span class="Literal-Sidebar">circle</span>, and <span class="Literal-Sidebar">square</span>.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer705" class="note">
+					<h5 class="noteHeader">NOTE</h5>
+					<p class="note">CSS3 introduces <a id="_idIndexMarker2224"></a>the <span class="Literal-Sidebar">@counter-style</span> rule, which provides <span class="Literal-Sidebar">box</span>, <span class="Literal-Sidebar">check</span>, <span class="Literal-Sidebar">diamond</span>, and <span class="Literal-Sidebar">dash</span> marker types as well as the ability to specify your own markers when a predefined one won’t do. See the spec for details.</p>
+				</div>
+			</div>
+			<p class="body">The remaining keywords (<span class="Xref-Figure">Table 12-1</span>) specify various numbering and lettering styles for use with ordered lists. </p>
+			<table id="table007-1" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Head" colspan="2">
+							<p class="TableTitle"><span class="Table-Label">Table 12-1.</span> Lettering and numbering system (CSS2.1) </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Keyword</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">System</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">decimal</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">1, 2, 3, 4, 5…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">decimal-leading-zero</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">01, 02, 03, 04, 05…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">lower-alpha</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">a, b, c, d, e…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">upper-alpha</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A, B, C, D, E…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">lower-latin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">a, b, c, d, e… (same as lower-alpha)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">upper-latin</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A, B, C, D, E… (same as upper-alpha)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">lower-roman</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">i, ii, iii, iv, v…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">upper-roman</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">I, II, III, IV, V…</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">lower-greek</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody"><span lang="ar-SA" xml:lang="ar-SA">α</span>, <span lang="ar-SA" xml:lang="ar-SA">β</span>, <span lang="ar-SA" xml:lang="ar-SA">γ</span>, <span lang="ar-SA" xml:lang="ar-SA">δ</span>, <span lang="ar-SA" xml:lang="ar-SA">ε</span>…</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<div id="_idContainer706" class="sidebar">
+					<h5 class="SidebarTitle">List Item Display Role</h5>
+					<p class="SidebarBody">You may have noticed that the list style properties apply to “elements whose display value is <span class="Literal-Sidebar">list-item</span>.” The CSS2.1 specification allows any element to perform like a list item by setting its <span class="Literal-Sidebar">display</span> property to <span class="Literal-Sidebar">list-item</span>. This property can be applied to any HTML element or elements in other XML languages. For example, you could automatically bullet or number a series of paragraphs by setting the<a id="_idIndexMarker2225"></a> <span class="Literal-Sidebar">display</span> property of paragraph (<span class="Literal-Sidebar">p</span>) elements to <span class="Literal-Sidebar">list-item</span>, as shown in this example:</p>
+					<pre class="SidebarCodeFirst">p.lettered {<br/> <code class="CodeColor">display: list-item;</code> <br/> list-style-type: upper-alpha;<br/>}</pre>
+				</div>
+			</div>
+			<h5 class="SidebarTitle">Marker Position</h5>
+			<p class="body">By default, the marker hangs outside the content area for the list item, displaying as a hanging indent. The <span class="Literal-fc">list-style-position</span> property allows you to pull the bullet <a id="_idIndexMarker2226"></a>inside the content area so it runs into the list content.</p>
+			<p class="RefNameCode-Left">list-style-position</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">inside</span> | <span class="prop-code">outside</span> | <span class="prop-code">hanging</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">outside</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	<span class="Literal-Sidebar">ul</span>, <span class="Literal-Sidebar">ol</span>, and <span class="Literal-Sidebar">li</span> (or elements whose display value is <span class="Literal-Sidebar">list-item</span>)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">I’ve applied a light green background color to the list items in <span class="Xref-Figure">Figure 12-22</span> to reveal the boundaries of their content area boxes. </p>
+			<div>
+				<figure id="_idContainer708" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1222_listposition.png" alt="" width="1062" height="988"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-22.</span><span class="FigureLabel"> </span>The <span class="Literal-Sidebar">list-style-position</span> property.</figcaption>
+				</figure>
+			</div>
+			<p class="body">You can see that when the position is set to <span class="Literal-fc">outside</span> (top), the markers fall outside the content area.When it is set to <span class="Literal-fc">inside</span> (bottom), the markers are tucked into the content area. </p>
+			<pre class="CodeFirst">li {background-color: #F99;}<br/>ul#outside {<code class="CodeColor">list-style-position: outside;</code>}<br/>ul#inside {<code class="CodeColor">list-style-position: inside;</code>}</pre>
+			<p class="body">CSS3 adds the <span class="Literal-fc">hanging</span> value for <span class="Literal-fc">list-style-position</span>. it is similar to <span class="Literal-fc">inside</span>, but the markers appear outside and abutting the left edge of the shaded area.</p>
+			<h2 class="HeadB">Make Your Own Bullets</h2>
+			<p class="body">You can also <a id="_idIndexMarker2227"></a>use your own image as a bullet by using the <span class="Literal-fc">list-style-image</span> property.</p>
+			<p class="RefNameCode-Left">list-style-image</p>
+			<p class="property"><span class="prop-label">Values:</span> 	<span class="prop-code">url(</span><span class="Replaceable">location</span><span class="prop-code">)</span> | <span class="prop-code">none</span> </p>
+			<p class="property"><span class="prop-label">Default:</span> 	<span class="prop-code">none</span></p>
+			<p class="property"><span class="prop-label">Applies to:</span> 	<span class="Literal-Sidebar">ul</span>, <span class="Literal-Sidebar">ol</span>, and <span class="Literal-Sidebar">li</span> (or elements whose display value is <span class="Literal-Sidebar">list-item</span>)</p>
+			<p class="property"><span class="prop-label">Inherits:</span> 	yes</p>
+			<p class="body">The value of the <span class="Literal-fc">list-style-image</span> property is the URL of the image you want to use as a marker. The <span class="Literal-fc">list-style-type</span> is set to <span class="Literal-fc">disc</span> as a backup in case the image does not display or the property isn’t supported by the browser or other user agent. The result is shown in <span class="Xref-Figure">Figure 12-23</span>.</p>
+			<pre class="CodeFirst">ul {<br/>  list-style-type: disc;<br/>  <code class="CodeColor">list-style-image: url(/images/rainbow.gif);</code><br/>  list-style-position: outside;<br/>}</pre>
+			<div>
+				<figure id="_idContainer710" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1223_bulletimage.png" alt="" width="319" height="146"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-23.</span> Using an image as a marker.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer711" class="sidebar">
+					<h5 class="SidebarSeries">CSS TIP</h5>
+					<p class="SidebarBody">There is a <span class="Literal-Sidebar">list-style</span> shorthand<a id="_idIndexMarker2228"></a> property that combines the values for type, position, and image, in any order. For example:</p>
+					<pre class="SidebarCodeFirst">ul {<br/> <code class="CodeColor">  list-style:</code> url(/images/rainbow.gif) disc outside; <br/>}</pre>
+					<p class="SidebarBody">As for all shorthands, be careful not to override list style properties set earlier in the style sheet.</p>
+				</div>
+			</div>
+			<p class="body"><em class="Emphasis">Wow!</em> Whatta chapter! We started by looking at properties for specifying fonts and character shapes followed by a review of all the text-level settings and effects. You also got to use descendent, ID, and class selectors and looked a little more closely at specificity. We topped it off with the properties available for adding some style to lists. I don’t expect you to have all of these properties committed to memory (although many will become second nature the more you practice), but let’s see how you do on the following questions. </p>
+			<h1 id="_idParaDest-116" class="HeadA"><a id="_idTextAnchor165"></a>Test Yourself</h1>
+			<p class="body">It’s time to see how well you understand the font properties and selectors introduced in this chapter. Check <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a> for the answers if you get stuck.</p>
+			<ol>
+				<li class="ListNumber" value="1">Match the style property with the text samples in <span class="Xref-Figure">Figure 12-24</span>.<ol><li class="ListNumber_Indent">_______   <code class="Code">{font-size: 1.5em;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{text-transform: capitalize;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{text-align: right;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{font-family: Verdana; font-size: 1.5em;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{letter-spacing: 3px;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{font: bold italic 1.2em Verdana;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{text-transform: uppercase;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{text-indent: 2em;}</code></li><li class="ListNumber_Indent">_______   <code class="Code">{font-variant: small-caps;}</code></li></ol></li>
+			</ol>
+			<div>
+				<figure id="_idContainer713" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1224_propertytest-ebook.png" alt="" width="1338" height="920"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-24.</span><span class="FigureLabel"> </span>Styled text samples.</figcaption>
+				</figure>
+			</div>
+			<ol>
+				<li class="ListNumber" value="2">Here is a chance to get a little practice writing selectors. Using the diagram shown in <span class="Xref-Figure">Figure 12-25</span>, write style rules that make each of the elements described here red (<span class="Literal-fc">color: red;</span>). Write the selector as efficiently as possible. <ol><li class="ListNumber_Indent" value="1">All text elements in the document </li><li class="ListNumber_Indent"><span class="Literal-fc">h2</span> elements</li><li class="ListNumber_Indent"><span class="Literal-fc">h1</span> elements and all paragraphs</li><li class="ListNumber_Indent">Elements belonging to the class <span class="Literal-fc">special</span></li><li class="ListNumber_Indent">All elements in the “intro” section</li><li class="ListNumber_Indent"><span class="Literal-fc">strong</span> elements in the “main” section</li><li class="ListNumber_Indent">Extra credit: just the paragraph that appears after an <span class="Literal-fc">h2</span> </li></ol></li>
+			</ol>
+			<div>
+				<figure id="_idContainer715" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1225_structure.png" alt="" width="1338" height="645"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 12-25.</span><span class="FigureLabel"> </span>Sample document structure.</figcaption>
+				</figure>
+			</div>
+			<h1 id="_idParaDest-117" class="HeadA"><a id="_idTextAnchor166"></a>CSS Review: Font and Text Properties</h1>
+			<p class="body">In this chapter, we covered the properties used to format text elements. Here is a summary <a id="_idIndexMarker2229"></a><a id="_idIndexMarker2230"></a>in<a id="_idIndexMarker2231"></a> alphabetical order.</p>
+			<table id="table008-1" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Property</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">color</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2232"></a>the foreground color (text and borders) for an element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">direction</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates whether the text reads left-to-right or right-to-left</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">A <a id="_idIndexMarker2233"></a>shorthand property that combines font properties</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-family</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2234"></a>a typeface or generic font family</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-feature-settings</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Allows<a id="_idIndexMarker2235"></a> access to lesser-used OpenType features</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-kerning</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Controls <a id="_idIndexMarker2236"></a>how browsers implement kerning data (space between characters)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-language-override</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Controls<a id="_idIndexMarker2237"></a> use of language-specific glyphs</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-size</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies<a id="_idIndexMarker2238"></a> the size of the font</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-size-adjust</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Matches <a id="_idIndexMarker2239"></a>the x-height of a fallback font with the specified font</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-stretch</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects <a id="_idIndexMarker2240"></a>a condensed, normal, or extended font</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-style</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2241"></a>italic or oblique fonts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-synthesis</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Controls <a id="_idIndexMarker2242"></a>whether a browser may simulate bold or italic fonts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies a <a id="_idIndexMarker2243"></a><a id="_idIndexMarker2244"></a>small-caps font</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-alternates</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects<a id="_idIndexMarker2245"></a> <a id="_idIndexMarker2246"></a>alternate versions of character glyphs</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-caps</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects<a id="_idIndexMarker2247"></a> small caps and similar alternates when available</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-east-asian</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects <a id="_idIndexMarker2248"></a><a id="_idIndexMarker2249"></a>alternate glyphs in Chinese, Japanese, and Korean</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-ligatures</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects<a id="_idIndexMarker2250"></a> ligatures for certain letter pairs when available</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-numeric</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects<a id="_idIndexMarker2251"></a> alternate number glyphs</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-variant-position</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects <a id="_idIndexMarker2252"></a>subscript or superscript character glyphs</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">font-weight</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2253"></a>the boldness of the font</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">hanging-punctuation</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates <a id="_idIndexMarker2254"></a>whether the punctuation may hang outside the content box</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">hyphens</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Controls <a id="_idIndexMarker2255"></a>how text is hyphenated</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">letter-spacing</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Inserts <a id="_idIndexMarker2256"></a>space between letters</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">line-break</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Describes <a id="_idIndexMarker2257"></a>rules for breaking lines</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">line-height</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates<a id="_idIndexMarker2258"></a> the distance between baselines of neighboring text lines</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">list-style-image</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies an<a id="_idIndexMarker2259"></a> image to be used as a list marker</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">list-style-position</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Puts a<a id="_idIndexMarker2260"></a> list marker inside or outside the content area</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">list-style-type</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Selects <a id="_idIndexMarker2261"></a>the marker type for list items</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">overflow-wrap</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2262"></a>whether the browser can break lines within words to prevent overflow</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">tab-size</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2263"></a>the length of a tab character </p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-align</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates<a id="_idIndexMarker2264"></a> the horizontal alignment of text</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-align-last</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2265"></a>how the last line in justified text is aligned</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-decoration</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2266"></a>underlines, overlines<a id="_idTextAnchor167"></a>, and lines through</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-indent</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2267"></a>the amount of indentation of the first line in a block</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-justify</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Denotes<a id="_idIndexMarker2268"></a> how space is distributed in justified text</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-shadow</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adds a <a id="_idIndexMarker2269"></a>drop shadow under the text</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">text-transform</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Changes <a id="_idIndexMarker2270"></a>the capitalization of text when it displays</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">unicode-bidi</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Works <a id="_idIndexMarker2271"></a>with Unicode bidirectional algorithms</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">vertical-align</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Adjusts <a id="_idIndexMarker2272"></a>the vertical position of inline elements relative to the baseline</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">white-space</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2273"></a>how whitespace in the source is displayed</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">word-break</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker2274"></a>whether to break lines within words</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">word-spacing</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Inserts<a id="_idIndexMarker2275"></a> space between words</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="cellCode">word-wrap</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody">Indicates <a id="_idIndexMarker2276"></a>whether the browser can break lines within words to prevent overflow (same as <span class="Literal-Sidebar">overflow-wrap</span>)</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

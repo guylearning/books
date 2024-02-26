@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer1417" class="ch22">
+			<p id="_idParaDest-201" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor279"></a>22. Using JavaScript</p>
+		</div>
+		<div id="_idContainer1418" class="ch22">
+			<h1 class="chapterLabel">22</h1>
+		</div>
+		<div id="_idContainer1419" class="ch22">
+			<h1 class="chapterTitle"><a id="_idTextAnchor280"></a><a id="_idTextAnchor281"></a>Using JavaScript</h1>
+			<p class="ChapterTitleSub">And the Document Object Model</p>
+		</div>
+		<div id="_idContainer1420" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In This Chapter</p>
+			<p class="chapterContents">Using the DOM to access and change elements, attributes, and contents</p>
+			<p class="chapterContents">Using polyfills to make browser versions work consistently</p>
+			<p class="chapterContents">Using JavaScript libraries</p>
+			<p class="chapterContents">A brief introduction to Ajax</p>
+		</div>
+		<div id="_idContainer1434" class="ch22">
+			<p class="body"><em class="Emphasis">by Mat Marquis</em></p>
+			<p class="body">Now that<a id="_idIndexMarker3992"></a> you have a sense for the language of JavaScript, let’s look at some of the ways we can put it to use in modern web design. First, we’ll explore DOM scripting, which allows us to manipulate the elements, attributes, and text on a page. I’ll introduce you to some ready-made JavaScript and DOM scripting resources, so you don’t have to go it alone. You’ll learn about <span class="FirstTerm">polyfills</span>, which <a id="_idIndexMarker3993"></a>provide older browsers with modern features and normalize functionality. I’ll also introduce you to JavaScript libraries that make developers’ lives easier with collections of polyfills and shortcuts for common tasks. </p>
+			<h1 id="_idParaDest-202" class="HeadA"><a id="_idTextAnchor282"></a>Meet the DOM</h1>
+			<p class="body">You’ve seen <a id="_idIndexMarker3994"></a>references to the <span class="FirstTerm">Document Object Model</span> (<span class="FirstTerm">DOM</span> for short) several times throughout this book, but now is the time to give it the attention it deserves. The DOM gives us a way to access and manipulate the contents of a document. We commonly use it for HTML, but the DOM can be used with any XML language as well. And although we’re focusing on its relationship with JavaScript, it’s worth noting that the DOM can be accessed by other languages too, such as PHP, Ruby, C++, and more. Although DOM Level 1 was released by the W3C in 1998, it was nearly five years later that<a id="_idIndexMarker3995"></a> DOM scripting began to gain steam.</p>
+			<div>
+				<div id="_idContainer1421" class="callout">
+					<p class="callout">The DOM gives us a way to access and manipulate the contents of a document.</p>
+				</div>
+			</div>
+			<p class="body">The DOM is a programming <a id="_idIndexMarker3996"></a><a id="_idIndexMarker3997"></a>interface (an API) for <a id="_idIndexMarker3998"></a><a id="_idIndexMarker3999"></a><a id="_idIndexMarker4000"></a>HTML and XML pages. It provides a structured map of the document, as well as a set of methods to interface with the elements contained therein. Effectively, it translates our markup into a format that JavaScript (and other languages) can understand. It sounds pretty dry, I know, but the basic gist is that the DOM serves as a map to all the elements on a page and lets us <em class="Emphasis">do</em> things with them. We can use it to find elements by their names or attributes, and then add, modify, or delete elements and their content.</p>
+			<p class="body">Without the DOM, JavaScript wouldn’t have any sense of a document’s contents—and by that, I mean the <em class="Emphasis">entirety</em> of the document’s contents. Everything from the page’s <span class="Literal-fc">doctype</span> to each individual letter in the text can be accessed via the DOM and manipulated with JavaScript.</p>
+			<h2 class="HeadB">The Node Tree</h2>
+			<p class="body">A simple way to think <a id="_idIndexMarker4001"></a><a id="_idIndexMarker4002"></a>of the DOM is in terms of the document tree as diagrammed in <span class="Xref-Figure">Figure 22-1</span>. You saw documents diagrammed in this way when you were learning about CSS selectors. </p>
+			<pre class="CodeFirst">&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;title&gt;Document title&lt;/title&gt;<br/>  &lt;meta charset="utf-8"&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;div&gt;<br/>    &lt;h1&gt;Heading&lt;/h1&gt;<br/>    &lt;p&gt;Paragraph text with a &lt;a href="foo.html"&gt;link&lt;/a&gt; here.&lt;/p&gt;<br/>  &lt;/div&gt;<br/>  &lt;div&gt;<br/>    &lt;p&gt;More text here.&lt;/p&gt;<br/>  &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;</pre>
+			<div>
+				<figure id="_idContainer1423" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2201_nodetree.png" alt="" width="1321" height="658"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 22-1.</span> A simple document. </figcaption>
+				</figure>
+			</div>
+			<p class="body">Each element within the page is referred to <a id="_idIndexMarker4003"></a>as a <span class="FirstTerm">node</span>. If you think of the DOM as a tree, each node is an individual branch that can contain further branches. But the DOM allows deeper access to the content than CSS because it treats the actual content as a node as well. <span class="Xref-Figure">Figure 22-2</span> shows the structure of the first <span class="Literal-fc">p</span> element. The <a id="_idIndexMarker4004"></a><a id="_idIndexMarker4005"></a><a id="_idIndexMarker4006"></a>element, its attributes, and its contents are all nodes in the DOM’s node tree.</p>
+			<div>
+				<figure id="_idContainer1425" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_2202_textnodes.png" alt="" width="1321" height="749"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 22-2.</span> The nodes within the first <span class="Literal-fc">p</span> element in our sample document.</figcaption>
+				</figure>
+			</div>
+			<div>
+				<div id="_idContainer1426" class="sidebar">
+					<h5 class="SidebarSeries">AT A GLANCE</h5>
+					<p class="SidebarBody">The DOM is a collection of nodes:</p>
+					<ul>
+						<li class="SidebarListBullet">Element nodes</li>
+						<li class="SidebarListBullet">Attribute nodes</li>
+						<li class="SidebarListBullet">Text nodes</li>
+					</ul>
+				</div>
+			</div>
+			<p class="body">The DOM also provides a standardized set of methods and functions through which JavaScript can interact with the elements on our page. Most <a id="_idIndexMarker4007"></a>DOM scripting involves reading from and writing to the document. </p>
+			<p class="body">There are several ways to use the DOM to find what you want in a document. Let’s go over some of the specific methods we can use for accessing objects defined by the DOM (we JS folks call<a id="_idIndexMarker4008"></a><a id="_idIndexMarker4009"></a> this “crawling the DOM” or “traversing the DOM”), as well as some of the methods for manipulating those elements.</p>
+			<h2 class="HeadB">Accessing DOM Nodes</h2>
+			<p class="body">The <span class="Literal-fc">document</span> <a id="_idIndexMarker4010"></a><a id="_idIndexMarker4011"></a>object in the DOM identifies the page itself, and more often than not will serve as the starting point for our DOM crawling. The <span class="Literal-fc">document</span> object comes with a number of standard properties and methods for accessing collections of elements. This is reminiscent of the <a id="_idIndexMarker4012"></a><span class="Literal-fc">length</span> property we learned about in <a href="lwd5_chapter21.xhtml#_idTextAnchor269"><span class="Xref">Chapter </span><span class="Xref">21</span><span class="Xref">, Introduction to JavaScript</span></a>. Just as <span class="Literal-fc">length</span> is a standard property of all arrays, the <span class="Literal-fc">document</span> object comes with a number of built-in properties containing information about the document. We then wind our way to the element we’re after by chaining those properties and methods together, separated by periods, to form a sort of route through the document. </p>
+			<p class="body">To give you a general idea of what I mean, the statement in this example says to look on the page (<span class="Literal-fc">document</span>), find the element that has the <span class="Literal-fc">id</span> value “beginner”, find the HTML content within that element (<span class="Literal-fc">innerHTML</span>), and save those contents to a variable (<span class="Literal-fc">foo</span>):</p>
+			<pre class="CodeFirst">var foo = document.getElementById("beginner").innerHTML;</pre>
+			<p class="body">Because the chains tend to get long, it is also common to see each property or method broken onto its own line to make it easier to read at a glance. Remember, whitespace in JavaScript is ignored, so this has no effect on how the statement is parsed.</p>
+			<pre class="CodeFirst">var foo = document<br/>   .getElementById("beginner")<br/>    .innerHTML;</pre>
+			<p class="body">There are several methods for accessing nodes in the document.</p>
+			<h3 class="HeadC">By element name </h3>
+			<p class="RefNameCode-Left">getElementsByTagName()</p>
+			<p class="body">We <a id="_idIndexMarker4013"></a>can access individual elements by the tags themselves, using <span class="Literal-fc">document.getElementsByTagName()</span>. This method retrieves any element or elements you specify as an argument. </p>
+			<p class="body">For example, <span class="Literal-fc">document.getElementsByTagName("p")</span> returns every paragraph on the page, wrapped in something called a <span class="FirstTerm">collection</span> or <span class="FirstTerm">nodeList</span>, in the order they appear in the document from top to bottom. nodeLists behave much like arrays. To access specific paragraphs in the nodeList, we reference them by their index, just like an array.</p>
+			<pre class="CodeFirst">var paragraphs = document.<code class="CodeColor">getElementsByTagName("p")</code>;</pre>
+			<div>
+				<div id="_idContainer1427" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">nodeLists are <a id="_idIndexMarker4014"></a><a id="_idIndexMarker4015"></a>living collections. If you manipulate the document in a nodeList loop—for example, looping through all paragraphs and appending new ones along the way—you can end up in an infinite loop. Good times!</p>
+				</div>
+			</div>
+			<p class="body">Based on this variable statement, <span class="Literal-fc">paragraphs[0]</span> is a reference to the first paragraph in the document, <span class="Literal-fc">paragraphs[1]</span> refers to the second, and so on. If we had to access each element in the nodeList separately, one at a time…well, it’s a good thing we learned about looping through arrays earlier. Loops work the exact same way with a nodeList.</p>
+			<pre class="CodeFirst">var paragraphs = document.getElementsByTagName("p");<br/>for( var i = 0; i &lt; paragraphs.length; i++ ) {<br/> <span class="Code-Comment">// do something </span><br/>}</pre>
+			<p class="body">Now we can access each paragraph on the page individually by referencing <span class="Literal-fc">paragraphs[i]</span> inside the loop, just as with an array, but with elements on the page instead of values.</p>
+			<h3 class="HeadC">By id attribute value</h3>
+			<p class="RefNameCode-Left">getElementById()</p>
+			<p class="body">This<a id="_idIndexMarker4016"></a> <a id="_idIndexMarker4017"></a>method returns a single element based on that element’s ID (the value of its <span class="Literal-fc">id</span> attribute), which we provide to the method as an argument. For example, to access this particular image</p>
+			<pre class="CodeFirst">&lt;img src="photo.jpg" alt="" <code class="CodeColor">id="lead-photo"</code>&gt; </pre>
+			<p class="body">we include the <span class="Literal-fc">id</span> value as an argument for the <span class="Literal-fc">getElementById()</span> method:</p>
+			<pre class="CodeFirst">var photo = document.<code class="CodeColor">getElementById("lead-photo")</code>;</pre>
+			<h3 class="HeadC">By class attribute value</h3>
+			<p class="RefNameCode-Left">getElementsByClassName()</p>
+			<div>
+				<div id="_idContainer1428" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note">This is a relatively new method for accessing DOM nodes. Although <span class="Literal-Sidebar">getElementsByClassName()</span> is available in the current versions of modern browsers, it will not work in IE8 or below.</p>
+				</div>
+			</div>
+			<p class="body">Just as it says <a id="_idIndexMarker4018"></a><a id="_idIndexMarker4019"></a>on the tin, this allows you to access nodes in the document based on the value of a <span class="Literal-fc">class</span> attribute. This statement assigns any element with a <span class="Literal-fc">class</span> value of “column-a” to the variable <span class="Literal-fc">firstColumn</span> so it can be accessed easily from within a script:</p>
+			<pre class="CodeFirst">var firstColumn = document.<code class="CodeColor">getElementsByClassName("column-a")</code>;</pre>
+			<p class="body">Like <span class="Literal-fc">getElementsByTagName()</span>, this returns a nodeList that we can reference by index or loop through one at a time.</p>
+			<h3 class="HeadC">By selector</h3>
+			<p class="RefNameCode-Left">querySelectorAll()</p>
+			<div>
+				<div id="_idContainer1429" class="note">
+					<h5 class="WarningHeader">Warning</h5>
+					<p class="note"><span class="Literal-Sidebar">querySelectorAll()</span> isn’t supported in IE7 or below.</p>
+				</div>
+			</div>
+			<p class="body"><span class="Literal-fc">querySelectorAll()</span> allows <a id="_idIndexMarker4020"></a><a id="_idIndexMarker4021"></a>you to access nodes of the DOM based on a CSS-style selector. The syntax of the arguments in the following examples should look familiar to you. It can be as simple as accessing the child elements of a specific element:</p>
+			<pre class="CodeFirst">var sidebarPara = document.querySelectorAll(<code class="CodeColor">".sidebar p"</code>);</pre>
+			<p class="body">or as complex as selecting an element based on an attribute:</p>
+			<pre class="CodeFirst">var textInput = document.querySelectorAll(<code class="CodeColor">"input[type='text']"</code>);</pre>
+			<p class="body"><span class="Literal-fc">querySelectorAll()</span> returns a nodeList, like <span class="Literal-fc">getElementsByTagName()</span> and <span class="Literal-fc">getElementsByClassName()</span>, even if the selector matches only a single element.</p>
+			<h3 class="HeadC">Accessing an attribute value</h3>
+			<p class="refNameCode">getAttribute()</p>
+			<p class="body">As I mentioned <a id="_idIndexMarker4022"></a>earlier, elements aren’t the only thing you can access with the DOM. To get the value of an attribute attached to an element node, we call <span class="Literal-fc">getAttribute()</span> with a single argument: the attribute name. Let’s assume we have an image, <span class="Filename">stratocaster.jpg</span>, marked up like this:</p>
+			<pre class="CodeFirst">&lt;img src="stratocaster.jpg" alt="electric guitar" id="lead-image"&gt; </pre>
+			<p class="body">In the following example, we access that specific image (<span class="Literal-fc">getElementbyId()</span>) and save a reference to it in a variable (“bigImage”). At that point, we could access any of the element’s attributes (<span class="Literal-fc">alt</span>, <span class="Literal-fc">src</span>, or <span class="Literal-fc">id</span>) by specifying it as an argument in the <span class="Literal-fc">getAttribute()</span> method. In the example, we get the value of the <span class="Literal-fc">src</span> attribute and use it as the content in an alert message. (I’m not sure <em class="Emphasis">why </em>we would ever do that, but it does demonstrate the method.)</p>
+			<pre class="CodeFirst">var bigImage = document.getElementById("lead-image"); <br/>alert( <code class="CodeColor">bigImage.getAttribute("src")</code> ); <span class="Code-Comment">// Alerts "stratocaster.jpg".</span></pre>
+			<h2 class="HeadB">Manipulating Nodes</h2>
+			<p class="body">Once we’ve <a id="_idIndexMarker4023"></a><a id="_idIndexMarker4024"></a>accessed a node by using one of the methods discussed previously, the DOM gives us several built-in methods for manipulating those elements, their attributes, and their contents. </p>
+			<p class="RefNameCode-Left">setAttribute()</p>
+			<p class="body">To continue with <a id="_idIndexMarker4025"></a>the previous example, we saw how we <em class="Emphasis">get</em> the attribute value, but what if we wanted to <em class="Emphasis">set</em> the value of that <span class="Literal-fc">src</span> attribute to a new pathname altogether?  Use <span class="Literal-fc">setAttribute()</span>! This method requires two arguments: the attribute to be changed and the new value for that attribute.</p>
+			<p class="body">In this example, we use a bit of JavaScript to swap out the image by changing the value of the <span class="Literal-fc">src</span> attribute:  </p>
+			<pre class="CodeFirst">var bigImage = document.getElementById("lead-image"); <br/><code class="CodeColor">bigImage.setAttribute("src", "lespaul.jpg");</code></pre>
+			<p class="body">Just think of all the things you could do with a document by changing the values of attributes. Here we swapped out an image, but we could use this same method to make a number of changes throughout our document:</p>
+			<ul>
+				<li class="ListBullet">Update the <span class="Literal-fc">checked</span> attributes of checkboxes and radio buttons based on user interaction elsewhere on the page.</li>
+				<li class="ListBullet">Find the <span class="Literal-fc">link</span> element for our <span class="Filename">.css</span> file and point the <span class="Literal-fc">href</span> value to a different style sheet, changing all the page’s styles.</li>
+				<li class="ListBullet">Update a <span class="Literal-fc">title</span> attribute with information on an element’s state (“this element is currently selected,” for example).</li>
+			</ul>
+			<p class="RefNameCode-Left">innerHTML</p>
+			<p class="body"><span class="Literal-fc">innerHTML</span> gives<a id="_idIndexMarker4026"></a> us a simple method for accessing and changing the text and markup inside an element. It behaves differently from the methods we’ve covered so far. Let’s say we need a quick way of adding a paragraph of text to the first element on our page with a class of <span class="Literal-fc">intro</span>:</p>
+			<pre class="CodeFirst">var <code class="CodeColor">introDiv</code> = document.getElementsByClassName("intro"); <br/><code class="CodeColor">introDiv[0].innerHTML</code> = "&lt;p&gt;This is our intro text&lt;/p&gt;";</pre>
+			<p class="body">The second statement here adds the content of the string to <span class="Literal-fc">introDiv</span> (an element with the <span class="Literal-fc">class</span> value “intro”) as a <em class="Emphasis">real live element</em> because <span class="Literal-fc">innerHTML</span> tells JavaScript to parse the strings “&lt;p&gt;” and “&lt;/p&gt;” as markup. </p>
+			<p class="RefNameCode-Left">style</p>
+			<p class="body">The DOM <a id="_idIndexMarker4027"></a>also allows you to add, modify, or remove a CSS style from an element by using the <span class="Literal-fc">style</span> property. It works similarly to applying a style with the inline <span class="Literal-fc">style</span> attribute. The individual CSS properties are available as properties of the <span class="Literal-fc">style</span> property. I bet you can figure out what these statements are doing by using your new CSS and DOM know-how:</p>
+			<pre class="CodeFirst">document.getElementById("intro").<code class="CodeColor">style</code>.color = "#fff"; <br/>document.getElementById("intro").<code class="CodeColor">style</code>.backgroundColor = "#f58220"; </pre>
+			<pre class="Code"><span class="Code-Comment">	//orange</span></pre>
+			<p class="body">In JavaScript and the DOM, property names that are hyphenated in CSS (such as <span class="Literal-fc">background-color</span> and <span class="Literal-fc">border-top-width</span>) become <a id="_idIndexMarker4028"></a><a id="_idIndexMarker4029"></a><a id="_idIndexMarker4030"></a><a id="_idIndexMarker4031"></a>camel case (<span class="Literal-fc">backgroundColor</span> and <span class="Literal-fc">borderTopWidth</span>, respectively) so the “<span class="Literal-fc">–</span>” character isn’t mistaken for an operator.</p>
+			<p class="body">In the examples you’ve just seen, the <span class="Literal-fc">style</span> property is used to set the styles for the node. It can also be used to get a style value for use elsewhere in the script. This statement gets the background color of the <span class="Literal-fc">#intro</span> element and assigns it to the <span class="Literal-fc">brandColor</span> variable:</p>
+			<pre class="CodeFirst">var brandColor = document.getElementById("intro").style.backgroundColor;</pre>
+			<h2 class="HeadB">Adding and Removing Elements</h2>
+			<p class="body">So far, we’ve seen<a id="_idIndexMarker4032"></a><a id="_idIndexMarker4033"></a> examples of getting and setting nodes in the existing document. The DOM also allows developers to change the document structure itself by adding and removing nodes on the fly. We’ll start out by creating new nodes, which is fairly straightforward, and then we’ll see how we add the nodes we’ve created to the page. The methods shown here are more surgical and precise than adding content with <span class="Literal-fc">innerHTML</span>. While we’re at it, we’ll remove nodes, too. </p>
+			<p class="RefNameCode-Left">createElement()</p>
+			<p class="body">To create a<a id="_idIndexMarker4034"></a> new element, use the aptly named <span class="Literal-fc">createElement()</span> method. This function accepts a single argument: the element to be created. Using this method is a little counterintuitive at first because the new element doesn’t appear on the page right away. Once we create an element in this way, that new element remains floating in the JavaScript ether until we add it to the document. Think of it as creating a <em class="Emphasis">reference</em> to a new element that lives purely in memory—something that we can manipulate in JavaScript as we see fit, and then add to the page once we’re ready:</p>
+			<pre class="CodeFirst">var newDiv = document.<code class="CodeColor">createElement("div")</code>;</pre>
+			<p class="RefNameCode-Left">createTextNode()</p>
+			<p class="body">If we want to <a id="_idIndexMarker4035"></a><a id="_idIndexMarker4036"></a>enter text into either an element we’ve created or an existing element on the page, we can call the <span class="Literal-fc">createTextNode()</span> method. To use it, provide a string of text as an argument, and the method creates a DOM-friendly version of that text, ready for inclusion on the page. Like <span class="Literal-fc">createElement()</span>, this creates a reference to the new text node that we can store in a variable and add to the page when the time comes:</p>
+			<pre class="CodeFirst">var ourText = document.<code class="CodeColor">createTextNode("This is our text.")</code>;</pre>
+			<p class="RefNameCode-Left">appendChild()</p>
+			<p class="body">So we’ve created a <a id="_idIndexMarker4037"></a>new element and a new string of text, but how do we make them part of the document? Enter the <span class="Literal-fc">appendChild()</span> method. This method takes a single argument: the node you want to add to the DOM. You call it on the existing element that will be its <em class="Emphasis">parent</em> in the document structure. Time for an example.</p>
+			<p class="body">Here we have a simple <span class="Literal-fc">div</span> on the page with the <span class="Literal-fc">id</span> “our-div”:</p>
+			<pre class="CodeFirst">&lt;div <code class="CodeColor">id="our-div"</code>&gt;&lt;/div&gt;</pre>
+			<p class="body">Let’s say we want to add a paragraph to <span class="Literal-fc">#our-div</span> that contains the text “Hello, world!” We start by creating the <span class="Literal-fc">p</span> element (<span class="Literal-fc">document.createElement()</span>) as well as a text node for the content that will go inside it (<span class="Literal-fc">createTextNode()</span>):</p>
+			<pre class="CodeFirst">var ourDiv = document.getElementById("our-div");<br/>var newParagraph = document.createElement("p");<br/>var copy = document.createTextNode("Hello, world!");</pre>
+			<p class="body">Now we have our element and some text, and we can use <span class="Literal-fc">appendChild()</span> to put the pieces together:</p>
+			<pre class="CodeFirst">newParagraph.<code class="CodeColor">appendChild( copy )</code>; <br/>ourDiv.<code class="CodeColor">appendChild( newParagraph )</code>; </pre>
+			<p class="body">The first statement appends <span class="Literal-fc">copy</span> (that’s our “Hello, world!” text node) to the new paragraph we created (<span class="Literal-fc">newParagraph</span>), so now that element has some content. The second line appends the <span class="Literal-fc">newParagraph</span> to the original <span class="Literal-fc">div</span> (<span class="Literal-fc">ourDiv</span>). Now <span class="Literal-fc">ourDiv</span> isn’t sitting there all empty in the DOM, and it will display on the page with the content “Hello, world!”</p>
+			<p class="body">You should be getting the idea of how it works. How about a couple more?</p>
+			<p class="RefNameCode-Left">insertBefore()</p>
+			<p class="body">The <a id="_idIndexMarker4038"></a><span class="Literal-fc">insertBefore()</span> method, as you might guess, inserts an element before another element. It takes two arguments: the first is the node that gets inserted, and the second is the element it gets inserted in front of. You also need to know the parent to which the element will be added.</p>
+			<p class="body">So, for example, to insert a new heading before the paragraph in this markup</p>
+			<pre class="CodeFirst">&lt;div id="our-div"&gt;<br/>  &lt;p id="our-paragraph"&gt;Our paragraph text&lt;/p&gt;<br/>&lt;/div&gt;</pre>
+			<p class="body">we start by assigning variable names to the <span class="Literal-fc">div</span> and the <span class="Literal-fc">p</span> it contains, and then create the <span class="Literal-fc">h1</span> element and its text node and put them together, just as we saw in the last example: </p>
+			<pre class="CodeFirst">var <code class="CodeColor">ourDiv</code> = document.getElementById("our-div");<br/>var <code class="CodeColor">para</code> = document.getElementById("our-paragraph"); <br/><br/>var <code class="CodeColor">newHeading</code> = document.createElement("h1"); <br/>var headingText = document.createTextNode("A new heading"); <br/>newHeading.appendChild( headingText ); <span class="Code-Comment"><br/>// Add our new text node to the new heading</span></pre>
+			<p class="body">Finally, in the last statement shown here, the <span class="Literal-fc">insertBefore()</span> method places the <span class="Literal-fc">newHeading</span> <span class="Literal-fc">h1</span> element before the <span class="Literal-fc">para</span> element inside <span class="Literal-fc">ourDiv</span>. </p>
+			<pre class="CodeFirst"><code class="CodeColor">ourDiv.insertBefore( newHeading, para ); </code></pre>
+			<p class="RefNameCode-Left">replaceChild()</p>
+			<p class="body">The <span class="Literal-fc">replaceChild()</span> <a id="_idIndexMarker4039"></a>method replaces one node with another and takes two arguments. The first argument is the new child (i.e., the node you want to end up with). The second is the node that gets replaced by the first. As with <span class="Literal-fc">insertBefore()</span>, you also need to identify the parent element in which the swap happens. For the sake of simplicity, let’s say we start with the following markup:</p>
+			<pre class="CodeFirst">&lt;div id="our-div"&gt;<br/>  &lt;div id="swap-me"&gt;&lt;/div&gt;<br/>&lt;/div&gt;</pre>
+			<p class="body">And we want to replace the <span class="Literal-fc">div</span> with the <span class="Literal-fc">id</span> “swap-me” with an image. We start by creating a new <span class="Literal-fc">img</span> element and setting the <span class="Literal-fc">src</span> attribute to the pathname to the image file. In the final statement, we use <span class="Literal-fc">replaceChild()</span> to put <span class="Literal-fc">newImg</span> in place of <span class="Literal-fc">swapMe</span>. </p>
+			<pre class="CodeFirst">var <code class="CodeColor">ourDiv</code> = document.getElementById("our-div");<br/>var <code class="CodeColor">swapMe</code> = document.getElementById("swap-me");<br/>var <code class="CodeColor">newImg</code> = document.createElement("img"); <br/><span class="Code-Comment">// Create a new image element</span>  <br/><br/>newImg.setAttribute( "src", "path/to/image.jpg" ); <br/><span class="Code-Comment">// Give the new image a "src" attribute</span><br/> <code class="CodeColor">ourDiv.replaceChild( newImg, swapMe ); </code></pre>
+			<p class="RefNameCode-Left">removeChild()</p>
+			<p class="body">To paraphrase my <a id="_idIndexMarker4040"></a>mother, “We brought these elements into this world, and we can take them out again.” You remove a node or an entire branch from the document tree with the <span class="Literal-fc">removeChild()</span> method. The method takes one argument, which is the node you want to remove. Remember that the DOM thinks in terms of <em class="Emphasis">nodes</em>, not just elements, so the child of an element may be the text (node) it contains, not just other elements.</p>
+			<p class="body">Like <span class="Literal-fc">appendChild()</span>, the <span class="Literal-fc">removeChild()</span> method is always called on the parent element of the element to be removed (hence, “remove <em class="Emphasis">child</em>”). That means we’ll need a reference to both the parent node and the node we’re looking to remove. Let’s assume the following markup pattern:</p>
+			<pre class="CodeFirst">&lt;div id="parent"&gt;<br/>  &lt;div id="remove-me"&gt;<br/>    &lt;p&gt;Pssh, I never liked it here anyway.&lt;/p&gt;<br/>  &lt;/div&gt;<br/>&lt;/div&gt;</pre>
+			<p class="body">Our script would look something like this:</p>
+			<pre class="CodeFirst">var <code class="CodeColor">parentDiv</code> = document.getElementById("parent");<br/>var <code class="CodeColor">removeMe</code> = document.getElementById("remove-me"); <br/><code class="CodeColor">parentDiv.removeChild( removeMe )</code>; <br/><span class="Code-Comment">// Removes the div with the id "remove-me" from the page.</span></pre>
+			<h2 class="HeadB">For Further Reading</h2>
+			<p class="body">That should give you a good idea of what DOM scripting is all about. Of course, I’ve just barely scratched the surface of what can be done with the DOM, but if you’d like to learn more, definitely check out the book <span class="Citation">DOM Scripting: Web Design with JavaScript and the Document Object Model, Second Edition</span>, by<a id="_idIndexMarker4041"></a><a id="_idIndexMarker4042"></a> Jeremy Keith and Jeffrey Sambells (Friends of Ed).</p>
+			<h1 id="_idParaDest-203" class="HeadA"><a id="_idTextAnchor283"></a>Polyfills</h1>
+			<p class="body">You’ve gotten<a id="_idIndexMarker4043"></a><a id="_idIndexMarker4044"></a><a id="_idIndexMarker4045"></a> familiar with a lot of new technologies in this book so far: new HTML5 elements, new ways of doing things with CSS3, using JavaScript to manipulate the DOM, and more. In a perfect world, all browsers would be in lockstep, keeping up with the cutting-edge technologies and getting the established ones right along the way (see the sidebar <span class="Xref">“The Browser Wars”</span>). In that perfect world, browsers that couldn’t keep up (I’m looking at you, IE8) would just vanish completely. Sadly, that is not the world we live in, and browser inadequacies remain the thorn in every developer’s side. </p>
+			<div>
+				<div id="_idContainer1430" class="sidebar">
+					<h5 class="SidebarTitle">The Browser Wars</h5>
+					<p class="SidebarBody">JavaScript came <a id="_idIndexMarker4046"></a><a id="_idIndexMarker4047"></a><a id="_idIndexMarker4048"></a>about during a dark and lawless time, before the web standards movement, when all the major players in the browser world were—for want of a better term—winging it. It likely won’t come as a major surprise to anyone that Netscape and Microsoft implemented radically different versions of the DOM, with the prevailing sentiment being “may the best browser win.” </p>
+					<p class="SidebarBody">I’ll spare you the gory details of the Battle for JavaScript Hill, but the two competing implementations were so different that they were both largely useless, unless you wanted to either maintain two separate code bases or add a “best viewed in Internet Explorer/Netscape” warning label to your sites.</p>
+					<p class="SidebarBody">Enter the web standards movement! During this cutthroat time, the <a id="_idIndexMarker4049"></a>W3C was putting together the foundations for the modern-day standardized DOM that we’ve all come to know and love. Fortunately for us, Netscape and Microsoft got on board with the standards movement. The standardized DOM is supported all the way back to Internet Explorer 5 and Netscape Navigator 6. Unfortunately, Internet Explorer’s advancements in this area stagnated for quite some time following IE6. As a result, older versions of IE have a few significant differences from the modern-day DOM. Fortunately with Internet Explorer 9 and later, they’re catching right back up.</p>
+					<p class="SidebarBody">The trouble is, your project likely still needs to support those users with older versions of IE. It’s a pain, but we’re up for it. We have an amazing set of tools at our disposal, such as polyfills and JavaScript libraries full of helper functions, that normalize the strange little quirks we’re apt to encounter from browser to browser. </p>
+				</div>
+			</div>
+			<p class="body">I’ll be the first to admit that I enjoy a good wheel reinvention. It’s a great way to learn, for one thing. For another, it’s the reason our cars aren’t rolling around on roundish rocks and sections of tree trunk. But when it comes to dealing with every strange browser quirk out there, we don’t have to start from scratch. Tons of people smarter than I am have run into these issues before, and have already found clever ways to work around them and fix the parts of JavaScript and the DOM where some browsers may fall short. We can use JavaScript to fix JavaScript. </p>
+			<p class="body"><span class="FirstTerm">Polyfill</span> is a term coined by <a id="_idIndexMarker4050"></a>Remy Sharp to describe a JavaScript “shim” that normalizes differing behavior from browser to browser (<a href="http://remysharp.com/2010/10/08/what-is-a-polyfill"><span class="URL-Email">remysharp.com/2010/10/08/what-is-a-polyfill</span></a>). Or, as <a id="_idIndexMarker4051"></a>Paul Irish put it, a polyfill is</p>
+			<blockquote class="Quote">A shim that mimics a future API providing fallback functionality to older browsers.</blockquote>
+			<p class="body">There’s a lot of time travel going on in that quote, but basically what he’s saying is that we’re making something new work in browsers that don’t natively support it—whether that’s brand-new technology like detecting a user’s physical location or fixing something that one of the browsers just plain got wrong. </p>
+			<p class="body">There are tons of polyfills out there targeted to specific tasks, such as making old browsers recognize new HTML5 elements or CSS3 selectors, and new ones are popping up all the time as new problems arise. I’m going to fill you in on the most commonly used polyfills in the modern developer’s toolbox as of the release of this book. You may find that new ones are necessary by the time you hit the web design trenches. You may also find that some of these techniques aren’t needed for the browsers you need to support.</p>
+			<h2 class="HeadB">HTML5 shim (or shiv)</h2>
+			<div>
+				<div id="_idContainer1431" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">If you don’t need to support IE8 and earlier, you don’t need an HTML5 shim.</p>
+				</div>
+			</div>
+			<p class="body">You may <a id="_idIndexMarker4052"></a><a id="_idIndexMarker4053"></a>remember seeing this one back in <a href="lwd5_chapter05.xhtml#_idTextAnchor059"><span class="Xref">Chapter </span><span class="Xref">5</span><span class="Xref">, Marking Up Text</span></a> but let’s give it a little more attention now that you have some JavaScript under your belt. </p>
+			<p class="body">An HTML5 shim/shiv is used to enable Internet Explorer 8 and earlier to recognize and style newer HTML5 elements such as <span class="Literal-fc">article</span>, <span class="Literal-fc">section</span>, and <span class="Literal-fc">nav</span>.</p>
+			<p class="body">There are several variations on the HTML5 shim/shiv, but they all work in much the same way: crawl the DOM looking for elements that IE doesn’t recognize, and then immediately replace them with the same element so they are visible to IE in the DOM. Now any styles we write against those elements work as expected. Sjoerd Visscher originally discovered this technique, and many, many variations of these scripts exist now. Remy Sharp’s version is the one in widest use today.</p>
+			<p class="body">The shim must be referenced in the <span class="Literal-fc">head</span> of the document, in order to “tell” Internet Explorer about these new elements before it finishes rendering the page. The script is referenced inside an IE-specific conditional comment and runs only if the browser is less than (<span class="Literal-fc">lt</span>) IE9—in other words, versions 8 and earlier:</p>
+			<pre class="CodeFirst">&lt;!--[if lt IE 9]&gt;<br/>     &lt;script src="html5shim.js"&gt;&lt;/script&gt;<br/>&lt;![endif]--&gt;</pre>
+			<p class="body">The major caveat here is that older versions of Internet Explorer that have JavaScript disabled or unavailable will receive unstyled elements. To learn more about HTML5 shim/shiv, try these resources:</p>
+			<ul>
+				<li class="ListBullet">The Wikipedia entry for HTML Shiv (<a href="http://en.wikipedia.org/wiki/HTML5_Shiv"><span class="URL-Email">en.wikipedia.org/wiki/HTML5_Shiv</span></a>) </li>
+				<li class="ListBullet">Remy Sharp’s original post (<a href="http://remysharp.com/2009/01/07/html5-enabling-script"><span class="URL-Email">remysharp.com/2009/01/07/html5-enabling-script</span></a>)</li>
+			</ul>
+			<h2 class="HeadB">Selectivizr</h2>
+			<div>
+				<div id="_idContainer1432" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">If you don’t need to support IE8 and earlier, you don’t need Selectivizr.</p>
+				</div>
+			</div>
+			<p class="body">Selectivizr (<a id="_idIndexMarker4054"></a><a id="_idIndexMarker4055"></a>created by <a id="_idIndexMarker4056"></a>Keith Clark) allows Internet Explorer 6–8 to understand complex CSS3 selectors such as <span class="Literal-fc">:nth-child</span> and <span class="Literal-fc">::first-letter</span>. It uses JavaScript to fetch and parse the contents of your style sheet and patch holes where the browser’s native CSS parser falls short.</p>
+			<p class="body">Selectivizr must be used with a JavaScript library (I talk about them in the next section). The link to the script goes in an IE conditional comment after the link to the library <span class="Filename">.js</span> file, like so:</p>
+			<pre class="CodeFirst">&lt;script type="text/javascript" src="[JS library]"&gt;&lt;/script&gt;<br/><code class="CodeColor">&lt;!--[if (gte IE 6)&amp;(lte IE 8)]&gt;<br/>  &lt;script type="text/javascript" src="selectivizr.js"&gt;&lt;/script&gt;</code> <br/>  &lt;noscript&gt;&lt;link rel="stylesheet" href="[fallback css]" /&gt;&lt;/noscript&gt;<br/><code class="CodeColor">&lt;![endif]--&gt;</code></pre>
+			<p class="body">Because we’re forgoing the native CSS parser here, we may see a slight performance hit in applicable browsers. See the Selectivizr site (<a href="http://selectivizr.com"><span class="URL-Email">selectivizr.com</span></a>) for more information.</p>
+			<h2 class="HeadB">Picturefill (A Responsive Image Polyfill)</h2>
+			<p class="body">Picturefill <a id="_idIndexMarker4057"></a><a id="_idIndexMarker4058"></a>enables support for the <span class="Literal-fc">picture</span> element, <span class="Literal-fc">srcset</span> and <span class="Literal-fc">sizes</span> attributes, and features related to delivering images based on viewport size and resolution (also known as responsive images, as discussed in <a href="lwd5_chapter07.xhtml#_idTextAnchor088"><span class="Xref">Chapter </span><span class="Xref">7</span><span class="Xref">, Adding Images</span></a>). It was created by <a id="_idIndexMarker4059"></a>Scott Jehl of Filament Group and is maintained by the Picturefill group.</p>
+			<p class="body">To use Picturefill, download the script and add it to the <span class="Literal-fc">head</span> of the document. The first script creates a <span class="Literal-fc">picture</span> element for browsers that don’t recognize it. The second script calls the Picturefill script itself and the <span class="Literal-fc">async</span> attribute tells the browser it can load <a id="_idIndexMarker4060"></a>Picturefill <span class="FirstTerm">asynchronously</span>—that is, without waiting for the script to finish before loading the rest of the document.</p>
+			<pre class="CodeFirst">&lt;head&gt;<br/>  &lt;script&gt;<br/>    <span class="Code-Comment">// Picture element HTML5 shiv</span> <br/>    document.createElement( "picture" );<br/>  &lt;/script&gt;<br/>  &lt;script src="<code class="CodeColor">picturefill.js</code>" async&gt;&lt;/script&gt;<br/>&lt;/head&gt;</pre>
+			<p class="body">On the downside, browsers without JavaScript that also do not support the <span class="Literal-fc">picture</span> element will see only alt-text for the image. Download Picturefill and get information about its use at <a href="http://scottjehl.github.io/picturefill/"><span class="URL-Email">scottjehl.github.io/picturefill/</span></a>.</p>
+			<h1 id="_idParaDest-204" class="HeadA"><a id="_idTextAnchor284"></a>JavaScript Libraries</h1>
+			<p class="body">Continuing <a id="_idIndexMarker4061"></a><a id="_idIndexMarker4062"></a>on the “you don’t have to write everything from scratch yourself” theme, it’s time to take on JavaScript libraries. A <span class="FirstTerm">JavaScript library</span> is a collection of prewritten functions and methods that you can use in your scripts to accomplish common tasks or simplify complex ones. </p>
+			<p class="body">There are many JS libraries out there. Some are large frameworks that include all of the most common polyfills, shortcuts, and widgets you’d ever need to build full-blown<a id="_idIndexMarker4063"></a> <a id="_idIndexMarker4064"></a>Ajax web applications (see the sidebar <span class="Xref">“What Is Ajax?”</span>). Some are targeted at specific tasks, such as handling forms, animation, charts, or math functions. For seasoned JavaScript-writing pros, starting with a library is an awesome time-saver. And for folks like you who are just getting started, a library can handle tasks that might be beyond the reach of your own skills. </p>
+			<div>
+				<div id="_idContainer1433" class="sidebar">
+					<h5 class="SidebarTitle">What Is Ajax?</h5>
+					<p class="SidebarBody"><span class="FirstTerm--Sidebar-">Ajax</span> (sometimes written AJAX) stands for <span class="FirstTerm--Sidebar-">Asynchronous JavaScript And XML</span>. The “XML” part isn’t that important—you don’t have to use XML to use Ajax (more on that in a moment). The “asynchronous” part is what matters. </p>
+					<p class="SidebarBody">Traditionally, when a user interacted with a web page in a way that required data to be delivered from the server, everything had to stop and wait for the data, and the whole page needed to reload when it was available. This made for a not especially smooth user experience.</p>
+					<p class="SidebarBody">But with Ajax, because the page can get data from the server in the background, you can make updates to the page based on user interaction smoothly and in real time without the page needing to be reloaded. This makes web applications feel more like “real” applications. </p>
+					<p class="SidebarBody">You see this on a number of modern websites, although sometimes it’s subtle. On Twitter, for example, scrolling to the bottom of a page loads in a set of new tweets. Those aren’t hardcoded in the page’s markup; they’re loaded dynamically as needed. Google’s image search uses a similar approach. When you reach the bottom of the current page, you’re presented with a button that allows you to load more‚ but you never navigate away from the current page.</p>
+					<p class="SidebarBody">The term “Ajax” was first coined by <a id="_idIndexMarker4065"></a>Jesse James Garrett in an article “Ajax: A New Approach to Web Applications.” Ajax is not a single technology, but rather a combination of HTML, CSS, the DOM, and JavaScript, including the <a id="_idIndexMarker4066"></a><span class="Literal-Sidebar">XMLHttpRequest</span> object, which allows data to be transferred asynchronously. Ajax may use XML for data, but it has become more common to<a id="_idIndexMarker4067"></a><a id="_idIndexMarker4068"></a> use <span class="FirstTerm--Sidebar-">JSON</span> (<span class="FirstTerm--Sidebar-">JavaScript Object Notation</span>), a JavaScript-based and human-readable format, for data exchange.</p>
+					<p class="SidebarBody">Writing web applications with Ajax isn’t the type of thing you would do right out of the gate, but many of the JavaScript libraries discussed in this chapter have built-in Ajax helpers and methods that let you get started with significantly less effort.</p>
+				</div>
+			</div>
+			<p class="body">The disadvantage of libraries is that because they generally contain all of their functionality in one big <span class="Filename">.js</span> file, you may end up forcing your users to download a lot of code that never gets used. But the library authors are aware of this and have made many of their libraries modular, and they continue to make efforts to optimize their code. In some cases, it’s also possible to customize the script and use just the parts you need.</p>
+			<h2 class="HeadB">jQuery and Other Libraries</h2>
+			<p class="body">As of this <a id="_idIndexMarker4069"></a>writing, the overwhelmingly dominant JavaScript library is jQuery (<a href="http://jquery.com"><span class="URL-Email">jquery.com</span></a>). Chances are, if you use a library, it will be that one (or at least that one first). Written in 2005 by <a id="_idIndexMarker4070"></a>John Resig, jQuery has found its way into over two-thirds of all websites. Furthermore, if a site uses a library at all, there is a 97% chance that it’s jQuery.  </p>
+			<p class="body">It is free, it’s open source, and it employs a syntax that makes it easy to use if you are already handy with CSS, JavaScript, and the DOM. You can supplement jQuery with the jQuery UI library, which adds cool interface elements such as calendar widgets, drag-and-drop functionality, expanding accordion lists, and simple animation effects. jQuery Mobile is another jQuery-based library that provides UI elements and polyfills designed to account for the variety of mobile browsers and their notorious quirks. </p>
+			<p class="body">Of course, jQuery isn’t the only library in town. Others include <a id="_idIndexMarker4071"></a>MooTools (<a href="http://mootools.net"><span class="URL-Email">mootools.net</span></a>), <a id="_idIndexMarker4072"></a>Dojo (<a href="http://dojotoolkit.org/"><span class="URL-Email">dojotoolkit.org</span></a>), and <a id="_idIndexMarker4073"></a>Prototype (<a href="http://prototypejs.org"><span class="URL-Email">prototypejs.org</span></a>). As for smaller JS libraries that handle specialized functions, because they are being created and made obsolete all the time, I recommend doing a web search for “JavaScript libraries for _____________” and see what is available. Some library categories include the following:</p>
+			<ul>
+				<li class="ListBullet">Forms</li>
+				<li class="ListBullet">Animation</li>
+				<li class="ListBullet">Image carousels</li>
+				<li class="ListBullet">Games</li>
+				<li class="ListBullet">Information graphics</li>
+				<li class="ListBullet">Image and 3-D effects for the <span class="Literal-fc">canvas</span> element</li>
+				<li class="ListBullet">String and math functions</li>
+				<li class="ListBullet">Database handling</li>
+				<li class="ListBullet">Touch gestures </li>
+			</ul>
+			<h2 class="HeadB">How to Use jQuery</h2>
+			<p class="body">It’s easy to implement any of the libraries I just listed. All you do is download the JavaScript (<span class="Filename">.js</span>) file, put it on your server, point to it in your <span class="Literal-fc">script</span> tag, and you’re good to go. It’s the <span class="Filename">.js</span> file that does all the heavy lifting, providing prewritten functions and syntax shortcuts. Once you’ve included it, you can write your own scripts that leverage the features built into the framework. Of course, what you actually do with it is the interesting part (and largely beyond the scope of this chapter, unfortunately). </p>
+			<p class="body">As a member of the jQuery Mobile team, I have a pretty obvious bias here, so we’re going to stick with jQuery in the upcoming examples. Not only is it the most popular library anyway, but they said they’d give me a dollar every time I say “jQuery.”</p>
+			<h3 class="HeadC">Download the jQuery .js file</h3>
+			<p class="body">To get started with jQuery (<em class="Emphasis">cha-ching</em>), go to <a href="http://jQuery.com"><span class="URL-Email">jQuery.com</span></a> and hit the big Download button to get your own copy of <span class="Filename">jquery.js</span>. You have a choice between a production version that has all the extra whitespace removed for a smaller file size, or a development version that is easier to read but nearly eight times larger in file size. The production version should be just fine if you are not going to edit it yourself. </p>
+			<p class="body">Copy the code, paste it into a new plain-text document, and save it with the same filename that you see in the address bar in the browser window. As of this writing, the latest version of jQuery is 3.2.1, and the filename of the production version is <span class="Filename">jquery-3.2.1.min.js</span> (the <span class="Filename">min</span> stands for “minimized”). Put the file in the directory with the other files for your site. Some developers keep their scripts in a <span class="Filename">js</span> directory for the sake of organization, or they may simply keep them in the root directory for the site. Wherever you decide put it, be sure to note the pathname to the file because you’ll need it in the markup.</p>
+			<h3 class="HeadC">Add it to your document</h3>
+			<p class="body">Include the jQuery script the same way you’d include any other script in the document, with a <a id="_idIndexMarker4074"></a><span class="Literal-fc">script</span> element: </p>
+			<pre class="CodeFirst">&lt;script src="pathtoyourjs/<code class="CodeColor">jquery-3.2.1.min.js</code>"&gt;&lt;/script&gt;</pre>
+			<p class="body">And that’s pretty much it. There is an alternative worth mentioning, however. If you don’t want to host the file yourself, you can point to one of the publicly hosted versions and use it that way. One advantage to this method is that it gets cached by the browser, so there’s a chance some of your users’ browsers already have a copy of it. The jQuery Download page lists a few options, including the following link to the code on Google’s server. Simply copy this code exactly as you see it here, paste it into the <span class="Literal-fc">head</span> of the document or before the <span class="Literal-fc">&lt;/body&gt;</span> tag, and you’ve got yourself some jQuery!</p>
+			<pre class="CodeFirst">&lt;script src="<code class="CodeColor">https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/</code><span class="remove"><code class="CodeColor"> →	</code></span><code class="CodeColor">jquery.min.js</code>"&gt;&lt;/script&gt;</pre>
+			<h3 class="HeadC">Get “ready”</h3>
+			<p class="body">You don’t want to go firing scripts before the document and the DOM are ready for them, do you? Well, jQuery has a statement known as<a id="_idIndexMarker4075"></a> the <span class="FirstTerm">ready event</span> that checks the document and waits until it’s ready to be manipulated. Not all scripts require this (for example, if you were only firing a browser alert), but if you are doing anything with the DOM, it is a good idea to start by setting the stage for your scripts by including this function in your custom <span class="Literal-fc">script</span> or <span class="Filename">.js</span> file:</p>
+			<pre class="CodeFirst">&lt;script src="<span class="Replaceable">pathtoyourjs</span>/jquery-3.2.1.min.js"&gt;&lt;/script&gt; <br/><br/>&lt;script&gt;<br/><code class="CodeColor">$(document).ready(function(){<br/><br/>  </code><span class="Code-Comment">   // Your code here  </span>  <br/><br/><code class="CodeColor">});</code><br/>&lt;/script&gt;</pre>
+			<h2 class="HeadB">Scripting with jQuery</h2>
+			<p class="body">Once you’re set up, you can begin writing your own scripts using jQuery. The shortcuts jQuery offers break down into two general categories:</p>
+			<ul>
+				<li class="ListBullet">A giant set of built-in feature detection scripts and polyfills</li>
+				<li class="ListBullet">A shorter, more intuitive syntax for targeting elements (<a id="_idIndexMarker4076"></a>jQuery’s <span class="FirstTerm">selector engine</span>)</li>
+			</ul>
+			<p class="body">You should have a decent sense of what the polyfills do after making your way through that last section, so let’s take a look at what the selector engine does for you. </p>
+			<p class="body">One of the things that jQuery simplifies is moving around through the DOM because you can use the selector syntax that you learned for CSS. Here is an example of getting an element by its <span class="Literal-fc">id</span> value <em class="Emphasis">without</em> a library:</p>
+			<pre class="CodeFirst">var paragraph = document.getElementById( "status" );</pre>
+			<p class="body">The statement finds the element with the <a id="_idIndexMarker4077"></a><a id="_idIndexMarker4078"></a>ID “status” and saves a reference to the element in a variable (<span class="Literal-fc">paragraph</span>). That’s a lot of characters for a simple task. You can probably imagine how things get a little verbose when you’re accessing lots of elements on the page. Now that we have jQuery in play, however, we can use this shorthand:</p>
+			<pre class="CodeFirst">var paragraph = <code class="CodeColor">$("#status")</code>;</pre>
+			<p class="body">That’s right—that’s the <span class="Literal-fc">id</span> selector you know and love from writing CSS. And it doesn’t just stop there. <em class="Emphasis">Any</em> selector you’d use in CSS will work within that special helper function.</p>
+			<p class="body">You want to find everything with a class of <span class="Literal-fc">header</span>? Use <span class="Literal-fc">$(".header");</span>.</p>
+			<p class="body">By the element’s name? Sure: <span class="Literal-fc">$("div");</span>.</p>
+			<p class="body">Every subhead in your sidebar? Easy-peasy: <span class="Literal-fc">$("#sidebar .sub");</span>.</p>
+			<p class="body">You can even target elements based on the value of attributes: <span class="Literal-fc">$("[href='http://google.com']");</span>.</p>
+			<p class="body">But it doesn’t stop with selectors. We can use a huge number of helper functions built into jQuery and libraries like it to crawl the DOM like so many, uh, Spider-men. Spider-persons. Web-slingers.</p>
+			<p class="body">jQuery also allows us to chain objects together in a way that can target things even CSS can’t (an element’s parent element, for example). Let’s say we have a paragraph and we want to add a <span class="Literal-fc">class</span> to that paragraph’s parent element. We don’t necessarily know what that parent element will be, so we’re unable to target the parent element directly. In jQuery we can use the <a id="_idIndexMarker4079"></a><span class="Literal-fc">parent()</span> object to get to it:</p>
+			<pre class="CodeFirst">$("p.error").parent().addClass("error-dialog");</pre>
+			<p class="body">Another major benefit is that this is highly readable at a glance: “find any paragraph(s) with the class ‘error’ and add the class ‘error-dialog’ to their parent(s).”</p>
+			<h2 class="HeadB">But What If I Don’t Know How to Write Scripts?</h2>
+			<p class="body">It takes time to learn JavaScript, and it may be a while before you can write scripts on your own. But not to worry. If you do a web search for what you need (for example, “jQuery image carousel” or “jQuery accordion list”), there’s a very good chance you will find lots of scripts that people have created and shared, complete with documentation on how to use them. Because jQuery uses a selector syntax very similar to CSS, it makes it easier to customize jQuery scripts for use with your own markup. </p>
+			<h1 id="_idParaDest-205" class="HeadA"><a id="_idTextAnchor285"></a>Big Finish</h1>
+			<p class="body">In all of two chapters, we’ve gone from learning the very basics of variables to manipulating the DOM to leveraging a JavaScript library. Even with all we’ve covered here, we’ve just barely begun to cover all the things JavaScript can do.</p>
+			<p class="body">The next time you’re looking at a website and it does something cool, view the source in your browser and have a look around for the JavaScript. You can learn a lot from reading and even taking apart someone else’s code. And remember, there’s nothing you can break with JavaScript that can’t be undone with a few strokes of the Delete key. </p>
+			<p class="body">Better still, JavaScript comes with an entire community of passionate developers who are eager to learn and just as eager to teach. Seek out like-minded developers and share the things you’ve learned along the way. If you’re stuck on a tricky problem, don’t hesitate to seek out help and ask questions. It’s rare that you’ll encounter a problem that nobody else has, and the open source developer community is always excited to share the things they’ve learned. That’s why you’ve had to put up with me for two chapters, as a matter of fact.</p>
+			<h1 id="_idParaDest-206" class="HeadA"><a id="_idTextAnchor286"></a>Test Yourself</h1>
+			<p class="body">Just a few questions for those of you playing along at home. If you need some help, peek in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a> for the answers.</p>
+			<ol>
+				<li class="ListNumber">Ajax is a combination of what technologies?</li>
+				<li class="ListNumber">What does this do? <pre class="CodeFirst"><code class="Code">document.getElementById("main")</code></pre></li>
+				<li class="ListNumber">What does this do?<pre class="CodeFirst"><code class="Code">document.getElementById("main").getElementsByTagName("section");</code></pre></li>
+				<li class="ListNumber">What does this do?<pre class="CodeFirst"><code class="Code">document.body.style.backgroundColor = "papayawhip"</code></pre></li>
+				<li class="ListNumber">What does this do? (This one is a little tricky because it nests functions, but you should be able to piece it together.)<pre class="CodeFirst"><code class="Code">document<br/>   .getElementById("main")<br/>    .appendChild(<br/>      document.createElement("p")<br/>        .appendChild(<br/>          documentCreateTextNode("Hey, I'm walking here!")<br/>        )<br/>     );</code></pre></li>
+				<li class="ListNumber">What is the benefit of using a JavaScript library such as jQuery? <ol><li class="ListNumber_Indent">Access to a packaged collection of polyfills</li><li class="ListNumber_Indent">Possibly shorter syntax</li><li class="ListNumber_Indent">Simplified Ajax support</li><li class="ListNumber_Indent">All of the above</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learning Web Design, 5th Edition</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/lwd5e.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer532" class="ch10">
+			<p id="_idParaDest-89" class="Epub-TOC-Chapter-Title"><a id="_idTextAnchor121"></a>10. Embedded Media</p>
+		</div>
+		<div id="_idContainer533" class="ch10">
+			<h1 class="chapterLabel">10</h1>
+		</div>
+		<div id="_idContainer534" class="ch10">
+			<h1 class="chapterTitle"><a id="_idTextAnchor122"></a><a id="_idTextAnchor123"></a>Embedded Media</h1>
+		</div>
+		<div id="_idContainer535" class="chapTOCFrame" epub:type="toc">
+			<p class="ChapterContentsTitle">In This Chapter</p>
+			<p class="chapterContents">The iframe element</p>
+			<p class="chapterContents">The object element</p>
+			<p class="chapterContents">Video and audio players</p>
+			<p class="chapterContents">The canvas element</p>
+		</div>
+		<div id="_idContainer572" class="ch10">
+			<p class="body">The HTML specification <a id="_idIndexMarker1635"></a><a id="_idIndexMarker1636"></a><a id="_idIndexMarker1637"></a>defines <span class="FirstTerm">embedded content</span> as follows:</p>
+			<blockquote class="Quote">content that <strong class="Emphasis_Bold">imports another resource</strong> into the document, or <strong class="Emphasis_Bold">content from another vocabulary</strong> that is inserted into the document </blockquote>
+			<p class="body">In <a href="lwd5_chapter07.xhtml#_idTextAnchor088"><span class="Xref">Chapter </span><span class="Xref">7</span><span class="Xref">, Adding Images</span></a>, you saw examples of both parts of that definition because images are one type of embedded content. The <span class="Literal-fc">img</span> and <span class="Literal-fc">picture</span> elements point to an external image resource using the <span class="Literal-fc">src</span> or <span class="Literal-fc">srcset</span> attributes, and the <span class="Literal-fc">svg</span> element embeds an image file written in the SVG vocabulary right in the page.</p>
+			<p class="body">But images certainly aren’t the only things you can stick in a web page. In this chapter, we’ll look at other types of embedded content and their respective markup, including the following:</p>
+			<ul>
+				<li class="ListBullet">A window for viewing an external HTML source (<span class="Literal-fc">iframe</span>)</li>
+				<li class="ListBullet">Multipurpose embedding elements (<span class="Literal-fc">object</span> and <span class="Literal-fc">embed</span>)</li>
+				<li class="ListBullet">Video and audio players (<span class="Literal-fc">video</span> and <span class="Literal-fc">audio</span>)</li>
+				<li class="ListBullet">A scriptable drawing area that can be used for animations or game-like interactivity (<span class="Literal-fc">canvas</span>)</li>
+			</ul>
+			<h1 id="_idParaDest-90" class="HeadA"><a id="_idTextAnchor124"></a>Window-In-A-Window (iframe)</h1>
+			<div>
+				<div id="_idContainer536" class="ref">
+					<p class="refNameCode">&lt;iframe&gt;…&lt;/iframe&gt;</p>
+					<p class="refPurpose">A nested browsing window</p>
+				</div>
+			</div>
+			<p class="body">The <a id="_idIndexMarker1638"></a><a id="_idIndexMarker1639"></a><span class="Literal-fc">iframe</span> (short for <span class="FirstTerm">inline frame</span>) element lets you embed a separate HTML document or other web resource in a document. It has been around for many years, but it has recently become one of the most popular ways to share content between sites. </p>
+			<p class="body">For example, when you request the code to embed a video from YouTube or a map from Google Maps, they provide iframe-based code to copy and paste into your page. Many other media sites are following suit because it allows them to control aspects of the content you are putting on your page. Inline frames have also become a standard tool for embedding ad content that might have been handled with Flash back in the day. Web tutorial sites may use inline frames to embed code samples on pages.</p>
+			<p class="body">Adding an <span class="Literal-fc">iframe</span> to the page creates a little window-in-a-window (or a <span class="FirstTerm">nested browsing context</span>, as <a id="_idIndexMarker1640"></a>it is known in the spec) that displays the external resource. You place an inline frame on a page similarly to an image, specifying the <a id="_idIndexMarker1641"></a>source (<span class="Literal-fc">src</span>) of its content. The <a id="_idIndexMarker1642"></a><a id="_idIndexMarker1643"></a><span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes specify the dimensions of the frame. The content in the <span class="Literal-fc">iframe</span> element itself is fallback content for browsers that don’t support the element, although virtually all browsers support iframes at this point. </p>
+			<p class="body">In this very crude example, the parent document displays the web page <span class="Filename">glossary.html</span> in an inline frame (<span class="Xref-Figure">Figure 10-1</span>). If iframe is not supported, a link to read the glossary is provided. This <span class="Literal-fc">iframe</span> has its own set of scrollbars because the embedded HTML document is too long to fit. To be honest, you don’t often see iframes used this way in the wild (except for code examples, perhaps), but it is a good way to understand how they work.</p>
+			<pre class="CodeFirst">&lt;h1&gt;An Inline Frame&lt;/h1&gt;</pre>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;iframe src="glossary.html" width="400" height="250" &gt;</code><br/>  Read the &lt;a href="glossary.html"&gt;glossary&lt;/a&gt;.<br/><code class="CodeColor">&lt;/iframe&gt;</code></pre>
+			<div>
+				<figure id="_idContainer538" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1001_iframe2.png" alt="" width="1337" height="648"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-1.</span><span class="FigureLabel"> </span>Inline frames (added with the <span class="Literal-Sidebar">iframe</span> element) are like a browser window within the browser that displays external HTML documents and resources. If the <span class="Literal-Sidebar">iframe</span> element is not supported, the content within the <span class="Literal-Sidebar">iframe</span> element displays instead (not shown).</figcaption>
+				</figure>
+			</div>
+			<p class="body">In modern uses of <span class="Literal-fc">iframe</span>, the window is not so obvious. In fact, there is usually no indication that there is an embedded frame there at all, as shown by the Google Maps example in <span class="Xref-Figure">Figure 10-2</span>. </p>
+			<div>
+				<figure id="_idContainer540" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1002_map.png" alt="" width="1338" height="730"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-2.</span> The edges of an <span class="Literal-Sidebar">iframe</span> are usually not detectable, as shown in this embedded Google Map.</figcaption>
+				</figure>
+			</div>
+			<p class="body">There are some security concerns with using iframes because they may act like open windows through which hackers can sneak. The <a id="_idIndexMarker1644"></a><a id="_idIndexMarker1645"></a><span class="Literal-fc">sandbox</span> attribute puts restrictions on what the framed content can do, such as not allowing forms, pop ups, scripts, and the like. </p>
+			<p class="body">Iframe security is beyond the scope of this chapter, but you’ll need to brush up if you are going to make use of iframes on your site. I recommend the <a id="_idIndexMarker1646"></a>MDN Web Docs article “From object to iframe: Other Embedding Technologies” (<a href="http://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies"><span class="URL-Email">developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies</span></a>), which provides a good overview of iframe security issues. </p>
+			<p class="body">To get a feel for how iframes work, use one to embed your favorite video on a page in <span class="Xref-Figure">Exercise 10-1</span>.</p>
+			<div>
+				<div id="_idContainer541" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 10-1.</span>  Embedding a video with iframe</h6>
+					<p class="SidebarBody">If you’d like to poke <a id="_idIndexMarker1647"></a>around with an <span class="Literal-Sidebar">iframe</span>, it’s easy to grab one from YouTube to embed your favorite video on a page. </p>
+					<p class="SidebarBody">Start by creating a new HTML document, including the basic structural elements that we covered in <span class="Xref--Sidebar-">Chapter 4, Creating a Simple Page</span>.</p>
+					<p class="SidebarBody">Go to YouTube and once you are on the page for your chosen video, look for the Share button; then choose the Embed option. The <span class="Literal-Sidebar">iframe</span> code is there for you to copy and paste. If you click “Show more,” there will be further configuration options. Just copy the <span class="Literal-Sidebar">iframe</span> code and paste it into the new HTML document. Open it in a browser, and you’re done!</p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-91" class="HeadA"><a id="_idTextAnchor125"></a>Multipurpose Embedder (object)</h1>
+			<div>
+				<div id="_idContainer542" class="ref">
+					<p class="refNameCode">&lt;object&gt;…&lt;/object&gt;</p>
+					<p class="refPurpose">Represents external resource</p>
+					<p class="refNameCode">&lt;param&gt;</p>
+					<p class="refPurpose">Parameters of an object</p>
+				</div>
+			</div>
+			<p class="body">In the early days,<a id="_idIndexMarker1648"></a> <a id="_idIndexMarker1649"></a>web browsers were extremely limited in what they were able to render, so they relied on <span class="FirstTerm">plug-ins</span> to help them display media that they couldn’t handle natively. Java applets, Flash movies, RealMedia (an old web video and audio format), and other media required third-party plug-ins in order to be played in the browser. Heck, even JPEG images once required a plug-in to display.</p>
+			<div>
+				<div id="_idContainer543" class="callout">
+					<p class="callout">A plug-in is software that gives a browser functionality that it doesn’t have natively.</p>
+				</div>
+			</div>
+			<p class="body">To embed those media resources on the page, we used the <a id="_idIndexMarker1650"></a><span class="Literal-fc">object</span> and <span class="Literal-fc">embed</span> elements. They have slightly different uses. The <span class="Literal-fc">object</span> element is a multipurpose object placer. It can be used to place an image, create a <a id="_idIndexMarker1651"></a>nested browsing context (like an iframe), or embed a resource that must be handled by a plug-in. The <span class="Literal-fc">embed</span> element was for use with <a id="_idIndexMarker1652"></a>plug-ins only. </p>
+			<p class="body">To put it frankly, although still in use, <span class="Literal-fc">object</span> is going out of style, and <span class="Literal-fc">embed</span> is all but extinct (I’ve tucked it away in a brief sidebar). Media like Java applets and Flash movies are disappearing fast, and modern browsers use APIs to display many types of media natively. In addition, mobile browsers as well as the desktop Microsoft Edge browser don’t support plug-ins. </p>
+			<div>
+				<div id="_idContainer544" class="sidebar">
+					<h5 class="SidebarTitle">Farewell Flash</h5>
+					<p class="SidebarBody">Apple’s announcement <a id="_idIndexMarker1653"></a><a id="_idIndexMarker1654"></a>that it would not support Flash on its<a id="_idIndexMarker1655"></a><a id="_idIndexMarker1656"></a> iOS devices, <em class="Emphasis">ever</em>, gave HTML5 an enormous push forward and eventually led to Adobe stopping development on its mobile Flash products. Not long after, Microsoft announced that it was discontinuing its Silverlight media player in lieu of HTML5 alternatives. As of this writing, HTML5 is a long way from being able to reproduce the vast features and functionality of Flash, but it’s getting there gradually. We are likely to occasionally see Flash players on the desktop, but the trajectory away from plug-ins and toward standard web technologies seems clear.</p>
+				</div>
+			</div>
+			<p class="body">That said, let’s take a look at the <span class="Literal-fc">object</span> element. At its most minimal, the <a id="_idIndexMarker1657"></a><span class="Literal-fc">object</span> element uses the <span class="Literal-fc">data</span> attribute to point to the resource and the <a id="_idIndexMarker1658"></a><span class="Literal-fc">type</span> attribute to provide its<a id="_idIndexMarker1659"></a> MIME type. Any content within the <span class="Literal-fc">object</span> element tags will be used as a fallback for browsers that don’t support the embedded resource type. Here is a simple <span class="Literal-fc">object</span> element that places an SVG image on the page and provides a PNG fallback:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;object data="picture.svg" type="image/svg+xml"&gt;</code><br/>  &lt;img src="picture.png" alt=""&gt;<br/><code class="CodeColor">&lt;/object&gt;</code></pre>
+			<p class="body">Additional attributes for the <span class="Literal-fc">object</span> element are available and vary according to the type of media it is placing. The media format may also require that the <span class="Literal-fc">object</span> contain a number of <a id="_idIndexMarker1660"></a><span class="Literal-fc">param</span> elements that set parameters specific to that type of media. </p>
+			<p class="body">In this example, <span class="Literal-fc">param</span> elements specify whether the movie starts automatically (no) or has visible controls (yes):</p>
+			<pre class="CodeFirst">&lt;object type="video/quicktime" data="movies/hekboy.mov" width="320" height="256"&gt;<code class="CodeColor"><br/>  &lt;param name="autostart" value="false"&gt;<br/>   &lt;param name="controller" value="true"&gt;</code><br/>&lt;/object&gt;</pre>
+			<div>
+				<div id="_idContainer545" class="sidebar">
+					<h5 class="SidebarTitle">The embed Element</h5>
+					<p class="SidebarBody">The <span class="Literal-Sidebar">embed</span> element <a id="_idIndexMarker1661"></a><a id="_idIndexMarker1662"></a>was created by Netscape for use with plug-in technologies. It has always been well supported, but it wasn’t adopted into a formal specification until HTML5. With so many other options for embedding media, the <span class="Literal-Sidebar">embed</span> element is not as useful as it once was. It is often used as a fallback when there is a good reason to support extremely old browser versions. </p>
+					<p class="SidebarBody"><span class="Literal-Sidebar">embed</span> is an empty element that points to an <a id="_idIndexMarker1663"></a>external resource with the <a id="_idIndexMarker1664"></a><span class="Literal-Sidebar">src</span> attribute:</p>
+					<pre class="SidebarCodeFirst">&lt;embed type="video/quicktime" src="movies/hekboy.mov" width="320" height="256"&gt;</pre>
+					<p class="SidebarBody">There are additional media-specific attributes that set parameters similar to the <span class="Literal-Sidebar">param</span> element, but I’m not going to cover them all here. In fact, I think that’s all there is to say about <span class="Literal-Sidebar">embed</span>. </p>
+				</div>
+			</div>
+			<h1 id="_idParaDest-92" class="HeadA"><a id="_idTextAnchor126"></a>Video and Audio</h1>
+			<p class="body">Until recently, <a id="_idIndexMarker1665"></a><a id="_idIndexMarker1666"></a>browsers did not have built-in capabilities for handling video or sound, so they used plug-ins to fill in the gap. With the development of the web as an open standards platform, and with broadband connections allowing for heftier downloads than previously, it seemed to be time to make multimedia support part of browsers’ out-of-the-box capabilities. Enter the new <span class="Literal-fc">video</span> and <span class="Literal-fc">audio</span> elements and their respective APIs (see the “<span class="Xref">API</span>” sidebar). </p>
+			<div>
+				<div id="_idContainer546" class="sidebar">
+					<h5 class="SidebarSeries">TERMinology</h5>
+					<h5 class="SidebarTitle">API </h5>
+					<p class="SidebarBody">An <span class="FirstTerm--Sidebar-">API (</span><span class="FirstTerm--Sidebar-"><a id="_idIndexMarker1667"></a></span><span class="FirstTerm--Sidebar-">Application Programming Interface)</span> is a <a id="_idIndexMarker1668"></a>standardized set of commands, data names, properties, actions, and so on, that lets one software application communicate with another. HTML5 introduced a number of APIs that give browsers programmable features that previously could only be achieved with third-party plug-ins. </p>
+					<p class="SidebarBody">Some APIs have a markup component, such as embedding multimedia with the new HTML5 <span class="Literal-Sidebar">video</span> and <span class="Literal-Sidebar">audio</span> elements <a id="_idIndexMarker1669"></a><a id="_idIndexMarker1670"></a>(Media Player API). Others happen entirely behind the scenes with JavaScript or server-side components, such as creating web applications that work even without an internet connection (Offline Web Application API).</p>
+					<p class="SidebarBody">The W3C <a id="_idIndexMarker1671"></a>is working on lots and lots of APIs for use with web applications, all in varying stages of completion and implementation. Most have their own specifications, separate from the HTML5 spec itself, but they are generally included under the wide HTML5 umbrella that covers web-based applications.</p>
+					<p class="SidebarBody">A list of all HTML5 APIs and specs in development is available at <a href="http://html5-overview.net"><span class="URL-Email--Sidebar-">html5-overview.net</span></a>, maintained by Erik Wilde. You will also find introductions to better-known APIs in <span class="Xref--Sidebar-">Appendix D</span>.</p>
+				</div>
+			</div>
+			<h2 class="HeadB">The Good News and the Bad News</h2>
+			<p class="body">The good news is that the <span class="Literal-fc">video</span> and <span class="Literal-fc">audio</span> elements are well supported in modern <a id="_idIndexMarker1672"></a><a id="_idIndexMarker1673"></a>browsers, including IE 9+, Safari, Chrome, Opera, and Firefox for the desktop and iOS Safari 4+, Android 2.3+, and Opera Mobile (however, not Opera Mini). </p>
+			<p class="body">But if you’re envisioning a perfect world where all browsers are supporting video and audio in perfect harmony, I’m afraid it’s not that simple. Although they have all lined up on the markup and JavaScript for embedding media players, unfortunately they have not agreed on which formats to support. Let’s take a brief journey through the land of media file formats. If you want to add video or audio to your page, this stuff is important to understand.</p>
+			<h2 class="HeadB">How Media Formats Work</h2>
+			<p class="body">When you prepare audio or video content for web delivery, there are two format decisions to make. The first is how the <a id="_idIndexMarker1674"></a>media is <span class="FirstTerm">encoded</span> (the algorithms used to convert the source to 1s and 0s and how they are compressed). The method used for encoding is<a id="_idIndexMarker1675"></a> called the <span class="FirstTerm">codec</span>, which is short for “code/decode” or “compress/decompress.” There are a bazillion codecs out there (that’s an estimate). Some probably sound familiar, like MP3; others might sound new, such as H.264, Vorbis, Theora, VP8, and AAC. </p>
+			<p class="body">Second, you need to choose <a id="_idIndexMarker1676"></a>the <span class="FirstTerm">container format</span> for the media. You can think of it as a ZIP file that holds the compressed media and its metadata together in a package. Usually a container format is compatible with more than one codec type, and the full story is complicated. Because space is limited in this chapter, I’m going to cut to the chase and introduce the most common container/codec combinations for the web. If you are going to add video or audio to your site, I encourage you to get more familiar with all of these formats. </p>
+			<h3 class="HeadC">Meet the video formats</h3>
+			<p class="body">For video, the <a id="_idIndexMarker1677"></a>most common options are as follows:</p>
+			<p class="ListItem"><span class="ListStartItem">MPEG-4 </span><span class="ListStartItem"><a id="_idIndexMarker1678"></a></span><span class="ListStartItem">container + </span><span class="ListStartItem"><a id="_idIndexMarker1679"></a></span><span class="ListStartItem">H.</span><span class="ListStartItem">264 video codec + </span><span class="ListStartItem"><a id="_idIndexMarker1680"></a></span><span class="ListStartItem">AAC audio codec.</span> This combination is generally referred to as “MPEG-4,” and it takes the <span class="Filename">.mp4</span> or <span class="Filename">.m4v</span> file suffix. H.264 is a high-quality and flexible video codec, but it is patented and must be licensed for a fee. All current browsers that support HTML5 video can play MPEG-4 files with the H.264 codec. The newer H.265 codec (also known <a id="_idIndexMarker1681"></a><a id="_idIndexMarker1682"></a>as <span class="FirstTerm">HEVC, High Efficiency Video Coding</span>) is in development and reduces the bitrate by half, but is not well supported as of this writing. </p>
+			<p class="ListItem"><span class="ListStartItem">WebM </span><span class="ListStartItem"><a id="_idIndexMarker1683"></a></span><span class="ListStartItem">container + </span><span class="ListStartItem"><a id="_idIndexMarker1684"></a></span><span class="ListStartItem">VP8 video codec + </span><span class="ListStartItem"><a id="_idIndexMarker1685"></a></span><span class="ListStartItem">Vorbis audio codec.</span> “WebM” is a container format that has the advantage of being open source and royalty-free. It uses the <span class="Filename">.webm</span> file extension. It was originally designed to work with VP8 and Vorbis codecs.</p>
+			<p class="ListItem"><span class="ListStartItem">WebM container + VP9 video codec + Opus audio codec.</span> The VP9 video codec from the WebM project offers the same video quality as VP8 and H.264 at half the bitrate. Because it is newer, it is not as well supported, but it is a great option for browsers that can play it.</p>
+			<p class="ListItem"><span class="ListStartItem">Ogg </span><span class="ListStartItem"><a id="_idIndexMarker1686"></a></span><span class="ListStartItem">container + </span><span class="ListStartItem"><a id="_idIndexMarker1687"></a></span><span class="ListStartItem">Theora video codec + Vorbis audio codec.</span> This is typically called “Ogg Theora,” and the file should have an <span class="Filename">.ogv</span> suffix. All of the codecs and the container in this option are open source and unencumbered by patents or royalty restrictions, but some say the quality is inferior to other options. In addition to new browsers, it is supported on some older versions of Chrome, Firefox, and Android that don’t support WebM or MP4, so including it ensures playback for more users.</p>
+			<div>
+				<div id="_idContainer547" class="sidebar">
+					<h5 class="SidebarSeries">Further Reading</h5>
+					<p class="SidebarBody">For a thorough introduction to HTML video and audio, I recommend <span class="Citation--Sidebar-">Beginning HTML5 Media: Make the Most of the New Video and Audio Standards for the Web</span> by <a id="_idIndexMarker1688"></a><a id="_idIndexMarker1689"></a>Silvia Pfeiffer and Tom Green (Apress).</p>
+				</div>
+			</div>
+			<p class="body">Of course, the problem that I referred to earlier is that browser makers have not agreed on a single format to support. Some go with open source, royalty-free options like Ogg Theora or WebM. Others are sticking with H.264 despite the royalty requirements. What that means is that we web developers need to make multiple versions of videos to ensure support across all browsers. <span class="Xref-Figure">Table 10-1</span> lists which browsers support the various video options (see the “<span class="Xref">Server Setup</span>” sidebar).</p>
+			<div>
+				<div id="_idContainer548" class="contents">
+					<table id="table001-9" class="Table">
+						<colgroup>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+						</colgroup>
+						<thead>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Head" colspan="10">
+									<p class="TableTitle"><span class="Table-Label"><span class="FigureLabel">Table 10-1.</span></span> Video support in desktop and<a id="_idIndexMarker1690"></a> mobile browsers (as of 2017)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Head">
+									<p class="TableHeader">Format</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Type</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">IE</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">MS Edge</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Chrome</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Firefox</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Safari</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Opera</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Android</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">iOS Safari</p>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">MP4 (H.264)</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">video/mp4 mp4 m4v</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">9.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">12+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">Yes*</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.2+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">25+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.4+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">3.2+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">WebM (VP8)</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">video/webm webm webmv</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">6+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">15+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">2.3+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">–</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">WebM (VP9)</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">video/webm webm webmv</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">14+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">29+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">28+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">16+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.4+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">–</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">Ogg Theora</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">video/ogg ogv</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">13+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">2.3+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">–</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Remove-bottom-rule Table-Body-Left" colspan="10">
+									<p class="Table">* Firefox version varies by operating system. </p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer549" class="sidebar">
+					<h5 class="SidebarTitle">Server Setup</h5>
+					<p class="SidebarBody">In <span class="Xref-Figure">Tables 10-1</span> and <span class="Xref-Figure">10-2</span>, the Type column identifies the <a id="_idIndexMarker1691"></a>MIME type of each media format. If your site is running on the <a id="_idIndexMarker1692"></a>Apache server, to make sure that video and audio files are served correctly, you may need to add their respective types to the server’s <span class="Filename--Sidebar-">.htaccess</span> file. The following example adds the MP4 type/subtype and extensions:</p>
+					<pre class="SidebarCodeFirst">AddType video/mp4 mp4 m4v</pre>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer550" class="sidebar">
+					<h5 class="SidebarSeries">For further exploration</h5>
+					<h5 class="SidebarTitle">HLS (HTTP Streaming Video)</h5>
+					<p class="SidebarBody">If you are serious about web video, you should become <a id="_idIndexMarker1693"></a><a id="_idIndexMarker1694"></a>familiar with <span class="FirstTerm--Sidebar-">HLS (HTTP Streaming Video)</span>, a streaming format that can adapt its bitrate on the fly. The HLS Wikipedia entry is as good a place as any to get started: <a href="http://en.wikipedia.org/wiki/HTTP_Live_Streaming"><span class="URL-Email--Sidebar-">en.wikipedia.org/wiki/HTTP_Live_Streaming</span></a>.</p>
+				</div>
+			</div>
+			<h3 class="HeadC">Meet the audio formats</h3>
+			<p class="body">The landscape looks <a id="_idIndexMarker1695"></a>similar for audio formats: several to choose from, but no format that is supported by all browsers (<span class="Xref-Figure">Table 10-2</span>). </p>
+			<p class="ListItem"><span class="ListStartItem">MP3.</span> The <a id="_idIndexMarker1696"></a>MP3 (short for MPEG-1 Audio Layer 3) format is a codec and container in one, with the file extension<span class="Filename">.mp3</span>. It has become ubiquitous as a music download format. </p>
+			<p class="ListItem"><span class="ListStartItem">WAV.</span> The <a id="_idIndexMarker1697"></a>WAV format (<span class="Filename">.wav</span>) is also a codec and container in one. This format is uncompressed so it is only good for very short clips, like sound effects.</p>
+			<p class="ListItem"><span class="ListStartItem">Ogg container + Vorbis audio codec.</span> This is usually referred to as “Ogg Vorbis” and is served with the <span class="Filename">.ogg</span> or <span class="Filename">.oga</span> file extension.</p>
+			<p class="ListItem"><span class="ListStartItem">MPEG 4 container + AAC audio codec.</span><span class="ListStartItem"> </span>“MPEG4 audio” (<span class="Filename">.m4a</span>) is less common than MP3.</p>
+			<p class="ListItem"><span class="ListStartItem">WebM container + Vorbis audio codec.</span> The WebM (<span class="Filename">.webm</span>) format can also contain audio only. </p>
+			<p class="ListItem"><span class="ListStartItem">WebM container + </span><span class="ListStartItem"><a id="_idIndexMarker1698"></a></span><span class="ListStartItem">Opus audio codec.</span><span class="ListStartItem"> </span>Opus is a newer, more efficient audio codec that can be used with WebM.</p>
+			<div>
+				<div id="_idContainer551" class="contents">
+					<table id="table002-6" class="Table">
+						<colgroup>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+						</colgroup>
+						<thead>
+							<tr class="Table">
+								<td class="Table Table-Title Table-Head" colspan="10">
+									<p class="TableTitle"><span class="Table-Label"><span class="FigureLabel">Table 10-2.</span></span> Audio support in current browsers (as of 2017)</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Head">
+									<p class="TableHeader">Format</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Type</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">IE</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">MS Edge</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Chrome</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Firefox</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Opera</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Safari</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">iOS Safari</p>
+								</td>
+								<td class="Table Table-Head">
+									<p class="TableHeader">Android</p>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">MP3</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/mpeg mp3</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">9.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">12+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">22+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">15+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.1</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">2.3+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">WAV</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/wav or audio/wave</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">12+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">8.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">11.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.2+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">2.3+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">Ogg Vorbis</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/ogg ogg oga</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">3.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">11.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">2.3+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">MPEG-4/AAC</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/mp4 m4a</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">11.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">12+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">12.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">15+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.1+</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">3.0+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">WebM/Vorbis</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/webm webm</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">6.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">4.0+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">11.5+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">2.3.3+</p>
+								</td>
+							</tr>
+							<tr class="Table">
+								<td class="Table Table-Body-Left">
+									<p class="TableBody">WebM/Opus</p>
+								</td>
+								<td class="Table Table-Body">
+									<pre class="cellCode">audio/webm webm</pre>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">14+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">33+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">15+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">20+</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body">
+									<p class="TableBody">–</p>
+								</td>
+								<td class="Table Table-Body-Right">
+									<p class="TableBody">–</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div>
+				<div id="_idContainer552" class="sidebar">
+					<h5 class="SidebarTitle">Video and Audio Encoding Tools</h5>
+					<p class="SidebarBody">There are scores of options <a id="_idIndexMarker1699"></a>for editing and encoding video and audio files, so I can’t cover them all here, but the following tools are free and get the job done.</p>
+					<h5 class="sbHead">Video conversion </h5>
+					<ul>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Handbrake</span> (<a href="http://handbrake.fr"><span class="URL-Email--Sidebar-">handbrake.fr</span></a>) is a<a id="_idIndexMarker1700"></a> popular open source tool for converting to MPEG4 with H.264, H.265, VP8, and Theora. It is available for Windows, macOS, and Linux.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Firefogg</span> (<a href="http://firefogg.org"><span class="URL-Email--Sidebar-">firefogg.org</span></a>) is an <a id="_idIndexMarker1701"></a>extension to Firefox for converting video to the WebM (VP8 and VP9) and Ogg Theora formats. Simply install the Firefogg extension to Firefox (cross-platform); then visit the Firefogg site and convert video by using its online interface. </li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">FFmpeg</span> (<a href="http://ffmpeg.org"><span class="URL-Email--Sidebar-">ffmpeg.org</span></a>)is an <a id="_idIndexMarker1702"></a>open source, command-line tool for converting just about any video format. If you are not comfortable with the command line, there are a number of software packages (some for pay, some free) that offer a user interface to FFmpeg to make it more user-friendly.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Freemake</span> (<a href="http://freemake.com"><span class="URL-Email--Sidebar-">freemake.com</span></a>) is a<a id="_idIndexMarker1703"></a> free video and audio conversion tool for Windows that supports over 500 media formats.</li>
+					</ul>
+					<h5 class="sbHead">Audio conversion </h5>
+					<ul>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Audio Converter</span> (<a href="http://online-audio-converter.com"><span class="URL-Email--Sidebar-">online-audio-converter.com</span></a>) is<a id="_idIndexMarker1704"></a> one of the free audio and video tools from <a href="http://123Apps.com"><span class="URL-Email--Sidebar-">123Apps.com</span></a> that converts files to MP3, WAV, OGG, and more.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Media.io</span> (<a href="http://media.io"><span class="URL-Email--Sidebar-">media.io</span></a>) is a free <a id="_idIndexMarker1705"></a>web service that converts audio to MP3, WAV, and OGG. </li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">MediaHuman Audio Converter</span> (<a href="http://www.mediahuman.com/audio-converter/"><span class="URL-Email--Sidebar-">www.mediahuman.com/audio-converter/</span></a>) is free for <a id="_idIndexMarker1706"></a>Mac and Windows and can convert to all of the audio formats listed in this chapter and more. It has an easy drag-and-drop interface, but is pretty much no-frills.</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Max</span> (<a href="http://sbooth.org/Max/"><span class="URL-Email--Sidebar-">sbooth.org/Max/</span></a>) is an open <a id="_idIndexMarker1707"></a>source audio converter (Mac only).</li>
+						<li class="SidebarListBullet"><span class="ListStartItem--Sidebar-">Audacity</span> (<a href="http://www.audacityteam.org"><span class="URL-Email--Sidebar-">www.audacityteam.org</span></a>) is free, <a id="_idIndexMarker1708"></a>open source, cross-platform audio software for multitrack recording and editing. It can import and export files in many of the formats listed in this chapter.</li>
+					</ul>
+				</div>
+			</div>
+			<h2 class="HeadB">Adding a Video to a Page</h2>
+			<div>
+				<div id="_idContainer553" class="ref">
+					<p class="refNameCode">&lt;video&gt;…&lt;/video&gt;</p>
+					<p class="refPurpose">Adds a video player to the page</p>
+				</div>
+			</div>
+			<p class="body">I guess it’s<a id="_idIndexMarker1709"></a><a id="_idIndexMarker1710"></a><a id="_idIndexMarker1711"></a> about time we got to the markup for adding a video to a web page (this is an HTML chapter, after all). Let’s start with an example that assumes you are designing for an environment where you know exactly what browser your user will be using. When this is the case, you can provide only one video format using the <a id="_idIndexMarker1712"></a><span class="Literal-fc">src</span> attribute in the <span class="Literal-fc">video</span> tag (just as you do for an <span class="Literal-fc">img</span>). <span class="Xref-Figure">Figure 10-3</span> shows a movie with the default player in the Chrome browser.</p>
+			<div>
+				<figure id="_idContainer555" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1003_video.png" alt="" width="1321" height="706"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-3.</span> An embedded movie using the <span class="Literal-Sidebar">video</span> element (shown in Chrome on a Mac). </figcaption>
+				</figure>
+			</div>
+			<p class="body">Here is a simple video element that embeds a movie and player on a web page:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;video src</code>="highlight_reel.mp4" <code class="CodeColor">width=</code>"640" <code class="CodeColor">height=</code>"480" <code class="CodeColor">poster=</code>"highlight_still.jpg" <code class="CodeColor">controls autoplay&gt;</code><br/>  Your browser does not support HTML5 video. Get the &lt;a href="highlight_reel.mp4"&gt;MP4 video&lt;/a&gt;<br/><code class="CodeColor">&lt;/video&gt;</code></pre>
+			<p class="body">Browsers that do not support <span class="Literal-fc">video</span> display whatever content is provided within the<a id="_idIndexMarker1713"></a> <span class="Literal-fc">video</span> element. In this example, it provides a link to the movie that your visitor could download and play in another player. </p>
+			<p class="body">There are also some <a id="_idIndexMarker1714"></a><a id="_idIndexMarker1715"></a><a id="_idIndexMarker1716"></a>attributes in that example worth looking at in detail:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">width=</span>"<span class="Replaceable">pixel measurement</span>"<span class="Literal-fc"> height=</span>"<span class="Replaceable">pixel measurement</span>"</p>
+			<p class="ListVariable">Specifies the size of the box the embedded media player takes up on the screen. Generally, it is best to set the dimensions to exactly match the pixel dimensions of the movie. The movie will resize to match the dimensions set here.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">poster=</span>"<span class="Replaceable">url of image</span>"</p>
+			<p class="ListVariable">Provides the <a id="_idIndexMarker1717"></a>location of an image that is shown in place of the video before it plays. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">controls</span> </p>
+			<p class="ListVariable">Adding the <span class="Literal-fc">controls</span> <a id="_idIndexMarker1718"></a>attribute prompts the browser to display its built-in media controls, generally a play/pause button, a “seeker” that lets you move to a position within the video, and volume controls. It is possible to create your own custom player interface using CSS and JavaScript if you want more consistency across browsers. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">autoplay</span> </p>
+			<p class="ListVariable">Makes the video <a id="_idIndexMarker1719"></a>start playing automatically after it has downloaded enough of the media file to play through without stopping. In general, use of <span class="Literal-fc">autoplay</span> should be avoided in favor of letting the user decide when the video should start. <span class="Literal-fc">autoplay</span> does not work on iOS Safari and some other mobile browsers in order to protect users from unnecessary data downloads.</p>
+			<p class="body">In addition, the <span class="Literal-fc">video</span> element can use the <a id="_idIndexMarker1720"></a><span class="Literal-fc">loop</span> attribute to make the video play again after it has finished (ad infinitum), <a id="_idIndexMarker1721"></a><span class="Literal-fc">muted</span> for playing the video track without the audio, and <a id="_idIndexMarker1722"></a><span class="Literal-fc">preload</span> for suggesting to the browser whether the video data should be fetched as soon as the page loads (<span class="Literal-fc">preload=</span>"<span class="Literal-fc">auto</span>") or wait until the user clicks the play button (<span class="Literal-fc">preload=</span>"<span class="Literal-fc">none</span>"). Setting <span class="Literal-fc">preload=</span>"<span class="Literal-fc">metadata</span>" loads information about the media file, but not the media itself. A device can decide how to best handle the <span class="Literal-fc">auto</span> setting; for example, a browser in a smartphone may protect a user’s data usage by not preloading media, even when it is set to <span class="Literal-fc">auto</span>.</p>
+			<h3 class="HeadC">Providing video format options</h3>
+			<p class="body">Do you remember<a id="_idIndexMarker1723"></a> <a id="_idIndexMarker1724"></a><a id="_idIndexMarker1725"></a><a id="_idIndexMarker1726"></a>back in <a href="lwd5_chapter07.xhtml#_idTextAnchor088"><span class="Xref">Chapter </span><span class="Xref">7</span></a> when we supplied multiple image formats with the <span class="Literal-fc">picture</span> element using a number of <span class="Literal-fc">source</span> elements? Well, <span class="Literal-fc">picture</span> got that idea from <span class="Literal-fc">video</span>! </p>
+			<p class="body">As you’ve seen, it is not easy to find one video format to please all browsers (although MPEG4/<a id="_idIndexMarker1727"></a><a id="_idIndexMarker1728"></a>H.264 gets close). In addition, new efficient video formats like VP9 and H.265 are available but not supported in older browsers. Using <a id="_idIndexMarker1729"></a><span class="Literal-fc">source</span> elements, we can let the browsers use what they can.</p>
+			<p class="body">In the markup, a series of <span class="Literal-fc">source</span> elements inside the <span class="Literal-fc">video</span> element point to each video file. Browsers look down the list until they find one they support and download only that version. The following example provides a video clip in the souped-up WebM/VP9 format for supporing browsers, as well as an MP4 and Ogg Theora for other browsers. This will cover pretty much all browsers that support HTML5 video (see the sidebar “<span class="Xref">Flash Video Fallback</span>”).</p>
+			<pre class="CodeFirst">&lt;video id="video" controls poster="img/poster.jpg"<code class="CodeColor"><br/>  &lt;source src="clip.webm" type="video/webm"&gt;<br/>  &lt;source src="clip.mp4" type="video/mp4"&gt;<br/>  &lt;source src="clip.ogg" type="video/ogg"&gt;</code><br/>  &lt;a href="clip.mp4"&gt;Download the MP4 of the clip.&lt;/a&gt;<br/>&lt;/video&gt;</pre>
+			<h3 class="HeadC">Custom video players</h3>
+			<p class="body">One of the <a id="_idIndexMarker1730"></a>powerful things about the <span class="Literal-fc">video</span> element and the <a id="_idIndexMarker1731"></a><a id="_idIndexMarker1732"></a>Media Player API is that the system allows for a lot of customization. You can change the appearance of the control buttons with CSS and manipulate the functionality with JavaScript. That is all beyond the scope of this chapter, but I recommend the article “Creating a Cross-Browser Video Player” by<a id="_idIndexMarker1733"></a><a id="_idIndexMarker1734"></a><a id="_idIndexMarker1735"></a> Eric Shepherd, Chris Mills, and Ian Devlin (<a href="http://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/cross_browser_video_player"><span class="URL-Email">developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/cross_browser_video_player</span></a>) for a good overview.</p>
+			<p class="body">You may also be interested in trying out a prefab video player that provides good looks and advanced performance such as support for streaming video formats. You can implement many of them by adding a line or two of JavaScript to your document and then by using the <span class="Literal-fc">video</span> element, so it’s not hard to get started. There’s a nice roundup of plug-and-play video player options listed at <a id="_idIndexMarker1736"></a>VideoSWS (<a href="http://videosws.praegnanz.de/"><span class="URL-Email">videosws.praegnanz.de/</span></a>).</p>
+			<div>
+				<div id="_idContainer556" class="sidebar">
+					<h5 class="SidebarTitle">Flash Video Fallback</h5>
+					<p class="SidebarBody">Older browsers—most notably Internet Explorer versions 8 and earlier—do not support <span class="Literal-Sidebar">video</span>. If f IE8 is making a significant blip in your site statistics, you may choose to provide a Flash movie fallback. The “Creating a Cross-Browser Video Player” article mentioned previously has thorough explanation of the technique. Another article worth a read is <a id="_idIndexMarker1737"></a>Kroc Camen’s “Video for Everybody” (<a href="http://camendesign.com/code/video_for_everybody"><span class="URL-Email--Sidebar-">camendesign.com/code/video_for_everybody</span></a>). It is a bit dated, but I’m sure it would be helpful, balanced with your up-to-date browser support knowledge. </p>
+				</div>
+			</div>
+			<h2 class="HeadB">Adding Audio to a Page</h2>
+			<div>
+				<div id="_idContainer557" class="ref">
+					<p class="refNameCode">&lt;audio&gt;…&lt;/audio&gt;</p>
+					<p class="refPurpose">Adds an audio file to the page</p>
+				</div>
+			</div>
+			<p class="body">If you’ve wrapped <a id="_idIndexMarker1738"></a><a id="_idIndexMarker1739"></a><a id="_idIndexMarker1740"></a>your head around the <span class="Literal-fc">video</span> markup example, you already know how to add audio to a page. The <span class="Literal-fc">audio</span> element uses the same attributes as the <span class="Literal-fc">video</span> element, with the exception of <span class="Literal-fc">width</span>, <span class="Literal-fc">height</span>, and <span class="Literal-fc">poster</span> (because there is nothing to display). Just like the <span class="Literal-fc">video</span> element, you can provide a stack of audio format options using the <span class="Literal-fc">source</span> element, as shown in the example here. <span class="Xref-Figure">Figure 10-4</span> shows how the audio player might look when it’s rendered in the browser.</p>
+			<pre class="CodeFirst">&lt;p&gt;Play "Percussion Gun" by White Rabbits&lt;/p&gt;<br/><br/> <code class="CodeColor">&lt;audio id="whiterabbits" controls preload="auto"&gt;</code><br/>  &lt;source src="percussiongun.mp3" type="audio/mp3"&gt;<br/>  &lt;source src="percussiongun.ogg" type="audio/ogg"&gt;<br/>  &lt;source src="percussiongun.webm" type="audio/webm"&gt;<br/>  &lt;p&gt;Download "Percussion Gun":&lt;/p&gt;<br/>  &lt;ul&gt;<br/>    &lt;li&gt;&lt;a href="percussiongun.mp3"&gt;MP3&lt;/a&gt;&lt;/li&gt;<br/>    &lt;li&gt;&lt;a href="percussiongun.ogg"&gt;Ogg Vorbis&lt;/a&gt;&lt;/li&gt;<br/>  &lt;/ul&gt;<br/><code class="CodeColor">&lt;/audio&gt;</code></pre>
+			<div>
+				<figure id="_idContainer559" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1004_audioplayer.png" alt="" width="885" height="168"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-4.</span> Audio player as rendered in Firefox.</figcaption>
+				</figure>
+			</div>
+			<p class="body">If you have only one audio file, you can simply use the <a id="_idIndexMarker1741"></a><a id="_idIndexMarker1742"></a><span class="Literal-fc">src</span> attribute instead. If you want to be evil, you could embed audio in a page, set it to play automatically and then loop, and not provide any controls to stop it like this:</p>
+			<pre class="CodeFirst">&lt;audio src="jetfighter.mp3" autoplay loop&gt;&lt;/audio&gt;</pre>
+			<p class="body">But you would never, <em class="Emphasis">ever</em> do something like that, right? <em class="Emphasis">Right?!</em> Of course you wouldn’t.</p>
+			<h2 class="HeadB">Adding Text Tracks</h2>
+			<div>
+				<div id="_idContainer560" class="ref">
+					<p class="refNameCode">&lt;track&gt;…&lt;/track&gt;</p>
+					<p class="refPurpose">Adds synchronized text to embedded media</p>
+				</div>
+			</div>
+			<p class="body">The <span class="Literal-fc">track</span> <a id="_idIndexMarker1743"></a><a id="_idIndexMarker1744"></a>element provides a way to add text that is synchronized with the timeline of a video or audio track. Some uses include the following:</p>
+			<ul>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Subtitles</strong> in alternative languages</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Captions</strong> for the hearing impaired</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Descriptions</strong> of what is happening in a video for the sight impaired</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Chapter titles</strong> to allow for navigation through the media</li>
+				<li class="ListBullet"><strong class="Emphasis_Bold">Metadata</strong> that is not displayed but can be used by scripts</li>
+			</ul>
+			<p class="body">Clearly, adding text tracks makes the media more accessible, but it has the added bonus of improving <a id="_idIndexMarker1745"></a><a id="_idIndexMarker1746"></a>SEO (Search Engine Optimization). It can also allow <a id="_idIndexMarker1747"></a><a id="_idIndexMarker1748"></a>for <span class="FirstTerm">deep linking</span>, linking to a particular spot within the media’s timeline.</p>
+			<p class="body"><span class="Xref-Figure">Figure 10-5</span><span class="Xref"> </span>shows how captions might be rendered in a browser that supports the <span class="Literal-fc">track</span> element.</p>
+			<div>
+				<figure id="_idContainer562" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1005_captions.png" alt="" width="674" height="393"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-5.</span> A video with captions.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Use the <span class="Literal-fc">track</span> element inside the <span class="Literal-fc">video</span> or <span class="Literal-fc">audio</span> element you wish to annotate. The <span class="Literal-fc">track</span> element must appear after all the <a id="_idIndexMarker1749"></a><span class="Literal-fc">source</span> elements, if any, and may include these attributes:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">src</span></p>
+			<p class="ListVariable">Points to the <a id="_idIndexMarker1750"></a>text file.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">kind</span></p>
+			<p class="ListVariable">Specifies the <a id="_idIndexMarker1751"></a>type of text annotation you are providing (<span class="Literal-fc">subtitles</span>, <span class="Literal-fc">captions</span>, <span class="Literal-fc">descriptions</span>, <span class="Literal-fc">chapters</span>, or <span class="Literal-fc">metadata</span>). If <span class="Literal-fc">kind</span> is set to <span class="Literal-fc">subtitle</span>, you must also specify the language (<span class="Literal-fc">srclang</span> attribute) by using a standardized IANA two-letter language tag (see <span class="Xref">Note</span>). </p>
+			<div>
+				<div id="_idContainer563" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">The full list of two-letter <a id="_idIndexMarker1752"></a><a id="_idIndexMarker1753"></a>language codes is published at <a href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry"><span class="URL-Email--Sidebar-">www.iana.org/assignments/language-subtag-registry/language-subtag-registry</span></a>.</p>
+				</div>
+			</div>
+			<p class="ListVariableTerm"><span class="Literal-fc">label</span></p>
+			<p class="ListVariable">Provides a <a id="_idIndexMarker1754"></a>name for the track that can be used in the interface for selecting a particular track. </p>
+			<p class="ListVariableTerm"><span class="Literal-fc">default</span></p>
+			<p class="ListVariable">Marks a <a id="_idIndexMarker1755"></a>particular track as the default and it may be used on only one track within a media element. </p>
+			<p class="body">The following code provides English and French subtitle options for a movie: </p>
+			<pre class="CodeFirst">&lt;video width="640" height="320" controls&gt;<br/>  &lt;source src="japanese_movie.mp4" type="video/mp4"&gt;<br/>  &lt;source src="japanese_movie.webm" type="video/webm"&gt;<code class="CodeColor"><br/>  &lt;track src="english_subtitles.vtt"<br/>         kind="subtitles"<br/>         srclang="en"<br/>         label="English subtitles</code><code class="CodeColor">"<br/>         default&gt;<br/>  &lt;track src="french.vtt"<br/>         kind="subtitles"<br/>         srclang="fr"<br/>         label="Sous-titres en français"&gt;</code><br/>&lt;/video&gt;</pre>
+			<h3 class="HeadC">WebVTT</h3>
+			<p class="body">You’ll notice in the <a id="_idIndexMarker1756"></a>previous example that the track points to a file with a <span class="Filename">.vtt</span> suffix. That is a text file in the <span class="FirstTerm">WebVTT</span> (<span class="FirstTerm">Web Video Text Tracks</span>) format that contains a list of cues. It looks like this:</p>
+			<pre class="CodeFirst">WEBVTT  <br/><br/>00:00:01.345 --&gt; 00:00:03.456 <br/>Welcome to Artifact [applause]  <br/><br/>00:00:06.289 --&gt; 00:00:09.066 <br/>There is a lot of new mobile technology to discuss. <br/><br/>00:00:06.289 --&gt; 00:00:13.049 <br/>We're glad you could all join us at the Alamo Drafthouse.</pre>
+			<p class="body">Cues are separated by empty line spaces. Each cue has a start and end time in <span class="Replaceable">hours:minutes:seconds:milliseconds</span> format, separated by an “arrow” (<span class="Literal-fc">--&gt;</span>). The cue text (subtitle, caption, description, chapter, or metadata) is on a line below. Optionally, an ID can be provided for each cue on the line above the time sequence.</p>
+			<p class="body">You can probably guess that there’s a lot more to mastering text tracks for video and audio. Take a look at the following resources:</p>
+			<ul>
+				<li class="ListBullet">“Adding Captions and Subtitles to HTML5 Video” at <a id="_idIndexMarker1757"></a>MDN Web Docs (<a href="https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video"><span class="URL-Email">developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/</span><span class="URL-Email">Adding_captions_and_subtitles_to_HTML5_video</span></a>)</li>
+				<li class="ListBullet">Subtitle tutorial on <a id="_idIndexMarker1758"></a>Miracle Tutorials (<a href="http://www.miracletutorials.com/how-to-create-captionssubtitles-for-video-and-audio-in-webtvv-srt-dfxp-format/"><span class="URL-Email">www.miracletutorials.com/how-to-create-captionssubtitles-for-video-and-audio-in-webtvv-srt-dfxp-format/</span></a>)</li>
+				<li class="ListBullet">The WebVTT specification at the <a id="_idIndexMarker1759"></a>W3C is available at <a href="http://www.w3.org/TR/webvtt1/"><span class="URL-Email">www.w3.org/TR/webvtt1/</span></a><div id="_idContainer564" class="note"><h5 class="noteHeader">NOTE</h5><p class="note">Other timed text formats include SRT captioning (replaced by WebVTT) and TML/DFXP, which is maintained by the W3C <a id="_idIndexMarker1760"></a>and supported by Internet Explorer but it is not recommended in the HTML5 specification for <span class="Literal-Sidebar">track</span>.</p></div></li>
+			</ul>
+			<p class="body">If you’d like to play around with the <span class="Literal-fc">video</span> element, spend some time with <span class="Xref-Figure">Exercise 10-2</span>.</p>
+			<div>
+				<div id="_idContainer565" class="exercise">
+					<h6 class="ExerciseTitle"><span class="Exercise-Label">exercise 10-2.</span> Embedding a video player</h6>
+					<p class="SidebarBody">In this exercise, you’ll add a video to a page with the <span class="Literal-Sidebar">video</span> element. In the materials for <span class="Xref--Sidebar-">Chapter 10</span>, you will find the small movie about wind tunnel testing in MPEG-4, OGG/Theora, and WebM formats. </p>
+					<ol>
+						<li class="SidebarListNumber">Create a new document with the proper HTML5 setup, or you can use the same document you used in <span class="Xref-Figure">Exercise 10-1</span>. </li>
+						<li class="SidebarListNumber">Start by adding the <span class="Literal-Sidebar">video</span> element with the <span class="Literal-Sidebar">src</span> attribute pointed to <span class="Filename--Sidebar-">windtunnel.mp4</span> because MP4 video has the best browser support. Be sure to include the width (320 pixels) and height (262 pixels), as well as the <span class="Literal-Sidebar">controls</span> attribute so you’ll have a way to play and pause it. Include some fallback copy within the <span class="Literal-Sidebar">video</span> element—either a message or a link to the video: <pre class="SidebarCodeFirst">&lt;video src="windtunnel.mp4" width="320" height="262" controls&gt;<br/>   Sorry, your browser doesn't support HTML5 video.<br/>&lt;/video&gt; </pre></li>
+						<li class="SidebarListNumber">Save and view the document in your browser. If you see the fallback message, your browser is old and doesn’t support the <span class="Literal-Sidebar">video</span> element. If you see the controls but no video, it doesn’t support MP4, so try it again with one of the other formats. </li>
+						<li class="SidebarListNumber">The <span class="Literal-Sidebar">video</span> element is pretty straightforward so you may feel done at this point, but I encourage you to play around with it a little to see what happens. Here are some things to try:<ul><li class="SidebarListBullet">Resize the video player with the <span class="Literal-Sidebar">width</span> and <span class="Literal-Sidebar">height</span> attributes.</li><li class="SidebarListBullet">Add the <span class="Literal-Sidebar">autoplay</span> attribute.</li><li class="SidebarListBullet">Remove the <span class="Literal-Sidebar">controls</span> attribute and see what that’s like as a user.</li><li class="SidebarListBullet">Rewrite the <span class="Literal-Sidebar">video</span> element using <span class="Literal-Sidebar">source</span> elements for each of the three provided video formats.</li></ul></li>
+					</ol>
+				</div>
+			</div>
+			<h1 id="_idParaDest-93" class="HeadA"><a id="_idTextAnchor127"></a>Canvas</h1>
+			<p class="body">Another cool, “Look Ma, no plug-ins!” addition in HTML5 is the <span class="Literal-fc">canvas</span> element and the associated Canvas API. The <a id="_idIndexMarker1761"></a><span class="Literal-fc">canvas</span> element creates an area on a web page for drawing with a set of<a id="_idIndexMarker1762"></a> <a id="_idIndexMarker1763"></a>JavaScript functions for creating lines, shapes, fills, text, animations, and so on. You could use it to display an illustration, but what gives the <span class="Literal-fc">canvas</span> element so much potential (and has the web development world so delighted) is that it’s all generated with scripting. That means it is dynamic and can draw things on the fly and respond to user input. This makes it a nifty platform for creating animations, games, and even whole applications—all using the native browser behavior and without proprietary plug-ins like Flash.</p>
+			<p class="body">It is worth noting that the <a id="_idIndexMarker1764"></a>canvas drawing area is raster-based, meaning that it is made up of a grid of pixels. This sets it apart from the other drawing standard, SVG, which uses vector shapes and paths that are defined with points and mathematics.</p>
+			<p class="body">The good news is that every current browser supports the <span class="Literal-fc">canvas</span> element as of this writing, with the exception of Internet Explorer 8 and earlier (see <span class="Xref">Note</span>). It has become so well established that Adobe’s <a id="_idIndexMarker1765"></a><a id="_idIndexMarker1766"></a>Animate software (the replacement for Flash Pro) now exports to canvas format. </p>
+			<div>
+				<div id="_idContainer566" class="note">
+					<h5 class="noteHeader">Note</h5>
+					<p class="note">If you have a good reason to support IE8, the <a id="_idIndexMarker1767"></a>FlashCanvas JavaScript library (<a href="http://flashcanvas.net"><span class="URL-Email--Sidebar-">flashcanvas.net</span></a>) adds canvas support using the Flash drawing API. </p>
+				</div>
+			</div>
+			<p class="body"><span class="Xref-Figure">Figure 10-6</span> shows a few examples of the <span class="Literal-fc">canvas</span> element used to create games, drawing programs, an interactive molecule structure tool, and an asteroid animation. You can find more examples at <a id="_idIndexMarker1768"></a>EnvatoTuts+ (<a href="http://code.tutsplus.com/articles/21-ridiculously-impressive-html5-canvas-experiments--net-14210"><span class="URL-Email">code.tutsplus.com/articles/21-ridiculously-impressive-html5-canvas-experiments--net-14210</span></a>), on <a id="_idIndexMarker1769"></a>David Walsh’s blog (<a href="http://davidwalsh.name/canvas-demos"><span class="URL-Email">davidwalsh.name/canvas-demos</span></a>), as well as the results of your own web search. </p>
+			<div>
+				<figure id="_idContainer568" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1006_canvas.png" alt="" width="1338" height="1146"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-6.</span> A few examples of the <span class="Literal-Sidebar">canvas</span> element used for games, animations, and applications.</figcaption>
+				</figure>
+			</div>
+			<p class="body">Mastering the <span class="Literal-fc">canvas</span> element is more than we can take on here, particularly without any JavaScript experience under our belts, but I will give you a taste of what it is like to draw with JavaScript. That should give you a good idea of how it works, and also a new appreciation for the complexity of some of those examples.</p>
+			<h2 class="HeadB">The canvas Element</h2>
+			<div>
+				<div id="_idContainer569" class="ref">
+					<p class="refNameCode">&lt;canvas&gt;…&lt;/canvas&gt;</p>
+					<p class="refPurpose">Adds a 2-D dynamic drawing area</p>
+				</div>
+			</div>
+			<p class="body">You add a canvas space to the page with the <span class="Literal-fc">canvas</span> element and specify the dimensions with the<a id="_idIndexMarker1770"></a> <span class="Literal-fc">width</span> and <span class="Literal-fc">height</span> attributes. And that’s really all there is to the markup. For browsers that don’t support the <span class="Literal-fc">canvas</span> element, you can provide some fallback content (a message, image, or whatever seems appropriate) inside the tags:</p>
+			<pre class="CodeFirst"><code class="CodeColor">&lt;canvas width="</code><span class="Replaceable">600</span><code class="CodeColor">" height="</code><span class="Replaceable">400</span><code class="CodeColor">"</code> id="my_first_canvas"<code class="CodeColor">&gt;</code><br/>Your browser does not support HTML5 canvas. Try using Chrome, Firefox, Safari or MS Edge.<br/><code class="CodeColor">&lt;/canvas&gt;</code></pre>
+			<p class="body">The markup just clears a space upon which the drawing will happen. You can affect the drawing space itself with CSS (add a border or a background color, for example), but all of the contents of the canvas are generated by scripting and cannot be selected for styling with CSS.</p>
+			<h2 class="HeadB">Drawing with JavaScript</h2>
+			<p class="body">The <a id="_idIndexMarker1771"></a>Canvas API includes functions for creating shapes, such as <a id="_idIndexMarker1772"></a><span class="Literal-fc">strokeRect()</span> for drawing a rectangular outline and <a id="_idIndexMarker1773"></a><span class="Literal-fc">beginPath()</span> for starting a line drawing. Some functions move things around, such as <a id="_idIndexMarker1774"></a><a id="_idIndexMarker1775"></a><span class="Literal-fc">rotate()</span> and <span class="Literal-fc">scale()</span>. It also includes attributes for applying styles (for example, <a id="_idIndexMarker1776"></a><a id="_idIndexMarker1777"></a><a id="_idIndexMarker1778"></a><a id="_idIndexMarker1779"></a><span class="Literal-fc">lineWidth</span>, <span class="Literal-fc">font</span>,<span class="Literal-fc"> strokeStyle</span>, and <span class="Literal-fc">fillStyle</span>). </p>
+			<p class="body">Sanders <a id="_idIndexMarker1780"></a>Kleinfeld created the following code example for his book <span class="Citation">HTML5 for Publishers</span> (O’Reilly). He was kind enough to allow me to use it in this book. <span class="Xref-Figure">Figure 10-7</span> shows the simple smiley face we’ll be creating with the <a id="_idIndexMarker1781"></a>Canvas API. </p>
+			<div>
+				<figure id="_idContainer571" class="figWCaption">
+					<p class="Figure_Holder"><img src="image/lwd5_1007_hellocanvas.png" alt="" width="601" height="258"/></p>
+					<figcaption class="FigureCaption"><span class="FigureLabel">Figure 10-7.</span> The finished product of our “Hello Canvas” example. See the original at <a href="http://examples.oreilly.com/0636920022473/my_first_canvas/my_first_canvas.html"><span class="URL-Email--Sidebar-">examples.oreilly.com/0636920022473/my_first_canvas/my_first_canvas.html</span></a>.</figcaption>
+				</figure>
+			</div>
+			<p class="body">And here is the script that created it. Don’t worry that you don’t know any JavaScript yet. Just skim through the script and pay attention to the inline comments. I’ll also describe some of the functions in use at the end. I bet you’ll get the gist of it just fine. </p>
+			<pre class="CodeFirst">&lt;script type="text/javascript"&gt;<br/>window.addEventListener('load', eventWindowLoaded, false);<br/>function eventWindowLoaded() {<br/>  canvasApp();<br/>} <br/><br/>function canvasApp(){<br/>var theCanvas = document.getElementById('my_first_canvas');<br/>var my_canvas = theCanvas.getContext('2d');<br/>my_canvas.strokeRect(0,0,200,225) <br/><span class="Code-Comment">    // to start, draw a border around the canvas  </span><br/><br/><span class="Code-Comment">    //draw face </span><br/>my_canvas.beginPath();<br/>my_canvas.arc(100, 100, 75, (Math.PI/180)*0, (Math.PI/180)*360, false);</pre>
+			<pre class="Code"><span class="Code-Comment">    // circle dimensions <br/></span>my_canvas.strokeStyle = "black"; <span class="Code-Comment">// circle outline is black </span><br/>my_canvas.lineWidth = 3; <span class="Code-Comment">// outline is three pixels wide </span><br/>my_canvas.fillStyle = "yellow"; <span class="Code-Comment">// fill circle with yellow </span><br/>my_canvas.stroke(); <span class="Code-Comment">// draw circle </span><br/>my_canvas.fill(); <span class="Code-Comment">// fill in circle </span><br/>my_canvas.closePath(); <br/><br/><span class="Code-Comment">    // now, draw left eye </span><br/>my_canvas.fillStyle = "black"; <span class="Code-Comment">// switch to black for the fill </span><br/>my_canvas.beginPath();<br/>my_canvas.arc(65, 70, 10, (Math.PI/180)*0, (Math.PI/180)*360, false); <br/><span class="Code-Comment">    // circle dimensions </span><br/>my_canvas.stroke(); <span class="Code-Comment">// draw circle</span><br/> my_canvas.fill(); <span class="Code-Comment">// fill in circle</span><br/> my_canvas.closePath(); <br/><span class="Code-Comment">    // now, draw right eye </span><br/>my_canvas.beginPath();<br/>my_canvas.arc(135, 70, 10, (Math.PI/180)*0, (Math.PI/180)*360, false);<br/><span class="Code-Comment">    // circle dimensions </span><br/>my_canvas.stroke(); <span class="Code-Comment">// draw circle</span><br/><code class="CodeColor"> </code>my_canvas.fill(); <span class="Code-Comment">// fill in circle</span><br/><code class="CodeColor"> </code>my_canvas.closePath(); <br/><br/><span class="Code-Comment">    // draw smile</span><br/><code class="CodeColor"> </code>my_canvas.lineWidth = 6; <code class="CodeColor">/</code><span class="Code-Comment">/ switch to six pixels wide for outline</span><br/><code class="CodeColor"> </code>my_canvas.beginPath();<br/>my_canvas.arc(99, 120, 35, (Math.PI/180)*0, (Math.PI/180)*-180, false);<br/><span class="Code-Comment">    // semicircle dimensions </span><br/>my_canvas.stroke();<br/>my_canvas.closePath(); <br/><br/><span class="Code-Comment">    // Smiley Speaks!</span><br/><code class="CodeColor"> </code>my_canvas.fillStyle = "black"; <span class="Code-Comment">// switch to black for text fill</span><br/><code class="CodeColor"> </code>my_canvas.font      = '20px _sans'; <span class="Code-Comment">// use 20 pixel sans serif font</span><br/><code class="CodeColor"> </code>my_canvas.fillText  ("Hello Canvas!", 45, 200); <span class="Code-Comment">// write text </span><br/>}<br/>&lt;/script&gt; </pre>
+			<p class="body">Finally, here is a little more information on the Canvas API functions used in the example:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">strokeRect(</span><span class="Replaceable">x1</span><span class="Replaceable">, </span><span class="Replaceable">y1</span><span class="Replaceable">, x2, </span><span class="Replaceable">y2</span><span class="Literal-fc">)</span></p>
+			<p class="ListVariable">Draws a rectangular outline from the point (x1, y1) to (x2, y2). By default, the origin of the canvas (0, 0) is the top-left corner, and <em class="Emphasis">x</em> and <em class="Emphasis">y</em> coordinates are measured to the right and down.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">beginPath()</span></p>
+			<p class="ListVariable">Starts a line drawing.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">closePath()</span></p>
+			<p class="ListVariable">Ends a line <a id="_idIndexMarker1782"></a>drawing that was started with <span class="Literal-fc">beginPath()</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">arc(</span><span class="Replaceable">x</span><span class="Literal-fc">, </span><span class="Replaceable">y</span><span class="Literal-fc">, </span><span class="Replaceable">arc_radius</span><span class="Literal-fc">, </span><span class="Replaceable">angle_radians_beg</span><span class="Literal-fc">, </span><span class="Replaceable">angle_radians_end</span><span class="Literal-fc">)</span></p>
+			<p class="ListVariable">Draws <a id="_idIndexMarker1783"></a>an arc where (x,y) is the center of the circle, <span class="Literal-fc">arc_radius</span> is the length of the radius of the circle, and <span class="Literal-fc">angle_radians_beg</span> and <span class="Literal-fc">_end</span> indicate the beginning and end of the arc angle.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">stroke()</span></p>
+			<p class="ListVariable">Draws<a id="_idIndexMarker1784"></a> <a id="_idIndexMarker1785"></a>the line defined by the path. If you don’t include this, the path won’t appear on the canvas.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">fill()</span></p>
+			<p class="ListVariable">Fills in <a id="_idIndexMarker1786"></a>the path specified with <span class="Literal-fc">beginPath()</span> and <span class="Literal-fc">endPath()</span>.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">fillText(</span><span class="Replaceable">your_text</span><span class="Literal-fc">, </span><span class="Replaceable">x1</span><span class="Literal-fc">, </span><span class="Replaceable">y1</span><span class="Literal-fc">)</span></p>
+			<p class="ListVariable">Adds<a id="_idIndexMarker1787"></a> text to the canvas starting at the (x,y) coordinate specified.</p>
+			<p class="body">In addition, the following attributes were used to specify colors and styles:</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">lineWidth</span></p>
+			<p class="ListVariable">Width of <a id="_idIndexMarker1788"></a>the border of the path.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">strokeStyle</span></p>
+			<p class="ListVariable">Color <a id="_idIndexMarker1789"></a>of the border.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">fillStyle</span></p>
+			<p class="ListVariable">Color of<a id="_idIndexMarker1790"></a> the fill (interior) of the shape created with the path.</p>
+			<p class="ListVariableTerm"><span class="Literal-fc">font</span></p>
+			<p class="ListVariable">The font <a id="_idIndexMarker1791"></a>and size of the text.</p>
+			<p class="body">Of course, the Canvas API includes many more functions and attributes than we’ve used here. For a complete list, see the W3C’s HTML5 Canvas 2D Context specification at <a href="http://www.w3.org/TR/2dcontext"><span class="URL-Email">www.w3.org/TR/2dcontex</span><span class="URL-Email">t</span></a>. A web search will turn up lots of Canvas tutorials should you be ready to learn more. In addition, I can recommend these resources:</p>
+			<ul>
+				<li class="ListBullet">The book <span class="Citation">HTML5 Canvas, Second Edition</span>, by <a id="_idIndexMarker1792"></a><a id="_idIndexMarker1793"></a>Steve Fulton and Jeff Fulton (O’Reilly).</li>
+				<li class="ListBullet">If video is more your speed, try this tutorial by <a id="_idIndexMarker1794"></a>David Geary: <span class="Citation">HTML5 Canvas for Developers</span> (<a href="http://shop.oreilly.com/product/0636920030751.do"><span class="URL-Email">shop.oreilly.com/product/0636920030751.do</span></a>).</li>
+			</ul>
+			<h1 id="_idParaDest-94" class="HeadA"><a id="_idTextAnchor128"></a>Test Yourself</h1>
+			<p class="body">We’ve looked at all sorts of ways to stick things in web pages in this chapter. We’ve seen how to use <span class="Literal-fc">iframe</span> to create a “window-in-a-window” for displaying external web resources; <span class="Literal-fc">object</span> for resources that require plug-ins, video and audio players; and the <span class="Literal-fc">canvas</span> 2-D scriptable drawing space. Now see if you were paying attention. As always, answers are in <a href="lwd5_appendixA.xhtml#_idTextAnchor325"><span class="Xref">Appendix </span><span class="Xref">A</span></a>.</p>
+			<ol>
+				<li class="ListNumber" value="1">What is a “nested browsing context,” and how would you create one?</li>
+				<li class="ListNumber">Why would you use the <span class="Literal-fc">sandbox</span> attribute with an <span class="Literal-fc">iframe</span>?</li>
+				<li class="ListNumber">Name some instances when you might need to know the MIME type for your media file.</li>
+				<li class="ListNumber">Identify each of the following as a container format, video codec, or audio codec:<table id="table003-1" class="table_invisible"><colgroup><col/><col/></colgroup><tbody><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">a. Ogg </p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">b. H.264</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">c. VP8</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">d. Vorbis</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">e. WebM</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">f. Theora</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">g. Opus</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr><tr class="table_invisible"><td class="table_invisible"><p class="TableBody">h. MPEG-4</p></td><td class="table_invisible"><p class="TableBody">____________________</p></td></tr></tbody></table></li>
+				<li class="ListNumber">What does the <span class="Literal-fc">poster</span> attribute do?</li>
+				<li class="ListNumber">What is a <span class="Filename">.vtt</span> file? </li>
+				<li class="ListNumber">List at least two differences between SVG and Canvas.</li>
+				<li class="ListNumber">List the two Canvas API functions you would use to draw a rectangle and fill it with red. You don’t need to write the whole script. </li>
+			</ol>
+			<h1 id="_idParaDest-95" class="HeadA"><a id="_idTextAnchor129"></a>Element Review: Embedded Media</h1>
+			<p class="body">The following elements are used to embed media files of many types into web pages.</p>
+			<table id="table004-1" class="Table">
+				<colgroup>
+					<col/>
+					<col/>
+				</colgroup>
+				<thead>
+					<tr class="Table">
+						<td class="Table Table-Head">
+							<p class="TableHeader">Element and Attributes</p>
+						</td>
+						<td class="Table Table-Head">
+							<p class="TableHeader">Description</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">audio</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Embeds an audio player on the page</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent"><a id="_idIndexMarker1795"></a>Address<a id="_idIndexMarker1796"></a> of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">crossorigin=</span>"<span class="Code1">anonymous|use-credentials</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">How the <a id="_idIndexMarker1797"></a>element handles requests from other origins (servers)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">preload=</span>"<span class="Code1">auto|none|metadata</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1798"></a>how much the media resource should be buffered on page load</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">autoplay</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1799"></a>the media can play as soon as the page is loaded</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">loop</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates<a id="_idIndexMarker1800"></a> the media file should start playing again automatically once it reaches the end</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">muted</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Disables <a id="_idIndexMarker1801"></a>the audio output</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">controls</span></pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1802"></a>the browser should display a set of playback controls for the media file</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">canvas</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Represents a two-dimensional area that can be used for rendering dynamic bitmap graphics</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">height</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1803"></a>height of the canvas area</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">width</span></pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1804"></a>width of the canvas area</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">embed</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Embeds a multimedia object that requires a plug-in for playback on the page. Certain media types require custom attributes not listed below.</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address<a id="_idIndexMarker1805"></a> of the media resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">type=</span>"<span class="Replaceable-Sidebar">media type</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1806"></a>media (MIME) type of the media</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">width=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1807"></a><a id="_idIndexMarker1808"></a>horizontal dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">height=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">The vertical <a id="_idIndexMarker1809"></a>dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">iframe</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Creates a nested browsing context to display HTML resources in a page</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address<a id="_idIndexMarker1810"></a> of the HTML resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">srcdoc=</span>"<span class="Replaceable-Sidebar">HTML source code</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1811"></a>HTML source of a document to display in the inline frame</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">name=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Assigns a <a id="_idIndexMarker1812"></a>name to the inline frame to be referenced by targeted links</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">sandbox=  </span>"<span class="Code1">allow-forms|  allow-pointer-lock|  allow-popups|  allow-same-origin|  allow-scripts|  allow-top-navigation</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Security rules <a id="_idIndexMarker1813"></a><a id="_idIndexMarker1814"></a>for nested content</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">allowfullscreen</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates the objects in the inline frame are allowed to use <span class="Literal-Sidebar">requestFullScreen()</span></p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">width=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The<a id="_idIndexMarker1815"></a> horizontal dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">height=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">The vertical <a id="_idIndexMarker1816"></a>dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">object</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">A generic element for embedding an external resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">data=</span>"<span class="Replaceable-Sidebar">URI</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address <a id="_idIndexMarker1817"></a>of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">type=</span>"<span class="Replaceable-Sidebar">media type</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The media <a id="_idIndexMarker1818"></a>(MIME) type of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">typemustmatch</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1819"></a>the resource is to be used only if the value of the <span class="Literal-Sidebar">type</span> attribute and the content type of the resource match</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">name=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1820"></a>name of the object to be referenced by scripts</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">form=</span>"<span class="Replaceable-Sidebar">form ID</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Associates <a id="_idIndexMarker1821"></a>the <span class="Literal-Sidebar">object</span> with a <span class="Literal-Sidebar">form</span> element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">width=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1822"></a>horizontal dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">height=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1823"></a>vertical dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">param</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Supplies<a id="_idIndexMarker1824"></a> a parameter within an <span class="Literal-Sidebar">object</span> element</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">name=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Defines the <a id="_idIndexMarker1825"></a>name of the parameter</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">value=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Defines<a id="_idIndexMarker1826"></a> the value of the parameter</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">source</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Allows authors to specify multiple versions of a media file (used with <span class="Literal-Sidebar">video</span> and <span class="Literal-Sidebar">audio</span>)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The <a id="_idIndexMarker1827"></a>address of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">type=</span>"<span class="Replaceable-Sidebar">media type</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">The media <a id="_idIndexMarker1828"></a>(MIME) type of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">track</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Specifies <a id="_idIndexMarker1829"></a>an external resource (text or audio) that is timed with a media file that improves accessibility, navigation, or SEO</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">kind=</span>"<span class="Code1">subtitles|captions|descriptions|chapters|metadata</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Type <a id="_idIndexMarker1830"></a>of text track</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address <a id="_idIndexMarker1831"></a>of external resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">srclang=</span>"<span class="Replaceable-Sidebar">valid language tag</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Language<a id="_idIndexMarker1832"></a> of the text track</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">label=</span>"<span class="Replaceable-Sidebar">text</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">A title <a id="_idIndexMarker1833"></a>for the track that may be displayed by the browser</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">default</span></pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Indicates<a id="_idIndexMarker1834"></a> the track should be used by default if it does not override user preferences</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="cellCode"><span class="Code1">video</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody">Embeds a video player on the page</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">src=</span>"<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Address <a id="_idIndexMarker1835"></a>of the resource</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">crossorigin=</span>"<span class="Code1">anonymous|use-credentials</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">How the <a id="_idIndexMarker1836"></a>element handles requests from other origins (servers)</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">poster=</span>"<span class="Replaceable-Sidebar">URL</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">The<a id="_idIndexMarker1837"></a> location of an image file that displays as a placeholder before the video begins to play</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">preload=</span>"<span class="Code1">auto|none|metadata</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Hints <a id="_idIndexMarker1838"></a>how much buffering the media resource will need</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">autoplay</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1839"></a><a id="_idIndexMarker1840"></a>the media can play as soon as the page is loaded</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">loop</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates<a id="_idIndexMarker1841"></a> the media file should start playing again automatically once it reaches the end</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">muted</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Disables<a id="_idIndexMarker1842"></a> the audio output</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">controls</span></pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Indicates <a id="_idIndexMarker1843"></a>the browser should display a set of playback controls for the media file</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Remove-bottom-rule Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">width=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Remove-bottom-rule Table-Body-Right">
+							<p class="TableBody-Indent">Specifies <a id="_idIndexMarker1844"></a>the horizontal dimension of the video player in pixels</p>
+						</td>
+					</tr>
+					<tr class="Table">
+						<td class="Table Table-Body-Left">
+							<pre class="CellCode-indent"><span class="Code1">height=</span>"<span class="Replaceable-Sidebar">number</span>"</pre>
+						</td>
+						<td class="Table Table-Body-Right">
+							<p class="TableBody-Indent">Specifies <a id="_idIndexMarker1845"></a>the vertical dimension of the video player in pixels</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>
