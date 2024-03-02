@@ -1,0 +1,759 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0                z3998: http://www.daisy.org/z3998/2012/vocab/structure/#" lang="en-US" xml:lang="en-US">
+
+<head>
+  <title>htmlcss_epub-11</title>
+  <link href="css/idGeneratedStyles.css" rel="stylesheet" type="text/css"/>
+<meta content="urn:uuid:e0000000-0000-0000-0000-000006605679" name="Adept.expected.resource"/>
+</head>
+
+<body id="htmlcss_epub-11" lang="en-US">
+
+  <div>
+
+    <h2 class="Chapter--" id="idParaDest-66"><a id="idTextAnchor063"/>| 7 | </h2>
+
+    <p class="Chapter-Title" id="idParaDest-67"><a id="idTextAnchor064"/>Using CSS to Size and Space Elements</p>
+
+    <div class="chapterOverview-wrap">
+
+      <h3 class="chapterOverview-title"><b>Chapter Overview</b></h3>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item">CSS uses a box model for formatting.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">Elements have size, border, padding, and margins.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">Border boxing makes spacing easier.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+    <p class="IntroParagraph">Much of the power of CSS’s formatting abilities lies in the CSS “box model.” The box model is a specific set of properties that are commonly used to delineate various elements of a web page layout. Properties that control the margin, border, and padding define the spacing around elements on the page.</p>
+
+    <p class="H2_Body">If we think of HTML elements as a set of discrete blocks, the box model helps us specify how those blocks should be arranged, both in relation to other elements and on the page itself. </p>
+
+    <p class="H2_Body">Imagine cars on a road. If we think of each element as a car, then we can specify the width of a lane and the amount of space between cars. We can also specify elements specific to each individual car, such as how the seats are placed in relationship to the body of the car. </p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo054.jpg"/>
+
+        <img alt="" class="w-60" src="image/30.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">Using the box model, we can specify the dimensions of the element’s <span class="italic idGenCharOverride-2">content</span>, the <span class="italic idGenCharOverride-2">padding</span> that specifies space around the content, and a <span class="italic idGenCharOverride-2">border</span> of the content (the outer body of the car), which specifies thickness, style, and more. We can use <span class="italic idGenCharOverride-2">margins</span> to create an invisible force field around the vehicle, so that nothing can bump up too close (figure 54).</p>
+
+    <h3 class="H2" id="idParaDest-68"><a id="idTextAnchor065"/>Content</h3>
+
+    <p class="H2_Body">The “content” part of the box model is simply the portion that is to be displayed. It can be text, images, or any other HTML element (usually) wrapped within a <code class="CODE">&lt;div&gt;</code> element. Divs are quite helpful in delineating content sections on a page because they don’t do anything themselves—they simply serve as containers for content.</p>
+
+    <p class="H2_Body">We can control the dimensions of a block of content by changing its width and height properties. We can make it a fixed size or specify dimensions in percentages so that it is relative to the size of the page (or containing element).</p>
+
+    <p class="H2_Body">Let’s go back to our example style sheet from chapter 6.</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-01.css</p>
+
+      <pre class="CODE_body">   /* Set a default font and size for the entire document */</pre>
+
+      <pre class="CODE_body">   body {</pre>
+
+      <pre class="CODE_body">      font-family: Arial, Helvetica, sans-serif;</pre>
+
+      <pre class="CODE_body">      font-size: 12px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   h1 { font-size: 22px; }</pre>
+
+      <pre class="CODE_body">   h2 { font-size: 18px; }</pre>
+
+      <pre class="CODE_body">   h3 { font-size: 16px; }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   .bold-text { font-weight: bold; }</pre>
+
+      <pre class="CODE_body">   .red-text { color: red; }</pre>
+
+      <pre class="CODE_body">   .purple-text { color: purple; }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red; </pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">To demonstrate content sizing, we can start with an image. On our fictitious sales page, we would like to add a picture of a car.</p>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-02.html</p>
+
+      <pre class="CODE_body">&lt;img alt="A nice car for sale." src="images/car.jpg"&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">If we want to alter the image’s dimensions, we have three options in CSS: define the properties in an inline style, use a custom class, or use an id. It’s generally best to avoid inline styles, so we should create a class or id. Recall that ids are used only once on a page, but classes can be used as many times as we like. Since this would be the only picture of a car on this page, it is best to give it an id, like this:</p>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-03.html</p>
+
+      <pre class="CODE_body">&lt;img id="car" alt="A nice car for sale." src="images/car.jpg"&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">Now let’s define the image’s size.</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-04.css</p>
+
+      <pre class="CODE_body">   #car {</pre>
+
+      <pre class="CODE_body">      width: 640px;</pre>
+
+      <pre class="CODE_body">      height: 480px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">With this CSS rule, we assign the properties <span class="italic idGenCharOverride-2">width</span> and <span class="italic idGenCharOverride-2">height</span>, in pixels (px), to the element with the id of “car.” (See figure 55.)</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo055.jpg"/>
+
+        <img alt="" class="w-60" src="image/31.png"/>
+
+      </figure>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo056.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure56.png"/>
+
+      </figure>
+
+      <p class="Caption">The car, dimensions 640x480, surrounded by padding, border, and margin</p>
+
+    </div>
+
+    <p class="H2_Body">If we want the car image to be resized according to the size of the containing element (in our case, the screen), we can use a percentage indicator:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-05.css</p>
+
+      <pre class="CODE_body">   #car {</pre>
+
+      <pre class="CODE_body">      width: 25%;</pre>
+
+      <pre class="CODE_body">      height: 25%;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">Now the image will be resized to 25% of the width and height. You can set one of these attributes to “auto” and have the browser calculate the other dimension for you in proportion to the first one.</p>
+
+    <p class="H2_Body">When considering dimensions of content like images, it is important to remember that your page will be viewed on a variety of devices. You might be fine with a car image expanding to 1000 pixels or more on a large monitor, but that size yields poor results on mobile devices.</p>
+
+    <p class="H2_Body">To help alleviate this issue, CSS provides a max-width and a max-height property. Specifying one or both of these ensures that an image can never be resized past a certain point. And, as you might have suspected, we can also use min-width and min-height to specify minimum sizes. Let’s put this into practice.</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-06.css</p>
+
+      <pre class="CODE_body">   #car {</pre>
+
+      <pre class="CODE_body">      width: auto;</pre>
+
+      <pre class="CODE_body">      height: auto;</pre>
+
+      <pre class="CODE_body">      min-width: 320px;</pre>
+
+      <pre class="CODE_body">      min-height: 240px;</pre>
+
+      <pre class="CODE_body">      max-width: 1280px;</pre>
+
+      <pre class="CODE_body">      max-height: 960px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-07.html</p>
+
+      <pre class="CODE_body">&lt;img id="car" alt="A nice car for sale." src="images/car.jpg"&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">Under these settings the image cannot be reduced to more than 320 by 240 pixels, nor be enlarged to more than 1280 by 960 pixels (figure 57).</p>
+
+    <p class="H2_Body">You may have noticed that these minimum and maximum numbers are relative to each other. The minimum width size is 320 pixels, which is half of the default 640 pixels we defined earlier. The maximum width size is 1280 pixels, which is double the original width and four times the minimum. You are not required to use this technique, but doing so helps ensure your images are not awkwardly scaled by the browser.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo057.jpg"/>
+
+        <img alt="" class="w-60" src="image/33.png"/>
+
+        <img alt="" class="w-60" src="image/34.png"/>
+
+      </figure>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-69"><a id="idTextAnchor066"/>Padding</h3>
+
+    <p class="H2_Body">The padding property creates space between the content of an element and its outer edge. This is used to make room between elements so they aren’t crowded on the page. </p>
+
+    <p class="H2_Body">Padding extends the background properties (image, color, etc.) of the content area. Text or images inside an element of padding will appear to have “bumpers” around them that retain the background style. Padding can be set for the top, right, bottom, and left of an element. Let’s put this into practice.</p>
+
+    <p class="H2_Body">Remember our atrociously colored yellow and red ad (Snippet_07-01.css)? Let’s add some padding around it (figure 58):</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-08.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">          color: red;</pre>
+
+      <pre class="CODE_body">          padding: 10px; </pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo058.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure58.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">The padding space will still have the background color of the element, but the ad text will now have space around it. In this case, by specifying <code class="CODE">padding: 10px;</code>, we are assigning ten pixels of padding to the top, right, bottom, and left. We can specify each side individually, too:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-09.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding-top: 10px; </pre>
+
+      <pre class="CODE_body">      padding-right: 12px; </pre>
+
+      <pre class="CODE_body">      padding-bottom: 10px; </pre>
+
+      <pre class="CODE_body">      padding-left: 12px; </pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">CSS provides a shorthand method for specifying all sides of an element, designated in a clockwise fashion: top, right, bottom, and left. Each value is separated by a space:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-10.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding: 10px 12px 10px 12px; </pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <p class="H2_Body">This produces results identical to those specified individually.</p>
+
+    <p class="H2_Body">If the top and bottom or left and right dimensions match, we can condense this code even further. The browser will assume that if only two padding dimensions are specified, the first is the top and bottom and the second is the left and right:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-11.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding: 10px 12px; </pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-70"><a id="idTextAnchor067"/>Borders</h3>
+
+    <p class="H2_Body">To create a border around an element, we specify the border’s width, style, and color. Let’s return to the example of our vibrant ad. Say we want to give it a purple border. It is doubtful anyone would ever use such an awful color combination, but it would certainly draw the visitor’s attention (figure 59).</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-12.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding: 10px 12px;</pre>
+
+      <pre class="CODE_body">      border: 1px solid purple; </pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo059.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure59.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">In this case, the border will be one pixel thick, solid in style, and colored purple. This border will be applied to all sides of the div, but we can specify different borders if we like. For example, the following border specification creates a somewhat three-dimensional effect (figure 60):</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-13.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding: 10px 12px;</pre>
+
+      <pre class="CODE_body">      border-top: 3px solid gray;</pre>
+
+      <pre class="CODE_body">      border-right: 3px solid black;</pre>
+
+      <pre class="CODE_body">      border-bottom: 3px solid black;</pre>
+
+      <pre class="CODE_body">      border-left: 3px solid gray; </pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <p class="H2_Body">Making the bottom and right borders darker than the top and left ones gives the “box” of the ad a drop-shadow effect. In chapter 8 we will explore adding such effects via CSS, but this simple demonstration shows how each border can be different if we so desire.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo060.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure60.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">Additionally, we can specify individual properties of the entire border. This is useful if we want to specify, for instance, a border size and a color but are otherwise content to accept the default style.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-14.css</p>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">      padding: 10px 12px;</pre>
+
+      <pre class="CODE_body">      border-width: 1px;</pre>
+
+      <pre class="CODE_body">      border-color: purple;</pre>
+
+      <pre class="CODE_body">   } </pre>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-71"><a id="idTextAnchor068"/>Margins</h3>
+
+    <p class="H2_Body">We use margins to create spacing between elements on the page. While padding gives us room <span class="italic idGenCharOverride-2">within</span> elements (like the distance between seats in a car), the margins serve as a buffer zone <span class="italic idGenCharOverride-2">between</span> elements (other cars on the road). If we want <span class="italic idGenCharOverride-2">all</span> images on the page to have a five-pixel margin around them, then we will specify it like this (figure 61):</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-15.css</p>
+
+      <pre class="CODE_body">   img { margin: 5px; }</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo061.jpg"/>
+
+        <img alt="" class="w-100" src="image/figure61.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">Like padding and borders, margins can be set individually for top, right, bottom, and left:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-16.css</p>
+
+      <pre class="CODE_body">   img { </pre>
+
+      <pre class="CODE_body">      margin-top: 5px;</pre>
+
+      <pre class="CODE_body">      margin-right: 10px;</pre>
+
+      <pre class="CODE_body">      margin-bottom: 5px;</pre>
+
+      <pre class="CODE_body">      margin-left: 10px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">Just like padding and borders, you can specify them in one line:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-17.css</p>
+
+      <pre class="CODE_body">   img { margin: 5px 10px 5px 10px; }</pre>
+
+    </div>
+
+    <p class="H2_Body">or</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-18.css</p>
+
+      <pre class="CODE_body">   img { margin: 5px 10px; }</pre>
+
+    </div>
+
+    <p class="H3">Negative Margins</p>
+
+    <p class="H3_Body">You can assign negative numbers to margins. This allows an element to break the margin boundaries of the element next to it. It’s helpful when you want to overlap a series of elements (figure 62).</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-19.css</p>
+
+      <pre class="CODE_body">   #red-car { margin-left: -20px; }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-20.html</p>
+
+      <pre class="CODE_body">&lt;img id="car" alt="Another car" src="images/car.jpg"&gt;</pre>
+
+      <pre class="CODE_body">&lt;img id="red-car" alt="A red car" src="images/red-car.jpg"&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo062.jpg"/>
+
+        <img alt="" class="w-100" src="image/35.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H3_Body">In this example, the right side of the red car image is overlapped by the other car image by 20 pixels.</p>
+
+    <h3 class="H2" id="idParaDest-72"><a id="idTextAnchor069"/>Box Sizing</h3>
+
+    <p class="H2_Body">The box-sizing property specifies the method we use to determine the overall size of an element. Let’s go back to our car analogy—we can look at box sizing as a way to define the amount of space we need for our car on the road. There are several ways to do this. By default, if we don’t define box size, our element is measured exactly as we say it is; if our content is forty pixels wide, that’s how much space is used. However, we need to consider the other cars on the road. If a roadway was fifteen feet wide and there were two cars on it that were each seven-and-a-half feet wide, they would technically fit, but they’d be jammed up against each other and neither could move. </p>
+
+    <p class="H2_Body">Space on a web page is similar. We usually want space between our elements so that the layout isn’t claustrophobic. That’s where the box-sizing property “border-box” comes into play.</p>
+
+    <p class="H2_Body">However, if we use the border-box property, this will define the borders as <span class="italic idGenCharOverride-2">part</span> of the content. While this decreases the amount of space available for content, it is more realistic, so we don’t try to jam things into the box that won’t fit. This can provide us with better control over the overall size. Using <code class="CODE">border-box</code> is particularly useful for sites that need to be flexible or responsive.</p>
+
+    <p class="H2_Body">This is a personal preference—you could handle box sizing in other ways. But many web designers use border-box as the default box-sizing property when laying out commonly used elements at the beginning of a project, as it makes spacing calculations easier.</p>
+
+    <p class="H2_Body">The following code can be used to set all the elements on a page to use border-box.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note"><code class="CODE">*:before</code>, and <code class="CODE">*:after</code> are types of pseudo-elements. We’ll address these in a later chapter, but for now, just know that they direct all elements contained in the HTML element to use border-box.</p>
+
+    </div>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">07-21.css</p>
+
+      <pre class="CODE_body">   html { box-sizing: border-box; }</pre>
+
+      <pre class="CODE_body">   *, *:before, *:after { box-sizing: inherit; }</pre>
+
+    </div>
+
+    <div class="chapterRecap-wrap">
+
+      <h2 class="chapterRecap-title"><b>Chapter Recap</b></h2>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">The CSS box model is a representation of the space and borders around elements.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Padding describes the space around the content but within the content’s boundary.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Border describes the style, color, and size of a line around the content.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Margins describe the space between elements.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

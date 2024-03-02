@@ -1,0 +1,877 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0                z3998: http://www.daisy.org/z3998/2012/vocab/structure/#" lang="en-US" xml:lang="en-US">
+
+<head>
+  <title>htmlcss_epub-6</title>
+  <link href="css/idGeneratedStyles.css" rel="stylesheet" type="text/css"/>
+<meta content="urn:uuid:e0000000-0000-0000-0000-000006605679" name="Adept.expected.resource"/>
+</head>
+
+<body id="htmlcss_epub-6" lang="en-US">
+
+  <div>
+
+    <h2 class="Chapter--" id="idParaDest-31"><a id="idTextAnchor028"/>| 3 | </h2>
+
+    <p class="Chapter-Title" id="idParaDest-32"><a id="idTextAnchor029"/>CSS Deep Dive</p>
+
+    <div class="chapterOverview-wrap">
+
+      <h3 class="chapterOverview-title"><b>Chapter Overview</b></h3>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item">CSS styles HTML elements.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">Styles can be applied to all, some, or just one element.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">Not all browsers identically render styled content.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+    <p class="IntroParagraph">As we mentioned earlier, HTML is a tool to organize, categorize, and structure content. CSS provides the ability to change the appearance and shape of that structure in order to provide a better visual experience. While HTML creates the backbone of the <span class="italic idGenCharOverride-2">information</span> on a web page, CSS styles flesh out the content and improve the user experience.</p>
+
+    <p class="H2_Body">Let’s return to our analogy of visualizing a web page like a house. HTML allows us to define how many rooms, how many stories, and how much furniture the house has. CSS lets us define the style and shape of each room, the organization of the furniture within the rooms, and the colors and styles of everything from walls to floors. HTML labels the elements, and CSS applies a set of styling rules to elements with those labels.</p>
+
+    <p class="H2_Body">As we learned in chapter 1, CSS stands for Cascading Style Sheets. CSS allows us to create global rules to style all elements of a certain type. For example, we can create a rule for paragraphs to have a certain indentation and font size, and this style will “cascade” through every paragraph in the document. CSS allows us to set general rules for our various styles and to set exceptions to those rules when needed. We will be exploring CSS in much more detail later, but for now, let’s expand on the concept by continuing with our house analogy.</p>
+
+    <p class="H2_Body">Let’s say you have decided that all windows in the house will be three feet wide and four feet tall, with white trim. You can specify this information in a global style sheet for windows. However, you may have some exceptions to these rules. For instance, bathroom windows will only be two-and-a-half feet wide and will have gray trim. You can provide a set of instructions that says, “Apply this alternate style to all windows that are <span class="italic idGenCharOverride-2">also</span> bathroom windows.” Now imagine there is a single window that you want to be tinted green; you need to specify this information about that one individual window. CSS allows you to apply style rules both broad and narrow in scope to any of the content created in your HTML documents.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/cautionLogo.png"/>
+
+      </figure>
+
+      <p class="Note">All web browsers have a set of built-in rules for how to interpret instructions provided in CSS files. For the most part, they handle this information in the same way. However, there is some variation in certain areas. Not all CSS rules are supported by all browsers. When using CSS, it’s always a good idea to ensure that any unique or fancy effects you employ are supported by the browsers your site visitors are most likely using.</p>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-33"><a id="idTextAnchor030"/>Background</h3>
+
+    <p class="H2_Body">In the early days of HTML and internet browsers, it was up to the browser to determine how to organize and lay out HTML code. As a result, all browsers would display websites differently. Simple things like font, text size, and color, if not explicitly defined in the existing HTML, would be determined by the browser and not the author of the web page. Web page creators had complete control over their content, but not their layout, graphic style, etc. </p>
+
+    <p class="H2_Body">While it was possible to style content in the early forms of HTML, doing so often required the awkward use of various tags (such as <code class="CODE">&lt;font&gt;</code> and <code class="CODE">&lt;center&gt;</code>) within the page to specify layout. Reliance on these HTML tags resulted in code that was overly busy and difficult to read. It also led to inconsistencies in the pages of the website. Sites with any significant magnitude and breadth (comprising multiple pages) were apt to have certain pages using entirely different methods for styling content. The resulting websites had a disjointed look and feel and were burdened with overcomplicated HTML code. Moreover, variations among browsers exacerbated the problem, and the process of making site changes or updates was extremely time-consuming and error-prone. Major design updates to change the look and feel of a website often required recreating all the content. On top of the painstaking nature of making changes, pages ended up being extremely large, inflating load times. </p>
+
+    <p class="H2_Body">Inspired by the desire to format web pages like traditional print media, the producers of various internet browsers began to publish “style sheets.” Web designers, when designing for a specific browser, could employ these style sheets and effectively and efficiently exert more uniform and global control over their website’s layout. Eventually, all major browsers used style sheets, and by consensus a standard emerged that became known as CSS. </p>
+
+    <h3 class="H2" id="idParaDest-34"><a id="idTextAnchor031"/>How It Works</h3>
+
+    <p class="H2_Body">If HTML provides the building blocks of our web page, CSS allows us to shape the way these blocks look, work, and interact with the blocks around them. As HTML provides the structure for the content, CSS provides a set of rules that allows us to define how these structures appear on the page. CSS selectors are part of this rule set and help us select the HTML elements we want to style (figure 24).</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo024.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure24.jpg"/>
+
+      </figure>
+
+      <p class="Caption">A portion of the ClydeBank Media website with CSS disabled (left) and enabled (right)</p>
+
+    </div>
+
+    <p class="H2_Body">As mentioned earlier, the C in CSS stands for “cascading,” meaning that the styling rules we provide will cascade throughout the site. Pure CSS is displayed as a named selector (such as “p” for paragraph) followed by a list of properties that will be assigned to this selector, such as the width, font, etc.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo025.jpg"/>
+
+        <img alt="" class="w-60" src="image/18.png"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">There is an important concept in CSS called “inheritance.” To understand how inheritance works, we need to look at the structure of our HTML code. In HTML, structures are “nested.” Outer elements are “parents” that contain other elements within them called “children.” When CSS is applied, child elements inherit all the defined properties of their parent (typically font face, size, and color), but child elements can, at the CSS coder’s discretion, be overridden with a set of rules distinct from those governing the parent elements.</p>
+
+    <p class="H2_Body">In figure 26, <code class="CODE">&lt;div&gt;</code> is the parent element and <code class="CODE">&lt;img&gt;</code> and <code class="CODE">&lt;p&gt;</code> are the child elements. We haven’t gone over any of these elements yet, so don’t worry about their function—for now, we’re focused on the structure. The child elements are completely contained within the parent. The child element inherits all the properties from the parent, so the (img) image and the (p) paragraph are styled according to the (div) parent element unless the child element overrides them with its own selectors.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo026.jpg"/>
+
+        <img alt="" class="w-60" src="image/19.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">Let’s look at the three approaches for incorporating CSS into HTML and the advantages and disadvantages of employing each method. </p>
+
+    <p class="H3">Inline CSS</p>
+
+    <p class="H3_Body">Inline CSS styles are added inside individual HTML elements. Inline CSS bears the closest resemblance to previous versions of HTML, where each element was styled using HTML tags such as <code class="CODE">&lt;center&gt;</code>, <code class="CODE">&lt;font&gt;</code>, and <code class="CODE">&lt;u&gt;</code>. This method of applying CSS has the smallest scope and impact, because it affects only the HTML element that contains it (figure 27).</p>
+
+    <p class="H3_Body">The disadvantage of using inline CSS can be inferred from the very definition of CSS: <span class="italic idGenCharOverride-2">cascading</span> style sheets. Since inline CSS embedded into an HTML element affects only that element, this method misses out on the purpose of using CSS to begin with: to apply universal styling rules to a document that cascade throughout the document (or multiple pages) so that each element doesn’t have to be individually styled.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo027.jpg"/>
+
+        <img alt="" class="w-100" src="image/figure27.jpg"/>
+
+      </figure>
+
+      <p class="Caption">Inline CSS affects only the HTML element it inhabits.</p>
+
+    </div>
+
+    <p class="H3">Internal CSS</p>
+
+    <p class="H3_Body">Internal CSS is CSS that is added to a selection of HTML elements within a single individual HTML page. Usually this is done by placing a set of <code class="CODE">&lt;style&gt;&lt;/style&gt;</code> tags (normally inside the <code class="CODE">&lt;head&gt;&lt;/head&gt;</code> element) in an HTML page. This approach is most likely to be used if there is only one page to be styled; it quickly loses its effectiveness if a website has multiple pages. </p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo028.jpg"/>
+
+        <img alt="" class="w-100" src="image/figure28.jpg"/>
+
+      </figure>
+
+      <p class="Caption">Internal CSS is placed in the &lt;style&gt; element within the HTML page.</p>
+
+    </div>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-01.html</p>
+
+      <pre class="CODE_body">&lt;!DOCTYPE html&gt;</pre>
+
+      <pre class="CODE_body">&lt;html&gt;</pre>
+
+      <pre class="CODE_body">  &lt;head&gt;</pre>
+
+      <pre class="CODE_body">    &lt;style&gt;</pre>
+
+      <pre class="CODE_body">      body { background-color: gray; color: black; }</pre>
+
+      <pre class="CODE_body">      h1 { color: white; text-align: center; }</pre>
+
+      <pre class="CODE_body">    &lt;/style&gt;</pre>
+
+      <pre class="CODE_body">  &lt;/head&gt;</pre>
+
+      <pre class="CODE_body">  &lt;body&gt;</pre>
+
+      <pre class="CODE_body">    &lt;h1&gt;This style for H1 is defined via CSS in the head.&lt;/h1&gt;</pre>
+
+      <pre class="CODE_body">    &lt;p&gt;Example paragraph.</pre>
+
+      <pre class="CODE_body">  &lt;/body&gt;</pre>
+
+      <pre class="CODE_body">&lt;/html&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo029.jpg"/>
+
+        <img alt="" class="w-100" src="image/figure29.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/rememberLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Digital (copy &amp; paste-able) access to all of the code samples in this book can be accessed in our GitHub account: github.com/clydebankmedia/htmlcss-quickstartguide.</p>
+
+    </div>
+
+    <p class="H3">External CSS</p>
+
+    <p class="H3_Body">With external CSS, styles are added to multiple pages at once. This method of applying CSS is most commonly used for more complex web pages. External CSS uses CSS code in a separate, unique file called a style sheet that is used as a reference by all the HTML files. The CSS file is referenced, or “called,” within the <code class="CODE">&lt;head&gt;</code> tags of the HTML file(s) (figure 30).</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">CSS</span>: (make sure it is named style.css in the CSS folder)</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-02.css</p>
+
+      <pre class="CODE_body">   body { background-color: black; color: white; }</pre>
+
+      <pre class="CODE_body">   h1 { color: gray; text-align: center; }</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">HTML</span>: (name it index.html, and note the css/style.css href in the link element since you created the style.css file in the CSS folder)</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-03.html</p>
+
+      <pre class="CODE_body">&lt;!DOCTYPE html&gt;</pre>
+
+      <pre class="CODE_body">&lt;html&gt;</pre>
+
+      <pre class="CODE_body">  &lt;head&gt;</pre>
+
+      <pre class="CODE_body">    &lt;link rel="stylesheet" href="css/style.css"&gt;</pre>
+
+      <pre class="CODE_body">  &lt;/head&gt;</pre>
+
+      <pre class="CODE_body">  &lt;body&gt;</pre>
+
+      <pre class="CODE_body">    &lt;h1&gt;This style for H1 is defined via CSS in the head.&lt;/h1&gt;</pre>
+
+      <pre class="CODE_body">    &lt;p&gt;Example paragraph.</pre>
+
+      <pre class="CODE_body">  &lt;/body&gt;</pre>
+
+      <pre class="CODE_body">&lt;/html&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo030.jpg"/>
+
+        <img alt="" class="w-100" src="image/20.jpg"/>
+
+      </figure>
+
+      <p class="Caption">External CSS is placed in its own style sheet that is then referenced in the HTML page.</p>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo031.jpg"/>
+
+      </figure>
+
+      <p class="Image-Line">
+
+        <img alt="" class="w-60" src="image/figure31.png"/>
+
+      </p>
+
+      <p class="Caption">The style.css file in the CSS folder on the explorer pane of Visual Studio Code</p>
+
+    </div>
+
+    <p class="H2_Body">Coders are not limited to any one of these methods for applying CSS to HTML. When mixing methods, however, it is important to realize that a hierarchy will be in play. Browsers will first apply any external CSS files, and these files will be applied in the order in which they are called on the page. Next, the browser will apply any styles listed directly on the page inside the <code class="CODE">&lt;style&gt;</code> element. Finally, the browser will apply inline styles.</p>
+
+    <h3 class="H2" id="idParaDest-35"><a id="idTextAnchor032"/>Applying Styles to Elements</h3>
+
+    <p class="H2_Body">There are three means by which we can apply styles to elements: element selectors, class selectors, and id selectors. Recall that CSS rule sets must first use selectors when identifying what is to be modified (figure 32). </p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo032.jpg"/>
+
+        <img alt="" class="w-60" src="image/21.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H3">Element Selectors</p>
+
+    <p class="H3_Body">Element selectors identify the type of the element (body, p, a, etc.), select every instance of that element, then apply the rule to it.</p>
+
+    <p class="H3_Body">For demonstration purposes, let’s look at the <code class="CODE">&lt;body&gt;</code> element. This element contains all the viewable content within an HTML page. We often use it to set some “default” styles for the page.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-04.css</p>
+
+      <pre class="CODE_body">   body { color: blue; }</pre>
+
+    </div>
+
+    <p class="H3_Body">In this example, we are selecting the element “body” on the HTML page. These rules are being applied to everything that exists within <code class="CODE">&lt;body&gt;&lt;/body&gt;</code> on the page.</p>
+
+    <p class="H3_Body">After the selector, we open a set of curly brackets <code class="CODE">{}</code> that will hold our property declarations.</p>
+
+    <p class="H3_Body">Each property declaration identifies a property (in this case, color). Then, following the colon, the desired setting for that property (in this case, blue) is identified. We use a semicolon at the end of each property declaration.</p>
+
+    <p class="H3_Body">The result of this small CSS snippet would be to change the color of the visible text on the page to blue.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/cautionLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Use of the semicolon is required. If left out, both the property missing the semicolon and the one that follows it are unable to be processed and will be ignored by most browsers.</p>
+
+    </div>
+
+    <p class="H3">Class Selectors</p>
+
+    <p class="H3_Body">Sometimes we want to apply a style to a subset of elements. For example, we may want to apply a style to a certain paragraph (or set of paragraphs) without affecting the others. To accomplish this, we need to establish a “class” of paragraphs. Elements can be assigned to a class using the class attribute in HTML.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/exampleLogo.png"/>
+
+      </figure>
+
+      <p class="H3_Body"><code class="CODE">&lt;p class="callout"&gt;</code> signals the beginning of a paragraph that will be defined by the “callout” class; the term callout is selected by the user. You can name a class whatever you please. CSS code will be used to define the stylistic attributes of this class. Consider the following HTML code:</p>
+
+      <div class="white2">
+
+        <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+          <img class="w-100" src="image/snipetLogo.jpg"/>
+
+        </figure>
+
+        <p class="snippet">03-05.html</p>
+
+        <pre class="CODE_body">      &lt;p&gt;</pre>
+
+        <pre class="CODE_body">      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. </pre>
+
+        <pre class="CODE_body">      &lt;/p&gt;</pre>
+
+        <pre class="CODE_body">      </pre>
+
+        <pre class="CODE_body">      &lt;p class="callout"&gt;</pre>
+
+        <pre class="CODE_body">      Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. </pre>
+
+        <pre class="CODE_body">      &lt;/p&gt;</pre>
+
+        <pre class="CODE_body">      </pre>
+
+        <pre class="CODE_body">      &lt;p&gt;</pre>
+
+        <pre class="CODE_body">      Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. 
+Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus.      </pre>
+
+        <pre class="CODE_body">      &lt;p&gt;</pre>
+
+        <pre class="CODE_body"> </pre>
+
+        <pre class="CODE_body">      &lt;p class="callout"&gt;</pre>
+
+        <pre class="CODE_body">      Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. </pre>
+
+        <pre class="CODE_body">      &lt;/p&gt;</pre>
+
+      </div>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/questionLogo.png"/>
+
+      </figure>
+
+      <p class="Question">Q: Lorem who?</p>
+
+      <p class="H3_Body">Answer: The “Lorem Ipsum . . .” dummy text sequence has long been used as placeholder text in the printing industry. It provides a somewhat realistic layout of paragraph text for demonstration purposes. There are extensions in Visual Studio Code that will generate Lorem Ipsum.</p>
+
+    </div>
+
+    <p class="H3_Body">Paragraph elements with the “callout” class will inherit its styling, whereas content between the regular <code class="CODE">&lt;p&gt;</code> elements without this class definition will be rendered in a default manner or inherit the styling of the containing element.</p>
+
+    <p class="H3_Body">To style the paragraphs with the “callout” class, we use a class selector in our CSS file. The class selector begins with a period and is followed by the class name, an open bracket, and an ensuing list of specific attributes:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-06.css</p>
+
+      <pre class="CODE_body">   .callout{</pre>
+
+      <pre class="CODE_body">      color: gray;</pre>
+
+      <pre class="CODE_body">      font-style: italic;</pre>
+
+      <pre class="CODE_body">      margin-left: 20px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H3_Body">As you can see, each attribute is formatted as follows: <code class="CODE">[attribute type]: [attribute detail];</code> and then the selector is concluded with an end-bracket.</p>
+
+    <p class="H3_Body">When applied, our class selector would result in output like that shown in figure 33.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo033.jpg"/>
+
+        <img alt="" class="w-100" src="image/figure33.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">CSS uses strict hierarchies. Class selectors, for instance, rank higher than element selectors. If you apply a “p” element selector to a paragraph of text that’s been assigned to a class, the class attributes will display and the element attributes will be ignored.</p>
+
+    </div>
+
+    <p class="H3">Id Selectors</p>
+
+    <p class="H3_Body">Classes can be used by multiple and varied elements, but an id selector references a single element on the page. This functions similarly to a class where we add an HTML attribute to the element in question.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-07.html</p>
+
+      <pre class="CODE_body">   &lt;h1 id="pageTitle"&gt;...&lt;/h1&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">When writing a rule with the id selector, begin with a “#” and then add the id of the specified element. For example,</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-08.css</p>
+
+      <pre class="CODE_body">   #pageTitle {font-weight: bold;}</pre>
+
+    </div>
+
+    <p class="H3_Body">Rules using an id selector override any class selectors that may be assigned to the element or browser default styles.</p>
+
+    <p class="H3">Contrasting “class” with “id”</p>
+
+    <p class="H3_Body">Classes are generally meant to apply to multiple elements, whereas ids reference only one element. Classes and ids are types of HTML element attributes that serve no direct function on their own. To further illustrate that point, let’s examine common usage scenarios for each.</p>
+
+    <p class="H3_Body">Let’s say we have several paragraphs on a web page for a surf shop. We have already designated all our paragraphs with a <code class="CODE">&lt;p&gt;</code> element in our HTML document. However, our website primarily has two types of paragraphs, one type for standard information about the surf shop and another more showy style for info on the shop’s current sales. We want the ability to apply a certain set of rules to all the sales paragraphs. Therefore, we are going to establish a style in our CSS document called “bold-red”:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-09.css</p>
+
+      <pre class="CODE_body">   .bold-red { font-weight: bold; color: red; }</pre>
+
+    </div>
+
+    <p class="H3_Body">In our HTML document, we can now call this class by modifying our opening tag as follows:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-10.html</p>
+
+      <pre class="CODE_body">   &lt;p class="bold-red"&gt;</pre>
+
+      <pre class="CODE_body">      40% off all surfboards and wetsuits this week. Don’t miss it!</pre>
+
+      <pre class="CODE_body">   &lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">Any element can be given this “bold-red” class, and in this particular instance, only this paragraph will be styled with the “bold-red” rule.</p>
+
+    <p class="H3_Body">If this was the one and only bold-red paragraph we needed on the whole page (or throughout the whole site), then we could use an id instead of a class definition. Ids style one specific element, whereas classes, once defined, can be invoked again and again to style a multitude of elements. In general, CSS rules may apply to several types of elements, so keeping them flexible saves you time on more complex pages. We could easily use this “bold-red” class on an h1 tag or any other element we want to highlight on our page, and it’s much easier to invoke a class than to recode all your descriptors and attributes.</p>
+
+    <p class="H3_Body">You may wonder why we should use ids at all if classes are so flexible and powerful. It’s an excellent question; at first glance, ids seem superfluous. But since ids allow us to specifically target a particular element, we can apply specific styles to just that element without resorting to inline styles. </p>
+
+    <p class="H3_Body">Ids are often used to designate a singular exception to a prevailing class definition: recall our example of the house. As a rule our windows may all have white trim, but if we want the bathroom window to have gray trim, then we can assign an id to the bathroom window and style that id to specify gray trim. This would only affect that one window.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Ids also allow JavaScript to target one specific element on a page.</p>
+
+    </div>
+
+    <p class="H3">Inline Styles</p>
+
+    <p class="H3_Body">Inline styles are used less frequently than the aforementioned selectors. They are more tedious to apply, but they are still useful for robust customization and control. They are added to the opening tag of an element in the HTML. Inline styles will override id, class, and element selectors as well as browser default styles.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-11.html</p>
+
+      <pre class="CODE_body">   &lt;h2 style="color: blue;"&gt;Matterhorn&lt;/h2&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">Standard CSS syntax is used (<code class="CODE">attribute type: attribute detail;</code>) just as it would be when writing a global CSS rule, even though inline styles are by definition not global and must be added to every individual element that the programmer/designer intends to stylize.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">The application of inline styles should be constrained to one line of text.</p>
+
+    </div>
+
+    <div class="oyo">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/oyoLogo.jpg"/>
+
+      </figure>
+
+      <p class="H3_Body">Using the web page starter template (<code class="CODE">starter.html</code>) in your Digital Asset Vault (clydebankmedia.com/htmlcss-assets), try adding various styles like bold, italics, and color to some sample text. For experience with all three methods, you can apply the styles inline, directly to the paragraph element, as a class, or as an id. Be as creative as you want and experiment with the various colors you can assign by name. The Visual Studio Code editor, as shown in figure 34, will show a preview of the color as you type it.</p>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo034.jpg"/>
+
+        <img alt="" class="w-60" src="image/22.png"/>
+
+      </figure>
+
+      <p class="Caption">The color preview feature of Visual Studio Code</p>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Visual Studio Code has a nifty shortcut for creating a starter HTML template. Type <code class="CODE">!</code> then hit ENTER, and a starter template will appear.</p>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-36"><a id="idTextAnchor033"/>Rendering Engines </h3>
+
+    <p class="H2_Body">When a web page is loaded, the code is processed (parsed) from the top down. The browser will go through the HTML file and each individual element is created and then styled according to any CSS rules. The part of the browser that handles this activity is called the <span class="glossaryterm idGenCharOverride-1">rendering engine</span>. As of this writing, there are a few different rendering engines used in modern browsers. Apple’s Safari browsers use WebKit. Chrome and Microsoft Edge use a WebKit variant called Blink, and Firefox uses an engine called Gecko. There are several others, but WebKit, Blink, and Gecko are the most widely used.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo035.jpg"/>
+
+      </figure>
+
+      <table class="Table1" id="table003">
+
+        <colgroup>
+
+          <col/>
+
+          <col/>
+
+        </colgroup>
+
+        <thead>
+
+          <tr class="Table1">
+            <td class="Table1 CellHead">
+              <p class="TableHead">Browser</p>
+            </td>
+            <td class="Table1 CellHead">
+              <p class="TableHead">Rendering Engine</p>
+            </td>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr class="Table1">
+            <td class="Table1 CellText idGenCellOverride-1">
+              <p class="TableText">Lunascape</p>
+            </td>
+            <td class="Table1 CellText idGenCellOverride-1">
+              <p class="TableText">Gecko, Trident, WebKit</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText">Internet Explorer</p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Trident</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText">Firefox</p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Gecko</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText">Google Chrome</p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">WebKit (Blink)</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText">Safari</p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">WebKit</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText">Opera v.15+</p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">WebKit (Blink)</p>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <p class="H2_Body">As a beginner, you may be wondering why we are focusing on something as technical as the rendering engines used by different web browsers. Although HTML and CSS have been mostly standardized, there are still some variations in the way that different browsers handle the rendering of your code. This is particularly important when you are deciding which CSS features to use. In many cases, something that looks fantastic while you are testing it in Chrome might look strange (or not render at all) when you look at it in Internet Explorer or Edge.</p>
+
+    <p class="H2_Body">Identifying and accounting for these inconsistencies is part of the cross-browser testing that needs to take place before a project is complete. There are almost always ways to navigate and work around browser inconsistencies, but it often requires writing multiple sets of rules in your CSS code.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">As new features are added to browsers, they may display content in different ways. However, over time they tend to become uniform and standardized. </p>
+
+    </div>
+
+    <p class="H3">How Do I Know Which Browsers to Code For?</p>
+
+    <p class="H3_Body">Many people will tell you to check the statistics for your site to determine which browsers the bulk of your users are running. This is always a good idea. Of course, if you haven’t launched the site yet, how could you know? As a rule, it’s a good idea to consider, at the very least, the big three or four: Chrome, Internet Explorer, Edge, and Firefox.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Many analytics tools, such as Google Analytics, are free. Google Analytics is very popular for this reason and because it provides a large amount of data about your site traffic, including which browsers your site visitors are using. Other excellent options for analytics include Matomo (previously known as Piwik) and AWStats.</p>
+
+    </div>
+
+    <p class="H3">How Do I Know How to Size the Elements on My Pages?</p>
+
+    <p class="H3_Body">In the earlier days of the web, sites were designed to be as wide as possible. This was because developers simply wanted or needed to take advantage of every pixel. The more modern and mature response to the question of appropriate page width is for HTML coders to choose a width that is appropriate for the content and responsive to the site’s users. </p>
+
+    <p class="H3_Body">When specifying sizes in CSS (like margins and padding), using percentages and device-independent intervals allows the browser to scale the size in proportion to the available screen. For example:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-12.css</p>
+
+      <pre class="CODE_body">   p { width: 200px; }</pre>
+
+    </div>
+
+    <p class="H3_Body">This will render paragraphs no more than 200 pixels wide. But using percentages, like this . . .</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">03-13.css</p>
+
+      <pre class="CODE_body">   p { width: 80%; }</pre>
+
+    </div>
+
+    <p class="H3_Body">. . . tells the browser to render a paragraph to be 80% of the available container, which allows for better scaling across devices.</p>
+
+    <p class="H3_Body">You can use your analytics software to detect what resolutions your users are using. One important point to consider is that many users will access your site on a phone or other mobile device. For this reason, you may wish to consider using a responsive design that will change the layout of your site depending on the dimensions of the device being used. We will be discussing responsive design tips and techniques in chapters 13 and 14. </p>
+
+    <p class="H3">How Can I Tell Which Features Are Supported?</p>
+
+    <p class="H3_Body">Browsers are constantly updated with new programming to support the latest and greatest features. Given this dynamic and ever-evolving environment, it’s helpful to know which features are supported by which rendering engines at any given moment. A good reference tool is Can I Use: www.caniuse.com. This website provides a list of browsers and browser versions that support specific features and also explains the more subtle distinctions between rendering engines.</p>
+
+    <h3 class="H2" id="idParaDest-37"><a id="idTextAnchor034"/>Beyond the Web</h3>
+
+    <p class="H2_Body">Along with HTML, CSS now has uses beyond creation of web pages. It is used to format e-books, maps, and more, in concert with other programming languages. CSS as a standard is quite active and is continually in the process of development, with new functionalities being added regularly. Like HTML, CSS revisions are now subject to a “living standard” and are adjusted incrementally based on developer usage and community feedback. CSS will likely remain with us until we reach a dramatic shift in the way online data is displayed.</p>
+
+    <div class="chapterRecap-wrap">
+
+      <h2 class="chapterRecap-title"><b>Chapter Recap</b></h2>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">CSS is applied to elements via inline, internal, or external CSS rules.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">CSS rules can apply to all elements, a particular type of element, a user-defined class of elements, or a specific element marked with the id attribute.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">The use of inline CSS is discouraged except for troubleshooting purposes.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Like HTML, CSS is a living standard.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

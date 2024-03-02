@@ -1,0 +1,1727 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0                z3998: http://www.daisy.org/z3998/2012/vocab/structure/#" lang="en-US" xml:lang="en-US">
+
+<head>
+  <title>htmlcss_epub-16</title>
+  <link href="css/idGeneratedStyles.css" rel="stylesheet" type="text/css"/>
+<meta content="urn:uuid:e0000000-0000-0000-0000-000006605679" name="Adept.expected.resource"/>
+</head>
+
+<body id="htmlcss_epub-16" lang="en-US">
+
+  <div>
+
+    <h2 class="Chapter--" id="idParaDest-102"><a id="idTextAnchor174"/>| 11 | </h2>
+
+    <p class="Chapter-Title" id="idParaDest-103"><a id="idTextAnchor175"/>HTML Forms</p>
+
+    <div class="chapterOverview-wrap">
+
+      <h3 class="chapterOverview-title"><b>Chapter Overview</b></h3>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item">Forms allow user input.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">The input element provides for data entry.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">HTML5 has built-in input validation.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+    <p class="IntroParagraph">You have likely used countless HTML forms while browsing the internet. Forms are used for search boxes, contact pages, logins, registrations, and checkout pages, and are combined in complex arrangements to form applications like webmail and social media platforms. </p>
+
+    <h3 class="H2" id="idParaDest-104"><a id="idTextAnchor176"/>Forms Overview</h3>
+
+    <p class="H2_Body">Forms employ both frontend code for display and backend code to process and use the submitted data. Since this book focuses on HTML and CSS, we can’t cover the backend code, but as a web designer, you’ll often be called on to design the form while a programmer is tasked with making use of the submitted data to perform tasks on the web server.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/rememberLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Recall from chapter 1 that backend languages, like PHP and Python, run on the web server and perform functions that both process user data and display dynamic content to the user. Forms play an integral role in connecting the user with the databases and functionality of the server.</p>
+
+    </div>
+
+    <p class="H2_Body">An HTML form is a group of elements that allow user input. These elements can accept a wide variety of input types, including name, email, phone number, option selections, and even file uploads. These input elements are given a name, and the data entered by the user is associated with that element name and is either sent to another URL, processed by JavaScript code on the page, or both.</p>
+
+    <p class="H2_Body">Forms are set apart from other parts of the page via a <code class="CODE">&lt;form&gt;</code> tag. At the end of the form, a closing <code class="CODE">&lt;/form&gt;</code> tag is used. The <code class="CODE">&lt;form&gt;</code> tag has several attributes that are important in instructing the browser in how to handle the submission of the data entered by the user (figure 96).</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">The examples in this section will work fine in your browser for testing, but until a backend script is added to process the input and do something with it, they won’t do anything on their own. These code snippets will just be used for illustrative purposes. The “Processing Form Input with PHP” section of this chapter provides some sample PHP code that will send this form’s input to an email address. </p>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo096.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure96.jpg"/>
+
+      </figure>
+
+      <p class="Caption">An example contact form, styled with CSS</p>
+
+    </div>
+
+    <p class="H3">Action</p>
+
+    <p class="H3_Body">The “action” attribute of the form is perhaps most important. It instructs the browser where to send the data submitted by the user. If this attribute is omitted, the data is sent to the same page. The URL can be either an absolute or a relative URL.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-01.html</p>
+
+      <pre class="CODE_body">   &lt;form action="contact.html"&gt;</pre>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">If the form is to perform some task, like send an email, add data to a database, or something similar, then the action must point to a page (usually a PHP script or other backend language file) that actually processes the data from the form. In this example, without extra code, an HTML page like contact.html can only use JavaScript to parse form input variables.</p>
+
+    </div>
+
+    <p class="H3">Method</p>
+
+    <p class="H3_Body">The “method” attribute instructs the browser as to what kind of request will be used to submit the form’s data. This can be either GET or POST. If the method is not specified, GET is used.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-02.html</p>
+
+      <pre class="CODE_body">   &lt;form action="contact.html" method="POST"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">Both GET and POST requests receive responses from the server. The difference between them is in how the user-provided data is sent. To illustrate both points, we’ll display an example form and explain how user-submitted variables are handled with both methods.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">GET</span>:  When form data is sent via GET, the browser simply requests the URL specified in the action attribute with an <code class="CODE">HTTP/S</code> GET request. This request merely asks for the page or file to download, without any additional HTML headers. User data is added to the end of the URL.</p>
+
+    <p class="CODE_heading">GET FORM</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-03.html</p>
+
+      <pre class="CODE_body">   &lt;form action="contact.php" method="GET"&gt;</pre>
+
+      <pre class="CODE_body">      &lt;label for="name"&gt;Name&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;input type="text" name="name" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;label for="message"&gt;Message&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;textarea name="message" rows="5" cols="60" maxlength="2000"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;input type="submit" name="submit" value="Send Message"&gt;      </pre>
+
+      <pre class="CODE_body">   &lt;/form&gt;</pre>
+
+    </div>
+
+    <p class="CODE_heading">GET URL AFTER SUBMIT</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">   https://www.yoursite.com/contact.php?name=Jim&amp;message=He%20is%20dead</pre>
+
+    </div>
+
+    <p class="H3_Body">A question mark is added after the file name, then, for each input element within the form, the name attribute from the form is specified, followed by an equals sign and then the content of the field as submitted by the user. Any special characters, including spaces, are “escaped,” that is, transformed into a number sequence, so that they don’t interfere with browser or server parsing of the URL. Any spaces are replaced with <code class="CODE">%20</code>, where the percent sign denotes the start of a special sequence and 20 is the number of the space character. <code class="CODE">%20</code> is by far the most common URL code used in HTML to accommodate input that would disturb the structure of the URL.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">POST</span>: Forms with their method attribute set to POST will instruct the browser to send the form data to the web server via an <code class="CODE">HTTP/S</code> POST<code class="CODE"> </code>request. This type of request sends the form input data to the web server, and the server usually responds with HTML content. This keeps all input data out of the URL and facilitates more complex input, such as when the user uploads a file to your form.</p>
+
+    <p class="CODE_heading">POST FORM</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-04.html</p>
+
+      <pre class="CODE_body">   &lt;form action="contact.php" method="POST"&gt;</pre>
+
+      <pre class="CODE_body">      &lt;label for="name"&gt;Name&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;input type="text" name="name" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;label for="message"&gt;Message&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;textarea name="message" rows="5" cols="60" maxlength="2000"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;input type="submit" name="submit" value="Send Message"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/form&gt;</pre>
+
+    </div>
+
+    <p class="CODE_heading">POST URL AFTER SUBMIT</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">   https://www.yoursite.com/contact.php</pre>
+
+    </div>
+
+    <p class="H3_Body">Note that the URL is simply <code class="CODE">contact.php</code>—no variables are appended to it. Instead, the <code class="CODE">name=Jim</code> and <code class="CODE">message=He%20is%20dead</code> are POSTed to the server as headers. Headers are additional pieces of data that are sent along with each request to a web server and that aren’t shown in the URL.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">The GET method is fine for simple forms with one or two input elements, but if a lot of user data is submitted via the form, the resulting URL can become quite unwieldy. I recommended using POST in those cases.</p>
+
+    </div>
+
+    <p class="H3">Name</p>
+
+    <p class="H3_Body">The “name” of the form is optional but helpful, especially when several forms exist on the same page. Form names can be referenced by JavaScript or server-side languages like PHP to determine which form inputs should be processed.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-05.html</p>
+
+      <pre class="CODE_body">  &lt;form name="contact" action="contact.html" method="POST"&gt;</pre>
+
+    </div>
+
+    <p class="H3">Id</p>
+
+    <p class="H3_Body">As with all HTML elements, an id attribute can be specified. This is helpful for using the form with JavaScript code. The id attribute is not passed to the server. It is optional.</p>
+
+    <p class="H3">Target</p>
+
+    <p class="H3_Body">With the “target” attribute, you can instruct the browser to submit the page in a new window by setting the target to <code class="CODE">_blank</code>.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">  &lt;form action="contact.html" method="POST" target="_blank"&gt;</pre>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-105"><a id="idTextAnchor190"/>Key Elements</h3>
+
+    <p class="H2_Body">Now that we’ve explored the form element and its attributes, it’s time to dive into the building blocks of forms—the HTML components that provide opportunities for user interaction. In these examples, we will omit the form opening and closing tags for the sake of brevity, but on a real web page they would almost always be part of a form.</p>
+
+    <p class="H3">Input</p>
+
+    <p class="H3_Body">An <code class="CODE">&lt;input&gt;</code> element provides a way for a user to enter data into your form. It has a wide variety of attributes that control the display and functionality of the form.</p>
+
+    <p class="H3_Body">Before we get into the types of input (text, email addresses, files, etc.), we should explore its traditional attributes. In the following examples, we’ll assume that the type attribute is set to text, which allows for generic input with characters and numbers. Later, we’ll dive into more specific types of input.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Name</span>: The “name” attribute provides a way to reference the data entered into the input element. The name of the input element is used when sending GET or POST data to the web server (figure 97).</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-07.html</p>
+
+      <pre class="CODE_body">   Subject: </pre>
+
+      <pre class="CODE_body">   &lt;input type="text" name="subject"&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo097.jpg"/>
+
+      </figure>
+
+      <div class="idGenObjectLayout-2">
+
+        <div id="idContainer098">
+
+          <img alt="" class="idGenObjectAttribute-4" src="image/Figure97.jpg"/>
+
+        </div>
+
+      </div>
+
+      <p class="Caption">A text input box</p>
+
+    </div>
+
+    <p class="H3_Body">If the user specifies “A Summer Day” in this field and it’s used in a GET form (figure 98), then upon submission the URL becomes:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">https://www.yoursite.com/contact.html?subject=A%20Summer%20Day</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo098.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure98.jpg"/>
+
+      </figure>
+
+      <p class="Caption">A text input box named “subject” filled in with the text “A Summer Day”</p>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Id</span>: The “id” attribute of the input element isn’t required but is helpful for use in JavaScript.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Style</span>: An input element can be styled with a CSS class. If we wanted to bold the text of the input box, we could create a class and attach it to the input box via the class attribute.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-08.css</p>
+
+      <pre class="CODE_body">   .subject { font-weight: bold; }</pre>
+
+    </div>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-09.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="subject" class="subject"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Type</span>: The “type” attribute allows you to specify the format of input that will be accepted in the field. In the previous examples, we’ve assumed “text,” which is the most generic specification. However, there are a wide assortment of types that allow you to define precisely the kind of data you want to accept. Some of the input types provide user interface elements that help the user specify the desired value. For example, the <span class="italic idGenCharOverride-2">range</span> type displays a slider, the <span class="italic idGenCharOverride-2">date</span> and <span class="italic idGenCharOverride-2">time</span> types display formatting helpers and up/down arrows to toggle months and years, and radio and checkbox fields are sized appropriately on each device.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo099.jpg"/>
+
+      </figure>
+
+      <table class="Table1" id="table008">
+
+        <colgroup>
+
+          <col/>
+
+          <col/>
+
+        </colgroup>
+
+        <thead>
+
+          <tr class="Table1">
+            <td class="Table1 CellHead" colspan="2">
+              <p class="TableHead">Various input types</p>
+            </td>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr class="Table1">
+            <td class="Table1 Gray CellText idGenCellOverride-1" colspan="2">
+              <p class="TableText">TEXT</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">text</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Generic text</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">number</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Generic number (no letters allowed)</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">email</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Email address</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">tel</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Phone number</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">url</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Website address (URL)</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">search</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Search input (behaves like text)</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">password</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Behaves like text but obscures characters for more secure entry</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 Gray CellText" colspan="2">
+              <p class="TableText">DATE AND TIME</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">month</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides for month and year input</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">week</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides for week and year input</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">time</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides for time input in <code class="CODEcondensed">hh:mm:ss AM/PM</code></p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">date</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides for <code class="CODEcondensed">mm/dd/yyyy</code> input, adjusting for localized international variants</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">datetime-local</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides for <code class="CODEcondensed">mm/dd/yyyy</code> date and <code class="CODEcondensed">hh:mm:ss AM/PM</code> time input, adjusting for localized international variants</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 Gray CellText" colspan="2">
+              <p class="TableText">MULTIPLE CHOICE / CHECK</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">radio</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays circular buttons to select from multiple options. Text for options is supplied via a <code class="CODEcondensed">&lt;label&gt;</code> element. If selected by user, <span class="italic idGenCharOverride-5">value</span> attribute is sent to server. To force selection among multiple elements, give each input radio element the same <span class="italic idGenCharOverride-5">name</span> attribute.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">checkbox</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a checkbox the user can toggle on and off. Text for the option is supplied via a <code class="CODEcondensed">&lt;label&gt; </code>element, and the value is specified via the <span class="italic idGenCharOverride-5">value</span> attribute.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 Gray CellText" colspan="2">
+              <p class="TableText">SUBMISSION</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">button</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a button. The <span class="italic idGenCharOverride-5">value</span> attribute is displayed as the button text. By itself, it doesn’t do anything, but when paired with JavaScript it can trigger action on the page.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">reset</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a button that resets all input elements to their default or preselected values. Text on the button is taken from the <span class="italic idGenCharOverride-5">value</span> attribute. Use this element with caution on long forms, as accidentally clearing a long form can raise a user’s blood pressure to dangerous levels.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">submit</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a submit button, allowing for submission of the form given the <span class="italic idGenCharOverride-5">action</span> and <span class="italic idGenCharOverride-5">method</span> values.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">image</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Same as submit but the <span class="italic idGenCharOverride-5">src</span> attribute of the input element is used to specify the URL of an image to use instead of the submit button. You need to specify <span class="italic idGenCharOverride-5">width</span> and <span class="italic idGenCharOverride-5">height</span> attributes of the image.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 Gray CellText" colspan="2">
+              <p class="TableText">SPECIAL PURPOSE</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">range</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a slider allowing for a range of numbers. Requires <span class="italic idGenCharOverride-5">min</span> and <span class="italic idGenCharOverride-5">max</span> input attributes to be set with a minimum and a maximum number.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">color</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Provides a color selection box, allowing the user to specify a particular color. Value becomes the hex color code of the user-selected color.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">file</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">Displays a file upload box, allowing the user to upload a file. Parsing of the file must be done by backend server code.</p>
+            </td>
+          </tr>
+
+          <tr class="Table1">
+            <td class="Table1 CellText">
+              <p class="TableText"><span class="DemiBold idGenCharOverride-4">hidden</span></p>
+            </td>
+            <td class="Table1 CellText">
+              <p class="TableText">This input element is not displayed on the page. Instead, the <span class="italic idGenCharOverride-5">name</span> and <span class="italic idGenCharOverride-5">value</span> attributes are used to pass a variable to the processing page.</p>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Readonly</span>: Specifying the “readonly” (read only) attribute tells the browser to prevent the user from changing the field.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-01.html</p>
+
+      <pre class="CODE_body">   &lt;input type="tel" name="phone" value="123-456-7890" readonly&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">While not absolutely required, it doesn’t make much sense to use the readonly attribute without specifying a value. This is often done on forms to indicate that the user can’t change some parts of it but can change others. The field is still displayed, and the user can click the input box, but they cannot change the value. Input fields marked as readonly are still sent to the server in a GET or POST request.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Disabled</span>: This is similar to readonly, except the field will not be selectable and will not be sent to the server. Most browsers will set the background to gray to indicate it cannot be clicked on or changed (figure 100).</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo100.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure100.png"/>
+
+      </figure>
+
+      <p class="Caption">A disabled input text box</p>
+
+    </div>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/myTakeLogo.png"/>
+
+      </figure>
+
+      <p class="Note">Both readonly and disabled accomplish the same goal of preventing users from editing the contents of the input box. However, a disabled input box provides a visual indication that the box is not editable and may reduce the confusion or frustration that a readonly input box may cause in a user.</p>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Placeholder</span>: This attribute’s value tells the browser to display text that hints as to the type of input the user should enter into the field (figure 101).</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-11.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="name" placeholder="Please enter your name"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">By default, most browsers will display this text in a lighter shade than usual and will clear the placeholder text when the user clicks in the field or starts to enter data. The placeholder value is not sent to the server, even if the field is empty.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo101.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure101.png"/>
+
+      </figure>
+
+      <p class="Caption">An input text box with a placeholder</p>
+
+    </div>
+
+    <p class="H3_Body">The placeholder can be styled as a pseudo-element using the <code class="CODE">::placeholder</code> selector.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-12.css</p>
+
+      <pre class="CODE_body">   ::placeholder { </pre>
+
+      <pre class="CODE_body">      color: darkgray;</pre>
+
+      <pre class="CODE_body">      font-style:italic;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Required</span>: Specifying the “required” attribute on an input element instructs the browser to require the user to put a value in the field. We’ll cover this topic later in this chapter under “HTML5 Validation.”</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-13.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="name" required&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">In this case, the text box called “name” would have to have some text entered before submission was possible.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Autofocus</span>: When this attribute is set, the field will automatically become the input focus when the page loads. This means that a user can simply start typing when the page loads and this input field will start receiving the data. You should only specify one autofocus on a page.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-14.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="name" autofocus&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Autocomplete</span>: This instructs the browser to enable or disable autocomplete. By default, autocomplete is on. A browser does not have to honor this, and limiting your users’ choices for inputting data may cause user frustration, so judicious use of this attribute is advised.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-15.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="username" autocomplete="off"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Step</span>: For certain input types, namely range, number, and the date/time types, specifying “step” allows you to adjust the increment and decrement values when the user toggles through the acceptable choices. It is best used with <span class="italic idGenCharOverride-2">min</span> and <span class="italic idGenCharOverride-2">max</span>.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-16.html</p>
+
+      <pre class="CODE_body">   &lt;input type="range" name="pressure" min="0" max="100" step="5"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Pattern</span>: The “pattern” attribute allows you to create special restrictions on input. We’ll cover this in the “HTML5 Validation” section of this chapter.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Submit</span>: Every HTML form must have a way for a user to input and then submit the data. While input elements are usually used to collect data, the “submit” type is used to create a submit button the user can click to trigger the form’s submission.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-17.html</p>
+
+      <pre class="CODE_body">   &lt;input type="submit" name="submit" value="Send Message"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">In this example, a submit button is created with the text “Send Message.”</p>
+
+    <p class="H3">Labels</p>
+
+    <p class="H3_Body">Label elements are used to display text alongside most input elements; they are generally used right before an input element. They make it easier for screen readers and some browser add-ons to identify form input elements and can also help mobile users by providing a larger area to tap to select the input field in question.</p>
+
+    <p class="H3_Body">Specifying the “for” attribute on the label element allows you to tell the browser exactly which input field the label should be associated with.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-18.html</p>
+
+      <pre class="CODE_body">   &lt;label for="email"&gt;Your Email&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">   &lt;input type="email" name="email"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">Placeholder attributes (discussed in the previous section) can eliminate the need for labels with some text fields, but labels are extremely useful elsewhere, such as with radio selection input types:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-19.html</p>
+
+      <pre class="CODE_body">   &lt;p&gt;What is your favorite color?&lt;/p&gt;</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   &lt;input type="radio" name="color" value="Red"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;label for="Red"&gt;Red&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">   &lt;input type="radio" name="color" value="Blue"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;label for="Blue"&gt;Blue&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">   &lt;input type="radio" name="color" value="Green"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;label for="Green"&gt;Green&lt;/label&gt;</pre>
+
+    </div>
+
+    <p class="H3">Fieldset and Legend</p>
+
+    <p class="H3_Body">Complicated forms can be intimidating and cumbersome for the user. Breaking the form into smaller related groups makes it easier to fill. The <code class="CODE">&lt;fieldset&gt;&lt;/fieldset&gt;</code> element can encapsulate input fields and labels, allowing you to display your form data logically. The <code class="CODE">&lt;legend&gt;&lt;/legend&gt;</code> element gives the fieldset a name, allowing the user to separate it from the rest of the fields (figure 102).</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-20.html</p>
+
+      <pre class="CODE_body">   &lt;form&gt;</pre>
+
+      <pre class="CODE_body">      &lt;fieldset&gt;</pre>
+
+      <pre class="CODE_body">         &lt;legend&gt;Personal Details&lt;/legend&gt;</pre>
+
+      <pre class="CODE_body">         &lt;label for="name"&gt;Name:&lt;/label&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" id="name" name="name"&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;label for="age"&gt;Age:&lt;/label&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" id="age" name="age"&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;/fieldset&gt;</pre>
+
+      <pre class="CODE_body">      </pre>
+
+      <pre class="CODE_body">      &lt;fieldset&gt;</pre>
+
+      <pre class="CODE_body">         &lt;legend&gt;Company Details&lt;/legend&gt;</pre>
+
+      <pre class="CODE_body">         &lt;label for="company"&gt;Company Name:&lt;/label&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" id="company" name="company"&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;/fieldset&gt;</pre>
+
+      <pre class="CODE_body">    </pre>
+
+      <pre class="CODE_body">      &lt;br&gt;</pre>
+
+      <pre class="CODE_body">      &lt;input type="submit" value="Submit"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/form&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo102.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure102.jpg"/>
+
+      </figure>
+
+      <p class="Caption">Two groups of input elements separated by fieldsets with legends</p>
+
+    </div>
+
+    <p class="H3_Body">The two fieldsets contain the inputs and labels for each group, and the legend element provides a name for the fieldset. The fieldset and legend elements, like all other HTML elements, can be styled with CSS to provide an even more visually appealing layout of your form.</p>
+
+    <p class="H3">Textarea</p>
+
+    <p class="H3_Body">A textarea is essentially a text type of input that accepts multiple lines of text. It has most of the same attributes as an input element, with a few specific options that cater to longer text input. The textarea tag is different from the input element in that it has a closing tag and has no value attribute. The predefined value of a textarea element, which you would normally set with <code class="CODE">value=</code><code class="CODE">""</code>, is simply the content between the opening <code class="CODE">&lt;textarea&gt;</code> tag and the closing <code class="CODE">&lt;/textarea&gt;</code> tag.</p>
+
+    <p class="H3_Body">In this example, we’ll use all of the special attributes and explain them in detail.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-21.html</p>
+
+      <pre class="CODE_body">   &lt;textarea name="message" rows="5" cols="60" maxlength="2000" wrap="hard"&gt;&lt;/textarea&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Rows</span>: With the rows attribute, you can specify the “height” of the text box in rows. The text area will accept more rows of text than are specified in “rows,” but at least the specified number of rows will be displayed. The height of a row is determined by the height of the font of the text box. This can be overridden with CSS by overriding the textarea element or attaching an id or class to it.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Cols</span>: The cols attribute allows you to specify the “width” of the text box in columns. A column is simply one character width and, as with rows, this adjusts according to the size of the text box’s font. It can be refined in CSS by overriding the textarea element or attaching an id or class to it.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Maxlength</span>: If you set the maxlength attribute, you can limit the total number of characters that can be entered by the user into the textarea field.</p>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Wrap</span>: Text entered into a textarea element is wrapped to the next line for the user but is not wrapped in the data submitted to the server. This is the default behavior and is defined by setting “wrap” to “soft.” Specifying the “hard” setting for wrap inserts new-line characters (returns) after each wrapped line before sending it to the server.</p>
+
+    <p class="H3_Body">R<span class="Semi-Bold idGenCharOverride-2">esize (via CSS)</span>: Many browsers allow users to resize a text area in both height and width. Because of this, the page formatting can be affected negatively. To avoid this, consider using the CSS resize property:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-22.css</p>
+
+      <pre class="CODE_body"> resize: vertical; /* allows resizing only for the height */</pre>
+
+      <pre class="CODE_body"> resize: horizontal; /* allows resizing only for the width */</pre>
+
+      <pre class="CODE_body"> resize: none; /* allows no resizing */</pre>
+
+    </div>
+
+    <p class="H3_Body"><span class="Semi-Bold idGenCharOverride-2">Select</span>: The select element creates a dropdown list of several options. It shares many of the input attributes but has a special syntax for multiple choice elements. Here’s an example:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-23.html</p>
+
+      <pre class="CODE_body">   &lt;select name="return"&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Email"&gt;Email&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Phone"&gt;Phone Call&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/select&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">In this case, the name of the element is “return” and a dropdown menu is displayed with the visible options “Email” and “Phone Call.” However, the name value will be set to “Email” or “Phone,” depending on which they select. The <span class="italic idGenCharOverride-2">value</span> attribute allows you to specify a value that differs from the displayed value, but if you omit it, then the exact text between the <code class="CODE">&lt;option&gt;</code> and <code class="CODE">&lt;/option&gt;</code> elements is used.</p>
+
+    <p class="H3_Body">If you want to specify a default option, use the <span class="italic idGenCharOverride-2">select</span> attribute. This takes no parameters and will preselect the option when the page loads.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-24.html</p>
+
+      <pre class="CODE_body">   &lt;select name="return"&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Smoke" disabled&gt;Smoke Signals&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Email"&gt;Email&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Phone" selected&gt;Phone Call&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/select&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">In this example (figure 103), “Phone Call” will be selected by default.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo103.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure103.png"/>
+
+      </figure>
+
+      <p class="Caption">A select box with a “selected” default value</p>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-106"><a id="idTextAnchor218"/>HTML5 Validation</h3>
+
+    <p class="H2_Body">Validation is the process of ensuring the user has entered the required data into your form fields. </p>
+
+    <p class="H2_Body">Historically, JavaScript and server-side code were used to check data the user submitted before the form was sent to the server. While this approach is perfectly acceptable, it is no longer necessary to use JavaScript to validate input.</p>
+
+    <p class="H2_Body">Adding the “required” attribute to an input tag will tell the browser to check the field to ensure it contains content and, if that check fails, to block submission of the form.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-25.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="name" required&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">In this example, the field will be selected and, depending on the browser, a visual indicator will be displayed prompting the user to fill in the field (figure 104).</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo104.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure104.png"/>
+
+      </figure>
+
+      <p class="Caption">Google Chrome displays this graphic pointing to the invalid field.</p>
+
+    </div>
+
+    <p class="H2_Body">Input validation goes beyond a simple check to make sure text is in a box. If you specify it on a special type of input, like email, it will ensure that a valid email address is entered (figure 105).</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-26.html</p>
+
+      <pre class="CODE_body">   &lt;input type="email" name="email" required&gt;</pre>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo105.jpg"/>
+
+        <img alt="" class="w-100" src="image/Figure105.jpg"/>
+
+      </figure>
+
+      <p class="Caption">On an email field, Google Chrome will prompt the user to enter a valid email address.</p>
+
+    </div>
+
+    <p class="H2_Body">Select elements can also use validation. You can force the user to select a value from a select box in two different ways. First, you can specify a default option with no value and put a required attribute on the select tag.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-27.html</p>
+
+      <pre class="CODE_body">   &lt;select name="reply" required&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="" selected&gt;Please select...&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Email"&gt;Email&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Phone" selected&gt;Phone Call&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/select&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">In this example, the user will be forced to choose “Email” or “Phone Call.” You can also omit the “selected” attribute altogether, like this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-28.html</p>
+
+      <pre class="CODE_body">   &lt;select name="reply" required&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Email"&gt;Email&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">      &lt;option value="Phone" selected&gt;Phone Call&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/select&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">While this method ensures you’ll get a value, it is not guaranteed to capture the user’s attention, as the field can simply be left to its default value. The choice of approach in this matter will depend on your preference, the audience, and the business requirements of the form.</p>
+
+    <p class="H2_Body">The “min” and “max” attributes can be used to ensure a number entered by the user was within the desired range. The “maxlength” attribute, as the name suggests, controls the maximum length of text, text area, and related fields. But what if you want to make sure a particular type of data is entered, like a social security number or a United States telephone number? That’s where pattern matching comes in.</p>
+
+    <p class="H2_Body">The “pattern” attribute can be paired with the “required” attribute to indicate that a pattern of text should be used to validate the input field. This is done using a syntax known as regular expressions, or regex for short. Regular expressions are extremely powerful; a proper discussion of this syntax would easily fill an entire book. For now, we’ll focus on a few simple values you may need.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-29.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="ssn" pattern="^(\d{3}-?\d{2}-?\d{4})$" required&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">The pattern value contains a regular expression to validate a US social security number. It may seem extremely complex, but breaking it down into its individual components makes it a bit easier to understand.</p>
+
+    <ul>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">^</code> signifies the start of the string</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">(</code> notes the start of the data to be matched</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">\d{3}</code> the <code class="CODE">\d</code> indicates digit, and <code class="CODE">{3}</code> means 3, so this means 3 digits</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">?</code> match the previous character literally (that is, the dash is not part of a special instruction)</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">\d{2}</code> match 2 digits</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">?</code> as before, ignore the previous dash (<code class="CODE">–</code>)</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">\d{4}</code> match 4 digits</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">)</code> closes the definition of data to be matched</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">$</code> signifies the end of the string</p>
+
+      </li>
+
+    </ul>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/cautionLogo.png"/>
+
+      </figure>
+
+      <p class="Note">If your form asks for sensitive data, like a social security number or credit card information, you must make certain that the form is delivered via an HTTPS (SSL) page. If you are coding the backend processing of this sensitive information, you must also encrypt and protect it. Moreover, with sensitive data you should always use the <code class="CODE">POST</code> method, to avoid the data being inserted into the URL. </p>
+
+    </div>
+
+    <p class="H2_Body">Let’s validate a two-letter country code, like “US” or “CA.”</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-30.html</p>
+
+      <pre class="CODE_body">   &lt;input type="text" name="country" pattern="^([A-Z]{2})$" required&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">This validates correctly with an entry like “US” but would not allow “USA” or “Canada.” Here’s a breakdown of the regex:</p>
+
+    <ul>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">^</code> signifies the start of the string</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">(</code> notes the start of the data to be matched</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">[A-Z]{2}</code> indicates capital letters A through Z are accepted and we require two of them</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">)</code> closes the definition of data to be matched</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item"><code class="CODE">$</code> signifies the end of the string</p>
+
+      </li>
+
+    </ul>
+
+    <p class="H2_Body">Don’t worry if you don’t understand regular expressions. You can use HTML and CSS without even knowing they exist (aside from pattern matching in input fields). However, knowledge of regular expressions is beneficial in programming languages, including JavaScript.</p>
+
+    <p class="H2_Body">It should be noted that, although validating user data with HTML5 or JavaScript is a good practice, it doesn’t replace the need for server-side data input validation. Malicious or malformed data sent to a backend script can cause a compromise of your website or security issues for your web server. In the following section, we’ll explore some simple ways to validate data in PHP.</p>
+
+    <h3 class="H2" id="idParaDest-107"><a id="idTextAnchor227"/>Processing Form Input with PHP</h3>
+
+    <p class="H2_Body">Though there are many options for handling user input, PHP is a reasonable choice because it’s a simple and common backend language used on most Linux and Windows web servers. Since your web hosting company will almost certainly support it, powering a contact form with PHP is a good choice. In this section, you’ll find an example PHP contact form handler and some introductory details about PHP. For more information on web hosting, please consult the more comprehensive discussion about web hosting in appendix I.</p>
+
+    <p class="H2_Body">An HTML file is simply a text file with an <code class="CODE">.html</code> extension, and the same principle applies to PHP files. For the server to execute a text file as a PHP script, the file must have a <code class="CODE">.php</code> extension. </p>
+
+    <p class="H2_Body">To signify the file will contain PHP code, we place <code class="CODE">&lt;?php</code> at the beginning of the file. We can return to HTML mode by closing the PHP mode with <code class="CODE">?&gt;</code>. The opening and the closing of a section of PHP code are similar to the opening and closing tags of an HTML element. Any line of PHP code that starts with <code class="CODE">//</code> or <code class="CODE">#</code> is a comment and is not processed.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-31.php</p>
+
+      <pre class="CODE_body">   &lt;?php</pre>
+
+      <pre class="CODE_body">   // This is some PHP code</pre>
+
+      <pre class="CODE_body">   ?&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;This will be shown on the page.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">When a contact form (or any form) is submitted via a web browser to a PHP script, PHP places the value of the input fields (that is, <code class="CODE">&lt;input&gt;</code>, <code class="CODE">&lt;textarea&gt;</code>, <code class="CODE">&lt;select&gt;</code>, etc.) in a unique structure called an “array” that we can access from code.</p>
+
+    <p class="H2_Body">Recall that a form can be submitted via GET or POST. PHP makes both available to the script, like this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-32.php</p>
+
+      <pre class="CODE_body">   &lt;?php</pre>
+
+      <pre class="CODE_body">   // Place value of HTML input field "name" in variable called "name"</pre>
+
+      <pre class="CODE_body">   $name = $_GET['name'];</pre>
+
+    </div>
+
+    <p class="H2_Body">This script will take the value of the HTML input field called “name” and assign it to the variable <code class="CODE">$name</code>. In PHP, all variables start with a dollar sign. Variables are a container in which to store a value for later processing. The <code class="CODE">$_GET</code> array is a special variable that contains other variables within it. These variables are accessed by a “key.” In this case, “name” is the key, denoting that we want the input field “name” from the array.</p>
+
+    <p class="H2_Body">What if the form is posted? In that case, we can use the <code class="CODE">$_POST</code> array.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-33.php</p>
+
+      <pre class="CODE_body">   &lt;?php</pre>
+
+      <pre class="CODE_body">   // Place value of HTML input field "name" in variable called "name"</pre>
+
+      <pre class="CODE_body">   $name = $_POST['name'];</pre>
+
+    </div>
+
+    <p class="H2_Body">If we don’t care which method is used, we can use the <code class="CODE">$_REQUEST</code> array. This is preferable in most cases because it can handle either GET or POST.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-34.php</p>
+
+      <pre class="CODE_body">   &lt;?php</pre>
+
+      <pre class="CODE_body">   // Place value of HTML input field "name" in variable called "name"</pre>
+
+      <pre class="CODE_body">   $name = $_REQUEST['name'];</pre>
+
+    </div>
+
+    <p class="H2_Body">You’ll also note that in the three previous examples, each line of PHP code shown has a semicolon at the end. In PHP, every line of code must end in a semicolon. If you omit it, you’ll receive an error.</p>
+
+    <p class="H2_Body">Placing the value of the input element in a variable doesn’t accomplish much in the real world. For our script to handle the code, it needs to do something with the data.</p>
+
+    <p class="H2_Body">But first, we should make sure the data is valid. HTML provides validation, as we discussed in the previous section. Still, malicious users and spammers can use GET and POST variables through external scripts and can force values into the input fields that would bypass our validations. In our example code, we’ll use the <code class="CODE">filter_var</code> PHP function to ensure the data is coherent or “sane.”</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-35.php</p>
+
+      <pre class="CODE_body">   &lt;?php</pre>
+
+      <pre class="CODE_body">   // Replace with your email address</pre>
+
+      <pre class="CODE_body">   $you = "you@youremail.com";</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   // Place HTML input fields into variables</pre>
+
+      <pre class="CODE_body">   $name = $_REQUEST['name'];</pre>
+
+      <pre class="CODE_body">   $email = $_REQUEST['email'];</pre>
+
+      <pre class="CODE_body">   $phone = $_REQUEST['phone'];</pre>
+
+      <pre class="CODE_body">   $country = $_REQUEST['country'];</pre>
+
+      <pre class="CODE_body">   $subject = $_REQUEST['subject'];</pre>
+
+      <pre class="CODE_body">   $reply = $_REQUEST['reply'];</pre>
+
+      <pre class="CODE_body">   $message = $_REQUEST['message'];</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   // Validate email address</pre>
+
+      <pre class="CODE_body">   if (filter_var($email, FILTER_VALIDATE_EMAIL)) { </pre>
+
+      <pre class="CODE_body">      die("Invalid email.");</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   // Build the message to send</pre>
+
+      <pre class="CODE_body">   $content = "</pre>
+
+      <pre class="CODE_body">   Name: $name</pre>
+
+      <pre class="CODE_body">   Email: $email</pre>
+
+      <pre class="CODE_body">   Phone: $phone</pre>
+
+      <pre class="CODE_body">   Country: $country</pre>
+
+      <pre class="CODE_body">   Subject: $subject</pre>
+
+      <pre class="CODE_body">   Best Method to Reply: $reply</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   Subject:</pre>
+
+      <pre class="CODE_body">   $subject</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   Message:</pre>
+
+      <pre class="CODE_body">   $message";</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   // Build mail headers</pre>
+
+      <pre class="CODE_body">   $headers = "Reply-to: $email";</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   // Send the message</pre>
+
+      <pre class="CODE_body">   mail($you, $you, $subject, $headers);</pre>
+
+      <pre class="CODE_body">   ?&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;Your message was sent successfully.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">This code will work in most simple configurations, but it lacks several important features, including anti-spam protection and validation for variable length. A spammer could submit this form many times with promotional or abusive messages. Since this form sends the mail to your address, this kind of misuse could become annoying. Additional validation and CAPTCHA (Completely Automated Public Turing Test to tell Computers and Humans Apart) challenges may be necessary.</p>
+
+    <p class="H2_Body">This code may not work on all web hosting servers, as each host has different restrictions and rules about sending emails via PHP code. The PHP <code class="CODE">mail()</code> function usually works, but if not, you may have to use custom code. Your web host should be able to point you in the right direction.</p>
+
+    <p class="H2_Body">The purpose of this example code is not to provide a complete solution to all your contact form needs but rather to serve as a starting point for you to learn more about backend programming languages like PHP.</p>
+
+    <h3 class="H2" id="idParaDest-108"><a id="idTextAnchor233"/>Putting It All Together</h3>
+
+    <p class="H2_Body">Now that we’ve explored HTML forms, let’s build a contact form with validation. In your text editor, create the following file and view the results in your browser. Note that you won’t be able to submit the form because there’s no backend code, but you’ll be able to see and interact with the form elements.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">11-36.html</p>
+
+      <pre class="CODE_body">&lt;!DOCTYPE html&gt;</pre>
+
+      <pre class="CODE_body">&lt;html lang="en"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;head&gt;</pre>
+
+      <pre class="CODE_body">      &lt;meta charset="UTF-8"&gt;</pre>
+
+      <pre class="CODE_body">      &lt;title&gt;Contact Us&lt;/title&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/head&gt;</pre>
+
+      <pre class="CODE_body">   &lt;body&gt;</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">      &lt;h1&gt;Contact Us&lt;/h1&gt;</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">      &lt;form action="contact.php" method="POST"&gt;</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">         &lt;label for="name"&gt;Name&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" name="name" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         </pre>
+
+      <pre class="CODE_body">         &lt;label for="email"&gt;Email&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="email" name="email" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">        </pre>
+
+      <pre class="CODE_body">         &lt;label for="phone"&gt;Phone&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="tel" name="phone"&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         </pre>
+
+      <pre class="CODE_body">         &lt;label for="country"&gt;Country&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" name="country" pattern="^([A-Z]{2})$" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">        </pre>
+
+      <pre class="CODE_body">         &lt;label for="name"&gt;Subject&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="text" name="subject" required&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         </pre>
+
+      <pre class="CODE_body">         &lt;label for="reply"&gt;Desired Reply&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;select name="reply" required&gt;</pre>
+
+      <pre class="CODE_body">               &lt;option value="" selected&gt;Please select...&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">               &lt;option value="Email"&gt;Email&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">               &lt;option value="Phone" selected&gt;Phone Call&lt;/option&gt;</pre>
+
+      <pre class="CODE_body">           &lt;/select&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;label for="message"&gt;Message&lt;/label&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;textarea name="message" rows="5" cols="60" maxlength=”2000"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;</pre>
+
+      <pre class="CODE_body">         &lt;input type="submit" name="submit" value="Send Message"&gt;      </pre>
+
+      <pre class="CODE_body">      &lt;/form&gt;</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   &lt;/body&gt;</pre>
+
+      <pre class="CODE_body">&lt;/html&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">In this example, we ask for the user’s name, email, phone, country, subject, and desired reply method, and we provide a space for them to enter a message. We validate the name, email, country, subject, message, and reply method, but we do not require the phone number, because they may choose “Email” as their desired reply method.</p>
+
+    <p class="H2_Body">The form will POST to <code class="CODE">contact.php</code>, which can be filled with the PHP example code we provided in the previous section to process the message. </p>
+
+    <p class="H2_Body">You don’t have to use PHP—you can use Ruby, Python, or any other backend scripting language. Covering these other languages is beyond the scope of this book. Still, as a web designer, you may need to integrate with several backend languages, and knowing how to build forms and send them to the appropriate URL will be an invaluable skill.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/noteLogo.png"/>
+
+      </figure>
+
+      <p class="Note">The following form is functional but is rather plain-looking. Why not try to spruce it up by using CSS to decorate the heading, input fields, select box, and labels?</p>
+
+    </div>
+
+    <div class="oyo">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/oyoLogo.jpg"/>
+
+      </figure>
+
+      <p class="Image-Line">
+
+        <img alt="" class="idGenObjectAttribute-1" src="image/25.jpg"/>
+
+      </p>
+
+      <p class="CBC_Heading">Contact Form</p>
+
+      <p class="H2_Body">The <code class="CODE">contact.html</code> page of the ClydeBank Coffee Shop website is missing a contact form. Let’s add one, so visitors can contact the coffee shop.</p>
+
+      <p class="H2_Body">You can use the PHP file <code class="CODE">contact.php</code> described in this chapter to send the email. Our client has informed us that a developer will do that for us. All we need to do is create the form and add validation. </p>
+
+      <div class="standard-box">
+
+        <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+          <img class="w-100" src="image/downloadLogo.png"/>
+
+        </figure>
+
+        <p class="Note">If you haven’t yet downloaded the ClydeBank Coffee Shop website, please do so from .</p>
+
+      </div>
+
+      <p class="H2_Body">We already have a working example of a form in the “Putting It All Together” section of this chapter. However, it is more detailed than we need. The client informed us that we only need ask for their name, email address, and message. Try to copy the form element, the relevant input fields, and the submit button into the <code class="CODE">contact.html</code> file. Don’t forget to validate each field. If you don’t want to use the <code class="CODE">contact.php</code> included in this chapter, then you can leave the action to reference contact.html, as a developer will adjust this after we’re done.</p>
+
+      <p class="H2_Body">While we encourage you to try this task on your own, you can consult appendix V if you get stuck. Once you’re done, patrons will have an easy way to reach the coffee shop via email. Fantastic work!</p>
+
+    </div>
+
+    <div class="chapterRecap-wrap">
+
+      <h2 class="chapterRecap-title"><b>Chapter Recap</b></h2>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">HTML forms allow users to provide input on a web page.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">The input element is the primary method of data entry. It provides many options for accepting text, numbers, email addresses, website URLs, and more. </p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">HTML5 provides methods of validating the data that users enter into your form, including the required attribute and pattern matching.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Backend languages like PHP can process your contact form data and send an email to you with its contents.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

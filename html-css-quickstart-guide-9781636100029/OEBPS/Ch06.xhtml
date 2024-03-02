@@ -1,0 +1,983 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0                z3998: http://www.daisy.org/z3998/2012/vocab/structure/#" lang="en-US" xml:lang="en-US">
+
+<head>
+  <title>htmlcss_epub-10</title>
+  <link href="css/idGeneratedStyles.css" rel="stylesheet" type="text/css"/>
+<meta content="urn:uuid:e0000000-0000-0000-0000-000006605679" name="Adept.expected.resource"/>
+</head>
+
+<body id="htmlcss_epub-10" lang="en-US">
+
+  <div>
+
+    <h2 class="Chapter--" id="idParaDest-58"><a id="idTextAnchor055"/>| 6 | </h2>
+
+    <p class="Chapter-Title" id="idParaDest-59"><a id="idTextAnchor056"/>CSS Structure</p>
+
+    <div class="chapterOverview-wrap">
+
+      <h3 class="chapterOverview-title"><b>Chapter Overview</b></h3>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item">Content is defined by HTML and styled by CSS. </p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">CSS rules are made up of selectors and properties.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item">CSS has a cascading hierarchy.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+    <p class="IntroParagraph">Until now we have been dealing with textual content in HTML. We have used tags for logically grouping text into paragraphs and sections (via <code class="CODE">&lt;div&gt;</code>), adding images, and even linking to other pages and sites. Since organization has largely been our focus, we have been at the browser’s mercy regarding how our code is visually presented to the user.</p>
+
+    <p class="H2_Body">That’s where CSS comes into play. HTML defines the content, and CSS styles it. With CSS, we can override the visual defaults of the browser and adjust how it displays our content in a wide variety of ways. CSS allows us to define attributes and appearance for all our tags and gives us the power to create styles that can apply to multiple tags and div segments on our page.</p>
+
+    <p class="H2_Body">Beyond appearances, though, CSS liberates our HTML from having to define appearance and lets our HTML code focus on content. By separating content and style, we gain tremendous advantages in code readability and maintainability.</p>
+
+    <h3 class="H2" id="idParaDest-60"><a id="idTextAnchor057"/>Where CSS “Lives”</h3>
+
+    <p class="H2_Body">CSS rules can be placed in many locations (in descending order with the preferred, best-practice usage on top). We covered this in chapter 3, but since the file structure and interaction of HTML and CSS files can be confusing, let’s do a quick review before diving further into this topic. CSS rules can be designated in the following ways:</p>
+
+    <ul>
+
+      <li>
+
+        <p class="marked-list-item">Defined via a separate .css file (called a style sheet)</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item">Included within <code class="CODE">&lt;style&gt;&lt;/style&gt;</code> tags within <code class="CODE">&lt;head&gt;&lt;/head&gt;</code></p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item">Included within <code class="CODE">&lt;style&gt;&lt;/style&gt;</code> tags anywhere in the HTML</p>
+
+      </li>
+
+      <li>
+
+        <p class="marked-list-item">Placed “inline” within individual tags</p>
+
+      </li>
+
+    </ul>
+
+    <p class="H3">.css Files</p>
+
+    <p class="H3_Body">Generally the best and most common approach to using CSS is to store CSS rules in a separate file that can be referenced repeatedly by multiple pages on a site.</p>
+
+    <p class="H3_Body">This is handled by calling it within <code class="CODE">&lt;head&gt;</code> using a special <code class="CODE">&lt;link&gt;</code> element.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-01.html</p>
+
+      <pre class="CODE_body">   &lt;link rel="stylesheet" type="text/css" href="style.css"&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">You can see that the <code class="CODE">&lt;link&gt;</code> element uses an “href” attribute much like the <code class="CODE">&lt;a&gt;</code> element. We specify in the “rel” (relation) attribute that we are referencing a style sheet and that the type is <code class="CODE">text/css</code>. Like <code class="CODE">&lt;img&gt;</code> elements, <code class="CODE">&lt;link&gt;</code> elements do not need closing tags.</p>
+
+    <p class="H3_Body">You can include multiple style sheets in the <code class="CODE">&lt;head&gt;</code> element in the same way, like this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-02.html</p>
+
+      <pre class="CODE_body">&lt;head&gt;</pre>
+
+      <pre class="CODE_body">   &lt;link rel="stylesheet" type="text/css" href="style.css"&gt;</pre>
+
+      <pre class="CODE_body">   &lt;link rel="stylesheet" type="text/css" href="style2.css"&gt;</pre>
+
+      <pre class="CODE_body">&lt;/head&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">The second style sheet, <code class="CODE">style2.css</code>, will be appended to the previous sheet. If any selectors have new rules, they will override any existing rules in <code class="CODE">style.css</code>.</p>
+
+    <p class="H3_Body">You may also use multiple <code class="CODE">&lt;style&gt;</code> elements inside the <code class="CODE">&lt;head&gt;</code> or <code class="CODE">&lt;body&gt;</code>, though combining them into one, or, ideally, using a .css file, is preferred.</p>
+
+    <p class="H3_Body">The use of .css files follows the DRY (Don’t Repeat Yourself) principle in allowing you to specify CSS rules once and use them on as many pages as you like. Changing the CSS file allows you to quickly alter the look of the entire site.</p>
+
+    <p class="H3">Style Tags</p>
+
+    <p class="H3_Body">Style tags allow for the inclusion of CSS rules directly on the HTML page. Unlike CSS files, <code class="CODE">&lt;style&gt;</code> tags apply only to the page on which they are used. The most common way to use the <code class="CODE">&lt;style&gt;</code> tag is to place it in the <code class="CODE">&lt;head&gt;</code> element, like this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-03.html</p>
+
+      <pre class="CODE_body">&lt;head&gt;</pre>
+
+      <pre class="CODE_body">   &lt;style&gt;</pre>
+
+      <pre class="CODE_body">      p {</pre>
+
+      <pre class="CODE_body">         font-weight: bold; </pre>
+
+      <pre class="CODE_body">         color: red;</pre>
+
+      <pre class="CODE_body">      }</pre>
+
+      <pre class="CODE_body">      h1 { font-size: 12x; }</pre>
+
+      <pre class="CODE_body">   &lt;/style&gt;</pre>
+
+      <pre class="CODE_body">&lt;/head&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">You can also place the <code class="CODE">&lt;style&gt;</code> element anywhere in the <code class="CODE">&lt;body&gt;</code> element, but this isn’t the preferred method because CSS rules applied in the body will override any .css files or <code class="CODE">&lt;style&gt;</code> elements in the head.</p>
+
+    <p class="H3">Inline Styling</p>
+
+    <p class="H3_Body">To include any CSS styling on an individual element, you create a named “style” attribute and set it to match the styling you would like for that specific instance of that element. For example:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-04.html</p>
+
+      <pre class="CODE_body">   &lt;p style="font-weight: bold; color: red;"&gt;This will be bold-red.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">This inline style applies only to this paragraph element on this HTML page.</p>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo051.jpg"/>
+
+        <img alt="" class="w-100" src="image/29.jpg"/>
+
+      </figure>
+
+    </div>
+
+    <p class="H2_Body">The web browser will interpret CSS rules in the order in which they are received. Each subsequent rule overrides any previous rule. Any rules you place in the <code class="CODE">&lt;head&gt;</code> element with <code class="CODE">&lt;style&gt;</code> tags will be interpreted in the order specified and not given precedence over any referenced .css files. Rules placed in a <code class="CODE">&lt;style&gt;</code> element in the <code class="CODE">&lt;body&gt;</code> will always be processed last, in the order listed in the code. Inline styles will override any CSS rule, no matter its source or location in HTML (figure 51).</p>
+
+    <h3 class="H2" id="idParaDest-61"><a id="idTextAnchor058"/>An Example CSS File</h3>
+
+    <p class="H2_Body">A CSS file is essentially a series of rules made up of selectors and properties. Here is a typical CSS file:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-05.css</p>
+
+      <pre class="CODE_body">   /* Set a default font and size for the entire document */</pre>
+
+      <pre class="CODE_body">   body {</pre>
+
+      <pre class="CODE_body">      font-family: Arial, Helvetica, sans-serif;</pre>
+
+      <pre class="CODE_body">      font-size: 12px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   h1 { font-size: 22px; }</pre>
+
+      <pre class="CODE_body">   h2 { font-size: 18px; }</pre>
+
+      <pre class="CODE_body">   h3 { font-size: 16px; }</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   .bold-text { font-weight: bold; }</pre>
+
+      <pre class="CODE_body">   .red-text { color: red; }</pre>
+
+    </div>
+
+    <p class="H2_Body">What makes this a CSS file is simply a .css extension at the end of the file name. For example, “style.css” is recognized as a CSS file, but the “style” part of the file name can be anything you like. You could use the rules featured here in a <code class="CODE">&lt;style&gt;</code> element as well.</p>
+
+    <p class="H2_Body">In this file, the body, h1, h2, and h3 tags are redefined with specific attributes, and two CSS classes are created: .bold-text and .red-text. There is also a comment at the top of the file set apart with <code class="CODE">/*</code> and <code class="CODE">*/</code>. Any text between these two markers is ignored by the browser.</p>
+
+    <p class="H2_Body">While there is no strict organizational requirement for the file, it is generally best practice to define overrides in a logical, hierarchical manner. For example, since <code class="CODE">&lt;body&gt;</code> is the containing element of the document content, override it first. Then drill down into other elements. This organization will keep the file easy to read and maintain.</p>
+
+    <p class="H2_Body">There is one other item about the format that is worth noting. The <code class="CODE">{ }</code> characters contain the properties we define. If there are several properties in a rule, specifying them one per line is visually appealing and easy to read:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">   body {</pre>
+
+      <pre class="CODE_body">      font-family: Arial, Helvetica, sans-serif;</pre>
+
+      <pre class="CODE_body">      font-size: 12px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H2_Body">In contrast, the heading tags in this example have only one property assigned, so listing the property on the same line maintains that readability:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <pre class="CODE_body">   h1 { font-size: 22px; }</pre>
+
+      <pre class="CODE_body">   h2 { font-size: 18px; }</pre>
+
+      <pre class="CODE_body">   h3 { font-size: 16px; }</pre>
+
+    </div>
+
+    <p class="H2_Body">Of course, you do not have to stick to this arrangement, but it is a common method of CSS file organization. Whichever styling you choose, consistency and readability are the keys to clean, maintainable code. </p>
+
+    <h3 class="H2" id="idParaDest-62"><a id="idTextAnchor059"/>Selectors</h3>
+
+    <p class="H2_Body">As we’ve previously discussed, CSS rules are made up of selectors and properties. The selector is the element or type of element that we wish to modify, and the properties are the rules that we wish to apply to it.</p>
+
+    <p class="H2_Body">Since this is crucial to the forthcoming content, let’s review the different types of selectors that are available to us.</p>
+
+    <p class="H3">Element</p>
+
+    <p class="H3_Body">Element selectors simply refer to HTML elements, such as p, h1, div, span, etc. Element selectors can be applied to any element that has a closing tag. For example, if we want all content that lives within <code class="CODE">&lt;p&gt;</code> elements to be bold and in a purple font, then we would describe our <code class="CODE">p</code> selector using the “font weight” and “color” properties: </p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-06.css</p>
+
+      <pre class="CODE_body">   p {</pre>
+
+      <pre class="CODE_body">      font-weight: bold; </pre>
+
+      <pre class="CODE_body">      color: purple;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H3">Class</p>
+
+    <p class="H3_Body">A class is a type of CSS rule that matches no HTML element by name but can be used to style any number of HTML elements. In our previous example, we defined two classes—bold text and red text. If we want to bold just one paragraph, we assign the bold-text class to that specific paragraph, like so:</p>
+
+    <p class="CODE_heading"><span class="BOLD idGenCharOverride-1">HTML:</span></p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-07.html</p>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph.&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p class="bold-text"&gt;This paragraph is bold. It stands out!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph, too.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">We can use our red-text class in a similar manner:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-08.html</p>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph.&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p class="red-text"&gt;This paragraph is red. It stands out more!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph, too.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">These paragraphs with class definitions are given the attributes assigned in the CSS file. Since the font color is set to red in the red-text class, that paragraph will be given red text.</p>
+
+    <p class="H3_Body">Now let’s say we want to change all the special paragraphs with red text to purple. All we have to do is change the applicable CSS rule:</p>
+
+    <p class="CODE_heading"><span class="BOLD idGenCharOverride-1">CSS:</span></p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-09.css</p>
+
+      <pre class="CODE_body">   .red-text { color: purple; }</pre>
+
+    </div>
+
+    <p class="H3_Body">Now the text inside the paragraph will be purple, even though the class name is still red-text:</p>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-10.html</p>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph.&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p class="red-text"&gt;This paragraph is red. It stands out more!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;This is a standard paragraph, too.&lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">The properties of a CSS class define its appearance and behavior, not the class name you give it. In this case, you have two choices: rename the class (which could be difficult if it is used many times throughout your site) or create a new rule. Given that you want to color the text purple, creating a new rule would be best. </p>
+
+    <p class="H3_Body">Let’s look at our updated style sheet:</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-11.css</p>
+
+      <pre class="CODE_body">   /* Set a default font and size for the entire document */</pre>
+
+      <pre class="CODE_body">   body {</pre>
+
+      <pre class="CODE_body">      font-family: Arial, Helvetica, sans-serif;</pre>
+
+      <pre class="CODE_body">      font-size: 12px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   h1 { font-size: 22px; }</pre>
+
+      <pre class="CODE_body">   h2 { font-size: 18px; }</pre>
+
+      <pre class="CODE_body">   h3 { font-size: 16px; }</pre>
+
+      <pre class="CODE_body">   </pre>
+
+      <pre class="CODE_body">   .bold-text { font-weight: bold; }</pre>
+
+      <pre class="CODE_body">   .red-text { color: red; }</pre>
+
+      <pre class="CODE_body">   .purple-text { color: purple; }</pre>
+
+    </div>
+
+    <p class="H3_Body">One final note about CSS classes—you can use <span class="italic idGenCharOverride-2">multiple</span> classes on an element, like this:</p>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-12.html</p>
+
+      <pre class="CODE_body">   &lt;p class="bold-text red-text"&gt;</pre>
+
+      <pre class="CODE_body">      This paragraph shines so much you need shades just to look at it!</pre>
+
+      <pre class="CODE_body">   &lt;/p&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">By combining the bold text and red text classes, we created an easy and consistent way to give a paragraph special attention.</p>
+
+    <p class="H3_Body">When creating your CSS classes, try to focus on as few properties as possible, and consider combining classes in some elements for easier readability and fewer lines of code.</p>
+
+    <p class="H3">Id</p>
+
+    <p class="H3_Body">Ids allow you to reference specific instances of elements in your HTML. While class element rules reference every instance of that element, ids reference only a specific use of an element.</p>
+
+    <p class="H3_Body">Going back to our previous CSS example, let’s add an id definition:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-13.css</p>
+
+      <pre class="CODE_body">   /* Set a default font and size for the entire document */</pre>
+
+      <pre class="CODE_body">   body {</pre>
+
+      <pre class="CODE_body">      font-family: Arial, Helvetica, sans-serif;</pre>
+
+      <pre class="CODE_body">      font-size: 12px;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   h1 { font-size: 22px; }</pre>
+
+      <pre class="CODE_body">   h2 { font-size: 18px; }</pre>
+
+      <pre class="CODE_body">   h3 { font-size: 16px; }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   .bold-text { font-weight: bold; }</pre>
+
+      <pre class="CODE_body">   .red-text { color: red; }</pre>
+
+      <pre class="CODE_body">   .purple-text { color: purple; }</pre>
+
+      <pre class="CODE_body"> </pre>
+
+      <pre class="CODE_body">   #top-ad { </pre>
+
+      <pre class="CODE_body">      background-color: yellow;</pre>
+
+      <pre class="CODE_body">      color: red; </pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="H3_Body">Now we’ve added an id called “top-ad.” It will only be used once per page and will feature red text on a yellow background. Not a chance a reader’s eyes will miss it! Let’s use it on a page:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-14.html</p>
+
+      <pre class="CODE_body">   &lt;body&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p id="top-ad"&gt;SUMMER SALE ON NOW!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;You’ll love our prices. 50% off? That’s so yesterday. Try 70% off!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;p&gt;We have the &lt;span class="bold-text"&gt;best&lt;/span&gt; widgets money can buy.&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/body&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">Here, the first paragraph will be given our lovely yellow/red hot-dog-stand color combination. And in the middle of the third paragraph, we invoked a class style to bold a word inside the paragraph.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/rememberLogo.png"/>
+
+      </figure>
+
+      <p class="Note">You cannot have more than one instance of the “top-ad” id on a single page, but you <span class="italic idGenCharOverride-3">can</span> use classes as many times as you like, and even combine them. </p>
+
+    </div>
+
+    <p class="H3_Body">Selectors are first applied to elements, then to classes, and finally to ids. If we set both an id and a class on an element in the HTML, and the rules conflict with one another, the browser will choose the properties associated with the id over those of the class. </p>
+
+    <h3 class="H2" id="idParaDest-63"><a id="idTextAnchor060"/>Pseudo-Classes</h3>
+
+    <p class="H2_Body">Pseudo-classes are identifiers added to a CSS selector that let you style an element in a specific state or apply a style to a specific subset of that element. If you read that sentence three times and are scratching your head, don’t worry—this is a complex topic that is best explained with an example.</p>
+
+    <p class="H2_Body">A common use of a pseudo-class is to decorate the various states of the anchor (link) element. Let’s consider these two examples:</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-15.css</p>
+
+      <pre class="CODE_body">   a { color: red; }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-16.html</p>
+
+      <pre class="CODE_body">&lt;a href="https://www.ClydeBankMedia.com/"&gt;ClydeBank Media&lt;/a&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">In this example, the links will be colored red instead of the browser default, which is usually blue. However, links have various states, including visited, active, and hover. Let’s expand our example:</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-17.css</p>
+
+      <pre class="CODE_body">   a:link { color: red; }</pre>
+
+      <pre class="CODE_body">   a:visited { color: purple; }</pre>
+
+      <pre class="CODE_body">   a:active { color: black; }</pre>
+
+      <pre class="CODE_body">   a:hover { color: green; }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-18.html</p>
+
+      <pre class="CODE_body">&lt;a href="https://www.ClydeBankMedia.com/"&gt;ClydeBank Media&lt;/a&gt;</pre>
+
+      <pre class="CODE_body">&lt;a href="https://www.google.com/"&gt;Google&lt;/a&gt;</pre>
+
+      <pre class="CODE_body">&lt;a href="https://www.yahoo.com/"&gt;Yahoo&lt;/a&gt;</pre>
+
+    </div>
+
+    <p class="H2_Body">In the three-link example, any unvisited link will be colored red, a visited link will be purple, the active (current) link will be black, and when you hover over the link it will turn green. Save this HTML and CSS in your browser and observe this behavior for yourself.</p>
+
+    <p class="H2_Body">Link, visited, active, and hover are pseudo-classes. They define states of the anchor element. Most elements have a “hover” state, so you can create interesting effects with any element.</p>
+
+    <p class="H3">Nested Elements</p>
+
+    <p class="H3_Body">Pseudo-classes can also be used to define the style of elements within other elements. Consider this example:</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-19.css</p>
+
+      <pre class="CODE_body">   article h2 { </pre>
+
+      <pre class="CODE_body">      font-size: 16px;</pre>
+
+      <pre class="CODE_body">      font-weight: bold;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-20.html</p>
+
+      <pre class="CODE_body">   &lt;article&gt;</pre>
+
+      <pre class="CODE_body">      &lt;h2&gt;A Super Interesting Article&lt;/h2&gt;</pre>
+
+      <pre class="CODE_body">      &lt;p&gt;You have to read this!&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/article&gt;</pre>
+
+    </div>
+
+    <p class="H3_Body">In this case, <span class="italic idGenCharOverride-2">only</span> the h2 elements within article elements will be set to have 16-pixel bold fonts. H2 elements outside article elements will continue to be styled as usual.</p>
+
+    <p class="H3">:first-child / :last-child / :nth-child(n)</p>
+
+    <p class="H3_Body">You can also use <code class="CODE">:first-child</code> and <code class="CODE">:last-child</code> to style only the first and last child occurrences of an element. For example, if you wanted the first paragraph of any article to be bold, you’d use this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-21.css</p>
+
+      <pre class="CODE_body">   article p:first-child { font-weight: bold; }</pre>
+
+    </div>
+
+    <p class="H3_Body">If you wanted to apply a style to the second paragraph, you would use the <code class="CODE">:nth-child(n)</code> pseudo-class.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-22.css</p>
+
+      <pre class="CODE_body">   article p:nth-child(2) { font-weight: bold; }</pre>
+
+    </div>
+
+    <p class="H3_Body">Adjust the value of n (in the previous example, 2) to match your desired position.</p>
+
+    <div class="standard-box">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/downloadLogo.png"/>
+
+      </figure>
+
+      <p class="Note">There are other pseudo-classes that are common to most elements. Check out the “List of CSS Pseudo Classes” at <a class="underline" href="https://www.clydebankmedia.com/htmlcss-assets">www.clydebankmedia.com/htmlcss-assets</a> for a complete record of all pseudo-classes.</p>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-64"><a id="idTextAnchor061"/>Pseudo-Elements</h3>
+
+    <p class="H2_Body">Pseudo-elements allow you to apply CSS styles to specific parts of an element, or to add content before, after, or within an element. Pseudo-elements use a syntax similar to pseudo-classes except they use two colons between the element and the pseudo-element name.</p>
+
+    <p class="H2_Body">Let’s look at a very practical example using the <code class="CODE">::first-line</code> pseudo-element.</p>
+
+    <p class="CODE_heading">CSS</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-23.css</p>
+
+      <pre class="CODE_body">   article::first-line { font-style: italic; }</pre>
+
+    </div>
+
+    <p class="CODE_heading">HTML</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-24.html</p>
+
+      <pre class="CODE_body">   &lt;article&gt;</pre>
+
+      <pre class="CODE_body">      &lt;p&gt;Those interested in learning more about HTML and CSS should consult the ClydeBank Media HTML and CSS QuickStart Guide. It is a fantastic resource.&lt;/p&gt;</pre>
+
+      <pre class="CODE_body">   &lt;/article&gt; </pre>
+
+    </div>
+
+    <p class="H2_Body">In this example, the first line of the article will be rendered in an italic font. The extent of the “first line” is based on the width of the browser window. On a phone, it may represent just a few words, but on a wide-screen device it may encompass the entire first paragraph, if the font is small.</p>
+
+    <p class="H2_Body">In the same vein as first-line, you can use ::first-letter to style the first letter of a text-based element. You can also use the ::selection pseudo-element to alter the style applied by the browser when a user clicks that element on your web page.</p>
+
+    <p class="H3">::before and ::after</p>
+
+    <p class="H3_Body">The <code class="CODE">::before</code> and <code class="CODE">::after</code> pseudo-elements allow you to add text before and after elements on a page.</p>
+
+    <p class="H3_Body">If we want to add NOTE: before each paragraph, we use <code class="CODE">::before</code>, like this:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-25.css</p>
+
+      <pre class="CODE_body">   p::before { content: "NOTE: "; }</pre>
+
+    </div>
+
+    <p class="H3_Body">If we want to style this inserted content, we can do that, too.</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-26.css</p>
+
+      <pre class="CODE_body">   p::before { </pre>
+
+      <pre class="CODE_body">      content: "NOTE: ";</pre>
+
+      <pre class="CODE_body">      font-weight: bold;</pre>
+
+      <pre class="CODE_body">      color: red;</pre>
+
+      <pre class="CODE_body">   }</pre>
+
+    </div>
+
+    <div class="oyo">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/oyoLogo.jpg"/>
+
+      </figure>
+
+      <p class="H3_Body">Construct an HTML page with at least a paragraph of text. Use <code class="CODE">::first-letter</code> to increase the font size, bold, and italicize it. This technique is sometimes used in books for additional style and interest (figure 52).</p>
+
+    </div>
+
+    <div class="whitebox">
+
+      <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+        <img alt="" class="w-100" src="image/graphicLogo052.jpg"/>
+
+        <img alt="" class="w-60" src="image/Figure52.png"/>
+
+      </figure>
+
+      <p class="Caption">Decorative styling of the first letter of a paragraph</p>
+
+    </div>
+
+    <h3 class="H2" id="idParaDest-65"><a id="idTextAnchor062"/>CSS Cascade Hierarchy</h3>
+
+    <p class="H2_Body">CSS, by definition, “cascades” between styles. Rules follow, or cascade over, the HTML elements they decorate. </p>
+
+    <p class="H2_Body">We have discussed the cascading order of CSS rules (from external files to <code class="CODE">&lt;style&gt;</code> elements to inline styles) and the selector hierarchy. But properties have a hierarchy, too.</p>
+
+    <p class="H2_Body">One situation where this is most evident is when we use third-party CSS files and frameworks. Some of them are quite large, and it’s impossible to know every element and class definition. Because of this, we are sometimes forced to use the <code class="CODE">!important</code> declaration on properties to ensure that our overrides percolate to the top of the priority chain. Here’s an example:</p>
+
+    <div class="white2">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/snipetLogo.jpg"/>
+
+      </figure>
+
+      <p class="snippet">06-27.css</p>
+
+      <pre class="CODE_body">   .very-important { font-weight: bold: !important; }</pre>
+
+    </div>
+
+    <p class="H2_Body">In this case, the bolding of text in an element with this class name will override <span class="italic idGenCharOverride-2">most</span> other rules, even if the font-weight is set to a different value by a competing CSS rule. This is extremely helpful for troubleshooting confusing rule cascade issues and for quick, one-off fixes. </p>
+
+    <p class="H2_Body">However, if you find yourself using <code class="CODE">!important</code> more than occasionally, then you have an issue with the structure of your CSS rules. This power, when used sparingly, is helpful, but it can quickly turn into a mess if you aren’t careful.</p>
+
+    <div class="oyo">
+
+      <figure class="horizontal-image-wrap2" epub:type="z3998:figure">
+
+        <img class="w-100" src="image/oyoLogo.jpg"/>
+
+      </figure>
+
+      <p class="H3">Continuing with Carter Dome</p>
+
+      <p class="H3_Body">Remember our Carter Dome page from chapter 5? In the “Putting It All Together” section, we built a complete HTML page. Not a great page, but complete (sort of). Unfortunately, it had no styling beyond the browser defaults. Let’s try using what we learned in this chapter to spruce up the Carter Dome page. Go to our GitHub repository for this title at <a href="http://www.github.com/clydebankmedia/htmlcss-quickstartguide">www.github.com/clydebankmedia/htmlcss-quickstartguide</a>. Locate the complete Carter Dome web page code found near the end of chapter 5 (Snippet_05-22.html).</p>
+
+      <p class="H3_Body">Open your text editor and create a new file: File &gt;&gt; New. Then copy all the Carter Dome code into the text editor. </p>
+
+      <p class="H3_Body">Create a <code class="CODE">&lt;style&gt;&lt;/style&gt;</code> section in the <code class="CODE">&lt;head&gt;&lt;/head&gt;</code> and add CSS code to designate interesting modifications for the heading and paragraph text.</p>
+
+      <p class="H3_Body">Save this file somewhere on your computer. Be sure to save it as file type “.html,” as it may save as a text file by default. Next, open the newly created .html file with your browser and behold your masterpiece. If you don’t see anything new, try refreshing the page.</p>
+
+      <p class="H3_Body">Keep your text editor and browser open. Make changes to the code and save them in your text editor. Then refresh your browser to see those changes rendered instantly.</p>
+
+      <div class="standard-box">
+
+        <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+          <img class="w-100" src="image/noteLogo.png"/>
+
+        </figure>
+
+        <p class="Note">If you’re feeling extra adventurous, don’t use <code class="CODE">&lt;style&gt;</code> tags, but create a whole new style.css file and link to your style sheet in the <code class="CODE">&lt;head&gt;</code> element of the Carter Dome page.</p>
+
+      </div>
+
+      <p class="H3_Body">Press the gas pedal on your newfound CSS knowledge, and feel free to experiment with ideas you don’t quite understand yet (or ideas suggested by your text editor). Remember, you’re not yet on the clock, clearing lucrative billings from clients. You’re just trying to learn how things work. Try to create the coolest looking web page you can. What do you come up with?</p>
+
+      <div class="whitebox">
+
+        <figure class="horizontal-image-wrap" epub:type="z3998:figure">
+
+          <img alt="" class="w-100" src="image/graphicLogo053.jpg"/>
+
+          <img alt="" class="w-100" src="image/Figure53.jpg"/>
+
+        </figure>
+
+        <p class="Caption">Can you beat this? </p>
+
+      </div>
+
+    </div>
+
+    <div class="chapterRecap-wrap">
+
+      <h2 class="chapterRecap-title"><b>Chapter Recap</b></h2>
+
+      <ul class="marked">
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">HTML code defines content and structure, and CSS applies style to those structures.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">CSS rules contain selectors that reference HTML elements, classes, and ids. Those selectors are assigned properties that modify the appearance and behavior of those elements.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">CSS can be placed in a .css file, in a style element in the head element, in a style element within the body element, or inline via the “style” attribute on the opening tag of an HTML element.</p>
+
+        </li>
+
+        <li>
+
+          <p class="marked-list-item margin-bottom-s">Pseudo-classes allow you to style specific states and variations of elements, while pseudo-elements let you style specific parts of elements and add content before and/or after an element.</p>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>
