@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch07"><span epub:type="pagebreak" id="page_145"></span>Chapter 7</h2>
+<h2 class="chap-title">Advanced Text Editing</h2>
+<p class="noindent">Having covered the basic functions of modern text editors in <a href="ch06.xhtml#ch06">Chapter 6</a>, in this chapter we’ll learn about a few of the most common advanced topics. Even more than in <a href="ch06.xhtml#ch06">Chapter 6</a>, details will vary based on the exact editor you choose, so use your growing technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) to figure out any necessary details. The most important lesson is that the advanced functions in this chapter are all things that <em>any</em> professional-grade editor can do, so you should be able to figure out how to do them no matter which editor you’re using.</p>
+<section>
+<h3 class="h3" id="ch07lev1">7.1 Autocomplete and Tab Triggers</h3>
+<p class="noindent">Two of the most useful features of text editors are <em>autocomplete</em> and <em>tab triggers</em>, which you can think of as roughly command-line style tab completion for text files. (See <a href="ch02.xhtml#box2-4">Box 2.4</a> from <a href="part01.xhtml#part01">Part I</a> for details on tab completion.) Both features allow us to type potentially large amounts of text with only a few keystrokes.</p>
+<section>
+<h4 class="h4" id="ch07lev1sec1">7.1.1 Autocomplete</h4>
+<p class="noindent">The most common variant of autocomplete lets us type the first few letters of a word and then gives us the ability to complete it from a menu of options, typically by using the arrow keys and hitting tab to accept the completion. An example of autocompleting the word “Markdown” in <span class="green"><code><strong>README.md</strong></code></span> appears in <a href="ch07.xhtml#fig7-1">Figure 7.1</a>.</p>
+<figure class="figure" id="fig7-1">
+<img src="graphics/07fig01.jpg" alt="Image" width="744" height="792"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.1:</strong> Autocomplete for “Markdown”.</p>
+</figcaption>
+</figure>
+<p class="indent">The autocomplete menu itself is populated using the current document, so auto-complete is particularly useful in longer documents that contain a large number of <span epub:type="pagebreak" id="page_146"></span>possible completions. For instance, the source for <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) (which is written using the powerful markup language L<sup><small>A</small></sup>T<sub>E</sub>X) makes use of a large number of labels for making cross-references, and these labels are often long enough that it’s much easier to <span epub:type="pagebreak" id="page_147"></span>autocomplete them than to type them out by hand. An example is the oft-cited <a href="ch05.xhtml#box5-2">Box 5.2</a>, whose source looks like <a href="ch07.xhtml#list7-1">Listing 7.1</a>.</p>
+<p class="list-head" id="list7-1"><strong>Listing 7.1:</strong> A cross-reference with a label I usually autocomplete.</p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis01" id="p07lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">Box~<span class="lgreen"><strong>\ref</strong></span><span class="lgreen">{</span>aside:technical<span class="lgreen">_</span>sophistication<span class="lgreen">_</span>text<span class="lgreen">_</span>editor<span class="lgreen">}</span></pre>
+</div>
+<p class="noindent">When writing a string like <span class="green"><code><strong>technical_sophistication</strong></code></span> in <a href="ch07.xhtml#list7-1">Listing 7.1</a>, I nearly always use autocomplete instead of typing it out in full.<sup><a id="rfn7_1" href="ch07.xhtml#fn7_1">1</a></sup> (As mentioned below, the rest of the cross-reference is generated using a custom tab trigger.) Similar considerations frequently occur when writing source code, where (as we’ll learn in <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>)) we might encounter something like this:</p>
+<p class="footnote"><a id="fn7_1" href="ch07.xhtml#rfn7_1">1.</a> I actually have my Sublime Text editor configured to use the <span class="green"><code><strong>ESC</strong></code></span> key for autocompletion instead of using a menu, mainly because I got used to that design when using my previous editor (TextMate). I arranged for this setup using my technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>).</p>
+<p class="codelink"><a href="ch07_images.xhtml#f000147-01" id="f000147-01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="brown1">ReallyLongClassName</span> <span class="gray">&lt;</span> <span class="brown1">ReallyLongBaseClassName</span></pre>
+<p class="noindent">In such cases, rather than typing out the long names by hand, it’s usually easier to type <span class="green"><code><strong>Rea</strong></code></span> and then select the relevant autocompletion.</p>
+</section>
+<section>
+<h4 class="h4" id="ch07lev1sec2">7.1.2 Tab Triggers</h4>
+<p class="noindent">Tab triggers are similar to autocompletion in that they let us type a few letters and then hit <em>Tab</em> to work some magic, but in this case many of them come pre-defined with the editor, with the exact triggers typically based on the particular type of document we’re editing. For example, in Markdown and other markup files (HTML, L<small><sup>A</sup></small>T<sub>E</sub>X, etc.), typing <code>lorem</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> or <code>lo</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> yields so-called <em>lorem ipsum</em> text, a slightly corrupted Latin fragment from a book by Cicero that is often used as dummy text in programming and design. We saw <em>lorem ipsum</em> briefly before in <a href="ch06.xhtml#list6-1">Listing 6.1</a>; a second example appears in <a href="ch07.xhtml#fig7-2">Figure 7.2</a>, which shows the result of typing <code>lo</code> in Atom. A closeup appears in <a href="ch07.xhtml#fig7-3">Figure 7.3</a>. After hitting <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> to invoke the tab trigger, the full <em>lorem ipsum</em> text appears as in <a href="ch07.xhtml#fig7-4">Figure 7.4</a>.</p>
+<figure class="figure" id="fig7-2">
+<img src="graphics/07fig02.jpg" alt="Image" width="744" height="794"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.2:</strong> Typing “lo” in Atom prepares to activate a tab trigger.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-3">
+<img src="graphics/07fig03.jpg" alt="Image" width="473" height="150"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.3:</strong> A more detailed view of the trigger in <a href="ch07.xhtml#fig7-2">Figure 7.2</a>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-4">
+<img src="graphics/07fig04.jpg" alt="Image" width="744" height="797"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.4:</strong> The result of the tab trigger in <a href="ch07.xhtml#fig7-2">Figure 7.2</a>.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_148"></span>Tab triggers are especially useful when editing more syntax-heavy file types like HTML and source code. For instance, when writing HTML, many editors support the creation of an HTML skeleton using the trigger <code>html</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/>, together with HTML <em>tags</em> (covered in <em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>)) <span epub:type="pagebreak" id="page_149"></span>using the tag name with a tab, such as <code>h1</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> for an <span class="green"><code><strong>h1</strong></code></span> or top-level heading tag. In Atom, we can do something like this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> atom index.html</pre>
+<p class="noindent">The result of applying the various tab triggers then might look something like <a href="ch07.xhtml#fig7-5">Figure 7.5</a>. Because HTML, or HyperText Markup Language, is the language of the World Wide Web, navigating to the file in a browser then shows a simple but real web page (<a href="ch07.xhtml#fig7-6">Figure 7.6</a>).</p>
+<figure class="figure" id="fig7-5">
+<img src="graphics/07fig05.jpg" alt="Image" width="744" height="600"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.5:</strong> The result of applying HTML tab triggers.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-6">
+<img src="graphics/07fig06.jpg" alt="Image" width="744" height="546"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.6:</strong> The result of applying tab triggers to an HTML page.</p>
+</figcaption>
+</figure>
+<p class="indent">Similarly, when writing Ruby code, typing <code>def</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> in Atom creates a Ruby <em>define</em> statement to make a <em>function</em>, which looks like this:</p>
+<pre class="box-pre1">def method_name
+
+end</pre>
+<p class="noindent">After typing the name of the function (which replaces the placeholder text <span class="green"><code><strong>method_name</strong></code></span>), we can hit <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> again to place the cursor in the right location to start writing the main part of the function. These sorts of auto-expansions of content can speed up code production considerably, while also lowering the cognitive load of programming. We’ll see a concrete example of this technique in <a href="ch07.xhtml#ch07lev2">Section 7.2</a>.</p>
+<p class="indent">Finally, it’s possible to define tab triggers of your own. My own editing makes extensive use of tab triggers; for example, to make the text in <a href="ch07.xhtml#list7-1">Listing 7.1</a>, instead of typing</p>
+<p class="codelink"><a href="ch07_images.xhtml#f000149-01" id="f000149-01a">Click here to view code image</a></p>
+<pre class="box-pre1">Box~<span class="lgreen"><strong>\ref</strong></span><span class="lgreen">{</span>aside:technical<span class="lgreen">_</span>sophistication<span class="lgreen">_</span>text<span class="lgreen">_</span>editor<span class="lgreen">}</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_150"></span>by hand I used the custom tab trigger <span class="green"><code><strong>bref</strong></code></span> (for “box reference”) to generate</p>
+<pre class="box-pre1">Box~<span class="lgreen"><strong>\ref</strong></span><span class="lgreen">{</span>aside:<span class="lgreen">}</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_151"></span>and then filled in the label <span class="green"><code><strong>technical_sophistication</strong></code></span> using autocomplete (<a href="ch07.xhtml#ch07lev1sec1">Section 7.1.1</a>). Defining custom tab triggers is highly editor-dependent and is beyond the scope of this tutorial, but some hints about how to figure it out for yourself appear in <a href="ch07.xhtml#ch07lev5">Section 7.5</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch07lev1sec3">7.1.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Add some more <em>lorem ipsum</em> text to <span class="green"><code><strong>README.md</strong></code></span> using a tab trigger.</p></li>
+<li><p class="number">Add another occurrence of the word “consectetur” using autocomplete.</p></li>
+<li><p class="number">Write the sentence “As Cicero once said, ‘quis nostrud exercitation ullamco laboris’.” with the help of as many uses of autocomplete as you want.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch07lev2"><span epub:type="pagebreak" id="page_152"></span>7.2 Writing Source Code</h3>
+<p class="noindent">As hinted at in <a href="ch07.xhtml#ch07lev1sec2">Section 7.1.2</a>, in addition to being good at editing markup like HTML and Markdown, text editors excel at writing computer programs. Any good programmer’s text editor supports many specialized functions for writing code; this section covers a few of the most useful. Even if you don’t know how to program (yet!), it’s still useful to know about some of the ways text editors support writing code.</p>
+<p class="indent">An example of computer code appears in <a href="ch07.xhtml#list7-2">Listing 7.2</a>, which shows a variant of a “hello, world” program written in the Ruby programming language. (You are not expected to understand this program.)</p>
+<p class="list-head" id="list7-2"><strong>Listing 7.2:</strong> A variant of “hello, world” in Ruby.</p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis02" id="p07lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="roman_gray">1</span> <span class="blue"><em># Prints a greeting.</em></span>
+<span class="roman_gray">2</span> <span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+<span class="roman_gray">3</span>   <span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+<span class="roman_gray">4</span> <span class="lgreen"><strong>end</strong></span>
+<span class="roman_gray">5</span>
+<span class="roman_gray">6</span> hello(<span class="brown">"world"</span>)</pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_153"></span>To see the contents from <a href="ch07.xhtml#list7-2">Listing 7.2</a> in a text editor, we can fire up Atom as follows:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> atom hello.rb</pre>
+<p class="noindent">Upon pasting in the content of <a href="ch07.xhtml#list7-2">Listing 7.2</a>, we get the result shown in <a href="ch07.xhtml#fig7-7">Figure 7.7</a>. (For extra credit, type in <a href="ch07.xhtml#list7-2">Listing 7.2</a> by hand using the <span class="green"><code><strong>def</strong></code></span> tab trigger discussed in <a href="ch07.xhtml#ch07lev1">Section 7.1</a>.)</p>
+<figure class="figure" id="fig7-7">
+<img src="graphics/07fig07.jpg" alt="Image" width="744" height="796"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_154"></span><strong>Figure 7.7:</strong> A Ruby program in Atom.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch07lev2sec1">7.2.1 Syntax Highlighting</h4>
+<p class="noindent">As we saw in <a href="ch06.xhtml#ch06lev2sec1">Section 6.2.1</a> with <span class="green"><code><strong>README.md</strong></code></span>, Atom uses the filename extension to determine the proper syntax highlighting. In that case the (rather subtle) highlighting was for Markdown; in this case, Atom infers from <span class="green"><code><strong>.rb</strong></code></span> that the file contains Ruby code, and highlights it accordingly. As before, it’s essential to understand that the highlighting isn’t inherent to the text, which is still plain. Syntax highlighting is purely for our benefit as readers of the code.</p>
+<p class="indent">In addition to making it easier to parse the source code visually (e.g., distinguishing keywords, strings, constants, etc.), syntax highlighting can also be useful for catching bugs. For example, at one point when editing <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) I accidentally deleted a L<small><sup>A</sup></small>T<sub>E</sub>X closing quote (which consists of the two single quotes <code>''</code>), with the result shown in <a href="ch07.xhtml#fig7-8">Figure 7.8</a>. This changed the color of the main text from the default white to the color used for quoted strings (green), which made it apparent at a glance that something was wrong. Upon fixing the error, the highlighting changed back to the expected white text, as shown in <a href="ch07.xhtml#fig7-9">Figure 7.9</a>.</p>
+<figure class="figure" id="fig7-8">
+<img src="graphics/07fig08.jpg" alt="Image" width="744" height="225"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.8:</strong> An error in L<small><sup>A</sup></small>T<sub>E</sub>X source caught by syntax highlighting.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-9">
+<img src="graphics/07fig09.jpg" alt="Image" width="744" height="218"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.9:</strong> Error fixed, syntax highlighting as expected.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch07lev2sec2"><span epub:type="pagebreak" id="page_155"></span>7.2.2 Commenting Out</h4>
+<p class="noindent">One of the most useful functions of a text editor is the ability to “comment out” blocks of code, a technique often used to temporarily prevent execution of certain lines without having to delete them entirely (which is often particularly helpful when debugging). Most programming and markup languages support comment lines that exist for the benefit of humans reading the code but are ignored by the programming language itself.<sup><a id="rfn7_2" href="ch07.xhtml#fn7_2">2</a></sup> An example of a Ruby comment appears in the first line of <a href="ch07.xhtml#list7-2">Listing 7.2</a>:</p>
+<p class="footnote"><a id="fn7_2" href="ch07.xhtml#rfn7_2">2.</a> Technically, comments are ignored by the compiler or interpreter. Some languages have automated documentation systems that do process the comments.</p>
+<pre class="box-pre1"><span class="blue"><em># Prints a greeting.</em></span></pre>
+<p class="noindent">Here the leading hash symbol <span class="green"><code><strong>#</strong></code></span> is Ruby’s way of indicating a comment line.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_156"></span>Suppose we wanted to comment out the next three lines (lines 2–4), to change</p>
+<p class="codelink"><a href="ch07_images.xhtml#p156pro01" id="p156pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="blue"><em># Prints a greeting.</em></span>
+<span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+  <span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+<span class="lgreen"><strong>end</strong></span>
+
+hello(<span class="brown">"world"</span>)</pre>
+<p class="noindent">to</p>
+<p class="codelink"><a href="ch07_images.xhtml#p156pro02" id="p156pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="blue"><em># Prints a greeting.</em></span>
+<span class="blue"><em># def hello(location)</em></span>
+<span class="blue"><em>#  puts "hello, #{location}!"</em></span>
+<span class="blue"><em># end</em></span>
+
+hello(<span class="brown">"world"</span>)</pre>
+<p class="noindent">It’s possible to do this by hand, of course, simply by inserting a <span class="green"><code><strong>#</strong></code></span> at the beginning of each line. This is inconvenient, though, and becomes increasingly so as the length of the commented-out text grows. Instead, we can select the desired text (<a href="ch06.xhtml#ch06lev4">Section 6.4</a>) and use a menu item or keyboard shortcut to comment out the selection. In Atom, we can comment out lines 2–3 by selecting those lines (<a href="ch07.xhtml#fig7-10">Figure 7.10</a>) and hitting <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>/, as shown in <a href="ch07.xhtml#fig7-11">Figure 7.11</a>. (Note from <a href="ch07.xhtml#fig7-11">Figure 7.11</a> that the subtle save indicator shown in <a href="ch06.xhtml#fig6-31">Figure 6.31</a> has been filled in; this is because I habitually press <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>S after making changes, as recommended in <a href="ch06.xhtml#ch06lev7">Section 6.7</a>.)</p>
+<figure class="figure" id="fig7-10">
+<img src="graphics/07fig10.jpg" alt="Image" width="744" height="784"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.10:</strong> Preparing to comment out some lines.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-11">
+<img src="graphics/07fig11.jpg" alt="Image" width="744" height="792"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.11:</strong> Commented-out lines.</p>
+</figcaption>
+</figure>
+<p class="indent">The commenting-out feature typically toggles back and forth, so by hitting <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>/ a second time we can restore the file to its previous state (<a href="ch07.xhtml#fig7-10">Figure 7.10</a>). This is useful when restoring some commented-out text after, for example, doing some debugging.</p>
+</section>
+<section>
+<h4 class="h4" id="ch07lev2sec3">7.2.3 Indenting and Dedenting</h4>
+<p class="noindent">Another element of code formatting made easier by text editors is <em>indentation</em>, which consists of the leading spaces at the beginning of certain lines. It used to be common to use <em>tab</em> characters for indentation, but unfortunately the number of spaces <em>displayed</em> for a tab is system-dependent, leading to unpredictable results: Some people might see four “spaces” per tab, some might see eight, and some might see only two.</p>
+<p class="indent">In recent years, many programmers have switched to <em>emulated tabs</em>, where pressing the tab key inserts a standard number of ordinary spaces (typically two or four). True <span epub:type="pagebreak" id="page_157"></span>tabs still have some partisans, though, and tabs vs. spaces remains holy war territory (<a href="ch05.xhtml#box5-4">Box 5.4</a>). (Luckily, there is one thing everyone agrees on, which is that <em>mixing</em> tabs and spaces is a bad idea.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_158"></span><span epub:type="pagebreak" id="page_159"></span>To see how this works, we can take a look at some Ruby code, which typically uses two spaces for indentation:</p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+  <span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+<span class="lgreen"><strong>end</strong></span></pre>
+<p class="noindent">This would typically be achieved by hitting return after “(location)” and then pressing the tab key, although pressing the spacebar twice would also work. Assuming that the editor has been configured to use two spaces to emulate tabs, we’d get the result shown above. In most languages, this would be equivalent to the following:<sup><a id="rfn7_3" href="ch07.xhtml#fn7_3">3</a></sup></p>
+<p class="footnote"><a id="fn7_3" href="ch07.xhtml#rfn7_3">3.</a> Python is a notable exception.</p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+<span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+<span class="lgreen"><strong>end</strong></span></pre>
+<p class="noindent">This second example is harder to read, though, and it’s important to indent properly for the sake of humans reading the code, even if the programming language doesn’t care.<sup><a id="rfn7_4" href="ch07.xhtml#fn7_4">4</a></sup></p>
+<p class="footnote"><a id="fn7_4" href="ch07.xhtml#rfn7_4">4.</a> Some languages, notably Python, actually enforce some measure of proper indentation, but most language compilers and interpreters ignore it.</p>
+<p class="indent">Text editors help maintain proper indentation in two main ways. First, new lines are typically inserted at the same level of indentation as the previous line, which you can verify by going to the end of line 3 in <a href="ch07.xhtml#list7-2">Listing 7.2</a> and typing in the following two lines:</p>
+<pre class="box-pre1"><span class="lgreen">puts</span> <span class="brown">"Uh, oh."</span>
+<span class="lgreen">puts</span> <span class="brown">"Goodbye,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span></pre>
+<p class="noindent">The result appears in <a href="ch07.xhtml#fig7-12">Figure 7.12</a>.</p>
+<figure class="figure" id="fig7-12">
+<img src="graphics/07fig12.jpg" alt="Image" width="744" height="796"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.12:</strong> Adding two indented lines.</p>
+</figcaption>
+</figure>
+<p class="indent">The second main way text editors help maintain good code formatting is by supporting block indentation, which works in much the same way as commenting out code blocks. Suppose, for example, that (contrary to conventional Ruby practices) we decided to indent lines 3–5 in <a href="ch07.xhtml#fig7-12">Figure 7.12</a> six extra spaces, making eight spaces total. As with commenting out, the first step is to select the text we want to indent (<a href="ch07.xhtml#fig7-13">Figure 7.13</a>). We can then type the tab key <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> to indent one “soft tab” (which <span epub:type="pagebreak" id="page_160"></span>is usually two spaces for Ruby) at a time. (If for any reason the default indentation in your editor doesn’t match the convention for the language you’re using, apply your technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) to figure out how to change it.) The result of applying three tabs in succession is shown in <a href="ch07.xhtml#fig7-14">Figure 7.14</a>.</p>
+<figure class="figure" id="fig7-13">
+<img src="graphics/07fig13.jpg" alt="Image" width="744" height="796"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_161"></span><strong>Figure 7.13:</strong> Preparing to indent some lines.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-14">
+<img src="graphics/07fig14.jpg" alt="Image" width="744" height="789"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_162"></span><strong>Figure 7.14:</strong> A block of Ruby code indented more than usual.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_163"></span>Because each extra tab just indents the block more, we can’t use the same command to undo indentation the way we did when commenting out code. Instead, we need to use a separate “dedent” command, which in Atom is <img src="graphics/pg20-6a.jpg" alt="images" width="41" height="18"/>. Applying this command three times in succession returns us to our original state, as shown <span epub:type="pagebreak" id="page_164"></span>in <a href="ch07.xhtml#fig7-15">Figure 7.15</a>. (By the way, many editors (including Atom) support the alternate keyboard shortcuts <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>] and <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>[ for indenting and dedenting, respectively.)</p>
+<figure class="figure" id="fig7-15">
+<img src="graphics/07fig15.jpg" alt="Image" width="744" height="789"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.15:</strong> Dedenting the code block in <a href="ch07.xhtml#fig7-14">Figure 7.14</a>.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch07lev2sec4">7.2.4 Goto Line Number</h4>
+<p class="noindent">It’s often important to be able to go to a particular line number, such as when debugging a program that has an error on (say) line 187. We saw this feature in <a href="ch05.xhtml#ch05lev6">Section 5.6</a>, where we learned that the Vim command <span class="green"><code><strong>&lt;n&gt;G</strong></code></span> takes us to line <span class="green"><code><strong>&lt;n&gt;</strong></code></span>. In many other editors, the relevant shortcut is ^G. This opens a modal box where you can type in the line number, as shown in <a href="ch07.xhtml#fig7-16">Figure 7.16</a>. (Incidentally, the syntax <span class="green"><code><strong>:&lt;number&gt;</strong></code></span> shown in <a href="ch07.xhtml#fig7-16">Figure 7.16</a>, which is for Sublime Text, also works in Vim.)</p>
+<figure class="figure" id="fig7-16">
+<img src="graphics/07fig16.jpg" alt="Image" width="744" height="70"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.16:</strong> The modal box for going to a particular line number.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch07lev2sec5">7.2.5 80 Columns</h4>
+<p class="noindent">Finally, many text editors help programmers enforce a line limit of 80 characters across, usually called an “80-column limit”. Not all programmers observe this limit, but keeping our code to 80 columns makes it easier to read and display, for example in fixed-width terminals, blog posts, or tutorials such as this one.<sup><a id="rfn7_5" href="ch07.xhtml#fn7_5">5</a></sup> An 80-column limit also enforces good coding discipline, as exceeding 80 columns is often a sign that we would do well to introduce a new variable or function name.<sup><a id="rfn7_6" href="ch07.xhtml#fn7_6">6</a></sup> Because it’s difficult to tell at a glance if a particular line exceeds 80 characters, many editors (including Atom and Sublime Text) include the option to display a subtle vertical line showing where the limit is, as shown in <a href="ch07.xhtml#fig7-17">Figure 7.17</a>.<sup><a id="rfn7_7" href="ch07.xhtml#fn7_7">7</a></sup> If the 80-column limit indicator isn’t <span epub:type="pagebreak" id="page_165"></span>shown by default in your editor, flex your technical sophistication to figure out how to enable it. (It’s often associated with a setting called “word wrap column”.)</p>
+<p class="footnote"><a id="fn7_5" href="ch07.xhtml#rfn7_5">5.</a> The original source of this constraint is actually IBM punch cards.</p>
+<p class="footnote"><a id="fn7_6" href="ch07.xhtml#rfn7_6">6.</a> The main exception to the 80-column rule is markup like HTML, Markdown, or L<small><sup>A</sup></small>T<sub>E</sub>X, which is why in these cases we often activate word wrap as in <a href="ch06.xhtml#ch06lev2">Section 6.2</a>.</p>
+<p class="footnote"><a id="fn7_7" href="ch07.xhtml#rfn7_7">7.</a> In some editors the line is at something like 78 columns instead of 80 to allow a small margin for error.</p>
+<figure class="figure" id="fig7-17">
+<img src="graphics/07fig17.jpg" alt="Image" width="744" height="248"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.17:</strong> Unsubtle arrows pointing at the subtle 80-column indicator in Atom.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch07lev2sec6">7.2.6 Exercises</h4>
+<ol class="number">
+<li><p class="number">Create the file <span class="green"><code><strong>foo.rb</strong></code></span>, then define the class <span class="green"><code><strong>FooBar</strong></code></span> (<a href="ch07.xhtml#list7-3">Listing 7.3</a>) using a tab trigger. <em>Hint</em>: Chances are the trigger is something like <code>cla</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/>.</p></li>
+<li><p class="number">Referring to <a href="ch07.xhtml#list7-4">Listing 7.4</a>, add the definition of <span class="green"><code><strong>bazquux</strong></code></span> using the <code>def</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> trigger, then add the final line shown by using autocomplete to type <span class="green"><code><strong>FooBar</strong></code></span> and <span class="green"><code><strong>bazquux</strong></code></span>. (Type the interstitial <span class="green"><code><strong>.new.</strong></code></span> by hand.)</p></li>
+<li><p class="number">Using tab triggers and autocomplete, make a file called <span class="green"><code><strong>greeter.rb</strong></code></span> with the contents shown in <a href="ch07.xhtml#list7-5">Listing 7.5</a>.</p></li>
+<li><p class="number">By cutting and pasting the text for the <span class="green"><code><strong>hello</strong></code></span> definition and indenting the block, transform <a href="ch07.xhtml#list7-5">Listing 7.5</a> into <a href="ch07.xhtml#list7-6">Listing 7.6</a>.</p></li>
+</ol>
+<p class="list-head" id="list7-3"><strong>Listing 7.3:</strong> Creating a class using a tab trigger.<br/><code><em>~/foo.rb</em></code></p>
+<div class="box2">
+<pre class="pre"><span class="lgreen"><strong>class</strong></span> <span class="pblue"><strong>FooBar</strong></span>
+
+<span class="lgreen"><strong>end</strong></span></pre>
+</div>
+<span epub:type="pagebreak" id="page_166"></span>
+<p class="list-head" id="list7-4"><strong>Listing 7.4:</strong> Using autocomplete to make a class name.<br/><code><em>~/foo.rb</em></code></p>
+<div class="box2">
+<pre class="pre"><span class="lgreen"><strong>class</strong></span> <span class="pblue"><strong>FooBar</strong></span>
+<span class="back-yellow"> <span class="bgreen"><strong>def</strong></span> <span class="pblue"><strong>bazquux</strong></span></span>
+<span class="back-yellow">    <span class="bgreen"><strong>puts</strong></span> <span class="brown"><strong>"Baz quux!"</strong></span></span>
+<span class="back-yellow"> <span class="bgreen"><strong>end</strong></span></span>
+<span class="lgreen"><strong>end</strong></span>
+
+<span class="back-yellow"><span class="brown"><strong>FooBar</strong></span>.new.bazquux</span></pre>
+</div>
+<p class="list-head" id="list7-5"><strong>Listing 7.5:</strong> A proto-Greeter class in Ruby.<br/><code><em>~/greeter.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis05" id="p07lis05a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="lgreen"><strong>class</strong></span> <span class="pblue"><strong>Greeter</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+
+<span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+  <span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+<span class="lgreen"><strong>end</strong></span>
+
+<span class="brown1">Greeter</span><span class="gray">.</span>new<span class="gray">.</span>hello(<span class="brown">"world"</span>)</pre>
+</div>
+<p class="list-head" id="list7-6"><strong>Listing 7.6:</strong> A completed Greeter class in Ruby.</p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis06" id="p07lis06a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="lgreen"><strong>class</strong></span> <span class="pblue"><strong>Greeter</strong></span>
+  <span class="lgreen"><strong>def</strong></span> <span class="pblue">hello</span>(location)
+    <span class="lgreen">puts</span> <span class="brown">"hello,</span> <span class="dpink"><strong>#{</strong></span>location<span class="dpink"><strong>}</strong></span><span class="brown">!"</span>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+
+<span class="brown1">Greeter</span><span class="gray">.</span>new<span class="gray">.</span>hello(<span class="brown">"world"</span>)</pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch07lev3">7.3 Writing an Executable Script</h3>
+<p class="noindent">As a practical application of the material in <a href="ch07.xhtml#ch07lev2">Section 7.2</a>, in this section we’re going to write something that’s actually useful: a <em>shell script</em> designed to kill a program as safely as possible. (A <em>script</em> is a program that is typically used to automate common tasks, but the detailed definition isn’t important at this stage.) En route, we’ll cover the steps needed to add this script to our command-line shell.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_167"></span>As discussed in <a href="ch03.xhtml#box3-2">Box 3.2</a>, Unix user and system tasks take place within a well-defined container called a <em>process</em>. Sometimes, one of these processes will get stuck or otherwise misbehave, in which case we might need to terminate it with the <span class="green"><code><strong>kill</strong></code></span> command, which sends a <em>terminate code</em> to kill the process with a given id:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">kill</span> -15 <span class="gray">12241</span></pre>
+<p class="noindent">(See the discussion in <a href="ch03.xhtml#box3-2">Box 3.2</a> for more on how to find this id on your system.) Here we’ve used the terminate code <span class="green"><code><strong>15</strong></code></span>, which attempts to kill the process as gently as possible (meaning it gives the process a chance to clean up any temporary files, complete any necessary operations, etc.). Sometimes terminate code <span class="green"><code><strong>15</strong></code></span> isn’t enough, though, and we need to escalate the level of urgency until the process is well and truly dead. It turns out that a good sequence of codes is <span class="green"><code><strong>15</strong></code></span>, <span class="green"><code><strong>2</strong></code></span>, <span class="green"><code><strong>1</strong></code></span>, and <span class="green"><code><strong>9</strong></code></span>. Our task is to write a command to implement this sequence, which we’ll call <span class="green"><code><strong>ekill</strong></code></span> (for “escalating kill”), so that we can kill a process as shown in <a href="ch07.xhtml#list7-7">Listing 7.7</a>.</p>
+<p class="list-head" id="list7-7"><strong>Listing 7.7:</strong> An example of using <span class="green"><code><strong>ekill</strong></code></span> (to be defined).</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> ekill <span class="gray">12241</span></pre>
+</div>
+<p class="noindent">As with the Ruby example in <a href="ch07.xhtml#ch07lev2">Section 7.2</a>, don’t worry about the details of the code; focus instead on the mechanics of the text editing.</p>
+<p class="indent">As preparation for adding <span class="green"><code><strong>ekill</strong></code></span> to our system, we’ll first make a new directory in our home directory called <span class="green"><code><strong>bin</strong></code></span> (for “binary”):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> mkdir ~/bin</pre>
+<p class="noindent">(It’s possible that this directory already exists on your system, in which case you’ll get a harmless warning message.) We’ll then change to the <span class="green"><code><strong>bin</strong></code></span> directory and open a new file called <span class="green"><code><strong>ekill</strong></code></span>:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~/bin
+<span class="dblue"><strong>$</strong></span> atom ekill</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_168"></span>The <span class="green"><code><strong>ekill</strong></code></span> script itself starts with a “shebang” line (pronounced “shuh-BANG”, from “shell” and “bang”, with the latter being the common pronunciation of the exclamation point <span class="green"><code><strong>!</strong></code></span> (<a href="ch03.xhtml#box3-1">Box 3.1</a>)):</p>
+<pre class="box-pre1"><span class="blue"><em>#!/bin/bash</em></span></pre>
+<p class="noindent">This line tells our system to use the shell program located in <span class="green"><code><strong>/bin/bash</strong></code></span> to execute the script. The <span class="green"><code><strong>bash</strong></code></span> program corresponds to the Bourne-again shell (Bash) mentioned in <a href="ch05.xhtml#ch05lev3">Section 5.3</a>, and in this context a shell script is often called a <em>Bash script</em>.<sup><a id="rfn7_8" href="ch07.xhtml#fn7_8">8</a></sup> Despite appearances, here the hash symbol <span class="green"><code><strong>#</strong></code></span> is <em>not</em> a comment character, which is potentially confusing because (as in Ruby) <span class="green"><code><strong>#</strong></code></span> is the character ordinarily used for a Bash comment line. Indeed, the initial version of our script includes several comment lines, as shown in <a href="ch07.xhtml#list7-8">Listing 7.8</a>.</p>
+<p class="footnote"><a id="fn7_8" href="ch07.xhtml#rfn7_8">8.</a> To learn how to write this same script using Zsh, see “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>).</p>
+<p class="list-head" id="list7-8"><strong>Listing 7.8:</strong> A custom escalating kill script.<br/><code><em>~/bin/ekill</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis08" id="p07lis08a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="roman_gray">1</span> <span class="blue"><em>#!/bin/bash</em></span>
+<span class="roman_gray">2</span>
+<span class="roman_gray">3</span> <span class="blue"><em># Kill a process as safely as possible.</em></span>
+<span class="roman_gray">4</span> <span class="blue"><em># Tries to kill a process using a series of signals with escalating urgency.</em></span>
+<span class="roman_gray">5</span> <span class="blue"><em># usage: ekill &lt;pid&gt;</em></span>
+<span class="roman_gray">6</span>
+<span class="roman_gray">7</span> <span class="blue"><em># Assign the process id to the first argument.</em></span>
+<span class="roman_gray">8</span> <span class="dblue">pid=$1</span>
+<span class="roman_gray">9</span> <span class="lgreen">kill</span> -15 <span class="dblue">$pid</span> <span class="dblue">||</span> <span class="lgreen">kill</span> -2 <span class="dblue">$pid</span> <span class="dblue">||</span> <span class="lgreen">kill</span> -1 <span class="dblue">$pid</span> <span class="dblue">||</span> <span class="lgreen">kill</span> -9 <span class="dblue">$pid</span></pre>
+</div>
+<p class="noindent">Apart from the shebang in line 1, all other uses of <span class="green"><code><strong>#</strong></code></span> introduce comments. Then, line 8 assigns the process id <span class="green"><code><strong>pid</strong></code></span> to <span class="green"><code><strong>$1</strong></code></span>, which in a shell script is the first argument to the command, e.g., <span class="green"><code><strong>12241</strong></code></span> in <a href="ch07.xhtml#list7-7">Listing 7.7</a>. Line 9 then uses the “or” operator <span class="green"><code><strong>||</strong></code></span> to execute the <span class="green"><code><strong>kill</strong></code></span> command using the code <span class="green"><code><strong>15</strong></code></span> or <span class="green"><code><strong>2</strong></code></span> or <span class="green"><code><strong>1</strong></code></span> or <span class="green"><code><strong>9</strong></code></span>, stopping on the first successful <span class="green"><code><strong>kill</strong></code></span>. (Again, don’t worry if you find this confusing; I include the explanation for completeness, but at this stage there’s no need to understand the details.)</p>
+<p class="indent">After typing the contents of <a href="ch07.xhtml#list7-8">Listing 7.8</a> into the script file, one thing you might notice is that the result has no syntax highlighting, as seen in <a href="ch07.xhtml#fig7-18">Figure 7.18</a>. This is because, unlike <span class="green"><code><strong>README.md</strong></code></span> (<a href="ch06.xhtml#ch06lev2">Section 6.2</a>) and <span class="green"><code><strong>hello.rb</strong></code></span> (<a href="ch07.xhtml#ch07lev2">Section 7.2</a>), the name <span epub:type="pagebreak" id="page_169"></span><span class="green"><code><strong>ekill</strong></code></span> has no filename extension. Although some people would use a name like <span class="green"><code><strong>ekill.sh</strong></code></span> for shell scripts like this one—which would in fact allow our editor to highlight the syntax automatically—using an explicit extension on a shell script is a bad practice because the script’s name is the user interface to the program. As users of the system, we don’t care if <span class="green"><code><strong>ekill</strong></code></span> is written in Bash or Ruby or C, so calling it <span class="green"><code><strong>ekill.sh</strong></code></span> unnecessarily exposes the implementation language to the end-user. Indeed, if we wrote the first implementation in Bash but then decided to rewrite it in Ruby and then in C, every program (and programmer) using the script would have to change the name from <span class="green"><code><strong>ekill.sh</strong></code></span> to <span class="green"><code><strong>ekill.rb</strong></code></span> to <span class="green"><code><strong>ekill.c</strong></code></span>—an annoying and avoidable complication.</p>
+<figure class="figure" id="fig7-18">
+<img src="graphics/07fig18.jpg" alt="Image" width="744" height="791"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.18:</strong> The <span class="green"><code><strong>ekill</strong></code></span> script with no syntax highlighting.</p>
+</figcaption>
+</figure>
+<p class="indent">Even though we’ve elected not to use a filename extension for the <span class="green"><code><strong>ekill</strong></code></span> script, we’d still like to get syntax highlighting to work. One way is to click on “Plain Text” in the lower right-hand corner of the editor (<a href="ch07.xhtml#fig7-18">Figure 7.18</a>) and change the highlighting language to the one we’re using. This requires us to <em>know</em> the language, though, and it would be nicer if we could get the editor to figure it out automatically. Happily, we can arrange exactly that, simply by closing the file and opening it again. To do this, click on the X to close the <span class="green"><code><strong>ekill</strong></code></span> tab (or press <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>W) and then re-open it from the command line:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> atom ekill</pre>
+<p class="noindent">Because of the shebang line in <a href="ch07.xhtml#list7-8">Listing 7.8</a>, Atom infers that the file is a Bash script. As a result, the detected file type changes from “Plain Text” to “Shell Script”, and syntax highlighting is activated (<a href="ch07.xhtml#fig7-19">Figure 7.19</a>).</p>
+<figure class="figure" id="fig7-19">
+<img src="graphics/07fig19.jpg" alt="Image" width="744" height="798"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.19:</strong> The <span class="green"><code><strong>ekill</strong></code></span> script with syntax highlighting and a new detected file type.</p>
+</figcaption>
+</figure>
+<p class="indent">At this point, we have a complete shell script, but typing <span class="green"><code><strong>ekill &lt;pid&gt;</strong></code></span> at the command line still won’t work. To add <span class="green"><code><strong>ekill</strong></code></span> to our system, we need to do two things:</p>
+<ol class="number">
+<li><p class="number">Make sure the <span class="green"><code><strong>~/bin</strong></code></span> directory is on the system <em>path</em>, which is the set of directories where the shell program searches for <em>executable</em> scripts.</p></li>
+<li><p class="number">Make the script itself executable.</p></li>
+</ol>
+<p class="indent">The list of directories on the path can be accessed via the special <span class="green"><code><strong>$PATH</strong></code></span> variable at the command line:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="blueg">$PATH</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_170"></span>If <span class="green"><code><strong>~/bin</strong></code></span> is on the list, you can skip this step, but it does no harm to follow it.</p>
+<p class="indent"><em>Note</em>: The literal directory <span class="green"><code><strong>~/bin</strong></code></span> won’t appear in the <span class="green"><code><strong>$PATH</strong></code></span> list; instead the tilde will be expanded to your particular home directory. For me, <span class="green"><code><strong>~/bin</strong></code></span> is the same as <span class="green"><code><strong>/Users/mhartl/bin</strong></code></span>, so that’s what appears in my <span class="green"><code><strong>PATH</strong></code></span>, but it will be different for you.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_171"></span>To make sure <span class="green"><code><strong>~/bin</strong></code></span> is on the path, we’ll edit the Bash profile file, which is related to the <span class="green"><code><strong>.bashrc</strong></code></span> file we saw in <a href="ch05.xhtml#ch05lev3">Section 5.3</a>. Open <span class="green"><code><strong>~/.bash_profile</strong></code></span> as follows:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> atom ~/.bash_profile</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_172"></span>Then add the <span class="green"><code><strong>export</strong></code></span> line shown in <a href="ch07.xhtml#list7-9">Listing 7.9</a>. If the <span class="green"><code><strong>source</strong></code></span> line isn’t already present, you should add that as well—it ensures that any aliases defined in <span class="green"><code><strong>.bashrc</strong></code></span> are added when <span class="green"><code><strong>.bash_profile</strong></code></span> gets run.<sup><a id="rfn7_9" href="ch07.xhtml#fn7_9">9</a></sup></p>
+<p class="footnote"><a id="fn7_9" href="ch07.xhtml#rfn7_9">9.</a> Keeping track of when each of <span class="green"><code><strong>.bashrc</strong></code></span> and <span class="green"><code><strong>.bash_profile</strong></code></span> gets run can get complicated, and in many cases editing either file works.</p>
+<p class="list-head" id="list7-9"><strong>Listing 7.9:</strong> Adding <span class="green"><code><strong>~/bin</strong></code></span> to the path.<br/><code><em>~/.bash_profile</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis09" id="p07lis09a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="lgreen">export</span> <span class="blueg">PATH=</span><span class="brown">"~/bin:</span><span class="blueg">$PATH</span><span class="brown">"</span>
+<span class="lgreen">source</span> ~/.bashrc</pre>
+</div>
+<p class="noindent">This uses the Bash <span class="green"><code><strong>export</strong></code></span> command to add <span class="green"><code><strong>~/bin</strong></code></span> to the current path. (It’s worth noting that some systems use the <em>environment variable</em> <span class="green"><code><strong>$HOME</strong></code></span> in place of <span class="green"><code><strong>~</strong></code></span>, but the two are synonyms. If for any reason <span class="green"><code><strong>~</strong></code></span> doesn’t work for you, it’s worth trying <span class="green"><code><strong>$HOME</strong></code></span> instead, as in <span class="green"><code><strong>$HOME/bin:$PATH</strong></code></span>.)</p>
+<p class="indent">To use it, we need to use <span class="green"><code><strong>source</strong></code></span> as in <a href="ch05.xhtml#ch05lev4">Section 5.4</a>:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">source</span> ~/.bash_profile</pre>
+<p class="indent">To make the resulting script executable, we need to use the “change mode” command <span class="green"><code><strong>chmod</strong></code></span> to add the “execute bit” <span class="green"><code><strong>x</strong></code></span> as follows:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> chmod +x ~/bin/ekill</pre>
+<p class="noindent">At this point, we can verify that the <span class="green"><code><strong>ekill</strong></code></span> script is ready to go using the <span class="green"><code><strong>which</strong></code></span> command (<a href="ch03.xhtml#ch03lev1">Section 3.1</a>):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> which ekill</pre>
+<p class="noindent">The result should be the full path to <span class="green"><code><strong>ekill</strong></code></span>, which on my system looks like this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> which ekill
+<span class="green">/Users/mhartl/bin/ekill</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_173"></span>On some systems, running <span class="green"><code><strong>source</strong></code></span> on <span class="green"><code><strong>.bash_profile</strong></code></span> might not be sufficient to put <span class="green"><code><strong>ekill</strong></code></span> on the path, so if <span class="green"><code><strong>which ekill</strong></code></span> returns no result then you should try exiting and restarting the shell program to reload the settings.</p>
+<p class="indent">As you can see by typing <span class="green"><code><strong>ekill</strong></code></span> by itself at the command line, the current behavior is confusing if we neglect to include a process id:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ekill
+<span class="green">&lt;confusing error message&gt;</span></pre>
+<p class="noindent">To make <span class="green"><code><strong>ekill</strong></code></span> friendlier in this case, we’ll arrange to print a usage message to the screen if the user neglects to include a process id. We can do this with the code in <a href="ch07.xhtml#list7-10">Listing 7.10</a>, which I recommend typing in rather than copying and pasting. When writing the <span class="green"><code><strong>if</strong></code></span> statement, I especially recommend trying <code>if</code> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> to see if your editor comes with a tab trigger for making Bash <span class="green"><code><strong>if</strong></code></span> statements.</p>
+<p class="list-head" id="list7-10"><strong>Listing 7.10:</strong> An enhanced version of the escalating kill script.<br/><code><em>~/bin/ekill</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#p07lis010" id="p07lis010a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="blue"><em>#!/bin/bash</em></span>
+
+<span class="blue"><em># Kill a process as safely as possible.</em></span>
+<span class="blue"><em># Tries to kill a process using a series of signals with escalating urgency.</em></span>
+<span class="blue"><em># usage: ekill &lt;pid&gt;</em></span>
+<span class="back-yellow"><span class="bgreen"><em># If the number of arguments is less than 1, exit with a usage statement.</em></span></span>
+<span class="back-yellow"><span class="bgreen">if</span> <span class="gray1">[[</span> <span class="dblue">$#</span> <strong>-lt</strong> <span class="gray1">1 ]]</span> <span class="bgreen"><strong>;</strong></span> <span class="bgreen">then</span></span>
+<span class="back-yellow">  <span class="bgreen"><strong>echo</strong></span> <span class="brown"><strong>"usage: ekill &lt;pid&gt;"</strong></span></span>
+<span class="back-yellow">  <span class="bgreen"><strong>exit</strong></span> <span class="gray1">1</span></span>
+<span class="back-yellow"><span class="bgreen"><strong>fi</strong></span></span>
+<span class="blue"><em># Assign the process id to the first argument.</em></span>
+<span class="blueg">pid</span><span class="gray1">=</span><span class="blueg">$1</span>
+<span class="lgreen">kill</span> -15 <span class="blueg">$pid</span> <span class="gray1">||</span> <span class="lgreen">kill</span> -2 <span class="blueg">$pid</span> <span class="gray1">||</span> <span class="lgreen">kill</span> -1 <span class="blueg">$pid</span> <span class="gray1">||</span> <span class="lgreen">kill</span> -9 <span class="blueg">$pid</span></pre>
+</div>
+<p class="noindent">After adding the code in <a href="ch07.xhtml#list7-10">Listing 7.10</a>, running <span class="green"><code><strong>ekill</strong></code></span> without an argument should produce a helpful message:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ekill
+<span class="green">usage: ekill &lt;pid&gt;</span></pre>
+<p class="indent">All we have left to do is to verify that <span class="green"><code><strong>ekill</strong></code></span> can actually be used to kill a process. This is left as an exercise (<a href="ch07.xhtml#ch07lev3sec1">Section 7.3.1</a>.)</p>
+<section>
+<h4 class="h4" id="ch07lev3sec1"><span epub:type="pagebreak" id="page_174"></span>7.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Let’s test the functionality of <span class="green"><code><strong>ekill</strong></code></span> by making a process that hangs and applying the lessons from grepping processes (<a href="ch03.xhtml#box3-2">Box 3.2</a>). We’ll start by opening two terminal tabs. In one tab, type <span class="green"><code><strong>tail</strong></code></span> to get a process that just hangs. In the other tab, use <span class="green"><code><strong>ps aux | grep tail</strong></code></span> to find the process id, then run <span class="green"><code><strong>ekill &lt;pid&gt;</strong></code></span> (substituting the actual id for <span class="green"><code><strong>&lt;pid&gt;</strong></code></span>). In the tab running <span class="green"><code><strong>tail</strong></code></span>, you should get something like “Terminated: 15” (<a href="ch07.xhtml#fig7-20">Figure 7.20</a>).</p>
+<figure class="figure" id="fig7-20">
+<img src="graphics/07fig20.jpg" alt="Image" width="744" height="603"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.20:</strong> The result of using <span class="green"><code><strong>ekill</strong></code></span> to kill a <span class="green"><code><strong>tail</strong></code></span> process.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Write an executable script called <span class="green"><code><strong>hello</strong></code></span> that takes in an argument and prints out “Hello” followed by the argument. Be sure to <span class="green"><code><strong>chmod</strong></code></span> the script so it can run properly. <em>Hint</em>: Use the <span class="green"><code><strong>echo</strong></code></span> command. <em>Bigger hint</em>: Bash scripts <em>interpolate</em> <span epub:type="pagebreak" id="page_175"></span>dollar-sign variables into strings, so the <span class="green"><code><strong>$1</strong></code></span> variable from <a href="ch07.xhtml#list7-8">Listing 7.8</a> can be used in a string like this: <span class="green"><code><strong>"Hello, $1"</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch07lev4">7.4 Editing Projects</h3>
+<p class="noindent">So far we’ve used our text editor to edit single files, but it can also be used to edit entire projects all at once. As an example of such a project, we’ll download the sample application from the 3rd edition of the <em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/book">https://www.railstutorial.org/book</a>). We won’t be running this application, but it will give us a large project to work with. As in <a href="ch05.xhtml#ch05lev6">Section 5.6</a> and <a href="ch06.xhtml#ch06lev2">Section 6.2</a>, we’ll use the <span class="green"><code><strong>curl</strong></code></span> command to download the file to our local disk:</p>
+<p class="codelink"><a href="ch07_images.xhtml#p175pro01" id="p175pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> curl -OL https://source.railstutorial.org/sample_app.zip</pre>
+<p class="noindent">As indicated by the <span class="green"><code><strong>.zip</strong></code></span> filename extension, this is a ZIP file, so we’ll unzip it (using the <span class="green"><code><strong>unzip</strong></code></span> command) and then <span class="green"><code><strong>cd</strong></code></span> into the sample app directory:</p>
+<p class="codelink"><a href="ch07_images.xhtml#p175pro02" id="p175pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> unzip sample_app.zip
+   <span class="green">creating: sample_app_3rd_edition-master/</span>
+   <span class="green">.</span>
+   <span class="green">.</span>
+   <span class="green">.</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> sample_app_3rd_edition-master/</pre>
+<p class="indent">The way to open a project is to use a text editor to open the entire directory. Recall from <a href="ch04.xhtml#ch04lev3">Section 4.3</a> that <span class="green"><code><strong>.</strong></code></span> (“dot”) is the current directory, which means that we can open it using “atom dot”:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <code>atom .</code></pre>
+<p class="noindent">The resulting text editor window includes the directory structure for our project, called a “tree view”, as seen in <a href="ch07.xhtml#fig7-21">Figure 7.21</a>. We can toggle its display using the View menu or a keyboard shortcut (<a href="ch07.xhtml#fig7-22">Figure 7.22</a>).</p>
+<figure class="figure" id="fig7-21">
+<img src="graphics/07fig21.jpg" alt="Image" width="744" height="796"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.21:</strong> The Rails Tutorial sample app in Atom.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-22">
+<img src="graphics/07fig22.jpg" alt="Image" width="744" height="785"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.22:</strong> Toggling the tree view.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch07lev4sec1"><span epub:type="pagebreak" id="page_176"></span>7.4.1 Fuzzy Opening</h4>
+<p class="noindent">It’s possible to open a file by double-clicking on it in the tree view, but in a project with a lot of files this is often cumbersome, especially when the file is buried several subdirectories deep. A convenient alternative is <em>fuzzy opening</em>, which lets us open files <span epub:type="pagebreak" id="page_177"></span>by hitting (in Atom) <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>P and then typing some of the letters in the filename we want. For example, we can open a file called <span class="green"><code><strong>users_controller_test.rb</strong></code></span> by typing, say, “userscon” and then selecting from the drop-down menu, as shown in <a href="ch07.xhtml#fig7-23">Figure 7.23</a>. The letters don’t have to be contiguous in the filename, though, so typing “uctt” (for <strong>u</strong>sers <strong>c</strong>on<strong>t</strong>roller <strong>t</strong>est) will also work, as seen in <a href="ch07.xhtml#fig7-24">Figure 7.24</a>.</p>
+<figure class="figure" id="fig7-23">
+<img src="graphics/07fig23.jpg" alt="Image" width="744" height="775"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.23:</strong> One way to open a file with fuzzy opening.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-24">
+<img src="graphics/07fig24.jpg" alt="Image" width="744" height="749"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.24:</strong> A second way to open a file with fuzzy opening.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_178"></span>As a result of opening multiple files in a project, you will generally have multiple tabs open in your editor (<a href="ch07.xhtml#fig7-25">Figure 7.25</a>). I recommend learning the keyboard shortcuts to switch between them, which are typically things like <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>1, <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>2, etc. (By the way, this trick also works in many browsers, such as Chrome and Firefox.)</p>
+<figure class="figure" id="fig7-25">
+<img src="graphics/07fig25.jpg" alt="Image" width="744" height="775"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.25:</strong> Opening multiple tabs.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch07lev4sec2"><span epub:type="pagebreak" id="page_179"></span>7.4.2 Multiple Panes</h4>
+<p class="noindent">The default editor view we’ve seen in most of the previous examples consists of a single <em>pane</em> (as in “window pane”), but it’s often convenient to split the editor into multiple panes so that we can see more than one file at a time (<a href="ch07.xhtml#fig7-26">Figure 7.26</a>). I especially like to use different panes for different types of files, such as using the left pane for test code <span epub:type="pagebreak" id="page_180"></span>and the right pane for application code. It’s also often useful to open the same file in two different panes (<a href="ch07.xhtml#fig7-27">Figure 7.27</a>); as I wrote in the meta-tutorial <em>Learn Enough Tutorial Writing to Be Dangerous</em> (<a href="https://www.learnenough.com/tutorial-writing-tutorial">https://www.learnenough.com/tutorial-writing-tutorial</a>):</p>
+<figure class="figure" id="fig7-26">
+<img src="graphics/07fig26.jpg" alt="Image" width="744" height="412"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.26:</strong> Using multiple panes.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-27">
+<img src="graphics/07fig27.jpg" alt="Image" width="744" height="437"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.27:</strong> Opening the same file in two different panes.</p>
+</figcaption>
+</figure>
+<p class="block12"><span epub:type="pagebreak" id="page_181"></span>When searching through the document for whatever reason (to fix an error, look up a label for a cross-reference, find a particular string, etc.), it’s usually inconvenient to move the cursor and hence lose our place. In this context, it’s useful to have the same file open in two different text editor windows… This way, we can use one pane as the main writing area and the other pane as a sort of “random access” window for moving around in the document.</p>
+<p class="noindent"><em>Note</em>: “Panes” are sometimes called “Groups” (e.g., in Sublime Text).</p>
+</section>
+<section>
+<h4 class="h4" id="ch07lev4sec3">7.4.3 Global Find and Replace</h4>
+<p class="noindent">We saw in <a href="ch06.xhtml#ch06lev8">Section 6.8</a> how to find and optionally replace content in a single file. When editing projects, it’s often useful to be able to do a <em>global</em> find and replace across multiple files. As usual, most editors have both a menu item (<a href="ch07.xhtml#fig7-28">Figure 7.28</a>) and a keyboard shortcut (often <img class="inline" src="graphics/c0124-01.jpg" alt="Image" width="41" height="20"/>F).</p>
+<figure class="figure" id="fig7-28">
+<img src="graphics/07fig28.jpg" alt="Image" width="249" height="358"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_182"></span><strong>Figure 7.28:</strong> A menu item for global find and replace.</p>
+</figcaption>
+</figure>
+<p class="indent">An example of global find appears in <a href="ch07.xhtml#fig7-29">Figure 7.29</a>, which searches for the string “@user” in all project files. The command to globally replace this with “@person” appears in <a href="ch07.xhtml#fig7-30">Figure 7.30</a>.</p>
+<figure class="figure" id="fig7-29">
+<img src="graphics/07fig29.jpg" alt="Image" width="744" height="420"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_183"></span><strong>Figure 7.29:</strong> The result of finding in project.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-30">
+<img src="graphics/07fig30.jpg" alt="Image" width="744" height="420"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.30:</strong> The result of replacing in project.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_184"></span>For really advanced replacing, we can use a mini-language for text pattern matching called <em>regular expressions</em> (or <em>regexes</em> for short), as mentioned briefly in <a href="ch03.xhtml#ch03lev4">Section 3.4</a>. Let’s see how to use regexes to add an annotation to all function definitions in the project, changing</p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">foo</span></pre>
+<p class="noindent">to</p>
+<p class="codelink"><a href="ch07_images.xhtml#p184pro01" id="p184pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">foo</span>   <span class="blue"><em># function definition</em></span></pre>
+<p class="noindent">and</p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">bar</span></pre>
+<p class="noindent">to</p>
+<p class="codelink"><a href="ch07_images.xhtml#p184pro02" id="p184pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="lgreen"><strong>def</strong></span> <span class="pblue">bar</span>   <span class="blue"><em># function definition</em></span></pre>
+<p class="indent">My favorite way to build up regular expressions is using a web application like regex101 (as mentioned briefly in <a href="ch03.xhtml#ch03lev4">Section 3.4</a>), which lets us create regexes interactively (<a href="ch07.xhtml#fig7-31">Figure 7.31</a>). Moreover, such resources typically include a quick reference to assist us in finding the code for matching particular patterns (<a href="ch07.xhtml#fig7-32">Figure 7.32</a>).</p>
+<figure class="figure" id="fig7-31">
+<img src="graphics/07fig31.jpg" alt="Image" width="744" height="558"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_185"></span><strong>Figure 7.31:</strong> An online regex tester.</p>
+</figcaption>
+</figure>
+<p class="indent">We can use the reference in <a href="ch07.xhtml#fig7-32">Figure 7.32</a> to discover a regex for <span class="green"><code><strong>def</strong></code></span> followed by any sequence of characters, which looks like this:</p>
+<pre class="box-pre1">def .*</pre>
+<figure class="figure" id="fig7-32">
+<img src="graphics/07fig32.jpg" alt="Image" width="744" height="337"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.32:</strong> A close-up of the regex reference.</p>
+</figcaption>
+</figure>
+<p class="noindent">Here <span class="green"><code><strong>.</strong></code></span> represents “any character”, while <span class="green"><code><strong>*</strong></code></span> matches zero or more of them. Doing a global search using the regex <span class="green"><code><strong>def .*</strong></code></span> matches all the function definitions in the project, as seen in <a href="ch07.xhtml#fig7-33">Figure 7.33</a>. Note that in most editors you’ll have to enable regex matching by clicking the regex match icon (.* in <a href="ch07.xhtml#fig7-33">Figure 7.33</a>).</p>
+<figure class="figure" id="fig7-33">
+<img src="graphics/07fig33.jpg" alt="Image" width="744" height="392"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.33:</strong> Matching a regular expression.</p>
+</figcaption>
+</figure>
+<p class="indent">We can do the replacement mentioned above using parentheses to create two <em>match groups</em>:</p>
+<pre class="box-pre1">(def) (.*)</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_186"></span>The first match group here is just the constant string <span class="green"><code><strong>def</strong></code></span>, while the second is whatever the function definition happens to be. (These match groups also appear in <a href="ch07.xhtml#fig7-31">Figure 7.31</a>.) Inside the “Replace” field in the editor, we can reference these groups using special dollar-sign match numbers, so that we can replace</p>
+<pre class="box-pre1">(def) (.*)</pre>
+<p class="noindent">with</p>
+<p class="codelink"><a href="ch07_images.xhtml#p186pro01" id="p186pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">$1 $2   # function definition</pre>
+<p class="noindent">For example, when matching <span class="green"><code><strong>def foo</strong></code></span>, <span class="green"><code><strong>$1</strong></code></span> is <span class="green"><code><strong>def</strong></code></span> and <span class="green"><code><strong>$2</strong></code></span> is <span class="green"><code><strong>foo</strong></code></span>; when matching <span class="green"><code><strong>def bar</strong></code></span>, <span class="green"><code><strong>$1</strong></code></span> is still <span class="green"><code><strong>def</strong></code></span>, but <span class="green"><code><strong>$2</strong></code></span> is <span class="green"><code><strong>bar</strong></code></span>. This means we can annotate all the function definitions at the same time using the commands shown in <a href="ch07.xhtml#fig7-34">Figure 7.34</a>. Actually completing this replacement is left as an exercise (<a href="ch07.xhtml#ch07lev4sec4">Section 7.4.4</a>).</p>
+<figure class="figure" id="fig7-34">
+<img src="graphics/07fig34.jpg" alt="Image" width="744" height="392"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.34:</strong> Using a match grouping.</p>
+</figcaption>
+</figure>
+<p class="indent">One thing to bear in mind when using global find and replace is that it can be hard to undo. In the case of a single file, it’s easy enough to undo a bad replacement <span epub:type="pagebreak" id="page_187"></span>with <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>Z (<a href="ch06.xhtml#ch06lev6">Section 6.6</a>), but when replacing across multiple files we have to run <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>Z in <em>every</em> affected file, which could be dozens. As a result, I recommend using global find and replace with great caution, and preferably in combination with a version control system such as Git. My general practice is to make a <em>commit</em> before any global search and replace so that I can easily undo it if there turns out to be a mistake. (See <em>Learn Enough Git to Be Dangerous</em> (<a href="https://www.learnenough.com/git">https://www.learnenough.com/git</a>) for more information.)</p>
+</section>
+<section>
+<h4 class="h4" id="ch07lev4sec4">7.4.4 Exercises</h4>
+<ol class="number">
+<li><p class="number">What is the keyboard shortcut in your editor for toggling the tree view?</p></li>
+<li><p class="number">What is the keyboard shortcut in your editor for splitting panes horizontally?</p></li>
+<li><p class="number">In the Rails Tutorial sample app project, open the file <span class="green"><code><strong>static_pages_controller.rb</strong></code></span> using fuzzy opening.</p></li>
+<li><p class="number">Use global find to find all occurrences of the string <span class="green"><code><strong>@user</strong></code></span>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_188"></span>Use global replace to change all occurrences of <span class="green"><code><strong>@user</strong></code></span> to <span class="green"><code><strong>@person</strong></code></span>.</p></li>
+<li><p class="number">Use a regex match to annotate all function definitions with <span class="green"><code><strong># function definition</strong></code></span> as described in the text.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch07lev5">7.5 Customization</h3>
+<p class="noindent">All good text editors are highly customizable, but the options are highly editor-dependent. The most important things are (a) to know what kind of customization is possible and (b) to apply your technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) to figure out how to make the desired changes.</p>
+<p class="indent">For example, one student of the <em>Ruby on Rails Tutorial</em> wrote in asking about the dark background in the Cloud9 editor (e.g., <a href="ch06.xhtml#fig6-5">Figure 6.5</a>), wondering if it was possible to use a light background instead. I responded that it was almost certainly possible to change to a light background, even though I didn’t know how to do it offhand. I knew that every good programmer’s editor has multiple highlighting color schemes, font sizes, tab sizes, etc., so I was confident I could figure out how to change the background color on the Cloud9 editor. And indeed, by clicking around and looking for promising menu items (a textbook application of <a href="ch05.xhtml#box5-2">Box 5.2</a>), I was able to discover the answer (Preferences &gt; Themes &gt; Syntax Theme &gt; Cloud9 Day), as shown in <a href="ch07.xhtml#fig7-35">Figure 7.35</a>.</p>
+<figure class="figure" id="fig7-35">
+<img src="graphics/07fig35.jpg" alt="Image" width="744" height="559"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.35:</strong> The Cloud9 editor with a light background.</p>
+</figcaption>
+</figure>
+<p class="indent">Another feature common to good text editors is some sort of package system. For example, we saw in <a href="ch06.xhtml#ch06lev2sec2">Section 6.2.2</a> that Atom comes with a built-in package to preview Markdown, but in Sublime Text we need to install a separate package called Package Control (<a href="https://packagecontrol.io/">https://packagecontrol.io/</a>) to do it. One way to find new packages is to Google around for more information, leading to a site like that shown in <a href="ch07.xhtml#fig7-36">Figure 7.36</a>. The result is a new option, Sublime Text &gt; Preferences &gt; Package Control, as shown in <a href="ch07.xhtml#fig7-37">Figure 7.37</a> and <a href="ch07.xhtml#fig7-38">Figure 7.38</a>.</p>
+<figure class="figure" id="fig7-36">
+<img src="graphics/07fig36.jpg" alt="Image" width="744" height="550"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.36:</strong> Searching for a Sublime Text package.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-37">
+<img src="graphics/07fig37.jpg" alt="Image" width="234" height="299"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.37:</strong> Sublime Text’s Package Control menu item.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig7-38">
+<img src="graphics/07fig38.jpg" alt="Image" width="675" height="548"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.38:</strong> Sublime Text’s Package Control.</p>
+</figcaption>
+</figure>
+<p class="indent">Most editors allow you to create your own packages of commands, as well as often supporting <em>snippets</em> that let you define your own tab triggers (<a href="ch07.xhtml#ch07lev1">Section 7.1</a>). These are advanced topics, so I recommend deferring them for now. Once you start becoming annoyed by having to repeatedly type the same boilerplate (as in, e.g., <a href="ch07.xhtml#list7-11">Listing 7.11</a>), Google around to figure out how to add custom commands to your editor. (The code in <a href="ch07.xhtml#list7-11">Listing 7.11</a> is generated using the custom Sublime Text tab trigger <span class="green"><code><strong>clist</strong></code></span> (for “code listing”), which I have also ported to Atom.)</p>
+<span epub:type="pagebreak" id="page_189"></span>
+<p class="list-head" id="list7-11"><strong>Listing 7.11:</strong> The boilerplate for a code listing in this document.</p>
+<div class="box2">
+<pre class="pre"><span class="lgreen"><strong>\begin</strong></span><span class="lgreen">{</span>codelisting<span class="lgreen">}</span>
+<span class="lgreen"><strong>\label</strong></span><span class="lgreen">{</span>code:<span class="lgreen">}</span>
+<span class="lgreen"><strong>\codecaption</strong></span><span class="lgreen">{}</span>
+<span class="blue"><em>%= lang:</em></span>
+<span class="lgreen"><strong>\begin</strong></span><span class="lgreen">{</span>code<span class="lgreen">}</span>
+
+<span class="lgreen"><strong>\end</strong></span><span class="lgreen">{</span>code<span class="lgreen">}</span>
+<span class="lgreen"><strong>\end</strong></span><span class="lgreen">{</span>codelisting<span class="lgreen">}</span></pre>
+</div>
+<section>
+<h4 class="h4" id="ch07lev5sec1">7.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Figure out how to change the syntax highlighting theme in your editor. Use the file from <a href="ch07.xhtml#list7-6">Listing 7.6</a> to confirm the change.</p></li>
+<li><p class="number">In Atom, figure out how to install the <code>minimap</code> package. What does this package do? The result for <span class="green"><code><strong>sonnets.txt</strong></code></span> should look something like <a href="ch07.xhtml#fig7-39">Figure 7.39</a>.</p>
+<figure class="figure" id="fig7-39">
+<img src="graphics/07fig39.jpg" alt="Image" width="744" height="753"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_190"></span><strong>Figure 7.39:</strong> The result of adding <code>minimap</code> to Atom.</p>
+</figcaption>
+</figure></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch07lev6"><span epub:type="pagebreak" id="page_191"></span>7.6 Summary</h3>
+<ul class="sq">
+<li><p class="bull">Autocomplete and tab triggers make it easy to type lots of text quickly.</p></li>
+<li><p class="bull">All good text editors have special features to support writing computer source code, including syntax highlighting, commenting out, indenting &amp; dedenting, and goto line number.</p></li>
+<li><p class="bull">Many programmers think it’s perfectly fine to have lines that are more than 80 columns across, but they are wrong. (Speaking of which, there’s nothing quite so entertaining as a holy war (<a href="ch05.xhtml#box5-4">Box 5.4</a>)…)</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_192"></span>Once you know how to use the command line and a text editor, it’s easy to add custom shell scripts to your system.</p></li>
+<li><p class="bull">It’s common to open entire projects (such as Ruby on Rails applications) all at once using the command line.</p></li>
+<li><p class="bull">Fuzzy opening is useful when editing projects with large numbers of files.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_193"></span>Using multiple panes allows the editor to display more than one file at a time.</p></li>
+<li><p class="bull">Global find and replace is dangerous but powerful.</p></li>
+<li><p class="bull">All good programmer’s editors are extensible and customizable.</p></li>
+</ul>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch07.xhtml#tab7-1">Table 7.1</a>.</p>
+<figure class="table" id="tab7-1">
+<p class="title-t"><strong>Table 7.1:</strong> Important commands from <a href="ch07.xhtml#ch07">Chapter 7</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para">Select + <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>/</p></td>
+<td><p class="tab-para">Toggle commenting out</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Select + <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/></p></td>
+<td><p class="tab-para">Indent</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Select + <img src="graphics/pg20-6a.jpg" alt="images" width="41" height="18"/></p></td>
+<td><p class="tab-para">Dedent</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">^G</p></td>
+<td><p class="tab-para">Goto line number</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>W</p></td>
+<td><p class="tab-para">Close a tab</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">$ <code>echo $PATH</code></p></td>
+<td><p class="tab-para">Show the current path variable</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">$ <code>chmod +x &lt;filename&gt;</code></p></td>
+<td><p class="tab-para">Make <code>filename</code> executable</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">$ <code>unzip &lt;filename&gt;.zip</code></p></td>
+<td><p class="tab-para">Unzip a ZIP archive</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>P</p></td>
+<td><p class="tab-para">Fuzzy opening</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>1</p></td>
+<td><p class="tab-para">Switch focus to tab #1</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">⇧ <img class="inline" src="graphics/command.jpg" alt="Image" width="18" height="18"/>F</p></td>
+<td><p class="tab-para">Global find and replace</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section>
+<h3 class="h3" id="ch07lev7">7.7 Conclusion</h3>
+<p class="noindent">Congratulations! You now know enough text editor to be <em>dangerous</em>. If you continue down this technical path, you’ll keep getting better at using text editors for years to come, but with the material in this tutorial you’ve got a great start. For now, you’re probably best off working with what you’ve got, applying your technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) when necessary. Once you’ve got a little more experience under your belt, I recommend seeking out resources specific to your editor of choice. To get you started, here are some links to documentation for the editors mentioned in this tutorial:</p>
+<ul class="sq">
+<li><p class="bull">Atom docs (<a href="https://atom.io/docs">https://atom.io/docs</a>)</p></li>
+<li><p class="bull">Sublime Text docs (<a href="https://www.sublimetext.com/docs/">https://www.sublimetext.com/docs/</a>)</p></li>
+<li><p class="bull">Cloud9 editor docs (<a href="https://aws.amazon.com/cloud9/details/">https://aws.amazon.com/cloud9/details/</a>)</p></li>
+</ul>
+<p class="noindent"><span epub:type="pagebreak" id="page_194"></span>As a reminder, <em>Learn Enough Text Editor to Be Dangerous</em> is just one in a series of tutorials (<a href="https://www.learnenough.com/courses">https://www.learnenough.com/courses</a>) designed to teach the fundamentals of software development. The next step in the series is <a href="part03.xhtml#part03">Part III</a> of <em>Learn Enough Developer Tools to Be Dangerous</em>, and the full sequence appears as follows:</p>
+<ol class="number">
+<li><p class="number"><em><strong>Learn Enough Developer Tools to Be Dangerous</strong></em></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><a href="part01.xhtml#part01">Part I</a>: <em>Learn Enough Command Line to Be Dangerous</em></p></li>
+<li><p class="alpha"><a href="part02.xhtml#part02">Part II</a>: <em>Learn Enough Text Editor to Be Dangerous</em> (you are here)</p></li>
+<li><p class="alpha"><a href="part03.xhtml#part03">Part III</a>: <em>Learn Enough Git to Be Dangerous</em></p></li>
+</ol></li>
+<li><p class="number"><strong>Web Basics</strong></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><em>Learn Enough HTML to Be Dangerous</em></p></li>
+<li><p class="alpha"><em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>)</p></li>
+<li><p class="alpha"><em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>)</p></li>
+</ol></li>
+<li><p class="number"><strong>Application Development</strong></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><em>Learn Enough Ruby to Be Dangerous</em></p></li>
+<li><p class="alpha"><em>Ruby on Rails Tutorial</em></p></li>
+<li><p class="alpha"><em>Learn Enough Action Cable to Be Dangerous</em> (<a href="https://www.learnenough.com/action-cable">https://www.learnenough.com/action-cable</a>) (optional)</p></li>
+</ol></li>
+</ol>
+<p class="noindent">Good luck!</p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

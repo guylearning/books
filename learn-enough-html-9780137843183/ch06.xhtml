@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch06"><span epub:type="pagebreak" id="page_133"></span>Chapter 6</h2>
+<h2 class="chap-title">The Style of Style</h2>
+<p class="noindent">We can think of CSS as operating at two main levels: the browser and the text editor. From the browser’s perspective, the exact choices for CSS classes and ids are irrelevant; indeed, as far as the browser is concerned, there is hardly any difference between beautiful self-contained CSS with perfectly comprehensible class names and horrible inline styles on every element.<sup><a id="ch06fn1a" href="ch06.xhtml#ch06fn1">1</a></sup></p>
+<p class="footnote"><a id="ch06fn1" href="ch06.xhtml#ch06fn1a">1</a>. There might be slight differences in download and processing times, but on most modern systems these differences would hardly be detectable to the user.</p>
+<p class="indent">At the level of the text editor, though, these concerns matter a lot to the people writing the HTML and CSS for the site—in this case, us. The browser might not care much about the repetition and complexity from inline styles and poorly named classes, but we sure do.</p>
+<p class="indent">Moreover, bad styling choices can haunt us throughout a project, so it’s important to do our best to get them right from the start (bearing in mind that we might have to make some changes down the line).</p>
+<p class="indent">In this chapter, we’ll focus on developing an understanding of the “style of style”—how to make good choices in naming and structuring the various parts of our site—as early as possible. The result will be a codebase that is flexible and maintainable, both for us and for any other developers who need to modify the site later on.</p>
+<section>
+<h3 class="h3" id="sec6_1"><span epub:type="pagebreak" id="page_134"></span>6.1 Naming Things</h3>
+<p class="noindent">As computer scientist Phil Karlton once remarked, “There are only two hard things in Computer Science: cache invalidation and naming things.”<sup><a id="ch06fn2a" href="ch06.xhtml#ch06fn2">2</a></sup> This latter “hard thing” applies to front-end development as well.</p>
+<p class="footnote"><a id="ch06fn2" href="ch06.xhtml#ch06fn2a">2</a>. An anonymous jokester once quipped that “There are only two hard things in Computer Science: cache invalidation, naming things, and off-by-one errors.”</p>
+<p class="indent">When coming up with names for classes and ids, it’s often helpful to think in terms of how something functions or what its intent is, and it’s usually best to be specific. For example, making a class called <span class="green-d"><code><strong>"box1"</strong></code></span> is a bad idea because the name is so generic; on a big project, you might not remember what <span class="green-d"><code><strong>"box1"</strong></code></span> refers to when you come back to the code at some point in the future. Better to introduce a class like <span class="green-d"><code><strong>"bio-box"</strong></code></span>, which makes reference to a specific kind of element on the page (in this case, a box for short biographies).</p>
+<p class="indent">One important thing to avoid is naming classes or ids after how the element looks on the page. For example, suppose that for some reason the last <span class="green-d"><code><strong>.bio-box</strong></code></span> on the test page has information that we want a user to be alerted to, which we want to indicate by setting the background color of the box to red. We could add a class of <span class="green-d"><code><strong>"red"</strong></code></span> to the last box (as in <a href="ch06.xhtml#ch6list1">Listing 6.1</a>), making sure it is separated from the other class by a space, and then style it in the CSS like in <a href="ch06.xhtml#ch6list2">Listing 6.2</a>.</p>
+<p class="listing" id="ch6list1"><strong>Listing 6.1:</strong> Adding the class <span class="green-d"><code><strong>.red</strong></code></span> to a <span class="green-d"><code><strong>.bio-box</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list01a" id="p06list01">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;I'm a link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="bg1">&lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"bio-box red"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;I'm a link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="listing" id="ch6list2"><strong>Listing 6.2:</strong> Creating the <span class="green-d"><code><strong>.red</strong></code></span> class styling.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list02a" id="p06list02">Click here to view code image</a></p>
+<pre class="pre2">  .<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+    <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+  }
+<span class="bg1">  .<span class="blue-v"><strong>red</strong></span> {</span>
+<span class="bg1">    <span class="pd_green2"><strong>background</strong></span>: <span class="pd_green2"><strong>red</strong></span>;</span>
+<span class="bg1">  }</span>
+ <span class="grey">&lt;/</span><span class="pd_green1"><strong>style</strong></span><span class="grey">&gt;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_135"></span>When you save your work and refresh the browser, you’ll see that the background of the box has changed (<a href="ch06.xhtml#ch6fig1">Figure 6.1</a>).</p>
+<figure class="figure" id="ch6fig1">
+<img src="graphics/06fig01.jpg" alt="images" width="676" height="334"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.1:</strong> Sure, this worked. But is it a good idea?</p>
+</figcaption>
+</figure>
+<p class="indent">But let’s say that at some point in the future we decide that red isn’t our favorite color for alerts anymore, and now we want to use purple. So we open up our project file, and in the CSS we change the <span class="green-d"><code><strong>background</strong></code></span> property to <span class="green-d"><code><strong>purple</strong></code></span>, as in <a href="ch06.xhtml#ch6list3">Listing 6.3</a>.</p>
+<p class="listing" id="ch6list3"><strong>Listing 6.3:</strong> The problem when you name classes based on appearance.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list03a" id="p06list03">Click here to view code image</a></p>
+<pre class="pre2">  .<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+    <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+  }
+  .<span class="blue-v"><strong>red</strong></span> {
+<span class="bg1">    <span class="pd_green2"><strong>background</strong></span>: <span class="pd_green2"><strong>purple</strong></span>;</span>
+  }
+&lt;/<span class="pd_green1"><strong>style</strong></span>&gt;</pre>
+<p class="indent">Now the class name and the effect it has on the page not only don’t match up; they are downright confusing.</p>
+<p class="indent">This might seem like no big deal on our simple test page, but imagine if that class were used on elements all over a project. We’d have two choices: go through and change all the class names on all the elements, or just live with the class and its effect being confusing.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_136"></span>Instead, if we use a naming convention where the class names are based on what the intended purpose is of the element on the page, and therefore used a more descriptive name like <span class="green-d"><code><strong>"alert"</strong></code></span>, then we can change the text color without needing to worry about contradictory or confusing names (<a href="ch06.xhtml#ch6list4">Listing 6.4</a>).</p>
+<p class="listing" id="ch6list4"><strong>Listing 6.4:</strong> A more appropriately named class based on the intention.<br/><code><em>index.html</em></code></p>
+<pre class="pre2"><span class="bg1">  .<span class="blue-v"><strong>alert</strong></span> {</span>
+   <span class="pd_green1"><strong>background</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>purple</strong></span><span class="grey">;</span>
+  }
+<span class="grey">&lt;/</span><span class="pd_green1"><strong>style</strong></span><span class="grey">&gt;</span></pre>
+<p class="indent">Then we can update the class name on the HTML element:</p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box alert"</span>&gt;</pre>
+<p class="indent">With the convention shown in <a href="ch06.xhtml#ch6list4">Listing 6.4</a>, if we later decide that alerts should be purple instead of red, there’s nothing confusing in the code. Some other examples: instead of calling something <span class="green-d"><code><strong>"small"</strong></code></span>, choose a class name like <span class="green-d"><code><strong>"collapsed"</strong></code></span> if that is the functionality; or use <span class="green-d"><code><strong>"disabled"</strong></code></span> instead of <span class="green-d"><code><strong>"gray"</strong></code></span> for grayed out elements that a user isn’t allowed to interact with.</p>
+<p class="indent">Of course, there are exceptions, and ultimately the naming system is totally up to you, but as a rule of thumb, it’s a good idea to stick with functional naming (<a href="ch06.xhtml#box6_1">Box 6.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box6_1">
+<p class="sb-title1"><strong>Box 6.1: Style Note: Naming Conventions</strong></p>
+<p class="sb-noindent">Strict prescriptive class naming systems have become popular recently, and with good reason: there were a lot of projects out there with naming conventions that were completely arbitrary—projects that had more in common with a Dr. Seuss story than a coherent development project. These sorts of strict naming systems are frequently used when there is no limit to the number of developers who might work on a project over its lifetime (think of web applications developed and managed at large corporations).</p>
+<p class="sb-indent">We aren’t going to get into any of these in this tutorial, but we thought it would be a good idea to at least mention that they exist. If you get more into front-end <span epub:type="pagebreak" id="page_137"></span>development, it might not be a bad idea to look into some of the conventions other developers are using:</p>
+<ul class="bullet">
+<li><p class="bullet">Block Element Modifier (BEM) (<a href="https://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/">https://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/</a>)</p></li>
+<li><p class="bullet">Object Oriented CSS (OOCSS) (<a href="https://www.smashingmagazine.com/2011/12/an-introduction-to-object-oriented-css-oocss/">https://www.smashingmagazine.com/2011/12/an-introduction-to-object-oriented-css-oocss/</a>)</p></li>
+<li><p class="bullet">Scalable and Modular Architecture for CSS (SMACSS) (<a href="http://smacss.com/">http://smacss.com/</a>)</p></li>
+</ul>
+<p class="sb-indent">Whether you find these systems useful or not, the most important thing is to strive for some semblance of consistency.</p>
+</aside>
+</section>
+<section>
+<h3 class="h3" id="sec6_2">6.2 When and Why</h3>
+<p class="noindent">One of the other decisions we have to make is to decide when we should use ids and when we should use classes. As noted in <a href="ch05.xhtml#sec5_5">Section 5.5</a>, ids are intended to target only one element on the page, while classes can target multiple things. To enforce this design, HTML elements will accept multiple class names on a single object (separated by spaces) but allow for only one id per element (anything after the first is ignored). But that isn’t the whole story, because browsers treat ids and classes differently, and here is the first place where we’re going to run the risk of starting a holy war…</p>
+<p class="indent">Our view is as follows:</p>
+<p class="blockquote">You should strive to use ids only when you absolutely have to (for example, if you are using JavaScript, and then use them <em>only</em> for JavaScript).</p>
+<p class="indent">Yes, in <a href="ch05.xhtml#sec5_5">Section 5.5</a> we added an id to the first <span class="green-d"><code><strong>div</strong></code></span> and targeted styles at it, but that was just for demonstration purposes, and in general it’s a practice that should be avoided. The reason is that when you use an id to apply styles, it is nearly impossible to change that styling with another declaration without making your code full of ugly hacks.</p>
+<p class="indent">To see why, add our new <span class="green-d"><code><strong>.alert</strong></code></span> class onto that first <span class="green-d"><code><strong>div</strong></code></span> (the one that also has the id <span class="green-d"><code><strong>#exec-bio</strong></code></span>), while also changing the alert color back to <span class="green-d"><code><strong>red</strong></code></span>:</p>
+<p class="codelink"><a href="ch06_images.xhtml#p137pro01a" id="p137pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"exec-bio"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box alert"</span>&gt;
+.<span class="blue-v"><strong>alert</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_138"></span>Save and refresh, and you’ll notice that nothing changed; even though you’d expect the background to be red, it isn’t, and instead looks just like <a href="ch06.xhtml#ch6fig1">Figure 6.1</a>.</p>
+<p class="indent">The problem is that ids are considered by the browser to have a higher <em>specificity</em>, and that means that any styles declared in the more specific statement will take precedence over less specific styles. You can think of classes like a machine gun spraying out lots of little projectiles, and ids like a rocket launcher. The style that gets launched by an id just has more power.</p>
+<p class="indent">One way to make the <span class="green-d"><code><strong>.alert</strong></code></span> style apply would be to increase the specificity of our declaration by adding a new declaration that targets any element that has both the id <span class="green-d"><code><strong>#exec-bio</strong></code></span> and the class <span class="green-d"><code><strong>.alert</strong></code></span>, as shown in <a href="ch06.xhtml#ch6list5">Listing 6.5</a>.</p>
+<p class="listing" id="ch6list5"><strong>Listing 6.5:</strong> Overcoming the strength of an id style by combining the id and a class.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list05a" id="p06list05">Click here to view code image</a></p>
+<pre class="pre2">  .<span class="blue-v"><strong>alert</strong></span> {
+    <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+  }
+<span class="bg1">  #<span class="blue-v"><strong>exec-bio.alert</strong></span> {</span>
+<span class="bg1">    <span class="pd_green2"><strong>background</strong></span>: <span class="pd_green2"><strong>red</strong></span>;</span>
+<span class="bg1">  }</span>
+<span class="grey">&lt;/</span><span class="pd_green1"><strong>style</strong></span><span class="grey">&gt;</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_139"></span>The CSS in <a href="ch06.xhtml#ch6list5">Listing 6.5</a> chains together the rules for an id and a class using <span class="green-d"><code><strong>#exec-bio.alert</strong></code></span>, and its effect in this case is to force a red background to be added to the div (<a href="ch06.xhtml#ch6fig2">Figure 6.2</a>).</p>
+<figure class="figure" id="ch6fig2">
+<img src="graphics/06fig02.jpg" alt="images" width="676" height="344"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.2:</strong> Combining the id and class makes for an unusually specific style.</p>
+</figcaption>
+</figure>
+<p class="indent">Using a combined style selector like that will change the background color, but it will apply the style only in the specific situation where both that id and class are present. If your site relies on styles targeted at ids, then over time you’ll find yourself adding more and more of these hyper-specific declarations. That isn’t the most effective way to use CSS.</p>
+<p class="indent">It’s better in the long run to use a system that’s modular, so that designing and developing the front-end of a site is like snapping together LEGOs. This way, you can add a class to an element and be confident that the styles from that class will be applied correctly.</p>
+<p class="indent">In case you were wondering, the browser merges together all the different declarations and then sorts out conflicts property by property. This means that stronger declarations don’t override <em>all</em> styles on an object, only the properties that are included in that stronger declaration. In the case of the <span class="green-d"><code><strong>.bio-box</strong></code></span> that we’ve been messing around with, all the properties in <a href="ch06.xhtml#ch6list6">Listing 6.6</a> are being simultaneously applied.</p>
+<p class="listing" id="ch6list6"><strong>Listing 6.6:</strong> All the styles that are affecting the one <span class="green-d"><code><strong>.bio-box</strong></code></span>.</p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list06a" id="p06list06">Click here to view code image</a></p>
+<pre class="pre2">#<span class="blue-v"><strong>exec-bio</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="pd_green1"><strong>lightgray</strong></span>;
+}
+.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+}
+.<span class="blue-v"><strong>alert</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+}
+#<span class="blue-v"><strong>exec-bio</strong></span>.<span class="blue-v"><strong>alert</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+}</pre>
+<p class="indent">Through the magic of the browser, all those rules are merged, and conflicts are automatically resolved. In the case of <a href="ch06.xhtml#ch6list6">Listing 6.6</a>, the merged styling would look something like <a href="ch06.xhtml#ch6list7">Listing 6.7</a> (which indicates unused rules with CSS <em>comments</em>, which are discussed further in <a href="ch06.xhtml#sec6_4">Section 6.4</a>).</p>
+<p class="listing" id="ch6list7"><span epub:type="pagebreak" id="page_140"></span><strong>Listing 6.7:</strong> The merged styles with the superseded ones commented out.</p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list07a" id="p06list07">Click here to view code image</a></p>
+<pre class="pre2">{
+  <span class="pd_blue1"><em>/* background: red; */</em></span>
+  <span class="pd_blue1"><em>/* background-color: lightgray; */</em></span>
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+}</pre>
+<p class="noindent">Because of the specificity of the combined <span class="green-d"><code><strong>#exec-bio.alert</strong></code></span> class, the <span class="green-d"><code><strong>background: red;</strong></code></span> rule overrides both the general <span class="green-d"><code><strong>background: red;</strong></code></span> and the more specific <span class="green-d"><code><strong>background-color: lightgray;</strong></code></span> rules.<sup><a id="ch06fn3a" href="ch06.xhtml#ch06fn3">3</a></sup></p>
+<p class="footnote"><a id="ch06fn3" href="ch06.xhtml#ch06fn3a">3</a>. The <span class="green-d"><code><strong>background</strong></code></span> declaration combines a bunch of different background rules, as seen in the Stack Overflow answer to the question “What is the difference between background and background-color” (<a href="https://stackoverflow.com/questions/10205464/what-is-the-difference-between-background-and-background-color">https://stackoverflow.com/questions/10205464/what-is-the-difference-between-background-and-background-color</a>).</p>
+<p class="indent">Let’s take a closer look at how the browser determines which rules take precedence.</p>
+</section>
+<section>
+<h3 class="h3" id="sec6_3">6.3 Priority and Specificity</h3>
+<p class="noindent">CSS was designed to allow for multiple stylesheets from multiple locations to influence the appearance of a single document without catastrophically crashing. The result is a system of priority and specificity rules devised to resolve contradictory style declarations like the ones we were playing with in <a href="ch06.xhtml#sec6_2">Section 6.2</a>.</p>
+<p class="indent">To make this clearer, let’s take a look at the simplified example shown in <a href="ch06.xhtml#ch6list8">Listing 6.8</a>, which uses a <span class="green-d"><code><strong>width</strong></code></span> set to a particular <em>percentage</em>. (We’ll learn more about percentages in <a href="ch07.xhtml#sec7_4">Section 7.4</a>.)</p>
+<p class="listing" id="ch6list8"><strong>Listing 6.8:</strong> Different rules targeting the same class.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">  .<span class="blue-v"><strong>bio-box</strong></span> {
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">75</span><span class="pd_red"><strong>%</strong></span>;
+  }
+  .<span class="blue-v"><strong>bio-box</strong></span> {
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">50</span><span class="pd_red"><strong>%</strong></span>;
+  }
+<span class="grey">&lt;/</span><span class="pd_green1"><strong>style</strong></span><span class="grey">&gt;</span></pre>
+<figure class="figure" id="ch6fig3">
+<img src="graphics/06fig03.jpg" alt="images" width="676" height="332"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.3:</strong> A 50%-width box showing how the final CSS rule gets applied.</p>
+</figcaption>
+</figure>
+<p class="noindent"><span epub:type="pagebreak" id="page_141"></span>If you update the style section of your test page with the styling above, you’ll notice that the boxes end up being half the width (50%) of the page—i.e., the second rule in <a href="ch06.xhtml#ch6list8">Listing 6.8</a> is the one that gets applied (<a href="ch06.xhtml#ch6fig3">Figure 6.3</a>). This is part of a general pattern: in the case of conflicting CSS rules, the final one gets applied.</p>
+<p class="indent">The full list of CSS priority rules appears in <a href="ch06.xhtml#ch6tab1">Table 6.1</a>. You don’t need to memorize this table—over time you’ll get a feel for how the priority works. Also, of all these rules, only numbers 3 and 5–8 are priorities that you’ll have to understand, and you should <em>strenuously</em> try and avoid using numbers 1 (<a href="ch06.xhtml#box6_2">Box 6.2</a>) and 2 (makes for difficult-to-maintain code). Numbers 4 and 9 are out of your control.</p>
+<figure class="table" id="ch6tab1">
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_142"></span><strong>Table 6.1:</strong> CSS priority rules.</p>
+</figcaption>
+<table class="all">
+<thead>
+<tr>
+<th class="border1"><p class="tab-para">Priority</p></th>
+<th class="border1"><p class="tab-para">Name</p></th>
+<th class="border1"><p class="tab-para">How it functions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para">1</p></td>
+<td><p class="tab-para">Importance</p></td>
+<td><p class="tab-para">Adding <span class="green-d"><code><strong>!important</strong></code></span> (e.g., “<span class="green-d"><code><strong>width: 100% !important</strong></code></span>”) to a value overrides all other similar styles (but never use <span class="green-d"><code><strong>!important</strong></code></span> (<a href="ch06.xhtml#box6_2">Box 6.2</a>).</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">2</p></td>
+<td><p class="tab-para">Inline</p></td>
+<td><p class="tab-para">A declaration that is put on an element using <span class="green-d"><code><strong>style=.</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">3</p></td>
+<td><p class="tab-para">Media type</p></td>
+<td><p class="tab-para">When a style is applied through a media query (more in <a href="ch13.xhtml#ch13">Chapter 13</a>).</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">4</p></td>
+<td><p class="tab-para">User defined</p></td>
+<td><p class="tab-para">Most browsers have the accessibility feature: a user defined CSS.</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">5</p></td>
+<td><p class="tab-para">Selector specificity</p></td>
+<td><p class="tab-para">Styling applied via a class or id overwrites generic styling.</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">6</p></td>
+<td><p class="tab-para">Rule order</p></td>
+<td><p class="tab-para">The last style written has priority.</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">7</p></td>
+<td><p class="tab-para">Parent inheritance</p></td>
+<td><p class="tab-para">If there is no style specified, then children inherit styles from their parent.</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">8</p></td>
+<td><p class="tab-para">CSS</p></td>
+<td><p class="tab-para">CSS rules from a stylesheet or <span class="green-d"><code><strong>style</strong></code></span> block that are applied to generic elements.</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">9</p></td>
+<td><p class="tab-para">Browser defaults</p></td>
+<td><p class="tab-para">Lowest priority, these are the default styles that browsers ship with.</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">Now you might be asking, “OK, but now what happens when we apply two styles that have the same priority?” In this case, we need to consider <em>specificity</em> as well as priority, which is used to resolve any situation where multiple styles with the same priority level are applied (#5 in <a href="ch06.xhtml#ch6tab1">Table 6.1</a>).</p>
+<p class="indent">At the most basic level, specificity just means that the more specific you are when you target an element, the greater the strength the browser will give to the styles in that declaration. For example, suppose we wanted to make all <span class="green-d"><code><strong>a</strong></code></span> elements gray by declaring a style as in <a href="ch06.xhtml#ch6list9">Listing 6.9</a>.</p>
+<p class="listing" id="ch6list9"><strong>Listing 6.9:</strong> A not-very-specific style.</p>
+<pre class="pre2"><span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>gray</strong></span>;
+}</pre>
+<p class="indent">Without even needing classes or ids, we could override this style by being a little more specific. So if we had links that were inside of <span class="green-d"><code><strong>h1</strong></code></span> headers, we could make all <span class="green-d"><code><strong>a</strong></code></span>s that are inside of those <span class="green-d"><code><strong>h1</strong></code></span> elements green using a declaration like the one in <a href="ch06.xhtml#ch6list10">Listing 6.10</a>.</p>
+<p class="listing" id="ch6list10"><strong>Listing 6.10:</strong> A more specific style.</p>
+<pre class="pre2"><span class="pd_green1"><strong>h1 a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+}</pre>
+<p class="noindent">That slightly more specific declaration overrides the initial styling that made the <span class="green-d"><code><strong>a</strong></code></span> text gray, and instead the text would be green. (This is the technique we used in <a href="ch05.xhtml#ch5list10">Listing 5.10</a>.)</p>
+<p class="indent"><a href="ch06.xhtml#ch6tab2">Table 6.2</a> has a more detailed listing of the values that different selectors are assigned by the browser. The styles get more specific as you go down the table, meaning that lower ones would override the styles above.</p>
+<figure class="table" id="ch6tab2">
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_143"></span><strong>Table 6.2:</strong> The confusingly complex rules of specificity.</p>
+</figcaption>
+<table class="all">
+<thead>
+<tr>
+<th class="border1"><p class="tab-para">Type</p></th>
+<th class="border1"><p class="tab-para">Example</p></th>
+<th class="border1"><p class="tab-para">Specificity</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para">Simple HTML selector</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>em {color: #fff;}</strong></code></span></p></td>
+<td><p class="tab-para">1</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">HTML selector targeting element inside another element</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>h1 em {color: #00ff00;}</strong></code></span></p></td>
+<td><p class="tab-para">2</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">CSS class name</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>.alert {color: #ff0000;}</strong></code></span></p></td>
+<td><p class="tab-para">1,0</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">HTML element with a class name</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>p.safe {color: #0000ff;}</strong></code></span></p></td>
+<td><p class="tab-para">1,1</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">CSS id</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>#thing {color: #823706;}</strong></code></span></p></td>
+<td><p class="tab-para">1,0,0</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">CSS id with a class name</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>#thing .property {color: #823706;}</strong></code></span></p></td>
+<td><p class="tab-para">1,1,0</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Inline style</p></td>
+<td><p class="tab-para"><span class="green-d"><code><strong>style=“color: transparent;”</strong></code></span></p></td>
+<td><p class="tab-para">1,0,0,0</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">You’ll notice that there isn’t a simple numbering system for <a href="ch06.xhtml#ch6tab2">Table 6.2</a> like there is for the priority list in <a href="ch06.xhtml#ch6tab1">Table 6.1</a>. That’s because the specificity uses a separate system that has different levels noted by adding new numbers with a comma—it’s confusing and we’ve never actually heard of a developer work through a specificity problem using the number system, but we’ve included it for the sake of completeness.</p>
+<p class="indent">This all seems really complicated, right?</p>
+<p class="indent">Well, most developers don’t actually know all these rules by heart. Instead, what we all use are systems of simple conventions like trying to keep declarations simple and general, with exceptions targeted via a class, not using ids to target styles, not using <span class="green-d"><code><strong>!important</strong></code></span> (<a href="ch06.xhtml#box6_2">Box 6.2</a>), etc. Over time you’ll build up a gut feeling for the specificity.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box6_2">
+<p class="sb-title1"><strong>Box 6.2: Style Note: Never Use <code>!important</code></strong></p>
+<p class="sb-noindent">There’s another bad way of getting a style to apply, and that is to use the <code>!important</code> flag to the declaration, which automatically overrides any conflicting styles (<a href="ch06.xhtml#ch6tab1">Table 6.1</a>). You should think about <code>!important</code> (read “important”; the “!” is silent) like this: if you’ve had to use <code>!important</code>, then you’ve failed at styling something.</p>
+<p class="sb-indent">The problem with using <code>!important</code> is that once you start using it, there’s a tendency to use it more and more over time, since the only way to overcome a style that was applied with <code>!important</code> is to use another <code>!important</code>. Such proliferating <code>!important</code> rules are the tribbles of CSS.</p>
+<p class="sb-indent">It is always better to rethink how you are styling something than to use <code>!important</code>. Now that you know about <code>!important</code>, erase it from your memory.</p>
+<figure class="image-c">
+<img src="graphics/144fig01.jpg" alt="Images" width="595" height="398"/>
+</figure>
+</aside>
+<p class="indent"><span epub:type="pagebreak" id="page_144"></span>One way to avoid getting caught in situations where overlapping layers of complexity keep your styles from being applied is to try to keep your selectors as simple as possible (<a href="ch06.xhtml#ch6list11">Listing 6.11</a>), rather than using an ugly and complicated set of selectors (<a href="ch06.xhtml#ch6list12">Listing 6.12</a>).</p>
+<p class="listing" id="ch6list11"><strong>Listing 6.11:</strong> Good, clean CSS.</p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+}
+.<span class="blue-v"><strong>alert</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+}</pre>
+<p class="listing" id="ch6list12"><span epub:type="pagebreak" id="page_145"></span><strong>Listing 6.12:</strong> Ugly and complicated CSS.</p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list12a" id="p06list12">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>body div</strong></span>#<span class="blue-v"><strong>exec-bio</strong></span>.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>orange</strong></span>;
+}</pre>
+<p class="indent">Often, simplicity is the best solution.</p>
+<section>
+<h4 class="h4" id="sec6_3_1">6.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use the <span class="green-d"><code><strong>!important</strong></code></span> flag to force the background color of the <span class="green-d"><code><strong>.alert</strong></code></span> class to be red (make sure to remove <span class="green-d"><code><strong>#exec-bio</strong></code></span> from the style).</p></li>
+<li><p class="number">Remove what you did in Exercise #1 and promise never to use <span class="green-d"><code><strong>!important</strong></code></span> again (<a href="ch06.xhtml#box6_2">Box 6.2</a>).</p></li>
+<li><p class="number">Try changing the color of the <span class="green-d"><code><strong>.bio-box a</strong></code></span> links not by changing the <span class="green-d"><code><strong>color</strong></code></span> property on the existing style, but instead by adding a new identical selector below the existing one and a new <span class="green-d"><code><strong>color</strong></code></span> declaration that changes the link color to <span class="green-d"><code><strong>pink</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_4">6.4 How to Be a Good Styling Citizen</h3>
+<p class="noindent">So, how should you be a good developer and use CSS selectors in a reasonable way that takes advantage of the intricate priority and specificity rules… without requiring a lot of mental overhead? Start with the concept we mentioned in <a href="ch06.xhtml#sec6_2">Section 6.2</a>: that classes should be combined like LEGOs to get the result we are looking for. Make design choices that are modular so that your styles only affect things inside modules instead of leaking out to affect elements site-wide.</p>
+<p class="indent">If you need to have a module do slightly different things depending on placement or status, multiple classes on an element are a valid usage of the class selector, but at the same time don’t take that to mean that you need to give every single element on the page a class or (even worse) multiple classes. It’s a fine balancing act between under-and over-classing your markup.</p>
+<p class="indent">Looking at the styling we’ve done, you might have wondered why we didn’t give the links in the <span class="green-d"><code><strong>.bio-box</strong></code></span>es classes of their own. We definitely could have, and there would have been nothing wrong with that, but this is another one of those subjective areas in styling. One good practice is to divide the styling into two different categories: global styles that will apply in many different places in order to create greater <span epub:type="pagebreak" id="page_146"></span>consistency, and individual sections that are self-contained modules of functionality or content.</p>
+<p class="indent">As an example, let’s assume that the <span class="green-d"><code><strong>.bio-box</strong></code></span>es are going to be located in a part of the site that always has one link in each box—they are going to be repeating and regular modules. In this case, we can just skip classing the individual links and apply a more general style for an <span class="green-d"><code><strong>a</strong></code></span> tag within the <span class="green-d"><code><strong>.bio-box</strong></code></span>, without needing to drill down and add new styles. But if we need to add another link, then we’d have to consider whether or not we want the two links to look the same. If not, it would be necessary to come up with a different way to target the elements.</p>
+<p class="indent">Let’s add some content to make these ideas more concrete. Replace the dummy <span class="green-d"><code><strong>.bio-box</strong></code></span>es with the markup shown in <a href="ch06.xhtml#ch6list13">Listing 6.13</a>, which includes the entire page to help you sync up. Note that, among other things, we’ve eliminated the <span class="green-d"><code><strong>exec-bio</strong></code></span> id, which (as mentioned in <a href="ch06.xhtml#sec6_2">Section 6.2</a>) we recommend using only when absolutely necessary, and we’ve also slimmed down the CSS rules.</p>
+<p class="listing" id="ch6list13"><strong>Listing 6.13:</strong> Using more realistic example HTML.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list13a" id="p06list13">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Test Page: Don't Panic&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>style</strong></span>&gt;
+      <span class="pd_green1"><strong>a</strong></span> {
+        <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+      }
+      .<span class="blue-v"><strong>bio-box</strong></span> {
+        <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+      }
+      .<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+        <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+      }
+    &lt;/<span class="pd_green1"><strong>style</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;I'm an h1&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>ul</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        <span epub:type="pagebreak" id="page_147"></span>&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;I'm an h2&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        Known for his dazzling charm, rapier wit, and unrivaled humility,
+        Michael is the creator of the
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails
+        Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and principal author of the
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;
+        Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; introductory sequence. Michael
+        is also notorious as the founder of
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/"</span>&gt;Tau Day&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and author of
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/tau-manifesto"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;The Tau
+        Manifesto&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, but rumors that he's secretly a supervillain
+        are slightly exaggerated.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        When he's not literally swimming with sharks or hunting powder stashes on
+        his snowboard, you can find Lee in front of his computer designing
+        interfaces, doing front-end development, or writing some of the
+        interface-related Learn Enough tutorials.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        You may have seen him shredding guitar live with Capital Cities on Jimmy
+        Kimmel, Conan, or The Ellen Show, but rest assured Nick is a true nerd at
+        heart. He's just as happy shredding well-spec'd lines of code from a tour
+        bus as he is from his kitchen table.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;??&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        The Future
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_148"></span>If you save and refresh the page, you’ll find that all of the links in the boxes look the same, i.e., they’re green (<a href="ch06.xhtml#ch6fig4">Figure 6.4</a>).</p>
+<figure class="figure" id="ch6fig4">
+<img src="graphics/06fig04.jpg" alt="images" width="676" height="395"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.4:</strong> All-green links.</p>
+</figcaption>
+</figure>
+<p class="indent">Looking back at <a href="ch06.xhtml#ch6list13">Listing 6.13</a>, we see that each bio contains a link to the corresponding person’s Twitter account, and it would be nice to distinguish these visually from the others. We’ll continue to improve these links throughout the tutorial, but for now we’ll just make them blue, while keeping the others green.</p>
+<p class="indent">One way to do this would be to retarget the style that makes the links green by making the style only apply to links that are <em>inside</em> paragraph <span class="green-d"><code><strong>p</strong></code></span> tags, as shown in <a href="ch06.xhtml#ch6list14">Listing 6.14</a>.</p>
+<p class="listing" id="ch6list14"><strong>Listing 6.14:</strong> Styling link color inside the paragraphs.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>p a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+}</pre>
+<p class="indent">This would change the Twitter links to red (the color specified by the generic rule for anchor tags in <a href="ch05.xhtml#ch5list9">Listing 5.9</a>), reserving green for links inside paragraph tags, but it <span epub:type="pagebreak" id="page_149"></span>would also start bumping up against a suggested <em>three-selector limit</em> rule of thumb, as discussed in <a href="ch06.xhtml#box6_3">Box 6.3</a>.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box6_3">
+<p class="sb-title1"><strong>Box 6.3: Style Note: Selector Depth</strong></p>
+<p class="sb-noindent">In general, and for a couple of reasons, it’s a good idea to keep the number of selectors in a declaration under three (i.e., to three or fewer). This might seem easy right now with our super-simple test page, but on a complicated site things can get very messy. One obvious reason you want your selectors to be as short as possible is for readability. It’s just easier to find what you are looking for in a big section of CSS if the selectors are short.</p>
+<p class="sb-indent">The other reason is that CSS selectors are read by the browser from right to left, so the more selectors there are, and the more general they are, the more work the browser has to do to render your page. It’s a little counter-intuitive, since you’d think that the browser would start on the left and narrow down the scope of the styling by moving right… but for technical reasons it doesn’t. So if you declared a style using <code>#first-table tr td h1</code>, the browser would first identify all <code>h1</code>s, then all <code>td</code>s, then all <code>tr</code>s, and finally restrict everything to just the elements that are in something with an id of <code>#first-table</code>.</p>
+<p class="sb-indent">If you have lots of elements on a page, this kind of inefficiency can really slow down rendering times, so keeping the number of selectors down is good both for us (the developers) and for our users.</p>
+</aside>
+<p class="indent">Using the rule shown in <a href="ch06.xhtml#ch6list14">Listing 6.14</a> would be fine—we’d just have to pay attention and avoid making it more complicated in future changes—but let’s instead use a more robust practice by applying the specificity rules to get what we want while still adhering to <a href="ch06.xhtml#box6_3">Box 6.3</a>’s three-selector limit. We can accomplish this by changing the style selector back to just <span class="green-d"><code><strong>.bio-box a</strong></code></span> while adding a class of <span class="green-d"><code><strong>social-link</strong></code></span> to all the Twitter links (<a href="ch06.xhtml#ch6list15">Listing 6.15</a>).</p>
+<p class="listing" id="ch6list15"><strong>Listing 6.15:</strong> Adding a class to the social media links.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list15a" id="p06list15">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+.
+.
+.
+&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+.
+.
+.
+&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_150"></span>Then we can style the links by adding the new class declaration in the CSS, as in <a href="ch06.xhtml#ch6list16">Listing 6.16</a>. (Put this new declaration somewhere below the <span class="green-d"><code><strong>.bio-box a</strong></code></span> declaration.)</p>
+<p class="listing" id="ch6list16"><strong>Listing 6.16:</strong> Adding a style declaration for our social links.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+}
+<span class="bg1"><span class="pd_green2"><strong>a</strong></span>.<span class="blue-v"><strong>social-link</strong></span> {</span>
+<span class="bg1">  <span class="pd_green2"><strong>color</strong></span>: <span class="pd_green2"><strong>blue</strong></span>;</span>
+<span class="bg1">}</span></pre>
+<p class="indent">Now, any links that are inside paragraphs will be green, while the social links will be a nice blue (<a href="ch06.xhtml#ch6fig5">Figure 6.5</a>).</p>
+<figure class="figure" id="ch6fig5">
+<img src="graphics/06fig05.jpg" alt="images" width="676" height="411"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.5:</strong> The class combined with <span class="green-d"><code><strong>a</strong></code></span> allows the styling to apply.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_151"></span>When combined, the class and element selectors have higher specificity than <span class="green-d"><code><strong>.bio-box a</strong></code></span>. So, if you were to remove the <span class="green-d"><code><strong>a</strong></code></span> from <span class="green-d"><code><strong>.social-link</strong></code></span> in the selector, the link would turn green again.</p>
+<p class="indent">So what’s the point of this seemingly simple exercise?</p>
+<p class="indent">It wouldn’t seem like choosing a link color is all that important, but little mistakes in how you deal with specificity at the beginning of a project can cause problems down the road. Even in this simplified example, there are a bunch of decisions that have to be made that could affect the future development of the page. Choosing poorly could require us to have to go back to the code and rewrite it if our original styling was too generic or restrictive.</p>
+<p class="indent">For example, suppose we kept the green link styling targeted using <span class="green-d"><code><strong>.bio-box p a</strong></code></span>. If we then later wanted to put images into the links—along with styles that target the images—we would have to add classes to all the images to cleanly target them (because <span class="green-d"><code><strong>.bio-box p a img</strong></code></span> is too many selectors deep). On the other hand, while classes for the images might be a good option if there are only a few, if there are a whole lot of images it could be a hassle to add in class names on each and every one.</p>
+<p class="indent">You could get around both of these problems by adding a class to the <span class="green-d"><code><strong>p</strong></code></span> tag, which would let you cut out a level in the declaration, but then what happens if you want multiple paragraphs in a bio? Now each <span class="green-d"><code><strong>p</strong></code></span> would need a class… and you are back into the mess of having to add class names to a large number of elements. An easy solution would be to wrap that whole text section in a new <span class="green-d"><code><strong>div</strong></code></span> with a class like <span class="green-d"><code><strong>.bio-copy</strong></code></span>, and then target the links inside with <span class="green-d"><code><strong>.bio-copy a</strong></code></span> and images in links with <span class="green-d"><code><strong>.bio-copy img</strong></code></span>.</p>
+<p class="indent">Let’s look at an example of what it looks like to wrap the text content in an element with its own class to allow for more precise targeting. This involves adding <span class="green-d"><code><strong>.bio-copy</strong></code></span> wrappers around each biography’s copy,<sup><a id="ch06fn4a" href="ch06.xhtml#ch06fn4">4</a></sup> as shown in <a href="ch06.xhtml#ch6list17">Listing 6.17</a>, which we’ll put to use in a moment.</p>
+<p class="footnote"><a id="ch06fn4" href="ch06.xhtml#ch06fn4a">4</a>. Here “copy” refers to “the text to be typeset”, i.e., the kind of thing a copy editor edits.</p>
+<p class="listing" id="ch6list17"><strong>Listing 6.17:</strong> Wrapping each of the bios in a <span class="green-d"><code><strong>div</strong></code></span> to better target the text.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list17a" id="p06list17">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+<span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"bio-copy"</strong></span>&gt;</span>
+    .
+    .
+    .
+<span class="bg1">  &lt;/&lt;<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+<span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"bio-copy"</strong></span>&gt;</span>
+    .
+    .
+    .
+<span class="bg1">  &lt;/&lt;<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"bio-copy"</strong></span>&gt;</span>
+      .
+      .
+      .
+<span class="bg1">    &lt;/&lt;<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_152"></span>Now let’s look at another styling wrinkle. If you were to stick with the style declaration <span class="green-d"><code><strong>a.social-link</strong></code></span> from <a href="ch06.xhtml#ch6list16">Listing 6.16</a> as the way to target all <span class="green-d"><code><strong>.social-link</strong></code></span>s, then you’d have to ask yourself, “Could there be a situation where I want the styling of a <span class="green-d"><code><strong>.social-link</strong></code></span> on an element that isn’t actually a link?” It sounds a little weird to ask the question, since it would seem that if you call something a link, you’d expect it always to be a link, but you’ll often have styling for links that you need to apply to something that isn’t an <span class="green-d"><code><strong>a</strong></code></span>.</p>
+<p class="indent">An example of this would be if you have a navigational menu where you have a bunch of links to pages. Often, you want to have a menu item for the current page a user is looking at, and you don’t want users to be able to click a link for the page they are already on (that would refresh the page), but you <em>do</em> want this type of menu item to look like the rest of the navigational links. In that case, the menu item that isn’t a link would need to inherit all the same styling that the links got, and in our example that would be difficult if the selector was a combined HTML element and class name: <span class="green-d"><code><strong>a.social-link</strong></code></span>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_153"></span>To allow the <span class="green-d"><code><strong>.social-link</strong></code></span> class to change the styling of the link without combining the HTML element and the class name, we should retarget the generic declarations in favor of the more specific method using the <span class="green-d"><code><strong>.bio-copy</strong></code></span> class name from <a href="ch06.xhtml#ch6list17">Listing 6.17</a>. The result is a change from the current <span class="green-d"><code><strong>.bio-box</strong></code></span> rule from <a href="ch06.xhtml#ch6list11">Listing 6.11</a> to the more targeted style, which affects only links that are in the <span class="green-d"><code><strong>.bio-copy</strong></code></span> section of the boxes:</p>
+<pre class="pre1">.<span class="blue-v"><strong>bio-copy</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+}</pre>
+<p class="noindent">At this point, we can also change <span class="green-d"><code><strong>a.social-link</strong></code></span> to just <span class="green-d"><code><strong>.social-link</strong></code></span>:</p>
+<pre class="pre1">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+}</pre>
+<p class="noindent">Because the CSS changes we’ve just made were a refactoring, the appearance should be the same as before (<a href="ch06.xhtml#ch6fig5">Figure 6.5</a>).</p>
+<p class="indent">As a final step, we’ll add some descriptive <em>CSS comments</em> while rearranging our CSS rules so that they are grouped thematically, according to whether they’re global, apply only to social links, or apply to the page biographies. This practice makes it easier to navigate, read, and edit the CSS rules later on (<a href="ch06.xhtml#box6_4">Box 6.4</a>). The result appears in <a href="ch06.xhtml#ch6list18">Listing 6.18</a>, which shows the full page in case you need to sync up.</p>
+<p class="listing" id="ch6list18"><strong>Listing 6.18:</strong> The final form of our page for this chapter.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#p06list18a" id="p06list18">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Test Page: Don't Panic&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>style</strong></span>&gt;
+      <span class="pd_blue1"><em>/* GLOBAL STYLES */</em></span>
+      <span class="pd_green1"><strong>a</strong></span> {
+        <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+      }
+
+      <span class="pd_blue1"><em>/* SOCIAL STYLES */</em></span>
+      .<span class="blue-v"><strong>social-link</strong></span> {
+        <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+      <span epub:type="pagebreak" id="page_154"></span>}
+
+      <span class="pd_blue1"><em>/* BIO STYLES */</em></span>
+      .<span class="blue-v"><strong>bio-box</strong></span> {
+        <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+      }
+      .<span class="blue-v"><strong>bio-copy</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+        <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+      }
+    &lt;/<span class="pd_green1"><strong>style</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;I'm an h1&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>ul</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;I'm an h2&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+        &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+          Known for his dazzling charm, rapier wit, and unrivaled humility,
+          Michael is the creator of the
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails
+          Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and principal author of the
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;
+          Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; introductory sequence. Michael
+          is also notorious as the founder of
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/"</span>&gt;Tau Day&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and author of
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/tau-manifesto"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;The Tau
+          Manifesto&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, but rumors that he's secretly a supervillain
+          are slightly exaggerated.
+        &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+        &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+          When he's not literally swimming with sharks or hunting powder
+          <span epub:type="pagebreak" id="page_155"></span>stashes on his snowboard, you can find Lee in front of his computer
+          designing interfaces, doing front-end development, or writing some of
+          the interface-related Learn Enough tutorials.
+        &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;here&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        You may have seen him shredding guitar live with Capital Cities on
+        Jimmy Kimmel, Conan, or The Ellen Show, but rest assured Nick is a
+        true nerd at heart. He's just as happy shredding well-spec'd lines
+        of code from a tour bus as he is from his kitchen table.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;??&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      The Future
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<aside epub:type="sidebar" class="sidebar1" id="box6_4">
+<p class="sb-title1"><strong>Box 6.4: Style Note: Group Your Styles and Add Comments!</strong></p>
+<p class="sb-noindent">It might seem obvious, but if you have any concern for other human beings who might ever look at your code, for the love of <code>$DEITY</code>, please group all styles that relate to the same part of the site in the same place, and to be extra helpful, add in a comment or two that explain what the styles are for!</p>
+<p class="sb-indent">CSS comments are any text that is between the asterisks <code>/* */</code>, which looks like this in practice:</p>
+<pre class="pre1">/* HOMEPAGE STYLES */</pre>
+<p class="sb-indent">Comments don’t affect how the code is displayed to users, but you should know that they can be seen by anyone who browses the site source code… so don’t put anything into the comments you’d be embarrassed to say out loud in a crowded place.</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_156"></span>From this point on, when we add new styles we’ll usually include a comment name for the section, like the <code>/* HOMEPAGE STYLES */</code> above. If the styles should be grouped into an existing section, we’ll indicate that using this convention:</p>
+<pre class="pre1">/* HOMEPAGE STYLES */
+.
+.
+.
+.some-style {
+}</pre>
+<p class="sb-indent">That means that you should put the new styles somewhere after the existing styles in that section (represented by the vertical ellipsis). The only time that we won’t include the section name when adding styles is when we are already working and making changes in that section.</p>
+</aside>
+<section>
+<h4 class="h4" id="sec6_4_1">6.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Add a new style that sets generic <span class="green-d"><code><strong>div</strong></code></span>s to have a border style of <span class="green-d"><code><strong>border: 1px solid green</strong></code></span>. Save and refresh, and all <span class="green-d"><code><strong>div</strong></code></span>s other than the <span class="green-d"><code><strong>.bio-box</strong></code></span>es should have a green border. Change the selector to <span class="green-d"><code><strong>div.bio-box</strong></code></span>, and then save and refresh.</p></li>
+<li><p class="number">Add the <span class="green-d"><code><strong>.social-link</strong></code></span> class onto the <span class="green-d"><code><strong>h1</strong></code></span>. Even though it isn’t a link, the color should change.</p></li>
+<li><p class="number">Add your own comment to the style section, and inside add <span class="green-d"><code><strong>html{background: red;}</strong></code></span>. Save and refresh. Then delete the first <span class="green-d"><code><strong>/*</strong></code></span> and then save and refresh. Your page should look very different—always remember to balance your comment tags.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch05"><span epub:type="pagebreak" id="page_79"></span>Chapter 5</h2>
+<h2 class="chap-title">Introduction to Text Editors</h2>
+<p class="noindent"><em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>)—<a href="part02.xhtml#part02">Part II</a> of <em>Learn Enough Developer Tools to Be Dangerous</em>—is designed to help you learn to use what is arguably the most important item in the aspiring computer magician’s bag of tricks (<a href="ch01.xhtml#box1-1">Box 1.1</a>): a <em>text editor</em> (<a href="ch05.xhtml#fig5-1">Figure 5.1</a>). Learning how to use a text editor is an essential component of technical sophistication.</p>
+<figure class="figure" id="fig5-1">
+<img src="graphics/05fig01.jpg" alt="Image" width="675" height="688"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.1:</strong> A text editor.</p>
+</figcaption>
+</figure>
+<p class="indent">Unlike other text editor tutorials, which are typically tied to a specific editor, <a href="part02.xhtml#part02">Part II</a> of <em>Learn Enough Developer Tools to Be Dangerous</em> is designed to introduce the entire <em>category</em> of application—a category many people don’t even know exists.<sup><a id="rfn5_1" href="ch05.xhtml#fn5_1">1</a></sup> Moreover, editor-specific tutorials tend to be aimed at professional developers, and generally assume years of experience, but <em>Learn Enough Text Editor to Be Dangerous</em> doesn’t even assume you know what a “text editor” is. Its only prerequisite is a basic understanding of the Unix command line, such as that provided by <a href="part01.xhtml#part01">Part I</a>.<sup><a id="rfn5_2" href="ch05.xhtml#fn5_2">2</a></sup></p>
+<p class="footnote"><a id="fn5_1" href="ch05.xhtml#rfn5_1">1.</a> This is why we refer to this part of <em>Learn Enough Developer Tools to Be Dangerous</em> as “Learn Enough Text Editor” rather than “Learn Enough Text Editors”—saying “text editor” in the singular emphasizes that we are discussing the general category and not just a series of specific editors.</p>
+<p class="footnote"><a id="fn5_2" href="ch05.xhtml#rfn5_2">2.</a> This is required both because we’ll be launching text editors from the command line and because some of the examples involve customizing and extending the <em>shell program</em> in which the command line runs.</p>
+<p class="indent">Unlike most programs used to produce written documents, such as word processors and email clients, a <em>text editor</em> is an application specifically designed to edit <em>plain text</em> (often called just “text” for short). Learning to use a text editor is important because text is ubiquitous in modern computing—it’s used for code, markup, configuration files, and many other things.<sup><a id="rfn5_3" href="ch05.xhtml#fn5_3">3</a></sup> (Indeed, I’m using plain text to write this very document.) Although it’s surprisingly difficult to define exactly what “plain text” <span epub:type="pagebreak" id="page_80"></span>is, from a practical perspective it means that the text itself doesn’t have any formatting, or at least none that matters. There’s no notion of <em>emphasized</em> or <strong>boldface</strong> text, the <span class="fonts">font size</span> and <span class="green"><code><strong>typeface</strong></code></span> don’t matter, etc.—the only thing that does matter is the <em>content</em>. For example, although the previous sentence contains formatted output like <em>this</em>, its source is plain text, and appears as in <a href="ch05.xhtml#list5-1">Listing 5.1</a>.<sup><a id="rfn5_4" href="ch05.xhtml#fn5_4">4</a></sup></p>
+<p class="footnote"><a id="fn5_3" href="ch05.xhtml#rfn5_3">3.</a> For more on the power of text, see the insightful post “always bet on text” (<a href="https://graydon2.dreamwidth.org/193447.html?HN2">https://graydon2.dreamwidth.org/193447.html?HN2</a>).</p>
+<p class="footnote"><a id="fn5_4" href="ch05.xhtml#rfn5_4">4.</a> Technically, the em dash “—” appears as a raw Unicode character rather than as —, but the latter is equivalent and is easier to notice in a code listing. For similar reasons, <a href="ch05.xhtml#list5-1">Listing 5.1</a> uses regular quotes in place of fancier “curly” quotes. (On most browsers, setting Unicode to display properly requires a full HTML document with the proper headers. These sorts of considerations are covered in <em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>).)</p>
+<span epub:type="pagebreak" id="page_81"></span>
+<p class="list-head" id="list5-1"><strong>Listing 5.1:</strong> The HTML source of a sentence in this tutorial.</p>
+<p class="codelink"><a href="ch05_images.xhtml#p05lis01" id="p05lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">There's no notion of &lt;<span class="lgreen"><strong>em</strong></span>&gt;emphasized&lt;/<span class="lgreen"><strong>em</strong></span>&gt; or &lt;<span class="lgreen"><strong>strong</strong></span>&gt;boldface&lt;/<span class="lgreen"><strong>strong</strong></span>&gt; text,
+the &lt;<span class="lgreen"><strong>small</strong></span>&gt;font size&lt;/<span class="lgreen"><strong>small</strong></span>&gt; and &lt;<span class="lgreen"><strong>code</strong></span>&gt;typeface&lt;/<span class="lgreen"><strong>code</strong></span>&gt; don't matter,
+etc.<span class="gray"><strong>&amp;mdash;</strong></span>the only thing that does matter is the &lt;<span class="lgreen"><strong>em</strong></span>&gt;content&lt;/<span class="lgreen"><strong>em</strong></span>&gt;.</pre>
+</div>
+<p class="indent">In <a href="ch05.xhtml#list5-1">Listing 5.1</a>, the desired formatting options are indicated with special <em>tags</em> (such as the HTML emphasis tag <span class="green"><code><strong>&lt;em&gt;…&lt;/em&gt;</strong></code></span>) rather than by changing the appearance of the text itself.<sup><a id="rfn5_5" href="ch05.xhtml#fn5_5">5</a></sup> This is the main reason why the more familiar word processor programs such as Word aren’t well-suited to editing plain text, and a different sort of tool is needed (<a href="ch05.xhtml#box5-1">Box 5.1</a>).</p>
+<p class="footnote"><a id="fn5_5" href="ch05.xhtml#rfn5_5">5.</a> It is up to the individual application to determine how to display the formatting. For example, HTML is designed to be rendered and displayed by web browsers like Chrome and Safari, which typically display emphasized text using <em>italics</em>.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box5-1">Box 5.1: Word Processors vs. Text Editors</p>
+<p class="box-no">Even if you’ve never used a text editor, the chances are good that you’ve used a similar tool, a <em>word processor</em>. There’s a lot of overlap between the features of word processors and text editors. For example, they both allow you to create documents, find and replace or cut/copy/paste text, and save the results. The main difference is that word processors are generally designed to produce documents following the principle of “What You See Is What You Get” (WYSIWYG, pronounced “WIZ-ee-wig”), so that effects such as <em>emphasis</em> or <strong>boldface</strong> are achieved directly in the application, instead of with plain-text markup like <code>&lt;em&gt;emphasis&lt;/em&gt;</code> or <code>**boldface**</code>. For the most part, word processors also save their results in proprietary formats that sometimes go bad (as many who’ve tried opening old Word files have learned to their chagrin).</p>
+<p class="box-ind">In contrast, text editors are designed to modify plain text, one of the most universal and durable formats. Text editors also differ from word processors in having features aimed at more technical users, including syntax highlighting for source code (<a href="ch07.xhtml#ch07lev2sec1">Section 7.2.1</a>), automatic indentation (<a href="ch07.xhtml#ch07lev2sec3">Section 7.2.3</a>), support for regular expressions (<a href="ch07.xhtml#ch07lev4sec3">Section 7.4.3</a>), and customization via packages and snippets (<a href="ch07.xhtml#ch07lev5">Section 7.5</a>). A good text editor is thus an essential tool in every technical person’s toolkit.</p>
+</aside>
+<figure class="figure" id="fig5-2">
+<img src="graphics/05fig02.jpg" alt="Image" width="444" height="444"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.2:</strong> Why not edit plain text with Microsoft Word?</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_82"></span>Building on the material developed in <a href="part01.xhtml#part01">Part I</a>, <a href="part02.xhtml#part02">Part II</a> starts by covering the important <em>Vim</em> editor (<a href="ch05.xhtml#ch05lev1">Section 5.1</a>), which can be run at the command line directly inside a terminal window. Vim will give us a chance to see our first examples of the most important functions of a text editor, but because Vim can be forbiddingly complex for a beginner, in this tutorial we will cover only the bare minimum necessary to make basic edits. The rest of the tutorial will expand on the themes developed in this <a href="ch05.xhtml#ch05">chapter 5</a> by describing some of the many powerful features required in any programmer-grade text editor, with examples drawn principally from <em>Atom</em>, an open-source cross-platform editor,<sup><a id="rfn5_6" href="ch05.xhtml#fn5_6">6</a></sup> with concepts applicable to the closely related Sublime Text and Visual Studio Code editors and to Cloud9, a cloud IDE.<sup><a id="rfn5_7" href="ch05.xhtml#fn5_7">7</a></sup></p>
+<p class="footnote"><a id="fn5_6" href="ch05.xhtml#rfn5_6">6.</a> In the blog post “Sunsetting Atom” (published in June 2022), GitHub announced plans to archive the Atom project. See Section 6.1 for more details.</p>
+<p class="footnote"><a id="fn5_7" href="ch05.xhtml#rfn5_7">7.</a> Some developers use an <em>integrated development environment</em>, or IDE, for their day-to-day programming, but every IDE includes an integrated text editor, so the lessons in this tutorial still apply.</p>
+<p class="indent">As with <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>), this tutorial is part of the <em>Unix tradition</em>, which includes virtually every operating system you’ve ever heard of (macOS, iOS, Android, Linux, etc.) except Microsoft Windows. Although all the editors we’ll discuss do run under <span epub:type="pagebreak" id="page_83"></span>Windows, using a non-Unix OS introduces friction into the process, so Microsoft Windows users are encouraged to set up a Linux-compatible development environment by following the steps in <a href="appa.xhtml#app3-3">Section A.3.3</a> or by using the Linux-based cloud IDE discussed in <a href="appa.xhtml#app2">Section A.2</a>.</p>
+<p class="indent">The focus throughout <em>Learn Enough Text Editor to Be Dangerous</em> is on general principles, so no matter which editor you end up using, you will have a good mental checklist of the kinds of tasks you should rely on your editor to perform. In addition, because the details vary by particular text editor and by system, this tutorial presents an ideal opportunity to continue developing your <em>technical sophistication</em> (<a href="ch05.xhtml#box5-2">Box 5.2</a>). Finally, don’t feel any pressure to master everything at once. You can be productive with even a small subset of what’s included in this tutorial. Because technically sophisticated people use text editors practically every day, you’ll keep learning new tricks in perpetuity.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box5-2">Box 5.2: Technical Sophistication</p>
+<p class="box-no">The phrase <em>technical sophistication</em>, mentioned before in <a href="part01.xhtml#part01">Part I</a> (<a href="ch01.xhtml#box1-4">Box 1.4</a>), refers to the general ability to use computers and other technical things. This includes both existing knowledge (such as familiarity with text editors and the Unix command line) and the ability to acquire <em>new</em> knowledge, as illustrated in “Tech Support Cheat Sheet” (<a href="https://m.xkcd.com/627/">https://m.xkcd.com/627/</a>) from xkcd. Unlike “hard skills” like coding and version control, this latter aspect of technical sophistication is a “soft skill”—difficult to teach directly, but essential to develop if you want to work with computer programmers or to become a programmer yourself.</p>
+<p class="box-ind">In the context of text editors, technical sophistication includes things like reading menu items to figure out what they do, using the Help menu to discover new commands, learning keyboard shortcuts by reading menu items or Googling around, etc. It also involves a tolerance for ambiguity: Technically sophisticated readers won’t panic if a tutorial says to use <img class="inline" src="graphics/command1.jpg" alt="Image" width="16" height="16"/>Z to Undo something when it’s actually ^Z on their system. They also won’t panic if they see <img class="inline" src="graphics/command1.jpg" alt="Image" width="16" height="16"/>Z but don’t know what <img class="inline" src="graphics/command1.jpg" alt="Image" width="16" height="16"/> means, because they know they can skim ahead to find something like <a href="ch01.xhtml#tab1-1">Table 1.1</a> (or simply Google for “mac special keys”). Perhaps the most important aspect of technical sophistication is an <em>attitude</em>—a confidence and can-do spirit in the face of confusion that is well worth cultivating.</p>
+<p class="box-ind">Throughout the rest of <em>Learn Enough Text Editor to Be Dangerous</em>, we’ll refer back to this box whenever we encounter examples of issues that require a little technical sophistication to solve. With experience, you too will become one of the “computer people” from “Tech Support Cheat Sheet” who seem to have the <span epub:type="pagebreak" id="page_84"></span>magical ability (<a href="ch01.xhtml#box1-1">Box 1.1</a>) to figure out technical things. (<em>Warning</em>: You might need a new shirt (<a href="ch05.xhtml#fig5-3">Figure 5.3</a>).)</p>
+<figure class="figure" id="fig5-3">
+<img src="graphics/05fig03.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.3:</strong> A T-shirt for the technically sophisticated.</p>
+</figcaption>
+</figure>
+</aside>
+<section>
+<h3 class="h3" id="ch05lev1">5.1 Minimum Viable Vim</h3>
+<p class="noindent">The vi (pronounced “vee-eye”) editor dates back to the earliest days of Unix, and Vim (pronounced “vim”) is an updated version that stands for “Vi IMproved”. Vim is absolutely a full-strength text editor, and many developers use it for their daily editing needs, but the barrier to Vim mastery is high, and it requires substantial customization and technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) to reach its full potential. Vim also has a large and often obscure set of commands, which rarely correspond to native keybindings <span epub:type="pagebreak" id="page_85"></span>(keyboard shortcuts), making Vim challenging to learn and remember. As a result, I generally recommend beginners learn a “modern” editor (<a href="ch06.xhtml#ch06">Chapter 6</a>) for everyday use. Nevertheless, I consider a minimal proficiency with Vim to be essential, simply because Vim is utterly ubiquitous—it’s present on virtually every Unix-like system in the known universe, which means that if you ssh into some random server halfway ’round the globe, Vim will probably be there.</p>
+<p class="indent">This chapter includes only Minimum Viable Vim—just enough to use Vim to do things like edit small configuration files or Git commits.<sup><a id="rfn5_8" href="ch05.xhtml#fn5_8">8</a></sup> It’s not even really enough to be <em>dangerous</em>. But it’s worth noting that even mastering Minimum Viable Vim puts you in elite company—because Vim is so difficult, even a little Vim knowledge is the sort of thing that can impress your friends (or a job interviewer).</p>
+<p class="footnote"><a id="fn5_8" href="ch05.xhtml#rfn5_8">8.</a> See <a href="part03.xhtml#part03">Part III</a> for more details.</p>
+<p class="indent"><em>Note</em>: If you’re using macOS, you should follow the instructions in <a href="ch02.xhtml#box2-3">Box 2.3</a> at this time.</p>
+</section>
+<section>
+<h3 class="h3" id="ch05lev2">5.2 Starting Vim</h3>
+<p class="noindent">Unlike most of the modern editors discussed starting in <a href="ch06.xhtml#ch06">Chapter 6</a>, Vim can be run directly inside a terminal window, and requires no graphical interface.<sup><a id="rfn5_9" href="ch05.xhtml#fn5_9">9</a></sup> All you do is type <span class="green"><code><strong>vim</strong></code></span> at the prompt:</p>
+<p class="footnote"><a id="fn5_9" href="ch05.xhtml#rfn5_9">9.</a> Vim thus dovetails nicely with a command-line tutorial like <em>Learn Enough Command Line to Be Dangerous</em> (<a href="part01.xhtml#part01">Part I</a>).</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> vim</pre>
+<p class="noindent">Typical results of running the <span class="green"><code><strong>vim</strong></code></span> command appear in <a href="ch05.xhtml#list5-2">Listing 5.2</a> and <a href="ch05.xhtml#fig5-4">Figure 5.4</a>. In both cases, the tildes (~) are not characters in the file but rather represent lines that have yet to be defined.</p>
+<figure class="figure" id="fig5-4">
+<img src="graphics/05fig04.jpg" alt="Image" width="744" height="566"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.4:</strong> Vim running in a terminal window.</p>
+</figcaption>
+</figure>
+<p class="list-head" id="list5-2"><strong>Listing 5.2:</strong> A textual representation of a Vim window (message and versions may differ).</p>
+<p class="codelink"><a href="ch05_images.xhtml#p05lis02" id="p05lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="green">~</span>
+<span class="green">~</span>
+<span class="green">~</span>
+<span class="green">~</span>
+<span epub:type="pagebreak" id="page_86"></span><span class="green">~</span>
+<span class="green">~                           VIM - Vi IMproved</span>
+<span class="green">~</span>
+<span class="green">~                              version 7.3</span>
+<span class="green">~                        by Bram Moolenaar et al.</span>
+<span class="green">~              Vim is open source and freely distributable</span>
+<span class="green">~</span>
+<span class="green">~                     Help poor children in Uganda!</span>
+<span class="green">~             type  :help iccf&lt;Enter&gt;       for information</span>
+<span class="green">~</span>
+<span class="green">~             type  :q&lt;Enter&gt;               to exit</span>
+<span class="green">~             type  :help&lt;Enter&gt;            or &lt;F1&gt; for on-line help</span>
+<span class="green">~             type  :help version7&lt;Enter&gt;   for version info</span></pre>
+</div>
+<p class="indent">If starting Vim is easy, learning to use it, at least at first, can be incredibly hard. This is mostly due to Vim being a <em>modal</em> editor, which is probably unlike anything you have used before (<a href="ch05.xhtml#box5-3">Box 5.3</a>). Vim has two principal <em>modes</em>, known as <em>normal mode</em> and <span epub:type="pagebreak" id="page_87"></span><em>insertion mode</em>. Normal mode is for doing things like moving around the file, deleting content, or finding and replacing text, whereas insertion mode is for inserting text.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box5-3">Box 5.3: Modal Vim</p>
+<p class="box-no">When I first started to learn programming in the Unix tradition (as opposed to my childhood experience with Microsoft DOS, BASIC, and Pascal), I distinctly recall being absolutely mortified at the unbelievably primitive editor I was expected to use. At the time, I was a first-year undergraduate at Harvard University, working in a research group at the Harvard-Smithsonian Center for Astrophysics. The tool I had been handed was vi. To say that it seemed like a downgrade from word processors is a gross understatement (<a href="ch05.xhtml#fig5-2">Figure 5.2</a>).</p>
+<p class="box-ind">What shocked me most about vi was modal editing: Unlike word processors, vi didn’t let me just click in the window and start typing. Instead, there were a profusion of options (<code>i</code>, <code>a</code>, and <code>o</code> among them) for switching to <em>insertion mode</em>, and all it took was a few wrong keystrokes for all hell to break loose. Although the intervening years have seen a proliferation of more modern text editors, whose design is much more like the click-and-type interface I expected from my experience with word processors, the enduring popularity of vi (via Vim) means that learning the basics of modal editing is a valuable skill, even if it might at first seem ridiculously foreign.</p>
+</aside>
+<p class="indent">Going back and forth between these two modes can cause a lot of confusion, especially since virtually all other programs that edit text (including word processors, email clients, and most text editors) have only insertion mode. Part of what makes Vim particularly confusing is that it <em>starts</em> in normal mode, which means that, if you try entering text immediately after starting Vim (as in <a href="ch05.xhtml#list5-2">Listing 5.2</a>), the result will be chaos.</p>
+<p class="indent">Because confusion is the likeliest result if you’re not used to Vim’s modal editing, we’re going to start our study of Vim with the <em>Most Important Vim Command ™</em>. One of my college friends, who was a huge partisan of vi’s (and hence Vim’s) historical rival Emacs (<a href="ch05.xhtml#box5-4">Box 5.4</a>), claimed the Most Important Vim Command™ was the only one he ever wanted to learn. Here it is:</p>
+<pre class="box-pre1"><span class="green">ESC:q!&lt;return&gt;</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_88"></span>This command means “Press the Escape key, then type ‘colon q exclamation-point’, then press the return key.” We’ll learn in a moment what this does and why, but for now we’ll start by practicing it a couple of times in the exercises.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box5-4">Box 5.4: Holy Wars: vi vs. Emacs</p>
+<p class="box-no">The Jargon File (<a href="http://www.catb.org/jargon/html/">http://www.catb.org/jargon/html/</a>) defines <em>holy wars</em> as follows:</p>
+<p class="block1"><strong>holy wars</strong>: n.</p>
+<p class="block">[from <em>Usenet</em>, but may predate it; common] <em>flame war</em>s over <em>religious issues</em>. The paper by Danny Cohen that popularized the terms <em>big-endian</em> and <em>little-endian</em> in connection with the LSB-first/MSB-first controversy was entitled <em>On Holy Wars and a Plea for Peace</em>.</p>
+<p class="block1">Great holy wars of the past have included <em>ITS</em> vs. <em>Unix</em>, <em>Unix</em> vs. <em>VMS</em>, <em>BSD</em> Unix vs. System V, <em>C</em> vs. <em>Pascal</em>, <em>C</em> vs. FORTRAN, etc. In the year 2003, popular favorites of the day are KDE vs. GNOME, vim vs. elvis, Linux vs. [Free|Net|Open]BSD. Hardy perennials include <em>EMACS</em> vs. <em>vi</em>, my personal computer vs. everyone else’s personal computer, ad nauseam. The characteristic that distinguishes holy wars from normal technical disputes is that in a holy war most of the participants spend their time trying to pass off personal value choices and cultural attachments as objective technical evaluations. This happens precisely because in a true holy war, the actual substantive differences between the sides are relatively minor. See also <em>theology</em>.</p>
+<p class="box-no1">As noted in the Jargon File entry, one of the longest-raging holy wars is fought between proponents of vi and its arch-rival Emacs (sometimes written “EMACS”), both of which have played important roles in the Unix computing tradition. Both also retain much popular support, although my guess is that, with the popularity of Vim, vi has taken a decisive lead in recent years. Of course, this is just the sort of statement that serves to perpetuate a holy war—likely prompting Emacs partisans to, say, make claims about the superior power and customizability of their favorite editor.</p>
+<p class="box-ind">If you wanted to start a <em>new</em> holy war, you might try something like, “Happily, the vi vs. Emacs holy war is now mostly a historical curiosity, as anyone who’s anyone has switched to a modern editor like Atom or Sublime.” It’s going to be quite a show—better bring some popcorn (<a href="ch05.xhtml#fig5-5">Figure 5.5</a>).<sup><a id="rfn5_10" href="ch05.xhtml#fn5_10">10</a></sup></p>
+<p class="footnote"><a id="fn5_10" href="ch05.xhtml#rfn5_10">10.</a> Image courtesy of Cartno Studio/Shutterstock.</p>
+<figure class="figure" id="fig5-5">
+<img src="graphics/05fig05.jpg" alt="Image" width="744" height="558"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.5:</strong> Watching a holy war play out can be entertaining.</p>
+</figcaption>
+</figure>
+</aside>
+<section>
+<h4 class="h4" id="ch05lev2sec1"><span epub:type="pagebreak" id="page_89"></span>5.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Start Vim in a terminal, then run the Most Important Vim Command™.</p></li>
+<li><p class="number">Restart Vim in a terminal. Before typing anything else, type the string “This is a Vim document.” What happened? Confusing, right?</p></li>
+<li><p class="number">Use the Most Important Vim Command™ to recover from the previous exercise and return to the normal command-line prompt.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch05lev3">5.3 Editing Small Files</h3>
+<p class="noindent">Now that we know the Most Important Vim Command™, we’ll start learning how to use Vim for real by opening and editing a small file. In <a href="ch05.xhtml#ch05lev2">Section 5.2</a>, we started by <span epub:type="pagebreak" id="page_90"></span>running <span class="green"><code><strong>vim</strong></code></span> by itself, but it’s more common to use a filename as an argument. Let’s navigate to the home directory of our system and then run such a command, which will either open the corresponding file (if it exists) or create it (if it doesn’t):<sup><a id="rfn5_11" href="ch05.xhtml#fn5_11">11</a></sup></p>
+<p class="footnote"><a id="fn5_11" href="ch05.xhtml#rfn5_11">11.</a> Technically, the file isn’t actually created until you save it (<a href="ch05.xhtml#ch05lev4">Section 5.4</a>), but you get the idea.</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> vim .bashrc</pre>
+<p class="noindent">Here <span class="green"><code><strong>.bashrc</strong></code></span> is a standard configuration file for Bash.<sup><a id="rfn5_12" href="ch05.xhtml#fn5_12">12</a></sup></p>
+<p class="footnote"><a id="fn5_12" href="ch05.xhtml#rfn5_12">12.</a> See this Stack Overflow thread (<a href="https://stackoverflow.com/questions/902946/about-bash-profile-bashrc-and-where-should-alias-be-written-in">https://stackoverflow.com/questions/902946/about-bash-profile-bashrc-and-where-should-alias-be-written-in</a>) if you’re curious about where the “rc” comes from.</p>
+<p class="indent">As noted above, the <span class="green"><code><strong>vim .bashrc</strong></code></span> command will automatically create the corresponding <span class="green"><code><strong>.bashrc</strong></code></span> file if it doesn’t already exist on your system. This important file is used to configure the <em>shell</em>, which is the program that supplies a command line—in this case, <em>Bash</em>, which is a pseudo-acronym that stands for <em>Bourne Again SHell</em> (also written as “Bourne-again shell”).<sup><a id="rfn5_13" href="ch05.xhtml#fn5_13">13</a></sup> (Recall from <a href="ch02.xhtml#box2-3">Box 2.3</a> that the default on macOS is now Zsh, so if you’re on a Mac you should follow the instructions there to switch to Bash if you haven’t already.)</p>
+<p class="footnote"><a id="fn5_13" href="ch05.xhtml#rfn5_13">13.</a> The first program in the sequence was the Bourne shell; in line with the Unix tradition of terrible puns, its successor is called the “Bourne again” (as in “born again”) shell.</p>
+<p class="indent">As is common on Unix-based systems, the configuration file for Bash begins with a dot, indicating (as noted in <a href="ch02.xhtml#ch02lev2">Section 2.2</a>) that the file is <em>hidden</em>. That is, it doesn’t show up by default when listing directory contents with <span class="green"><code><strong>ls</strong></code></span>, or even when viewing the directory using a graphical file browser.</p>
+<p class="indent">We’ll learn in <a href="ch05.xhtml#ch05lev4">Section 5.4</a> how to save changes to this file, but for now we’re just going to add some dummy content so that we can practice moving around. In <a href="ch05.xhtml#ch05lev2">Section 5.2</a>, we learned that Vim starts in normal mode, which means that we can change location, delete text, etc. Let’s go into insertion mode to add some content. The first step is to press the <span class="green"><code><strong>i</strong></code></span> key to <em>insert</em> text. Then, type a few lines (separated by returns), as shown in <a href="ch05.xhtml#list5-3">Listing 5.3</a>.<sup><a id="rfn5_14" href="ch05.xhtml#fn5_14">14</a></sup> (There may be other existing content, which you should simply ignore.)</p>
+<p class="footnote"><a id="fn5_14" href="ch05.xhtml#rfn5_14">14.</a> Recall from <a href="ch04.xhtml#ch04lev1">Section 4.1</a> that a tilde ~ is used to indicate the home directory, so <span class="green"><code><strong>~/.bashrc</strong></code></span> in the <a href="ch05.xhtml#list5-3">Listing 5.3</a> caption refers to the Bash configuration file in the home directory.</p>
+<span epub:type="pagebreak" id="page_91"></span>
+<p class="list-head" id="list5-3"><strong>Listing 5.3:</strong> Adding some text after typing <span class="green"><code><strong>i</strong></code></span> to insert.<br/><code><em>~/.bashrc</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#p05lis03" id="p05lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="roman_gray">1</span> lorem ipsum
+<span class="roman_gray">2</span> dolor sit amet
+<span class="roman_gray">3</span> foo bar baz
+<span class="roman_gray">4</span> I've made this longer than usual because I haven't had time to make it shorter.</pre>
+</div>
+<p class="noindent">After entering the text in <a href="ch05.xhtml#list5-3">Listing 5.3</a>, press <span class="green"><code><strong>ESC</strong></code></span> (the escape key) to switch from insertion mode back to normal mode.</p>
+<p class="indent">Now that we have some text on a few lines, we can learn some commands for moving around small files. (We’ll cover some commands for navigating large files in <a href="ch05.xhtml#ch05lev6">Section 5.6</a>.) The easiest way to move around is to use arrow keys—up, down, left, right—which is what I recommend.<sup><a id="rfn5_15" href="ch05.xhtml#fn5_15">15</a></sup> Vim has literally jillions of ways of moving around, and if you decide to use Vim as your primary text editor I recommend learning them, but for our purposes the arrow keys are fine. The only two additional commands I feel are essential are the ones to move to the beginning and end of the line, which are <span class="green"><code><strong>0</strong></code></span> and <span class="green"><code><strong>$</strong></code></span>, respectively.<sup><a id="rfn5_16" href="ch05.xhtml#fn5_16">16</a></sup></p>
+<p class="footnote"><a id="fn5_15" href="ch05.xhtml#rfn5_15">15.</a> Vim purists will tell you that there’s a better way, namely, to use the <span class="green"><code><strong>h</strong></code></span>, <span class="green"><code><strong>j</strong></code></span>, <span class="green"><code><strong>k</strong></code></span>, <span class="green"><code><strong>l</strong></code></span> to move around, but it takes a lot of practice for this to become intuitive, and it’s certainly not necessary to be <em>dangerous</em>.</p>
+<p class="footnote"><a id="fn5_16" href="ch05.xhtml#rfn5_16">16.</a> These are not native keybindings (on macOS they would be Command–left arrow and Command–right arrow), which as noted in the introduction to <a href="ch05.xhtml#ch05">Chapter 5</a> makes it harder to learn them. This is just one of many reasons I don’t generally recommend beginners use Vim as their primary editor.</p>
+<section>
+<h4 class="h4" id="ch05lev3sec1">5.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use the arrow keys to navigate to line 4 in the file from <a href="ch05.xhtml#list5-3">Listing 5.3</a>.</p></li>
+<li><p class="number">Use the arrow keys to go to the end and then the beginning of line 4. Cumbersome, eh?</p></li>
+<li><p class="number">Go to the beginning of line 4 by using the command mentioned in the text.</p></li>
+<li><p class="number">Go to the end of line 4 using the command mentioned in the text.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch05lev4">5.4 Saving and Quitting Files</h3>
+<p class="noindent">Having learned a little about moving around and inserting text, now we’re going to learn how to save a file. Our specific example will involve making a useful new Bash <span epub:type="pagebreak" id="page_92"></span>command, but first we have to deal with the current state of the Bash profile file. The text we added in <a href="ch05.xhtml#list5-3">Listing 5.3</a> is gibberish (at least from Bash’s perspective), so what we’d like to do is quit the file without saving any changes. For historical reasons, some Vim commands (especially those having to do with file manipulation) start with a colon <span class="green"><code><strong>:</strong></code></span>, and the normal way to quit a file is with <span class="green"><code><strong>:q&lt;return&gt;</strong></code></span>, but that only works when there are no changes to save. In the present case, we get the error message “No write since last change (add ! to override)”, as shown in <a href="ch05.xhtml#fig5-6">Figure 5.6</a>.</p>
+<figure class="figure" id="fig5-6">
+<img src="graphics/05fig06.jpg" alt="Image" width="744" height="581"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.6:</strong> Trying to quit a file with unsaved changes.</p>
+</figcaption>
+</figure>
+<p class="indent">Following the message’s advice, we can type <span class="green"><code><strong>:q!&lt;return&gt;</strong></code></span> to force Vim to quit without saving any changes (<a href="ch05.xhtml#fig5-7">Figure 5.7</a>), which returns us to the command line.</p>
+<figure class="figure" id="fig5-7">
+<img src="graphics/05fig07.jpg" alt="Image" width="744" height="559"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.7:</strong> Forcing Vim to quit.</p>
+</figcaption>
+</figure>
+<p class="indent">You may have noticed that we’re now in a position to understand the Most Important Vim Command™ introduced in <a href="ch05.xhtml#ch05lev2">Section 5.2</a>: No matter what terrible things you might have done to a file, as long as you type <span class="green"><code><strong>ESC</strong></code></span> (to get out of insertion mode if <span epub:type="pagebreak" id="page_93"></span>necessary)<sup><a id="rfn5_17" href="ch05.xhtml#fn5_17">17</a></sup> followed by <span class="green"><code><strong>:q!&lt;return&gt;</strong></code></span> (to force-quit) you are guaranteed not to do any damage.</p>
+<p class="footnote"><a id="fn5_17" href="ch05.xhtml#rfn5_17">17.</a> Hitting <span class="green"><code><strong>ESC</strong></code></span> while in normal mode does no harm, so it’s a good idea to include this step in any case.</p>
+<p class="indent">Of course, Vim is only really useful if we can save our edits, so let’s add some useful text and then write out the result. As in <a href="ch05.xhtml#ch05lev3">Section 5.3</a>, we’ll work on the <span class="green"><code><strong>.bashrc</strong></code></span> file, and the edit we’ll make will add an <em>alias</em> to our shell. In a computing context, an alias is simply a synonym for a command or set of commands. The main use for Bash aliases is defining shorter commands for commonly used combinations.<sup><a id="rfn5_18" href="ch05.xhtml#fn5_18">18</a></sup></p>
+<p class="footnote"><a id="fn5_18" href="ch05.xhtml#rfn5_18">18.</a> To learn how to write aliases using Zsh, see “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>). TL;DR: The syntax is identical; the only difference is that you edit a file called <span class="green"><code><strong>.zshrc</strong></code></span> instead of <span class="green"><code><strong>.bashrc</strong></code></span>. (Indeed, in Bash you can actually edit a file called <span class="green"><code><strong>.bashrc</strong></code></span> instead, which makes the parallel even clearer.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_94"></span>In this case, we’ll define the command <span class="green"><code><strong>lr</strong></code></span> (short for “list reverse”) as an alias for <span class="green"><code><strong>ls -hartl</strong></code></span>, which is the command to list files and directories using <strong>h</strong>uman-readable values for the sizes (e.g., 29K instead of 29592 for a 29-kilobyte file), including <strong>a</strong>ll of them (even hidden ones), ordered by <strong>r</strong>everse <strong>t</strong>ime, <strong>l</strong>ong form. This command, which as you may recognize from an exercise in <a href="ch03.xhtml#ch03lev1sec1">Section 3.1.1</a>, is useful for seeing which files and directories have recently changed (as well as being, for obvious reasons, one of my personal favorites). After defining the alias, we’ll be able to replace the more verbose</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -hartl</pre>
+<p class="noindent">with the pithier</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> lr</pre>
+<p class="indent">The steps appear as follows:</p>
+<ol class="number">
+<li><p class="number">Press <span class="green"><code><strong>i</strong></code></span> to enter insertion mode.</p></li>
+<li><p class="number">Enter the contents shown in <a href="ch05.xhtml#list5-4">Listing 5.4</a>. (On some systems, the <span class="green"><code><strong>.bashrc</strong></code></span> file may include some pre-existing content, which you can simply leave in place.)</p></li>
+<li><p class="number">Press <span class="green"><code><strong>ESC</strong></code></span> to exit insertion mode.</p></li>
+<li><p class="number">Write the file using <span class="green"><code><strong>:w&lt;return&gt;</strong></code></span>.</p></li>
+<li><p class="number">Quit Vim by typing <span class="green"><code><strong>:q&lt;return&gt;</strong></code></span>.</p></li>
+</ol>
+<p class="indent"><em>Note</em>: If you make any mistakes, you can type <span class="green"><code><strong>ESC</strong></code></span> followed by <span class="green"><code><strong>u</strong></code></span> to <em>undo</em> any of the previous steps. (Most programs use Command-Z or Ctrl-Z to undo things, yet another example of the non-native keybindings used by Vim. In contrast, the editors discussed starting in <a href="ch06.xhtml#ch06">Chapter 6</a> all support native keybindings.)</p>
+<p class="list-head" id="list5-4"><strong>Listing 5.4:</strong> Defining a Bash alias.</p>
+<pre><code><em>~/.bashrc</em></code></pre>
+<div class="box2">
+<pre class="pre"><span class="lgreen">alias</span> <span class="blueg">lr</span><span class="gray">=</span><span class="brown">'ls -hartl'</span></pre>
+</div>
+<p class="indent">After adding the <span class="green"><code><strong>lr</strong></code></span> alias to <span class="green"><code><strong>.bashrc</strong></code></span>, writing the file, and quitting, you may be surprised to find that the command doesn’t yet work:</p>
+<span epub:type="pagebreak" id="page_95"></span>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> lr
+<span class="green">-bash: lr: command not found</span></pre>
+<p class="noindent">This is because we need to tell the shell about the updated Bash profile file by “sourcing” it using the <span class="green"><code><strong>source</strong></code></span> command, as shown in <a href="ch05.xhtml#list5-5">Listing 5.5</a>.<sup><a id="rfn5_19" href="ch05.xhtml#fn5_19">19</a></sup></p>
+<p class="footnote"><a id="fn5_19" href="ch05.xhtml#rfn5_19">19.</a> Incidentally, a bare “dot” is a shorthand for <span class="green"><code><strong>source</strong></code></span>, so in fact you can type <span class="green"><code><strong>. .bashrc</strong></code></span> to obtain the same result. (This usage is unrelated to the use of a dot to refer to the current directory (<a href="ch04.xhtml#ch04lev3">Section 4.3</a>).)</p>
+<p class="list-head" id="list5-5"><strong>Listing 5.5:</strong> Activating the alias by sourcing the Bash profile.</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">source</span> .bashrc</pre>
+</div>
+<p class="noindent">With that, the <span class="green"><code><strong>lr</strong></code></span> command should work as advertised:</p>
+<p class="codelink"><a href="ch05_images.xhtml#p095pro02" id="p095pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> lr
+<span class="green">.</span>
+<span class="green">.</span>
+<span class="green">.</span>
+<span class="green">drwx------+  15 mhartl   staff   510B Sep   4 18:58 Desktop</span>
+<span class="green">-rw-------    1 mhartl   staff    13K Sep   4 19:13 .viminfo</span>
+<span class="green">-rw-r--r--    1 mhartl   staff    46B Sep   4 19:14 .bashrc</span>
+<span class="green">drwxr-xr-x+ 117 mhartl   staff   3.9K Sep   4 19:14 .</span></pre>
+<p class="noindent">By the way, the <span class="green"><code><strong>.bashrc</strong></code></span> file is sourced automatically when we open a new terminal tab or window, so explicit sourcing is necessary only when we want a change to be reflected in the <em>current</em> terminal.</p>
+<section>
+<h4 class="h4" id="ch05lev4sec1">5.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Define an alias <span class="green"><code><strong>g</strong></code></span> for the commonly used <em>case-insensitive grep</em> <span class="green"><code><strong>grep -i</strong></code></span>. What happens if, after making your changes and hitting <span class="green"><code><strong>ESC</strong></code></span>, you issue the command <span class="green"><code><strong>:wq</strong></code></span> instead of <span class="green"><code><strong>:w</strong></code></span> and <span class="green"><code><strong>:q</strong></code></span> separately?</p></li>
+<li><p class="number">You may recall the <span class="green"><code><strong>curl</strong></code></span> command from <a href="ch03.xhtml#ch03lev1">Section 3.1</a>, which lets us interact with URLs via the command line. Define <span class="green"><code><strong>get</strong></code></span> as an alias for <span class="green"><code><strong>curl -OL</strong></code></span>, which is the command to download a file to the local disk (while following any redirects encountered along the way).</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_96"></span>Use the alias from the previous exercise to execute the command shown in <a href="ch05.xhtml#list5-6">Listing 5.6</a>, which downloads a longer text file for use in <a href="ch05.xhtml#ch05lev6">Section 5.6</a>.</p></li>
+</ol>
+<p class="list-head" id="list5-6"><strong>Listing 5.6:</strong> Downloading a longer text file for use in a future section.</p>
+<p class="codelink"><a href="ch05_images.xhtml#p05lis06" id="p05lis06a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> get cdn.learnenough.com/sonnets.txt</pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch05lev5">5.5 Deleting Content</h3>
+<p class="noindent">As with every category of text manipulation, Vim has an enormous number of commands for deleting content, but in this section we’re just going to cover the absolute minimum. We’ll start with deleting single characters, which we can do in normal mode using the <span class="green"><code><strong>x</strong></code></span> command:</p>
+<ol class="number">
+<li><p class="number">Open <span class="green"><code><strong>.bashrc</strong></code></span> and insert the misspelled word <span class="green"><code><strong>aliaes</strong></code></span>.</p></li>
+<li><p class="number">Get back to normal mode by pressing <span class="green"><code><strong>ESC</strong></code></span>.</p></li>
+<li><p class="number">Move the cursor over the <span class="green"><code><strong>e</strong></code></span> in <span class="green"><code><strong>aliaes</strong></code></span> (<a href="ch05.xhtml#fig5-8">Figure 5.8</a>) and press <span class="green"><code><strong>x</strong></code></span>.</p>
+<figure class="figure" id="fig5-8">
+<img src="graphics/05fig08.jpg" alt="Image" width="744" height="567"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.8:</strong> Preparing to delete a letter using <span class="green"><code><strong>x</strong></code></span>.</p>
+</figcaption>
+</figure></li>
+</ol>
+<p class="indent">There are lots of fancy ways to delete text, but by repeatedly pressing <span class="green"><code><strong>x</strong></code></span> it’s easy (if a bit cumbersome) to delete entire words or even entire lines. On the other hand, deleting lines is enough of a special case to merit inclusion. Let’s get rid of the extra <span class="green"><code><strong>alias</strong></code></span> we added by pressing <span class="green"><code><strong>dd</strong></code></span> to delete the line. Voilà ! It should be gone (<a href="ch05.xhtml#fig5-9">Figure 5.9</a>). To get it back, you can press <span class="green"><code><strong>p</strong></code></span> to “put” the line, which also allows you to simulate copying and pasting one line at a time. (Again, this is a minimal subset of Vim; if you decide to get good at it, you’ll learn lots of better ways to do things.)</p>
+<figure class="figure" id="fig5-9">
+<img src="graphics/05fig09.jpg" alt="Image" width="744" height="565"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.9:</strong> The result of deleting a line with <span class="green"><code><strong>dd</strong></code></span>.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch05lev5sec1">5.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using Vim, open a new file called <span class="green"><code><strong>foo.txt</strong></code></span>.</p></li>
+<li><p class="number">Insert the string “A leopard can’t change it’s spots.” (<a href="ch05.xhtml#fig5-10">Figure 5.10</a>).<sup><a id="rfn5_20" href="ch05.xhtml#fn5_20">20</a></sup></p>
+<p class="footnote"><a id="fn5_20" href="ch05.xhtml#rfn5_20">20.</a> Image courtesy of apoplexia/123rf.com.</p>
+<figure class="figure" id="fig5-10">
+<img src="graphics/05fig10.jpg" alt="Image" width="744" height="558"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.10:</strong> This animal’s spot-changing abilities are frequently questioned.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Using the <span class="green"><code><strong>x</strong></code></span> key, delete the character necessary to correct the mistake in the line you just entered. (If you can’t find the error, refer to <a href="ch05.xhtml#tab5-1">Table 5.1</a>.)</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_97"></span>Use <span class="green"><code><strong>dd</strong></code></span> to delete the line, then use <span class="green"><code><strong>p</strong></code></span> to paste it repeatedly into the document.</p></li>
+<li><p class="number">Save the document and quit using a single command. <em>Hint</em>: See the first exercise in <a href="ch05.xhtml#ch05lev4sec1">Section 5.4.1</a>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch05lev6">5.6 Editing Large Files</h3>
+<p class="noindent">The final skills needed for your Minimum Viable Vim involve navigating large files. If you didn’t download <span class="green"><code><strong>sonnets.txt</strong></code></span> in the exercises from <a href="ch05.xhtml#ch05lev4">Section 5.4</a>, you should so do now (<a href="ch05.xhtml#list5-7">Listing 5.7</a>).<sup><a id="rfn5_21" href="ch05.xhtml#fn5_21">21</a></sup></p>
+<p class="footnote"><a id="fn5_21" href="ch05.xhtml#rfn5_21">21.</a> If you completed the exercises in <a href="ch06.xhtml#ch06lev7sec1">Section 6.7.1</a>, you can use your own custom <span class="green"><code><strong>get</strong></code></span> alias in place of <span class="green"><code><strong>curl -OL</strong></code></span>.</p>
+<span epub:type="pagebreak" id="page_98"></span>
+<p class="list-head" id="list5-7"><strong>Listing 5.7:</strong> Downloading Shakespeare’s <em>Sonnets</em>.</p>
+<p class="codelink"><a href="ch05_images.xhtml#p05lis07" id="p05lis07a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> curl -OL https://cdn.learnenough.com/sonnets.txt</pre>
+</div>
+<p class="noindent">The resulting file contains the full text of Shakespeare’s <em>Sonnets</em>, which is 2620 lines, 17670 words, and 95635 characters long, which we can verify using the word count command <span class="green"><code><strong>wc</strong></code></span> (<a href="ch03.xhtml#ch03lev2sec1">Section 3.2.1</a>):</p>
+<p class="codelink"><a href="ch05_images.xhtml#p098pro01" id="p098pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> wc sonnets.txt
+   <span class="green">2620   17670   95635 sonnets.txt</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_99"></span>On many systems, Vim shows some of the same basic stats upon opening the file:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> vim sonnets.txt</pre>
+<p class="noindent">The result on my system appears in <a href="ch05.xhtml#fig5-11">Figure 5.11</a>. Because of its length, this file is far too long to navigate conveniently by hand.</p>
+<figure class="figure" id="fig5-11">
+<img src="graphics/05fig11.jpg" alt="Image" width="744" height="577"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.11:</strong> Some file stats displayed upon starting Vim.</p>
+</figcaption>
+</figure>
+<p class="indent">As before, there are lots of commands for moving around, but I find that the most useful ones involve moving a screen at a time, moving to the beginning or end, or searching. The commands to move one screen at a time are Ctrl-F (Forward) and Ctrl-B (Backward). To move to the end of the file, we can use <span class="green"><code><strong>G</strong></code></span>, and to move to the beginning we can use <span class="green"><code><strong>1G</strong></code></span>. Finally, perhaps the most powerful navigation command is <em>search</em>, which involves typing slash <span class="green"><code><strong>/</strong></code></span> followed by the string you want to find. The trick <span epub:type="pagebreak" id="page_100"></span>is to type <span class="green"><code><strong>/&lt;string&gt;</strong></code></span> followed by return, and then press <span class="green"><code><strong>n</strong></code></span> to go to the next match (if any).</p>
+<p class="indent">This might all sound a little familiar, because it’s the same as the interface to the <span class="green"><code><strong>less</strong></code></span> program (<a href="ch03.xhtml#ch03lev3">Section 3.3</a>).<sup><a id="rfn5_22" href="ch05.xhtml#fn5_22">22</a></sup> This is one of the advantages of learning basic Unix commands: Many of the patterns recur in many different contexts.</p>
+<p class="footnote"><a id="fn5_22" href="ch05.xhtml#rfn5_22">22.</a> Depending on your system, there may be minor differences between the Vim and <span class="green"><code><strong>less</strong></code></span> interfaces. For example, on my system the slash operator is case-sensitive when used with <span class="green"><code><strong>less</strong></code></span> and case-insensitive when used with Vim. As usual, use your technical sophistication (<a href="ch05.xhtml#box5-2">Box 5.2</a>) to resolve any discrepancies.</p>
+<section>
+<h4 class="h4" id="ch05lev6sec1"><span epub:type="pagebreak" id="page_101"></span>5.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">With <span class="green"><code><strong>sonnets.txt</strong></code></span> open in Vim, move down three screens and then back up three screens.</p></li>
+<li><p class="number">Go to the end of the file. What is the last line of the final sonnet?</p></li>
+<li><p class="number">Navigate back to the top to change the old-style name “Shake-speare” on line 1 of <span class="green"><code><strong>sonnets.txt</strong></code></span> to the more modern “Shakespeare”, and save the result.</p></li>
+<li><p class="number">Use Vim’s search feature to discover which sonnet contains references to Cupid, the Roman god of love.</p></li>
+<li><p class="number">Confirm that <span class="green"><code><strong>18G</strong></code></span> goes to the final line of the first sonnet. What do you suppose that command does? <em>Hint</em>: Recall that <span class="green"><code><strong>1G</strong></code></span> goes to the beginning of the file, i.e., line 1.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch05lev7">5.7 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch05.xhtml#tab5-1">Table 5.1</a>. If you’re interested in learning more about Vim, dropping “learn vim” into a search engine is a good bet. The Interactive Vim tutorial (<a href="https://www.openvim.com/">https://www.openvim.com/</a>) is especially recommended.</p>
+<figure class="table" id="tab5-1">
+<p class="title-t"><strong>Table 5.1:</strong> Important Vim commands from <a href="ch05.xhtml#ch05">Chapter 5</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>ESC:q!&lt;return&gt;</code></p></td>
+<td><p class="tab-para">The Most Important Vim Command™</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>i</code></p></td>
+<td><p class="tab-para">Exit normal mode, enter insertion mode</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ESC</code></p></td>
+<td><p class="tab-para">Exit insertion mode, enter normal mode</p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Arrow keys</p></td>
+<td><p class="tab-para">Move around</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>0</code></p></td>
+<td><p class="tab-para">Go to beginning of line</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>$</code></p></td>
+<td><p class="tab-para">Go to end of line</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:w&lt;return&gt;</code></p></td>
+<td><p class="tab-para">Save (write) a file</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:q&lt;return&gt;</code></p></td>
+<td><p class="tab-para">Quit a file (must be saved)</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:wq&lt;return&gt;</code></p></td>
+<td><p class="tab-para">Write and quit a file</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:q!&lt;return&gt;</code></p></td>
+<td><p class="tab-para">Force-quit a file, discarding any changes</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>u</code></p></td>
+<td><p class="tab-para">Undo</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>x</code></p></td>
+<td><p class="tab-para">Delete the character under the cursor</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>dd</code></p></td>
+<td><p class="tab-para">Delete a line</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>p</code></p></td>
+<td><p class="tab-para">Put (paste) deleted text</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>it's spots</code></p></td>
+<td><p class="tab-para">No, you mean <code>its spots</code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>Ctrl-F</code></p></td>
+<td><p class="tab-para">Go forward one screen</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>Ctrl-B</code></p></td>
+<td><p class="tab-para">Go backward one screen</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>G</code></p></td>
+<td><p class="tab-para">Go to last line</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>1G</code></p></td>
+<td><p class="tab-para">Go to first line</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>/&lt;string&gt;</code></p></td>
+<td><p class="tab-para">Search for <code>&lt;string&gt;</code></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<section>
+<h4 class="h4" id="ch05lev7sec1">5.7.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Open <span class="green"><code><strong>sonnets.txt</strong></code></span>.</p></li>
+<li><p class="number">Go to the last line.</p></li>
+<li><p class="number">Go to the end of the last line.</p></li>
+<li><p class="number">Make a new line that says “That’s all, folks! Bard out. &lt;drops mic&gt;”. Make sure to move the cursor one space to the right so you don’t drag the final period along.</p></li>
+<li><p class="number">Write out the file.</p></li>
+<li><p class="number">Undo your changes.</p></li>
+<li><p class="number">Write out and quit the file.</p></li>
+<li><p class="number">Reopen the file and type <span class="green"><code><strong>2620dd</strong></code></span>.</p></li>
+<li><p class="number">Realize that you just deleted the entire file contents, and apply the Most Important Vim Command™ to ensure that no damage is done.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_102"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

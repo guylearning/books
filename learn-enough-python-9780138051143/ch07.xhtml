@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch07"><span epub:type="pagebreak" id="page_169"></span>Chapter 7</h2>
+<h2 class="h2a">Objects and Classes</h2>
+<p class="noindent">So far in this tutorial, we’ve seen many examples of Python objects. In this chapter, we’ll learn how to use Python <em>classes</em> to make objects of our own, which have both data (attributes) and functions (methods) attached to them. We’ll also learn how to define a custom iterator for our class. Finally, we’ll learn how to reuse functionality with <em>inheritance</em>.</p>
+<section>
+<h3 class="h3" id="sec7_1">7.1 Defining Classes</h3>
+<p class="noindent">Classes are a way of organizing data and functions into a single convenient object. In Python, we can create a class of our own using two basic elements:</p>
+<ol class="number">
+<li><p class="number">Use the <span class="pd_green-d"><code><strong>class</strong></code></span> keyword to define the class.</p></li>
+<li><p class="number">Use the special <span class="pd_green-d"><code><strong>__init__</strong></code></span> method (often called an <em>initializer function</em>) to specify how to initialize a class.</p></li>
+</ol>
+<p class="indent">Our concrete example will be a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class with a <span class="pd_green-d"><code><strong>content</strong></code></span> attribute, which we’ll put in <span class="pd_green-d"><code><strong>palindrome.py</strong></code></span> (last seen in <a href="ch05.xhtml#sec5_3">Section 5.3</a>). Let’s build it up piece by piece (for simplicity we’ll omit the <span class="pd_green-d"><code><strong>reverse()</strong></code></span> and <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> functions for the moment). The first element is the <span class="pd_green-d"><code><strong>class</strong></code></span> itself (<a href="ch07.xhtml#ch7list1">Listing 7.1</a>).</p>
+<p class="listing" id="ch7list1"><strong>Listing 7.1:</strong> Defining a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f169-01" id="f169-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+<span epub:type="pagebreak" id="page_170"></span>
+<span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:
+    phrase <span class="pd_gray">=</span> Phrase()
+    <span class="pd_green">print</span>(phrase)</code></pre>
+</div>
+<p class="noindent">In <a href="ch07.xhtml#ch7list1">Listing 7.1</a>, we’ve created an <em>instance</em> (particular object) of the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class using</p>
+<pre class="pre1"><code>phrase <span class="pd_gray">=</span> Phrase()</code></pre>
+<p class="noindent">which automatically calls <span class="pd_green-d"><code><strong>__init__</strong></code></span> under the hood. The strange-looking syntax</p>
+<pre class="pre1"><code><span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:</code></pre>
+<p class="noindent">arranges to execute the subsequent code if the file is run at the command line but not when the class is loaded into other files. This convention is very much Pythonic but can seem a bit obscure; most Python developers just learn this trick by example, but see the official documentation (<a href="https://docs.python.org/3/library/__main__.html">https://docs.python.org/3/library/__main__.html</a>) if you’re interested in an explanation.</p>
+<p class="indent">Meanwhile, the final <span class="pd_green-d"><code><strong>print()</strong></code></span> in <a href="ch07.xhtml#ch7list1">Listing 7.1</a> lets us see some concrete (if not especially instructive) results at the command line:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f170-01" id="f170-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span> python3 palindrome.py
+<span class="pd_green-d">&lt;__main__.Phrase object at 0x10267afa0&gt;</span></code></pre>
+<p class="noindent">This shows Python’s abstract internal representation of a bare instance of the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class. (Should your results match exactly?) We also see where the value <span class="pd_green-d"><code><strong>"__main__"</strong></code></span> comes from in <span class="pd_green-d"><code><strong>if __name__ == "__main__"</strong></code></span>—it’s the “top-level code environment”, which is the environment (containing classes, functions, variables, etc.) in which Python shell scripts are executed.</p>
+<p class="indent">We’ll start filling in <a href="ch07.xhtml#ch7list1">Listing 7.1</a> in a moment, but before moving on we should note that, unlike variables and methods, Python classes use <em>CamelCase</em> (with a leading capital) instead of snake_case (<a href="ch02.xhtml#sec2_2">Section 2.2</a>). CamelCase, which is named for the resemblance of the capital letters to humps of a camel (<a href="ch07.xhtml#ch7fig1">Figure 7.1</a><sup><a id="fn7_1a" href="ch07.xhtml#fn7_1">1</a></sup>), involves separating words using capitalization rather than with underscores. It’s hard to tell with <span class="pd_green-d"><code><strong>Phrase</strong></code></span>, <span epub:type="pagebreak" id="page_171"></span>since it’s only a single word, but we’ll see the principle more clearly illustrated in <a href="ch07.xhtml#sec7_3">Section 7.3</a>, which defines a class called <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>.</p>
+<figure class="image-c" id="ch7fig1">
+<img src="graphics/07fig01.jpg" alt="images" width="488" height="392"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.1:</strong> The origin of CamelCase.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn7_1" href="ch07.xhtml#fn7_1a">1.</a> Image courtesy of Utsav Academy and Art Studio. Pearson India Education Services Pvt. Ltd.</p>
+<p class="indent">Eventually, we’ll use <span class="pd_green-d"><code><strong>Phrase</strong></code></span> to represent a phrase like “Madam, I’m Adam.” that can qualify as a palindrome even if it’s not literally the same forward and backward. At first, though, all we’ll do is define a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> initializer function that takes in an argument (the <span class="pd_green-d"><code><strong>content</strong></code></span>) and sets a <em>data attribute</em> called <span class="pd_green-d"><code><strong>content</strong></code></span>.<sup><a id="fn7_2a" href="ch07.xhtml#fn7_2">2</a></sup> As we’ll see, we can access an object’s attributes using the same dot notation used for methods.</p>
+<p class="footnote"><a id="fn7_2" href="ch07.xhtml#fn7_2a">2.</a> Python data attributes correspond to Ruby <em>instance variables</em> and JavaScript <em>properties</em>. Where Ruby uses the <span class="pd_green-d"><code><strong>@</strong></code></span> symbol and JavaScript uses <span class="pd_green-d"><code><strong>this</strong></code></span> (followed by a dot), Python uses <span class="pd_green-d"><code><strong>self</strong></code></span> (followed by a dot).</p>
+<p class="indent">In order to add the attribute, we first need to define the <span class="pd_green-d"><code><strong>__init__</strong></code></span> method that gets called when we initialize an object using <span class="pd_green-d"><code><strong>Phrase()</strong></code></span> (<a href="ch07.xhtml#ch7list2">Listing 7.2</a>). The use of double underscores is a convention in Python used to indicate “magic” methods used internally for defining object behavior. We’ll see a couple more examples of such magic or “dunder” (<strong>d</strong>ouble-<strong>under</strong>score) methods in <a href="ch07.xhtml#sec7_2">Section 7.2</a>. (Underscores, both double and single, have special meaning for Python attributes and methods; see <a href="ch07.xhtml#sec7_4_1">Section 7.4.1</a> for more.)</p>
+<span epub:type="pagebreak" id="page_172"></span>
+<p class="listing" id="ch7list2"><strong>Listing 7.2:</strong> Defining <span class="pd_green-d"><code><strong>__init__</strong></code></span>.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f172-01" id="f172-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+<span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:
+    phrase <span class="pd_gray">=</span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)
+    <span class="pd_green">print</span>(phrase<span class="pd_gray">.</span>content)</code></pre>
+</div>
+<p class="noindent"><a href="ch07.xhtml#ch7list2">Listing 7.2</a> initializes a data attribute called <span class="pd_green-d"><code><strong>content</strong></code></span>, which is distinguished by being attached to the <span class="pd_green-d"><code><strong>self</strong></code></span> object and inside the class represents the object itself.<sup><a id="fn7_3a" href="ch07.xhtml#fn7_3">3</a></sup> Note that calling them both <span class="pd_green-d"><code><strong>content</strong></code></span> is just a convention; we could have written this as well:</p>
+<p class="footnote"><a id="fn7_3" href="ch07.xhtml#fn7_3a">3.</a> If you ever find yourself writing classes with a large number of attributes, take a look at the <span class="pd_green-d"><code><strong>dataclasses</strong></code></span> module. Data classes use a special <em>decorator</em> called <span class="pd_green-d"><code><strong>@dataclass</strong></code></span> to create methods like <span class="pd_green-d"><code><strong>__init__</strong></code></span> automatically, saving you the trouble of typing out a bunch of <span class="pd_green-d"><code><strong>self.&lt;something&gt; = &lt;something&gt;</strong></code></span> initializations.</p>
+<pre class="pre1"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, foo):
+    <span class="pd_green">self</span><span class="pd_gray">.</span>bar <span class="pd_gray">=</span> foo</code></pre>
+<p class="noindent">That would probably be confusing to human readers but wouldn’t bother Python one bit.</p>
+<p class="indent">With the definition in <a href="ch07.xhtml#ch7list2">Listing 7.2</a>, we now have a working example:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f172-02" id="f172-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 palindrome.py
+<span class="pd_green-d">Madam, I'm Adam.</span></code></pre>
+<p class="noindent">We can also now assign directly to <span class="pd_green-d"><code><strong>content</strong></code></span> using the dot notation, as seen in <a href="ch07.xhtml#ch7list3">Listing 7.3</a>.</p>
+<p class="listing" id="ch7list3"><strong>Listing 7.3:</strong> Assigning to an object attribute.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f172-03" id="f172-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+<span epub:type="pagebreak" id="page_173"></span>
+<span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:
+    phrase <span class="pd_gray">=</span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)
+    <span class="pd_green">print</span>(phrase<span class="pd_gray">.</span>content)
+
+    phrase<span class="pd_gray">.</span>content <span class="pd_gray">=</span> <span class="pd_red">"Able was I, ere I saw Elba."</span>
+    <span class="pd_green">print</span>(phrase<span class="pd_gray">.</span>content)</code></pre>
+</div>
+<p class="noindent">The result is as you probably can guess:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f173-01" id="f173-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 palindrome.py
+<span class="pd_green-d">Madam, I'm Adam.</span>
+<span class="pd_green-d">Able was I, ere I saw Elba.</span></code></pre>
+<p class="indent">At this point, we’re ready to restore the <span class="pd_green-d"><code><strong>reverse()</strong></code></span> and <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> functions in our initial definition of <span class="pd_green-d"><code><strong>Phrase</strong></code></span>, as shown in <a href="ch07.xhtml#ch7list4">Listing 7.4</a> (which also deletes the calls to <span class="pd_green-d"><code><strong>print()</strong></code></span> and related lines, though you are welcome to keep them if you like since they will be executed only when the file is run as a script due to the <span class="pd_green-d"><code><strong>if __name__ == "__main__"</strong></code></span> trick).</p>
+<p class="listing" id="ch7list4"><strong>Listing 7.4:</strong> Our initial <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class definition.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f173-02" id="f173-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(string):
+    <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+    processed_content <span class="pd_gray">=</span> string<span class="pd_gray">.</span>lower()
+    <span class="pd_green"><strong>return</strong></span> processed_content <span class="pd_gray">==</span> reverse(processed_content)</code></pre>
+</div>
+<p class="noindent">Just as a reality check, it’s a good idea to run it in the REPL to catch any syntax errors, etc.:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f173-03" id="f173-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">(venv) $ source venv/bin/activate
+(venv) $ python3</span>
+<span epub:type="pagebreak" id="page_174"></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>palindrome</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"Racecar"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase<span class="pd_gray">.</span>content
+<span class="pd_green-d">'Racecar'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(phrase<span class="pd_gray">.</span>content)
+<span class="pd_green-d">True</span></code></pre>
+<p class="indent">As a next step, we’ll move the <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> function into the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> object itself, adding it as a method. (Because <span class="pd_green-d"><code><strong>reverse()</strong></code></span> is of potentially general utility, we’ll leave it outside the class. Note that it is available inside the class even if placed after the class definition.) The only things we need to do are (1) change the method to take zero arguments and (2) use the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> content instead of the variable <span class="pd_green-d"><code><strong>string</strong></code></span>. Exactly how to do this second step is shown in <a href="ch07.xhtml#ch7list5">Listing 7.5</a>.</p>
+<p class="listing" id="ch7list5"><strong>Listing 7.5:</strong> Moving <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> into the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f174-01" id="f174-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+       <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+       processed_content <span class="pd_gray">=</span> <span class="pd_green">self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+       <span class="pd_green"><strong>return</strong></span> processed_content <span class="pd_gray">==</span> reverse(processed_content)
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+<span class="b-y">    <span class="pd_red"><em>"""Reverse a string."""</em></span></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="noindent">As with the assignment in <a href="ch07.xhtml#ch7list2">Listing 7.2</a>, <a href="ch07.xhtml#ch7list5">Listing 7.5</a> shows that inside the <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method we can access the value of <span class="pd_green-d"><code><strong>content</strong></code></span> through <span class="pd_green-d"><code><strong>self</strong></code></span>.</p>
+<p class="indent">The result of <a href="ch07.xhtml#ch7list5">Listing 7.5</a> is that we can now call <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> directly on a phrase instance. After reloading the <span class="pd_green-d"><code><strong>palindrome</strong></code></span> module as in <a href="ch05.xhtml#sec5_3">Section 5.3</a>, we can confirm in the REPL:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f174-02" id="f174-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>importlib</strong></span> <span class="pd_green"><strong>import</strong></span> reload
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"Racecar"</span>)
+<span epub:type="pagebreak" id="page_175"></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase<span class="pd_gray">.</span>ispalindrome()
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">It worked! A <span class="pd_green-d"><code><strong>phrase</strong></code></span> instance initialized with the string “Racecar” knows that it’s a palindrome (<a href="ch07.xhtml#ch7fig2">Figure 7.2</a><sup><a id="fn7_4a" href="ch07.xhtml#fn7_4">4</a></sup>).</p>
+<figure class="image-c" id="ch7fig2">
+<img src="graphics/07fig02.jpg" alt="images" width="638" height="365"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.2:</strong> A Formula One palindrome.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn7_4" href="ch07.xhtml#fn7_4a">4.</a> Image courtesy of Msyaraafiq/Shutterstock.</p>
+<p class="indent">The palindrome detector in <a href="ch07.xhtml#ch7list5">Listing 7.5</a> is fairly rudimentary, but we now have a good foundation for building (and testing) a more sophisticated palindrome detector in <a href="ch08.xhtml#ch08">Chapter 8</a>.</p>
+<section>
+<h4 class="h4" id="sec7_1_1">7.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By filling in the code in <a href="ch07.xhtml#ch7list6">Listing 7.6</a>, add a <span class="pd_green-d"><code><strong>louder</strong></code></span> method to the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> object that returns a LOUDER (all-caps) version of the content. Confirm in the REPL that the result appears as in <a href="ch07.xhtml#ch7list7">Listing 7.7</a>. <em>Hint</em>: Use the appropriate string method from <a href="ch02.xhtml#sec2_5">Section 2.5</a>.</p></li>
+<li><p class="number">Restore the <span class="pd_green-d"><code><strong>if __name__ == "__main__"</strong></code></span> material from <a href="ch07.xhtml#ch7list3">Listing 7.3</a> and confirm that it is <em>not</em> run when importing <span class="pd_green-d"><code><strong>palindrome.py</strong></code></span>.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_176"></span>
+<p class="listing" id="ch7list6"><strong>Listing 7.6:</strong> Making the content LOUDER.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f176-01" id="f176-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        processed_content <span class="pd_gray">=</span> <span class="pd_green">self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+        <span class="pd_green"><strong>return</strong></span> processed_content <span class="pd_gray">==</span> reverse(processed_content)
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">louder</span>(<span class="pd_green">self</span>):
+      <span class="pd_red"><em>"""Make the phrase LOUDER."""</em></span>
+<span class="b-y">      <span class="pd_green"><em># FILL IN</em></span></span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="listing" id="ch7list7"><strong>Listing 7.7:</strong> Using <span class="pd_green-d"><code><strong>louder()</strong></code></span> in the REPL.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f176-02" id="f176-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> p <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"yo adrian!"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> p<span class="pd_gray">.</span>louder()
+<span class="pd_green-d">'YO ADRIAN!'</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_2">7.2 Custom Iterators</h3>
+<p class="noindent">Previously in this tutorial, we’ve seen how to iterate through several different Python objects, including strings (<a href="ch02.xhtml#sec2_6">Section 2.6</a>), lists (<a href="ch03.xhtml#sec3_5">Section 3.5</a>), and dictionaries (<a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>). We also encountered iterators directly in <a href="ch05.xhtml#sec5_3">Section 5.3</a>. In this section, we’ll learn how to add an iterator to a custom class as well.</p>
+<p class="indent">Using the class defined in <a href="ch07.xhtml#ch7list5">Listing 7.5</a>, we can iterate through the content directly (since it’s just a string):</p>
+<p class="codelink"><a href="ch07_images.xhtml#f176-03" id="f176-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"Racecar"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> phrase<span class="pd_gray">.</span>content:
+<span epub:type="pagebreak" id="page_177"></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(c)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">R
+a
+c
+e
+c
+a
+r</span></code></pre>
+<p class="noindent">This is roughly analogous to iterating through the keys of a dictionary using</p>
+<p class="codelink"><a href="ch07_images.xhtml#f177-01" id="f177-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>for</strong></span> key <span class="pd_pink"><strong>in</strong></span> dictionary<span class="pd_gray">.</span>keys():    <span class="pd_blue1"><em># Not Pythonic</em></span>
+    <span class="pd_green">print</span>(key)</code></pre>
+<p class="noindent">But recall from <a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a> that this works without calling the <span class="pd_green-d"><code><strong>keys()</strong></code></span> method:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f177-02" id="f177-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>for</strong></span> key <span class="pd_pink"><strong>in</strong></span> dictionary:           <span class="pd_blue1"><em># Pythonic</em></span>
+    <span class="pd_green">print</span>(key)</code></pre>
+<p class="noindent">It would be nice if we could do the same thing with a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> instance, like this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f177-03" id="f177-03a">Click here to view code image</a></p>
+<pre class="pre1"><code>phrase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"Racecar"</span>)
+<span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> phrase:
+    <span class="pd_green">print</span>(c)</code></pre>
+<p class="indent">We can do this with a custom iterator. The general requirements for an iterator are twofold:</p>
+<ol class="number">
+<li><p class="number">An <span class="pd_green-d"><code><strong>__iter__</strong></code></span> method that does any necessary setup and then returns <span class="pd_green-d"><code><strong>self</strong></code></span></p></li>
+<li><p class="number">A <span class="pd_green-d"><code><strong>__next__</strong></code></span> method that returns the next element in the sequence</p></li>
+</ol>
+<p class="noindent">Note that, as with <span class="pd_green-d"><code><strong>__init__</strong></code></span>, the methods to perform iteration use the double-underscore convention to indicate that they are magic (dunder) methods used to define the behavior of Python objects.</p>
+<p class="indent">In our particular case, we also need the <span class="pd_green-d"><code><strong>iter()</strong></code></span> function, which turns an ordinary object into an iterator. We can see how this works with a string in the REPL:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f177-04" id="f177-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase_iterator <span class="pd_gray">=</span> <span class="pd_green">iter</span>(<span class="pd_red">"foo"</span>)    <span class="pd_blue1"><em># makes a string iterator</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">type</span>(phrase_iterator)            <span class="pd_blue1"><em># use type() to find the type</em></span>
+<span epub:type="pagebreak" id="page_178"></span>
+<span class="pd_green-d">&lt;class 'str_iterator'&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">next</span>(phrase_iterator)
+<span class="pd_green-d">'f'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">next</span>(phrase_iterator)
+<span class="pd_green-d">'o'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">next</span>(phrase_iterator)
+<span class="pd_green-d">'o'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">next</span>(phrase_iterator)
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">StopIteration</span></code></pre>
+<p class="noindent">We see from the <span class="pd_green-d"><code><strong>type()</strong></code></span> function that <span class="pd_green-d"><code><strong>iter()</strong></code></span> takes in a string and returns a string iterator. Calling <span class="pd_green-d"><code><strong>next()</strong></code></span> on the iterator yields the next element in the sequence until it reaches the end, as indicated by the special <span class="pd_green-d"><code><strong>StopIteration</strong></code></span> exception.</p>
+<p class="indent">Our strategy for adding an iterator to the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class looks like this:</p>
+<ol class="number">
+<li><p class="number">In <span class="pd_green-d"><code><strong>__iter__</strong></code></span>, create a phrase iterator based on the <span class="pd_green-d"><code><strong>content</strong></code></span> attribute using <span class="pd_green-d"><code><strong>iter()</strong></code></span>, and then return <span class="pd_green-d"><code><strong>self</strong></code></span> as required by the way Python iterators work.</p></li>
+<li><p class="number">In <span class="pd_green-d"><code><strong>__next__</strong></code></span>, call <span class="pd_green-d"><code><strong>next()</strong></code></span> on the phrase iterator and return the result.</p></li>
+</ol>
+<p class="indent">Converting these steps to code gives the result in <a href="ch07.xhtml#ch7list8">Listing 7.8</a>.</p>
+<p class="listing" id="ch7list8"><strong>Listing 7.8:</strong> Adding an iterator to the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f178-01" id="f178-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        processed_content <span class="pd_gray">=</span> <span class="pd_green">self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+        <span class="pd_green"><strong>return</strong></span> processed_content <span class="pd_gray">==</span> reverse(processed_content)
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_bluea">__iter__</span>(<span class="pd_green">self</span>):</span>
+<span class="b-y">        <span class="pd_green">self</span>.phrase_iterator = <span class="pd_green">iter</span>(<span class="pd_green">self</span>.content)</span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self</span></span>
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_bluea">__next__</span>(<span class="pd_green">self</span>):</span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> next</span>(<span class="pd_green">self</span>.phrase_iterator)</span>
+<span epub:type="pagebreak" id="page_179"></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">With the code in <a href="ch07.xhtml#ch7list8">Listing 7.8</a>, we can reload the <span class="pd_green-d"><code><strong>palindrome</strong></code></span> module to see if it worked:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f179-01" id="f179-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> phrase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>Phrase(<span class="pd_red">"Racecar"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> phrase:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(c)
+<span class="pd_green-d">R
+a
+c
+e
+c
+a
+r</span></code></pre>
+<p class="noindent">Yup! We can now iterate through a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> object without having to specify the <span class="pd_green-d"><code><strong>content</strong></code></span> attribute explicitly.</p>
+<section>
+<h4 class="h4" id="sec7_2_1">7.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using the REPL, determine if <span class="pd_green-d"><code><strong>list(phrase)</strong></code></span> works after the custom iterator has been defined as in <a href="ch07.xhtml#ch7list8">Listing 7.8</a>. What about joining on the empty string using <span class="pd_green-d"><code><strong>"".join(phrase)</strong></code></span>?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_3">7.3 Inheritance</h3>
+<p class="noindent">When learning about Python classes, it’s useful to investigate the <em>class hierarchy</em> using the <span class="pd_green-d"><code><strong>__class__</strong></code></span> and <span class="pd_green-d"><code><strong>__mro__</strong></code></span> attributes, where the latter stands for <em>method resolution order</em>, which turns out to print the exact hierarchy we need.</p>
+<p class="indent">Let’s look at an example of what this means in the case of a familiar type of object, a string:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f179-02" id="f179-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">=</span> <span class="pd_red">"foobar"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">type</span>(s)        <span class="pd_blue1"><em># one way to get the class</em></span>
+<span class="pd_green-d">&lt;class 'str'&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s<span class="pd_gray">.</span><span class="pd_blue">__class__</span>    <span class="pd_blue1"><em># another way to get the class</em></span>
+<span class="pd_green-d">&lt;class 'str'&gt;</span>
+<span epub:type="pagebreak" id="page_180"></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s<span class="pd_gray">.</span><span class="pd_blue">__class_</span><span class="pd_gray">_.</span><span class="pd_blue">__mro__</span>
+<span class="pd_green-d">(&lt;class 'str'&gt;, &lt;class 'object'&gt;)</span></code></pre>
+<p class="noindent">What this tells us is that a string is of class <span class="pd_green-d"><code><strong>str</strong></code></span>, which in turn is of type <span class="pd_green-d"><code><strong>object</strong></code></span>. The latter is known as a <em>superclass</em> because it is usually thought of as being “above” the <span class="pd_green-d"><code><strong>str</strong></code></span> class.</p>
+<p class="indent">A diagram of the resulting class hierarchy appears in <a href="ch07.xhtml#ch7fig3">Figure 7.3</a>. We see here that the superclass of <span class="pd_green-d"><code><strong>str</strong></code></span> is <span class="pd_green-d"><code><strong>object</strong></code></span>, which is where the hierarchy ends. This pattern is true of every Python object: Trace back the class hierarchy far enough and you’ll always reach <span class="pd_green-d"><code><strong>object</strong></code></span>, which has no superclass itself.</p>
+<figure class="image-c" id="ch7fig3">
+<img src="graphics/07fig03.jpg" alt="images" width="378" height="292"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.3:</strong> The inheritance hierarchy for the <span class="pd_green-d"><code><strong>str</strong></code></span> class.</p>
+</figcaption>
+</figure>
+<p class="indent">The way Python’s class hierarchy works is that each class <em>inherits</em> the attributes and methods of classes further up in the hierarchy. For example, we’ve just seen how to find the class of an object of type <span class="pd_green-d"><code><strong>str</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"honey badger"</span><span class="pd_gray">.</span><span class="pd_blue">__class__</span>
+<span class="pd_green-d">&lt;class 'str'&gt;</span></code></pre>
+<p class="noindent">But where does the <span class="pd_green-d"><code><strong>__class__</strong></code></span> attribute come from? The answer is that <span class="pd_green-d"><code><strong>str</strong></code></span> inherits <span class="pd_green-d"><code><strong>__class__</strong></code></span> from <span class="pd_green-d"><code><strong>object</strong></code></span> itself:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">object</span>()<span class="pd_gray">.</span><span class="pd_blue">__class__</span>
+<span class="pd_green-d">&lt;class 'object'&gt;</span></code></pre>
+<p class="noindent">The class of each object with <span class="pd_green-d"><code><strong>object</strong></code></span> as superclass stores its class name in <span class="pd_green-d"><code><strong>__class__</strong></code></span>.</p>
+<span epub:type="pagebreak" id="page_181"></span>
+<p class="indent">Let’s return now to the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class we defined in <a href="ch07.xhtml#sec7_1">Section 7.1</a>. As presently defined, <span class="pd_green-d"><code><strong>Phrase</strong></code></span> <em>has a</em> <span class="pd_green-d"><code><strong>content</strong></code></span> attribute, which in the terminology of object-oriented programming is known as a <em>has-a</em> relationship. Such a design is known as <em>composition</em>, where a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> is composed of a <span class="pd_green-d"><code><strong>content</strong></code></span> attribute (possibly among other things). Another way of looking at the situation is to say that a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> <em>is a</em> string, which is known as an <em>is-a relationship</em>. In this case, we could arrange for the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class to inherit from Python’s native string class, called <span class="pd_green-d"><code><strong>str</strong></code></span>, using code as in <a href="ch07.xhtml#ch7list9">Listing 7.9</a>.<sup><a id="fn7_5a" href="ch07.xhtml#fn7_5">5</a></sup> A visual representation of the corresponding class hierarchies appears in <a href="ch07.xhtml#ch7fig4">Figure 7.4</a> and <a href="ch07.xhtml#ch7fig5">Figure 7.5</a> (with <span class="pd_green-d"><code><strong>Phrase</strong></code></span> in place of <span class="pd_green-d"><code><strong>palindrome.Phrase</strong></code></span> for brevity).</p>
+<p class="footnote"><a id="fn7_5" href="ch07.xhtml#fn7_5a">5.</a> As we’ll see in <a href="ch07.xhtml#sec7_4">Section 7.4</a>, the way to implement inheritance in Python is simply to include the superclass as an argument (in this case, <span class="pd_green-d"><code><strong>str</strong></code></span>).</p>
+<figure class="image-c" id="ch7fig4">
+<img src="graphics/07fig04.jpg" alt="images" width="378" height="293"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.4:</strong> The class hierarchy for the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class with composition.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch7fig5">
+<img src="graphics/07fig05.jpg" alt="images" width="378" height="442"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.5:</strong> The class hierarchy for the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class with inheritance from <span class="pd_green-d"><code><strong>str</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch7list9"><strong>Listing 7.9:</strong> Inheriting from <span class="pd_green-d"><code><strong>str</strong></code></span>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f181-01" id="f181-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="b-y"><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>(<span class="pd_green">str</span>):</span>
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+    <span class="pd_gray">.
+    .
+    .</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_182"></span>
+<p class="indent">Which design to adopt depends on our preferences as programmers and the general practices of the corresponding programming community. In particular, different language communities vary in their enthusiasm for inheriting from built-in objects like <span class="pd_green-d"><code><strong>str</strong></code></span>. For example, such a practice is common in the Ruby community, even to the point of adding methods to the base <span class="pd_green-d"><code><strong>String</strong></code></span><sup><a id="fn7_6a" href="ch07.xhtml#fn7_6">6</a></sup> class itself.</p>
+<p class="footnote"><a id="fn7_6" href="ch07.xhtml#fn7_6a">6.</a> <span class="pd_green-d"><code><strong>String</strong></code></span> is the Ruby analogue of Python’s <span class="pd_green-d"><code><strong>str</strong></code></span> class.</p>
+<p class="indent">In contrast, many members of the Python community prefer to use composition in this case. In my survey of Pythonistas, some considered inheriting from <span class="pd_green-d"><code><strong>str</strong></code></span> to be fine, but a majority considered it to be unPythonic, with one even stating that it seemed like a “Ruby developer writing Python.” Perhaps the best test is that I actually implemented it when preparing this chapter; having <span class="pd_green-d"><code><strong>Phrase</strong></code></span> inherit from <span class="pd_green-d"><code><strong>str</strong></code></span> was fairly straightforward, but having <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> inherit from <span class="pd_green-d"><code><strong>Phrase</strong></code></span> (<a href="ch07.xhtml#sec7_4">Section 7.4</a>) was <em>extremely</em> tricky (whereas the Ruby and even JavaScript versions were much easier). In order to avoid this complexity, and in accordance with my perception of generally preferred Python practices, this chapter uses composition instead of inheritance.</p>
+<span epub:type="pagebreak" id="page_183"></span>
+<section>
+<h4 class="h4" id="sec7_3_1">7.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">What are the class hierarchies for lists and dictionaries?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_4">7.4 Derived Classes</h3>
+<p class="noindent">Let’s build on the techniques in <a href="ch07.xhtml#sec7_3">Section 7.3</a> to make a class that inherits from <span class="pd_green-d"><code><strong>Phrase</strong></code></span>, which we’ll call <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>. The purpose of this so-called <em>derived class</em> (or <em>subclass</em>) is to reuse as much of <span class="pd_green-d"><code><strong>Phrase</strong></code></span> as possible while giving us the flexibility to, say, test if a <em>translation</em> is a palindrome.</p>
+<p class="indent">We’ll start by factoring <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> into a separate method, as shown in <a href="ch07.xhtml#ch7list10">Listing 7.10</a>. We’ll see in a moment why this is useful in the current context, though it’s a nice refinement in any case. Note that <a href="ch07.xhtml#ch7list10">Listing 7.10</a> also eliminates the custom iterator from <a href="ch07.xhtml#sec7_2">Section 7.2</a> for brevity, though you are welcome to retain it.</p>
+<p class="listing" id="ch7list10"><strong>Listing 7.10:</strong> Factoring <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> into a method.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f183-01" id="f183-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+         <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+         <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Process content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">Now we’re ready to inherit from <span class="pd_green-d"><code><strong>Phrase</strong></code></span>. We’ll start by including the name of the superclass as an argument to the <em>derived</em> class:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f183-02" id="f183-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+    <span class="pd_green"><strong>pass</strong></span></code></pre>
+<span epub:type="pagebreak" id="page_184"></span>
+<p class="noindent">Our plan is to use <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> like this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f184-01" id="f184-01a">Click here to view code image</a></p>
+<pre class="pre1"><code>TranslatedPhrase(<span class="pd_red">"recognize"</span>, <span class="pd_red">"reconocer"</span>)</code></pre>
+<p class="noindent">where the first argument is the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> content and the second argument is the translation. As a result, a <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> instance needs a <span class="pd_green-d"><code><strong>translation</strong></code></span> attribute, which we’ll create using <span class="pd_green-d"><code><strong>__init__</strong></code></span> as with <span class="pd_green-d"><code><strong>content</strong></code></span> in <a href="ch07.xhtml#ch7list2">Listing 7.2</a>:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f184-02" id="f184-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_blue1"><em># Handle content here.</em></span>
+        <span class="pd_green">self</span><span class="pd_gray">.</span>translation <span class="pd_gray">=</span> translation</code></pre>
+<p class="indent">Note that <span class="pd_green-d"><code><strong>__init__</strong></code></span> takes <em>two</em> arguments, <span class="pd_green-d"><code><strong>content</strong></code></span> and <span class="pd_green-d"><code><strong>translation</strong></code></span>. We’ve handled <span class="pd_green-d"><code><strong>translation</strong></code></span> like a normal attribute, but what to do about <span class="pd_green-d"><code><strong>content</strong></code></span>? The answer is a special Python function called <span class="pd_green-d"><code><strong>super()</strong></code></span>:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f184-03" id="f184-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_green">super</span>()<span class="pd_gray">.</span><span class="pd_nila">__init__</span>(content)
+<span class="b-y">        <span class="pd_green">self</span>.translation = translation</span></code></pre>
+<p class="noindent">This calls the <span class="pd_green-d"><code><strong>__init__</strong></code></span> method for the superclass—in this case, <span class="pd_green-d"><code><strong>Phrase</strong></code></span>. The result is that the <span class="pd_green-d"><code><strong>content</strong></code></span> attribute gets set as in <a href="ch07.xhtml#ch7list10">Listing 7.10</a>.</p>
+<p class="indent">Putting everything together gives the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> class shown in <a href="ch07.xhtml#ch7list11">Listing 7.11</a>.</p>
+<p class="listing" id="ch7list11"><strong>Listing 7.11:</strong> Defining <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f184-04" id="f184-04a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+<span epub:type="pagebreak" id="page_185"></span>
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_green">super</span>()<span class="pd_gray">.</span><span class="pd_nila">__init__</span>(content)
+        <span class="pd_green">self</span><span class="pd_gray">.</span>translation <span class="pd_gray">=</span> translation
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="noindent">Because <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> inherits from the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> object, an instance of <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> automatically has all the methods of a <span class="pd_green-d"><code><strong>Phrase</strong></code></span> instance, including <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span>. Let’s create a variable called <span class="pd_green-d"><code><strong>frase</strong></code></span> (pronounced “FRAH-seh”, Spanish for “phrase”) to see how it works (<a href="ch07.xhtml#ch7list12">Listing 7.12</a>).</p>
+<p class="listing" id="ch7list12"><strong>Listing 7.12:</strong> Defining a <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f185-01" id="f185-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> frase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>TranslatedPhrase(<span class="pd_red">"recognize"</span>, <span class="pd_red">"reconocer"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> frase<span class="pd_gray">.</span>ispalindrome()
+<span class="pd_green-d">False</span></code></pre>
+</div>
+<p class="noindent">We see that <span class="pd_green-d"><code><strong>frase</strong></code></span> has an <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method as claimed, and that it returns <span class="pd_green-d"><code><strong>False</strong></code></span> because “recognize” isn’t a palindrome.</p>
+<p class="indent">But what if we wanted to use the <em>translation</em> instead of the content for determining whether the translated phrase is a palindrome or not? Because we factored <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> into a separate method (<a href="ch07.xhtml#ch7list10">Listing 7.10</a>), we can do this by <em>overriding</em> the <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> method in <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>, as seen in <a href="ch07.xhtml#ch7list13">Listing 7.13</a>.</p>
+<p class="listing" id="ch7list13"><strong>Listing 7.13:</strong> Overriding a method.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f185-02" id="f185-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+<span epub:type="pagebreak" id="page_186"></span>    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Process the content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_green">super</span>()<span class="pd_gray">.</span><span class="pd_nila">__init__</span>(content)
+        <span class="pd_green">self</span><span class="pd_gray">.</span>translation <span class="pd_gray">=</span> translation
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):</span>
+<span class="b-y">        <span class="pd_red"><em>"""Override superclass method to use translation."""</em></span></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self</span>.translation.lower()</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">The key point in <a href="ch07.xhtml#ch7list13">Listing 7.13</a> is that we’re using <span class="pd_green-d"><code><strong>self.translation</strong></code></span> in the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> version of <span class="pd_green-d"><code><strong>processed_content()</strong></code></span>, so Python knows to use that one instead of the one in <span class="pd_green-d"><code><strong>Phrase</strong></code></span>. Because the translation “reconocer” <em>is</em> a palindrome, we get a different result from the one we got in <a href="ch07.xhtml#ch7list12">Listing 7.12</a>, as shown in <a href="ch07.xhtml#ch7list14">Listing 7.14</a>.</p>
+<p class="listing" id="ch7list14"><strong>Listing 7.14:</strong> Calling <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> after overriding <span class="pd_green-d"><code><strong>processed_content()</strong></code></span>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f186-01" id="f186-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> frase <span class="pd_gray">=</span> palindrome<span class="pd_gray">.</span>TranslatedPhrase(<span class="pd_red">"recognize"</span>, <span class="pd_red">"reconocer"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> frase<span class="pd_gray">.</span>ispalindrome()
+<span class="pd_green-d">True</span></code></pre>
+</div>
+<p class="noindent">The resulting inheritance hierarchy appears as in <a href="ch07.xhtml#ch7fig6">Figure 7.6</a>.</p>
+<figure class="image-c" id="ch7fig6">
+<img src="graphics/07fig06.jpg" alt="images" width="378" height="441"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.6:</strong> The inheritance hierarchy for the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> class.</p>
+</figcaption>
+</figure>
+<p class="indent">This practice of overriding gives us great flexibility. We can trace the execution of <span class="pd_green-d"><code><strong>frase.ispalindrome()</strong></code></span> for the two different cases:</p>
+<p class="noindent">Case 1: <a href="ch07.xhtml#ch7list11">Listing 7.11</a> and <a href="ch07.xhtml#ch7list12">Listing 7.12</a></p>
+<p class="case-n">1. <span class="pd_green-d"><code><strong>frase.ispalindrome()</strong></code></span> calls <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> on the <span class="pd_green-d"><code><strong>frase</strong></code></span> instance, which is a <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>. Since there is no <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method in the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> object, Python uses the one from <span class="pd_green-d"><code><strong>Phrase</strong></code></span>.</p>
+<p class="case-n"><span epub:type="pagebreak" id="page_187"></span>2. The <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method in <span class="pd_green-d"><code><strong>Phrase</strong></code></span> calls the <span class="pd_green-d"><code><strong>processed_content</strong></code></span> method. Since there is no <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> method in the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> object, Python uses the one from <span class="pd_green-d"><code><strong>Phrase</strong></code></span>.</p>
+<p class="case-n">3. The result is to compare the processed version of the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> instance with its own reverse. Since “recognize” isn’t a palindrome, the result is <span class="pd_green-d"><code><strong>False</strong></code></span>.</p>
+<p class="noindent">Case 2: <a href="ch07.xhtml#ch7list13">Listing 7.13</a> and <a href="ch07.xhtml#ch7list14">Listing 7.14</a></p>
+<p class="case-n">1. <span class="pd_green-d"><code><strong>frase.ispalindrome()</strong></code></span> calls <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> on the <span class="pd_green-d"><code><strong>frase</strong></code></span> instance, which is a <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>. As in Case 1, there is no <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method in the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> object, so Python uses the one from <span class="pd_green-d"><code><strong>Phrase</strong></code></span>.</p>
+<p class="case-n">2. The <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method in <span class="pd_green-d"><code><strong>Phrase</strong></code></span> calls the <span class="pd_green-d"><code><strong>processed_content</strong></code></span> method. Since there now <em>is</em> a <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> method in the <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> object, Python uses the one from <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> instead of the one in <span class="pd_green-d"><code><strong>Phrase</strong></code></span>.</p>
+<p class="case-n"><span epub:type="pagebreak" id="page_188"></span>3. The result is to compare the processed version of <span class="pd_green-d"><code><strong>self.translation</strong></code></span> with its own reverse. Since “reconocer” <em>is</em> a palindrome, the result is <span class="pd_green-d"><code><strong>True</strong></code></span>.</p>
+<p class="indent"><em>¿Puedes «reconocer» un palíndromo en español?</em> (Can you “reconocer” [recognize] a palindrome in Spanish?) (See <a href="ch07.xhtml#ch7fig7">Figure 7.7</a>.<sup><a id="fn7_7a" href="ch07.xhtml#fn7_7">7</a></sup>)</p>
+<figure class="image-c" id="ch7fig7">
+<img src="graphics/07fig07.jpg" alt="images" width="604" height="428"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.7:</strong> Narciso se reconoce. (Narcissus recognizes himself.)</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn7_7" href="ch07.xhtml#fn7_7a">7.</a> John William Waterhouse, “Echo and Narcissus”, 1903 (detail). Image courtesy of Archivart/Alamy Stock Photo.</p>
+<section>
+<h4 class="h4" id="sec7_4_1">7.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">You may have noticed that the <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> method is only used internally to the classes. Many object-oriented languages have a way of designating such methods as <em>private</em>, a practice known as <em>encapsulation</em>. Python doesn’t have truly private methods, but it does have a convention for indicating them using a leading underscore. Confirm that the classes still work after changing <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> to <span class="pd_green-d"><code><strong>_processed_content()</strong></code></span> as shown in <a href="ch07.xhtml#ch7list15">Listing 7.15</a>.</p>
+<span epub:type="pagebreak" id="page_189"></span>
+<p class="listing" id="ch7list15"><strong>Listing 7.15:</strong> Using a convention for private methods.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f189-01" id="f189-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">_processed_content</span>(<span class="pd_green">self</span>):</span>
+        <span class="pd_red"><em>"""Process the content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self.</span>_processed_content() == reverse(<span class="pd_green">self</span>._processed_content())</span>
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_green">super</span>()<span class="pd_gray">.</span><span class="pd_nila">__init__</span>(content)
+        <span class="pd_green">self</span><span class="pd_gray">.</span>translation <span class="pd_gray">=</span> translation
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">_processed_content</span>(<span class="pd_green">self</span>):</span>
+        <span class="pd_red"><em>"""Override superclass method to use translation."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>translation<span class="pd_gray">.</span>lower()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="number-para"><em>Note</em>: Python has a second convention, known as <em>name mangling</em>, that uses <em>two</em> leading underscores. With this convention, Python automatically changes the name of the method in a standard way so that it can’t be easily accessed through an object instance.</p></li>
+<li><p class="number">It might make sense when iterating over a <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span> to use the translation instead of the untranslated content. Arrange for this by overriding the <span class="pd_green-d"><code><strong>__iter__</strong></code></span> method in the derived class (<a href="ch07.xhtml#ch7list16">Listing 7.16</a>). Confirm using the Python interpreter that the updated iterator works as expected. (Note that <a href="ch07.xhtml#ch7list16">Listing 7.16</a> incorporates the private method convention from the previous exercise.)</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_190"></span>
+<p class="listing" id="ch7list16"><strong>Listing 7.16:</strong> Overriding the <span class="pd_green-d"><code><strong>__iter__</strong></code></span> method.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f190-01" id="f190-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+    <span class="pd_gray">.
+    .
+    .</span>
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__iter__</span>(<span class="pd_green">self</span>):
+<span class="b-y">        <span class="pd_green">self</span>.phrase_iterator = <span class="pd_green">iter</span>(<span class="pd_green">self</span>.content)</span>
+        <span class="pd_green"><strong>return</strong> self</span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__next__</span>(<span class="pd_green">self</span>):
+        <span class="pd_green"><strong>return</strong> next</span>(<span class="pd_green">self</span><span class="pd_gray">.</span>phrase_iterator)
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>TranslatedPhrase</strong></span>(Phrase):
+    <span class="pd_red"><em>"""A class to represent phrases with translation."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content, translation):
+        <span class="pd_green">super</span>()<span class="pd_gray">.</span><span class="pd_nila">__init__</span>(content)
+        <span class="pd_green">self</span><span class="pd_gray">.</span>translation <span class="pd_gray">=</span> translation
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">_processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Override superclass method to use translation."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>translation<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__iter__</span>(<span class="pd_green">self</span>):
+<span class="b-y">        <span class="pd_green">self</span>.phrase_iterator = FILL_IN</span>
+        <span class="pd_green"><strong>return</strong> self</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

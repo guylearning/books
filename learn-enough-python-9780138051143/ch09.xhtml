@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch09"><span epub:type="pagebreak" id="page_231"></span>Chapter 9</h2>
+<h2 class="h2a">Shell Scripts</h2>
+<p class="noindent">In this chapter, we’ll build on the foundation laid in <a href="ch01.xhtml#sec1_4">Section 1.4</a> and write three <em>shell scripts</em> of increasing sophistication. In the first two programs (<a href="ch09.xhtml#sec9_1">Section 9.1</a> and <a href="ch09.xhtml#sec9_2">Section 9.2</a>), we’ll take the Python package developed in <a href="ch08.xhtml#ch08">Chapter 8</a> and put it to work detecting palindromes drawn from two different sources: a file, and the Web. In the process, we’ll learn how to read and write from files with Python, and also how to read from a live Web URL. Finally, in <a href="ch09.xhtml#sec9_3">Section 9.3</a>, we’ll write a real-life utility program adapted from one I once wrote for myself. It includes an introduction to manipulation of the Document Object Model (or <em>DOM</em>) in a context outside a web browser.<sup><a id="fn9_1a" href="ch09.xhtml#fn9_1">1</a></sup></p>
+<p class="footnote"><a id="fn9_1" href="ch09.xhtml#fn9_1a">1.</a> The Document Object Model was introduced (<a href="https://www.learnenough.com/css-and-layout-tutorial/introduction#sec-start_stylin">https://www.learnenough.com/css-and-layout-tutorial/introduction#sec-start_stylin</a>) in <em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>) and is explored (<a href="https://www.learnenough.com/javascript-tutorial/dom_manipulation#cha-dom_manipulation">https://www.learnenough.com/javascript-tutorial/dom_manipulation#cha-dom_manipulation</a>) in more depth in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>).</p>
+<section>
+<h3 class="h3" id="sec9_1">9.1 Reading from Files</h3>
+<p class="noindent">Our first task is to read and process the contents of a file. The example is simple by design, but it demonstrates the necessary principles, and gives you the background needed to read more advanced documentation.</p>
+<p class="indent">We’ll start by using <span class="pd_green-d"><code><strong>curl</strong></code></span> to download a file of simple phrases (note that this should be in the <span class="pd_green-d"><code><strong>python_tutorial</strong></code></span> directory we used prior to <a href="ch08.xhtml#ch08">Chapter 8</a>, not the palindrome package directory):</p>
+<p class="codelink"><a href="ch09_images.xhtml#f231-01" id="f231-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span> ~/repos/python_tutorial/
+<span class="pd_blue"><strong>$</strong></span> curl -OL https://cdn.learnenough.com/phrases.txt</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_232"></span>As you can confirm by running <span class="pd_green-d"><code><strong>less phrases.txt</strong></code></span> at the command line, this file contains a large number of phrases—some of which (surprise!) happen to be palindromes.</p>
+<p class="indent">Our specific task is to write a palindrome detector that iterates through each line in this file and prints out any phrases that are palindromes (while ignoring others). To do this, we’ll need to open the file and read its contents. We’ll then use the package developed in <a href="ch08.xhtml#ch08">Chapter 8</a> to determine which phrases are palindromes.</p>
+<p class="indent">Python handles file operations natively through the <span class="pd_green-d"><code><strong>open()</strong></code></span> function, which we can use to create an open file, read the file contents with <span class="pd_green-d"><code><strong>read()</strong></code></span>, and then close it with <span class="pd_green-d"><code><strong>close()</strong></code></span>, as shown in <a href="ch09.xhtml#ch9list1">Listing 9.1</a>.<sup><a id="fn9_2a" href="ch09.xhtml#fn9_2">2</a></sup></p>
+<p class="footnote"><a id="fn9_2" href="ch09.xhtml#fn9_2a">2.</a> See the article “Reading and Writing Files in Python” (<a href="https://realpython.com/read-write-files-python/">https://realpython.com/read-write-files-python/</a>) for more on this useful subject.</p>
+<p class="listing" id="ch9list1"><strong>Listing 9.1:</strong> Opening a file in the REPL.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f232-01" id="f232-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green-d">$ source venv/bin/activate</span>
+<span class="pd_green-d">(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> file <span class="pd_gray">=</span> <span class="pd_green">open</span>(<span class="pd_red">"phrases.txt"</span>)    <span class="pd_blue1"><em># Not fully Pythonic</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> text <span class="pd_gray">=</span> file<span class="pd_gray">.</span>read()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> file<span class="pd_gray">.</span>close()</code></pre>
+</div>
+<p class="noindent">This reads the contents of <span class="pd_green-d"><code><strong>phrases.txt</strong></code></span> and puts it in the <span class="pd_green-d"><code><strong>text</strong></code></span> variable.</p>
+<p class="indent">We can confirm that the assignment worked using the <span class="pd_green-d"><code><strong>splitlines()</strong></code></span> method introduced in <a href="ch03.xhtml#sec3_1">Section 3.1</a> (<a href="ch03.xhtml#ch3list2">Listing 3.2</a>):</p>
+<p class="codelink"><a href="ch09_images.xhtml#f232-02" id="f232-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(text)
+<span class="pd_green-d">1373</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> text<span class="pd_gray">.</span>splitlines()[<span class="pd_gray">0</span>]    <span class="pd_blue1"><em># Split on newlines and extract the 1st phrase.</em></span>
+<span class="pd_green-d">'A butt tuba'</span></code></pre>
+<p class="noindent">The second command here splits the text on the newline character <span class="pd_green-d"><code><strong>\n</strong></code></span> and selects the zeroth element, revealing the enigmatic first line of the file, “A butt tuba”.</p>
+<p class="indent">As noted in <a href="ch09.xhtml#ch9list1">Listing 9.1</a>, opening a file as shown isn’t fully Pythonic. The reason is that we have to remember to close the file every time we open one, which can cause unpredictable behavior if we forget. We can avoid such issues by using the special <span class="pd_green-d"><code><strong>with</strong></code></span> keyword, together with <span class="pd_green-d"><code><strong>as</strong></code></span> and the desired filename:</p>
+<span epub:type="pagebreak" id="page_233"></span>
+<p class="codelink"><a href="ch09_images.xhtml#f233-01" id="f233-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     text <span class="pd_gray">=</span> file<span class="pd_gray">.</span>read()
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(text)
+<span class="pd_green-d">1373</span></code></pre>
+<p class="noindent">This code arranges to close the file automatically at the end of the <span class="pd_green-d"><code><strong>with</strong></code></span> statement, and the result is the same as before.</p>
+<p class="indent">Let’s take the ideas from the Python interpreter and put them in a script to detect the palindromes in <span class="pd_green-d"><code><strong>phrases.txt</strong></code></span>:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f233-02" id="f233-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch palindrome_file
+<span class="pd_blue"><strong>(venv) $</strong></span> chmod +x palindrome_file</code></pre>
+<p class="noindent">We’ll then put in the necessary shebang line (<a href="ch01.xhtml#sec1_4">Section 1.4</a>) and require the palindrome package, as shown in <a href="ch09.xhtml#ch9list2">Listing 9.2</a>. You should use your package if possible, but you can use <span class="pd_green-d"><code><strong>palindrome-mhartl</strong></code></span> if you didn’t publish your own in <a href="ch08.xhtml#sec8_5_1">Section 8.5.1</a>:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f233-03" id="f233-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install palindrome_mhartl --index-url https://test.pypi.org/simple/</code></pre>
+<p class="listing" id="ch9list2"><strong>Listing 9.2:</strong> Including the shebang line and package.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f233-04" id="f233-04a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)</code></pre>
+</div>
+<p class="noindent">The final line in <a href="ch09.xhtml#ch9list2">Listing 9.2</a> is a habit I have of always making sure a script is in a working state before writing any more code:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ./palindrome_file
+<span class="pd_green-d">hello, world!</span></code></pre>
+<p class="noindent">In earlier versions of this tutorial, this command actually failed, which led me toward changes that got it to work straightaway. This is the great thing about “hello, world!”—the code is so simple that, if it fails, you know something else must have gone wrong.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_234"></span>The script to read and detect palindromes from <span class="pd_green-d"><code><strong>phrases.txt</strong></code></span> is fairly straightforward: We open the file, split the contents on newlines, and iterate through the resulting array, printing any line that’s a palindrome. The result, which at this stage you should aspire to read fairly easily, appears in <a href="ch09.xhtml#ch9list3">Listing 9.3</a>.</p>
+<p class="listing" id="ch9list3"><strong>Listing 9.3:</strong> Reading and processing the contents of a file.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f234-01" id="f234-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+    text <span class="pd_gray">=</span> file<span class="pd_gray">.</span>read()
+    <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> text<span class="pd_gray">.</span>splitlines():    <span class="pd_blue1"><em># Arguably not Pythonic</em></span>
+        <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+            <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)</code></pre>
+</div>
+<p class="indent">Running the script at the command line confirms that there are quite a few palindromes in the file:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f234-02" id="f234-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ./palindrome_file
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: Dennis sinned.</span>
+<span class="pd_green-d">palindrome detected: Dennis and Edna sinned.</span>
+<span class="pd_green-d">palindrome detected: Dennis, Nell, Edna, Leon, Nedra, Anita, Rolf, Nora,</span>
+<span class="pd_green-d">Alice, Carol, Leo, Jane, Reed, Dena, Dale, Basil, Rae, Penny, Lana, Dave,</span>
+<span class="pd_green-d">Denny, Lena, Ida, Bernadette, Ben, Ray, Lila, Nina, Jo, Ira, Mara, Sara,</span>
+<span class="pd_green-d">Mario, Jan, Ina, Lily, Arne, Bette, Dan, Reba, Diane, Lynn, Ed, Eva, Dana,</span>
+<span class="pd_green-d">Lynne, Pearl, Isabel, Ada, Ned, Dee, Rena, Joel, Lora, Cecil, Aaron, Flora,</span>
+<span class="pd_green-d">Tina, Arden, Noel, and Ellen sinned.</span>
+<span class="pd_green-d">palindrome detected: Go hang a salami, I'm a lasagna hog.</span>
+<span class="pd_green-d">palindrome detected: level</span>
+<span class="pd_green-d">palindrome detected: Madam, I'm Adam.</span>
+<span class="pd_green-d">palindrome detected: No "x" in "Nixon"</span>
+<span class="pd_green-d">palindrome detected: No devil lived on</span>
+<span class="pd_green-d">palindrome detected: Race fast, safe car</span>
+<span class="pd_green-d">palindrome detected: racecar</span>
+<span class="pd_green-d">palindrome detected: radar</span>
+<span class="pd_green-d">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a car or a cat I saw?</span>
+<span epub:type="pagebreak" id="page_235"></span>
+<span class="pd_green-d">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Yo, banana boy!</span>
+<span class="pd_green-d">palindrome detected:</span></code></pre>
+<p class="noindent">Among others, we see a rather elaborate expansion on the simple palindrome “Dennis sinned” (<a href="ch09.xhtml#ch9fig1">Figure 9.1</a><sup><a id="fn9_3a" href="ch09.xhtml#fn9_3">3</a></sup>)!</p>
+<figure class="image-c" id="ch9fig1">
+<img src="graphics/09fig01.jpg" alt="images" width="720" height="461"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.1:</strong> Dennis, Nell, Edna, Leon, Nedra, and many others sinned.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn9_3" href="ch09.xhtml#fn9_3a">3.</a> Image courtesy of Historical Images Archive/Alamy Stock Photo.</p>
+<p class="indent">This is a great start, but in fact files have a <span class="pd_green-d"><code><strong>readlines()</strong></code></span> method that reads all the lines by default, without needing the call to <span class="pd_green-d"><code><strong>splitlines()</strong></code></span>. Applying this to <a href="ch09.xhtml#ch9list3">Listing 9.3</a> gives <a href="ch09.xhtml#ch9list4">Listing 9.4</a>.</p>
+<p class="listing" id="ch9list4"><strong>Listing 9.4:</strong> Switching to <span class="pd_green-d"><code><strong>readlines()</strong></code></span>.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f235-02" id="f235-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span epub:type="pagebreak" id="page_236"></span><span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+<span class="b-y">    <span class="pd_red">for</span> line <span class="pd_pink">in</span> file.readlines():    <span class="pd_blue1"><em># Pythonic</em></span></span>
+        <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+            <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)</code></pre>
+</div>
+<p class="noindent">You should confirm at the command line that the result is almost the same:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f236-01" id="f236-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ./palindrome_file
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: Was it a bar or a bat I saw?</span>
+
+<span class="pd_green-d">palindrome detected: Was it a car or a cat I saw?</span>
+
+<span class="pd_green-d">palindrome detected: Was it a cat I saw?</span>
+
+<span class="pd_green-d">palindrome detected: Yo, banana boy!</span></code></pre>
+<p class="noindent">There are now extra newlines between the palindrome lines, which is due to each element in <span class="pd_green-d"><code><strong>open(...).readlines()</strong></code></span> actually <em>including</em> the newline.</p>
+<p class="indent">In order to replicate the output from <a href="ch09.xhtml#ch9list3">Listing 9.3</a>, we can apply the common and useful technique of <em>stripping</em> each string, which simply removes any whitespace at the beginning or end, as we can see in the interpreter:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f236-02" id="f236-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> greeting <span class="pd_gray">=</span> <span class="pd_red">"    hello, world!</span>    <span class="pd_orange"><strong>\n</strong></span><span class="pd_red">"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> greeting<span class="pd_gray">.</span>strip()
+<span class="pd_green-d">'hello, world!'</span></code></pre>
+<p class="noindent">Applying this technique to the code in <a href="ch09.xhtml#ch9list4">Listing 9.4</a> yields <a href="ch09.xhtml#ch9list5">Listing 9.5</a>.<sup><a id="fn9_4a" href="ch09.xhtml#fn9_4">4</a></sup> (The version with <span class="pd_green-d"><code><strong>readlines()</strong></code></span> is probably the most Pythonic solution, but it comes at the cost of a call to <span class="pd_green-d"><code><strong>strip()</strong></code></span>, so the <span class="pd_green-d"><code><strong>splitlines()</strong></code></span> version in <a href="ch09.xhtml#ch9list3">Listing 9.3</a> is defensible as well.)</p>
+<p class="footnote"><a id="fn9_4" href="ch09.xhtml#fn9_4a">4.</a> Using the <span class="pd_green-d"><code><strong>end=""</strong></code></span> argument to <span class="pd_green-d"><code><strong>print()</strong></code></span> (<a href="ch02.xhtml#sec2_3">Section 2.3</a>) would work as well.</p>
+<p class="listing" id="ch9list5"><strong>Listing 9.5:</strong> Removing a newline with <span class="pd_green-d"><code><strong>strip()</strong></code></span>.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f236-03" id="f236-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+<span epub:type="pagebreak" id="page_237"></span><span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+    <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> file<span class="pd_gray">.</span>readlines():
+        <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+<span class="b-y">            <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_pink">{</span>line.strip()<span class="pd_pink">}</span><span class="pd_red">"</span>)</span></code></pre>
+</div>
+<p class="noindent">At this point, the output of <span class="pd_green-d"><code><strong>palindrome_file</strong></code></span> should be just the palindrome lines, with no extra newlines and no blank palindrome at the end:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f237-01" id="f237-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ./palindrome_file
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a car or a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Yo, banana boy!</span></code></pre>
+<p class="indent">Finally, let’s look at how to <em>write</em> files in Python. It could hardly be simpler; the template looks like this:</p>
+<pre class="pre1"><code>file<span class="pd_gray">.write</span>(content_string)</code></pre>
+<p class="noindent">We can build up a content string consisting of palindromes by capturing the output of <span class="pd_green-d"><code><strong>readlines()</strong></code></span> in a separate variable (called <span class="pd_green-d"><code><strong>lines</strong></code></span>) and then using a list comprehension with a condition (<a href="ch06.xhtml#sec6_2">Section 6.2</a>):</p>
+<p class="codelink"><a href="ch09_images.xhtml#f237-02" id="f237-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+<span class="b-y">    lines = file.readlines()</span>
+<span class="b-y">    <span class="pd_green">for</span> line <span class="pd_pink">in</span> lines:</span>
+        <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+            <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line.strip()<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+
+<span class="b-y">palindromes = [line <span class="pd_green">for</span> line <span class="pd_pink">in</span> lines <span class="pd_green">if</span> Phrase(line).ispalindrome()]</span></code></pre>
+<p class="noindent">Joining the <span class="pd_green-d"><code><strong>palindromes</strong></code></span> list on the empty string and writing the resulting string to a <span class="pd_green-d"><code><strong>palindromes_file.txt</strong></code></span> file is then just two lines total, as seen in <a href="ch09.xhtml#ch9list6">Listing 9.6</a>.</p>
+<p class="listing" id="ch9list6"><strong>Listing 9.6:</strong> Writing out the palindromes.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f237-03" id="f237-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+<span epub:type="pagebreak" id="page_238"></span><span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+    lines <span class="pd_gray">=</span> file<span class="pd_gray">.</span>readlines()
+    <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> lines:
+        <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+            <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line.strip()<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+
+palindromes <span class="pd_gray">=</span> [line <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> lines <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome()]
+<span class="b-y"><span class="pd_green">with open</span>(<span class="pd_red">"palindromes_file.txt"</span>, <span class="pd_red">"w"</span>) <span class="pd_green">as</span> file:</span>
+<span class="b-y">    file.write(<span class="pd_red">""</span>.join(palindromes))</span></code></pre>
+</div>
+<p class="noindent">Running the script then writes out the file as a side effect:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f238-01" id="f238-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="b-y"><span class="pd_blue"><strong>(venv) $</strong></span> ./palindrome_file</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: Madam, I'm Adam.</span>
+<span class="pd_green-d">palindrome detected: No "x" in "Nixon"</span>
+<span class="pd_green-d">palindrome detected: No devil lived on</span>
+<span class="pd_green-d">palindrome detected: Race fast, safe car</span>
+<span class="pd_green-d">palindrome detected: racecar</span>
+<span class="pd_green-d">palindrome detected: radar</span>
+<span class="pd_green-d">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a car or a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Yo, banana boy!</span>
+<span class="b-y"><span class="pd_blue"><strong>(venv) $</strong></span> tail palindromes_file.txt</span>
+<span class="pd_green-d">Madam, I'm Adam.</span>
+<span class="pd_green-d">No "x" in "Nixon"</span>
+<span class="pd_green-d">No devil lived on</span>
+<span class="pd_green-d">Race fast, safe car</span>
+<span class="pd_green-d">racecar</span>
+<span class="pd_green-d">radar</span>
+<span class="pd_green-d">Was it a bar or a bat I saw?</span>
+<span class="pd_green-d">Was it a car or a cat I saw?</span>
+<span class="pd_green-d">Was it a cat I saw?</span>
+<span class="pd_green-d">Yo, banana boy!</span></code></pre>
+<section>
+<h4 class="h4" id="sec9_1_1">9.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">You may have noticed some duplication in <a href="ch09.xhtml#ch9list6">Listing 9.6</a>: We first detect all palindromes, writing them out one at a time, and then find a list of all palindromes again (using a list comprehension). Show that we can eliminate this duplication <span epub:type="pagebreak" id="page_239"></span>by replacing the whole file with the more compact code shown in <a href="ch09.xhtml#ch9list7">Listing 9.7</a>. (Because the palindrome content itself already ends with a newline, <a href="ch09.xhtml#ch9list7">Listing 9.7</a> calls <span class="pd_green-d"><code><strong>print()</strong></code></span> with the <span class="pd_green-d"><code><strong>end=""</strong></code></span> option mentioned in <a href="ch02.xhtml#sec2_3">Section 2.3</a> to prevent a duplicate newline.)</p></li>
+<li><p class="number">One common pattern in Python shell scripts is to put the main steps in a separate function (often called <span class="pd_green-d"><code><strong>main()</strong></code></span>) and then call the function only when the file itself is called as a shell script. (See this video (<a href="https://www.youtube.com/watch?v=g_wlZ9IhbTs">https://www.youtube.com/watch?v=g_wlZ9IhbTs</a>) for more.) Using the special syntax introduced in <a href="ch07.xhtml#sec7_1">Section 7.1</a>, show that the shell script in <a href="ch09.xhtml#ch9list7">Listing 9.7</a> can be converted to <a href="ch09.xhtml#ch9list8">Listing 9.8</a>. Does it give the same result when executed at the command line?</p></li>
+<li><p class="number">Some Python programmers even prefer to put the content of the script in a different function and then have <span class="pd_green-d"><code><strong>main()</strong></code></span> call that function, as seen in <a href="ch09.xhtml#ch9list9">Listing 9.9</a>. Show that this code still produces the same output as before.</p></li>
+</ol>
+<p class="listing" id="ch9list7"><strong>Listing 9.7:</strong> Writing out palindromes the unduplicated way.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f239-01" id="f239-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+    palindromes <span class="pd_gray">=</span> [line <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> file<span class="pd_gray">.</span>readlines()
+                   <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome()]
+
+palindrome_content <span class="pd_gray">=</span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(palindromes)
+<span class="pd_green">print</span>(palindrome_content, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+
+<span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"palindromes_file.txt"</span>, <span class="pd_red">"w"</span>) <span class="pd_green"><strong>as</strong></span> file:
+    file<span class="pd_gray">.</span>write(palindrome_content)</code></pre>
+</div>
+<p class="listing" id="ch9list8"><strong>Listing 9.8:</strong> Calling <span class="pd_green-d"><code><strong>main()</strong></code></span> only at the command line.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f239-02" id="f239-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">main</span>():
+
+<span epub:type="pagebreak" id="page_240"></span>    <span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+        palindromes <span class="pd_gray">=</span> [line <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> file<span class="pd_gray">.</span>readlines()
+                       <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome()]
+
+    palindrome_content <span class="pd_gray">=</span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(palindromes)
+    <span class="pd_green">print</span>(palindrome_content, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+
+    <span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"palindromes_file.txt"</span>, <span class="pd_red">"w"</span>) <span class="pd_green"><strong>as</strong></span> file:
+        file<span class="pd_gray">.write</span>(palindrome_content)
+
+<span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:
+    main()</code></pre>
+</div>
+<p class="listing" id="ch9list9"><strong>Listing 9.9:</strong> Adding another layer between the script and <span class="pd_green-d"><code><strong>main()</strong></code></span>.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f240-01" id="f240-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">main</span>():
+    detect_palindromes()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">detect_palindromes</span>():
+    <span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"phrases.txt"</span>) <span class="pd_green"><strong>as</strong></span> file:
+        palindromes <span class="pd_gray">=</span> [line <span class="pd_green"><strong>for</strong></span> line <span class="pd_pink"><strong>in</strong></span> file<span class="pd_gray">.</span>readlines()
+                       <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome()]
+
+    palindrome_content <span class="pd_gray">=</span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(palindromes)
+    <span class="pd_green">print</span>(palindrome_content, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+
+    <span class="pd_green"><strong>with</strong> open</span>(<span class="pd_red">"palindromes_file.txt"</span>, <span class="pd_red">"w"</span>) <span class="pd_green"><strong>as</strong></span> file:
+        file<span class="pd_gray">.write</span>(palindrome_content)
+
+<span class="pd_green"><strong>if</strong></span> <span class="pd_blue">__name__</span> <span class="pd_gray">==</span> <span class="pd_red">"__main__"</span>:
+    main()</code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec9_2">9.2 Reading from URLs</h3>
+<p class="noindent">In this section, we’ll write a script whose effect is identical to the one in <a href="ch09.xhtml#sec9_1">Section 9.1</a>, except that it reads the <span class="pd_green-d"><code><strong>phrases.txt</strong></code></span> file directly from its public URL. By itself, the program doesn’t do anything fancy, but realize what a miracle this is: The ideas aren’t <span epub:type="pagebreak" id="page_241"></span>specific to the URL we’re hitting, which means that after this section you’ll have the power to write programs to access and process practically any site on the Web. (This practice, sometimes called “web scraping”, should be done with due consideration and caution.)</p>
+<p class="indent">The main trick is to use the Requests package, which we can install using <span class="pd_green-d"><code><strong>pip</strong></code></span>:<sup><a id="fn9_5a" href="ch09.xhtml#fn9_5">5</a></sup></p>
+<p class="footnote"><a id="fn9_5" href="ch09.xhtml#fn9_5a">5.</a> Older Python code often uses the <span class="pd_green-d"><code><strong>urllib.request</strong></code></span> module from the <span class="pd_green-d"><code><strong>urllib</strong></code></span> package, but this isn’t as user-friendly as Requests, and indeed the <span class="pd_green-d"><code><strong>urllib.request</strong></code></span> documentation itself explicitly recommends Requests (“The Requests package is recommended for a higher-level HTTP client interface.”).</p>
+<p class="codelink"><a href="ch09_images.xhtml#f241-01" id="f241-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_blue">requests</span><span class="pd_gray">==2</span>.28.1</code></pre>
+<p class="indent">As noted in the documentation, Requests includes a <span class="pd_green-d"><code><strong>get()</strong></code></span> method that can just, well, <em>get</em> a URI (also called a URL; the difference rarely matters):</p>
+<p class="codelink"><a href="ch09_images.xhtml#f241-02" id="f241-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> url <span class="pd_gray">=</span> <span class="pd_red">"https://cdn.learnenough.com/phrases.txt"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> response <span class="pd_gray">=</span> requests<span class="pd_gray">.</span>get(url)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> response<span class="pd_gray">.</span>text
+<span class="pd_green-d">'A butt tuba\nA bad penny always turns up.\n...Yo, banana boy!\n'</span></code></pre>
+<p class="noindent">We see here that the <span class="pd_green-d"><code><strong>response</strong></code></span> object has an attribute called <span class="pd_green-d"><code><strong>text</strong></code></span> that includes the text returned by <span class="pd_green-d"><code><strong>requests.get()</strong></code></span>, which we can combine with the <span class="pd_green-d"><code><strong>splitlines()</strong></code></span> method from <a href="ch09.xhtml#ch9list3">Listing 9.3</a> to extract the lines.<sup><a id="fn9_6a" href="ch09.xhtml#fn9_6">6</a></sup></p>
+<p class="footnote"><a id="fn9_6" href="ch09.xhtml#fn9_6a">6.</a> There is also an <span class="pd_green-d"><code><strong>iter_lines()</strong></code></span> method that returns an iterator that iterates over the lines, which at first glance effectively replicates the <span class="pd_green-d"><code><strong>readlines()</strong></code></span> solution in <a href="ch09.xhtml#ch9list5">Listing 9.5</a>. As it turns out, though, the resulting elements are returned as raw bytes and have to be decoded before they can be used. As a result, the <span class="pd_green-d"><code><strong>splitlines()</strong></code></span> solution is actually a little simpler in this case.</p>
+<p class="indent">We can create our script as in <a href="ch09.xhtml#sec9_1">Section 9.1</a>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> touch palindrome_url
+<span class="pd_blue"><strong>$</strong></span> chmod +x palindrome_url</code></pre>
+<p class="noindent">The implementation then broadly parallels the code in <a href="ch09.xhtml#ch9list3">Listing 9.3</a>, just without the call to <span class="pd_green-d"><code><strong>with</strong></code></span>, as shown in <a href="ch09.xhtml#ch9list10">Listing 9.10</a>.</p>
+<span epub:type="pagebreak" id="page_242"></span>
+<p class="listing" id="ch9list10"><strong>Listing 9.10:</strong> Reading from a URL.<br/><code><em>palindrome_url</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f242-01" id="f242-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+<span class="b-y">URL = <span class="pd_red">"https://cdn.learnenough.com/phrases.txt"</span></span>
+
+
+<span class="b-y"><span class="pd_green">for</span> line <span class="pd_pink">in</span> requests.get(URL).text.splitlines():</span>
+    <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+        <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)</code></pre>
+</div>
+<p class="indent">At this point, we’re ready to try the script out at the command line:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f242-02" id="f242-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> ./palindrome_url
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: Madam, I'm Adam.</span>
+<span class="pd_green-d">palindrome detected: No "x" in "Nixon"</span>
+<span class="pd_green-d">palindrome detected: No devil lived on</span>
+<span class="pd_green-d">palindrome detected: Race fast, safe car</span>
+<span class="pd_green-d">palindrome detected: racecar</span>
+<span class="pd_green-d">palindrome detected: radar</span>
+<span class="pd_green-d">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a car or a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green-d">palindrome detected: Yo, banana boy!</span></code></pre>
+<p class="noindent">Amazing! The result is almost exactly as we saw in <a href="ch09.xhtml#sec9_1">Section 9.1</a>, but this time, we got the data right off the live Web.</p>
+<p class="indent">There’s actually one little detail left, which is that the em dash in “A man, a plan, a canal—Panama!” didn’t quite come out right (<a href="ch09.xhtml#ch9fig2">Figure 9.2</a>). This is a hint of a character encoding issue, and a little investigation shows that <span class="pd_green-d"><code><strong>requests.get()</strong></code></span> can also download using a <span class="pd_green-d"><code><strong>content</strong></code></span> attribute that can be <em>decoded</em> to include characters like the em dash we need. Specifically, we can indicate that the character encoding is UTF-8 using the <span class="pd_green-d"><code><strong>decode()</strong></code></span> method, as shown in <a href="ch09.xhtml#ch9list11">Listing 9.11</a>. (We’ll meet UTF-8 again in <a href="ch10.xhtml#ch10">Chapter 10</a>, where we’ll include it as a standard element on the HTML web page; it is also covered in <em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>).)</p>
+<span epub:type="pagebreak" id="page_243"></span>
+<figure class="image-c" id="ch9fig2">
+<img src="graphics/09fig02.jpg" alt="images" width="725" height="574"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.2:</strong> The wrong character.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch9list11"><strong>Listing 9.11:</strong> Decoding the <span class="pd_green-d"><code><strong>content</strong></code></span>.<br/><code><em>palindrome_url</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f243-01" id="f243-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+URL <span class="pd_gray">=</span> <span class="pd_red">"https://cdn.learnenough.com/phrases.txt"</span>
+
+<span class="b-y"><span class="pd_green">for</span> line <span class="pd_pink">in</span> requests.get(URL).content.decode(<span class="pd_red">"utf-8"</span>).splitlines():</span>
+    <span class="pd_green"><strong>if</strong></span> Phrase(line)<span class="pd_gray">.</span>ispalindrome():
+        <span class="pd_green">print</span>(<span class="pd_red">f"palindrome detected:</span> <span class="pd_lpink"><strong>{</strong></span>line<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_244"></span>
+<p class="noindent">The result is the em dash we are looking for:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f244-01" id="f244-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> ./palindrome_url
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">palindrome detected: A man, a plan, a canal--Panama!</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span></code></pre>
+<p class="indent">By the way, if you actually visit the URL <a href="http://cdn.learnenough.com/phrases.txt">cdn.learnenough.com/phrases.txt</a>, you’ll find that in fact it <em>forwards</em> (using a 301 redirect) to a page on Amazon’s Simple Storage Service (S3), as seen in <a href="ch09.xhtml#ch9fig3">Figure 9.3</a>. Luckily, the <span class="pd_green-d"><code><strong>requests.get()</strong></code></span> method we used in <a href="ch09.xhtml#ch9list10">Listing 9.10</a> automatically follows such redirects, so the script worked as written, but <span epub:type="pagebreak" id="page_245"></span>this behavior is not universal among URL libraries. Depending on the exact library you use, you might have to manually configure the web requester to follow redirects.</p>
+<figure class="image-c" id="ch9fig3">
+<img src="graphics/09fig03.jpg" alt="images" width="725" height="560"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.3:</strong> Visiting the phrase URL.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec9_2_1">9.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">In analogy with <a href="ch09.xhtml#ch9list6">Listing 9.6</a>, add code to <a href="ch09.xhtml#ch9list10">Listing 9.10</a> that writes out a file called <span class="pd_green-d"><code><strong>palindromes_url.txt</strong></code></span>. Confirm using the <span class="pd_green-d"><code><strong>diff</strong></code></span> utility (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending">https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending</a>) that the output is identical to the <span class="pd_green-d"><code><strong>palindromes_file.txt</strong></code></span> file from <a href="ch09.xhtml#sec9_1">Section 9.1</a>.</p></li>
+<li><p class="number">Modify <a href="ch09.xhtml#ch9list10">Listing 9.10</a> to use the more compact programming style seen in <a href="ch09.xhtml#ch9list7">Listing 9.7</a> (including the step to write out the file).</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec9_3">9.3 DOM Manipulation at the Command Line</h3>
+<p class="noindent">In this final section, we’re going to put the URL-reading tricks we learned in <a href="ch09.xhtml#sec9_2">Section 9.2</a> to good use by writing a version of an actual utility script I once wrote for myself. To begin, I’ll explain the context in which the script arose, and the problem it solves.</p>
+<p class="indent">In recent years, there has been an explosion in the resources available for learning foreign languages, including things like Duolingo, Google Translate, and native OS support for multilingual text-to-speech (TTS). A few years ago, I decided to take advantage of this opportunity to brush up on my high-school/college Spanish.</p>
+<p class="indent">One of the resources I found myself turning to was Wikipedia, with its huge number of articles in languages other than English. In particular, I discovered how useful it was to copy text from Spanish-language Wikipedia (<a href="ch09.xhtml#ch9fig4">Figure 9.4</a>) and drop it into Google Translate (<a href="ch09.xhtml#ch9fig5">Figure 9.5</a>). At that point, I could use the text-to-speech from either Google Translate (the red square in <a href="ch09.xhtml#ch9fig5">Figure 9.5</a>) or macOS to hear the words spoken in Spanish, while following along with either the native language or the translation. Es muy útil.</p>
+<figure class="image-c" id="ch9fig4">
+<img src="graphics/09fig04.jpg" alt="images" width="725" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.4:</strong> Un artículo sobre Python.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch9fig5">
+<img src="graphics/09fig05.jpg" alt="images" width="725" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.5:</strong> An article about Python dropped into Google Translate.</p>
+</figcaption>
+</figure>
+<p class="noindent">After a while, I noticed two consistent sources of friction:</p>
+<ol class="number">
+<li><p class="number">Copying a large number of paragraphs by hand was cumbersome.</p></li>
+<li><p class="number">Hand-copying text often selected things that I didn’t want, particularly <em>reference numbers</em>, which the TTS system duly pronounced, resulting in random numbers <span epub:type="pagebreak" id="page_246"></span>being spoken (e.g., “entre otros.2[dos] Se trata de un lenguaje” = “among others.2 It is treated as a language”. ¿Qué pasó?).</p></li>
+</ol>
+<p class="noindent">Friction like this has inspired many a utility script, and thus was born <span class="pd_green-d"><code><strong>wikp</strong></code></span> (“Wikipedia paragraphs”), a program to download a Wikipedia article’s HTML source, extract its paragraphs, and eliminate its reference numbers, dumping all the results to the screen.</p>
+<p class="indent">The original <span class="pd_green-d"><code><strong>wikp</strong></code></span> program was written in Ruby; what appears here is a slightly simplified version. Let’s think about how it will work.</p>
+<p class="indent">We already know from <a href="ch09.xhtml#ch9list10">Listing 9.10</a> how to download the source of a URL. The remaining tasks are then to:</p>
+<ol class="number">
+<li><p class="number">Take an arbitrary URL argument at the command line.</p></li>
+<li><p class="number">Manipulate the downloaded HTML using the DOM (<a href="ch09.xhtml#ch9fig6">Figure 9.6</a>).</p>
+<span epub:type="pagebreak" id="page_247"></span>
+<figure class="image-c" id="ch9fig6">
+<img src="graphics/09fig06.jpg" alt="images" width="721" height="438"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.6:</strong> The Document Object Model (DOM).</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Remove the references.</p></li>
+<li><p class="number">Collect and print the paragraphs.</p></li>
+</ol>
+<p class="noindent">Let’s get started by creating the initial script:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> touch wikp
+<span class="pd_blue"><strong>$</strong></span> chmod +x wikp</code></pre>
+<p class="noindent">Now we’re ready to get going on the main program. For each task above, I’ll include the kind of Google search you might use to figure out how to do it.</p>
+<p class="indent">There are several options for processing HTML in Python; one of the most powerful and highly regarded ones goes by the rather whimsical name Beautiful Soup (a reference to a song from <a href="ch09.xhtml#ch09">Chapter 9</a> of <em>Alice’s Adventures in Wonderland</em>)<sup><a id="fn9_7a" href="ch09.xhtml#fn9_7">7</a></sup> that can <span epub:type="pagebreak" id="page_248"></span>manipulate the DOM (python dom manipulation). We’ll use version 4, which is compatible with Python 3:</p>
+<p class="footnote"><a id="fn9_7" href="ch09.xhtml#fn9_7a">7.</a> What this song has to do with HTML processing is anybody’s guess.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f248-01" id="f248-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_blue">beautifulsoup4</span><span class="pd_gray">==4</span>.11.1</code></pre>
+<p class="noindent">The Beautiful Soup package itself is available via the abbreviated name <span class="pd_green-d"><code><strong>bs4</strong></code></span>.</p>
+<p class="indent">Our principal task is sometimes known as “HTML parsing”, and Beautiful Soup comes equipped with a powerful HTML parser. The official Beautiful Soup website has a bunch of useful tutorials; for our purposes, the most important method looks like <a href="ch09.xhtml#ch9list12">Listing 9.12</a>.</p>
+<p class="listing" id="ch9list12"><strong>Listing 9.12:</strong> Parsing some HTML.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f248-02" id="f248-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>bs4</strong></span> <span class="pd_green"><strong>import</strong></span> BeautifulSoup
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> html <span class="pd_gray">=</span> <span class="pd_red">'&lt;p&gt;lorem&lt;sup class="reference"&gt;1&lt;/sup&gt;&lt;/p&gt;&lt;p&gt;ipsum&lt;/p&gt;'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc <span class="pd_gray">=</span> BeautifulSoup(html)</code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_249"></span>The resulting <span class="pd_green-d"><code><strong>doc</strong></code></span> variable is a Beautiful Soup document, in this case with two paragraphs, one of which contains a <span class="pd_green-d"><code><strong>sup</strong></code></span> (superscript) tag with CSS class <span class="pd_green-d"><code><strong>reference</strong></code></span>.</p>
+<p class="indent">Beautiful Soup documents can be manipulated in any number of ways. My favorite method for selecting elements is <span class="pd_green-d"><code><strong>find_all</strong></code></span>, which lets us pull out HTML tags (beautiful soup select html tag) using an intuitive syntax. For example:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f249-01" id="f249-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc<span class="pd_gray">.</span>find_all(<span class="pd_red">"p"</span>)
+<span class="pd_green-d">[&lt;p&gt;lorem&lt;sup class="reference"&gt;1&lt;/sup&gt;&lt;/p&gt;, &lt;p&gt;ipsum&lt;/p&gt;]</span></code></pre>
+<p class="noindent">This operation is so common that it’s the default when we pass an argument directly to a document object:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f249-02" id="f249-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc(<span class="pd_red">"p"</span>)
+<span class="pd_green-d">[&lt;p&gt;lorem&lt;sup class="reference"&gt;1&lt;/sup&gt;&lt;/p&gt;, &lt;p&gt;ipsum&lt;/p&gt;]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(doc(<span class="pd_red">"p"</span>))
+<span class="pd_green-d">2</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc(<span class="pd_red">"p"</span>)[<span class="pd_gray">0</span>].text
+<span class="pd_green-d">'lorem1'</span></code></pre>
+<p class="noindent">We see from the final line that we can get the text of a particular result using the <span class="pd_green-d"><code><strong>text</strong></code></span> property, which in this case includes the reference number <span class="pd_green-d"><code><strong>1</strong></code></span>. Meanwhile, we can grab the elements (in this case, only one) with a <span class="pd_green-d"><code><strong>"reference"</strong></code></span> class using the <span class="pd_green-d"><code><strong>class_</strong></code></span> option:<sup><a id="fn9_8a" href="ch09.xhtml#fn9_8">8</a></sup></p>
+<p class="footnote"><a id="fn9_8" href="ch09.xhtml#fn9_8a">8.</a> The extra underscore in <span class="pd_green-d"><code><strong>class_</strong></code></span> is included because <span class="pd_green-d"><code><strong>class</strong></code></span> (no underscore) is reserved for creating Python classes (<a href="ch07.xhtml#ch07">Chapter 7</a>). By the way, <span class="pd_green-d"><code><strong>doc.select(".reference")</strong></code></span> selects <em>all</em> the elements (not just <span class="pd_green-d"><code><strong>sup</strong></code></span> tags) with class <span class="pd_green-d"><code><strong>"reference"</strong></code></span> using much the same “dot” notation used by CSS itself.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f249-03" id="f249-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc(<span class="pd_red">"sup"</span>, class_<span class="pd_gray">=</span><span class="pd_red">"reference"</span>)
+<span class="pd_green-d">[&lt;sup class="reference"&gt;1&lt;/sup&gt;]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(doc(<span class="pd_red">"sup"</span>, class_<span class="pd_gray">=</span><span class="pd_red">"reference"</span>))
+<span class="pd_green-d">1</span></code></pre>
+<p class="indent">Perhaps you can see where we’re going with this. We’re now in a position to parse an HTML document and select all the paragraphs and all the references (assuming, of course, they have class <span class="pd_green-d"><code><strong>reference</strong></code></span>). All we need now is a way to <em>remove</em> the references from the document. As it happens, this is not hard at all using the <span class="pd_green-d"><code><strong>decompose()</strong></code></span> method (beautiful soup remove element), as seen in <a href="ch09.xhtml#ch9list13">Listing 9.13</a>.</p>
+<span epub:type="pagebreak" id="page_250"></span>
+<p class="listing" id="ch9list13"><strong>Listing 9.13:</strong> Removing DOM elements.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f250-01" id="f250-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> reference <span class="pd_pink"><strong>in</strong></span> doc(<span class="pd_red">"sup"</span>, class<span class="pd_gray">_=</span><span class="pd_red">"reference"</span>):
+<span class="pd_blue"><strong>...</strong></span>     reference<span class="pd_gray">.</span>decompose()
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> doc
+<span class="pd_green-d">&lt;html&gt;&lt;body&gt;&lt;p&gt;lorem&lt;/p&gt;&lt;p&gt;ipsum&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span></code></pre>
+</div>
+<p class="noindent">Then, we can collect all the paragraph content using <span class="pd_green-d"><code><strong>doc("p")</strong></code></span> and print each paragraph (<a href="ch09.xhtml#ch9list14">Listing 9.14</a>).</p>
+<p class="listing" id="ch9list14"><strong>Listing 9.14:</strong> Printing paragraph content.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f250-02" id="f250-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> paragraph_tag <span class="pd_pink"><strong>in</strong></span> doc(<span class="pd_red">"p"</span>):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(paragraph_tag<span class="pd_gray">.</span>text)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">lorem</span>
+<span class="pd_green-d">ipsum</span></code></pre>
+</div>
+<p class="indent">We’re now ready to put together the script itself. We’ll start by taking in the URL as a command-line argument using the <span class="pd_green-d"><code><strong>sys</strong></code></span> (system) library (python script command line argument), as seen in <a href="ch09.xhtml#ch9list15">Listing 9.15</a>. Note that we’ve included a <span class="pd_green-d"><code><strong>print</strong></code></span> line as a temporary way to make sure the argument is being accepted properly. We’ve also used a lowercase name (<span class="pd_green-d"><code><strong>url</strong></code></span>) since, unlike in <a href="ch09.xhtml#sec9_2">Section 9.2</a>, it is now a variable and not a constant. (Either <span class="pd_green-d"><code><strong>URL</strong></code></span> or <span class="pd_green-d"><code><strong>url</strong></code></span> would work; the choice of case is just a convention.)</p>
+<p class="listing" id="ch9list15"><strong>Listing 9.15:</strong> Accepting a command-line argument.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f250-03" id="f250-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>sys</strong></span>
+
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>bs4</strong></span> <span class="pd_green"><strong>import</strong></span> BeautifulSoup
+
+
+<span class="pd_blue1"><em># Return the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+<span class="pd_blue1"><em># Especially useful for text-to-speech (both native and foreign).</em></span>
+
+<span class="pd_blue1"><em># Get URL from the command line.</em></span>
+url <span class="pd_gray">=</span> sys<span class="pd_gray">.</span>argv[<span class="pd_gray">1</span>]
+<span class="b-y"><span class="pd_green">print</span>(url)</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_251"></span>We can confirm that <a href="ch09.xhtml#ch9list15">Listing 9.15</a> works as advertised:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f251-01" id="f251-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/Python
+<span class="pd_green-d">https://es.wikipedia.org/wiki/Python</span></code></pre>
+<p class="indent">Next, we need to open the URL and read its contents, which we learned in <a href="ch09.xhtml#sec9_2">Section 9.2</a> (<a href="ch09.xhtml#ch9list11">Listing 9.11</a>) can be done using the following code:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f251-02" id="f251-02a">Click here to view code image</a></p>
+<pre class="pre1"><code>requests.get(url).content.decode(<span class="pd_red">"utf-8"</span>)</code></pre>
+<p class="noindent">Feeding the result of this into <span class="pd_green-d"><code><strong>BeautifulSoup()</strong></code></span> then gives <a href="ch09.xhtml#ch9list16">Listing 9.16</a>. Note that we’ve explicitly specified the parser to be for HTML, which is the default but can give rise to warning messages if omitted.</p>
+<p class="listing" id="ch9list16"><strong>Listing 9.16:</strong> Parsing the live URL with Beautiful Soup.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f251-03" id="f251-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>sys</strong></span>
+
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>bs4</strong></span> <span class="pd_green"><strong>import</strong></span> BeautifulSoup
+
+
+<span class="pd_blue1"><em># Return the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+<span class="pd_blue1"><em># Especially useful for text-to-speech (both native and foreign).</em></span>
+
+<span class="pd_blue1"><em># Get URL from the command line.</em></span>
+url <span class="pd_gray">=</span> sys<span class="pd_gray">.</span>argv[<span class="pd_gray">1</span>]
+<span class="pd_blue1"><em># Create Beautiful Soup document from live URL.</em></span>
+<span class="b-y">content = requests.get(url).content.decode(<span class="pd_red">"utf-8"</span>)</span>
+<span class="b-y">doc = BeautifulSoup(content, features=<span class="pd_red">"html.parser"</span>)</span></code></pre>
+</div>
+<p class="indent">Now all we need to do is apply the reference removal and paragraph collection code from <a href="ch09.xhtml#ch9list13">Listing 9.13</a> and <a href="ch09.xhtml#ch9list14">Listing 9.14</a>. As hinted above, Wikipedia identifies its references with the <span class="pd_green-d"><code><strong>.reference</strong></code></span> class, which we can confirm using a web inspector (<a href="https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#sec-pages-folders">https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#sec-pages-folders</a>) (<a href="ch09.xhtml#ch9fig7">Figure 9.7</a>). This suggests the reference removal code shown in <a href="ch09.xhtml#ch9list17">Listing 9.17</a>.</p>
+<span epub:type="pagebreak" id="page_252"></span>
+<figure class="image-c" id="ch9fig7">
+<img src="graphics/09fig07.jpg" alt="images" width="725" height="421"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.7:</strong> Viewing a reference in the web inspector.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch9list17"><strong>Listing 9.17:</strong> Removing the references.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f252-01" id="f252-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>sys</strong></span>
+
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>bs4</strong></span> <span class="pd_green"><strong>import</strong></span> BeautifulSoup
+
+
+<span class="pd_blue1"><em># Return the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+<span class="pd_blue1"><em># Especially useful for text-to-speech (both native and foreign).</em></span>
+
+<span class="pd_blue1"><em># Get URL from the command line.</em></span>
+url <span class="pd_gray">=</span> sys<span class="pd_gray">.</span>argv[<span class="pd_gray">1</span>]
+<span class="pd_blue1"><em># Create Beautiful Soup document from live URL.</em></span>
+content <span class="pd_gray">=</span> requests<span class="pd_gray">.</span>get(url)<span class="pd_gray">.</span>content<span class="pd_gray">.</span>decode(<span class="pd_red">"utf-8"</span>)
+doc <span class="pd_gray">=</span> BeautifulSoup(content, features<span class="pd_gray">=</span><span class="pd_red">"html.parser"</span>)
+<span class="pd_blue1"><em># Remove references.</em></span>
+<span class="b-y"><span class="pd_green">for</span> reference <span class="pd_pink">in</span> doc(<span class="pd_red">"sup"</span>, class_=<span class="pd_red">"reference"</span>):</span>
+<span class="b-y">    reference.decompose()</span></code></pre>
+</div>
+<p class="indent">Now all that’s left is to extract the paragraph content and print it out (<a href="ch09.xhtml#ch9list18">Listing 9.18</a>).</p>
+<span epub:type="pagebreak" id="page_253"></span>
+<p class="listing" id="ch9list18"><strong>Listing 9.18:</strong> Printing the content.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f253-01" id="f253-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>sys</strong></span>
+
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>requests</strong></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>bs4</strong></span> <span class="pd_green"><strong>import</strong></span> BeautifulSoup
+
+
+<span class="pd_blue1"><em># Return the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+<span class="pd_blue1"><em># Especially useful for text-to-speech (both native and foreign).</em></span>
+
+<span class="pd_blue1"><em># Get URL from the command line.</em></span>
+url <span class="pd_gray">=</span> sys<span class="pd_gray">.</span>argv[<span class="pd_gray">1</span>]
+<span class="pd_blue1"><em># Create Beautiful Soup document from live URL.</em></span>
+content <span class="pd_gray">=</span> requests<span class="pd_gray">.</span>get(url)<span class="pd_gray">.</span>content<span class="pd_gray">.</span>decode(<span class="pd_red">"utf-8"</span>)
+doc <span class="pd_gray">=</span> BeautifulSoup(content, features<span class="pd_gray">=</span><span class="pd_red">"html.parser"</span>)
+<span class="pd_blue1"><em># Remove references.</em></span>
+<span class="pd_green"><strong>for</strong></span> reference <span class="pd_pink"><strong>in</strong></span> doc(<span class="pd_red">"sup"</span>, class_<span class="pd_gray">=</span><span class="pd_red">"reference"</span>):
+    reference.decompose()
+<span class="pd_blue1"><em># Print paragraphs.</em></span>
+<span class="b-y"><span class="pd_green"><strong>for</strong></span> paragraph_tag <span class="pd_pink">in</span> doc(<span class="pd_red">"p"</span>):</span>
+<span class="b-y">    <span class="pd_green"><strong>print</strong></span>(<strong>paragraph_tag.text</strong>)</span></code></pre>
+</div>
+<p class="indent">Let’s see how things went:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f253-02" id="f253-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/Python
+<span class="pd_green-d">Python es un lenguaje de alto nivel de programación interpretado cuya</span>
+<span class="pd_green-d">filosofía hace hincapié en la legibilidad de su código, se utiliza para</span>
+<span class="pd_green-d">desarrollar aplicaciones de todo tipo, ejemplos: Instagram, Netflix, Spotify,</span>
+<span class="pd_green-d">Panda 3D, entre otros. Se trata de un lenguaje de programación multiparadigma,</span>
+<span class="pd_green-d">ya que soporta parcialmente la orientación a objetos, programación imperativa</span>
+<span class="pd_green-d">y, en menor medida[?`cuál?], programación funcional. Es un lenguaje</span>
+<span class="pd_green-d">interpretado, dinámico y multiplataforma.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">.</span>
+<span class="pd_green-d">Existen diversas implementaciones del lenguaje:</span>
+
+<span class="pd_green-d">A lo largo de su historia, Python ha presentado una serie de incidencias, de</span>
+<span class="pd_green-d">las cuales las más importantes han sido las siguientes:</span></code></pre>
+<p class="noindent">Success! By scrolling up in our terminal, we can now select all the text and drop it into Google Translate or a text editor of our choice. On macOS, we can do even better by piping (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-wordcount_and_pipes">https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-wordcount_and_pipes</a>) <span epub:type="pagebreak" id="page_254"></span>the results to <span class="pd_green-d"><code><strong>pbcopy</strong></code></span>, which automatically copies the results to the macOS <strong>p</strong>aste<strong>b</strong>oard (also called the “clipboard”):</p>
+<p class="codelink"><a href="ch09_images.xhtml#f254-01" id="f254-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/Python | pbcopy</code></pre>
+<p class="noindent">At this point, pasting into Google Translate (or anywhere else) will paste the full text.</p>
+<p class="indent">Consider how remarkable an accomplishment this is. The script in <a href="ch09.xhtml#ch9list18">Listing 9.18</a> is a little tricky—and to get such a thing working completely on your own might involve quite a bit of Googling and more than a few <span class="pd_green-d"><code><strong>print</strong></code></span> statements as you go along—but it’s really only six lines of code: not exactly rocket science. And yet, it’s genuinely useful, something that (if you’re active in foreign-language learning) you might well use all the time. Moreover, the basic skills involved—including not just the programming, but also the technical sophistication (&lt;cough&gt;Googling&lt;/cough&gt;)—unlock a huge number of potential applications.</p>
+<section>
+<h4 class="h4" id="sec9_3_1">9.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By moving the file or changing your system’s configuration, add the <span class="pd_green-d"><code><strong>wikp</strong></code></span> script to your environment’s PATH. (You may find the steps (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script</a>) in <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) helpful.) Confirm that you can run <span class="pd_green-d"><code><strong>wikp</strong></code></span> without prepending <span class="pd_green-d"><code><strong>./</strong></code></span> to the command name. <em>Note</em>: If you have a conflicting <span class="pd_green-d"><code><strong>wikp</strong></code></span> program from following <em>Learn Enough JavaScript to Be Dangerous</em> or <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>), I suggest replacing it—thus demonstrating the principle that the file’s name is the user interface, and the implementation can change language without affecting users.</p></li>
+<li><p class="number">What happens if you run <span class="pd_green-d"><code><strong>wikp</strong></code></span> with no argument? Add code to your script to detect the absence of a command-line argument and output an appropriate usage statement. <em>Hint</em>: After printing out the usage statement, you will have to <em>exit</em>, which you can learn how to do with the search python how to exit script.</p></li>
+<li><p class="number">The “pipe to <span class="pd_green-d"><code><strong>pbcopy</strong></code></span>” trick mentioned in the text works only on macOS, but any Unix-compatible system can redirect the output to a file. What’s the command to redirect the output of <span class="pd_green-d"><code><strong>wikp</strong></code></span> to a file called <span class="pd_green-d"><code><strong>article.txt</strong></code></span>? (You could then open this file, select all, and copy the contents, which has the same basic result as piping to <span class="pd_green-d"><code><strong>pbcopy</strong></code></span>.)</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

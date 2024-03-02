@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch09"><span epub:type="pagebreak" id="page_221"></span>Chapter 9</h2>
+<h2 class="chap-title">Backing Up and Sharing</h2>
+<p class="noindent">With the changes made in <a href="ch08.xhtml#ch08">Chapter 8</a>, we’re now ready to push a copy of our project to a <em>remote repository</em>. This will serve as a backup of our project and its history, and will also make it easier for collaborators to work with us on our site.</p>
+<p class="indent">We’ll start by pushing our project up to <em>GitHub</em>, a site designed to facilitate collaboration with Git repositories. For repositories that are publicly available, GitHub has always been free, so we’ll plan to make our website’s repo public to take advantage of this. (When this tutorial was first written, GitHub charged for private repositories; in <a href="ch11.xhtml#ch11lev4sec1">Section 11.4.1</a>, we’ll discuss an alternative that has always allowed unlimited free private repos.) Over time, releasing projects publicly on GitHub serves to build up a portfolio, which is one good reason to make as much work public as possible. There’s also a Secret Reason™ for adding our repo to GitHub, which we’ll get to in <a href="ch11.xhtml#ch11lev4">Section 11.4</a>.</p>
+<p class="indent">For reference, important commands from this chapter are summarized in <a href="ch09.xhtml#ch09lev4">Section 9.4</a>.</p>
+<section>
+<h3 class="h3" id="ch09lev1">9.1 Signing Up for GitHub</h3>
+<p class="noindent">If you don’t already have a GitHub account, you can get started by visiting the GitHub signup page (<a href="https://github.com/join">https://github.com/join</a>) (<a href="ch09.xhtml#fig9-1">Figure 9.1</a>) and following the instructions. Use your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>) if you get stuck.</p>
+<figure class="figure" id="fig9-1">
+<img src="graphics/09fig01.jpg" alt="Image" width="744" height="574"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.1:</strong> Joining GitHub.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h3 class="h3" id="ch09lev2"><span epub:type="pagebreak" id="page_222"></span>9.2 Remote Repo</h3>
+<p class="noindent">After signing up for a GitHub account, the next step is to create a remote repository. Start by selecting the menu item for adding a new repository, as shown in <a href="ch09.xhtml#fig9-2">Figure 9.2</a>, and then fill in the repository name (“website”) and description (“A sample website for Learn Enough Git to Be Dangerous”), as shown in <a href="ch09.xhtml#fig9-3">Figure 9.3</a>. GitHub actively develops its user interface, so <a href="ch09.xhtml#fig9-2">Figure 9.2</a>, <a href="ch09.xhtml#fig9-3">Figure 9.3</a>, and other GitHub screenshots may not match your results exactly, but this is no cause for concern. As usual, apply your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>) to resolve any discrepancies.</p>
+<figure class="figure" id="fig9-2">
+<img src="graphics/09fig02.jpg" alt="Image" width="744" height="579"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.2:</strong> Adding a new repository at GitHub.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig9-3">
+<img src="graphics/09fig03.jpg" alt="Image" width="744" height="563"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.3:</strong> Creating a new repository.</p>
+</figcaption>
+</figure>
+<p class="indent">After clicking the button to create the repository (<a href="ch09.xhtml#fig9-3">Figure 9.3</a>), you should see a page like <a href="ch09.xhtml#fig9-4">Figure 9.4</a> containing instructions for how to <em>push</em> your local repository up to GitHub. To get the right commands, be sure to select the setup option for HTTPS rather than SSH.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_223"></span>The exact commands in <a href="ch09.xhtml#fig9-4">Figure 9.4</a> will be tailored to your personal account name and default branch name, with a template that looks like <a href="ch09.xhtml#list9-1">Listing 9.1</a>. The first command sets up GitHub as the <em>remote origin</em>, the second ensures that the default branch name is <span class="green"><code><strong>main</strong></code></span> (which in our case does nothing since that’s already its name), and the third arranges to <em>push</em> the full repository to GitHub. (The <span class="green"><code><strong>-u</strong></code></span> option to <span class="green"><code><strong>git push</strong></code></span> sets GitHub as the <em>upstream repository</em>, which means we’ll be able to download any changes automatically when we run <span class="green"><code><strong>git pull</strong></code></span> starting in <a href="ch11.xhtml#ch11lev1">Section 11.1</a>.) Don’t worry about these details, though; you will almost always copy such commands from GitHub and probably won’t ever have to figure them out on your own.</p>
+<figure class="figure" id="fig9-4">
+<img src="graphics/09fig04.jpg" alt="Image" width="744" height="557"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.4:</strong> Instructions for pushing up the repo.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_224"></span>
+<p class="list-head" id="list9-1"><strong>Listing 9.1:</strong> A template for the first push to GitHub.</p>
+<p class="codelink"><a href="ch09_images.xhtml#p09lis01" id="p09lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git remote add origin https://github.com/&lt;name&gt;/website.git
+[website (main)]$ git push -u origin main</pre>
+</div>
+<p class="noindent">In <a href="ch09.xhtml#list9-1">Listing 9.1</a>, you should replace <span class="green"><code><strong>&lt;name&gt;</strong></code></span> with your actual username. For example, the commands for my username, which is <span class="green"><code><strong>mhartl</strong></code></span>, look like this:</p>
+<p class="codelink"><a href="ch09_images.xhtml#p224pro01" id="p224pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git remote add origin https://github.com/mhartl/website.git
+[website (main)]$ git push -u origin main</pre>
+<p class="indent">After running the third command in <a href="ch09.xhtml#list9-1">Listing 9.1</a>, you will be prompted to enter your username and password. The username is simply your GitHub username, but the password is <em>not</em> your GitHub password; instead, the “password” must be a <em>personal access token</em>,<sup><a id="rfn9_1" href="ch09.xhtml#fn9_1">1</a></sup> <span epub:type="pagebreak" id="page_225"></span>which you can create by following the instructions in the GitHub article “Creating a personal access token” (<a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token</a>).<sup><a id="rfn9_2" href="ch09.xhtml#fn9_2">2</a></sup> I suggest selecting “No expiration” for the token expiration, and also be sure to select “repo” as the scope of the token so that it works at the command line. Once you’ve <span epub:type="pagebreak" id="page_226"></span>created and saved the personal access token, paste it in at the command line when prompted for a password to complete the <span class="green"><code><strong>git push</strong></code></span> in <a href="ch09.xhtml#list9-1">Listing 9.1</a>.</p>
+<p class="footnote"><a id="fn9_1" href="ch09.xhtml#rfn9_1">1.</a> The “password” used to be your actual password, but GitHub changed its interface in 2021, requiring an update to this tutorial. This is the kind of little change that happens <em>all the time</em> in tech, and it’s impossible for tutorials like this one to be up-to-date at all times; as is so often the case, technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>) is the only general answer for dealing with issues of this kind.</p>
+<p class="footnote"><a id="fn9_2" href="ch09.xhtml#rfn9_2">2.</a> As of this writing, the article is at <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token</a>, but Googling “github creating personal access token” is also a good bet.</p>
+<p class="indent">As noted briefly above, we’re using the HTTPS option for our repository URL (<a href="ch09.xhtml#fig9-4">Figure 9.4</a>), which sends data using the secure version of the HyperText Transfer Protocol (HTTP). This is the current GitHub default, but there’s another version that uses so-called SSH keys (<a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a>), which has the advantage of remembering your authentication status automatically. We’ll stick with HTTPS for now, since it’s simpler to use and configure. The biggest downside is that you have to input your personal access token every time you want to push any changes, which can be inconvenient. Luckily, there are ways to get your computer to remember, or <em>cache</em>, your credentials; see the article “Caching your GitHub credentials in Git” (<a href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git">https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git</a>) for information on how to set this up on your system.<sup><a id="rfn9_3" href="ch09.xhtml#fn9_3">3</a></sup></p>
+<p class="footnote"><a id="fn9_3" href="ch09.xhtml#rfn9_3">3.</a> As of this writing, the article is at <a href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git">https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git</a>, but Googling “caching your github credentials in git” is also a good bet.</p>
+<p class="indent">After executing the first <span class="green"><code><strong>git push</strong></code></span> as shown in <a href="ch09.xhtml#list9-1">Listing 9.1</a>, you should reload the current page (using, e.g., <img src="graphics/command.jpg" alt="Image" width="18" height="18"/>R or the icon shown in <a href="ch09.xhtml#fig9-5">Figure 9.5</a>). The result should look something like <a href="ch09.xhtml#fig9-6">Figure 9.6</a>. If it does, you have officially shipped your first Git repository!</p>
+<figure class="figure" id="fig9-5">
+<img src="graphics/09fig05.jpg" alt="Image" width="675" height="55"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.5:</strong> The browser reload page button.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig9-6">
+<img src="graphics/09fig06.jpg" alt="Image" width="744" height="561"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.6:</strong> The remote repository at GitHub.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch09lev2sec1">9.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">On the GitHub page for your repo, click on “Commits” to see a list of your commits. Confirm that they match the results of running <span class="green"><code><strong>git log</strong></code></span> on your local system.</p></li>
+<li><p class="number">At GitHub, click on the commit for adding HTML structure (<a href="ch08.xhtml#list8-10">Listing 8.10</a>). Verify that the diff for the commit agrees with the one shown in <a href="ch08.xhtml#list8-9">Listing 8.9</a>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_227"></span>In honor of shipping your first Git repo, drink a celebratory beverage of your choice (<a href="ch09.xhtml#fig9-7">Figure 9.7</a>).<sup><a id="rfn9_4" href="ch09.xhtml#fn9_4">4</a></sup></p>
+<p class="footnote"><a id="fn9_4" href="ch09.xhtml#rfn9_4">4.</a> Image courtesy of retroclipart/123rf.</p></li>
+</ol>
+<figure class="figure" id="fig9-7">
+<img src="graphics/09fig07.jpg" alt="Image" width="337" height="319"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.7:</strong> Shipping a project often calls for a celebratory beverage.</p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch09lev3">9.3 Adding a README</h3>
+<p class="noindent">Now that we’ve pushed up our repository, let’s add a second file and practice the <span class="green"><code><strong>add</strong></code></span>, <span class="green"><code><strong>commit</strong></code></span>, and <span class="green"><code><strong>push</strong></code></span> sequence shown in <a href="ch08.xhtml#fig8-1">Figure 8.1</a>. You may have noticed in <a href="ch09.xhtml#fig9-6">Figure 9.6</a> that GitHub encourages the presence of a README file via the note “Help people interested in this repository understand your project by adding a README.” <span epub:type="pagebreak" id="page_228"></span>Such a file literally asks the viewer to “READ ME”, <em>à la</em> the DRINK ME bottle from <em>Alice’s Adventures in Wonderland</em> (<a href="ch09.xhtml#fig9-8">Figure 9.8</a>),<sup><a id="rfn9_5" href="ch09.xhtml#fn9_5">5</a></sup> and it’s a good practice to include one.</p>
+<p class="footnote"><a id="fn9_5" href="ch09.xhtml#rfn9_5">5.</a> <em>Alice’s Adventures in Wonderland</em> original illustrations by John Tenniel. Colorized image courtesy of The Print Collector/Alamy Stock Photo.</p>
+<figure class="figure" id="fig9-8">
+<img src="graphics/09fig08.jpg" alt="Image" width="338" height="528"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.8:</strong> Alice would know to read a README file.</p>
+</figcaption>
+</figure>
+<p class="indent"><a href="ch09.xhtml#fig9-6">Figure 9.6</a> shows a green <span class="green"><code><strong>Add a README</strong></code></span> button that GitHub includes to make it easy to add a README file through the web interface, but we’ll follow the common (and more instructive) practice of adding it by hand locally and then pushing it up. When it comes to rendering and displaying READMEs, GitHub supports several common formats, but my favorite format for short documents like READMEs is Markdown, the lightweight markup language introduced in <a href="ch06.xhtml#ch06lev2">Section 6.2</a>.</p>
+<p class="indent">We can get started by opening <span class="green"><code><strong>README.md</strong></code></span> in Atom (or any other text editor), where the <span class="green"><code><strong>.md</strong></code></span> extension identifies the file as Markdown:</p>
+<p class="codelink"><a href="ch09_images.xhtml#p228pro01" id="p228pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ atom README.md</pre>
+<p class="noindent">We can then fill it with the content shown in <a href="ch09.xhtml#list9-2">Listing 9.2</a>.</p>
+<span epub:type="pagebreak" id="page_229"></span>
+<p class="list-head" id="list9-2"><strong>Listing 9.2:</strong> The contents of the README file.<br/><code><em>~/repos/website/README.md</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#p09lis02" id="p09lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"># Sample Website
+
+This is a sample website made as part of [*Learn Enough Git to Be
+Dangerous*](https://www.learnenough.com/git-tutorial), possibly the greatest
+beginner Git tutorial in the history of the Universe. You should totally [
+check it out](https://www.learnenough.com/git-tutorial), and be sure to [join
+the email list](https://www.learnenough.com/#email_list) and
+[follow @learnenough](http://twitter.com/learnenough) on Twitter.
+
+After finishing *Learn Enough Git to Be Dangerous*, you'll know enough Git
+to be *dangerous*. This means you'll be able to use Git to track changes in
+your projects, back up data, share your work with others, and collaborate
+with programmers and other users of Git.</pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_230"></span>The result in Atom appears as shown in <a href="ch09.xhtml#fig9-9">Figure 9.9</a>. As mentioned in <a href="ch06.xhtml#ch06lev2sec2">Section 6.2.2</a>, Atom includes a Markdown previewer via the Packages menu item shown in <a href="ch09.xhtml#fig9-10">Figure 9.10</a>,<sup><a id="rfn9_6" href="ch09.xhtml#fn9_6">6</a></sup> which (after resizing the window) results in the preview shown in <a href="ch09.xhtml#fig9-11">Figure 9.11</a>.<sup><a id="rfn9_7" href="ch09.xhtml#fn9_7">7</a></sup></p>
+<p class="footnote"><a id="fn9_6" href="ch09.xhtml#rfn9_6">6.</a> If you get the error message “Previewing Markdown failed r.trim is not a function”, try running the Toggle Preview keyboard shortcut from <a href="ch09.xhtml#fig9-10">Figure 9.10</a> a few times to see if that helps.</p>
+<p class="footnote"><a id="fn9_7" href="ch09.xhtml#rfn9_7">7.</a> Atom comes with a built-in Markdown previewer, but recall from <a href="ch07.xhtml#ch07lev5">Section 7.5</a> that editors such as Sublime Text often have installable Markdown Preview packages as well.</p>
+<figure class="figure" id="fig9-9">
+<img src="graphics/09fig09.jpg" alt="Image" width="744" height="712"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.9:</strong> The README file viewed in Atom.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig9-10">
+<img src="graphics/09fig10.jpg" alt="Image" width="675" height="531"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.10:</strong> The Packages menu item for toggling the Markdown preview.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig9-11">
+<img src="graphics/09fig11.jpg" alt="Image" width="744" height="318"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.11:</strong> The resized Atom window with a Markdown preview.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_231"></span>Now that we’ve created the <span class="green"><code><strong>README.md</strong></code></span> file, we’re ready to add it to our Git repository and push it up. We can’t just run <span class="green"><code><strong>git commit -am</strong></code></span> because <span class="green"><code><strong>README.md</strong></code></span> isn’t currently in the repository, so we have to add it first:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f000231-01" id="f000231-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git add -A</pre>
+<p class="noindent">(As noted in <a href="ch08.xhtml#ch08lev3sec1">Section 8.3.1</a>, we could also run <span class="green"><code><strong>git add README.md</strong></code></span>, but in most cases we want to add all the new files, so I suggest getting in the habit of running <span class="green"><code><strong>git add-A</strong></code></span> unless there’s a specific reason not to.) Then we commit as usual:</p>
+<p class="codelink"><a href="ch09_images.xhtml#f000231-02" id="f000231-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git commit -m "Add README file"</pre>
+<p class="noindent">By the way, there’s no harm in including <span class="green"><code><strong>-a</strong></code></span> via the <span class="green"><code><strong>-am</strong></code></span> combination shown in <a href="ch08.xhtml#list8-7">Listing 8.7</a> (and despite the redundancy I often do so out of habit), so this could just as easily read <span class="green"><code><strong>git commit -am ”Add a README file”</strong></code></span>. (The call to <span class="green"><code><strong>git add</strong></code></span> is <span epub:type="pagebreak" id="page_232"></span>still necessary, though; recall from <a href="ch08.xhtml#ch08lev4">Section 8.4</a> that <span class="green"><code><strong>git commit -a</strong></code></span> by itself commits changes only to files that Git is already tracking and have been modified.)</p>
+<p class="indent">Having added the file to the repository and made a commit, we’re now ready to push up to GitHub. Recall from <a href="ch09.xhtml#list9-1">Listing 9.1</a> that the first occurrence of <span class="green"><code><strong>git push</strong></code></span> included the “set upstream” option <span class="green"><code><strong>-u</strong></code></span>, the destination <span class="green"><code><strong>origin</strong></code></span>, and <span class="green"><code><strong>main</strong></code></span>, but once these are set up we can omit all those details and just <span class="green"><code><strong>push</strong></code></span>, like this:</p>
+<pre class="box-pre1">[website (main)]$ git push</pre>
+<p class="noindent">The result of this is to push up the new README to the remote repository, which means that we’ve completed the full sequence shown in <a href="ch08.xhtml#fig8-1">Figure 8.1</a>. In this case, GitHub uses the <span class="green"><code><strong>.md</strong></code></span> extension to identify the file as Markdown, converting it to HTML for easy viewing,<sup><a id="rfn9_8" href="ch09.xhtml#fn9_8">8</a></sup> as shown in <a href="ch09.xhtml#fig9-12">Figure 9.12</a>.</p>
+<p class="footnote"><a id="fn9_8" href="ch09.xhtml#rfn9_8">8.</a> This involves converting the <span class="green"><code><strong>#</strong></code></span> in <a href="ch09.xhtml#list9-2">Listing 9.2</a> to a top-level heading (the <span class="green"><code><strong>h1</strong></code></span> we first saw in <a href="ch08.xhtml#ch08lev5">Section 8.5</a>) and converting each Markdown link of the form <span class="green"><code><strong>[content](address)</strong></code></span> into an HTML <em>anchor</em> tag <span class="green"><code><strong>a</strong></code></span>, which we’ll meet in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>.</p>
+<figure class="figure" id="fig9-12">
+<img src="graphics/09fig12.jpg" alt="Image" width="744" height="559"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.12:</strong> The README file at GitHub.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch09lev3sec1">9.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using the Markdown shown in <a href="ch09.xhtml#list9-3">Listing 9.3</a>, add a line at the end of the README with a link to the official Git documentation.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_233"></span>Commit your change with an appropriate message (<a href="ch08.xhtml#box8-3">Box 8.3</a>). You don’t have to run <span class="green"><code><strong>git add</strong></code></span>. Why not?</p></li>
+<li><p class="number">Push your change to GitHub. By refreshing your browser, confirm that the new line has been added to the rendered README. Click on the “official Git documentation” link to verify that it works.</p></li>
+</ol>
+<p class="list-head" id="list9-3"><strong>Listing 9.3:</strong> Markdown code for adding a link to the official Git documentation.<br/><code><em>~/repos/website/README.md</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#p09lis03" id="p09lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">For more information on Git, see the
+[official Git documentation](https://git-scm.com/).</pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch09lev4"><span epub:type="pagebreak" id="page_234"></span>9.4 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch09.xhtml#tab9-1">Table 9.1</a>.</p>
+<figure class="table" id="tab9-1">
+<p class="title-t"><strong>Table 9.1:</strong> Important commands from <a href="ch09.xhtml#ch09">Chapter 9</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>git remote add</code></p></td>
+<td><p class="tab-para">Add remote repo</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git remote add origin</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git push -u &lt;loc&gt; &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Push branch to remote</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git push -u origin main</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git push</code></p></td>
+<td><p class="tab-para">Push to default remote</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git push</strong></code></span></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

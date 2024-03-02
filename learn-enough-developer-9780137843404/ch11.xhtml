@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch11"><span epub:type="pagebreak" id="page_259"></span>Chapter 11</h2>
+<h2 class="chap-title">Collaborating</h2>
+<p class="noindent">Now that we’ve covered some of the tools needed to use Git effectively on solo projects, it’s time to learn about what is perhaps Git’s greatest strength: making it easier to collaborate with other people. This is especially the case when using repository hosts like GitHub (<a href="https://github.com/">https://github.com/</a>) or Bitbucket (<a href="https://bitbucket.org/">https://bitbucket.org/</a>), but it is also possible to host Git repositories on private servers (sometimes using software like GitLab (<a href="https://about.gitlab.com/">https://about.gitlab.com/</a>) to get many GitHub-like benefits).</p>
+<p class="indent">Because this tutorial is designed for individual readers, we won’t actually be able to collaborate with others, but this chapter will explain how you can practice “collaborating” with yourself. There are many different collaboration scenarios, and they vary significantly by team and by project, so we’ll focus on the important case of multiple collaborators who all have <em>commit rights</em> to a particular repo. This model is appropriate for teams where everyone can make changes without explicit approval from a project maintainer.</p>
+<p class="indent">Open-source projects typically use a different flow involving <em>forking</em> and <em>pull requests</em>, but the details differ enough that it’s best to defer to the collaboration instructions of each particular project. Consider, for example, the instructions for contributing to Ruby on Rails (<a href="https://guides.rubyonrails.org/contributing_to_ruby_on_rails.html">https://guides.rubyonrails.org/contributing_to_ruby_on_rails.html</a>). With the commands from this tutorial and your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>), you’ll be in a good position to understand and follow such instructions if you decide to get involved in contributing to open-source software or other projects under version control with Git.</p>
+<p class="indent">For reference, important commands from this chapter are summarized in <a href="ch11.xhtml#ch11lev5">Section 11.5</a>.</p>
+<section>
+<h3 class="h3" id="ch11lev1"><span epub:type="pagebreak" id="page_260"></span>11.1 Clone, Push, Pull</h3>
+<p class="noindent">As an example of a common collaboration workflow, we’ll simulate the case of two developers working on the same project, in this case the simple website developed in this tutorial. We’ll start with Alice (<a href="ch11.xhtml#fig11-1">Figure 11.1</a>)<sup><a id="rfn11_1" href="ch11.xhtml#fn11_1">1</a></sup> working in the original <span class="green"><code><strong>website</strong></code></span> directory, and we’ll create a second directory (<span class="green"><code><strong>website-copy</strong></code></span>) for her collaborator Bob (<a href="ch11.xhtml#fig11-2">Figure 11.2</a>).<sup><a id="rfn11_2" href="ch11.xhtml#fn11_2">2</a></sup></p>
+<p class="footnote"><a id="fn11_1" href="ch11.xhtml#rfn11_1">1.</a> <em>Alice’s Adventures in Wonderland</em> original illustrations by John Tenniel. Colorized image courtesy of The Print Collector/Alamy Stock Photo.</p>
+<p class="footnote"><a id="fn11_2" href="ch11.xhtml#rfn11_2">2.</a> Image courtesy RTRO/Alamy Stock Photo.</p>
+<figure class="figure" id="fig11-1">
+<img src="graphics/11fig01.jpg" alt="Image" width="337" height="528"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.1:</strong> Alice, working on <span class="green"><code><strong>website</strong></code></span>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-2">
+<img src="graphics/11fig02.jpg" alt="Image" width="338" height="437"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.2:</strong> Bob (with son Tim), working on <span class="green"><code><strong>website-copy</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">As a first step, Alice runs <span class="green"><code><strong>git push</strong></code></span> just to make sure all her changes are on the remote repository:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<pre class="box-pre1">[website (main)]$ git push</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_261"></span>In real life, Alice would now need to add Bob as a collaborator on the <span class="green"><code><strong>website</strong></code></span> repository, which she could do at GitHub by clicking on Settings &gt; Manage Access &gt; Invite a collaborator and then put Bob’s GitHub username in the invitation box (<a href="ch11.xhtml#fig11-3">Figure 11.3</a>). Because we’re collaborating with ourselves, we can skip this step.</p>
+<figure class="figure" id="fig11-3">
+<img src="graphics/11fig03.jpg" alt="Image" width="744" height="554"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.3:</strong> The GitHub page to add collaborators.</p>
+</figcaption>
+</figure>
+<p class="indent">Once Bob gets the notification that he’s been added to the <span class="green"><code><strong>website</strong></code></span> repository, he can go to GitHub to get the <em>clone URL</em>, as shown in <a href="ch11.xhtml#fig11-4">Figure 11.4</a>. This URL lets Bob make a full copy of the repository (including its history) using <span class="green"><code><strong>git clone</strong></code></span>.</p>
+<figure class="figure" id="fig11-4">
+<img src="graphics/11fig04.jpg" alt="Image" width="744" height="553"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.4:</strong> Finding the clone URL at GitHub.</p>
+</figcaption>
+</figure>
+<p class="indent">Ordinarily, Bob would probably use his own <span class="green"><code><strong>repos</strong></code></span> directory, with a project called <span class="green"><code><strong>website</strong></code></span> as in Alice’s original, but because we’re only simulating the collaboration we’ll use the name <span class="green"><code><strong>website-copy</strong></code></span> for clarity. In addition, when doing something <span epub:type="pagebreak" id="page_262"></span>a little artificial like this, I like to use a temp directory called <span class="green"><code><strong>~/tmp</strong></code></span>,<sup><a id="rfn11_3" href="ch11.xhtml#fn11_3">3</a></sup> so create this directory if it doesn’t already exist on your system:</p>
+<p class="footnote"><a id="fn11_3" href="ch11.xhtml#rfn11_3">3.</a> The idea behind a temp directory is to have a place to put temporary files that won’t necessarily persist for long. Many operating systems have a system-wide temp directory (often called <span class="green"><code><strong>/tmp</strong></code></span>), but I also like to have one under my home directory for personal use.</p>
+<pre class="box-pre1">$ cd
+$ mkdir tmp</pre>
+<p class="noindent">Then <span class="green"><code><strong>cd</strong></code></span> to it and clone the repo to the local directory:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p263pro01" id="p263pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[~]$ cd tmp/
+[tmp]$ git clone &lt;clone URL&gt; website-copy
+Cloning into 'website-copy'...
+[tmp]$ cd website-copy/</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_263"></span>Here we’ve included the argument <span class="green"><code><strong>website-copy</strong></code></span> to <span class="green"><code><strong>git clone</strong></code></span>, thereby showing how to use a different name than the original repo, but usually you just run <span class="green"><code><strong>git clone &lt;clone URL&gt;</strong></code></span>, which uses the default repo name (in this case, <span class="green"><code><strong>website</strong></code></span>).</p>
+<p class="indent">Now we’re ready to open the copy of the project and start making edits:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<pre class="box-pre1">[website-copy (main)]$ atom .</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_264"></span>For the purposes of this exercise, I recommend placing the editor windows for <span class="green"><code><strong>website</strong></code></span> and <span class="green"><code><strong>website-copy</strong></code></span> side by side, as shown in <a href="ch11.xhtml#fig11-5">Figure 11.5</a>.</p>
+<figure class="figure" id="fig11-5">
+<img src="graphics/11fig05.jpg" alt="Image" width="831" height="468"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.5:</strong> The <span class="green"><code><strong>website</strong></code></span> and <span class="green"><code><strong>website-copy</strong></code></span> editors running side by side.</p>
+</figcaption>
+</figure>
+<p class="indent">To begin the collaboration, we’ll have Bob make a change to the site by wrapping the tutorial title on the About page in a link, like this:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p264pro01" id="p264pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">&lt;<span class="lgreen"><strong>a</strong></span> <span class="ygreen">href</span><span class="gray1">=</span><span class="brown">"https://www.learnenough.com/git-tutorial"</span>&gt;…&lt;/<span class="lgreen"><strong>a</strong>&gt;</span></pre>
+<p class="noindent">Here the ellipsis <span class="green"><code><strong>…</strong></code></span> represents the full title of the tutorial, <em>Learn Enough Git to Be Dangerous</em>. The resulting line is too long to display here, but we can wrap it, as shown in <a href="ch11.xhtml#fig11-6">Figure 11.6</a>, with the result as shown in <a href="ch11.xhtml#fig11-7">Figure 11.7</a>.</p>
+<figure class="figure" id="fig11-6">
+<img src="graphics/11fig06.jpg" alt="Image" width="302" height="267"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.6:</strong> Toggling soft wrap in Atom.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-7">
+<img src="graphics/11fig07.jpg" alt="Image" width="744" height="582"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.7:</strong> The About page with soft wrap activated.</p>
+</figcaption>
+</figure>
+<p class="indent">If we look at the diffusing <span class="green"><code><strong>git diff</strong></code></span>, we see the wrapped line (<a href="ch11.xhtml#fig11-8">Figure 11.8</a>), which appears in a browser as shown in <a href="ch11.xhtml#fig11-9">Figure 11.9</a>.</p>
+<figure class="figure" id="fig11-8">
+<img src="graphics/11fig08.jpg" alt="Image" width="744" height="604"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.8:</strong> The diff with a wrapped line.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-9">
+<img src="graphics/11fig09.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.9:</strong> Linking the Git tutorial title on the About page.</p>
+</figcaption>
+</figure>
+<p class="indent">Having added the link, Bob can commit his changes and push up to the remote repository:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p265pro01" id="p265pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git commit -am "Add link to tutorial title"
+[website-copy (main)]$ git push</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_265"></span>At this point, Bob might send Alice a notification that there’s a change ready, or Alice might just be diligent about checking for changes. In either case, Alice can get the changes from the remote origin by running <span class="green"><code><strong>git pull</strong></code></span>. I suggest opening up a new tab in your terminal window for Alice’s directory (as shown in <a href="ch11.xhtml#fig11-10">Figure 11.10</a>) and then pull as follows:</p>
+<figure class="figure" id="fig11-10">
+<img src="graphics/11fig10.jpg" alt="Image" width="744" height="600"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.10:</strong> Using a new terminal tab for the original directory.</p>
+</figcaption>
+</figure>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000265-02" id="f000265-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git pull
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0
+Unpacking objects: 100% (3/3), 336 bytes | 168.00 KiB/s, done.</pre>
+<p class="codelink"><a href="ch11_images.xhtml#f000266-01" id="f000266-01a">Click here to view code image</a></p>
+<pre class="box-pre1">From https://github.com/mhartl/website
+   cad4761..9a9cecf  main       -&gt; origin/main
+Updating cad4761..9a9cecf
+Fast-forward
+ about.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_266"></span>With that, Alice’s project should have Bob’s commit, and her copy of the About page should be identical to <a href="ch11.xhtml#fig11-9">Figure 11.9</a>. (Checking that Bob’s commit is present in the log is left as an exercise.)</p>
+<section>
+<h4 class="h4" id="ch11lev1sec1">11.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">As Alice, run <span class="green"><code><strong>git log</strong></code></span> to verify that the commit was pulled down correctly. Double-check the details using <span class="green"><code><strong>git log -p</strong></code></span>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_267"></span>The whale picture added in <a href="ch10.xhtml#list10-1">Listing 10.1</a> (<a href="ch10.xhtml#fig10-1">Figure 10.1</a>) requires attribution under the Creative Commons Attribution-NoDerivs 2.0 Generic license. As Alice, link the image to the original attribution page, as shown in <a href="ch11.xhtml#list11-1">Listing 11.1</a>. Commit the result and push to GitHub.</p></li>
+<li><p class="number">As Bob, pull in the changes from the previous exercise. Verify by refreshing the browser and by running <span class="green"><code><strong>git log -p</strong></code></span> that Bob’s repo has been properly updated.</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure></li>
+</ol>
+<span epub:type="pagebreak" id="page_268"></span>
+<p class="list-head" id="list11-1"><strong>Listing 11.1:</strong> Linking to the whale image’s attribution page.<br/><code><em>~/repos/website/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis01" id="p011lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">   .
+   .
+   .
+   &lt;<span class="lgreen"><strong>a</strong></span> <span class="ygreen">href</span><span class="gray1">=</span><span class="brown">"https://www.flickr.com/photos/28883788@N04/10097824543"</span>&gt;
+     &lt;<span class="lgreen"><strong>img</strong></span> <span class="ygreen">src</span><span class="gray1">=</span><span class="brown">"images/breaching_whale.jpg"</span>&gt;
+   &lt;/<span class="lgreen"><strong>a</strong></span>&gt;
+   .
+   .
+   .</pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev2"><span epub:type="pagebreak" id="page_269"></span>11.2 Pulling and Merge Conflicts</h3>
+<p class="noindent">In <a href="ch11.xhtml#ch11lev1">Section 11.1</a>, Alice didn’t make any changes while Bob was making his commit, so there was no chance of conflict, but this is not always the case. In particular, when two collaborators edit the same file, it is possible that the changes might be irreconcilable. Git is pretty smart about merging in changes, and in general conflicts are surprisingly rare, but it’s important to be able to handle them when they occur. In this section, we’ll consider both non-conflicting and conflicting changes in turn.</p>
+<section>
+<h4 class="h4" id="ch11lev2sec1"><span epub:type="pagebreak" id="page_270"></span>11.2.1 Non-conflicting Changes</h4>
+<p class="noindent">We’ll start by having Alice and Bob make <em>non</em>-conflicting changes in the same file. Suppose Alice decides to change the top-level heading on the About page from “About” to “About Us”, as shown in <a href="ch11.xhtml#list11-2">Listing 11.2</a>.</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="list-head" id="list11-2"><strong>Listing 11.2:</strong> Alice’s change to the About page’s <span class="green"><code><strong>h1</strong></code></span>.<br/><code><em>~/repos/website/about.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis02" id="p011lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+    .
+    .
+    .
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>h1</strong></span>&gt;<strong>About Us</strong>&lt;/<span class="bgreen"><strong>h1</strong></span>&gt;</span>
+    .
+    .
+    .
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">After making this change, Alice commits and pushes as usual:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p270pro01" id="p270pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git commit -am "Change page heading"
+[website (main)]$ git push</pre>
+<p class="indent">Meanwhile, Bob decides to add a new image (<a href="ch11.xhtml#fig11-11">Figure 11.11</a>)<sup><a id="rfn11_4" href="ch11.xhtml#fn11_4">4</a></sup> to the About page. He first downloads it with <span class="green"><code><strong>curl</strong></code></span> as follows:</p>
+<p class="footnote"><a id="fn11_4" href="ch11.xhtml#rfn11_4">4.</a> Image courtesy of Vaclav Sebek/Shutterstock.</p>
+<figure class="figure" id="fig11-11">
+<img src="graphics/11fig11.jpg" alt="Image" width="737" height="491"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.11:</strong> An image for Bob to add to the About page.</p>
+</figcaption>
+</figure>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p271pro01" id="p271pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ curl -o images/polar_bear.jpg \
+&gt;                           -L https://cdn.learnenough.com/polar_bear.jpg</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_271"></span>(As noted in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, you should type the backslash character <span class="green"><code><strong>\</strong></code></span> but you <em>shouldn’t</em> type the literal angle bracket <span class="green"><code><strong>&gt;</strong></code></span>.) He then adds it to <span class="green"><code><strong>about.html</strong></code></span> using the <span class="green"><code><strong>img</strong></code></span> tag, as shown in <a href="ch11.xhtml#list11-3">Listing 11.3</a>, with the result shown in <a href="ch11.xhtml#fig11-12">Figure 11.12</a>.</p>
+<figure class="figure" id="fig11-12">
+<img src="graphics/11fig12.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.12:</strong> The About page with an added image.</p>
+</figcaption>
+</figure>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<span epub:type="pagebreak" id="page_272"></span>
+<p class="list-head" id="list11-3"><strong>Listing 11.3:</strong> Adding an image to the About page.<br/><code><em>~/tmp/website-copy/about.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis03" id="p011lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+    .
+    .
+    .
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>img</strong></span> <span class="ygreen"><strong>src</strong></span><span class="gray1">=</span><span class="brown"><strong>"images/polar_bear.jpg"</strong></span> <span class="ygreen"><strong>alt</strong></span><span class="gray1">=</span><span class="brown"><strong>"Polar bear"</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">Note that Bob has included an <span class="green"><code><strong>alt</strong></code></span> attribute in <a href="ch11.xhtml#list11-3">Listing 11.3</a>, which is a text alternative to the image. The <span class="green"><code><strong>alt</strong></code></span> attribute is actually required by the HTML5 standard, and including it is a good practice because it’s used by web spiders and by screen readers for the visually impaired.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_273"></span>Having made his change, Bob commits as usual:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000273-01" id="f000273-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git add -A
+[website-copy (main)]$ git commit -m "Add an image"</pre>
+<p class="noindent">When he tries to push, though, something unexpected happens, as shown in <a href="ch11.xhtml#list11-4">Listing 11.4</a>.</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="list-head" id="list11-4"><strong>Listing 11.4:</strong> Bob’s push, rejected.</p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis04" id="p011lis04a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website-copy (main)]$ git push
+To https://github.com/mhartl/website.git
+<span class="back-yellow"> ! [rejected]        main -&gt; main (fetch first)</span>
+error: failed to push some refs to 'https://github.com/mhartl/website.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+<span class="back-yellow">hint: (e.g., 'git pull ...') before pushing again.</span>
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.</pre>
+</div>
+<p class="indent">Because of the changes Alice already pushed, Git won’t let Bob’s push go through: As indicated by the first highlighted line in <a href="ch11.xhtml#list11-4">Listing 11.4</a>, the push was rejected by GitHub. As indicated by the second highlighted line, the solution to this is for Bob to <span class="green"><code><strong>pull</strong></code></span>:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000273-02" id="f000273-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git pull</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_274"></span>Even though Alice made changes to <span class="green"><code><strong>about.html</strong></code></span>, there is no conflict because Git figures out how to combine the diffs. In particular, <span class="green"><code><strong>git pull</strong></code></span> brings in the changes from the remote repo and uses <span class="green"><code><strong>merge</strong></code></span> to combine them automatically, adding the option to add a commit message by dropping Bob into the default editor, which on most systems is Vim (<a href="ch11.xhtml#fig11-13">Figure 11.13</a>). (This is just one of many reasons why <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) covers Minimum Viable Vim (<a href="ch05.xhtml#ch05lev1">Section 5.1</a>).) To get the merge to go through, you can simply quit out of Vim using <span class="green"><code><strong>:q</strong></code></span>.</p>
+<figure class="figure" id="fig11-13">
+<img src="graphics/11fig13.jpg" alt="Image" width="744" height="642"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.13:</strong> The default editor for merging from a <span class="green"><code><strong>git pull</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">We can confirm that this worked by checking the log, which shows both the merge commit and Alice’s commit from the original copy (<a href="ch11.xhtml#list11-5">Listing 11.5</a>).</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<span epub:type="pagebreak" id="page_275"></span>
+<p class="list-head" id="list11-5"><strong>Listing 11.5:</strong> The Git log after Bob merges in Alice’s changes. (Exact results will differ.)</p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis05" id="p011lis05a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website-copy (main)]$ git log
+commit 679afb8771b1893a865c3775a2786390a936db26 (HEAD -&gt; main)
+Merge: 7a69702 baafb1b
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 12:28:00 2021 -0700
+
+    Merge branch 'main' of https://github.com/mhartl/website
+
+commit 7a6970229233346ce10cfefb3ace91b1d37c4cb2
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 12:26:26 2021 -0700
+
+    Add an image
+
+commit baafb1bd473d553f1532267edfbbf09faf813bf2 (origin/main, origin/HEAD)
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 12:25:18 2021 -0700
+
+    Change page heading</pre>
+</div>
+<p class="indent">If Bob now pushes, it should go through as expected:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<pre class="box-pre1">$ git push</pre>
+<p class="noindent">This puts Bob’s changes on the remote repo, which means Alice can pull them in:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<pre class="box-pre1">$ git pull</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_276"></span>Alice can confirm that her repo now includes Bob’s changes by inspecting the Git log, which should match the results you got in <a href="ch11.xhtml#list11-5">Listing 11.5</a>. Meanwhile, she can refresh her browser to see Bob’s cool new ursine addition (<a href="ch11.xhtml#fig11-14">Figure 11.14</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch11lev2sec2">11.2.2 Conflicting Changes</h4>
+<p class="noindent">Even though Git’s merge algorithms can often figure out how to combine changes from different collaborators, sometimes there’s no avoiding a conflict. For example, suppose both Alice and Bob notice that the required <span class="green"><code><strong>alt</strong></code></span> attribute is missing from the whale image included in <a href="ch10.xhtml#list10-1">Listing 10.1</a> and decide to correct the issue by adding one.</p>
+<figure class="figure" id="fig11-14">
+<img src="graphics/11fig14.jpg" alt="Image" width="744" height="574"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.14:</strong> Confirming that Alice’s repo includes Bob’s added image.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_277"></span>First, Alice adds the <span class="green"><code><strong>alt</strong></code></span> attribute “Breaching whale” (<a href="ch11.xhtml#list11-6">Listing 11.6</a>).</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="list-head" id="list11-6"><strong>Listing 11.6:</strong> Alice’s image <span class="green"><code><strong>alt</strong></code></span>.<br/><code><em>~/repos/website/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis06" id="p011lis06a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+    .
+    .
+    .
+    &lt;<span class="lgreen"><strong>a</strong></span> <span class="ygreen">href</span><span class="gray1">=</span><span class="brown">"https://www.flickr.com/photos/28883788@N04/10097824543"</span>&gt;
+<span class="back-yellow">      &lt;<span class="bgreen"><strong>img</strong></span> <span class="ygreen"><strong>src</strong></span><span class="gray1">=</span><span class="brown"><strong>"images/breaching_whale.jpg"</strong></span> <span class="ygreen"><strong>alt</strong></span><span class="gray1">=</span><span class="brown"><strong>"Breaching whale"</strong></span>&gt;</span>
+    &lt;/<span class="lgreen"><strong>a</strong></span>&gt;
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">She then commits and pushes her change:<sup><a id="rfn11_5" href="ch11.xhtml#fn11_5">5</a></sup></p>
+<p class="footnote"><a id="fn11_5" href="ch11.xhtml#rfn11_5">5.</a> <a href="ch11.xhtml#list11-6">Listing 11.6</a> and <a href="ch11.xhtml#list11-7">Listing 11.7</a> include the attribution link added in the <a href="ch11.xhtml#ch11lev1sec1">Section 11.1.1</a> exercises.</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000277-01" id="f000277-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git commit -am "Add necessary image alt"
+[website (main)]$ git push</pre>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="list-head" id="list11-7"><strong>Listing 11.7:</strong> Bob’s image <span class="green"><code><strong>alt</strong></code></span>.<br/><code><em>~/tmp/website-copy/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis07" id="p011lis07a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+    .
+    .
+    .
+    &lt;<span class="lgreen"><strong>a</strong></span> <span class="ygreen">href</span><span class="gray1">=</span><span class="brown">"https://www.flickr.com/photos/28883788@N04/10097824543"</span>&gt;
+<span class="back-yellow">      &lt;<span class="bgreen"><strong>img</strong></span> <span class="ygreen"><strong>src</strong></span><span class="gray">=</span><span class="brown"><strong>"images/breaching_whale.jpg"</strong></span> <span class="ygreen"><strong>alt</strong></span><span class="gray1">=</span><span class="brown"><strong>"Whale"</strong></span>&gt;</span>
+    &lt;/<span class="lgreen"><strong>a</strong></span>&gt;
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_278"></span>Meanwhile, Bob adds his own <span class="green"><code><strong>alt</strong></code></span> attribute, “Whale” (<a href="ch11.xhtml#list11-7">Listing 11.7</a>), and commits his change:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p278pro01" id="p278pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git commit -am "Add an alt attribute"</pre>
+<p class="noindent">If Bob tries to <span class="green"><code><strong>push</strong></code></span>, he’ll be met with the same rejection message shown in <a href="ch11.xhtml#list11-4">Listing 11.4</a>, which means he should pull—but that comes at a cost:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p278pro02" id="p278pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="back-yellow">[website-copy (main)]$ git pull</span>
+
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0
+Unpacking objects: 100% (3/3), 415 bytes | 207.00 KiB/s, done.
+From https://github.com/mhartl/website
+   679afb8..81c190a main        -&gt; origin/main
+Auto-merging index.html
+<span class="back-yellow">CONFLICT (content): Merge conflict in index.html</span>
+<span class="back-yellow">Automatic merge failed; fix conflicts and then commit the result.</span>
+<span class="back-yellow">[website-copy (main|MERGING)]$</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_279"></span>As indicated in the second highlighted line, Git has detected a merge conflict from Bob’s pull, and his working copy has been put into a special branch state called <span class="green"><code><strong>main|MERGING</strong></code></span>.</p>
+<p class="indent">Bob can see the effect of this conflict by viewing <span class="green"><code><strong>index.html</strong></code></span> in his text editor, as shown in <a href="ch11.xhtml#fig11-15">Figure 11.15</a>. Supposing Bob prefers Alice’s more descriptive <span class="green"><code><strong>alt</strong></code></span> text, he can resolve the conflict by deleting all but the line with <span class="green"><code><strong>alt=”Breaching whale”</strong></code></span>, as seen in <a href="ch11.xhtml#fig11-16">Figure 11.16</a>. (In fact, as seen in <a href="ch11.xhtml#fig11-15">Figure 11.15</a>, Atom includes two “Use me” buttons to make it easy to pick one of the options. Clicking on the bottom “Use me” button gives the same result shown in <a href="ch11.xhtml#fig11-16">Figure 11.16</a>.)</p>
+<figure class="figure" id="fig11-15">
+<img src="graphics/11fig15.jpg" alt="Image" width="744" height="583"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.15:</strong> A file with a merge conflict.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-16">
+<img src="graphics/11fig16.jpg" alt="Image" width="744" height="582"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.16:</strong> The HTML file edited to remove the merge conflict.</p>
+</figcaption>
+</figure>
+<p class="indent">After saving the file, Bob can commit his change, which causes the prompt to revert back to displaying the <span class="green"><code><strong>main</strong></code></span> branch, and at that point he’s ready to <span class="green"><code><strong>push</strong></code></span>:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000279-01" id="f000279-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main|MERGING)]$ git commit -am "Use longer alt attribute"
+[website-copy (main)]$ git push</pre>
+<p class="noindent">Alice’s and Bob’s repos now have the same content, but it’s still a good idea for Alice to pull in Bob’s merge commit:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<pre class="box-pre1">[website (main)]$ git pull</pre>
+<p class="indent">Because of the potential for conflict, it’s a good idea to do a <span class="green"><code><strong>git pull</strong></code></span> before making any changes on a project with multiple collaborators (or even just being edited by the same person on different machines). Even then, on a long enough timeline some conflicts are inevitable, and with the techniques in this section you’re now in a position to handle them.</p>
+</section>
+<section>
+<h4 class="h4" id="ch11lev2sec3"><span epub:type="pagebreak" id="page_280"></span>11.2.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Change your default Git editor from Vim to Atom. <em>Hint</em>: Google for it. (This is an absolutely <em>classic</em> application of technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>): With a well-chosen Google search, you can often go from “I have no idea how to do this” to “It’s done” in under 30 seconds.)</p></li>
+<li><p class="number">The polar bear picture added in <a href="ch11.xhtml#list11-3">Listing 11.3</a> (<a href="ch11.xhtml#fig11-11">Figure 11.11</a>) requires attribution under the Creative Commons Attribution 2.0 Generic license. As Alice, link the image to the original attribution page, as shown in <a href="ch11.xhtml#list11-8">Listing 11.8</a>. Then run <span class="green"><code><strong>git commit -a</strong></code></span> <em>without</em> including <span class="green"><code><strong>-m</strong></code></span> and a command-line message. This should drop you into the default Git editor. Quit the editor <em>without</em> including a message, which cancels the commit.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_281"></span>Run <span class="green"><code><strong>git commit -a</strong></code></span> again, but this time add the commit message “Add polar bear attribution link”. Then hit return a couple of times and add a longer message of your choice. (One example appears in <a href="ch11.xhtml#fig11-17">Figure 11.17</a>.) Save the message and exit the editor.</p>
+<figure class="figure" id="fig11-17">
+<img src="graphics/11fig17.jpg" alt="Image" width="744" height="712"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.17:</strong> Adding a longer message in a text editor.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Run <span class="green"><code><strong>git log</strong></code></span> to confirm that both the short and longer messages correctly appear. After pushing the changes to GitHub, navigate to the page for the commit to confirm that both the short and longer messages correctly appear.</p></li>
+<li><p class="number">As Bob, pull in the changes to the About page. Verify by refreshing the browser and by running <span class="green"><code><strong>git log -p</strong></code></span> that Bob’s repo has been properly updated.</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure></li>
+</ol>
+<span epub:type="pagebreak" id="page_282"></span>
+<p class="list-head" id="list11-8"><strong>Listing 11.8:</strong> Linking to the polar bear image’s attribution page.<br/><code><em>~/repos/website/about.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis08" id="p011lis08a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">   .
+   .
+   .
+   &lt;<span class="lgreen"><strong>a</strong></span> <span class="ygreen">href</span><span class="gray1">=</span><span class="brown">"https://www.flickr.com/photos/puliarfanita/22959238329"</span>&gt;
+     &lt;<span class="lgreen"><strong>img</strong></span> <span class="ygreen">src</span><span class="gray1">=</span><span class="brown">"images/polar_bear.jpg"</span> <span class="ygreen">alt</span><span class="gray1">=</span><span class="brown">"Polar bear"</span>&gt;
+   &lt;/<span class="lgreen"><strong>a</strong></span>&gt;
+   .
+   .
+   .</pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev3"><span epub:type="pagebreak" id="page_283"></span>11.3 Pushing Branches</h3>
+<p class="noindent">In this section, we’ll apply our newfound collaboration skills to get Alice to request a bugfix from Bob, who will make the correction and then share the result with Alice. In the process, we’ll learn how to collaborate on branches other than <span class="green"><code><strong>main</strong></code></span>, thereby applying the material from <a href="ch10.xhtml#ch10lev3">Section 10.3</a> as well.</p>
+<p class="indent">Recall from <a href="ch10.xhtml#ch10lev3">Section 10.3</a> that the trademark character ™ is currently broken on the About page (<a href="ch10.xhtml#fig10-7">Figure 10.7</a>). Alice suspects the fix for this involves adding some markup to the HTML template for the website’s pages, but she’s already agreed to attend a tea party (<a href="ch11.xhtml#fig11-18">Figure 11.18</a>),<sup><a id="rfn11_6" href="ch11.xhtml#fn11_6">6</a></sup> so she only has time to add a couple of <em>HTML comments</em> requesting for Bob to add the relevant fix, as shown in <a href="ch11.xhtml#list11-9">Listing 11.9</a> and <a href="ch11.xhtml#list11-10">Listing 11.10</a>. (We’ll cover HTML comments further in <em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>).)</p>
+<p class="footnote"><a id="fn11_6" href="ch11.xhtml#rfn11_6">6.</a> <em>Alice’s Adventures in Wonderland</em> original illustrations by John Tenniel. Image courtesy of The History Collection / Alamy Stock Photo.</p>
+<figure class="figure" id="fig11-18">
+<img src="graphics/11fig18.jpg" alt="Image" width="744" height="505"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.18:</strong> Alice has a tea party to attend and so asks Bob to fix the website.</p>
+</figcaption>
+</figure>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<span epub:type="pagebreak" id="page_284"></span>
+<p class="list-head" id="list11-9"><strong>Listing 11.9:</strong> A stub for the fix to the ™ problem.<br/><code><em>~/repos/website/about.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis09" id="p011lis09a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;About Us&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+<span class="back-yellow">    <span class="bgreen">&lt;!-- Add something here to fix trademark --&gt;</span></span>
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="list-head" id="list11-10"><strong>Listing 11.10:</strong> A stub to add the ™ fix to the index page.<br/><code><em>~/repos/website/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis010" id="p011lis010a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;A whale of a greeting&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+<span class="back-yellow">    <span class="bgreen">&lt;!-- Add something here to fix trademark --&gt;</span></span>
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">Notice that Alice has wisely asked Bob to fix the index page as well (<a href="ch11.xhtml#list11-10">Listing 11.10</a>) even though the current error only occurs on the About page. This way, any ™ or similar characters added to <span class="green"><code><strong>index.html</strong></code></span> will automatically work in the future. (As noted in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>, having to make such changes in multiple places is annoying, and it’s also brittle and error-prone. The correct solution is to use <em>templates</em>, which we’ll cover starting in <em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>).)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_285"></span>Alice has decided to follow a common convention and use a separate branch for the bugfix, which in this case she calls <span class="green"><code><strong>fix-trademark</strong></code></span>:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000285-01" id="f000285-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git checkout -b fix-trademark
+[website (fix-trademark)]$</pre>
+<p class="noindent">This shows something important: It’s possible to make changes to the working directory (in this case, the additions from <a href="ch11.xhtml#list11-9">Listing 11.9</a> and <a href="ch11.xhtml#list11-10">Listing 11.10</a>) <em>before</em> creating a new branch, as long as those changes haven’t yet been committed.</p>
+<p class="indent">Having made the new branch for the fix, Alice can make a commit and push up the branch using <span class="green"><code><strong>git push</strong></code></span>:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000285-02" id="f000285-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (fix-trademark)]$ git commit -am "Add placeholders for the TM fix"
+[website (fix-trademark)]$ git push -u origin fix-trademark</pre>
+<p class="noindent">Here Alice has used exactly the same <span class="green"><code><strong>push</strong></code></span> syntax used in <a href="ch09.xhtml#list9-1">Listing 9.1</a> to push the repo up to GitHub in the first place, with <span class="green"><code><strong>fix-trademark</strong></code></span> in place of <span class="green"><code><strong>main</strong></code></span>.</p>
+<p class="indent">If Alice sends Bob a note before she heads off to her tea party, Bob will know to do a <span class="green"><code><strong>git pull</strong></code></span> to pull in Alice’s changes:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000285-03" id="f000285-03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="back-yellow"> [website-copy (main)]$ git pull</span>
+
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 4 (delta 3), reused 4 (delta 3), pack-reused 0
+Unpacking objects: 100% (4/4), 444 bytes | 148.00 KiB/s, done.
+From https://github.com/mhartl/website
+<span class="back-yellow">* [new branch]      fix-trademark -&gt; origin/fix-trademark</span>
+
+Already up to date.</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_286"></span>Bob can check his local working directory for the <span class="green"><code><strong>fix-trademark</strong></code></span> branch that Alice created and pushed, but it isn’t there:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p286pro01" id="p286pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git branch
+* main</pre>
+<p class="indent">The reason is that the branch is associated with the remote <span class="green"><code><strong>origin</strong></code></span>, and such branches aren’t displayed by default. To see it, Bob can use the <span class="green"><code><strong>-a</strong></code></span> option (for “all”):<sup><a id="rfn11_7" href="ch11.xhtml#fn11_7">7</a></sup></p>
+<p class="footnote"><a id="fn11_7" href="ch11.xhtml#rfn11_7">7.</a> In fact, <span class="green"><code><strong>git branch --all</strong></code></span> works, but when using Git at the command line it’s more common to use the short forms of the options.</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p286pro02" id="p286pro02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git branch -a
+* main
+  remotes/origin/HEAD -&gt; origin/main
+
+<span class="back-yellow"> remotes/origin/fix-trademark</span>
+
+  remotes/origin/main</pre>
+<p class="noindent">To start work on <span class="green"><code><strong>fix-trademark</strong></code></span> on his local copy, Bob just needs to check it out. By using the same name (i.e., <span class="green"><code><strong>fix-trademark</strong></code></span>), he arranges for it to be associated with the upstream branch on GitHub, which means that <span class="green"><code><strong>git push</strong></code></span> will automatically push up his changes:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p287pro01" id="p287pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (main)]$ git checkout fix-trademark
+Branch fix-trademark set up to track remote branch fix-trademark from origin.
+Switched to a new branch 'fix-trademark'
+[website-copy (fix-trademark)]$</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_287"></span>At this point, Bob can <span class="green"><code><strong>diff</strong></code></span> against <span class="green"><code><strong>main</strong></code></span> to see what he’s dealing with:</p>
+<p class="codelink"><a href="ch11_images.xhtml#f000287-01" id="f000287-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (fix-trademark)]$ git diff main
+<span class="dblue"><strong>diff --git a/about.html b/about.html</strong></span>
+<span class="dblue"><strong>index 173e5fe..4d4b780 100644</strong></span>
+<span class="dred">--- a/about.html</span>
+<span class="bgreen">+++ b/about.html</span>
+<span class="violet"><strong>@@ -2,6 +2,7 @@</strong></span>
+ &lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;About Us&lt;/title&gt;
+<span class="bgreen">+   &lt;!-- Add something here to fix trademark --&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;About Us&lt;/h1&gt;
+<span class="dblue"><strong>diff --git a/index.html b/index.html</strong></span>
+<span class="dblue"><strong>index 024ada5..d8e946f 100644</strong></span>
+<span class="dred">--- a/index.html</span>
+<span class="bgreen">+++ b/index.html</span>
+<span class="violet"><strong>@@ -2,6 +2,7 @@</strong></span>
+ &lt;html&gt;
+   &lt;head&gt;
+     &lt;title&gt;A whale of a greeting&lt;/title&gt;
+<span class="bgreen">+    &lt;!-- Add something here to fix trademark --&gt;</span>
+   &lt;/head&gt;
+   &lt;body&gt;
+     &lt;h1&gt;hello, world&lt;/h1&gt;</pre>
+<p class="noindent">Now all Bob has to do is actually implement the fix. If you’d like a challenging exercise in technical sophistication, try Googling around to see if you can figure out what the problem might be, and also how you might fix it. In case you’d like to do this, I’ll wait here while you look…</p>
+<p class="indent">All right, the problem is that the page doesn’t have the right <em>character encoding</em> to display non-ASCII characters like ™, ®, or ℒ. The fix involves using a tag called <span class="green"><code><strong>meta</strong></code></span> <span epub:type="pagebreak" id="page_288"></span>to tell browsers to use a character set (or <span class="green"><code><strong>charset</strong></code></span> for short) called UTF-8, which will let our page display anything that’s part of the enormous set of Unicode characters. The result, which you would not necessarily be able to guess, appears in <a href="ch11.xhtml#list11-11">Listing 11.11</a> and <a href="ch11.xhtml#list11-12">Listing 11.12</a>.</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="list-head" id="list11-11"><strong>Listing 11.11:</strong> A fix for the ™ problem.<br/><code><em>~/tmp/website-copy/about.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis011" id="p011lis011a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;About Us&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>meta</strong></span> <span class="ygreen"><strong>charset</strong></span><span class="gray1">=</span><span class="brown"><strong>"utf-8"</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="list-head" id="list11-12"><strong>Listing 11.12:</strong> Adding the ™ fix to the index page.<br/><code><em>~/tmp/website-copy/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis012" id="p011lis012a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;A whale of a greeting&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>meta</strong></span> <span class="ygreen"><strong>charset</strong></span><span class="gray1">=</span><span class="brown"><strong>"utf-8"</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">Like the <span class="green"><code><strong>img</strong></code></span> tag introduced in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, <span class="green"><code><strong>meta</strong></code></span> is a void element and so has no closing tag.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_289"></span>Having made the change, Bob can confirm the fix by reloading the page in his browser, as shown in <a href="ch11.xhtml#fig11-19">Figure 11.19</a>.</p>
+<figure class="figure" id="fig11-19">
+<img src="graphics/11fig19.jpg" alt="Image" width="744" height="571"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.19:</strong> Confirming a working trademark character.</p>
+</figcaption>
+</figure>
+<p class="indent">Confident that his solution is correct, Bob can now make a commit and push the fix up to the remote server:</p>
+<figure class="figure1">
+<img src="graphics/un11fig02.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#f000289-01" id="f000289-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website-copy (fix-trademark)]$ git commit -am "Fix trademark character display"
+[website-copy (fix-trademark)]$ git push</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_290"></span>With that, Bob sends a note to Alice that the fix is pushed, and heads out for some well-deserved rest (<a href="ch11.xhtml#fig11-20">Figure 11.20</a>).<sup><a id="rfn11_8" href="ch11.xhtml#fn11_8">8</a></sup></p>
+<p class="footnote"><a id="fn11_8" href="ch11.xhtml#rfn11_8">8.</a> Image courtesy of Maxim Safronov/Shutterstock.</p>
+<figure class="figure" id="fig11-20">
+<img src="graphics/11fig20.jpg" alt="Image" width="744" height="488"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.20:</strong> Bob’s reward for a job well-done.</p>
+</figcaption>
+</figure>
+<p class="indent">Alice, now back from her tea party, gets Bob’s note and pulls in his fix:</p>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p290pro01" id="p290pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (fix-trademark)]$ git pull</pre>
+<p class="noindent">She refreshes her browser to confirm that the ™ character displays properly on her end of things (<a href="ch11.xhtml#fig11-21">Figure 11.21</a>), and then merges the changes into <span class="green"><code><strong>main</strong></code></span>:</p>
+<figure class="figure" id="fig11-21">
+<img src="graphics/11fig21.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.21:</strong> Reconfirming the trademark fix before merging.</p>
+</figcaption>
+</figure>
+<figure class="figure1">
+<img src="graphics/un11fig01.jpg" alt="Image" width="105" height="105"/>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p291pro01" id="p291pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (fix-trademark)]$ git checkout main
+[website (main)]$ git merge fix-trademark
+[website (main)]$ git push</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_291"></span>With the final <span class="green"><code><strong>git push</strong></code></span>, Alice arranges for the remote <span class="green"><code><strong>main</strong></code></span> branch on GitHub to get the fix. (Syncing up Bob’s <span class="green"><code><strong>main</strong></code></span> branch is left as an exercise (<a href="ch11.xhtml#ch11lev3sec1">Section 11.3.1</a>).)</p>
+<p class="indent">Of course, <span class="green"><code><strong>git push</strong></code></span> publishes the change only to a remote Git repository. Wouldn’t it be nice if there were a way to confirm that the ™ character—and the rest of the website—displays correctly on the live Web?</p>
+<section>
+<h4 class="h4" id="ch11lev3sec1"><span epub:type="pagebreak" id="page_292"></span>11.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Bob’s <span class="green"><code><strong>main</strong></code></span> branch doesn’t currently have Alice’s merge, so check out <span class="green"><code><strong>main</strong></code></span> as Bob and do a <span class="green"><code><strong>git pull</strong></code></span>. Confirm using <span class="green"><code><strong>git log</strong></code></span> that Alice’s merge commit is now present.</p></li>
+<li><p class="number">Delete the <span class="green"><code><strong>fix-trademark</strong></code></span> branch locally. Do you need to use the <span class="green"><code><strong>-D</strong></code></span> option (<a href="ch10.xhtml#ch10lev3sec2">Section 10.3.2</a>), or is <span class="green"><code><strong>-d</strong></code></span> sufficient?</p></li>
+<li><p class="number">Delete the remote <span class="green"><code><strong>fix-trademark</strong></code></span> branch on GitHub. <em>Hint</em>: If you get stuck, Google for it.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev4">11.4 A Surprise Bonus</h3>
+<p class="noindent">As hinted at the end of the last section, it would be nice to be able to confirm that the new character encoding works on a live web page. But this requires knowing how to deploy a live site to the Web, and that’s beyond the scope of a humble Git tutorial, right? Amazingly, the answer is no. The reason is that GitHub offers a free service called <em>GitHub Pages</em>, and <em>any</em> repository at GitHub containing static HTML is automatically available as a live website.</p>
+<p class="indent">There is one minor prerequisite to using GitHub Pages, which is that you have to verify your email address with GitHub. Once you’ve done that, though, all you need to do is configure your repository to use GitHub Pages on the <span class="green"><code><strong>main</strong></code></span> branch, which you can do by going to the settings (<a href="ch11.xhtml#fig11-22">Figure 11.22</a>) and then selecting the <span class="green"><code><strong>main</strong></code></span> option (<a href="ch11.xhtml#fig11-23">Figure 11.23</a>) and saving the changes (<a href="ch11.xhtml#fig11-24">Figure 11.24</a>).</p>
+<figure class="figure" id="fig11-22">
+<img src="graphics/11fig22.jpg" alt="Image" width="744" height="558"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.22:</strong> The settings for a GitHub repository.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-23">
+<img src="graphics/11fig23.jpg" alt="Image" width="744" height="551"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.23:</strong> Serving our website from the <span class="green"><code><strong>main</strong></code></span> branch.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-24">
+<img src="graphics/11fig24.jpg" alt="Image" width="744" height="560"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.24:</strong> Saving the new GitHub Pages settings.</p>
+</figcaption>
+</figure>
+<p class="indent">That’s it! Our website is now available at the URL</p>
+<p class="codelink"><a href="ch11_images.xhtml#p292pro01" id="p292pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">https://&lt;name&gt;.github.io/website/</pre>
+<p class="noindent">where <span class="green"><code><strong>&lt;name&gt;</strong></code></span> is your GitHub username. Since my username is <span class="green"><code><strong>mhartl</strong></code></span>, my copy of this tutorial’s website is at mhartl.github.io/website/, as shown in <a href="ch11.xhtml#fig11-25">Figure 11.25</a>.</p>
+<figure class="figure" id="fig11-25">
+<img src="graphics/11fig25.jpg" alt="Image" width="744" height="570"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.25:</strong> A production website at GitHub Pages.</p>
+</figcaption>
+</figure>
+<p class="indent">Note that the URL <span class="green"><code><strong>https://&lt;name&gt;.github.io/website/</strong></code></span> automatically displays <span class="green"><code><strong>index.html</strong></code></span>, which is the usual convention on the Web: The index page is understood to be the default, so there’s no need to type it in. This is not the case with other pages, though, and if you follow the link to the About page you’ll see that the filename appears in the address bar (<a href="ch11.xhtml#fig11-26">Figure 11.26</a>). As seen in <a href="ch11.xhtml#fig11-27">Figure 11.27</a>, the trademark character ™ also renders correctly on the live website, just as we hoped it would.</p>
+<figure class="figure" id="fig11-26">
+<img src="graphics/11fig26.jpg" alt="Image" width="523" height="65"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.26:</strong> An explicit <span class="green"><code><strong>about.html</strong></code></span> in the address bar.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig11-27">
+<img src="graphics/11fig27.jpg" alt="Image" width="744" height="573"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.27:</strong> The About page in production.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_293"></span>Because static HTML pages by definition don’t change from one page view to the next, GitHub can <em>cache</em> them efficiently, storing them for the next user who visits the site. This makes GitHub Pages sites both fast and cheap to serve (which is why GitHub can afford to offer them for free). You can even configure GitHub Pages to work with a custom domain, letting you replace &lt;name&gt;.github.io with something like <a href="http://www.example.com">www.example.com</a>; see the free tutorial <em>Learn Enough Custom Domains to Be Dangerous</em> (<a href="https://www.learnenough.com/custom-domains">https://www.learnenough.com/custom-domains</a>) to learn how to do it. This combination of high performance and support for custom domains makes GitHub Pages suitable for production websites—for example, the Learn Enough blog (<a href="https://news.learnenough.com/">https://news.learnenough.com/</a>) is a static website running on a custom domain at GitHub Pages.</p>
+<p class="indent">The example website in this tutorial is really just a toy, but it’s a great start, and we’ll build on this foundation to make a nearly industrial-grade website in <em>Learn Enough</em> <em>HTML to Be Dangerous</em> and a fully industrial-grade site in <em>Learn Enough CSS &amp; Layout to Be Dangerous</em>.</p>
+<section>
+<h4 class="h4" id="ch11lev4sec1">11.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number"><span epub:type="pagebreak" id="page_294"></span>On the About page, add a link back to <span class="green"><code><strong>index.html</strong></code></span>. Commit and push your change and verify that the link works on the production site.</p></li>
+<li><p class="number">As noted in <a href="ch02.xhtml#ch02lev3">Section 2.3</a>, two of the most important Unix commands are <span class="green"><code><strong>mv</strong></code></span> and <span class="green"><code><strong>rm</strong></code></span>. Git provides analogues of these commands, which have the same effect on local files while also arranging to track the changes. Experiment with these commands via the following sequence: Create a file with some <em>lorem ipsum</em> text, add &amp; commit it, rename it with <span class="green"><code><strong>git mv</strong></code></span> &amp; commit, then remove it with <span class="green"><code><strong>git rm</strong></code></span> &amp; commit again. Examine the results of <span class="green"><code><strong>git log -p</strong></code></span> to see how Git handled the operations.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_295"></span>To practice the process of making a new Git repository, make a second project called <span class="green"><code><strong>second_website</strong></code></span> in the <span class="green"><code><strong>repos</strong></code></span> directory. Create an <span class="green"><code><strong>index.html</strong></code></span> file with the content “hello, again!” and follow the steps (starting in <a href="ch08.xhtml#ch08lev2">Section 8.2</a>) needed to deploy it to the live Web.</p></li>
+<li><p class="number">Make a third, secret project called <span class="green"><code><strong>secret_project</strong></code></span>. Touch files called <span class="green"><code><strong>foo</strong></code></span>, <span class="green"><code><strong>bar</strong></code></span>, and <span class="green"><code><strong>baz</strong></code></span> in the main project directory, and then follow the steps to initialize the repository and commit the initial results. Then, to practice using a service other than GitHub, create a free private repository at Bitbucket.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev5">11.5 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch11.xhtml#tab11-1">Table 11.1</a>.</p>
+<figure class="table" id="tab11-1">
+<p class="title-t"><strong>Table 11.1:</strong> Important commands from <a href="ch11.xhtml#ch11">Chapter 11</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>git clone &lt;URL&gt;</code></p></td>
+<td><p class="tab-para">Copy repo (incl. full history) to local disk</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git clone https://ex.co/repo.git</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git pull</code></p></td>
+<td><p class="tab-para">Pull in changes from remote repository</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git pull</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git branch -a</code></p></td>
+<td><p class="tab-para">List all branches</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git branch -a</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git checkout &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Check out remote branch and configure for</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git checkout fixtrademark</strong></code></span></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section>
+<h3 class="h3" id="ch11lev6"><span epub:type="pagebreak" id="page_296"></span>11.6 Advanced Setup</h3>
+<p class="noindent">This section contains some optional advanced Git setup. The main features are adding an alias for checking out branches, adding the branch name to the Unix prompt, and enabling branch name tab completion. Following the steps in this section should be within your capabilities if you completed <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) and <em>Learn Enough Text Editor to Be</em> <em>Dangerous</em>, but they can be tricky, so use your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>) if you <span epub:type="pagebreak" id="page_297"></span>get stuck. If you’d rather skip these steps for now, you can proceed directly to the conclusion (<a href="ch11.xhtml#ch11lev7">Section 11.7</a>).</p>
+<p class="indent"><em>Note for Mac users</em>: The instructions below assume you are using Bash, as described in <a href="ch02.xhtml#box2-3">Box 2.3</a>. To learn how to set up your Git system using Z shell instead, see the Learn Enough blog post “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>).</p>
+<section>
+<h4 class="h4" id="ch11lev6sec1">11.6.1 A Checkout Alias</h4>
+<p class="noindent">In <a href="ch08.xhtml#ch08">Chapter 8</a>, we added global configuration settings for the name and email address (<a href="ch08.xhtml#list8-3">Listing 8.3</a>) to be included automatically when making commits. Now we’ll add a third config setting, an <em>alias</em> to make it easier to check out branches.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_298"></span>Throughout this tutorial, we’ve used <span class="green"><code><strong>git checkout</strong></code></span> to check out branches (e.g., <a href="ch10.xhtml#list10-3">Listing 10.3</a>), but most experienced Git users configure their systems to use the shorter command <span class="green"><code><strong>git co</strong></code></span>.<sup><a id="rfn11_9" href="ch11.xhtml#fn11_9">9</a></sup> The way to do this is with a Git <em>alias</em>: Much as the Bash aliases covered in <a href="ch05.xhtml#ch05lev4">Section 5.4</a> let us add commands to our Bash shell, Git aliases let us add commands to our Git system. In particular, the way to add the <span class="green"><code><strong>co</strong></code></span> alias is to run the command shown in <a href="ch11.xhtml#list11-13">Listing 11.13</a>.</p>
+<p class="footnote"><a id="fn11_9" href="ch11.xhtml#rfn11_9">9.</a> This choice is no doubt influenced by the analogous command <span class="green"><code><strong>svn co</strong></code></span> used by Subversion, one of Git’s main predecessors.</p>
+<p class="list-head" id="list11-13"><strong>Listing 11.13:</strong> Adding an alias for <span class="green"><code><strong>git co</strong></code></span>.</p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis013" id="p011lis013a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> git config --global alias.co checkout</pre>
+</div>
+<p class="noindent">In effect, this adds <span class="green"><code><strong>co</strong></code></span> as a new Git command, and running <a href="ch11.xhtml#list11-13">Listing 11.13</a> allows us to replace <span class="green"><code><strong>checkout</strong></code></span> in commands like</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> git checkout main</pre>
+<p class="noindent">with the more compact <span class="green"><code><strong>co</strong></code></span> command, as follows:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> git co main</pre>
+<p class="noindent">For maximum compatibility with systems that don’t have <span class="green"><code><strong>co</strong></code></span> configured, this tutorial has always used the full <span class="green"><code><strong>checkout</strong></code></span> command, but in real life I nearly always use <span class="green"><code><strong>git co</strong></code></span>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch11lev6sec2"><span epub:type="pagebreak" id="page_299"></span>11.6.2 Prompt Branches and Tab Completion</h4>
+<p class="noindent">In this section, we’ll add two final advanced customizations. First, we’ll arrange for the command-line prompt to include the name of the current branch. Second, we’ll add the ability to fill in Git branch names using <em>tab completion</em> (<a href="ch02.xhtml#box2-4">Box 2.4</a>), which is especially convenient when dealing with longer branch names. Both of these features come as shell scripts with the Git source code distribution, which can be downloaded as shown in <a href="ch11.xhtml#list11-14">Listing 11.14</a>.</p>
+<p class="list-head" id="list11-14"><strong>Listing 11.14:</strong> Downloading scripts for branch display and tab completion.</p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis014" id="p011lis014a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> curl -o ~/.git-prompt.sh -L https://cdn.learnenough.com/git-prompt.sh
+<span class="dblue"><strong>$</strong></span> curl -o ~/.git-completion.bash <span class="brown"><strong>\</strong></span>
+<span class="dblue"><strong>&gt;</strong></span>      -L https://cdn.learnenough.com/git-completion.bash</pre>
+</div>
+<p class="noindent">Here the <span class="green"><code><strong>-o</strong></code></span> flag arranges to save the files locally under slightly different names from the ones on the server, prepending a dot <span class="green"><code><strong>.</strong></code></span> so that the files are hidden (<a href="ch02.xhtml#ch02lev2sec1">Section 2.2.1</a>) and saving them in the home directory <span class="green"><code><strong>~</strong></code></span>.</p>
+<p class="indent">After downloading the scripts as in <a href="ch11.xhtml#list11-14">Listing 11.14</a>, on some systems we need to make them executable, which we can do with the <span class="green"><code><strong>chmod</strong></code></span> command (<a href="ch07.xhtml#ch07lev3">Section 7.3</a>):</p>
+<p class="codelink"><a href="ch11_images.xhtml#f000299-01" id="f000299-01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> chmod +x ~/.git-prompt.sh
+<span class="dblue"><strong>$</strong></span> chmod +x ~/.git-completion.bash</pre>
+<p class="indent">Next, we need to tell the shell about the new commands, so open up the Bash profile file in your favorite editor (which for simplicity I’ll assume is Atom):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> atom ~/.bashrc</pre>
+<p class="noindent">Then add the configuration shown in <a href="ch11.xhtml#list11-15">Listing 11.15</a> to the bottom of the file. Also, make sure to delete any other lines starting with <span class="green"><code><strong>PS1</strong></code></span> (which you’ll have to do if you modified <span class="green"><code><strong>.bashrc</strong></code></span> as shown in <a href="ch06.xhtml#list6-6">Listing 6.6</a>).</p>
+<span epub:type="pagebreak" id="page_300"></span>
+<p class="list-head" id="list11-15"><strong>Listing 11.15:</strong> Adding Git configuration to Bash.<br/><code><em>~/.bashrc</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p011lis015" id="p011lis015a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">.
+.
+.
+<span class="blue"><em># Git configuration</em></span>
+<span class="blue"><em># Branch name in prompt</em></span>
+<span class="lgreen">source</span> ~/.git-prompt.sh
+<span class="blueg">PS1</span><span class="gray1">=</span><span class="brown">'[\W$(__git_ps1 " (%s)")]\$ '</span>
+<span class="lgreen">export</span> <span class="blueg">PROMPT_COMMAND</span><span class="gray1">=</span><span class="brown">'echo -ne "\033]0;${PWD/#$HOME/~}\007"'</span>
+<span class="blue"><em># Tab completion for branch names</em></span>
+<span class="lgreen">source</span> ~/.git-completion.bash</pre>
+</div>
+<p class="noindent"><em>Note</em>: The vertical dots in <a href="ch11.xhtml#list11-15">Listing 11.15</a> indicate omitted content and should not be copied literally. This is the sort of thing you can figure out using your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>). Speaking of which, I have hardly any idea of what most of the code in <a href="ch11.xhtml#list11-15">Listing 11.15</a> means; part of having technical sophistication means being able to copy things from the Internet and getting them to work even when you have no idea what you’re doing (<a href="ch11.xhtml#fig11-28">Figure 11.28</a><sup><a id="rfn11_10" href="ch11.xhtml#fn11_10">10</a></sup>).</p>
+<p class="footnote"><a id="fn11_10" href="ch11.xhtml#rfn11_10">10</a>. Image courtesy of Adam Frank/Shutterstock.</p>
+<figure class="figure" id="fig11-28">
+<img src="graphics/11fig28.jpg" alt="Image" width="744" height="496"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.28:</strong> It’s OK—neither does anyone else.</p>
+</figcaption>
+</figure>
+<p class="indent">Once we’ve saved the result of editing <span class="green"><code><strong>.bashrc</strong></code></span>, we have to <em>source</em> it to make the changes active (as seen in <a href="ch05.xhtml#list5-5">Listing 5.5</a>):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">source</span> ~/.bashrc</pre>
+<p class="noindent">At this point, the prompt for a Git repository’s default <span class="green"><code><strong>main</strong></code></span> branch should look something like this:</p>
+<pre class="box-pre1">[website (main)]$</pre>
+<p class="noindent">If you skipped ahead from <a href="ch08.xhtml#ch08lev1">Section 8.1</a> to complete this section, you’ll have to wait until <a href="ch08.xhtml#ch08lev2">Section 8.2</a> to see this effect. Checking that tab completion is working is left as an exercise (<a href="ch11.xhtml#ch11lev6sec3">Section 11.6.3</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch11lev6sec3">11.6.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Create a branch called <span class="green"><code><strong>really-long-branch-name</strong></code></span> using <span class="green"><code><strong>git co -b</strong></code></span>.</p></li>
+<li><p class="number">Switch back to the <span class="green"><code><strong>main</strong></code></span> branch using <span class="green"><code><strong>git co</strong></code></span>.</p>
+</li>
+<li><p class="number"><span epub:type="pagebreak" id="page_301"></span>Check out the branch <span class="green"><code><strong>really-long-branch-name</strong></code></span> using tab completion by typing <span class="green"><code><strong>git checkout r</strong></code></span>⇥ at the command-line prompt.</p></li>
+<li><p class="number">What does your prompt look like? Verify that the correct branch name appears in the prompt.</p></li>
+<li><p class="number">Check out the <span class="green"><code><strong>main</strong></code></span> branch using <span class="green"><code><strong>git co m</strong></code></span> ⇥. (This shows that tab completion works with the <span class="green"><code><strong>co</strong></code></span> alias set up in <a href="ch11.xhtml#list11-13">Listing 11.13</a>.) What does the prompt look like now?</p></li>
+<li><p class="number">Use <span class="green"><code><strong>git branch -d r</strong></code></span>⇥ to delete <span class="green"><code><strong>really-long-branch-name</strong></code></span>, thus verifying that tab completion works with <span class="green"><code><strong>git branch</strong></code></span> as well as with <span class="green"><code><strong>git checkout</strong></code></span>. (In fact, tab completion works with most relevant Git commands.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev7"><span epub:type="pagebreak" id="page_302"></span>11.7 Conclusion</h3>
+<p class="noindent">Congratulations! You now know enough Git to be <em>dangerous</em>—which means, with <a href="part01.xhtml#part01">Part I</a> and <a href="part02.xhtml#part02">Part II</a>, you know enough <em>developer tools</em> to be dangerous as well.</p>
+<p class="indent">There’s a lot more to learn, and if you continue down this technical path you’ll keep getting better at using Git for years to come, but with the material in this tutorial you’ve got a great start. For now, you’re probably best off working with what you’ve got, applying your technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>) when necessary. Once you’ve gotten a little more experience under your belt, I recommend seeking out additional resources. Here are some suggestions for getting started:</p>
+<ul class="sq">
+<li><p class="bull"><em>Pro Git</em> by Scott Chacon and Ben Straub (<a href="https://git-scm.com/book/en/v2">https://git-scm.com/book/en/v2</a>)</p></li>
+<li><p class="bull">Learn Git at Codecademy (<a href="https://www.codecademy.com/learn/learn-git">https://www.codecademy.com/learn/learn-git</a>)</p></li>
+<li><p class="bull">Git tutorials (<a href="https://www.atlassian.com/git/tutorials">https://www.atlassian.com/git/tutorials</a>) by Atlassian (makers of Bitbucket)</p></li>
+<li><p class="bull">Tower Git tutorials (<a href="https://www.git-tower.com/learn/">https://www.git-tower.com/learn/</a>)</p></li>
+</ul>
+<p class="indent">At this point, you are in an excellent position to collaborate with millions of software developers around the world. You are also well on your way to becoming a developer yourself. Regardless of your ultimate goals, you can continue improving your dev skills with the rest of the core Learn Enough sequence:</p>
+<ol class="number">
+<li><p class="number"><em><strong>Learn Enough Developer Tools to Be Dangerous</strong></em></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><a href="part01.xhtml#part01">Part I</a>: <em>Learn Enough Command Line to Be Dangerous</em></p></li>
+<li><p class="alpha"><a href="part02.xhtml#part02">Part II</a>: <em>Learn Enough Text Editor to Be Dangerous</em></p></li>
+<li><p class="alpha"><a href="part03.xhtml#part03">Part III</a>: <em>Learn Enough Git to Be Dangerous</em> (you are here)</p></li>
+</ol></li>
+<li><p class="number"><strong>Web Basics</strong></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>)</p></li>
+<li><p class="alpha"><em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>)</p></li>
+<li><p class="alpha"><em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>)</p></li>
+</ol></li>
+<li><p class="number"><strong>Application Development</strong></p>
+<ol class="lower-alpha">
+<li><p class="alpha"><em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>)</p></li>
+<li><p class="alpha"><em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>)</p></li>
+<li><p class="alpha"><span epub:type="pagebreak" id="page_303"></span><em>Learn Enough Action Cable to Be Dangerous</em> (<a href="https://www.learnenough.com/action-cable">https://www.learnenough.com/action-cable</a>) (optional)</p></li>
+</ol></li>
+</ol>
+<p class="noindent">Good luck!<span epub:type="pagebreak" id="page_304"></span></p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch01"><span epub:type="pagebreak" id="page_1"></span>Chapter 1</h2>
+<h2 class="h2a">Hello, World!</h2>
+<p class="noindent">Welcome to <em>Learn Enough Python to Be Dangerous</em>!</p>
+<p class="indent">This tutorial is designed to get you started writing practical and modern Python programs as fast as possible, with a focus on the real tools used every day by software developers. You’ll see how everything fits together by learning skills like testing and test-driven development, publishing packages, beginning web development, and data science. As a result, <em>Learn Enough Python to Be Dangerous</em> can serve either as a standalone introduction or as an excellent prerequisite for longer and more syntax-heavy Python tutorials, of which there are many excellent ones.</p>
+<p class="indent">Python is one of the world’s most popular programming languages, and for good reason. Python has a clean syntax, flexible data types, a wealth of useful libraries, and a powerful and elegant design that supports multiple styles of programming. Python has seen particularly robust adoption for command-line programs (also known as <em>scripting</em>, as discussed in <a href="ch09.xhtml#ch09">Chapter 9</a>), web development (via frameworks like <em>Flask</em> (<a href="ch10.xhtml#ch10">Chapter 10</a>) and <em>Django</em>), and data science (especially data analysis using <em>pandas</em> and machine learning with libraries like <em>scikit-learn</em> (<a href="ch11.xhtml#ch11">Chapter 11</a>)).</p>
+<p class="indent">Just about the only things Python isn’t good for are running inside a web browser (for which JavaScript (<a href="https://www.learnenough.com/javascript-tutorial">https://www.learnenough.com/javascript-tutorial</a>) is necessary) and writing programs where speed is of the essence. And even in the latter case, specialized libraries like NumPy (<a href="ch11.xhtml#sec11_2">Section 11.2</a>) can give us the speed of a lower-level language like C with the power and flexibility of a higher-level language like Python.<sup><a id="fn1_1a" href="ch01.xhtml#fn1_1">1</a></sup></p>
+<p class="footnote"><a id="fn1_1" href="ch01.xhtml#fn1_1a">1.</a> “Higher-level” languages like Python, JavaScript, and Ruby generally have greater support for abstraction and perform automatic memory management.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_2"></span><em>Learn Enough Python to Be Dangerous</em> broadly follows the same structure as <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>) and <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>), either of which can be studied either before or after this tutorial. Because many of the examples are the same, the tutorials reinforce each other nicely—there are few things more instructive in computer programming than seeing the same basic problems solved in two or more different languages.<sup><a id="fn1_2a" href="ch01.xhtml#fn1_2">2</a></sup> As noted in <a href="ch01.xhtml#ch1box1">Box 1.1</a>, though, we’ll definitely be writing <em>Python</em>, not JavaScript or Ruby translated into Python.</p>
+<p class="footnote"><a id="fn1_2" href="ch01.xhtml#fn1_2a">2.</a> See Rosetta Code (<a href="https://rosettacode.org/wiki/Rosetta_Code">https://rosettacode.org/wiki/Rosetta_Code</a>) for a huge compilation of such examples.</p>
+<div class="box">
+<p class="box-title" id="ch1box1"><strong>Box 1.1: Pythonic programming</strong></p>
+<p class="sb-noindent">More so even than users of other languages, Python programmers—sometimes known as <em>Pythonistas</em>—tend to have strongly held opinions on what constitutes proper programming style. For example, as noted by Python contributor Tim Peters in “The Zen of Python” (<a href="ch01.xhtml#sec1_2_1">Section 1.2.1</a>): “There should be one—and preferably only one—obvious way to do it.” (This stands in contrast to a famous principle associated with the Perl programming language known as “TMTOWTDI”: There’s More Than One Way To Do It.)</p>
+<p class="sb-indent">Code that adheres to good programming practices (as judged by Pythonistas) is known as <em>Pythonic</em> code. This includes proper code formatting (especially the practices in PEP 8 – Style Guide for Python Code (<a href="https://peps.python.org/pep-0008/">https://peps.python.org/pep-0008/</a>)), using built-in Python facilities like <code>enumerate()</code> (<a href="ch03.xhtml#sec3_5">Section 3.5</a>) and <code>items()</code> (<a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>), and using characteristic idioms like list and dictionary comprehensions (<a href="ch06.xhtml#ch06">Chapter 6</a>). (As noted in the official documentation (<a href="https://peps.python.org/pep-0001/">https://peps.python.org/pep-0001/</a>), “PEP stands for Python Enhancement Proposal. A PEP is a design document providing information to the Python community, or describing a new feature for Python or its processes or environment.” PEP 8 is the PEP specifically concerned with Python code style and formatting.)</p>
+<p class="sb-indent">The code in this tutorial generally strives to be as Pythonic as possible given the material introduced at the given point in the exposition. In addition, we will often begin by introducing a series of intentionally <em>un</em>Pythonic examples, culminating in a fully Pythonic version. In such cases, the distinction between unPythonic and Pythonic code will be carefully noted.</p>
+<p class="sb-indent">Pythonistas have been known to be a bit harsh in their judgment of unPythonic code, which can lead beginners to become overly concerned about programming <span epub:type="pagebreak" id="page_3"></span>Pythonically. But “Pythonic” is a sliding scale, depending on how much experience you have in the language. Moreover, programming is fundamentally about <em>solving problems</em>, so don’t let worries about programming Pythonically stop you from solving the problems <em>you</em> face in your role as a Python programmer and software developer.</p>
+</div>
+<p class="indent">There are no programming prerequisites for <em>Learn Enough Python to Be Dangerous</em>, although it certainly won’t hurt if you’ve programmed before. What is important is that you’ve started developing your <em>technical sophistication</em> (<a href="ch01.xhtml#ch1box2">Box 1.2</a>), either on your own or using the preceding Learn Enough tutorials (<a href="https://www.learnenough.com/courses">https://www.learnenough.com/courses</a>). These tutorials include the following, which together make a good list of prerequisites for this book:</p>
+<ol class="number">
+<li><p class="number"><em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>)</p></li>
+<li><p class="number"><em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>)</p></li>
+<li><p class="number"><em>Learn Enough Git to Be Dangerous</em> (<a href="https://www.learnenough.com/git">https://www.learnenough.com/git</a>)</p></li>
+</ol>
+<p class="noindent">All of these tutorials are available as print or digital books or online for individual purchase, and we offer a subscription service—the Learn Enough All Access subscription (<a href="https://www.learnenough.com/all-access">https://www.learnenough.com/all-access</a>)—with access to all the corresponding online courses.</p>
+<div class="box">
+<p class="box-title" id="ch1box2"><strong>Box 1.2: Technical sophistication</strong></p>
+<p class="sb-noindent">An essential aspect of using computers is the ability to figure things out and troubleshoot on your own, a skill we at Learn Enough (<a href="https://www.learnenough.com/">https://www.learnenough.com/</a>) call <em>technical sophistication</em>.</p>
+<p class="sb-indent">Developing technical sophistication means not only following systematic tutorials like <em>Learn Enough Python to Be Dangerous</em>, but also knowing when it’s time to break free of a structured presentation and just start Googling around for a solution.</p>
+<p class="sb-indent"><em>Learn Enough Python to Be Dangerous</em> will give us ample opportunity to practice this essential technical skill.</p>
+<p class="sb-indent">In particular, as alluded to above, there is a wealth of Python reference material on the Web, but it can be hard to use unless you already basically know <span epub:type="pagebreak" id="page_4"></span>what you’re doing. One goal of this tutorial is to be the key that unlocks the documentation. This will include lots of pointers to the official Python site.</p>
+<p class="sb-indent">Especially as the exposition gets more advanced, I’ll also sometimes include the web searches you could use to figure out how to accomplish the particular task at hand. For example, how do you use Python to manipulate a Document Object Model (DOM)? Like this: python dom manipulation.</p>
+</div>
+<p class="indent">You won’t learn everything there is to know about Python in this tutorial—that would take thousands of pages and centuries of effort—but you will learn enough Python to be <em>dangerous</em> (<a href="ch01.xhtml#ch1fig1">Figure 1.1</a><sup><a id="fn1_3a" href="ch01.xhtml#fn1_3">3</a></sup>). Let’s take a look at what that means.</p>
+<figure class="image-c" id="ch1fig1">
+<img src="graphics/01fig01.jpg" alt="images" width="725" height="483"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.1:</strong> Python knowledge, like Rome, wasn’t built in a day.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn1_3" href="ch01.xhtml#fn1_3a">3.</a> Image courtesy of Kirk Fisher/Shutterstock.</p>
+<p class="indent">In <a href="ch01.xhtml#ch01">Chapter 1</a>, we’ll begin at the beginning with a series of simple “hello, world” programs using several different techniques, including an introduction to an interactive command-line program for evaluating Python code. In line with the Learn Enough philosophy of always doing things “for real”, even as early as the first chapter we’ll deploy a (very simple) dynamic Python application to the live Web. You’ll <span epub:type="pagebreak" id="page_5"></span>also get pointers to the latest setup and installation instructions via <em>Learn Enough Dev Environment to Be Dangerous</em> (<a href="https://www.learnenough.com/dev-environment">https://www.learnenough.com/dev-environment</a>), which is available for free online and as a free downloadable ebook.</p>
+<p class="indent">After mastering “hello, world”, we’ll take a tour of some Python <em>objects</em>, including strings (<a href="ch02.xhtml#ch02">Chapter 2</a>), arrays (<a href="ch03.xhtml#ch03">Chapter 3</a>), and other native objects (<a href="ch04.xhtml#ch04">Chapter 4</a>). Taken together, these chapters constitute a gentle introduction to <em>object-oriented programming</em> with Python.</p>
+<p class="indent">In <a href="ch05.xhtml#ch05">Chapter 5</a>, we’ll learn the basics of <em>functions</em>, an essential subject for virtually every programming language. We’ll then apply this knowledge to an elegant and powerful style of coding called <em>functional programming</em> (<a href="ch06.xhtml#ch06">Chapter 6</a>).</p>
+<p class="indent">Having covered the basics of built-in Python objects, in <a href="ch07.xhtml#ch07">Chapter 7</a> we’ll learn how to make objects of our own. In particular, we’ll define an object for a <em>phrase</em>, and then develop a method for determining whether or not the phrase is a <em>palindrome</em> (the same read forward and backward).</p>
+<p class="indent">Our initial palindrome implementation will be rather rudimentary, but we’ll extend it in <a href="ch08.xhtml#ch08">Chapter 8</a> using a powerful technique called <em>test-driven development</em> (TDD). In the process, we’ll learn more about testing generally, as well as how to create and publish a self-contained Python package.</p>
+<p class="indent">In <a href="ch09.xhtml#ch09">Chapter 9</a>, we’ll learn how to write nontrivial <em>shell scripts</em>, one of Python’s biggest strengths. Examples include reading from both files and URLs, with a final example showing how to manipulate a downloaded file as if it were an HTML web page.</p>
+<p class="indent">In <a href="ch10.xhtml#ch10">Chapter 10</a>, we’ll develop our first full Python web application: a site for detecting palindromes. This will give us a chance to learn about <em>routes</em>, <em>layouts</em>, <em>embedded Python</em>, and <em>form handling</em>. As a capstone to our work, we’ll deploy our palindrome detector to the live Web.</p>
+<p class="indent">Finally, <a href="ch11.xhtml#ch11">Chapter 11</a> introduces several core libraries for doing data science in Python, including NumPy, Matplotlib, pandas, and scikit-learn.</p>
+<p class="indent">By the way, experienced developers can largely skip the first four chapters of <em>Learn Enough Python to Be Dangerous</em>, as described in <a href="ch01.xhtml#ch1box3">Box 1.3</a>.</p>
+<div class="box">
+<p class="box-title" id="ch1box3"><strong>Box 1.3: For experienced developers</strong></p>
+<p class="sb-noindent">By keeping a few diffs in mind, experienced developers can skip <a href="ch01.xhtml#ch01">Chapters 1</a>–<a href="ch04.xhtml#ch04">4</a> of this tutorial and start with functions in <a href="ch05.xhtml#ch05">Chapter 5</a>. They can then move quickly on <span epub:type="pagebreak" id="page_6"></span>to functional programming in <a href="ch06.xhtml#ch06">Chapter 6</a>, consulting earlier chapters as necessary to fill in any gaps.</p>
+<p class="sb-indent">Here are some of the notable differences between Python and most other languages:</p>
+<ul class="sq">
+<li><p class="bull">Use <code>print</code> for printing (<a href="ch01.xhtml#sec1_2">Section 1.2</a>).</p></li>
+<li><p class="bull">Use <code>#!/usr/bin/env python3</code> for the shebang line in shell scripts (<a href="ch01.xhtml#sec1_4">Section 1.4</a>).</p></li>
+<li><p class="bull">Single- and double-quoted strings are effectively identical (<a href="ch02.xhtml#sec2_1">Section 2.1</a>).</p></li>
+<li><p class="bull">Use formatted strings (f-strings) and curly braces for string interpolation, e.g., <code>f"foo {bar} baz"</code> for strings <code>"foo"</code> and <code>"baz"</code> and variable <code>bar</code> (<a href="ch02.xhtml#sec2_2">Section 2.2</a>).</p></li>
+<li><p class="bull">Use <code>r"..."</code> for raw strings (<a href="ch02.xhtml#sec2_2_2">Section 2.2.2</a>).</p></li>
+<li><p class="bull">Python doesn’t have an <code>obj.length</code> attribute or an <code>obj.length()</code> method; instead, use <code>len(obj)</code> to calculate object lengths (<a href="ch02.xhtml#sec2_4">Section 2.4</a>).</p></li>
+<li><p class="bull">Whitespace is significant (<a href="ch02.xhtml#sec2_4">Section 2.4</a>). Lines are typically ended by newlines or colons, and block structure is indicated using indentation (generally four spaces per block level).</p></li>
+<li><p class="bull">Use <code>elif</code> for <code>else if</code> (<a href="ch02.xhtml#sec2_4">Section 2.4</a>).</p></li>
+<li><p class="bull">In a boolean context, all Python objects are <code>True</code> except <code>0</code>, <code>None</code>, “empty” objects (<code>""</code>, <code>[]</code>, <code>{}</code>, etc.), and <code>False</code> itself (<a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a> and later sections).</p></li>
+<li><p class="bull">Use <code>[...]</code> for lists (<a href="ch03.xhtml#ch03">Chapter 3</a>) and <code>{key: value, ...}</code> for hashes (called <em>dictionaries</em> in Python) (<a href="ch04.xhtml#sec4_4">Section 4.4</a>).</p></li>
+<li><p class="bull">Python makes extensive use of <em>namespaces</em>, so importing a library like <code>math</code> leads to accessing methods through a library object by default (e.g., <code>math.sqrt(2)</code>) (<a href="ch04.xhtml#sec4_1_1">Section 4.1.1</a>).</p></li>
+</ul>
+</div>
+<section>
+<h3 class="h3" id="sec1_1">1.1 Introduction to Python</h3>
+<p class="noindent">Created by Dutch developer Guido van Rossum (<a href="ch01.xhtml#ch1fig2">Figure 1.2</a><sup><a id="fn1_4a" href="ch01.xhtml#fn1_4">4</a></sup>), Python was originally designed as a high-level, general-purpose programming language. The name <em>Python</em> is a reference, not directly to the snake of that name, but rather to the British comedy troupe Monty Python. This speaks to a certain lightheartedness at the core of Python, but Python is also an elegant, powerful language useful for serious work. Indeed, <span epub:type="pagebreak" id="page_7"></span>although I am probably better known for my contributions to the Ruby community (especially the <em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>)), Python has long had a special place in my heart (<a href="ch01.xhtml#ch1box4">Box 1.4</a>).</p>
+<figure class="image-c" id="ch1fig2">
+<img src="graphics/01fig02.jpg" alt="images" width="600" height="450"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.2:</strong> Guido van Rossum, the creator of Python.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn1_4" href="ch01.xhtml#fn1_4a">4.</a> Image courtesy of Eugene Lazutkin/Getty Images.</p>
+<div class="box">
+<p class="box-title" id="ch1box4"><strong>Box 1.4: My Python journey</strong></p>
+<p class="sb-noindent">Back in the early days of the World Wide Web, I initially learned Perl and PHP for scripting and web development. When I finally got around to learning Python, I was blown away by how much cleaner and more elegant it was than those languages (in my humble opinion and no offense intended). Although I had programmed in a wide variety of languages by that point—including Basic, Pascal, C, C++, IDL, Perl, and PHP—Python was the first language I really <em>loved</em>.</p>
+<p class="sb-indent">When I was in graduate school, Python played a key role in my doctoral research in theoretical physics, mainly for data processing and as a “glue” language for high-speed simulations written in C and C++. After I graduated, I decided to become an entrepreneur, and I preferred Python so much that I couldn’t bring myself to go back to PHP even though at the time the latter had more mature features for web development. Instead, for my first startup I wrote a custom web <span epub:type="pagebreak" id="page_8"></span>framework in Python. (Why not just use Django? This was a while ago, and Django hadn’t been released yet.)</p>
+<p class="sb-indent">After Ruby on Rails came out, I ended up getting more involved in the Ruby language (eventually leading to the <em>Ruby on Rails Tutorial</em>), but I never lost my interest in Python. I’ve been impressed by how Python’s syntax has continued to mature and become even more elegant, particularly with the advent of Python 3. I was especially pleased to see Python incorporate tau, the mathematical constant I proposed in <em>The Tau Manifesto</em> (<a href="https://tauday.com/tau-manifesto">https://tauday.com/tau-manifesto</a>). Finally, I’ve watched in amazement as Python’s capabilities expanded into areas like numerical computing, plotting, and data analysis (all of which are discussed in <a href="ch11.xhtml#ch11">Chapter 11</a>), as well as into scientific and mathematical computing (e.g., SciPy and Sage). The power of Python-based systems now genuinely rivals proprietary systems like MATLAB, Maple, and <em>Mathematica</em>; especially given Python’s open-source nature, it seems likely that this trend will continue.</p>
+<p class="sb-indent">The future looks bright for Python, and I for one expect to use Python frequently in the years to come. As a result, making this tutorial has been a great opportunity for me to reconnect with my Python roots, and I’m glad you’re joining me on the journey.</p>
+</div>
+<p class="indent">In order to give you the best broad-range introduction to programming with Python, <em>Learn Enough Python to Be Dangerous</em> uses four main methods:</p>
+<ol class="number">
+<li><p class="number">An interactive prompt with a Read-Eval-Print Loop (REPL)</p></li>
+<li><p class="number">Standalone Python files</p></li>
+<li><p class="number">Shell scripts (as introduced (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script</a>) in <em>Learn Enough Text Editor to Be Dangerous</em>)</p></li>
+<li><p class="number">Python web applications running in a web server</p></li>
+</ol>
+<p class="noindent">We’ll begin our study of Python with four variations on the time-honored theme of a “hello, world” program, a tradition that dates back to the early days of the C programming language. The main purpose of “hello, world” is to confirm that our system is correctly configured to execute a simple program that prints the string <span class="pd_green-d"><code><strong>"hello, world!"</strong></code></span> (or some close variant) to the screen. By design, the program is simple, allowing us to focus on the challenge of getting the program to run in the first place.</p>
+<p class="indent">Because one of the most common applications of Python is writing shell scripts for execution at the command line, we’ll start by writing a series of programs to display a greeting in a command-line terminal: first in a REPL; then in a <span epub:type="pagebreak" id="page_9"></span>standalone file called <span class="pd_green-d"><code><strong>hello.py</strong></code></span>; and finally in an executable shell script called <span class="pd_green-d"><code><strong>hello</strong></code></span>. We’ll then write (and deploy!) a simple proof-of-concept web application using the Flask (<a href="https://flask.palletsprojects.com">https://flask.palletsprojects.com</a>) web framework (a lightweight framework that serves as good preparation for a heavier framework like Django).</p>
+<section>
+<h4 class="h4" id="sec1_1_1">1.1.1 System Setup and Installation</h4>
+<p class="noindent">Throughout what follows, I’ll assume that you have access to a Unix-compatible system like macOS or Linux (including the Linux-based Cloud9 IDE (<a href="https://www.learnenough.com/dev-environment-tutorial#sec-cloud_ide">https://www.learnenough.com/dev-environment-tutorial#sec-cloud_ide</a>), as described in the free tutorial <em>Learn Enough Dev Environment to Be Dangerous</em>). The cloud IDE is especially well-suited to beginners and is recommended for those looking to streamline their setup process or who run into difficulties configuring their native system.</p>
+<p class="indent">If you use the cloud IDE, I recommend creating a development environment (<a href="https://www.learnenough.com/dev-environment-tutorial#fig-cloud9_page_aws">https://www.learnenough.com/dev-environment-tutorial#fig-cloud9_page_aws</a>) called <span class="pd_green-d"><code><strong>python-tutorial</strong></code></span>. The cloud IDE uses the Bash shell program by default; Linux and Mac users can use whichever shell program they prefer—this tutorial should work with either Bash or macOS’s default Z shell (Zsh). You can use the following command to figure out which one is running on your system:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">echo</span> <span class="pd_blue">$SHELL</span></code></pre>
+<p class="noindent">When updating your system settings (as in <a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a>), be sure to use the profile file corresponding to your shell program (<span class="pd_green-d"><code><strong>.bash_profile</strong></code></span> or <span class="pd_green-d"><code><strong>.zshrc</strong></code></span>). See “Using Z Shell on Macs with the Learn Enough Tutorials (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>)” for more information.</p>
+<p class="indent">This tutorial standardizes on Python 3.10, although the vast majority of code will work with any version after 3.7. You can check to see if Python is already installed by running <span class="pd_green-d"><code><strong>python3 --version</strong></code></span> at the command line to get the version number (<a href="ch01.xhtml#ch1list1">Listing 1.1</a>).<sup><a id="fn1_5a" href="ch01.xhtml#fn1_5">5</a></sup></p>
+<p class="listing" id="ch1list1"><strong>Listing 1.1:</strong> Checking the Python version.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> python3 --version
+<span class="pd_green-d">Python 3.10.6</span></code></pre>
+</div>
+<p class="footnote"><a id="fn1_5" href="ch01.xhtml#fn1_5a">5.</a> All of the listings in <em>Learn Enough Python to Be Dangerous</em> can be found online at <a href="http://github.com/learnenough/learn_enough_python_code_listings">github.com/learnenough/learn_enough_python_code_listings</a>.</p>
+<p class="noindent"><span epub:type="pagebreak" id="page_10"></span>If instead you get a result like</p>
+<p class="codelink"><a href="ch01_images.xhtml#f010-01" id="f010-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> python3 --version
+<span class="pd_green-d">-bash: python3: command not found</span></code></pre>
+<p class="noindent">or you get a version number earlier than 3.10 then you should install a more recent version of Python.</p>
+<p class="indent">The details of installing Python vary by system and can require applying a little technical sophistication (<a href="ch01.xhtml#ch1box2">Box 1.2</a>). The different possibilities are covered in <em>Learn Enough Dev Environment to Be Dangerous</em>, which you should take a look at now if you don’t already have Python on your system. In particular, if you end up using the cloud IDE recommended by <em>Learn Enough Dev Environment to Be Dangerous</em>, you can update the Python version as shown in <a href="ch01.xhtml#ch1list2">Listing 1.2</a>. Note that the steps in <a href="ch01.xhtml#ch1list2">Listing 1.2</a> should work on any Linux system that supports the APT package manager. On macOS systems, Python can be installed using Homebrew as shown in <a href="ch01.xhtml#ch1list3">Listing 1.3</a>.</p>
+<p class="listing" id="ch1list2"><strong>Listing 1.2:</strong> Installing Python on a Linux system like the cloud IDE.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f010-02" id="f010-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> sudo add-apt-repository -y ppa:deadsnakes/ppa
+<span class="pd_blue"><strong>$</strong></span> sudo apt-get install -y python3.10
+<span class="pd_blue"><strong>$</strong></span> sudo apt-get install -y python3.10-venv
+<span class="pd_blue"><strong>$</strong></span> sudo ln -sf /usr/bin/python3.10 /usr/bin/python3</code></pre>
+</div>
+<p class="listing" id="ch1list3"><strong>Listing 1.3:</strong> Installing Python on macOS using Homebrew.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> brew install python@3.10</code></pre>
+</div>
+<p class="indent">Whichever way you go, the result should be an executable version of Python (or more specifically, Python 3):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> python3 --version
+<span class="pd_green-d">Python 3.10.6</span></code></pre>
+<p class="noindent">(Exact version numbers may differ.)</p>
+<p class="indent">For historical reasons, many systems include copies of both Python 3 and an earlier version of Python known as Python 2. You can often get away with using the <span epub:type="pagebreak" id="page_11"></span><span class="pd_green-d"><code><strong>python</strong></code></span> command (without the <span class="pd_green-d"><code><strong>3</strong></code></span>), especially when working in a virtual environment (<a href="ch01.xhtml#sec1_3">Section 1.3</a>). As you level up as a Python programmer, you may find yourself using the plain <span class="pd_green-d"><code><strong>python</strong></code></span> command more often, secure in the knowledge that the correct version is being used. This route is more error-prone, though, so we’ll stick with <span class="pd_green-d"><code><strong>python3</strong></code></span> in this tutorial since it makes the version number explicit, with negligible risk of accidentally using Python 2.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec1_2">1.2 Python in a REPL</h3>
+<p class="noindent">Our first example of a “hello, world” program involves a Read-Eval-Print Loop, or <em>REPL</em> (pronounced “repple”). A REPL is a program that <strong>read</strong>s input, <strong>eval</strong>uates it, <strong>print</strong>s out the result (if any), and then <strong>loop</strong>s back to the read step. Most modern programming languages provide a REPL, and Python is no exception; in Python’s case, the REPL is often known as the Python <em>interpreter</em> because it directly executes (or “interprets”) user commands. (A third common term is the Python <em>shell</em>, in analogy with the Bash and Zsh programs used to run command-line shell programs.)</p>
+<p class="indent">Learning to use the REPL well is a valuable skill for every aspiring Python programmer. As noted Python author David Beazley put it:</p>
+<p class="blockquote">Although there are many non-shell environments where you can code Python, you will be a stronger Python programmer if you are able to run, debug, and interact with Python at the terminal [i.e., the REPL]. This is Python’s native environment. If you are able to use Python here, you will be able to use it everywhere else.</p>
+<p class="indent">The Python REPL can be started with the Python command <span class="pd_green-d"><code><strong>python3</strong></code></span>, so we can run it at the command line as shown in <a href="ch01.xhtml#ch1list4">Listing 1.4</a>.</p>
+<p class="listing" id="ch1list4"><strong>Listing 1.4:</strong> Bringing up the interactive Python prompt at the command line.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green-d">$ python3
+&gt;&gt;&gt;</span></code></pre>
+</div>
+<p class="noindent">Here <span class="pd_green-d"><code><strong>&gt;&gt;&gt;</strong></code></span> represents a generic Python prompt waiting for input from the user.</p>
+<p class="indent">We’re now ready to write our first Python program using the <span class="pd_green-d"><code><strong>print()</strong></code></span> command, as seen in <a href="ch01.xhtml#ch1list5">Listing 1.5</a>. (Here <span class="pd_green-d"><code><strong>"hello, world!"</strong></code></span> is a <em>string</em>; we’ll start learning more about strings in <a href="ch02.xhtml#ch02">Chapter 2</a>.)</p>
+<span epub:type="pagebreak" id="page_12"></span>
+<p class="listing" id="ch1list5"><strong>Listing 1.5:</strong> A “hello, world” program in the REPL.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)
+<span class="pd_green-d">hello, world!</span></code></pre>
+</div>
+<p class="noindent">That’s it! That’s how easy it is to print “hello, world!” interactively with Python.</p>
+<p class="indent">If you’re familiar with other programming languages (such as PHP or JavaScript), you may have noticed that <a href="ch01.xhtml#ch1list5">Listing 1.5</a> lacks a terminating semicolon to mark the end of the line. Indeed, Python is unusual among programming languages in that its syntax depends on things like newlines (<a href="ch01.xhtml#sec1_2_1">Section 1.2.1</a>) and spaces. We’ll see many more examples of Python’s unique syntax as this tutorial progresses.</p>
+<section>
+<h4 class="h4" id="sec1_2_1">1.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number"><a href="ch01.xhtml#ch1box1">Box 1.1</a> references “The Zen of Python” by Tim Peters. Confirm that we can print out the full text of “The Zen of Python” using the command <span class="pd_green-d"><code><strong>import this</strong></code></span> in the Python REPL (<a href="ch01.xhtml#ch1list6">Listing 1.6</a>).</p></li>
+</ol>
+<p class="listing" id="ch1list6"><strong>Listing 1.6:</strong> “The Zen of Python” by Tim Peters.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f012-01" id="f012-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green-d">&gt;&gt;&gt; import this
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!</span></code></pre>
+</div>
+<ol class="number" start="2">
+<li><p class="number"><span epub:type="pagebreak" id="page_13"></span>What happens if you use <span class="pd_green-d"><code><strong>print("hello, world!", end="")</strong></code></span> in place of <span class="pd_green-d"><code><strong>print()</strong></code></span> by itself? (The <span class="pd_green-d"><code><strong>end=""</strong></code></span> is known as a <em>keyword argument</em> (<a href="ch05.xhtml#sec5_1_2">Section 5.1.2</a>).) How would you change the <span class="pd_green-d"><code><strong>end</strong></code></span> argument to get the result to match <a href="ch01.xhtml#ch1list5">Listing 1.5</a>? <em>Hint</em>: Recall (<a href="https://www.learnenough.com/command-line-tutorial/basics#sec-exercises_man">https://www.learnenough.com/command-line-tutorial/basics#sec-exercises_man</a>) that <span class="pd_green-d"><code><strong>\n</strong></code></span> is the typical way to represent a newline character.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec1_3">1.3 Python in a File</h3>
+<p class="noindent">As convenient as it is to be able to explore Python interactively, most Real Programming™ takes place in text files created with a text editor. In this section, we’ll show how to create and execute a Python file with the same “hello, world” program we’ve discussed in <a href="ch01.xhtml#sec1_2">Section 1.2</a>. The result will be a simplified prototype of the reusable Python files we’ll start learning about in <a href="ch05.xhtml#sec5_2">Section 5.2</a>.</p>
+<p class="indent">We’ll start by creating a directory for this tutorial and a Python file (with a <span class="pd_green-d"><code><strong>.py</strong></code></span> file extension) for our <span class="pd_green-d"><code><strong>hello</strong></code></span> program (be sure to exit the interpreter first if you’re still in the REPL, which you can do using <span class="pd_green-d"><code><strong>exit</strong></code></span> or <span class="pd_green-d"><code><strong>Ctrl-D</strong></code></span>):</p>
+<p class="codelink"><a href="ch01_images.xhtml#f013-01" id="f013-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span>    <span class="pd_blue1"><em># Make sure we're in the home directory.</em></span>
+<span class="pd_blue"><strong>$</strong></span> mkdir -p repos/python_tutorial
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span> repos/python_tutorial</code></pre>
+<p class="noindent">Here the <span class="pd_green-d"><code><strong>-p</strong></code></span> option to <span class="pd_green-d"><code><strong>mkdir</strong></code></span> arranges to create intermediate directories if necessary. <em>Note</em>: Throughout this tutorial, if you’re using the cloud IDE recommended in <em>Learn Enough Dev Environment to Be Dangerous</em>, you should replace the home directory <span class="pd_green-d"><code><strong>~</strong></code></span> with the directory <span class="pd_green-d"><code><strong>~/environment</strong></code></span>.</p>
+<p class="indent">Because Python is so widely used, many systems come preinstalled with Python, and default programs often use it extensively. This introduces the possibility of interactions between the version of Python we’re using and the versions used by other programs, and the results can be nasty and confusing. To avoid this headache, one common practice is to use self-contained <em>virtual environments</em>, which allow us to use the exact version of Python we want, and to install whatever Python packages we want, without affecting the rest of the system.</p>
+<p class="indent">We’ll be using the <span class="pd_green-d"><code><strong>venv</strong></code></span> package combined with <span class="pd_green-d"><code><strong>pip</strong></code></span> to install additional packages. This solution is especially suitable for a tutorial like this one because all of the specifics of the setup are contained in a single directory, which can be deleted and recreated if anything goes wrong. There is another powerful solution called Conda, though, which <span epub:type="pagebreak" id="page_14"></span>has a large and enthusiastic following among Python programmers. In my experience, Conda is just a little more difficult to use than venv/pip (e.g., the first time I tried using the <span class="pd_green-d"><code><strong>conda</strong></code></span> utility it took over my system and replaced the default Python, which was tricky to reverse), but as you level up you might find yourself switching over to Conda.<sup><a id="fn1_6a" href="ch01.xhtml#fn1_6">6</a></sup></p>
+<p class="footnote"><a id="fn1_6" href="ch01.xhtml#fn1_6a">6.</a> Yet another possibility is pipenv, which provides a more structured interface to venv and bears a strong resemblance to the Bundler/<span class="pd_green-d"><code><strong>Gemfile</strong></code></span> solution used by Ruby.</p>
+<p class="indent">To create a virtual environment, we’ll use the <span class="pd_green-d"><code><strong>python3</strong></code></span> command with <span class="pd_green-d"><code><strong>-m</strong></code></span> (for “module”) and <span class="pd_green-d"><code><strong>venv</strong></code></span> (the name of the virtual environment module):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> python3 -m venv venv</code></pre>
+<p class="noindent">Note that the second occurrence of <span class="pd_green-d"><code><strong>venv</strong></code></span> is our choice; we could write <span class="pd_green-d"><code><strong>python3 -m venv foobar</strong></code></span> to create a virtual environment called <span class="pd_green-d"><code><strong>foobar</strong></code></span>, but <span class="pd_green-d"><code><strong>venv</strong></code></span> is the conventional choice. N.B. If you ever completely screw up your Python configuration, you can simply remove the venv directory using <span class="pd_green-d"><code><strong>rm -rf venv/</strong></code></span> and start again (but don’t run that command right now or the rest of the chapter might not work!).</p>
+<p class="indent">Once the virtual environment is installed, we need to <em>activate</em> it to use it:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span></code></pre>
+<p class="noindent">Note that many shell programs will insert <span class="pd_green-d"><code><strong>(venv)</strong></code></span> before the prompt <span class="pd_green-d"><code><strong>$</strong></code></span> to remind us that we’re working in a virtual environment. The <span class="pd_green-d"><code><strong>activate</strong></code></span> step is frequently required when using virtual environments, so I suggest creating a shell alias (<a href="https://www.learnenough.com/text-editor-tutorial/vim#secsaving_and_quitting_files">https://www.learnenough.com/text-editor-tutorial/vim#secsaving_and_quitting_files</a>) for it, such as <span class="pd_green-d"><code><strong>va</strong></code></span>.<sup><a id="fn1_7a" href="ch01.xhtml#fn1_7">7</a></sup></p>
+<p class="footnote"><a id="fn1_7" href="ch01.xhtml#fn1_7a">7.</a> In both Bash and Zsh, this could be accomplished by adding <span class="pd_green-d"><code><strong>alias va="source venv/bin/activate"</strong></code></span> to your <span class="pd_green-d"><code><strong>.bash_profile</strong></code></span> or <span class="pd_green-d"><code><strong>.zshrc</strong></code></span> file and then running <span class="pd_green-d"><code><strong>source</strong></code></span> on that file. See Saving and quitting files in <em>Learn Enough Text Editor to Be Dangerous</em> for more details.</p>
+<p class="indent">To deactivate a virtual environment, use the <span class="pd_green-d"><code><strong>deactivate</strong></code></span> command:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> deactivate
+<span class="pd_blue"><strong>$</strong></span></code></pre>
+<p class="noindent">Note that the <span class="pd_green-d"><code><strong>(venv)</strong></code></span> in front of the prompt disappears upon deactivation.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_15"></span>Now let’s reactivate the virtual environment and create a file called <span class="pd_green-d"><code><strong>hello.py</strong></code></span> using the <span class="pd_green-d"><code><strong>touch</strong></code></span> command (as discussed (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-listing">https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-listing</a>) in <em>Learn Enough Command Line to Be Dangerous</em>):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span> touch hello.py</code></pre>
+<p class="indent">Next, using our favorite text editor, we’ll fill the file with the contents shown in <a href="ch01.xhtml#ch1list7">Listing 1.7</a>. Note that the code is exactly the same as in <a href="ch01.xhtml#ch1list5">Listing 1.5</a>, with the difference that in a Python file there’s no command prompt <span class="pd_green-d"><code><strong>&gt;&gt;&gt;</strong></code></span>.</p>
+<p class="listing" id="ch1list7"><strong>Listing 1.7:</strong> A “hello, world” program in a Python file.<br/><code><em>hello.py</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)</code></pre>
+</div>
+<p class="indent">At this point, we’re ready to execute our program using the <span class="pd_green-d"><code><strong>python3</strong></code></span> command we used in <a href="ch01.xhtml#ch1list1">Listing 1.1</a> to check the Python version number. The only difference is that this time we omit the <span class="pd_green-d"><code><strong>--version</strong></code></span> option and instead include an argument with the name of our file:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 hello.py
+<span class="pd_green-d">hello, world!</span></code></pre>
+<p class="noindent">As in <a href="ch01.xhtml#ch1list5">Listing 1.5</a>, the result is to print “hello, world!” out to the terminal screen, only now it’s the raw shell instead of a Python REPL.</p>
+<p class="indent">Although this example is simple, it’s a huge step forward, as we’re now in the position to write Python programs much longer than could comfortably fit in an interactive session.</p>
+<section>
+<h4 class="h4" id="sec1_3_1">1.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">What happens if you give <span class="pd_green-d"><code><strong>print()</strong></code></span> two arguments, as in <a href="ch01.xhtml#ch1list8">Listing 1.8</a>?</p></li>
+</ol>
+<p class="listing" id="ch1list8"><strong>Listing 1.8:</strong> Using two arguments.<br/><code><em>hello.py</em></code></p>
+<p class="codelink"><a href="ch01_images.xhtml#f015-01" id="f015-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>, <span class="pd_red">"how's it going?"</span>)</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_16"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec1_4">1.4 Python in a Shell Script</h3>
+<p class="noindent">Although the code in <a href="ch01.xhtml#sec1_3">Section 1.3</a> is perfectly functional, when writing a program to be executed in the command-line shell (<a href="https://www.learnenough.com/command-line-tutorial/basics#sec-man_pages">https://www.learnenough.com/command-line-tutorial/basics#sec-man_pages</a>) it’s often better to use an <em>executable script</em> of the sort discussed in <em>Learn Enough Text Editor to Be Dangerous</em>.</p>
+<p class="indent">Let’s see how to make an executable script using Python. We’ll start by creating a file called <span class="pd_green-d"><code><strong>hello</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch hello</code></pre>
+<p class="noindent">Note that we <em>didn’t</em> include the <span class="pd_green-d"><code><strong>.py</strong></code></span> extension—this is because the filename itself is the user interface, and there’s no reason to expose the implementation language to the user. Indeed, there’s a reason not to: By using the name <span class="pd_green-d"><code><strong>hello</strong></code></span>, we give ourselves the option to rewrite our script in a different language down the line, without changing the command our program’s users have to type. (Not that it matters in this simple case, but the principle should be clear. We’ll see a more realistic example in <a href="ch09.xhtml#sec9_3">Section 9.3</a>.)</p>
+<p class="indent">There are two steps to writing a working script. The first is to use the same command we’ve seen before (<a href="ch01.xhtml#ch1list7">Listing 1.7</a>), preceded by a “shebang” line telling our system to use Python to execute the script.</p>
+<p class="indent">Ordinarily, the exact shebang line is system-dependent (as seen with Bash in <em>Learn Enough Text Editor to Be Dangerous</em> and with JavaScript (<a href="https://www.learnenough.com/javascript-tutorial/hello_world#sec-js_shell">https://www.learnenough.com/javascript-tutorial/hello_world#sec-js_shell</a>) in <em>Learn Enough JavaScript to Be Dangerous</em>), but with Python we can ask the shell itself to supply the proper command. The trick is to use the following line to use the <span class="pd_green-d"><code><strong>python</strong></code></span> executable available as part of the shell’s <em>environment</em> (env):</p>
+<pre class="pre1"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span></code></pre>
+<p class="noindent">Using this for the shebang line gives the shell script shown in <a href="ch01.xhtml#ch1list9">Listing 1.9</a>.</p>
+<p class="listing" id="ch1list9"><strong>Listing 1.9:</strong> A “hello, world” shell script.<br/><code><em>hello</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue1"><em>#!/usr/bin/env python3</em></span>
+
+print<span class="pd_gray">(</span><span class="pd_red">"hello, world!"</span><span class="pd_gray">)</span></code></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_17"></span>We could execute this file directly using the <span class="pd_green-d"><code><strong>python</strong></code></span> command as in <a href="ch01.xhtml#sec1_3">Section 1.3</a>, but a true shell script should be executable without the use of an auxiliary program. (That’s what the shebang line is for.) Instead, we’ll follow the second of the two steps mentioned above and make the file itself executable using the <span class="pd_green-d"><code><strong>chmod</strong></code></span> (“change mode”) command combined with <span class="pd_green-d"><code><strong>+x</strong></code></span> (“plus executable”):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> chmod +x hello</code></pre>
+<p class="indent">At this point, the file should be executable, and we can execute it by preceding the command with <span class="pd_green-d"><code><strong>./</strong></code></span>, which tells our system to look in the current directory (dot = <span class="pd_green-d"><code><strong>.</strong></code></span>) for the executable file. (Putting the <span class="pd_green-d"><code><strong>hello</strong></code></span> script on the PATH (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#code-export_path">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#code-export_path</a>), so that it can be called from any directory, is left as an exercise.) The result looks like this:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ./hello
+<span class="pd_green-d">hello, world!</span></code></pre>
+<p class="noindent">Success! We’ve now written a working Python shell script suitable for extension and elaboration. As mentioned briefly above, we’ll see an example of a real-life utility script in <a href="ch09.xhtml#sec9_3">Section 9.3</a>.</p>
+<p class="indent">Throughout the rest of this tutorial, we’ll mainly use the Python interpreter for initial investigations, but the eventual goal will almost always be to create a file containing Python.</p>
+<section>
+<h4 class="h4" id="sec1_4_1">1.4.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">By moving the file or changing your system’s configuration, add the <span class="pd_green-d"><code><strong>hello</strong></code></span> script to your environment’s PATH. (You may find the steps in <em>Learn Enough Text Editor to Be Dangerous</em> helpful.) Confirm that you can run <span class="pd_green-d"><code><strong>hello</strong></code></span> without prepending <span class="pd_green-d"><code><strong>./</strong></code></span> to the command name. <em>Note</em>: If you have a conflicting <span class="pd_green-d"><code><strong>hello</strong></code></span> program from following <em>Learn Enough JavaScript to Be Dangerous</em> or <em>Learn Enough Ruby to Be Dangerous</em>, I suggest replacing it—thus demonstrating the principle that the file’s name is the user interface, and the implementation can change language without affecting users.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_18"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec1_5">1.5 Python in a Web Browser</h3>
+<p class="noindent">Although it wasn’t initially designed for web development, Python’s elegant and powerful design has led to its widespread use in making web applications. In recognition of this, our final example of a “hello, world” program will be a live web application, written in the simple but powerful <em>Flask</em> micro-framework (<a href="ch01.xhtml#ch1fig3">Figure 1.3</a><sup><a id="fn1_8a" href="ch01.xhtml#fn1_8">8</a></sup>). Because of its simplicity, Flask is a perfect introduction to web development with Python while also serving as excellent preparation for a “batteries included” framework like Django.</p>
+<figure class="image-c" id="ch1fig3">
+<img src="graphics/01fig03.jpg" alt="images" width="675" height="394"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.3:</strong> A traditional drinking-horn flask.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn1_8" href="ch01.xhtml#fn1_8a">8.</a> Image courtesy of Peter Gudella/Shutterstock.</p>
+<p class="indent">We’ll begin by installing the Flask package using pip (a recursive acronym that stands for “pip installs packages”). The <span class="pd_green-d"><code><strong>pip</strong></code></span> command comes automatically as part of the virtual environment, so we can access it by typing <span class="pd_green-d"><code><strong>pip</strong></code></span> at the command line (or <span class="pd_green-d"><code><strong>pip3</strong></code></span> on some systems—try the latter if the former doesn’t work). As a first step, it’s a good idea to upgrade pip to ensure we’re running the latest version:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f018-01" id="f018-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install --upgrade pip</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_19"></span>Next, install Flask (<a href="ch01.xhtml#ch1list10">Listing 1.10</a>).</p>
+<p class="listing" id="ch1list10"><strong>Listing 1.10:</strong> Installing Flask (with an exact version number).</p>
+<p class="codelink"><a href="ch01_images.xhtml#f019-01" id="f019-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_blue">Flask</span><span class="pd_gray">==2</span>.2.2</code></pre>
+</div>
+<p class="noindent">We’ve included an exact version number in <a href="ch01.xhtml#ch1list10">Listing 1.10</a> in case future versions of Flask don’t happen to work with this tutorial; this is similar to our decision to use <span class="pd_green-d"><code><strong>python3</strong></code></span> instead of plain <span class="pd_green-d"><code><strong>python</strong></code></span>. As you get more advanced, though, you’ll probably just run things like <span class="pd_green-d"><code><strong>pip install Flask</strong></code></span>, secure in the knowledge that you can figure out what went wrong if the version number doesn’t happen to work.</p>
+<p class="indent">Believe it or not, the one command in <a href="ch01.xhtml#ch1list10">Listing 1.10</a> installs all of the software needed to run a simple but full-strength web application on our local system (where “local” might refer to the cloud if you’re using the cloud IDE recommended in <em>Learn Enough Dev Environment to Be Dangerous</em>).</p>
+<p class="indent">Although the code for the “hello, world” web app uses some commands that we haven’t covered yet, it’s a straightforward adaptation of the example program on the Flask home page (<a href="ch01.xhtml#ch1fig4">Figure 1.4</a>). Being able to adapt code you don’t necessarily understand is a classic hallmark of technical sophistication (<a href="ch01.xhtml#ch1box2">Box 1.2</a>).</p>
+<p class="indent">We’ll put our “hello, world” app in a file called <span class="pd_green-d"><code><strong>hello_app.py</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch hello_app.py</code></pre>
+<p class="noindent">The code itself closely parallels the program in <a href="ch01.xhtml#ch1fig4">Figure 1.4</a>, as seen in <a href="ch01.xhtml#ch1list11">Listing 1.11</a>.</p>
+<figure class="image-c" id="ch1fig4">
+<img src="graphics/01fig04.jpg" alt="images" width="725" height="537"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.4:</strong> A sample program from the Flask home page.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch1list11"><strong>Listing 1.11:</strong> A “hello, world” web app.<br/><code><em>python_tutorial/hello_app.py</em></code></p>
+<p class="codelink"><a href="ch01_images.xhtml#f019-02" id="f019-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+app <span class="pd_gray">=</span> Flask<span class="pd_blue">(__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">"&lt;p&gt;hello, world!&lt;/p&gt;"</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_20"></span>The code in <a href="ch01.xhtml#ch1list11">Listing 1.11</a> defines the behavior for the <em>root URL</em> / when responding to an ordinary browser request (known as <code>GET</code>). The response itself is the required “hello, world!” string, which will be returned to the browser as a (very simple) web page.</p>
+<p class="indent">To run the web application in <a href="ch01.xhtml#ch1list11">Listing 1.11</a>, all we need to do is run the <span class="pd_green-d"><code><strong>hello_app.py</strong></code></span> file using the <span class="pd_green-d"><code><strong>flask</strong></code></span> command (<a href="ch01.xhtml#ch1list12">Listing 1.12</a>). (Do make sure you’re running in the virtual environment; weird things can happen if you try running the <span class="pd_green-d"><code><strong>flask</strong></code></span> command on the default system.) In <a href="ch01.xhtml#ch1list12">Listing 1.12</a>, the <span class="pd_green-d"><code><strong>--app</strong></code></span> option specifies the app and the <span class="pd_green-d"><code><strong>--debug</strong></code></span> option arranges to update the app when we change the code (which saves us from having to restart the Flask server every time we make a change).</p>
+<p class="listing" id="ch1list12"><strong>Listing 1.12:</strong> Running the Flask app on a local system.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f020-01" id="f020-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flask --app hello_app.py --debug run
+<span class="pd_green-d"> * Running on http://127.0.0.1:5000/</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_21"></span>At this point, visiting the given URL (which consists of the local address 127.0.0.1 and the port number) shows the application running on the local machine.<sup><a id="fn1_9a" href="ch01.xhtml#fn1_9">9</a></sup></p>
+<p class="footnote"><a id="fn1_9" href="ch01.xhtml#fn1_9a">9.</a> Many systems configure <span class="pd_green-d"><code><strong>localhost</strong></code></span> to be a synonym for <span class="pd_green-d"><code><strong>127.0.0.1</strong></code></span>; with Flask, this can still be arranged, but it requires a little extra configuration, so we’ll stick with the raw address in this tutorial.</p>
+<p class="indent">If you’re using the cloud IDE, the commands are nearly identical to the ones shown in <a href="ch01.xhtml#ch1list12">Listing 1.12</a>; the only difference is that you have to include a different port number using the <span class="pd_green-d"><code><strong>--port</strong></code></span> option (<a href="ch01.xhtml#ch1list13">Listing 1.13</a>).</p>
+<p class="listing" id="ch1list13"><strong>Listing 1.13:</strong> Running the Flask app on the cloud IDE.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f021-01" id="f021-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flask --app hello_app.py --debug run --port <span class="pd_blue">$PORT</span>
+<span class="pd_green-d"> * Running on http://127.0.0.1:8080/</span></code></pre>
+</div>
+<p class="indent">To preview the app and replicate the result shown in <a href="ch01.xhtml#ch1fig5">Figure 1.5</a>, we have to follow a few more steps. First, we need to preview the app as shown in <a href="ch01.xhtml#ch1fig6">Figure 1.6</a>.</p>
+<figure class="image-c" id="ch1fig5">
+<img src="graphics/01fig05.jpg" alt="images" width="725" height="555"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.5:</strong> The hello app running locally.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_22"></span>
+<figure class="image-c" id="ch1fig6">
+<img src="graphics/01fig06.jpg" alt="images" width="725" height="537"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.6:</strong> The “local” server running on the cloud IDE.</p>
+</figcaption>
+</figure>
+<p class="noindent">The result typically shows up in a small window inside the IDE (details may vary); by clicking the icon shown in <a href="ch01.xhtml#ch1fig7">Figure 1.7</a>, we can pop out into a new window. The result should appear as in <a href="ch01.xhtml#ch1fig8">Figure 1.8</a> (the only difference with <a href="ch01.xhtml#ch1fig5">Figure 1.5</a> is the URL).</p>
+<figure class="image-c" id="ch1fig7">
+<img src="graphics/01fig07.jpg" alt="images" width="725" height="537"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.7:</strong> Previewing the hello app.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch1fig8">
+<img src="graphics/01fig08.jpg" alt="images" width="724" height="546"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.8:</strong> The hello app running on the cloud IDE.</p>
+</figcaption>
+</figure>
+<p class="indent">Just getting a web app to work, even locally, is a huge accomplishment. But the real <em>pièce de résistance</em> is deploying the app to the live Web. This is the goal of <a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a>.</p>
+<section>
+<h4 class="h4" id="sec1_5_1">1.5.1 Deployment</h4>
+<p class="noindent">Now that we’ve got our app running locally, we’re ready to deploy it to a production environment. This used to be practically impossible to do in a beginning tutorial, but the technology landscape has matured significantly in recent years, to the point where we actually have an abundance of choices. The result will be a production version of the application from <a href="ch01.xhtml#sec1_5">Section 1.5</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_23"></span>There’s a bit of overhead involved in deploying something the first time, but deploying early and often is a core part of the Learn Enough philosophy of <em>shipping</em> (<a href="ch01.xhtml#ch1box5">Box 1.5</a>). Moreover, a simple app like “hello, world” is the best kind of app for first-time deployment, because there’s so much less that can go wrong.</p>
+<p class="indent">As with the GitHub Pages deployment option used in previous tutorials (<em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>) and <em>Learn Enough JavaScript to Be Dangerous</em> among them), our first step is to put our project under version control with Git (as covered (<a href="https://www.learnenough.com/git-tutorial/getting_started#sec-initializing_the_repo">https://www.learnenough.com/git-tutorial/getting_started#sec-initializing_the_repo</a>) in <em>Learn Enough Git to Be Dangerous</em>). While this is not strictly necessary for the deployment solution used in this section, it’s always a good idea to have a fully versioned project so that we can more easily recover from any errors.</p>
+<span epub:type="pagebreak" id="page_24"></span>
+<div class="box">
+<p class="box-title" id="ch1box5"><strong>Box 1.5: Real artists ship</strong></p>
+<p class="sb-noindent">As legendary Apple cofounder Steve Jobs once said: <em>Real artists ship.</em> What he meant was that, as tempting as it is to privately polish in perpetuity, makers must <em>ship</em> their work—that is, actually finish it and get it out into the world. This can be scary, because shipping means exposing your work not only to fans but also to critics. “What if people don’t like what I’ve made?” <em>Real artists ship.</em></p>
+<p class="sb-indent">It’s important to understand that shipping is a separate skill from making. Many makers get good at making things but never learn to ship. To keep this from happening to us, we’ll follow the practice started in <em>Learn Enough Git to Be Dangerous</em> and ship several things in this tutorial. Shipping the “hello, world” app in this section is only the beginning!</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_25"></span>Our first step is to create a <span class="pd_green-d"><code><strong>.gitignore</strong></code></span> file to tell Git to ignore files and directories we don’t want to version. Use <span class="pd_green-d"><code><strong>touch .gitignore</strong></code></span> (or any other method you prefer) to create the file and then fill it with the contents shown in <a href="ch01.xhtml#ch1list14">Listing 1.14</a>.<sup><a id="fn1_10a" href="ch01.xhtml#fn1_10">10</a></sup></p>
+<p class="footnote"><a id="fn1_10" href="ch01.xhtml#fn1_10a">10.</a> This file is based in part on the example from the Flask documentation itself.</p>
+<p class="listing" id="ch1list14"><strong>Listing 1.14:</strong> Ignoring certain files and directories.<br/><code><em>.gitignore</em></code></p>
+<div class="box1">
+<pre class="pre"><code>venv/
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+
+.DS_Store</code></pre>
+</div>
+<p class="indent">Next, initialize the repository:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f025-01" id="f025-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> git init
+<span class="pd_blue"><strong>(venv) $</strong></span> git add -A
+<span class="pd_blue"><strong>(venv) $</strong></span> git commit -m <span class="pd_red">"Initialize repository"</span></code></pre>
+<p class="indent">It’s also a good idea to push any newly initialized repository up to a remote backup. As in previous Learn Enough tutorials, we’ll use GitHub for this purpose (<a href="ch01.xhtml#ch1fig9">Figure 1.9</a>).</p>
+<figure class="image-c" id="ch1fig9">
+<img src="graphics/01fig09.jpg" alt="images" width="725" height="554"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.9:</strong> Creating a new repository at GitHub.</p>
+</figcaption>
+</figure>
+<p class="indent">Because web apps sometimes include sensitive information like passwords or API keys, I like to err on the side of caution and use a <em>private</em> repository. Accordingly, be sure to select the Private option when creating the new repository at GitHub, as shown in <a href="ch01.xhtml#ch1fig10">Figure 1.10</a>. (By the way, it’s still a bad idea to include passwords or API keys, even in a private repo; the best practice is to use environment variables or the like instead.)</p>
+<span epub:type="pagebreak" id="page_26"></span>
+<figure class="image-c" id="ch1fig10">
+<img src="graphics/01fig10.jpg" alt="images" width="725" height="581"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.10:</strong> Using a private repo.</p>
+</figcaption>
+</figure>
+<p class="indent">Next, tell your local system about the remote repository (taking care to fill in <span class="pd_green-d"><code><strong>&lt;username&gt;</strong></code></span> with your GitHub username) and then push it up:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f026-01" id="f026-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue-l">(venv) $</span> git remote add origin https://github.com/&lt;username&gt;/python_tutorial.git
+<span class="pd_blue-l">(venv) $</span> git push -u origin main</code></pre>
+<p class="indent">The service we’ll be using for Flask deployment is Fly.io. We’ll start by installing a necessary package and we’ll then list the requirements (including Flask) needed to deploy the application. <em>Note</em>: The following steps work as of this writing, but deploying to a third-party service is exactly the kind of thing that can change without notice. If that happens, you will likely have an opportunity to apply your technical sophistication (<a href="ch01.xhtml#ch1box2">Box 1.2</a>), up to and including finding an alternate service (such as Render) if necessary.</p>
+<span epub:type="pagebreak" id="page_27"></span>
+<p class="indent">Our first step is to install a package for Gunicorn, a Python web server:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f027-01" id="f027-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_blue">gunicorn</span><span class="pd_gray">==20</span>.1.0</code></pre>
+<p class="noindent">Then we need to create a file called <span class="pd_green-d"><code><strong>requirements.txt</strong></code></span> to tell the deployment host which packages are needed to run our app, which we can do by creating a <span class="pd_green-d"><code><strong>requirements.txt</strong></code></span> file using</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> touch requirements.txt</code></pre>
+<p class="noindent">and then filling it with the contents shown in <a href="ch01.xhtml#ch1list15">Listing 1.15</a>, which we can figure out using <span class="pd_green-d"><code><strong>pip freeze</strong></code></span> in a virtual environment where no unneeded packages had been installed. (Some resources recommend redirecting (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending">https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending</a>) <span epub:type="pagebreak" id="page_28"></span>the output of <span class="pd_green-d"><code><strong>pip freeze</strong></code></span> using <span class="pd_green-d"><code><strong>pip freeze &gt; requirements.txt</strong></code></span> to create the file in <a href="ch01.xhtml#ch1list15">Listing 1.15</a>, but this approach can lead to unnecessary or invalid packages being required.)</p>
+<p class="listing" id="ch1list15"><strong>Listing 1.15:</strong> Specifying the requirements for our app.<br/><code><em>requirements.txt</em></code></p>
+<div class="box1">
+<pre class="pre"><code>click==8.1.3
+Flask==2.2.2
+gunicorn==20.1.0
+itsdangerous==2.1.2
+Jinja2==3.1.2
+MarkupSafe==2.1.1
+Werkzeug==2.2.2</code></pre>
+</div>
+<p class="noindent">The current recommended practice for Python package management is to use a <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> file to specify the build system for the project. This step is not required when deploying to Fly.io, but we will follow this practice when we make a package of our own in <a href="ch08.xhtml#ch08">Chapter 8</a>.</p>
+<p class="indent">With the configuration in <a href="ch01.xhtml#ch1list15">Listing 1.15</a>, we have set up our system for Fly.io to detect the presence of a Flask app automatically. Here are the steps for getting started:</p>
+<ol class="number">
+<li><p class="number">Sign up (<a href="https://fly.io/app/sign-up">https://fly.io/app/sign-up</a>) for Fly.io. Take care to click the link for the free tier, which can be a little tricky to find (<a href="ch01.xhtml#ch1fig11">Figure 1.11</a>). Free accounts are limited to two deployment servers, which is perfect for us since that’s the number in this tutorial (here and in <a href="ch10.xhtml#ch10">Chapter 10</a>).</p>
+<figure class="image-c" id="ch1fig11">
+<img src="graphics/01fig11.jpg" alt="images" width="725" height="510"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.11:</strong> The Fly.io free tier.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Install Fly Control (<span class="pd_green-d"><code><strong>flyctl</strong></code></span>), a command-line program for interacting with Fly.io.<sup><a id="fn1_11a" href="ch01.xhtml#fn1_11">11</a></sup> Options for macOS and for Linux (including the cloud IDE) are shown in <a href="ch01.xhtml#ch1list16">Listing 1.16</a> and <a href="ch01.xhtml#ch1list17">Listing 1.17</a>, respectively. For the latter, take care to add any lines to your <span class="pd_green-d"><code><strong>.bash_profile</strong></code></span> or <span class="pd_green-d"><code><strong>.zshrc</strong></code></span> file as instructed (<a href="ch01.xhtml#ch1list18">Listing 1.18</a>), and then run <span class="pd_green-d"><code><strong>source ~/.bash_profile</strong></code></span> (or <span class="pd_green-d"><code><strong>source ~/.zshrc</strong></code></span>) to update the configuration. Note that the vertical dots in <a href="ch01.xhtml#ch1list18">Listing 1.18</a> indicate omitted lines.</p>
+<p class="footnote"><a id="fn1_11" href="ch01.xhtml#fn1_11a">11.</a> I discovered accidentally that <span class="pd_green-d"><code><strong>flyctl</strong></code></span> is aliased to <span class="pd_green-d"><code><strong>fly</strong></code></span>, at least on my system; I suggest seeing if you can be similarly <span class="pd_green-d"><code><strong>fly</strong></code></span> on your system as well.</p></li>
+<li><p class="number">Sign in to Fly.io at the command line (<a href="ch01.xhtml#ch1list19">Listing 1.19</a>).</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_29"></span>
+<p class="listing" id="ch1list16"><strong>Listing 1.16:</strong> Installing <span class="pd_green-d"><code><strong>flyctl</strong></code></span> on macOS using Homebrew.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> brew install flyctl</code></pre>
+</div>
+<p class="listing" id="ch1list17"><strong>Listing 1.17:</strong> Installing <span class="pd_green-d"><code><strong>flyctl</strong></code></span> on Linux.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f029-01" id="f029-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> curl -L https://fly.io/install.sh | sh</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_30"></span>
+<p class="listing" id="ch1list18"><strong>Listing 1.18:</strong> Adding configuration lines for <span class="pd_green-d"><code><strong>flyctl</strong></code></span>.<br/><code><em>~/.bash_profile or ~/.zshrc</em></code></p>
+<p class="codelink"><a href="ch01_images.xhtml#f030-01" id="f030-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>.
+.
+.
+<span class="pd_green">export</span> <span class="pd_blue">FLYCTL_INSTALL</span><span class="pd_gray">=</span><span class="pd_red">"/home/ubuntu/.fly"</span>
+<span class="pd_green">export</span> <span class="pd_blue">PATH</span><span class="pd_gray">=</span><span class="pd_red">"</span><span class="pd_blue">$FLYCTL_INSTALL</span><span class="pd_red">/bin:</span><span class="pd_blue">$PATH</span><span class="pd_red">"</span></code></pre>
+</div>
+<p class="listing" id="ch1list19"><strong>Listing 1.19:</strong> Signing in to Fly.io.<sup><a id="fn1_12a" href="ch01.xhtml#fn1_12">12</a></sup></p>
+<p class="codelink"><a href="ch01_images.xhtml#f030-02" id="f030-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flyctl auth login --interactive</code></pre>
+</div>
+<p class="footnote"><a id="fn1_12" href="ch01.xhtml#fn1_12a">12.</a> <a href="ch01.xhtml#ch1list19">Listing 1.19</a> includes the <span class="pd_green-d"><code><strong>--interactive</strong></code></span> option to prevent <span class="pd_green-d"><code><strong>flyctl</strong></code></span> from spawning a browser window, which works both on native systems and on the cloud IDE. If you’re using a native system, feel free to omit that option.</p>
+<p class="indent">Once you’ve signed in to Fly.io, follow these steps to deploy the hello app:</p>
+<ol class="number">
+<li><p class="number">Run <span class="pd_green-d"><code><strong>flyctl launch</strong></code></span> (<a href="ch01.xhtml#ch1list20">Listing 1.20</a>) and accept the autogenerated name and the default options (i.e., no database).</p></li>
+<li><p class="number">Edit the generated <span class="pd_green-d"><code><strong>Procfile</strong></code></span> and fill it with the contents shown in <a href="ch01.xhtml#ch1list21">Listing 1.21</a>. You’ll probably have to make only one change by updating the app name from <span class="pd_green-d"><code><strong>server</strong></code></span> to <span class="pd_green-d"><code><strong>hello_app</strong></code></span>.</p></li>
+<li><p class="number">Deploy the application with <span class="pd_green-d"><code><strong>flyctl deploy</strong></code></span> (<a href="ch01.xhtml#ch1list22">Listing 1.22</a>).<sup><a id="fn1_13a" href="ch01.xhtml#fn1_13">13</a></sup></p>
+<p class="footnote"><a id="fn1_13" href="ch01.xhtml#fn1_13a">13.</a> In my testing, <span class="pd_green-d"><code><strong>flyctl deploy</strong></code></span> fails when running a Virtual Private Network (VPN), so if you use a VPN I suggest you disable it for this step.</p></li>
+</ol>
+<p class="listing" id="ch1list20"><strong>Listing 1.20:</strong> “Launching” the app (which is just local configuration).</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flyctl launch</code></pre>
+</div>
+<p class="listing" id="ch1list21"><strong>Listing 1.21:</strong> <code><em>Procfile</em></code></p>
+<div class="box1">
+<pre class="pre"><code>web: gunicorn hello_app:app</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_31"></span>
+<p class="listing" id="ch1list22"><strong>Listing 1.22:</strong> Deploying the app to Fly.io.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flyctl deploy</code></pre>
+</div>
+<p class="indent">After the deployment step has finished, you can run the command in <a href="ch01.xhtml#ch1list23">Listing 1.23</a> to see the status of the app. (If anything goes wrong, you may find <span class="pd_green-d"><code><strong>flyctl logs</strong></code></span> helpful in debugging.)</p>
+<p class="listing" id="ch1list23"><strong>Listing 1.23:</strong> Viewing the status of the deployed app.</p>
+<p class="codelink"><a href="ch01_images.xhtml#f031-01" id="f031-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> flyctl status    <span class="pd_blue1"><em># Details will vary</em></span>
+<span class="pd_green-d">App
+  Name     = restless-sun-9514
+  Owner    = personal
+  Version  = 2
+  Status   = running</span>
+
+<span class="b-y">  <span class="pd_green-d">Hostname = crimson-shadow-1161.fly.dev  # Your URL will differ.</span></span>
+  <span class="pd_green-d">Platform = nomad</span>
+
+<span class="pd_green-d">Deployment Status
+  ID          = 051e253a-e322-4b2c-96ec-bc2758763328
+  Version     = v2
+  Status      = successful
+  Description = Deployment completed successfully
+  Instances   = 1 desired, 1 placed, 1 healthy, 0 unhealthy</span></code></pre>
+</div>
+<p class="noindent">The highlighted line in <a href="ch01.xhtml#ch1list23">Listing 1.23</a> indicates the URL of the live app, which you can open automatically as follows:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f031-02" id="f031-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> flyctl open     <span class="pd_blue1"><em># won't work on the cloud IDE, so use displayed URL</em></span></code></pre>
+<p class="noindent">As noted, the <span class="pd_green-d"><code><strong>flyctl open</strong></code></span> command won’t work on the cloud IDE because it needs to spawn a new browser window, but in that case you can just copy and paste the URL from your version of <a href="ch01.xhtml#ch1list23">Listing 1.23</a> into your browser’s address bar to obtain the same result.</p>
+<p class="indent">And that’s it! Our hello app is now running in production (<a href="ch01.xhtml#ch1fig12">Figure 1.12</a>). “It’s alive!” (<a href="ch01.xhtml#ch1fig13">Figure 1.13</a><sup><a id="fn1_14a" href="ch01.xhtml#fn1_14">14</a></sup>).</p>
+<span epub:type="pagebreak" id="page_32"></span>
+<figure class="image-c" id="ch1fig12">
+<img src="graphics/01fig12.jpg" alt="images" width="724" height="546"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.12:</strong> The hello app running in production.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch1fig13">
+<img src="graphics/01fig13.jpg" alt="images" width="239" height="303"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.13:</strong> Bringing a site to life is easier than it used to be.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn1_14" href="ch01.xhtml#fn1_14a">14.</a> Image courtesy of Niday Picture Library/Alamy Stock Photo.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_33"></span>Although there were quite a few steps involved in this section, being able to deploy a site so early is nothing short of miraculous. It may be a simple app, but it’s a real one, and being able to deploy it to production is an enormous step.</p>
+<p class="indent">By the way, you might have noticed that deploying to Fly.io didn’t require a Git commit (in contrast to, say, GitHub Pages or a hosting service like Heroku). As a result, it’s probably a good idea to make one final commit now and push the result up to GitHub:</p>
+<p class="codelink"><a href="ch01_images.xhtml#f033-01" id="f033-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> git add -A
+<span class="pd_blue"><strong>(venv) $</strong></span> git commit -m <span class="pd_red">"Configure hello app for deployment"</span>
+<span class="pd_blue"><strong>(venv) $</strong></span> git push</code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec1_5_2">1.5.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Change “hello, world!” to “goodbye, world!” in <span class="pd_green-d"><code><strong>hello_app.py</strong></code></span> running locally. Does the updated text display right away? What about after refreshing the browser?</p></li>
+<li><p class="number">Deploy your updated app to Fly.io and confirm that the new text appears as expected.<span epub:type="pagebreak" id="page_34"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

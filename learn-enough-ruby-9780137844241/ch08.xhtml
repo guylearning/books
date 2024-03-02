@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch08"><span epub:type="pagebreak" id="page_197"></span>Chapter 8</h2>
+<h2 class="h2a">Testing and Test-Driven Development</h2>
+<p class="noindent">Although rarely covered in introductory programming tutorials, <em>automated testing</em> is one of the most important subjects in modern software development. Accordingly, this chapter includes an introduction to testing in Ruby, including a first look at <em>test-driven development</em>, or TDD.</p>
+<p class="indent">Test-driven development came up briefly in <a href="ch06.xhtml#sec6_3_3">Section 6.3.3</a>, which promised that we would use testing techniques to add an important capability to finding palindromes, namely, being able to detect complicated palindromes such as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch06fig07">Figure 6.7</a>) or “Madam, I’m Adam.” (<a href="ch08.xhtml#ch08fig01">Figure 8.1</a>).<sup><a id="fn8_1" href="ch08.xhtml#fn8_1a">1</a></sup> This chapter fulfills that promise.</p>
+<p class="footnote"><sup><a id="fn8_1a" href="ch08.xhtml#fn8_1">1</a></sup>“The Temptation of Adam” by Tintoretto. Image courtesy of Album/Alamy Stock Photo.</p>
+<figure class="figure" id="ch08fig01">
+<img src="graphics/f0198-01.jpg" alt="Images" width="826" height="558"/>
+<figcaption>
+<p class="title-f">Figure 8.1: The <a href="https://en.wikipedia.org/wiki/Garden_of_Eden">Garden of Eden</a> had it all—even palindromes.</p>
+</figcaption>
+</figure>
+<p class="indent">As it turns out, learning how to write Ruby tests will also give us a chance to learn how to create (and publish!) a Ruby gem, another exceptionally useful Ruby skill rarely covered in introductory tutorials.</p>
+<p class="indent">Here’s our strategy for testing the current palindrome code and extending it to more complicated phrases:</p>
+<ol class="number-n">
+<li><p class="number-n">Set up our system for automated testing (<a href="ch08.xhtml#sec8_1">Section 8.1</a>).</p></li>
+<li><p class="number-n">Write automated tests for the existing <code><span class="green"><strong>palindrome?</strong></span></code> functionality (<a href="ch08.xhtml#sec8_2">Section 8.2</a>).<span epub:type="pagebreak" id="page_198"></span></p></li>
+<li><p class="number-n"><span epub:type="pagebreak" id="page_199"></span>Write a <em>failing</em> test for the enhanced palindrome detector (<span class="red"><span class="smallcaps">RED</span></span>) (<a href="ch08.xhtml#sec8_3">Section 8.3</a>).</p></li>
+<li><p class="number-n">Write (possibly ugly) code to get the test <em>passing</em> (<span class="green"><span class="smallcaps">GREEN</span></span>) (<a href="ch08.xhtml#sec8_4">Section 8.4</a>).</p></li>
+<li><p class="number-n"><em>Refactor</em> the code to make it prettier, while ensuring that the test suite stays <span class="green"><span class="smallcaps">GREEN</span></span> (<a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p></li>
+</ol>
+<section>
+<h3 class="h3" id="sec8_1">8.1 Testing and Ruby Gem Setup</h3>
+<p class="noindent">We saw as early as <a href="ch01.xhtml#sec1_5">Section 1.5</a> that the Ruby ecosystem includes a large number of self-contained packages called <em>gems</em>. In this section, we’ll create a gem based on the palindrome detector developed in <a href="ch07.xhtml#ch07">Chapter 7</a>; along the way, we’ll see that gem creation leads naturally to the generation of a sample <em>test suite</em> to test our code.</p>
+<p class="indent">In <a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a>, we briefly encountered <em>Bundler</em> when deploying our hello app to production. Bundler’s principal use is in bundling together all the gem dependencies for a given application, but it also includes the ability to generate the skeleton of a brand-new Ruby gem.</p>
+<p class="indent">Getting started with a new gem is easy using the <code><span class="green"><strong>bundle</strong></span></code> command, which can create a gem skeleton using <code><span class="green"><strong>bundle gem</strong></span></code>. Since we’ll be publishing the gem publicly, you’ll need to pick a unique name for your palindrome gem; I suggest using <code><span class="green"><strong>&lt;username&gt;_palindrome</strong></span></code>, where <code><span class="green"><strong>&lt;username&gt;</strong></span></code> is your unique username. (I’ll use <code><span class="green"><strong>mhartl_palindrome</strong></span></code>.) The result appears in <a href="ch08.xhtml#ch08ex01">Listing 8.1</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex01"><strong>Listing 8.1:</strong> Creating a new gem with Bundler.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0199-01" id="f0199-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="yellowb-n"><span class="blue"><strong>$</strong></span> <span class="green1"><strong>cd</strong></span> <strong>~/repos</strong>   <span class="blue1-n"> <strong><em># Use ~/environment/repos on Cloud9</em></strong></span></span>
+<span class="yellowb-n"><span class="blue"><strong>$</strong></span> <strong>bundle gem &lt;username&gt;_palindrome</strong></span>
+<span class="green1"><strong>Do you want to generate tests with your gem?</strong></span>
+<span class="green1"><strong>Type 'rspec' or 'minitest' to generate those test files now and in the future.</strong></span>
+<span class="yellowb-n"><span class="green1"><strong>rspec/minitest/(none): minitest</strong></span></span>
+<span class="yellowb-n"><span class="green1"><strong>Do you want to license your code permissively under the MIT license? y/(n): n</strong></span></span>
+<span class="yellowb-n"><span class="green1"><strong>Do you want to include a code of conduct in gems you generate? y/(n): n</strong></span></span></pre>
+</div>
+<p class="noindent"><a href="ch08.xhtml#ch08ex01">Listing 8.1</a> shows the interactive prompt that shows up the first time you generate a gem, which asks you to choose a test framework and decide whether <span epub:type="pagebreak" id="page_200"></span>or not to include a license and a code of conduct. We’ll be using a simple yet powerful test framework called <a href="https://github.com/seattlerb/minitest">minitest</a>, so enter <code><span class="green"><strong>minitest</strong></span></code> at the first prompt; for the other two, I recommend using the default answer of “no”, but once you’re ready for others to start using your gem you should consider adding an open-source license (in a file called <code><span class="green"><strong>LICENSE.txt</strong></span></code>),<sup><a id="fn8_2" href="ch08.xhtml#fn8_2a">2</a></sup> and when you’re ready for collaborators you should consider adding a code of conduct (in a file called <code><span class="green"><strong>CODE_OF_CONDUCT.md</strong></span></code>).<sup><a id="fn8_3" href="ch08.xhtml#fn8_3a">3</a></sup> Bundler will remember these defaults for use in generating future gems, but you can use the <a href="https://bundler.io/man/bundle-config.1.html"><code><span class="green"><strong>bundle config</strong></span></code> command</a> to change the defaults at any time.<sup><a id="fn8_4" href="ch08.xhtml#fn8_4a">4</a></sup></p>
+<p class="footnote"><sup><a id="fn8_2a" href="ch08.xhtml#fn8_2">2</a></sup>The most common choice of license in the Ruby community is probably the <a href="https://opensource.org/licenses/MIT">MIT License</a>, although Ruby itself is released under the <a href="https://www.ruby-lang.org/en/about/license.txt">Ruby License</a>.</p>
+<p class="footnote"><sup><a id="fn8_3a" href="ch08.xhtml#fn8_3">3</a></sup>Possible choices include the <a href="https://www.contributor-covenant.org/version/1/4/code-of-conduct.html">Contributor Covenant Code of Conduct</a> and the <a href="https://www.ruby-lang.org/en/conduct/">Ruby Community Conduct Guideline</a>.</p>
+<p class="footnote"><sup><a id="fn8_4a" href="ch08.xhtml#fn8_4">4</a></sup>For example, running <code><span class="green"><strong>bundle config set gem.test rspec</strong></span></code> would switch to using the <a href="https://rspec.info/">RSpec</a> testing framework by default, and <code><span class="green"><strong>bundle config set gem.mit true</strong></span></code> would automatically add the MIT License for future invocations of <code><span class="green"><strong>bundle gem</strong></span></code>. Note that these settings affect only <em>future</em> gems, though; you’ll still have to make changes to any existing gems by hand (e.g., by downloading a copy of the MIT License and copying it to the gem’s local directory).</p>
+<p class="indent">After creating the gem skeleton, <code><span class="green"><strong>cd</strong></span></code> into the directory and put the project under version control with Git:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0200-01" id="f0200-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <span class="green1"><strong>cd</strong></span> <strong>&lt;username&gt;_palindrome</strong>
+<span class="blue"><strong>$</strong></span> <strong>git init</strong>
+<span class="blue"><strong>$</strong></span> <strong>git add -A</strong>
+<span class="blue"><strong>$</strong></span> <strong>git commit -m</strong> <span class="brown1"><strong>"Initialize repository"</strong></span></pre>
+</div>
+<p class="noindent">At this point, I recommend creating a public repository for the gem at <a href="https://github.com/">GitHub</a> by following the same basic steps from <a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a> (replacing “GitLab” with “GitHub” as necessary). This will also give you a GitHub repo URL for use in the next step.</p>
+<p class="indent">Next, add the required summary and description (along with a project homepage) to the <em>gemspec</em> file generated by Bundler using your editor of choice (<a href="ch08.xhtml#ch08ex02">Listing 8.2</a>). Note that the generated <code><span class="green"><strong>gemspec</strong></span></code> uses the notation <code><span class="green"><strong>%q{...}</strong></span></code> as an alternate way to write strings, which avoids having to worry about escaping out single or double quotes.<sup><a id="fn8_5" href="ch08.xhtml#fn8_5a">5</a></sup></p>
+<p class="footnote"><sup><a id="fn8_5a" href="ch08.xhtml#fn8_5">5</a></sup>Another alternative for making strings, and my personal favorite, is simply to use percent-parentheses, like this: <code><span class="green"><strong>%(...)</strong></span></code>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex02"><span epub:type="pagebreak" id="page_201"></span><strong>Listing 8.2:</strong> Adding the necessary gem information.<br/><code><em>&lt;username&gt;_palindrome.gemspec</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0201-01" id="f0201-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>lib</strong> <span class="gray2-n"><strong>=</strong></span> <span class="brown"><strong>File</strong></span><strong>.expand_path</strong><span class="brown1"><strong>("../lib"</strong></span><strong>,</strong> <span class="green1"><strong>__FILE__</strong></span>)
+<span class="blue2-n"><strong>$LOAD_PATH</strong></span><span class="gray2-n"><strong>.</strong></span><strong>unshift(lib)</strong> <span class="green1"><strong>unless</strong></span> <span class="blue2-n"><strong>$LOAD_PATH</strong></span><strong>.include?(lib)</strong>
+<span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="brown"><strong>Gem</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Specification</strong></span><span class="gray2-n"><strong>.</strong></span><strong>new</strong> <span class="green1"><strong>do</strong></span> <span class="gray2-n"><strong>|</strong></span><strong>spec</strong><span class="gray2-n"><strong>|</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>name</strong>          <span class="gray2-n"><strong>=</strong></span> <span class="brown1"><strong>"mhartl_palindrome"</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>version</strong>       <span class="gray2-n"><strong>=</strong></span> <span class="brown"><strong>MhartlPalindrome</strong></span><span class="gray2-n"><strong>:</strong></span><span class="gray2-n"><strong>:</strong></span><span class="brown"><strong>VERSION</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>authors</strong>       <span class="gray2-n"><strong>=</strong></span> <span class="gray2-n"><strong>[</strong></span><span class="brown1"><strong>"Michael Hartl</strong></span><span class="gray2-n"><strong>"]</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>email</strong>         <span class="gray2-n"><strong>=</strong></span> <span class="gray2-n"><strong>[</strong></span><span class="brown1"><strong>"michael@michaelhartl.com</strong></span><span class="gray2-n"><strong>"]</strong></span>
+
+<span class="yellowb-n">  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>summary</strong>       <span class="gray2-n"><strong>=</strong></span> <span class="green1"><strong>%q{Palindrome detector}</strong></span></span>
+<span class="yellowb-n">  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>description</strong>   <span class="gray2-n"><strong>=</strong></span> <span class="green1"><strong>%q{Learn Enough Ruby palindrome detector}</strong></span></span>
+<span class="yellowb-n">  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>homepage</strong>      <span class="gray2-n"><strong>=</strong></span> <span class="brown1"><strong>"https://github.com/mhartl/mhartl_palindrome"</strong></span></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>license</strong>       <span class="gray2-n"><strong>=</strong></span> <span class="brown1"><strong>"MIT"</strong></span>
+
+  <span class="blue1-n"><em><strong># Prevent pushing this gem to RubyGems.org. To allow pushes either set the</strong></em></span>
+  <span class="blue1-n"><em><strong># 'allowed_push_host'</strong></em></span>
+  <span class="blue1-n"><em><strong># to allow pushing to a single host or delete this section to allow pushing to</strong></em></span>
+  <span class="blue1-n"><em><strong># any host.</strong></em></span>
+  <span class="green1"><strong>if</strong></span> <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>respond_to? (</strong><span class="blue2-n">:<strong>metadata</strong></span>)
+<span class="yellowb-n">   <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>metadata</strong><span class="gray2-n"><strong>[</strong></span><span class="brown1"><strong>"allowed_push_host"</strong></span><span class="gray2-n"><strong>] =</strong></span> <span class="brown1"><strong>"https://rubygems.org/"</strong></span></span>
+  <span class="green"><strong>else</strong></span>
+    <span class="green"><strong>raise</strong></span> <span class="brown1"><strong>"RubyGems 2.0 or newer is required to protect against "</strong></span> <strong>\</strong>
+      <span class="brown1"><strong>"public gem pushes."</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1-n"><em><strong># Specify which files should be added to the gem when it is released.</strong></em></span>
+  <span class="blue1-n"><em><strong># The `git ls-files -z` loads the files in the RubyGem</strong></em></span>
+  <span class="blue1-n"><em><strong># that have been added into git.</strong></em></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>files</strong>         <span class="gray2-n"><strong>=</strong></span> <span class="brown"><strong>Dir</strong></span><strong>.chdir(</strong><span class="brown"><strong>File</strong></span><strong>.expand_path(</strong><span class="brown1"><strong>'..'</strong></span><strong>,</strong> <span class="green1"><strong>__FILE__</strong></span><strong>))</strong> <span class="green1"><strong>do</strong></span>
+   <span class="brown1"><strong>`git ls-files -z`</strong></span><strong>.split</strong><span class="brown1"><strong>(</strong></span><span class="brown1"><strong>"</strong></span><span class="gray3-n"><strong>\x0</strong></span><span class="brown1"><strong>"</strong></span><span class="gray2-n"><strong>)</strong></span><strong>.reject</strong> <span class="green1"><strong>do</strong></span>
+     <span class="gray2-n"><strong>|</strong></span><strong>f</strong><span class="gray2-n"><strong>|</strong></span> <strong>f</strong><span class="gray2-n"><strong>.</strong></span><strong>match(<span class="gray4-n">%r{^(test|spec|features)/<strong>}</strong></span>)</strong>
+   <span class="green"><strong>end</strong></span>
+  <span class="green"><strong>end</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>bindir</strong>        <span class="gray2-n"><strong>=</strong></span> <span class="brown1"><strong>"exe"</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>executables</strong>   <span class="gray2-n"><strong>=</strong></span> <strong>spec.files.grep</strong><span class="gray4-n"><strong>(%r{^exe/</strong>}</span>) <strong>{ |f</strong><span class="gray2-n">|</span> <span class="brown"><strong>File</strong></span><span class="gray2-n"><strong>.</strong></span><strong>basename(f) }</strong>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>require_paths</strong> <span class="gray2-n"><strong>=</strong></span> <span class="gray2-n"><strong>[</strong></span><span class="brown1"><strong>"lib</strong></span><span class="gray2-n"><strong>"]</strong></span>
+
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>add_development_dependency</strong> <span class="brown1"><strong>"bundler"</strong></span><strong>,</strong> <span class="brown1"><strong>"~&gt; 1.16"</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>add_development_dependency</strong> <span class="brown1"><strong>"rake"</strong></span><strong>,</strong> <span class="brown1"><strong>"~&gt; 10.0"</strong></span>
+  <strong>spec</strong><span class="gray2-n"><strong>.</strong></span><strong>add_development_dependency</strong> <span class="brown1"><strong>"minitest"</strong></span><strong>,</strong> <span class="brown1"><strong>"~&gt; 5.0"</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Finally, as a bit of preparation for our testing sequence, add the <code>mini-test-reporters</code> gem in the <code><span class="green"><strong>Gemfile</strong></span></code>, as shown in <a href="ch08.xhtml#ch08ex03">Listing 8.3</a>. This gem <span epub:type="pagebreak" id="page_202"></span>adds color to the testing output in line with the “Red, Green, Refactor” pattern we’ll be developing in the rest of the chapter.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex03"><strong>Listing 8.3:</strong> Adding a gem for nice test output.<br/><code><em>Gemfile</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0202-01" id="f0202-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>source</strong> <span class="brown1"><strong>"https://rubygems.org"</strong></span>
+
+<strong>git_source(</strong><span class="blue2-n"><strong>:github</strong></span><strong>)</strong>  <strong>{</strong><span class="gray2-n"><strong>|</strong></span><strong>repo_name</strong><span class="gray2-n"><strong>|</strong></span> <span class="brown1"><strong>"https://github.com</strong></span><span class="gray4-n"><strong>/#{</strong></span><strong>repo_name</strong><span class="gray4-n"><strong>}</strong></span><span class="brown1"><strong>"</strong></span> <strong>}</strong>
+
+<span class="blue1-n"><strong><em># Specify your gem's dependencies in &lt;username&gt;_palindrome.gemspec</em></strong></span>
+<strong>gemspec</strong>
+
+<span class="yellowb-n"><strong>gem</strong> <span class="brown1"><strong>'minitest-reporters'</strong></span><strong>,</strong> <span class="brown1"><strong>'1.2.0'</strong></span></span></pre>
+</div>
+<p class="noindent">You’ll also need to update the “test helper” file to include the reporters (whose effect we’ll see later in this section), as shown in <a href="ch08.xhtml#ch08ex04">Listing 8.4</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex04"><strong>Listing 8.4:</strong> Configuring the test helper.<br/><code><em>test/test_helper.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0202-02" id="f0202-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue2-n"><strong>$LOAD_PATH</strong></span><span class="gray2-n"><strong>.</strong></span><strong>unshift</strong> <span class="brown"><strong>File</strong></span><span class="gray2-n"><strong>.</strong></span><strong>expand_path(</strong><span class="brown1"><strong>"../../lib"</strong></span><strong>,</strong> <span class="green1"><strong>__FILE__</strong></span><strong>)</strong>
+<span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome"</strong></span>
+<span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"minitest/autorun"</strong></span>
+<span class="yellowb-n"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"minitest/reporters"</strong></span></span>
+<span class="yellowb-n"><span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Reporters</strong></span><span class="gray2-n"><strong>.</strong></span><strong>use!</strong></span></pre>
+</div>
+<p class="noindent">Now install all necessary gems using Bundler and we’ll be good to go:</p>
+<div class="ex-box">
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>bundle _2.3.10_ install</strong></pre>
+</div>
+<p class="indent">Before moving on to testing and extending our gem, let’s take a moment to run our <em>default test suite</em>, which <code><span class="green"><strong>bundle gem</strong></span></code> generated automatically as part of <a href="ch08.xhtml#ch08ex01">Listing 8.1</a>. We can run the test suite using the <code><span class="green"><strong>rake</strong></span></code> utility program (short for “Ruby <a href="https://www.computerhope.com/unix/umake.htm">make</a>”), preceded by <code><span class="green"><strong>bundle exec</strong></span></code> to use the exact gem environment specified by our <code><span class="green"><strong>Gemfile</strong></span></code> (<a href="ch08.xhtml#ch08ex05">Listing 8.5</a>).<sup><a id="fn8_6" href="ch08.xhtml#fn8_6a">6</a></sup></p>
+<p class="footnote"><sup><a id="fn8_6a" href="ch08.xhtml#fn8_6">6</a></sup>Many Ruby developers <a href="https://www.learnenough.com/text-editor-tutorial#code-alias">alias</a> the rather verbose <code><span class="green"><strong>bundle exec</strong></span></code> command to the much shorter <code><span class="green"><strong>be</strong></span></code> by putting <code><span class="green"><strong>alias be='bundle exec'</strong></span></code> in their <code><span class="green"><strong>.bash_profile</strong></span></code> file.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex05"><span epub:type="pagebreak" id="page_203"></span><strong>Listing 8.5:</strong> Running our test suite for the first time.<span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0203-01" id="f0203-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="yellowb-n"><span class="blue"><strong>$</strong></span> <strong>bundle</strong> <span class="green1"><strong>exec</strong></span> <strong>rake</strong> <span class="green1"><strong>test</strong></span></span>
+<span class="green"><strong>Started with run options --seed 57409</strong></span>
+
+ <span class="green1"><strong>FAIL["test_it_does_something_useful", "MhartlPalindromeTest",</strong></span>
+ <span class="green1"><strong>0.0007609999738633633]</strong></span>
+ <span class="green1"><strong>test_it_does_something_useful#MhartlPalindromeTest (0.00s)</strong></span>
+        <span class="green1"><strong>Expected false to be truthy.</strong></span>
+        <span class="green1"><strong>/Users/mhartl/repos/mhartl_palindrome/test/mhartl_palindrome_test.rb:9:in</strong></span>
+        <span class="green1"><strong>`test_it_does_something_useful'</strong></span>
+
+  <span class="green"><strong>2/2: [===================================] 100% Time: 00:00:00, Time: 00:00:00</strong></span>
+
+<span class="green1"><strong>Finished in 0.00119s</strong></span>
+<span class="yellowb-n"><span class="green1"><strong>2 tests, 2 assertions, 1 failures, 0 errors, 0 skips</strong></span></span></pre>
+</div>
+<p class="noindent">Don’t worry about the details of the results of this command (which will vary by system). The key takeaway is that the suite is <em>failing</em> by default, as seen in the last line; as seen in <a href="ch08.xhtml#ch08fig02">Figure 8.2</a>, it appears as <span class="red"><span class="smallcaps">RED</span></span> in a terminal window (which is why we added <code>minitest-reporters</code> in <a href="ch08.xhtml#ch08ex03">Listing 8.3</a>).</p>
+<figure class="figure" id="ch08fig02">
+<img src="graphics/f0204-01.jpg" alt="Images" width="870" height="718"/>
+<figcaption>
+<p class="title-f">Figure 8.2: The <span class="red"><span class="smallcaps">RED</span></span> state of the default test suite.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec8_1_1">8.1.1 Exercises</h4>
+<ol class="number-n">
+<li><p class="number-n">It’s a good practice to include a “README” file with information about the module. Create a file with the name <code><span class="green"><strong>README.md</strong></span></code> and fill it with information about the module. You can use <a href="https://raw.githubusercontent.com/mhartl/mhartl_palindrome/master/README.md">my README</a> as a reference if you like. The result will automatically be nicely formatted at GitHub (<a href="ch08.xhtml#ch08fig03">Figure 8.3</a>).</p></li>
+</ol>
+<figure class="figure" id="ch08fig03">
+<img src="graphics/f0205-01.jpg" alt="Images" width="878" height="677"/>
+<figcaption>
+<p class="title-f">Figure 8.3: The README file at GitHub.</p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_2">8.2 Initial Test Coverage</h3>
+<p class="noindent">With the preparation from <a href="ch08.xhtml#sec8_1">Section 8.1</a> done, we’re now ready to get started with our automated tests. We ended <a href="ch08.xhtml#sec8_1">Section 8.1</a> with a <span class="red"><span class="smallcaps">RED</span></span> test suite; in this section, we’ll get it to <span class="green"><span class="smallcaps">GREEN</span></span>, and en route we’ll write tests for the current palindrome-detection functionality.<span epub:type="pagebreak" id="page_204"></span><span epub:type="pagebreak" id="page_205"></span></p>
+<p class="indent"><span epub:type="pagebreak" id="page_206"></span><a href="ch08.xhtml#ch08ex06">Listing 8.6</a> shows the default test code itself.<sup><a id="fn8_7" href="ch08.xhtml#fn8_7a">7</a></sup> <a href="ch08.xhtml#ch08ex06">Listing 8.6</a> is code generated by Bundler, and in general you don’t need to understand all the details of generated code, but you might be able to guess the gist of it: First, it confirms that the gem has a <em>version number</em> (using a variant of <code><span class="green"><strong>refute</strong></span></code>, covered in <a href="ch08.xhtml#sec8_2_2">Section 8.2.2</a>), and then it <em>asserts</em> something using the <code><span class="green"><strong>assert</strong></span></code> function. This kind of construction—called, appropriately enough, an <em>assertion</em>—is one of the most common ways to test code. (It will look especially <a href="https://www.learnenough.com/r/learn_enough_javascript/testing/testing_existing_functionality#sec-testing_existing_functionality">familiar</a> if you completed <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>.)</p>
+<p class="footnote"><sup><a id="fn8_7a" href="ch08.xhtml#fn8_7">7</a></sup>This is exactly the kind of detail that often changes from version to version. It’s possible that future versions of minitest will have a different default test suite. If your results don’t match exactly, use your technical sophistication (<a href="ch01.xhtml#box1_1">Box 1.1</a>) to resolve any discrepancies.</p>
+<p class="indent"><em>Note</em>: For simplicity and concreteness, code samples throughout the rest of this tutorial will use my username (mhartl), but you should substitute your own.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex06"><strong>Listing 8.6:</strong> The default test suite. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0206-01" id="f0206-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_that_it_has_a_version_number</strong></span>
+    <strong>refute_nil</strong> <span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>MhartlPalindrome</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>VERSION</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_it_does_something_useful</strong></span>
+<span class="yellowb-n">    <strong>assert</strong> <span class="green1"><strong>false</strong></span></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">A plain assertion (using <code><span class="green"><strong>assert</strong></span></code> alone) passes if the argument is <code><span class="green"><strong>true</strong></span></code>. Since the assertion in <a href="ch08.xhtml#ch08ex06">Listing 8.6</a> literally asserts <code><span class="green"><strong>false</strong></span></code>, it fails by design:</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex07"><strong>Listing 8.7:</strong> <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0206-02" id="f0206-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>bundle</strong> <span class="green1"><strong>exec</strong></span> <strong>rake</strong> <span class="green1"><strong>test</strong></span>
+<span class="green"><strong>2 tests, 2 assertions, 1 failures, 0 errors, 0 skips</strong></span></pre>
+</div>
+<p class="noindent">(This is the same result that we got in <a href="ch08.xhtml#ch08ex05">Listing 8.5</a>; I’ve omitted the other output for brevity.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_207"></span>Our first step is to get the test suite passing (<span class="green"><span class="smallcaps">GREEN</span></span>), which we can do (just as an example) by changing <code><span class="green"><strong>false</strong></span></code> to <code><span class="green"><strong>true</strong></span></code>, as seen in <a href="ch08.xhtml#ch08ex08">Listing 8.8</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex08"><strong>Listing 8.8:</strong> Getting a passing test suite. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0207-01" id="f0207-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>Mhartl</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>PalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_that_it_has_a_version_number</strong></span>
+    <strong>refute_nil</strong> <span class="gray2-n"><strong>:</strong></span><span class="brown"><strong>:Mhartl</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Palindrome</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>VERSION</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_it_does_something_useful</strong></span>
+<span class="yellowb-n">    <strong>assert</strong> <span class="green1"><strong>true</strong></span></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">We can confirm at the command line that it worked:</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex09"><strong>Listing 8.9:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0207-02" id="f0207-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>bundle</strong> <span class="green1"><strong>exec</strong></span> <strong>rake</strong> <span class="green1"><strong>test</strong></span>
+<span class="green"><strong>2 tests, 2 assertions, 0 failures, 0 errors, 0 skips</strong></span></pre>
+</div>
+<p class="indent">Now let’s get started with our gem’s main application code, which is located in the <code><span class="green"><strong>lib/</strong></span></code> (“library”) directory. The generated gem includes a Ruby module (<a href="ch07.xhtml#sec7_5">Section 7.5</a>), as shown in <a href="ch08.xhtml#ch08ex010">Listing 8.10</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex010"><strong>Listing 8.10:</strong> The generated gem module.<br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0207-03" id="f0207-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>module</strong></span> <span class="bluer-n"><strong>MhartlPalindrome</strong></span>
+  <span class="blue1-n"><strong><em># Your code goes here...</em></strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">In place of the default module, we’ll instead start with a <code><span class="green"><strong>class</strong></span></code>, as we used in most of <a href="ch07.xhtml#ch07">Chapter 7</a>. (Guidance on restoring the module is provided in the <span epub:type="pagebreak" id="page_208"></span>exercises for <a href="ch08.xhtml#sec8_5">Section 8.5</a> (<a href="ch08.xhtml#sec8_5_2">Section 8.5.2</a>).) In particular, we’ll copy the code from <a href="ch07.xhtml#ch07ex020">Listing 7.20</a> into <code><span class="green"><strong>lib/&lt;username&gt;_palindrome.rb</strong></span></code>, as shown in <a href="ch08.xhtml#ch08ex011">Listing 8.11</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex011"><strong>Listing 8.11:</strong> Putting the palindrome detector in the gem.<br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0208-01" id="f0208-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Now we’re ready to start making some tests to check that the code in <a href="ch08.xhtml#ch08ex011">Listing 8.11</a> is actually working. We’ll start with a negative case:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0208-02" id="f0208-02a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+  <strong>assert</strong> <span class="gray2-n"><strong>!</strong></span><span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Here we’ve used <code><span class="green"><strong>assert</strong></span></code> to assert that <code><span class="green"><strong>"apple"</strong></span></code> should <em>not</em> be a palindrome (<a href="ch08.xhtml#ch08fig04">Figure 8.4</a>),<sup><a id="fn8_8" href="ch08.xhtml#fn8_8a">8</a></sup> where “not” is indicated with an exclamation point (“bang”) <code><span class="green"><strong>!</strong></span></code> as usual (<a href="ch02.xhtml#sec2_4_1">Section 2.4.1</a>). Note that the function call has higher <em><a href="https://en.wikipedia.org/wiki/Order_of_operations">precedence</a></em>, so it happens before the negation; as a result, we don’t need parentheses after the <code><span class="green"><strong>!</strong></span></code>.</p>
+<p class="footnote"><sup><a id="fn8_8a" href="ch08.xhtml#fn8_8">8</a></sup>Image courtesy of Glayan/Shutterstock.</p>
+<figure class="figure" id="ch08fig04">
+<img src="graphics/f0209-01.jpg" alt="Images" width="892" height="592"/>
+<figcaption>
+<p class="title-f">Figure 8.4: The word “apple”: not a palindrome.</p>
+</figcaption>
+</figure>
+<p class="indent">In similar fashion, we can test a plain palindrome (one that’s literally the same forward and backward) with another <code><span class="green"><strong>assert</strong></span></code>:<span epub:type="pagebreak" id="page_209"></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0210-01" id="f0210-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span epub:type="pagebreak" id="page_210"></span><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+  <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Combining the code from the above discussion (and eliminating the generated tests from <a href="ch08.xhtml#ch08ex06">Listing 8.6</a> and <a href="ch08.xhtml#ch08ex08">Listing 8.8</a>) gives us our initial non-generated test file, as shown in <a href="ch08.xhtml#ch08ex012">Listing 8.12</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex012"><strong>Listing 8.12:</strong> Our initial (non-generated) test suite.<br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0210-02" id="f0210-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>assert</strong> <span class="gray2-n"><strong></strong></span><span class="gray2-n"><strong>!</strong></span><span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Now for the real test (so to speak):</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex013"><strong>Listing 8.13:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0210-03" id="f0210-03a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>2 tests, 2 assertions, 0 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="noindent">The tests are now <span class="green"><span class="smallcaps">GREEN</span></span>, indicating that they are in a passing state. That means our code is working!</p>
+<section>
+<h4 class="h4" id="sec8_2_1">8.2.1 Pending Tests</h4>
+<p class="noindent">Before moving on, we’ll add a couple of <em>pending</em> tests, which are placeholders/reminders for tests we want to write. The way to write a pending test is simply to use <code><span class="green"><strong>skip</strong></span></code>, as shown in <a href="ch08.xhtml#ch08ex014">Listing 8.14</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex014"><span epub:type="pagebreak" id="page_211"></span><strong>Listing 8.14:</strong> Adding two pending tests. <span class="bluey-n"><span class="smallcaps">YELLOW</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0211-01" id="f0211-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>assert</strong> <span class="gray2-n"><strong></strong></span><span class="gray2-n"><strong>!</strong></span><span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+<span class="yellowb-n">    <strong>skip</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+<span class="yellowb-n">    <strong>skip</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">We can see the result of <a href="ch08.xhtml#ch08ex014">Listing 8.14</a> by rerunning the test suite:</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex015"><strong>Listing 8.15:</strong> <span class="bluey-n"><span class="smallcaps">YELLOW</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0211-02" id="f0211-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>4 tests, 2 assertions, 0 failures, 0 errors, 2 skips</strong></pre>
+</div>
+<p class="noindent">Now the test runner displays indications that there are two “skips” representing pending tests. Sometimes people speak of a test suite with pending tests as being <span class="bluey-n"><span class="smallcaps">YELLOW</span></span>, in analogy with the red-yellow-green color scheme of traffic lights (<a href="ch08.xhtml#ch08fig05">Figure 8.5</a>), although it’s also common to refer to any non-<span class="red"><span class="smallcaps">RED</span></span> test suite as <span class="green"><span class="smallcaps">GREEN</span></span>.</p>
+<figure class="figure" id="ch08fig05">
+<img src="graphics/f0212-01.jpg" alt="Images" width="870" height="719"/>
+<figcaption>
+<p class="title-f">Figure 8.5: A <span class="bluey-n"><span class="smallcaps">YELLOW</span></span> (pending) test suite.</p>
+</figcaption>
+</figure>
+<p class="indent">Filling in the test for a mixed-case palindrome is left as an exercise (with a solution shown in the next section), while filling in the second pending test is the subject of <a href="ch08.xhtml#sec8_3">Section 8.3</a> and <a href="ch08.xhtml#sec8_4">Section 8.4</a>.<span epub:type="pagebreak" id="page_212"></span></p>
+</section>
+<section>
+<h4 class="h4" id="sec8_2_2"><span epub:type="pagebreak" id="page_213"></span>8.2.2 Exercises</h4>
+<ol class="number-n">
+<li><p class="number-n">By filling in the code in <a href="ch08.xhtml#ch08ex016">Listing 8.16</a>, add a test for a mixed-case palindrome like “RaceCar”. Is the test suite still <span class="green"><span class="smallcaps">GREEN</span></span> (or <span class="bluey-n"><span class="smallcaps">YELLOW</span></span>)?</p></li>
+<li><p class="number-n">In order to make 100% sure that the tests are testing what we <em>think</em> they’re testing, it’s a good practice to get to a failing state (<span class="red"><span class="smallcaps">RED</span></span>) by intentionally <em>breaking</em> the tests. Change the application code to break each of the existing tests in turn, and then confirm that they are <span class="green"><span class="smallcaps">GREEN</span></span> again once the original code has been restored. An example of code that breaks the test in the previous exercise (but not the other tests) appears in <a href="ch08.xhtml#ch08ex017">Listing 8.17</a>. (One advantage of writing the tests <em>first</em> is that this <span class="red"><span class="smallcaps">RED</span></span>–<span class="green"><span class="smallcaps">GREEN</span></span> cycle happens automatically.)</p></li>
+<li><p class="number-n">The most common method for making minitest assertions is, appropriately enough, <code><span class="green"><strong>assert</strong></span></code>, but there’s a second method called <code><span class="green"><strong>refute</strong></span></code> for making <em>negative</em> assertions—i.e., asserting that something is <em>not</em> true. In your test suite, replace <code><span class="green"><strong>assert !"apple".palindrome?</strong></span></code> with <code><span class="green"><strong>refute "apple".palindrome?</strong></span></code> and show that the test suite is still <span class="green"><span class="smallcaps">GREEN</span></span>/<span class="bluey-n"><span class="smallcaps">YELLOW</span></span>.</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex016"><strong>Listing 8.16:</strong> Adding a test for a mixed-case palindrome.<br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0213-01" id="f0213-01a">Click here to view code image</a></p>
+
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>assert</strong> <span class="gray2-n"><strong>!</strong></span><span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+<span class="yellowb-n">    <span class="blue1-n"><strong><em># FILL IN</em></strong></span></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+    <span epub:type="pagebreak" id="page_214"></span><strong>skip</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex017"><strong>Listing 8.17:</strong> Intentionally breaking a test. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0214-02" id="f0214-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+<span class="yellowb-n">      <span class="green1"><strong>self</strong></span></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_3">8.3 Red</h3>
+<p class="noindent">In this section, we’ll take the important first step toward being able to detect more complex palindromes like “Madam, I’m Adam.” and “A man, a plan, a canal—Panama!”. Unlike the previous strings we’ve encountered, these phrases—which contain both spaces and punctuation—aren’t strictly palindromes in a literal sense, even if we ignore capitalization. Instead of testing the strings as they are, we have to figure out a way to select only the letters, and then see if the resulting letters are the same forward and backward.</p>
+<p class="indent">The code to do this is fairly tricky, but the tests for it are simple. This is one of the situations where test-driven development particularly shines (<a href="ch08.xhtml#box8_1">Box 8.1</a>). We can write our simple tests, thereby getting to <span class="red"><span class="smallcaps">RED</span></span>, and then write the application code any way we want to get to <span class="green"><span class="smallcaps">GREEN</span></span> (<a href="ch08.xhtml#sec8_4">Section 8.4</a>). At that point, with the tests protecting us against undiscovered errors, we can change the application <span epub:type="pagebreak" id="page_215"></span>code with confidence (<a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box8_1">
+<p class="sb-title">Box 8.1. When to Test</p>
+<p class="indent">When deciding when and how to test, it’s helpful to understand <em>why</em> to test. In my view, writing automated tests has three main benefits:</p>
+<ol class="number-n">
+<li><p class="number-n">Tests protect against <em>regressions</em>, where a functioning feature stops working for some reason.</p></li>
+<li><p class="number-n">Tests allow code to be <em>refactored</em> (i.e., changing its form without changing its function) with greater confidence.</p></li>
+<li><p class="number-n">Tests act as a <em>client</em> for the application code, thereby helping determine its design and its interface with other parts of the system.</p></li>
+</ol>
+<p class="indent">Although none of the above benefits <em>require</em> that tests be written first, there are many circumstances where test-driven development (TDD) is a valuable tool to have in your kit. Deciding when and how to test depends in part on how comfortable you are writing tests; many developers find that, as they get better at writing tests, they are more inclined to write them first. It also depends on how difficult the test is relative to the application code, how precisely the desired features are known, and how likely the feature is to break in the future.</p>
+<p class="indent">In this context, it’s helpful to have a set of guidelines on when we should test first (or test at all). Here are some suggestions based on my own experience:</p>
+<ul class="bullet-n">
+<li><p class="bullet-n1">When a test is especially short or simple compared to the application code it tests, lean toward writing the test first.</p></li>
+<li><p class="bullet-n1">When the desired behavior isn’t yet crystal clear, lean toward writing the application code first, then write a test to codify the result.</p></li>
+<li><p class="bullet-n1">Whenever a bug is found, write a test to reproduce it and protect against regressions, then write the application code to fix it.</p></li>
+<li><p class="bullet-n1"><span epub:type="pagebreak" id="page_216"></span>Write tests before refactoring code, focusing on testing error-prone code that’s especially likely to break.</p></li>
+</ul>
+</aside>
+<p class="indent">We’ll start by writing a test for a palindrome with punctuation, which just parallels the tests from <a href="ch08.xhtml#ch08ex012">Listing 8.12</a>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0216-01" id="f0216-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+  <strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">The updated test suite appears in <a href="ch08.xhtml#ch08ex018">Listing 8.18</a>, which also includes the solution to a couple of exercises in <a href="ch08.xhtml#ch08ex016">Listing 8.16</a> (<a href="ch08.xhtml#ch08fig06">Figure 8.6</a>).<sup><a id="fn8_9" href="ch08.xhtml#fn8_9a">9</a></sup></p>
+<p class="footnote"><sup><a id="fn8_9a" href="ch08.xhtml#fn8_9">9</a></sup>Image courtesy of msyaraafiq/Shutterstock.</p>
+<figure class="figure" id="ch08fig06">
+<img src="graphics/f0217-01.jpg" alt="Images" width="891" height="510"/>
+<figcaption>
+<p class="title-f">Figure 8.6: “RaceCar” is still a palindrome (ignoring case).</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex018"><strong>Listing 8.18:</strong> Adding a test for a punctuated palindrome. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0216-02" id="f0216-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+<span class="yellowb-n">    <strong>refute</strong> <span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+<span class="yellowb-n">    <strong>assert</strong> <span class="brown1"><strong>"RaceCar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+<span class="yellowb-n">    <strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">As required, the test suite is now <span class="red"><span class="smallcaps">RED</span></span>:<span epub:type="pagebreak" id="page_217"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex019"><strong>Listing 8.19:</strong> <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0217-02" id="f0217-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>4 tests, 4 assertions, 1 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="indent">At this point, we can start thinking about how to write the application code and get to <span class="green"><span class="smallcaps">GREEN</span></span>. Our strategy will be to write a <code><span class="green"><strong>letters</strong></span></code> method that returns only the letters in the content string. In other words, the code</p>
+<div class="ex-box">
+<pre class="pre1"><span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong></pre>
+</div>
+<p class="noindent">should evaluate to this:</p>
+<div class="ex-box">
+<pre class="pre1"><span class="brown"><strong>MadamImAdam</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_218"></span>Getting to that state will allow us to use our current palindrome detector to determine whether the original phrase is a palindrome or not.</p>
+<p class="indent">Having made this specification, we can now write a simple test for <code><span class="green"><strong>letters</strong></span></code>. We could follow the pattern from previous tests and assert (strict) equality directly (<a href="ch08.xhtml#ch08ex020">Listing 8.20</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex020"><strong>Listing 8.20:</strong> Asserting strict equality directly.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0218-01" id="f0218-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong> <span class="gray2-n"><strong>==</strong></span> <span class="brown1"><strong>"MadamImAdam"</strong></span></pre>
+</div>
+<p class="noindent">It turns out, though, that the <code><span class="green"><strong>assert</strong></span></code> module has native support for this kind of comparison (as seen in the official documentation for <a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/minitest/rdoc/MiniTest/Assertions.html">minitest assertions</a>), leading to assertions of the form shown in <a href="ch08.xhtml#ch08ex021">Listing 8.21</a>.<sup><a id="fn8_10" href="ch08.xhtml#fn8_10a">10</a></sup></p>
+<p class="footnote"><sup><a id="fn8_10a" href="ch08.xhtml#fn8_10">10</a></sup>If you’ve studied JavaScript, it’s worth noting that the order of <code><span class="green"><strong>&lt;actual&gt;</strong></span></code> and <code><span class="green"><strong>&lt;expected&gt;</strong></span></code> is reversed in Node’s <code><span class="green"><strong>assert</strong></span></code> library, which follows the convention <code><span class="green"><strong>assert.equal(&lt;actual&gt;, &lt;expected&gt;)</strong></span></code> (or <code><span class="green"><strong>assert.strictEqual(&lt;actual&gt;, &lt;expected&gt;)</strong></span></code>, as discussed in <a href="https://www.learnenough.com/r/learn_enough_javascript/testing/red#sec-red">Section 8.3</a> of <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex021"><strong>Listing 8.21:</strong> Using a native assertion.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0218-02" id="f0218-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>assert_equal</strong> <span class="gray2-n"><strong>&lt;</strong></span><strong>expected</strong><span class="gray2-n"><strong>&gt;</strong></span>, <span class="gray2-n"><strong>&lt;</strong></span><strong>actual</strong><span class="gray2-n"><strong>&gt;</strong></span></pre>
+</div>
+<p class="noindent">As we’ll see in a moment, it’s generally preferable to use native assertions when possible, since doing so leads to more helpful messages for failed tests. For the sake of such failing test messages, it’s also important to include the arguments in the “expected, actual” order shown above.</p>
+<p class="indent">In the present case, the “actual” result is <code><span class="green"><strong>"Madam, I'm Adam.".letters</strong></span></code>, and the “expected” value is <code><span class="green"><strong>"MadamImAdam"</strong></span></code>, so we can fill in the assertion as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0218-03" id="f0218-03a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><strong>assert_equal</strong> <span class="brown1"><strong>"MadamImAdam"</strong></span><strong>,</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong></pre>
+</div>
+<p class="noindent">The new test appears with the others in <a href="ch08.xhtml#ch08ex022">Listing 8.22</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex022"><span epub:type="pagebreak" id="page_219"></span><strong>Listing 8.22:</strong> Adding a test for the <code><span class="green"><strong>letters</strong></span></code> method. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0219-01" id="f0219-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>refute</strong> <span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"RaceCar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_letters</strong></span>
+<span class="yellowb-n">    <strong>assert_equal</strong> <span class="brown1"><strong>"MadamImAdam"</strong></span><strong>,</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Because the <code><span class="green"><strong>letters</strong></span></code> method doesn’t exist at all, the current failing message isn’t all that helpful (indeed, it’s an “error” rather than “failing”):</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex023"><strong>Listing 8.23:</strong> <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0219-02" id="f0219-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<span class="yellowb-n"><strong>NoMethodError: undefined method `letters' for "Madam, I'm Adam.":String</strong></span>
+<strong>5 tests, 4 assertions, 0 failures, 1 errors, 0 skips</strong></pre>
+</div>
+<p class="indent">We can get to a more useful <span class="red"><span class="smallcaps">RED</span></span> state by adding a <em>stub</em> for <code><span class="green"><strong>letters</strong></span></code>: a method that doesn’t work, but at least exists. For simplicity, we’ll simply return nothing, as shown in <a href="ch08.xhtml#ch08ex024">Listing 8.24</a>.<sup><a id="fn8_11" href="ch08.xhtml#fn8_11a">11</a></sup></p>
+<p class="footnote"><sup><a id="fn8_11a" href="ch08.xhtml#fn8_11">11</a></sup>Arguably, <code><span class="green"><strong>letters</strong></span></code> should be a <code><span class="green"><strong>private</strong></span></code> method like <code><span class="green"><strong>processed_content</strong></span></code>. If we made this design choice, we wouldn’t be able to test it directly by calling it on a string, as that would give a <code><span class="green"><strong>NoMethodError</strong></span></code>. We can route around this restriction using the <code><span class="green"><strong>send</strong></span></code> method, which takes in a symbol (<a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>) and calls the corresponding method on the object, as in <code><span class="green"><strong>"Madam, I'm Adam.".send(:letters)</strong></span></code>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex024"><span epub:type="pagebreak" id="page_220"></span><strong>Listing 8.24:</strong> A stub for the <code><span class="green"><strong>letters</strong></span></code> method. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0220-01" id="f0220-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_conten</strong><span class="gray2-n"><strong>t</strong></span><strong>.reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+<span class="yellowb-n">  <span class="blue1-n"><strong><em># Returns the letters in the string.</em></strong></span></span>
+<span class="yellowb-n">  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span></span>
+<span class="yellowb-n">  <span class="green1"><strong>end</strong></span></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">As promised, the error message is now quite helpful, as seen in <a href="ch08.xhtml#ch08ex025">Listing 8.25</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex025"><strong>Listing 8.25:</strong> <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0220-02" id="f0220-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+ <strong>FAIL["test_letters", "MhartlPalindromeTest", 0.0007690000347793102]</strong>
+ <strong>test_letters#MhartlPalindromeTest (0.00s)</strong>
+<span class="yellowb-n">        <strong>Expected: "MadamImAdam"</strong></span>
+<span class="yellowb-n">          <strong>Actual: nil</strong></span>
+<strong>5 tests, 5 assertions, 2 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="indent">With our two <span class="red"><span class="smallcaps">RED</span></span> tests capturing the desired behavior, we’re now ready to move on to the application code and try getting it to <span class="green"><span class="smallcaps">GREEN</span></span>.</p>
+<section>
+<h4 class="h4" id="sec8_3_1">8.3.1 Exercises</h4>
+<ol class="number-n">
+<li><p class="number-n">What is the error message when using the direct <code><span class="green"><strong>==</strong></span></code> assertion shown in <a href="ch08.xhtml#ch08ex020">Listing 8.20</a>? Why is this less useful than the message in <a href="ch08.xhtml#ch08ex025">Listing 8.25</a>?</p></li>
+<li><p class="number-n"><span epub:type="pagebreak" id="page_221"></span>What happens if you reverse the actual and expected values (<a href="ch08.xhtml#ch08ex021">Listing 8.21</a>) in <a href="ch08.xhtml#ch08ex025">Listing 8.25</a>? Why is the resulting error message confusing?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_4">8.4 Green</h3>
+<p class="noindent">Now that we have <span class="red"><span class="smallcaps">RED</span></span> tests to capture the enhanced behavior of our palindrome detector, it’s time to make them <span class="green"><span class="smallcaps">GREEN</span></span>. Part of the philosophy of TDD is to get them passing without worrying too much at first about the quality of the implementation. Once the test suite is <span class="green"><span class="smallcaps">GREEN</span></span>, we can polish it up without introducing regressions (<a href="ch08.xhtml#box8_1">Box 8.1</a>).</p>
+<p class="indent">The main challenge is implementing <code><span class="green"><strong>letters</strong></span></code>, which returns a string of the letters (but not any other characters) making up the <code><span class="green"><strong>content</strong></span></code> of a <code><span class="green"><strong>String</strong></span></code>. In other words, we need to select the characters that match a certain pattern. This sounds like a job for regular expressions (<a href="ch04.xhtml#sec4_3">Section 4.3</a>).</p>
+<p class="indent">At times like these, using an <a href="http://rubular.com/">online regex matcher</a> with a regex reference like the one shown in <a href="ch04.xhtml#ch04fig05">Figure 4.5</a> is an excellent idea. Indeed, sometimes they make things a little <em>too</em> easy, such as when the reference has the exact regex you need (<a href="ch08.xhtml#ch08fig07">Figure 8.7</a>).</p>
+<figure class="figure" id="ch08fig07">
+<img src="graphics/f0221-01.jpg" alt="Images" width="892" height="398"/>
+<figcaption>
+<p class="title-f">Figure 8.7: The exact regex we need.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_222"></span>Let’s test it in the console to make sure it satisfies our criteria (using the <code><span class="green"><strong>match?</strong></span></code> method, which is like the <code><span class="green"><strong>match</strong></span></code> method introduced in <a href="ch04.xhtml#sec4_3">Section 4.3</a> but returns a boolean value):<sup><a id="fn8_12" href="ch08.xhtml#fn8_12a">12</a></sup></p>
+<p class="footnote"><sup><a id="fn8_12a" href="ch08.xhtml#fn8_12">12</a></sup>Note that this won’t work for non<a href="https://en.wikipedia.org/wiki/ASCII">-ASCII</a> characters. If you need to match words containing such characters, the Google search <a href="https://www.google.com/search?q=ruby+unicode+letter+regular+expression">ruby unicode letter regular expression</a> might be helpful. Thanks to reader Paul Gemperle for pointing out this issue.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0222-01" id="f0222-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="green"><strong>$ irb</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"M"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>match?(</strong><span class="gray4-n"><strong>/[a-zA-Z]/</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"d"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>match?(</strong><span class="gray4-n"><strong>/[a-zA-Z]/</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>","</strong></span><span class="gray2-n"><strong>.</strong></span><strong>match?(</strong><span class="gray4-n"><strong>/[a-zA-Z]/</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; false</strong></span></pre>
+</div>
+<p class="noindent">Lookin’ good!</p>
+<p class="indent">We’re now in a position to build up an array of characters that matches upper- or lowercase letters. The most straightforward way to do this is with the <code><span class="green"><strong>for</strong></span></code> loop method we first saw in <a href="ch02.xhtml#sec2_6">Section 2.6</a>. We’ll start with an array for the letters, and then iterate through the content string, pushing each character onto the array (<a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>) if it matches the letter regex:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0222-02" id="f0222-02a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><strong>the_letters</strong> <span class="gray2-n"><strong>= []</strong></span>
+<span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray2-n"><strong>0.</strong></span><span class="gray2-n"><strong>.</strong></span><strong>self</strong><span class="gray2-n"><strong>.</strong></span><strong>length</strong> <span class="gray2-n"><strong>- 1</strong></span>
+  <span class="green1"><strong>if</strong></span> <strong>(</strong><span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span><span class="gray2-n"><strong>.</strong></span><strong>match(</strong><span class="gray4-n"><strong>/[a-zA-Z]/</strong></span><strong>))</strong>
+    <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Note that we’ve used <code><span class="green"><strong>match</strong></span></code> here in place of <code><span class="green"><strong>match?</strong></span></code>; although the latter is arguably more precise, the two are equivalent inside an <code><span class="green"><strong>if</strong></span></code> clause, and using <code><span class="green"><strong>match</strong></span></code> in this context is common in idiomatic Ruby code.</p>
+<p class="indent">At this point, <code><span class="green"><strong>the_letters</strong></span></code> is an array of letters, which can be <code><span class="green"><strong>join</strong></span></code>ed to form a string of the letters in the original string:</p>
+<div class="ex-box">
+<pre class="pre1"><span epub:type="pagebreak" id="page_223"></span><strong>the_letters</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong></pre>
+</div>
+<p class="noindent">Putting everything together gives the <code><span class="green"><strong>String#letter</strong></span></code> method in <a href="ch08.xhtml#ch08ex026">Listing 8.26</a> (with a highlight added to indicate the beginning of the new method).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex026"><strong>Listing 8.26:</strong> A working <code><span class="green"><strong>letters</strong></span></code> method (but full suite still <span class="red"><span class="smallcaps">RED</span></span>).<br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0223-01" id="f0223-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns the letters in the string.</em></strong></span>
+<span class="yellowb-n">  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span></span>
+    <strong>the_letters</strong> <span class="gray2-n"><strong>= []</strong></span>
+    <span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray2-n"><strong>0..</strong></span><strong>self.length</strong> <span class="gray2-n"><strong>- 1</strong></span>
+      <span class="green1"><strong>if self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span><strong>.match(</strong><span class="gray4-n"><strong>/[a-zA-Z]</strong></span><strong>/)</strong>
+        <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span>
+      <span class="green1"><strong>end</strong></span>
+    <span class="green1"><strong>end</strong></span>
+    <strong>the_letters</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Although the full test suite is still <span class="red"><span class="smallcaps">RED</span></span>, our <code><span class="green"><strong>letters</strong></span></code> test should now be <span class="green"><span class="smallcaps">GREEN</span></span>:</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex027"><strong>Listing 8.27:</strong> <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0223-02" id="f0223-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>5 tests, 5 assertions, 1 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_224"></span>We can get the final <span class="red"><span class="smallcaps">RED</span></span> test to pass by replacing <code><span class="green"><strong>self</strong></span></code> with <code><span class="green"><strong>self.letters</strong></span></code> in the <code><span class="green"><strong>processed_content</strong></span></code> method. The result appears in <a href="ch08.xhtml#ch08ex028">Listing 8.28</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex028"><strong>Listing 8.28:</strong> A working <code><span class="green"><strong>palindrome?</strong></span></code> method. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0224-01" id="f0224-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns the letters in the string.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span>
+    <strong>the_letters</strong> <span class="gray2-n"><strong>= []</strong></span>
+    <span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray2-n"><strong>0..</strong></span><strong>self</strong><span class="gray2-n"><strong>.</strong></span><strong>length</strong> <span class="gray2-n"><strong>- 1</strong></span>
+      <span class="green1"><strong>if self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span><strong>.match(</strong><span class="gray4-n"><strong>/[a-zA-Z]/</strong></span><strong>)</strong>
+        <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span>
+      <span class="green1"><strong>end</strong></span>
+    <span class="green1"><strong>end</strong></span>
+    <strong>the_letters</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+<span class="yellowb-n">      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">The result of <a href="ch08.xhtml#ch08ex028">Listing 8.28</a> is a <span class="green"><span class="smallcaps">GREEN</span></span> test suite (<a href="ch08.xhtml#ch08fig08">Figure 8.8</a>):<sup><a id="fn8_13" href="ch08.xhtml#fn8_13a">13</a></sup></p>
+<p class="footnote"><sup><a id="fn8_13a" href="ch08.xhtml#fn8_13">13</a></sup>Image courtesy of Album/Alamy Stock Photo.</p>
+<figure class="figure" id="ch08fig08">
+<img src="graphics/f0225-01.jpg" alt="Images" width="826" height="558"/>
+<figcaption>
+<p class="title-f">Figure 8.8: Our detector finally understands Adam’s palindromic nature.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex029"><strong>Listing 8.29:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0224-02" id="f0224-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>5 tests, 5 assertions, 0 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="noindent">It may not be the prettiest code in the world, but this <span class="green"><span class="smallcaps">GREEN</span></span> test suite means our code is working!<span epub:type="pagebreak" id="page_225"></span></p>
+<section>
+<h4 class="h4" id="sec8_4_1"><span epub:type="pagebreak" id="page_226"></span>8.4.1 Exercises</h4>
+<ol class="number-n">
+<li><p class="number-n">By <code><span class="green"><strong>require</strong></span></code>-ing the <code><span class="green"><strong>palindrome</strong></span></code> gem in irb, verify by hand that the <code><span class="green"><strong>String#palindrome?</strong></span></code> code can successfully detect palindromes of the form “Madam, I’m Adam.” (You may have to quit and restart the REPL to refresh all relevant object definitions. As discussed further in <a href="ch08.xhtml#sec8_5_1">Section 8.5.1</a>, you will also have to install the gem locally using <code><span class="green1"><strong>bundle exec rake install</strong></span></code>.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_5">8.5 Refactor</h3>
+<p class="noindent">Although the code in <a href="ch08.xhtml#ch08ex028">Listing 8.28</a> is now working, as evidenced by our <span class="green"><span class="smallcaps">GREEN</span></span> test suite, it relies on a rather cumbersome (and very un-Rubyish) <code><span class="green"><strong>for</strong></span></code> loop, and there’s some duplication as well. In this section, we’ll <em>refactor</em> our code, which is the process of changing the form of code without changing its function.</p>
+<p class="indent">By running our test suite after any significant changes, we’ll catch any regressions quickly, thereby giving us confidence that the final form of the refactored code is still correct. Throughout this section, I suggest making changes incrementally and running the test suite after each change to confirm that the suite is still <span class="green"><span class="smallcaps">GREEN</span></span>.</p>
+<p class="indent">We start by observing that there’s some duplication in <a href="ch08.xhtml#ch08ex028">Listing 8.28</a>: The expression</p>
+<div class="ex-box">
+<pre class="pre1"><span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span></pre>
+</div>
+<p class="noindent">appears twice. This suggests eliminating the duplication by binding it to a variable, which we’ll call <code><span class="green"><strong>character</strong></span></code>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0226-01" id="f0226-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span>
+  <strong>the_letters</strong> <span class="gray2-n"><strong>= []</strong></span>
+  <span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray2-n"><strong>0..</strong></span><strong>self</strong><span class="gray2-n"><strong>.</strong></span><strong>length</strong> <span class="gray2-n"><strong>- 1</strong></span>
+<span class="yellowb-n">    <strong>character</strong> <span class="gray2-n"><strong>=</strong></span> <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span></span>
+<span class="yellowb-n">    <span class="green1"><strong>if</strong></span> <strong>character</strong><span class="gray4-n"><strong>.</strong></span><strong>match(</strong><span class="gray4-n"><strong>/[a-zA-Z]</strong></span><strong>/)</strong></span>
+<span class="yellowb-n">      <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <strong>character</strong></span>
+    <span class="green1"><strong>end</strong></span>
+  <span epub:type="pagebreak" id="page_227"></span><span class="green1"><strong>end</strong></span>
+  <strong>the_letters</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">As another bit of polish, we can simplify the regex by using <code><span class="green"><strong>i</strong></span></code> after <code><span class="green"><strong>/.../</strong></span></code> to make a case-insensitive match, while also binding it to a name to make its purpose clearer:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0227-02" id="f0227-02a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="yellowb-n"><strong>letter_regex</strong> <span class="gray2-n"><strong>=</strong></span> <span class="gray4-n"><strong>/[a-z]/i</strong></span></span>
+<span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray2-n"><strong>0..</strong></span><strong>self</strong><span class="gray2-n"><strong>.</strong></span><strong>length</strong> <span class="gray2-n"><strong>- 1</strong></span>
+  <strong>character</strong> <span class="gray2-n"><strong>=</strong></span> <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>[</strong></span><strong>i</strong><span class="gray2-n"><strong>]</strong></span>
+<span class="yellowb-n">  <span class="green1"><strong>if</strong></span> <strong>characte</strong><span class="gray2-n"><strong>r</strong></span><strong>.match(letter_regex)</strong></span>
+    <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <strong>character</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Per <a href="ch03.xhtml#sec3_5">Section 3.5</a>, it’s usually better to use an <code><span class="green"><strong>each</strong></span></code> loop when we can. We can do this by combining the <code><span class="green"><strong>String#chars</strong></span></code> method mentioned briefly in <a href="ch05.xhtml#sec5_3">Section 5.3</a> and an <code><span class="green"><strong>each</strong></span></code> loop as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0227-03" id="f0227-03a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><strong>letter_regex</strong> <span class="gray2-n"><strong>=</strong></span><span class="gray4-n"> <strong>/[a-z]/i</strong></span>
+<span class="yellowb-n"><span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong><span class="gray2-n"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray2-n"><strong>|</strong></span><strong>character</strong><span class="gray2-n"><strong>|</strong></span></span>
+   <span class="green1"><strong>if</strong></span> <strong>character</strong><span class="gray2-n"><strong>.</strong></span><strong>match(letter_regex)</strong>
+     <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <strong>character</strong>
+   <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Notice that this has the side effect of eliminating the assignment we just made, replacing it with a loop variable.</p>
+<p class="indent">We’ve got some more refactoring to do, but for reference the full state of the application code appears in <a href="ch08.xhtml#ch08ex030">Listing 8.30</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex030"><strong>Listing 8.30:</strong> A refactored <code><span class="green"><strong>letters</strong></span></code> method. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0227-04" id="f0227-04a">Click here to view code image</a></p>
+
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span epub:type="pagebreak" id="page_228"></span><span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns the letters in the string.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span>
+    <strong>the_letters</strong> <span class="gray2-n"><strong>= []</strong></span>
+    <strong>letter_regex</strong> <span class="gray2-n"><strong>=</strong></span> <span class="gray4-n"><strong>/[a-z]/i</strong></span>
+    <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong><span class="gray2-n"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray2-n"><strong>|</strong></span><strong>character</strong><span class="gray2-n"><strong>|</strong></span>
+      <span class="green1"><strong>if</strong></span> <strong>character</strong><span class="gray2-n"><strong>.</strong></span><strong>match(letter_regex)</strong>
+        <strong>the_letters</strong> <span class="gray2-n"><strong>&lt;&lt;</strong></span> <strong>character</strong>
+      <span class="green1"><strong>end</strong></span>
+    <span class="green1"><strong>end</strong></span>
+    <strong>the_letters</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">The result of running the test suite is gratifying:</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex031"><strong>Listing 8.31:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0228-02" id="f0228-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>5 tests, 5 assertions, 0 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="noindent">It’s still <span class="green"><span class="smallcaps">GREEN</span></span>! The changes above involved lots of tricky and error-prone manipulations, so a <span class="green"><span class="smallcaps">GREEN</span></span> test suite gives us confidence that we didn’t introduce any regressions.</p>
+<p class="indent">To motivate a <a href="https://en.wiktionary.org/wiki/penultimate#English">penultimate</a> refactoring, we can note that the form of the code in <a href="ch08.xhtml#ch08ex030">Listing 8.30</a> is similar to that in <a href="ch06.xhtml#ch06ex04">Listing 6.4</a> from <a href="ch06.xhtml#sec6_2">Section 6.2</a>: we initialize an empty array and then <code><span class="green"><strong>push</strong></span></code> to it (using the shovel operator <code><span class="green"><strong>&lt;&lt;</strong></span></code>) in an <code><span class="green"><strong>each</strong></span></code> loop. In <a href="ch06.xhtml#ch06ex05">Listing 6.5</a>, we used functional programming via the <code><span class="green"><strong>select</strong></span></code> method to convert that loop to a single line, and we can do exactly the same thing here.</p>
+<p class="indent">As a quick refresher, let’s drop into the REPL:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0229-01" id="f0229-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span epub:type="pagebreak" id="page_229"></span><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong>
+<span class="green"><strong>=&gt; ["M", "a", "d", "a", "m", ",", " ", "I", "'", "m", " ",</strong></span>
+    <span class="green"><strong>"A", "d", "a", "m", "."]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Madam, I'm Adam"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong><span class="gray2-n"><strong>.</strong></span><strong>select {</strong> <span class="gray2-n"><strong>|</strong></span><strong>c</strong><span class="gray2-n"><strong>|</strong></span> <strong>c</strong><span class="gray2-n"><strong>.</strong></span><strong>match(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>) }</strong>
+<span class="green"><strong>=&gt; ["M", "a", "d", "a", "m", "I", "m", "A", "d", "a", "m"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Madam, I'm Adam"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong><span class="gray2-n"><strong>.</strong></span><strong>select {</strong> <span class="gray2-n"><strong>|</strong></span><strong>c</strong><span class="gray2-n"><strong>|</strong></span> <strong>c</strong><span class="gray2-n"><strong>.</strong></span><strong>match(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>) }</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+<span class="green"><strong>=&gt; "MadamImAdam"</strong></span></pre>
+</div>
+<p class="noindent">We see here how combining method chaining (<a href="ch05.xhtml#sec5_3">Section 5.3</a>) with functional programming makes it easy to select and join the letter characters in a string.</p>
+<p class="indent">Applying <code><span class="green"><strong>select</strong></span></code> to the code in <a href="ch08.xhtml#ch08ex030">Listing 8.30</a>, we can condense the <code><span class="green"><strong>letters</strong></span></code> method into a single line, as shown in <a href="ch08.xhtml#ch08ex032">Listing 8.32</a>. (It could arguably be improved by retaining the <code><span class="green"><strong>lettersRegEx</strong></span></code> constant from <a href="ch08.xhtml#ch08ex030">Listing 8.30</a>, but I find the austerity of a one-line function to be nearly impossible to resist.)</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex032"><strong>Listing 8.32:</strong> Refactoring <code><span class="green"><strong>letters</strong></span></code> down to a single line. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0229-02" id="f0229-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns the letters in the string.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>letters</strong></span>
+<span class="yellowb-n">    <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>chars</strong><span class="gray2-n"><strong>.</strong></span><strong>select {</strong> <span class="gray2-n"><strong>|</strong></span><strong>c</strong><span class="gray2-n"><strong>|</strong></span> <strong>c</strong><span class="gray2-n"><strong>.</strong></span><strong>match(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>) }</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>letters</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">As noted in <a href="ch06.xhtml#ch06">Chapter 6</a>, functional programs are harder to build up incrementally, which is one reason why it’s so nice to have a test suite to check that it <span epub:type="pagebreak" id="page_230"></span>had its intended effect:<sup><a id="fn8_14" href="ch08.xhtml#fn8_14a">14</a></sup></p>
+<p class="footnote"><sup><a id="fn8_14a" href="ch08.xhtml#fn8_14">14</a></sup><a href="https://www.urbandictionary.com/define.php?term=IRL">IRL</a>, I would probably write the <code><span class="green"><strong>Phrase#letters</strong></span></code> method by first writing the tests we saw in <a href="ch08.xhtml#sec8_3">Section 8.3</a>, and then try for a functional solution right away. If I failed at that, I would backtrack, do it an easier (loopier) way, and then make another run at a functional solution after getting the test suite <span class="green"><span class="smallcaps">GREEN</span></span>. (I find this sort of backtracking to be especially necessary with the <code><span class="green"><strong>reduce</strong></span></code>/<code><span class="green"><strong>inject</strong></span></code> method we met in <a href="ch06.xhtml#sec6_3">Section 6.3</a>.)</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex033"><strong>Listing 8.33:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0230-01" id="f0230-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>5 tests, 5 assertions, 0 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<p class="noindent"><a href="https://en.wiktionary.org/wiki/huzzah">Huzzah!</a> Our test suite still passes, so our one-line <code><span class="green"><strong>letters</strong></span></code> method works.</p>
+<p class="indent">This is a major improvement, but in fact there’s one more refactoring that represents a great example of the power of Ruby. We’ll start by <em>removing</em> the test for <code><span class="green"><strong>letters</strong></span></code>, as shown in <a href="ch08.xhtml#ch08ex034">Listing 8.34</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex034"><strong>Listing 8.34:</strong> Removing the <code><span class="green"><strong>letters</strong></span></code> test. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0230-02" id="f0230-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>refute</strong> <span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"RaceCar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Now for some yummy Ruby goodness. Recall from <a href="ch04.xhtml#sec4_3">Section 4.3</a> that strings support a <code><span class="green"><strong>scan</strong></span></code> method that lets us select regex-matching characters right from a string:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0231-01" id="f0231-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span epub:type="pagebreak" id="page_231"></span><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>scan(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["M", "a", "d", "a", "m", "I", "m", "A", "d", "a", "m"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>scan(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>)</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong>
+<span class="green"><strong>=&gt; "MadamImAdam"</strong></span></pre>
+</div>
+<p class="noindent">By scanning on the same regex we’ve been using throughout this section and then joining on the empty string, we’ve replicated the functionality of the <code><span class="green"><strong>letters</strong></span></code> method! This means we can simplify the application code even further by eliminating <code><span class="green"><strong>letters</strong></span></code> entirely, as shown in <a href="ch08.xhtml#ch08ex035">Listing 8.35</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex035"><strong>Listing 8.35:</strong> Replacing <code><span class="green"><strong>letters</strong></span></code> with a <code><span class="green"><strong>scan</strong></span></code>. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0231-02" id="f0231-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+<span class="yellowb-n">      <span class="green1"><strong>self</strong></span><span class="gray2-n"><strong>.</strong></span><strong>scan(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>)</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Per the exercise in <a href="ch07.xhtml#sec7_2_1">Section 7.2.1</a>, we can even eliminate the <code><span class="green"><strong>self.</strong></span></code>, since inside the <code><span class="green"><strong>String</strong></span></code> class Ruby is smart enough to apply the <code><span class="green"><strong>scan</strong></span></code> to the string itself. This yields the final version of the code, as shown in <a href="ch08.xhtml#ch08ex036">Listing 8.36</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex036"><strong>Listing 8.36:</strong> Omitting the <code><span class="green"><strong>self.</strong></span></code> inside the <code><span class="green"><strong>String</strong></span></code> class. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0231-03" id="f0231-03a">Click here to view code image</a></p>
+
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+
+  <span epub:type="pagebreak" id="page_232"></span><span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+<span class="yellowb-n">      <span class="green1"><strong>scan</strong></span><strong>(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>)</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">One more run of the test suite confirms that everything is still <a href="https://en.wiktionary.org/wiki/copacetic#English">copacetic</a> (<a href="ch08.xhtml#ch08fig09">Figure 8.9</a>):</p>
+<figure class="figure" id="ch08fig09">
+<img src="graphics/f0233-01.jpg" alt="Images" width="826" height="558"/>
+<figcaption>
+<p class="title-f">Figure 8.9: Still a palindrome after all our work.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex037"><strong>Listing 8.37:</strong> <span class="green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0232-02" id="f0232-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>$ bundle exec rake test</strong>
+<strong>4 tests, 4 assertions, 0 failures, 0 errors, 0 skips</strong></pre>
+</div>
+<section>
+<h4 class="h4" id="sec8_5_1">8.5.1 Publishing the Ruby Gem</h4>
+<p class="noindent">Having finished a refactored version of our <code><span class="green"><strong>palindrome</strong></span></code> gem, we’re now ready for the final step, which is to publish the gem publicly so that it can be included into other projects (such as the live web app in <a href="ch10.xhtml#ch10">Chapter 10</a>). Luckily, RubyGems makes this amazingly easy.</p>
+<p class="indent">First, we should make a Git commit and push up the remote repository:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0232-03" id="f0232-03a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>git add -A</strong>
+<span class="blue"><strong>$</strong></span> <strong>git commit -m</strong> <span class="brown1"><strong>"Finish working and refactored palindrome method"</strong></span>
+<span class="blue"><strong>$</strong></span> <strong>git push</strong></pre>
+</div>
+<p class="indent">Next, it’s a good idea to install the gem using <code><span class="green"><strong>rake install</strong></span></code> and then test it locally using irb:<span epub:type="pagebreak" id="page_233"></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0234-01" id="f0234-01a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span epub:type="pagebreak" id="page_234"></span><span class="blue"><strong>$</strong></span> <strong>bundle</strong> <span class="green1"><strong>exec</strong></span> <strong>rake install</strong>
+<span class="blue"><strong>$</strong></span> <strong>irb</strong>
+<span class="green1"><strong>&gt;&gt; require '&lt;username&gt;_palindrome'</strong></span>
+<span class="green1"><strong>true</strong></span>
+<span class="green1"><strong>&gt;&gt; "Madam, I'm Adam.".palindrome?</strong></span>
+<span class="green1"><strong>true</strong></span></pre>
+</div>
+<p class="indent">With a working gem confirmed, it’s time to publish it to the world. You’ll need to register for an account at <a href="https://rubygems.org/">RubyGems.org</a> (unless you’re already a member, in which case you should run <code><span class="green"><strong>gem signin</strong></span></code>), at which point you can release your gem using <code><span class="green"><strong>rake release</strong></span></code>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0234-02" id="f0234-02a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>bundle</strong> <span class="green1"><strong>exec</strong></span> <strong>rake release</strong>
+<span class="green1"><strong>mhartl_palindrome 0.1.0 built to pkg/mhartl_palindrome-0.1.0.gem.</strong></span>
+<span class="green1"><strong>Tagged v0.1.0.</strong></span>
+<span class="green"><strong>Pushed git commits and tags.</strong></span>
+<span class="green"><strong>Pushed mhartl_palindrome 0.1.0 to rubygems.org</strong></span></pre>
+</div>
+<p class="indent">After waiting a few minutes for RubyGems to update its system, you should be able to uninstall the locally installed version and then reinstall it from the Web:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f0234-03" id="f0234-03a">Click here to view code image</a></p>
+<div class="ex-box">
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>gem uninstall &lt;username&gt;_palindrome</strong>
+<span class="green"><strong>Successfully uninstalled &lt;username&gt;_palindrome-0.1.0</strong></span>
+<span class="blue"><strong>$</strong></span> <strong>gem install &lt;username&gt;_palindrome -v</strong> <span class="gray2-n"><strong>0</strong></span><strong>.1.0</strong>
+<span class="green1"><strong>Successfully installed &lt;username&gt;_palindrome-0.1.0</strong></span>
+<span class="green1"><strong>1 gem installed</strong></span>
+<span class="blue"><strong>$</strong></span> <strong>irb</strong>
+<span class="green1"><strong>&gt;&gt; require '&lt;username&gt;_palindrome'</strong></span>
+<span class="green1"><strong>true</strong></span>
+<span class="green1"><strong>&gt;&gt; "RaceCar".palindrome?</strong></span>
+<span class="green1"><strong>true</strong></span></pre>
+</div>
+<p class="indent">That’s it! Your Ruby gem is now publicly available to be incorporated into anyone’s project.</p>
+<p class="indent">For a general Ruby gem project, you can continue adding features and making new releases. All you need to do is increment the version number in <code><span class="green"><strong>lib/&lt;username&gt;_palindrome/version.rb</strong></span></code> to reflect the changes you’ve made. For more guidance on how to increment the versions, I suggest learning a bit about the rules of so-called <em>semantic versioning</em>, or <em>semver</em> (<a href="ch08.xhtml#box8_2">Box 8.2</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box8_2">
+<p class="sb-title"><span epub:type="pagebreak" id="page_235"></span>Box 8.2. Semver</p>
+<p class="indent">You might have noticed in this section that we’ve used the version number 0.1.0 for our new gem. The leading zero indicates that our package is at an early stage, often called “beta” (or even “alpha” for very early-stage projects).</p>
+<p class="indent">We can indicate updates by incrementing the middle number in the version, e.g., from 0.1.0 to 0.2.0, 0.3.0, etc. Bugfixes are represented by incrementing the rightmost number, as in 0.2.1, 0.2.2, etc., and a mature version (suitable for use by others, and which may not be backward-compatible with prior versions) is indicated by version 1.0.0.</p>
+<p class="indent">After reaching version 1.0.0, further changes follow this same general pattern: 1.0.1 would represent minor changes (a “patch release”), 1.1.0 would represent new (but backward-compatible) features (a “minor release”), and 2.0.0 would represent major or backward-incompatible changes (a “major release”).</p>
+<p class="indent">These numbering conventions are known as <em>semantic versioning</em>, or <em>semver</em> for short. For more information, see <a href="https://semver.org/">semver.org</a>.</p>
+</aside>
+</section>
+<section>
+<h4 class="h4" id="sec8_5_2">8.5.2 Exercises</h4>
+<ol class="number-n">
+<li><p class="number-n">Restore the module in the palindrome gem, as shown in <a href="ch08.xhtml#ch08ex038">Listing 8.38</a>. Confirm that the test suite is still <span class="green"><span class="smallcaps">GREEN</span></span>.</p></li>
+<li><p class="number-n">Let’s generalize our palindrome detector by adding the capability to detect integer palindromes like 12321. By filling in <code><span class="green"><strong>FILL_IN</strong></span></code> in <a href="ch08.xhtml#ch08ex039">Listing 8.39</a>, write tests for integer non-palindromes and palindromes. (Note the call to <code><span class="green"><strong>to_s</strong></span></code> to convert integers to strings so that we can apply <code><span class="green"><strong>scan</strong></span></code>.) Get both tests to <span class="green"><span class="smallcaps">GREEN</span></span> by updating the regex to match digits and including the palindrome module in <code><span class="green"><strong>Integer</strong></span></code> (<a href="ch08.xhtml#ch08ex040">Listing 8.40</a>).</p></li>
+<li><p class="number-n">Bump the version number, commit your changes, and release a new version of your gem.</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex038"><span epub:type="pagebreak" id="page_236"></span><strong>Listing 8.38:</strong> Restoring the palindrome module. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0236-01" id="f0236-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>module</strong></span> <span class="bluer-n"><strong>MhartlPalindrome</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+      <span class="green1"><strong>scan</strong></span><strong>(</strong><span class="gray4-n"><strong>/[a-z]/i</strong></span><strong>)</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+  <span class="green1"><strong>include</strong></span> <span class="brown"><strong>MhartlPalindrome</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex039"><strong>Listing 8.39:</strong> Testing integer palindromes. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>test/&lt;username&gt;_palindrome_test.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0236-02" id="f0236-02a">Click here to view code image</a></p>
+
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"test_helper"</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>MhartlPalindromeTest</strong></span> <span class="gray2-n"><strong>&lt;</strong></span> <span class="brown"><strong>Minitest</strong></span><span class="gray2-n"><strong>::</strong></span><span class="brown"><strong>Test</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_non_palindrome</strong></span>
+    <strong>refute</strong> <span class="brown1"><strong>"apple"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_literal_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"racecar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_mixed_case_palindrome</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"RaceCar"</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_palindrome_with_punctuation</strong></span>
+    <strong>assert</strong> <span class="brown1"><strong>"Madam, I'm Adam."</strong></span><span class="gray2-n"><strong>.</strong></span><strong>palindrome?</strong>
+  <span class="green1"><strong>end</strong></span>
+    <span epub:type="pagebreak" id="page_237"></span><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_integer_non_palindrome</strong></span>
+<span class="yellowb-n">    <span class="brown"><strong>FILL_IN</strong></span> <span class="gray2-n"><strong>12345</strong></span><strong>.palindrome?</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>test_integer_palindrome</strong></span>
+<span class="yellowb-n">    <span class="brown"><strong>FILL_IN</strong></span> <span class="gray2-n"><strong>12321.</strong></span><strong>palindrome?</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch08ex040"><strong>Listing 8.40:</strong> Adding detection of integer palindromes. <span class="green"><span class="smallcaps">GREEN</span></span><br/><code><em>lib/&lt;username&gt;_palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f0237-02" id="f0237-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>"mhartl_palindrome/version"</strong></span>
+
+<span class="green1"><strong>module</strong></span> <span class="bluer-n"><strong>MhartlPalindrome</strong></span>
+
+  <span class="blue1-n"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span>
+    <span class="green1"><strong>if</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>empty?</strong>
+      <span class="green1"><strong>false</strong></span>
+    <span class="green1"><strong>else</strong></span>
+      <strong>processed_content</strong> <span class="gray2-n"><strong>==</strong></span> <strong>processed_content</strong><span class="gray2-n"><strong>.</strong></span><strong>reverse</strong>
+    <span class="green1"><strong>end</strong></span>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="green1"><strong>private</strong></span>
+
+    <span class="blue1-n"><strong><em># Returns content for palindrome testing.</em></strong></span>
+    <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>processed_content</strong></span>
+<span class="yellowb-n">      <span class="green1"><strong>to_s</strong></span><span class="gray2-n"><strong>.</strong></span><strong>scan(</strong><span class="gray4-n"><strong>/[a-zFILL_IN]/i</strong></span><strong>)</strong><span class="gray2-n"><strong>.</strong></span><strong>join</strong><span class="gray2-n"><strong>.</strong></span><strong>downcase</strong></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>String</strong></span>
+  <span class="green1"><strong>include</strong></span> <span class="brown"><strong>MhartlPalindrome</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="green1"><strong>class</strong></span> <span class="bluer-n"><strong>Integer</strong></span>
+<span class="yellowb-n">  <span class="green1"><strong>include</strong></span> <span class="brown"><strong>FILL_IN</strong></span></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<span epub:type="pagebreak" id="page_238"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch05"><span epub:type="pagebreak" id="page_91"></span>Chapter 5</h2>
+<h2 class="chap-title">Functions</h2>
+<p class="noindent">So far in this tutorial, we’ve repeatedly mentioned JavaScript functions, and in this chapter we’ll finally learn how to define functions of our own. The resulting ability gives us greater flexibility as programmers, and enables powerful techniques like <span class="pd_green"><code><strong>forEach</strong></code></span> (<a href="ch05.xhtml#ch5lev4">Section 5.4</a>) and <em>functional programming</em> (<a href="ch06.xhtml#ch06">Chapter 6</a>). Functions: <a href="https://www.urbandictionary.com/define.php?term=Achievement%20unlocked">achievement unlocked</a> (<a href="ch05.xhtml#ch5fig1">Figure 5.1</a>).</p>
+<figure class="figure" id="ch5fig1">
+<img src="graphics/05fig01.jpg" alt="images" width="473" height="88"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.1:</strong> Time to level up.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="ch5lev1">5.1 Function Definitions</h3>
+<p class="noindent">As we saw in <a href="ch01.xhtml#ch1lev2">Section 1.2</a>, function calls in JavaScript consist of a <em>name</em> and zero or more arguments enclosed in parentheses:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c091pro01" id="c091pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> console.log(<span class="pd_red">"hello, world!"</span>);
+hello, world<span class="gray">!</span></pre>
+<p class="noindent">As discussed in <a href="ch02.xhtml#ch2lev5">Section 2.5</a>, functions attached to objects (such as <span class="pd_green"><code><strong>log</strong></code></span> attached to <span class="pd_green"><code><strong>console</strong></code></span>) are also called <em>methods</em>.</p>
+<p class="indent">One of the most important tasks in programming involves defining <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions">our own functions</a>. Let’s take a look at a simple example in the REPL. We’ll define a function called <span epub:type="pagebreak" id="page_92"></span><span class="pd_green"><code><strong>stringMessage</strong></code></span> that takes a single argument and returns a message based on whether the argument is empty or not:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c092pro01" id="c092pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>function</strong></span> stringMessage(string) {
+    <span class="pd_green1"><strong>if</strong></span> (string) {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"The string is nonempty."</span>;
+    } <span class="pd_green1"><strong>else</strong></span> {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"It's an empty string!"</span>;
+    }
+  }
+<span class="pd_green1"><strong>undefined</strong></span></pre>
+<p class="noindent">Note the use of <span class="pd_green"><code><strong>return</strong></code></span> to indicate the <em>return value</em> of the function. The result can be seen by calling the function in the REPL:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c092pro02" id="c092pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> stringMessage(<span class="pd_red">"honey badger"</span>);
+<span class="pd_red">'The string is nonempty.'</span>
+<span class="gray">&gt;</span> stringMessage(<span class="pd_red">""</span>);
+<span class="pd_red">'It\'s an empty string!'</span></pre>
+<p class="indent">It’s important to understand that the name of the function argument is irrelevant as far as the caller is concerned. In other words, the first example above could replace <span class="pd_green"><code><strong>string</strong></code></span> with any other valid variable name, such as <span class="pd_green"><code><strong>asdf</strong></code></span>, and it would work just the same:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c092pro03" id="c092pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>function</strong></span> stringMessage(asdf) {
+    <span class="pd_green1"><strong>if</strong></span> (asdf) {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"The string is nonempty."</span>;
+    } <span class="pd_green1"><strong>else</strong></span> {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"It's an empty string!"</span>;
+    }
+  }
+<span class="pd_green1"><strong>undefined</strong></span>
+<span class="gray">&gt;</span> stringMessage(<span class="pd_red">"honey badger"</span>);
+<span class="pd_red">'The string is nonempty.'</span>
+<span class="gray">&gt;</span> stringMessage(<span class="pd_red">""</span>);
+<span class="pd_red">'It\'s an empty string!'</span></pre>
+<section>
+<h4 class="h4" id="ch5lev1sec1">5.1.1 Sorting Numerical Arrays</h4>
+<p class="noindent">We can apply functions to solve the conundrum encountered in <a href="ch03.xhtml#ch3lev4sec1">Section 3.4.1</a>, where we saw that JavaScript sorts even numerical arrays “alphabetically” by default:</p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_93"></span><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> a <span class="gray">=</span> [<span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">99</span>];
+<span class="gray">&gt;</span> a.sort();
+[ <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">8</span>, <span class="gray">99</span> ]</pre>
+<p class="indent">To sort an array numerically, we can define a function (which we’ll call <span class="pd_green"><code><strong>number-Compare</strong></code></span>) that takes in two numbers <span class="pd_green"><code><strong>a</strong></code></span> and <span class="pd_green"><code><strong>b</strong></code></span> and returns <span class="pd_green"><code><strong>1</strong></code></span> when <span class="pd_green"><code><strong>a &gt; b</strong></code></span>, <span class="pd_green"><code><strong>-1</strong></code></span> when <span class="pd_green"><code><strong>a &lt; b</strong></code></span>, and <span class="pd_green"><code><strong>0</strong></code></span> when they’re equal. This is the form required by the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort">Array sort documentation</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort</a>), and as we’ll see it will let <span class="pd_green"><code><strong>sort</strong></code></span> figure out that we want to sort the array numerically rather than alphabetically. The result appears in <a href="ch05.xhtml#ch5list1">Listing 5.1</a>.</p>
+<p class="listing" id="ch5list1"><strong>Listing 5.1:</strong> Comparing numbers numerically.</p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis01" id="c05lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>function</strong></span> numberCompare(a, b) {
+    <span class="pd_green1"><strong>if</strong></span> (a <span class="gray">&gt;</span> b) {
+      <span class="pd_green1"><strong>return</strong></span> <span class="gray">1</span>;
+    } <span class="pd_green1"><strong>else if</strong></span> (a <span class="gray">&lt;</span> b) {
+      <span class="pd_green1"><strong>return</strong></span> <span class="gray">-1</span>;
+    }
+      <span class="pd_green1"><strong>else</strong></span> {
+      <span class="pd_green1"><strong>return</strong></span> <span class="gray">0</span>;
+    }
+  }</pre>
+<p class="noindent">We can test this directly as follows:</p>
+<pre class="pre1"><span class="gray">&gt;</span> numberCompare(<span class="gray">8</span>, <span class="gray">17</span>);
+<span class="gray">-1</span>
+<span class="gray">&gt;</span> numberCompare(<span class="gray">17</span>, <span class="gray">99</span>);
+<span class="gray">-1</span>
+<span class="gray">&gt;</span> numberCompare(<span class="gray">99</span>, <span class="gray">42</span>);
+<span class="gray">1</span>
+<span class="gray">&gt;</span> numberCompare(<span class="gray">99</span>, <span class="gray">99</span>);
+<span class="gray">0</span></pre>
+<p class="indent">At this point, we can sort the array by giving <span class="pd_green"><code><strong>sort</strong></code></span> a <em>function argument</em>, which causes it to change its default comparison:</p>
+<pre class="pre1"><span class="gray">&gt;</span> a.sort(numberCompare);
+[ <span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">99</span> ]</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_94"></span>This is the result we’re looking for. Under the hood, JavaScript is marching through the array and asking the question, “What is the value of <span class="pd_green"><code><strong>numberCompare(a, b)</strong></code></span>? If it’s negative, <span class="pd_green"><code><strong>a</strong></code></span> goes before <span class="pd_green"><code><strong>b</strong></code></span>; if it’s positive, <span class="pd_green"><code><strong>b</strong></code></span> goes before <span class="pd_green"><code><strong>a</strong></code></span>. (If they’re equal, it doesn’t matter.)” The result is an array sorted according to what we intuitively expect.</p>
+<p class="indent">We’ll see an even better way to sort arrays when we learn about <em>anonymous functions</em> (functions without a name) in <a href="ch05.xhtml#ch5lev4">Section 5.4</a>. In particular, an exercise in <a href="ch05.xhtml#ch5lev4sec1">Section 5.4.1</a> includes the most idiomatically correct way to sort JavaScript arrays numerically (<a href="ch05.xhtml#ch5list17">Listing 5.17</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch5lev1sec2">5.1.2 Fat Arrow</h4>
+<p class="noindent">ES6 adds a second method for defining functions known as a “fat arrow”, indicated with an equals sign followed by a right angle bracket: <span class="pd_green"><code><strong>=&gt;</strong></code></span>. We can define an alternate string message function by combining <span class="pd_green"><code><strong>=&gt;</strong></code></span> and the <span class="pd_green"><code><strong>let</strong></code></span> keyword:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c094pro01" id="c094pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_red">&gt;</span> <span class="pd_green1"><strong>let</strong></span> altStringMessage <span class="gray">=</span> (string) =&gt; {
+    <span class="pd_green1"><strong>if</strong></span> (string) {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"The string is nonempty."</span>;
+    } <span class="pd_green1"><strong>else</strong></span> {
+      <span class="pd_green1"><strong>return</strong></span> <span class="pd_red">"It's an empty string!"</span>;
+    }
+  }
+<span class="gray">&gt;</span> altStringMessage(<span class="pd_red">"honey badger"</span>);
+<span class="pd_red">'The string is nonempty '</span></pre>
+<p class="noindent">Here <span class="pd_green"><code><strong>(string) =&gt; …</strong></code></span> says to create a function with one argument (<span class="pd_green"><code><strong>string</strong></code></span>) defined by the code to the right of the arrow. In other words,</p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> name(arg) {
+  <span class="pd_blue1"><em>// code</em></span>
+}</pre>
+<p class="noindent">is the same as</p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> name <span class="gray">=</span> (arg) =&gt; {
+   <span class="pd_blue1"><em>// code</em></span>
+}</pre>
+<p class="indent">Some developers prefer to use this alternate notation for <em>all</em> their functions, and this may eventually be a universal practice, but for now the use of <span class="pd_green"><code><strong>function</strong></code></span> is <em>very</em> common. It also maps more cleanly to the way you actually call functions:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c095pro01" id="c095pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_95"></span><span class="pd_green1"><strong>function</strong></span> foo(bar, baz) {
+  <span class="pd_blue1"><em>// do something with bar and baz</em></span>
+}
+
+<span class="pd_green1"><strong>let</strong></span> x <span class="gray">= 1</span>;
+<span class="pd_green1"><strong>let</strong></span> y <span class="gray">= 2</span>;
+<span class="pd_green1"><strong>let</strong></span> result <span class="gray">=</span> foo(x, y);</pre>
+<p class="noindent">Because the actual code here uses <span class="pd_green"><code><strong>foo(x, y)</strong></code></span>, it’s nice to see a similar sequence of characters appear in the function definition.</p>
+<p class="indent">In this tutorial, we’ll generally stick to using <span class="pd_green"><code><strong>function</strong></code></span> to define functions, but in some contexts we will use the arrow notation for anonymous functions, especially in the context of the <em>functional programming</em> techniques discussed in <a href="ch06.xhtml#ch06">Chapter 6</a>.</p>
+<p class="indent">As with <span class="pd_green"><code><strong>var</strong></code></span> and <span class="pd_green"><code><strong>let</strong></code></span>/<span class="pd_green"><code><strong>const</strong></code></span>, both <span class="pd_green"><code><strong>function</strong></code></span> and <span class="pd_green"><code><strong>=&gt;</strong></code></span> are in common use. Even if you standardize on one convention for your own code, you have to know both syntaxes in order to read code written by others.</p>
+</section>
+<section>
+<h4 class="h4" id="ch5lev1sec3">5.1.3 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using <span class="pd_green"><code><strong>function</strong></code></span>, define a <span class="pd_green"><code><strong>square</strong></code></span> function that returns the square of a number. Do the same with an analogous <span class="pd_green"><code><strong>altSquare</strong></code></span> function using the fat arrow notation.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch5lev2">5.2 Functions in a File</h3>
+<p class="noindent">Although defining functions in a REPL is convenient for demonstration purposes, it’s a bit cumbersome, and a better practice is to put them in a file (as we did with the script in <a href="ch04.xhtml#ch4lev5">Section 4.5</a>). We’ll start by defining a function directly in the <span class="pd_green"><code><strong>index.html</strong></code></span> file created in <a href="ch01.xhtml#ch1lev2">Section 1.2</a>, and will then move the function to an even more convenient external file.</p>
+<p class="indent">Recall from <a href="ch04.xhtml#ch4lev2">Section 4.2</a> that <span class="pd_green"><code><strong>Date</strong></code></span> objects have a <span class="pd_green"><code><strong>getDay()</strong></code></span> method that returns the index corresponding to the day of the week (<span class="pd_green"><code><strong>0</strong></code></span> for Sunday, <span class="pd_green"><code><strong>1</strong></code></span> for Monday, etc.). In <a href="ch04.xhtml#ch4list1">Listing 4.1</a>, we defined a <span class="pd_green"><code><strong>const</strong></code></span> for the days of the week, and then defined a <span class="pd_green"><code><strong>dayName</strong></code></span> variable using <span class="pd_green"><code><strong>getDay()</strong></code></span>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c095pro02" id="c095pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                       <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+<span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_red">Date</span>();
+<span epub:type="pagebreak" id="page_96"></span><span class="pd_green1"><strong>let</strong></span> dayName <span class="gray">=</span> daysOfTheWeek[now.getDay()];
+alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName<span class="pink"><strong>}</strong></span><span class="pd_red">.`</span>);</pre>
+<p class="indent">It would be convenient to <em>encapsulate</em> this definition and logic in a <span class="pd_green"><code><strong>dayName</strong></code></span> function, so that we could write our alert like this:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c096pro01" id="c096pro01a">Click here to view code image</a></p>
+<pre class="pre1">alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName(now)<span class="pink"><strong>}</strong></span><span class="pd_red">.`</span>);</pre>
+<p class="noindent">This eliminates the use of the <span class="pd_green"><code><strong>dayName</strong></code></span> variable, instead replacing it with the function call <span class="pd_green"><code><strong>dayName(now)</strong></code></span>.</p>
+<p class="indent">Applying the function definition syntax from <a href="ch05.xhtml#ch5lev1">Section 5.1</a> leads to the following <span class="pd_green"><code><strong>dayName</strong></code></span> function:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c096pro02" id="c096pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> dayName(date) {
+  <span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday",</span>
+                         <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+  <span class="pd_green1"><strong>return</strong></span> daysOfTheWeek[date.getDay()];
+}</pre>
+<p class="noindent">Note how we’ve switched from the variable <span class="pd_green"><code><strong>now</strong></code></span> to the more generic-sounding <span class="pd_green"><code><strong>date</strong></code></span>, which is a way of indicating that our function works with any date that’s passed to it.</p>
+<p class="indent">Putting this definition into the code from <a href="ch04.xhtml#ch4list1">Listing 4.1</a> nicely separates the <span class="pd_green"><code><strong>alert</strong></code></span> logic from the code used to generate the day of the week, as shown in <a href="ch05.xhtml#ch5list2">Listing 5.2</a>. The result appears in <a href="ch05.xhtml#ch5fig2">Figure 5.2</a>.</p>
+<figure class="figure" id="ch5fig2">
+<img src="graphics/05fig02.jpg" alt="images" width="726" height="550"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.2:</strong> The result of a functional greeting.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch5list2"><strong>Listing 5.2:</strong> Factoring the day of the week into a function.<br/><code><em><a href="http://index.html">index.html</a></em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis02" id="c05lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      <span class="pd_green1"><strong>function</strong></span> dayName(date) {
+        <span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                               <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+        <span class="pd_green1"><strong>return</strong></span> daysOfTheWeek[date.getDay()];
+      }
+
+      <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green">Date</span>();
+<span epub:type="pagebreak" id="page_97"></span>alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName(now)<span class="pink"><strong>}</strong></span><span class="pd_red">.`</span>);
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">We can make the code in <a href="ch05.xhtml#ch5list2">Listing 5.2</a> even cleaner by factoring the <span class="pd_green"><code><strong>dayName</strong></code></span> function into a separate file and then including it into our page. We’ll start by cutting the function and pasting it into a new file, <span class="pd_green"><code><strong>day.js</strong></code></span>:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch day.js</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_98"></span>The resulting files appear as in <a href="ch05.xhtml#ch5list3">Listing 5.3</a> and <a href="ch05.xhtml#ch5list4">Listing 5.4</a>.<sup><a id="ch5fn-1" href="ch05.xhtml#ch5fn_1">1</a></sup></p>
+<p class="footnote"><a id="ch5fn_1" href="ch05.xhtml#ch5fn-1">1</a>. In some editors, you can use Shift-Command-V to paste in a selection using the local indentation level, which saves us the trouble of dedenting it by hand.</p>
+<p class="listing" id="ch5list3"><strong>Listing 5.3:</strong> The <span class="pd_green"><code><strong>dayName</strong></code></span> function in a file.<br/><code><em>day.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis03" id="c05lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Returns the day of the week for the given date.</em></span>
+<span class="pd_green1"><strong>function</strong></span> dayName(date) {
+  <span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                         <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+  <span class="pd_green1"><strong>return</strong></span> daysOfTheWeek[date.getDay()];
+}</pre>
+<p class="listing" id="ch5list4"><strong>Listing 5.4:</strong> Our greeting with a function in a file.<br/><code><em><a href="http://index.html">index.html</a></em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis04" id="c05lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_red">Date</span>();
+<span class="bg1">      alert(<span class="pd_red"><strong>`Hello, world! Happy</strong></span> <span class="pd_red">$</span>{dayName(now)<span class="pd_red">}<strong>!`</strong></span>);</span>
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+
+   &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">As you can verify by reloading the browser, at this point our <span class="pd_green"><code><strong><a href="http://index.html">index.html</a></strong></code></span> page is simply blank—there’s no alert, and the JavaScript doesn’t work. The default behavior is simply a silent error, but using the browser console (<a href="ch01.xhtml#ch1lev3sec1">Section 1.3.1</a>) shows the problem, as seen in <a href="ch05.xhtml#ch5fig3">Figure 5.3</a>. Using the console in this manner is a powerful debugging technique—if your JavaScript ever just silently fails, firing up the browser console should be your strategy of first resort (<a href="ch05.xhtml#ch5box1">Box 5.1</a>).<sup><a id="ch5fn-2" href="ch05.xhtml#ch5fn_2">2</a></sup></p>
+<p class="footnote"><a id="ch5fn_2" href="ch05.xhtml#ch5fn-2">2</a>. <a href="https://twitter.com/thepracticaldev">@ThePracticalDev</a> image used with permission.</p>
+<figure class="figure" id="ch5fig3">
+<img src="graphics/05fig03.jpg" alt="images" width="725" height="549"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.3:</strong> Using the browser console to find an error.</p>
+</figcaption>
+</figure>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch5box1"><span epub:type="pagebreak" id="page_99"></span><strong>Box 5.1: Debugging JavaScript</strong></h1>
+</header>
+<p class="box-no">One skill that’s an essential part of technical sophistication is <em>debugging</em>: the art of finding and correcting errors in computer programs. While there’s no substitute for experience, here are some techniques that should give you a leg up when tracking down the inevitable glitches in your code:</p>
+<ul class="sq">
+<li><p class="bull"><em>Fire up the browser console.</em> Often, this alone will allow you to identify the bug, especially when the error is silent (i.e., when the program just fails in the browser without any indication of why).</p></li>
+<li><p class="bull"><em>Trace the execution with logs or alerts.</em> When trying to figure out why a particular program is going awry, it’s often helpful to display variable values with <span epub:type="pagebreak" id="page_100"></span>temporary <code>console.log</code> or <code>alert</code> statements, which can be removed when the bug is fixed.</p></li>
+<li><p class="bull"><em>Comment out code.</em> It’s sometimes a good idea to comment out code you suspect is unrelated to the problem to allow you to focus on the code that isn’t working.</p></li>
+<li><p class="bull"><em>Use the REPL.</em> Firing up the REPL and pasting in the problematic code is frequently an excellent way to isolate the problem.</p></li>
+<li><p class="bull"><em>Google it.</em> Googling error messages or other search terms related to the bug (which often leads to helpful threads at <a href="https://stackoverflow.com/">Stack Overflow</a>) is an essential skill for every modern software developer (<a href="ch05.xhtml#ch5fig4">Figure 5.4</a>).</p>
+<figure class="figure" id="ch5fig4">
+<img src="graphics/05fig04.jpg" alt="images" width="638" height="679"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.4:</strong> How did people ever debug before Google?</p>
+</figcaption>
+</figure></li>
+</ul>
+</aside>
+<p class="indent">The problem is that we’ve removed <span class="pd_green"><code><strong>dayName</strong></code></span> from the <span class="pd_green"><code><strong>script</strong></code></span> section of <span class="pd_green"><code><strong>index.html</strong></code></span>, so naturally our page has no idea what it is. The solution is to include it using a second script tag with the <span class="pd_green"><code><strong>src</strong></code></span> (source) attribute pointing to the file containing the definition:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c100pro01" id="c100pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1">&lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1"><strong>src</strong></span><span class="pd_red"><strong>="day.js"</strong></span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+
+&lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+  <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green">Date</span>();
+  alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName(now)<span class="pink"><strong>}</strong></span><span class="pd_red">!`</span>);
+&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</pre>
+<p class="noindent">This code might look familiar, since it is similar to the <a href="https://www.learnenough.com/r/learn_enough_html/filling_in_the_index_page/images#sec-images">syntax for including images</a> (<a href="https://www.learnenough.com/html-tutorial/filling_in_the_index_page#sec-images">https://www.learnenough.com/html-tutorial/filling_in_the_index_page#sec-images</a>) (<a href="ch05.xhtml#ch5fig5">Figure 5.5</a>):<sup><a id="ch5fn-3" href="ch05.xhtml#ch5fn_3">3</a></sup></p>
+<p class="footnote"><a id="ch5fn_3" href="ch05.xhtml#ch5fn-3">3</a>. Image courtesy of <a href="http://halfmax.ru/Shutterstock">halfmax.ru/Shutterstock</a>.</p>
+<figure class="figure" id="ch5fig5">
+<img src="graphics/05fig05.jpg" alt="images" width="213" height="282"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.5:</strong> Recognize this <a href="https://www.learnenough.com/html-tutorial#fig-kitten">cutie</a> from <em>Learn Enough HTML, CSS and Layout to Be Dangerous?</em></p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch05_images.xhtml#c100pro02" id="c100pro02a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"images/kitten.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"An adorable kitten"</span>&gt;</pre>
+<p class="noindent">In particular, <span class="pd_green"><code><strong>src</strong></code></span> needs to have the full path to the file, so a JavaScript source file <span class="pd_green"><code><strong>site.js</strong></code></span> in a <span class="pd_green"><code><strong>scripts/</strong></code></span> directory would be referenced using</p>
+<p class="codelink"><a href="ch05_images.xhtml#c100pro03" id="c100pro03a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"scripts/site.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_101"></span>The result of putting our new <span class="pd_green"><code><strong>script</strong></code></span> tag with <span class="pd_green"><code><strong>src</strong></code></span> into <span class="pd_green"><code><strong><a href="http://index.html">index.html</a></strong></code></span> appears in <a href="ch05.xhtml#ch5list5">Listing 5.5</a>. Upon reloading the page, our greeting now appears as expected (<a href="ch05.xhtml#ch5fig6">Figure 5.6</a>).</p>
+<figure class="figure" id="ch5fig6">
+<img src="graphics/05fig06.jpg" alt="images" width="729" height="563"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.6:</strong> The greeting restored.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch5list5"><span epub:type="pagebreak" id="page_102"></span><strong>Listing 5.5:</strong> Using a function from an external file.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis05" id="c05lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>script</strong></span> <span class="g1"><strong>src</strong></span><span class="pd_red"><strong>="day.js"</strong></span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green1">Date</span>();
+      alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName(now)<span class="pink"><strong>}</strong></span><span class="pd_red">!`</span>);
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="noindent">It’s important to note that the source script has to come <em>before</em> any functions defined in the script are used. Otherwise, the result is the same as in <a href="ch05.xhtml#ch5fig3">Figure 5.3</a>. Confirming this is left as an exercise (<a href="ch05.xhtml#ch5lev2sec1">Section 5.2.1</a>).</p>
+<section>
+<h4 class="h4" id="ch5lev2sec1"><span epub:type="pagebreak" id="page_103"></span>5.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">What happens if the <span class="pd_green"><code><strong>src</strong></code></span> line in <a href="ch05.xhtml#ch5list5">Listing 5.5</a> comes after the main script? What is the error in the console?</p></li>
+<li><p class="number">Let’s replace the interpolated string in <a href="ch05.xhtml#ch5list4">Listing 5.4</a> with a <span class="pd_green"><code><strong>greeting</strong></code></span> function in <span class="pd_green"><code><strong>day.js</strong></code></span>. Fill in the code in <a href="ch05.xhtml#ch5list6">Listing 5.6</a> to get <a href="ch05.xhtml#ch5list7">Listing 5.7</a> to work.</p></li>
+</ol>
+<p class="listing" id="ch5list6"><strong>Listing 5.6:</strong> Defining a <span class="pd_green"><code><strong>greeting</strong></code></span> function.<br/><code><em>day.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis06" id="c05lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Returns the day of the week for the given date.</em></span>
+<span class="pd_green1"><strong>function</strong></span> dayName(date) {
+  <span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                         <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+<span epub:type="pagebreak" id="page_104"></span>  <span class="pd_green1"><strong>return</strong></span> daysOfTheWeek[date.getDay()];
+}
+
+<span class="pd_blue1"><em>// Returns a greeting for the given date.</em></span>
+<span class="pd_green1"><strong>function</strong></span> greeting(date) {
+<em><span class="bg1">  <span class="g1">// FILL IN</span></span></em>
+}</pre>
+<p class="listing" id="ch5list7"><strong>Listing 5.7:</strong> Using the <span class="pd_green"><code><strong>greeting</strong></code></span> function.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis07" id="c05lis07a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"day.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_red">Date</span>();
+<span class="bg1">      alert(greeting(now));</span>
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch5lev3">5.3 Method Chaining</h3>
+<p class="noindent">In this section, we’ll start developing the palindrome theme mentioned in the introduction (<a href="ch01.xhtml#ch01">Chapter 1</a>). Our goal is to write a function called <span class="pd_green"><code><strong>palindrome</strong></code></span> that returns <span class="pd_green"><code><strong>true</strong></code></span> if its argument is the same forward and backward, and <span class="pd_green"><code><strong>false</strong></code></span> otherwise.</p>
+<p class="indent">We can express the simplest possible definition of a palindrome as “a string and the string reversed are the same.” (We’ll steadily expand this definition over time.) In code, we can write this definition as follows:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c104pro01" id="c104pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> palindrome(string) {
+  <span class="pd_green1"><strong>return</strong></span> string <span class="gray">===</span> reverse(string);
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_105"></span>As required, this will return <span class="pd_green"><code><strong>true</strong></code></span> if a string is a palindrome (equal to its own reverse), and <span class="pd_green"><code><strong>false</strong></code></span> otherwise. There’s just one problem, though: JavaScript has no native way to reverse a string, so <span class="pd_green"><code><strong>reverse(string)</strong></code></span> in our proposed implementation won’t work. This means we’ll have to write the <span class="pd_green"><code><strong>reverse</strong></code></span> function ourselves.</p>
+<p class="indent">Our technique involves a useful practice called <em>method chaining</em>, whereby we call a series of methods one after the other. In particular, although JavaScript doesn’t have a native way to reverse strings, we saw in <a href="ch03.xhtml#ch3lev4sec1">Section 3.4.1</a> that it <em>does</em> have a native way to reverse <em>arrays</em>:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> a <span class="gray">=</span> [ <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">8</span>, <span class="gray">99</span> ];
+<span class="gray">&gt;</span> a.reverse();
+[ <span class="gray">99</span>, <span class="gray">8</span>, <span class="gray">42</span>, <span class="gray">17</span> ]</pre>
+<p class="indent">Meanwhile, we saw in <a href="ch03.xhtml#ch3lev1">Section 3.1</a> how to decompose a string into its constituent characters by splitting on the empty string <span class="pd_green"><code><strong>""</strong></code></span>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c105pro02" id="c105pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"racecar"</span>.split(<span class="pd_red">""</span>);
+[ <span class="pd_red">'r'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'c'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'c'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'r'</span> ]</pre>
+<p class="indent">Finally, we learned in <a href="ch03.xhtml#ch3lev4sec3">Section 3.4.3</a> that the <span class="pd_green"><code><strong>join</strong></code></span> method effectively undoes a split:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c105pro03" id="c105pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_red">&gt;</span> [ <span class="pd_red">'r'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'c'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'c'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'r'</span> ].join(<span class="pd_red">""</span>);
+<span class="pd_red">'racecar'</span></pre>
+<p class="indent">This discussion suggests the following algorithm for writing a <span class="pd_green"><code><strong>reverse</strong></code></span> method:</p>
+<ol class="number">
+<li><p class="number">Split a string on the empty string to create an array of characters.</p></li>
+<li><p class="number">Reverse the array.</p></li>
+<li><p class="number">Join the array on the empty string to create the reversed string.</p></li>
+</ol>
+<p class="noindent">Because of method chaining, we can implement this algorithm in a single line:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c105pro04" id="c105pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> <span class="pd_red">"Racecar"</span>;
+<span class="pd_red">&gt;</span> string.split(<span class="pd_red">""</span>).reverse().join(<span class="pd_red">""</span>)
+<span class="pd_red">'racecaR'</span></pre>
+<p class="noindent">(Because of the way <span class="pd_green"><code><strong>split("")</strong></code></span> works, this method will actually fail for text containing more complex characters like emojis. We’ll fix this minor blemish in <a href="ch05.xhtml#ch5lev3sec1">Section 5.3.1</a>.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_106"></span>Let’s put the <span class="pd_green"><code><strong>reverse</strong></code></span> function into a library for detecting palindromes, which we’ll call <span class="pd_green"><code><strong>palindrome.js</strong></code></span>:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch palindrome.js</pre>
+<p class="noindent">The resulting function appears in <a href="ch05.xhtml#ch5list8">Listing 5.8</a>.</p>
+<p class="listing" id="ch5list8"><strong>Listing 5.8:</strong> A function for reversing a string.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis08" id="c05lis08a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> string.split(<span class="pd_red">""</span>).reverse().join(<span class="pd_red">""</span>);
+}</pre>
+<p class="noindent">Note that <a href="ch05.xhtml#ch5list8">Listing 5.8</a> includes a <em>documentation comment</em> (introduced briefly in <a href="ch05.xhtml#ch5list3">Listing 5.3</a>) explaining the purpose of the function. This isn’t strictly required, but it’s an excellent practice for the sake of future programmers (including us!).</p>
+<p class="indent">To check the effect of <a href="ch05.xhtml#ch5list8">Listing 5.8</a>, we can <span class="pd_green"><code><strong>load</strong></code></span> the external file in a Node REPL using “dot load” (note the lack of an ending semicolon, which is necessary to avoid an error):</p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> reverse(<span class="pd_red">"Racecar"</span>);
+<span class="pd_red">'racecaR'</span></pre>
+<p class="noindent">(Using <span class="pd_green"><code><strong>.load</strong></code></span> simply runs every line of the file inside the REPL. This has the side effect of altering our command history, so that using “up arrow” to retrieve previous commands is less useful than it would be otherwise. There’s really no way around this; unfortunately, as a consequence of its web-browser origins, JavaScript doesn’t have a native way to include one file into another, so the <span class="pd_green"><code><strong>.load</strong></code></span> <a href="http://www.catb.org/jargon/html/K/kluge.html">kluge</a> is the best we can do.)</p>
+<p class="indent">We are now in a position to write the first version of our palindrome function, which will compare a string to its own reverse:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c106pro02" id="c106pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> string;    <span class="pd_blue1"><em>// Just a reminder of what our string is</em></span>
+<span class="pd_red">'Racecar'</span>
+<span class="gray">&gt;</span> string <span class="gray">===</span> reverse(string);
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_107"></span>The resulting definition of <span class="pd_green"><code><strong>palindrome</strong></code></span> appears in <a href="ch05.xhtml#ch5list9">Listing 5.9</a>.</p>
+<p class="listing" id="ch5list9"><strong>Listing 5.9:</strong> Our initial <span class="pd_green"><code><strong>palindrome</strong></code></span> function.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis09" id="c05lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> string.split(<span class="pd_red">""</span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Returns true for a palindrome, false otherwise.</em></span>
+<span class="pd_green1"><strong>function</strong></span> palindrome(string) {
+  <span class="pd_green1"><strong>return</strong></span> string <span class="gray">===</span> reverse(string);
+}</pre>
+<p class="indent">Reloading <span class="pd_green"><code><strong>palindrome.js</strong></code></span> lets us check the effect of the <span class="pd_green"><code><strong>palindrome</strong></code></span> function directly:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c107pro01" id="c107pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"To be or not to be"</span>);
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"Racecar"</span>);
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"level"</span>);
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent">It works!</p>
+<p class="indent">There’s one minor refinement it would be nice to add right away, which is the ability to detect palindromes independent of case. In other words, we’d like to return <span class="pd_green"><code><strong>true</strong></code></span> for something like “Racecar”, even though the initial “R” is capitalized. We can do this by converting the string to lowercase before making the comparison, which we can do using the <span class="pd_green"><code><strong>toLowerCase</strong></code></span> method from <a href="ch02.xhtml#ch2lev5">Section 2.5</a>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c107pro02" id="c107pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> processedContent <span class="gray">=</span> string.toLowerCase();
+<span class="gray">&gt;</span> processedContent;
+<span class="pd_red">'racecar'</span>
+<span class="gray">&gt;</span> processedContent <span class="gray">===</span> reverse(processedContent);
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent">Putting this into <span class="pd_green"><code><strong>palindrome.js</strong></code></span> gives <a href="ch05.xhtml#ch5list10">Listing 5.10</a>.</p>
+<p class="listing" id="ch5list10"><span epub:type="pagebreak" id="page_108"></span><strong>Listing 5.10:</strong> Detecting palindromes independent of case.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis10" id="c05lis10a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> string.split(<span class="pd_red">""</span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Returns true for a palindrome, false otherwise.</em></span>
+<span class="pd_green1"><strong>function</strong></span> palindrome(string) {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> processedContent = string.toLowerCase();</span>
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> processedContent === reverse(processedContent);</span>
+}</pre>
+<p class="indent">Using the REPL, we can confirm that it worked:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c108pro01" id="c108pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"racecar"</span>);
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"Racecar"</span>);
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> palindrome(<span class="pd_red">"Able was I ere I saw Elba"</span>);
+<span class="pd_green1"><strong>true</strong></span></pre>
+<section>
+<h4 class="h4" id="ch5lev3sec1">5.3.1 Caveat Emoji</h4>
+<p class="noindent">There’s one minor caveat to the <span class="pd_green"><code><strong>reverse</strong></code></span> method developed in <a href="ch05.xhtml#ch5list10">Listing 5.10</a>, which is that it won’t quite work with text that includes more complicated characters like emojis. For example, attempting to reverse a sentence containing the “fox face” and “dog face” emojis yields a garbled result, as shown in <a href="ch05.xhtml#ch5fig7">Figure 5.7</a>.</p>
+<figure class="figure" id="ch5fig7">
+<img src="graphics/05fig07.jpg" alt="images" width="601" height="154"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.7:</strong> A failed emoji reversal.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_109"></span>The reason for this is that each emoji is effectively represented as two separate characters, and splitting on the empty string as in <a href="ch05.xhtml#ch5list10">Listing 5.10</a> splits each emoji in half (ouch!). The solution is to create an array from a string in a different way, using a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from">custom array method</a> called <span class="pd_green"><code><strong>Array.from()</strong></code></span>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c109pro01" id="c109pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_red">'honey badger'</span>);
+[ <span class="pd_red">'h'</span>, <span class="pd_red">'o'</span>, <span class="pd_red">'n'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'y'</span>, <span class="pd_red">'  '</span>, <span class="pd_red">'b'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'g'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'r'</span> ]</pre>
+<p class="indent">Replacing <span class="pd_green"><code><strong>split</strong></code></span> in <a href="ch05.xhtml#ch5list10">Listing 5.10</a> with this improved method gives the updated <span class="pd_green"><code><strong>reverse</strong></code></span> code in <a href="ch05.xhtml#ch5list11">Listing 5.11</a>.</p>
+<p class="listing" id="ch5list11"><strong>Listing 5.11:</strong> Improving <span class="pd_green"><code><strong>reverse</strong></code></span> using <span class="pd_green"><code><strong>Array.from</strong></code></span>.</p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis11" id="c05lis11a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+<span class="bg1">  <span class="pd_green1"><strong>return Array</strong></span>.from(string).reverse().join(<span class="pd_red"><strong>""</strong></span>)</span>
+}
+
+<span class="pd_blue1"><em>// Returns true for a palindrome, false otherwise.</em></span>
+<span class="pd_green1"><strong>function</strong></span> palindrome(string) {
+  <span class="pd_green1"><strong>let</strong></span> processedContent <span class="gray">=</span> string.toLowerCase();
+  <span class="pd_green1"><strong>return</strong></span> processedContent <span class="gray">===</span> reverse(processedContent);
+}</pre>
+<p class="noindent">Confirming that this code works is left as an exercise.</p>
+</section>
+<section>
+<h4 class="h4" id="ch5lev3sec2">5.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using method chaining and the template in <a href="ch05.xhtml#ch5list12">Listing 5.12</a>, write a function <span class="pd_green"><code><strong>emailParts</strong></code></span> to return an array of the username and domain for a standard email address of the form <span class="pd_green"><code><strong>username@example.com</strong></code></span>. <em>Note</em>: Make sure your function returns the same result for <span class="pd_green"><code><strong>USERNAME@EXAMPLE.COM</strong></code></span>.</p></li>
+<li><p class="number">Using the Node REPL, confirm that the <span class="pd_green"><code><strong>reverse</strong></code></span> function defined in <a href="ch05.xhtml#ch5list11">Listing 5.11</a> correctly reverses a string containing emojis. (You may find <a href="https://emojipedia.org/">Emojipedia</a> (<a href="https://emojipedia.org/">https://emojipedia.org/</a>) links to the <a href="https://emojipedia.org/fox-face/">fox face</a> and <a href="https://emojipedia.org/dog-face/">dog face</a> emojis helpful.) Your result should look something like <a href="ch05.xhtml#ch5fig8">Figure 5.8</a>.</p>
+<figure class="figure" id="ch5fig8">
+<img src="graphics/05fig08.jpg" alt="images" width="601" height="151"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.8:</strong> A successful emoji reversal.</p>
+</figcaption>
+</figure></li>
+</ol>
+<p class="listing" id="ch5list12"><span epub:type="pagebreak" id="page_110"></span><strong>Listing 5.12:</strong> Returning the parts of an email.</p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis12" id="c05lis12a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>function</strong></span> emailParts(email) {
+    <span class="pd_blue1"><em>// FILL IN</em></span>
+  }</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch5lev4">5.4 Iteration for Each</h3>
+<p class="noindent">So far, we’ve seen several examples of <em>iteration</em>: for strings (<a href="ch02.xhtml#ch2lev6">Section 2.6</a>), arrays (<a href="ch03.xhtml#ch3lev5">Section 3.5</a>), and objects (<a href="ch04.xhtml#ch4lev5">Section 4.5</a>)—all based on the <span class="pd_green"><code><strong>for</strong></code></span> loop. In this section, we’ll learn how to use <span class="pd_green"><code><strong>forEach</strong></code></span> loops, which iterate through each element in an array, without the inconvenience of an auxiliary index variable.</p>
+<p class="indent">Doing an operation “for each” element in an array means we can change from this:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c110pro01" id="c110pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green"><strong>for</strong></span> (<span class="pd_green"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> array.length; i<span class="gray">++</span>) {
+  console.log(array[i]);
+}</pre>
+<p class="noindent">to this:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c110pro02" id="c110pro02a">Click here to view code image</a></p>
+<pre class="pre1">array.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+  console.log(element);
+});</pre>
+<p class="noindent">The latter code allows us to perform actions on each array element directly, without having to access it using <span class="pd_green"><code><strong>array[i]</strong></code></span>.</p>
+<p class="indent">You can see why we had to wait until now: <span class="pd_green"><code><strong>forEach</strong></code></span> requires that we use a function—in particular, a nameless, or <em>anonymous</em>, function—to create a variable for <span epub:type="pagebreak" id="page_111"></span>each element in the array.<sup><a id="ch5fn-4" href="ch05.xhtml#ch5fn_4">4</a></sup> That said, I find it helps not to pronounce “function” (whether aloud or in your head), so that it sounds like “array: for each element &lt;do something&gt;.”</p>
+<p class="footnote"><a id="ch5fn_4" href="ch05.xhtml#ch5fn-4">4</a>. A function (whether named or anonymous) with data attached in this manner is known as a <a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)"><em>closure</em></a>.</p>
+<p class="indent">To get a better understanding of <span class="pd_green"><code><strong>forEach</strong></code></span>, let’s look at a concrete example in the REPL:</p>
+<p class="codelink"><a href="ch05_images.xhtml#c111pro01" id="c111pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> [<span class="gray">42</span>, <span class="gray">17</span>, <span class="gray">85</span>].forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    console.log(element);
+  });
+<span class="gray">42</span>
+<span class="gray">17</span>
+<span class="gray">85</span></pre>
+<p class="noindent">What’s going on here is that <span class="pd_green"><code><strong>forEach</strong></code></span> itself takes a function as an argument, which then returns each element of the corresponding array in turn. The syntax might look a little strange, but this pattern of passing a function to a method is a common one, and you’ll soon become accustomed to it. Don’t worry too much about exactly what’s going on under the hood—instead, focus on the concrete effects.</p>
+<p class="indent">Using our newfound <span class="pd_green"><code><strong>forEach</strong></code></span> powers, we can rewrite each of the previously encountered <span class="pd_green"><code><strong>for</strong></code></span> loops using <span class="pd_green"><code><strong>forEach</strong></code></span>, starting with the array iteration from <a href="ch03.xhtml#ch3list4">Listing 3.4</a>. For convenience, we’ll put the code in a file and execute it at the command line:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch foreach.js</pre>
+<p class="noindent">To perform the iteration, all we need is a <span class="pd_green"><code><strong>forEach</strong></code></span> loop whose contents print the element itself instead of printing <span class="pd_green"><code><strong>a[i]</strong></code></span>. The result is shown in <a href="ch05.xhtml#ch5list13">Listing 5.13</a>.</p>
+<p class="listing" id="ch5list13"><strong>Listing 5.13:</strong> Iterating through an array with a <span class="pd_green"><code><strong>forEach</strong></code></span> loop.<br/><code><em>foreach.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis13" id="c05lis13a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> a <span class="gray">=</span> [<span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>, <span class="gray">42</span>];
+a.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+  console.log(element);
+});</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_112"></span>Executing the program in <a href="ch05.xhtml#ch5list13">Listing 5.13</a> at the command line results in the same output we saw in <a href="ch03.xhtml#ch3list4">Listing 3.4</a>, as shown in <a href="ch05.xhtml#ch5list14">Listing 5.14</a>.</p>
+<p class="listing" id="ch5list14"><strong>Listing 5.14:</strong> The output of an array iteration.</p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> node foreach.js
+<span class="pd_green2">ant</span>
+<span class="pd_green2">cat</span>
+<span class="pd_green2">bat</span>
+<span class="pd_green2">42</span></pre>
+<p class="indent">Now let’s use <span class="pd_green"><code><strong>forEach</strong></code></span> to rewrite the string iteration from <a href="ch02.xhtml#ch2list18">Listing 2.18</a>. Our technique will be to create an array from the string, and then use <span class="pd_green"><code><strong>forEach</strong></code></span> to iterate one element at a time. For the first step, we’ll be creating an array from the string using the <span class="pd_green"><code><strong>Array.from</strong></code></span> method introduced at the end of <a href="ch05.xhtml#ch5lev3">Section 5.3</a> (<a href="ch05.xhtml#ch5list11">Listing 5.11</a>):</p>
+<p class="codelink"><a href="ch05_images.xhtml#c112pro01" id="c112pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_red">"honey badger"</span>);
+[ <span class="pd_red">'h'</span>, <span class="pd_red">'o'</span>, <span class="pd_red">'n'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'y'</span>, <span class="pd_red">' '</span>, <span class="pd_red">'b'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'g'</span>, <span class="pd_red">'e'</span>, <span class="pd_red">'r'</span> ]</pre>
+<p class="noindent">The result is an array of characters, which we can then iterate through using <span class="pd_green"><code><strong>forEach</strong></code></span>.</p>
+<p class="indent">We’ll start by including the <span class="pd_green"><code><strong>soliloquy</strong></code></span> variable from <a href="ch02.xhtml#ch2list15">Listing 2.15</a> in the <span class="pd_green"><code><strong>foreach.js</strong></code></span> file, and then use <span class="pd_green"><code><strong>Array.from</strong></code></span> and <span class="pd_green"><code><strong>forEach</strong></code></span>. The resulting code (which we’ll place after the array iteration from <a href="ch05.xhtml#ch5list13">Listing 5.13</a>) appears as in <a href="ch05.xhtml#ch5list15">Listing 5.15</a>.</p>
+<p class="listing" id="ch5list15"><strong>Listing 5.15:</strong> Using a <span class="pd_green"><code><strong>forEach</strong></code></span> loop to iterate through a string.<br/><code><em>foreach.js</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis15" id="c05lis15a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_green1"><strong>let</strong></span> soliloquy <span class="gray">=</span> <span class="pd_red">"To be, or not to be, that is the question:"</span>;
+<span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(soliloquy).forEach(<span class="pd_green1"><strong>function</strong></span>(character) {
+  console.log(character);
+});</pre>
+<p class="indent">Executing the program in <a href="ch05.xhtml#ch5list15">Listing 5.15</a> at the command line results in the same output we saw in <a href="ch02.xhtml#ch2list18">Listing 2.18</a> (preceded in this case by the output from <a href="ch05.xhtml#ch5list14">Listing 5.14</a>), as shown in <a href="ch05.xhtml#ch5list16">Listing 5.16</a>.</p>
+<p class="listing" id="ch5list16"><span epub:type="pagebreak" id="page_113"></span><strong>Listing 5.16:</strong> The output of a string iteration.</p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> node foreach.js
+<span class="pd_green2">ant</span>
+<span class="pd_green2">bat</span>
+<span class="pd_green2">cat</span>
+<span class="pd_green2">42</span>
+<span class="pd_green2">T</span>
+<span class="pd_green2">o</span>
+
+<span class="pd_green2">b</span>
+<span class="pd_green2">e</span>
+<span class="pd_green2">.</span>
+<span class="pd_green2">.</span>
+<span class="pd_green2">.</span>
+<span class="pd_green2">t</span>
+<span class="pd_green2">i</span>
+<span class="pd_green2">o</span>
+<span class="pd_green2">n</span>
+<span class="pd_green2">:</span></pre>
+<p class="indent">Using the <span class="pd_green"><code><strong>forEach</strong></code></span> method, we can iterate directly through the elements in an array, thereby avoiding having to type out Mike Vanier’s <em><a href="https://en.wiktionary.org/wiki/b%C3%AAte_noire">bête noire</a></em>, “for (i = 0; i &lt; N; i++)”. The result is cleaner code and a happier programmer (<a href="ch05.xhtml#ch5fig9">Figure 5.9</a>).</p>
+<figure class="figure" id="ch5fig9">
+<img src="graphics/05fig09.jpg" alt="images" width="142" height="194"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.9:</strong> Using <span class="pd_green"><code><strong>forEach</strong></code></span> has made Mike Vanier a little happier.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch5lev4sec1">5.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Rewrite the <span class="pd_green"><code><strong>forEach</strong></code></span> loop in <a href="ch05.xhtml#ch5list13">Listing 5.13</a> using the fat arrow notation from <a href="ch05.xhtml#ch5lev1sec2">Section 5.1.2</a>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_114"></span>We saw in <a href="ch05.xhtml#ch5list1">Listing 5.1</a> how to define a number comparison function that let us sort JavaScript arrays numerically. There we used return values of <span class="pd_green"><code><strong>1</strong></code></span>, <span class="pd_green"><code><strong>-1</strong></code></span>, and <span class="pd_green"><code><strong>0</strong></code></span>, but it turns out <span class="pd_green"><code><strong>sort</strong></code></span> only cares about the <em>sign</em> of the comparison, so <span class="pd_green"><code><strong>17</strong></code></span> is the same as <span class="pd_green"><code><strong>1</strong></code></span>, <span class="pd_green"><code><strong>-42</strong></code></span> is the same as <span class="pd_green"><code><strong>-1</strong></code></span>, etc. For numbers <span class="pd_green"><code><strong>a</strong></code></span> and <span class="pd_green"><code><strong>b</strong></code></span>, the value <span class="pd_green"><code><strong>a - b</strong></code></span> has the right sign, so show that the code in <a href="ch05.xhtml#ch5list17">Listing 5.17</a>, which uses an anonymous function, correctly sorts the array.</p></li>
+<li><p class="number">Write a <span class="pd_green"><code><strong>forEach</strong></code></span> loop to print the values of the previous exercise.</p></li>
+</ol>
+<p class="listing" id="ch5list17"><strong>Listing 5.17:</strong> Sorting an array the anonymous way.</p>
+<p class="codelink"><a href="ch05_images.xhtml#c05lis17" id="c05lis17a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> a <span class="gray">=</span> [<span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">99</span>];
+<span class="gray">&gt;</span> a.sort(<span class="pd_green1"><strong>function</strong></span>(a, b) { <span class="pd_green1"><strong>return</strong></span> a <span class="gray">-</span> b; });
+[ <span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">42</span>, <span class="gray">99</span> ]</pre>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

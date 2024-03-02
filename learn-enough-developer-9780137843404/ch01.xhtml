@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch01"><span epub:type="pagebreak" id="page_3"></span>Chapter 1</h2>
+<h2 class="chap-title">Basics</h2>
+<p class="noindent">Welcome to <em>Learn Enough Developer Tools to Be Dangerous</em>! This tutorial is designed to teach you three essential tools—the <em>command line</em>, a <em>text editor</em>, and <em>version control</em>— needed for modern software development (or, as I prefer to call it, “computer magic” (<a href="ch01.xhtml#box1-1">Box 1.1</a>)). It is aimed both at those who work with software developers and those who aspire to become developers themselves.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box1-1">Box 1.1: The Magic of Computers</p>
+<p class="box-no">Computers may be as close as we get to <em>magic</em> in the real world: We type incantations into a machine, and—if the incantations are right—the machine does our bidding. To perform such magic, computer witches and wizards rely not only on words, but also on wands, potions, and an ancient tome or two. Taken together, these tricks of the trade are known as <em>software development</em>: computer programming, plus tools like <em>command lines</em>, <em>text editors</em>, and <em>version control</em>. Knowledge of these tools is perhaps the main dividing line between “technical” and “non-technical” people (or, to put it in magical terms, between magicians and Muggles). The present tutorial represents the first steps needed to cross this technical/non-technical divide. The resulting <em>technical sophistication</em> (<a href="ch01.xhtml#box1-4">Box 1.4</a>) will make us software magicians—able to cast computer spells, and get the machine to do our bidding.</p>
+</aside>
+<p class="indent"><em>Learn Enough Developer Tools to Be Dangerous</em> consists of three parts, each covering one of the essential tools (and based on the corresponding online course from Learn Enough <a href="https://www.learnenough.com/">https://www.learnenough.com/</a>):</p>
+<ul class="sq">
+<li><p class="bull"><span epub:type="pagebreak" id="page_4"></span><a href="part01.xhtml#part01">Part I</a>: <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) on the Unix command line</p></li>
+<li><p class="bull"><a href="part02.xhtml#part02">Part II</a>: <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) on how to use a text editor</p></li>
+<li><p class="bull"><a href="part03.xhtml#part03">Part III</a>: <em>Learn Enough Git to Be Dangerous</em> (<a href="https://www.learnenough.com/git">https://www.learnenough.com/git</a>) on version control with Git</p></li>
+</ul>
+<p class="noindent">Because of the close association between the parts and the standalone courses, <em>Learn Enough Developer Tools to Be Dangerous</em> will use terms like “<a href="part01.xhtml#part01">Part I</a>” and “<em>Learn Enough Command Line to Be Dangerous</em>” interchangeably.</p>
+<p class="indent"><a href="part01.xhtml#part01">Part I</a> of <em>Learn Enough Developer Tools to Be Dangerous</em> is an introduction to the Unix command line for complete beginners, so it doesn’t assume any background other than general computer knowledge (how to launch an application, how to use a web browser, how to touch type, etc.). Each subsequent part of <em>Learn Enough Developer Tools to Be Dangerous</em> assumes only the material in the preceding parts, so to get started you don’t even need to know what “command line”, “text editor”, and “version control” mean. Moreover, even if you are already somewhat familiar with one or more of these subjects, following this tutorial (and doing the exercises) will help fill in any gaps in your knowledge, and might even teach you a few new things.</p>
+<p class="indent">Many programming tutorials either gloss over developer tools or assume you already know how to use them. But understanding the basics of the command line, text editors, and version control is <em>absolutely essential</em> to becoming a skilled developer.<sup><a id="rfn1_1" href="ch01.xhtml#fn1_1">1</a></sup>Indeed, if you look at the desktop of an experienced computer programmer, even on a system with a polished graphical user interface like macOS, you are likely to find a large number of “terminal windows”, text-editor windows, and version-control commands (<a href="ch01.xhtml#fig1-1">Figure 1.1</a>). Proficiency with the developer tools covered in <em>Learn Enough Developer Tools to Be Dangerous</em> is also useful for anyone who needs to <em>work</em> with developers, such as product managers, project managers, and designers. Making this essential component of technical sophistication accessible to as broad an audience as possible is the goal of this tutorial.</p>
+<p class="footnote"><a id="fn1_1" href="ch01.xhtml#rfn1_1">1.</a> Regarding the version of the command line covered in this tutorial, this statement applies specifically to the <em>Unix tradition</em>, which is the principal computing tradition behind the Internet and the World Wide Web. In addition to being important for developers, knowing the command line is also essential for system administrators (sysadmins).</p>
+<figure class="figure" id="fig1-1">
+<img src="graphics/01fig01.jpg" alt="Image" width="831" height="468"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.1:</strong> Terminal windows on the desktop of an experienced developer.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="ch01lev1"><span epub:type="pagebreak" id="page_5"></span>1.1 Introduction</h3>
+<p class="noindent">As author Neal Stephenson famously put it, “In the Beginning… Was the Command Line” (paperback edition, Avon Books, 1999). Although a graphical user interface (GUI) can dramatically simplify computer use, in many contexts the most powerful and flexible way to interact with a computer is through a <em>command-line interface</em> (CLI). In such an interface, the user types <em>commands</em> that tell the computer to perform desired tasks. These commands can then be combined in various ways to achieve a variety of outcomes. An example of a typical command-line command appears in <a href="ch01.xhtml#fig1-2">Figure 1.2</a>.</p>
+<figure class="figure" id="fig1-2">
+<img src="graphics/01fig02.jpg" alt="Image" width="600" height="63"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.2:</strong> A prototypical command-line command.</p>
+</figcaption>
+</figure>
+<p class="indent">This tutorial covers the basics of the Unix command line, where <em>Unix</em> refers to a family of operating systems that includes Linux, Android, iOS (iPhone and iPad), and macOS.<sup><a id="rfn1_2" href="ch01.xhtml#fn1_2">2</a></sup> <span epub:type="pagebreak" id="page_6"></span>Unix systems serve most of the software on the World Wide Web, run most mobile and tablet devices, and power many of the world’s desktop computers as well. As a result of Unix’s central role in modern computing, this tutorial covers the Unix way of developing software. The main exception to Unix’s dominance is Microsoft Windows, which is not part of the Unix tradition, but those who mostly develop using native Windows development tools will still benefit from learning the Unix command line. Among other things, at some point such users are likely to need to issue commands on a Unix server (e.g., via the “secure shell” command <span class="green"><code><strong>ssh</strong></code></span>), at which point familiarity with Unix commands becomes essential. As a result, Microsoft Windows users are encouraged to set up a Linux-compatible development environment by following the steps in <a href="appa.xhtml#app3-3">Section A.3.3</a> or by using the Linux-based cloud IDE discussed in <a href="appa.xhtml#app2">Section A.2</a>.</p>
+<p class="footnote"><a id="fn1_2" href="ch01.xhtml#rfn1_2">2.</a> In a fairly typical turn of events, the name <em>Unix</em> started as a pun on a rival system called <em>Multics</em>.</p>
+</section>
+<section>
+<h3 class="h3" id="ch01lev2">1.2 Running a Terminal</h3>
+<p class="noindent">To run a command-line command, we first need to start a <em>terminal</em>, which is the program that gives us a command line. The exact details depend on the particular operating system you’re using.</p>
+<section>
+<h4 class="h4" id="ch01lev3_sec1">macOS</h4>
+<p class="noindent">On macOS, you can open a terminal window using the macOS application <em>Spotlight</em>, which you can launch either by typing <img class="inline" src="graphics/command-space.jpg" alt="Image" width="30" height="18"/> (Command-space) or by clicking on the magnifying glass in the upper right part of your screen. Once you’ve launched Spotlight, you can start a terminal program by typing “terminal” in the Spotlight Search bar. (If you are interested in using a more advanced and customizable terminal program, I recommend installing iTerm, but this step is optional.)</p>
+<p class="indent">At this point, you might see the alert shown in <a href="ch01.xhtml#list1-1">Listing 1.1</a>.</p>
+<p class="list-head" id="list1-1"><strong>Listing 1.1:</strong> A macOS terminal alert.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis01" id="p01lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="green">The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.</span>
+
+<span class="dblue"><strong>[~]$</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_7"></span>This alert is the result of a change made in macOS Catalina. You don’t need to do anything about it right now; we’ll address this issue the first time it makes any difference in this tutorial (<a href="ch02.xhtml#ch02lev3">Section 2.3</a>). For more information, see the Learn Enough blog post “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>).</p>
+<section>
+<h5 class="h5" id="ch01lev3_sec2">Linux</h5>
+<p class="noindent">On Linux, you can click the terminal icon as shown in <a href="ch01.xhtml#fig1-3">Figure 1.3</a>. The result should be something like <a href="ch01.xhtml#fig1-4">Figure 1.4</a>, although the exact details on your system will likely differ.</p>
+<figure class="figure" id="fig1-3">
+<img src="graphics/01fig03.jpg" alt="Image" width="750" height="511"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.3:</strong> The Linux terminal icon.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig1-4">
+<img src="graphics/01fig04.jpg" alt="Image" width="750" height="510"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.4:</strong> A terminal window.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3_sec3">Windows</h5>
+<p class="noindent">On Windows, the recommended option is to install Linux (which, incredibly, Microsoft has decided to support natively) as described in the steps in <a href="appa.xhtml#app3-3">Section A.3.3</a>.</p>
+<p class="noindent"><span epub:type="pagebreak" id="page_8"></span>Once Linux is installed, you should look for a terminal icon as described in <a href="ch01.xhtml#ch01lev2">Section 1.2</a>. Apply your technical sophistication (<a href="ch01.xhtml#box1-4">Box 1.4</a>) if you get stuck.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3_sec4">Terminal Window</h5>
+<p class="noindent">Regardless of which operating system you use, your terminal window should look something like <a href="ch01.xhtml#fig1-4">Figure 1.4</a>, though details may differ.</p>
+<p class="indent">The example we saw in <a href="ch01.xhtml#fig1-2">Figure 1.2</a> includes all of the typical elements of a command, as illustrated in <a href="ch01.xhtml#fig1-5">Figure 1.5</a>: the <em>prompt</em> (to “prompt” the user to do something) followed by a <em>command</em> (as in “give the computer a command”), an <em>option</em> (as in “choose a different option”),<sup><a id="rfn1_3" href="ch01.xhtml#fn1_3">3</a></sup> and an <em>argument</em> (as in the “argument of a function” in mathematics). It’s essential to understand that the prompt is supplied automatically by the terminal, and you do not need to type it. (Indeed, if you do type it, it will likely <span epub:type="pagebreak" id="page_9"></span>result in an error.) Moreover, the exact details of the prompt will differ, and are not important for the purposes of this tutorial (<a href="ch01.xhtml#box1-2">Box 1.2</a>).</p>
+<p class="footnote"><a id="fn1_3" href="ch01.xhtml#rfn1_3">3.</a> An option is sometimes also called a <em>flag</em>.</p>
+<figure class="figure" id="fig1-5">
+<img src="graphics/01fig05.jpg" alt="Image" width="750" height="272"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.5:</strong> Anatomy of a command line. (Your prompt may differ.)</p>
+</figcaption>
+</figure>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box1-2">Box 1.2: What Is the Prompt?</p>
+<p class="box-no">Every command line starts with some symbol or symbols designed to “prompt” you to action. The prompt usually ends with a dollar sign <code>$</code> or a percent sign <code>%</code>, and is preceded by information that depends on the details of your system. For example, on some systems the prompt might look like this:</p>
+<p class="codelink"><a href="ch01_images.xhtml#p009pro01" id="p009pro01a">Click here to view code image</a></p>
+<pre class="pre">Michael's MacBook Air:~ mhartl$</pre>
+<p class="box-no">In <a href="ch01.xhtml#fig1-4">Figure 1.4</a>, the prompt looks like this instead:</p>
+<pre class="pre">[~]$</pre>
+<p class="box-no">and in <a href="ch01.xhtml#fig1-5">Figure 1.5</a> it looks like this:</p>
+<pre class="pre">[projects]$</pre>
+<p class="box-no">Finally, the prompt I’m looking at right now looks like this:</p>
+<p class="codelink"><a href="ch01_images.xhtml#p009pro02" id="p009pro02a">Click here to view code image</a></p>
+<pre class="pre">[learn_enough_command_line (first-draft)]$</pre>
+<p class="box-no">For the purposes of this tutorial, the details of the prompt are not important, but we will discuss useful ways to customize the prompt in <a href="part02.xhtml#part02">Part II</a>.</p>
+</aside>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec1"><span epub:type="pagebreak" id="page_10"></span>1.2.1 Exercises</h4>
+<p class="noindent"><em>Learn Enough Developer Tools to Be Dangerous</em> includes a large number of exercises. I strongly recommend getting in the habit of attempting them before moving on to the next section, as they reinforce the material we’ve just covered and will give you essential practice in using the many commands discussed. It’s not generally the case that they are <em>required</em> to proceed, though, so if you get stuck it’s sometimes a good idea to continue forward and then revisit the exercise at a later time. Indeed, this is good advice for the main text as well—you’ll be surprised how often a seemingly impossible idea or intractable problem will look easy the second time around.</p>
+<ol class="number">
+<li><p class="number">By referring to <a href="ch01.xhtml#fig1-5">Figure 1.5</a>, identify the prompt, command, options, arguments, and cursor in each line of <a href="ch01.xhtml#fig1-6">Figure 1.6</a>.</p>
+<figure class="figure" id="fig1-6">
+<img src="graphics/01fig06.jpg" alt="Image" width="750" height="610"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.6:</strong> A series of typical commands.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Most modern terminal programs have the ability to create multiple <em>tabs</em> (<a href="ch01.xhtml#fig1-7">Figure 1.7</a>), which are useful for organizing a set of related terminal windows.<sup><a id="rfn1_4" href="ch01.xhtml#fn1_4">4</a></sup>By examining the menu items for your terminal program (<a href="ch01.xhtml#fig1-8">Figure 1.8</a>), figure out how to create a new tab. <em>Extra credit</em>: Learn the keyboard shortcut for creating a new tab. (Learning keyboard shortcuts for your system is an excellent habit to cultivate.)</p>
+<p class="footnote"><a id="fn1_4" href="ch01.xhtml#rfn1_4">4.</a> For example, when developing web applications, in addition to my main command-line tab I often have separate tabs for running a local web server (<a href="https://www.railstutorial.org/book/beginning#sec-rails_server">https://www.railstutorial.org/book/beginning#sec-rails_server</a>) and an automated test suite (<a href="https://www.railstutorial.org/book/static_pages#sec-our_first_test">https://www.railstutorial.org/book/static_pages#sec-our_first_test</a>).</p>
+<figure class="figure" id="fig1-7">
+<img src="graphics/01fig07.jpg" alt="Image" width="750" height="606"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.7:</strong> A terminal window with three tabs.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig1-8">
+<img src="graphics/01fig08.jpg" alt="Image" width="750" height="698"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.8:</strong> Some menu items for the default macOS terminal.</p>
+</figcaption>
+</figure></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev3">1.3 Our First Command</h3>
+<p class="noindent">We are now prepared to run our first command, which prints the word “hello” to the screen. (The place where characters get printed is known as “standard out”, which is usually just the screen, and rarely refers to a physical printer.) The command is <span class="green"><code><strong>echo</strong></code></span>, and the argument is the string of characters—or simply <em>string</em> for short—that we want to print. To run the <span class="green"><code><strong>echo</strong></code></span> command, type “echo hello” at the prompt, and then press the Return key (also called Enter):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> hello
+<span class="green">hello</span>
+<span class="dblue"><strong>$</strong></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_11"></span>(I recommend always typing the commands out yourself, which will let you learn more than if you rely on copying and pasting.) Here we see that <span class="green"><code><strong>echo hello</strong></code></span> prints “hello” and then returns another prompt. Note that, for brevity, I’ve omitted all characters in the prompt except the dollar sign <span class="green"><code><strong>$</strong></code></span>.</p>
+<p class="indent">Just to make the pattern clear, let’s try a second <span class="green"><code><strong>echo</strong></code></span> command:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"goodbye"</span>
+<span class="green">goodbye</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">'goodbye'</span>
+<span class="green">goodbye</span>
+<span class="dblue"><strong>$</strong></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_12"></span>Note here that we’ve wrapped “goodbye” in quotation marks—and we also see that we can use either double quotes, as in <span class="green"><code><strong>"goodbye"</strong></code></span>, or single quotes, as in <span class="green"><code><strong>'goodbye'</strong></code></span>. Such quotes can be used to group strings visually, though in many contexts they are not required by <span class="green"><code><strong>echo</strong></code></span> (<a href="ch01.xhtml#list1-2">Listing 1.2</a>).<sup><a id="rfn1_5" href="ch01.xhtml#fn1_5">5</a></sup></p>
+<p class="footnote"><a id="fn1_5" href="ch01.xhtml#rfn1_5">5.</a> There are subtle differences between the two cases, but they aren’t important at the level of this tutorial. Use your technical sophistication (<a href="ch01.xhtml#box1-4">Box 1.4</a>) if you’re curious. <em>Hint</em>: Google searches are your friends.</p>
+<p class="list-head" id="list1-2"><strong>Listing 1.2:</strong> Printing “hello, goodbye” two different ways.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis02" id="p01lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> hello, goodbye
+<span class="green">hello, goodbye</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"hello, goodbye"</span>
+<span class="green">hello, goodbye</span>
+<span class="dblue"><strong>$</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_13"></span>One thing that can happen when using quotes is accidentally not matching them, as follows:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"hello, goodbye</span>
+<span class="green">&gt;</span></pre>
+<p class="noindent">At this point, it seems we’re stuck. There are specific ways out of this quandary (in fact, in this case you can just add a closing quote and hit return), but it’s good to <span epub:type="pagebreak" id="page_14"></span>have a general strategy for getting out of trouble (<a href="ch01.xhtml#fig1-9">Figure 1.9</a>).<sup><a id="rfn1_6" href="ch01.xhtml#fn1_6">6</a></sup> This strategy is called “Ctrl-C” (<a href="ch01.xhtml#box1-3">Box 1.3</a>).</p>
+<p class="footnote"><a id="fn1_6" href="ch01.xhtml#rfn1_6">6.</a> Image courtesy of Akitameldes/Shutterstock.</p>
+<figure class="figure" id="fig1-9">
+<img src="graphics/01fig09.jpg" alt="Image" width="498" height="448"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.9:</strong> This cat appears to be stuck and should probably hit <span class="green"><code><strong>Ctrl-C</strong></code></span>.</p>
+</figcaption>
+</figure>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box1-3">Box 1.3: Getting Out of Trouble</p>
+<p class="noindent">When using the command line, there are lots of things that can get you in trouble, by which I mean the terminal will just hang or otherwise end up in a state that makes entering further commands difficult or impossible. Here are some examples of such commands:</p>
+<pre class="pre">$ echo "hello
+
+$ grep foobar
+
+$ yes
+
+$ tail
+
+$ cat</pre>
+<p class="box-ind"><span epub:type="pagebreak" id="page_15"></span>In every case, the solution is the same: hit <code>Ctrl-C</code> (pronounced “control-see”). Here <code>Ctrl</code> refers to the “control” key on your keyboard, and <code>C</code> refers to the key labeled “C”. <code>Ctrl-C</code> thus means “While holding down the control key, press C.” In particular, <code>C</code> does <em>not</em> refer to the capital letter C, so you should not press Shift in addition to Ctrl. (<code>Ctrl-C</code> sends a <em>control code</em> to the terminal and has nothing to do with producing a capital C when typing normal text.) The result of typing <code>Ctrl-C</code> is sometimes written as <code>^C</code>, like this:</p>
+<pre class="pre">$ tail
+^C</pre>
+<p class="box-ind">The origins of <code>Ctrl-C</code> are somewhat obscure, but as a mnemonic I like to think of it as meaning “cancel”. However you remember it, <em>do</em> remember it: When you get into trouble at the command line, your best bet is usually to hit <code>Ctrl-C</code>.</p>
+<p class="box-ind"><em>Note</em>: When <code>Ctrl-C</code> fails, 90% of the time hitting <code>ESC</code> (escape) will do the trick.</p>
+</aside>
+<section>
+<h4 class="h4" id="ch01lev3sec1">1.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write a command that prints out the string “hello, world”. <em>Extra credit</em>: As in <a href="ch01.xhtml#list1-2">Listing 1.2</a>, do it two different ways, both with and without using quotation marks.</p></li>
+<li><p class="number">Type the command <span class="green"><code><strong>echo 'hello</strong></code></span> (with a mismatched single quote), and then get out of trouble using the technique from <a href="ch01.xhtml#box1-3">Box 1.3</a>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev4">1.4 Man Pages</h3>
+<p class="noindent">The program we’re using to run a command line, which is technically known as a <em>shell</em>,<sup><a id="rfn1_7" href="ch01.xhtml#fn1_7">7</a></sup> includes a powerful (though often cryptic) tool to learn more about available commands. This tool is itself a command-line command called <span class="green"><code><strong>man</strong></code></span> (short for “manual”), <span epub:type="pagebreak" id="page_16"></span>and we use it by typing <span class="green"><code><strong>man</strong></code></span> and then the name of the command we want to learn more about:</p>
+<p class="footnote"><a id="fn1_7" href="ch01.xhtml#rfn1_7">7.</a> Many introductions to the command line cover elements of the shell that require knowledge of a text editor—knowledge which (as noted in the introduction) this tutorial does <em>not</em> assume. As a result, we’ll defer these important topics to the follow-on tutorials to this one (<a href="ch04.xhtml#ch04lev6">Section 4.6</a>), starting with <em>Learn Enough Text Editor to Be Dangerous</em>.</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> man <span class="lgreen">echo</span></pre>
+<p class="noindent">The result is to print out a so-called <em>man page</em> for the command in question (in this case, <span class="green"><code><strong>echo</strong></code></span>). The details are system-dependent, but on my system the result of running <span class="green"><code><strong>man echo</strong></code></span> appears as in <a href="ch01.xhtml#list1-3">Listing 1.3</a>.</p>
+<p class="list-head" id="list1-3"><strong>Listing 1.3:</strong> The result of running <span class="green"><code><strong>man echo</strong></code></span>.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis03" id="p01lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> man <span class="lgreen">echo</span>
+<span class="green">ECHO(1)          BSD General Commands Manual          ECHO(1)</span>
+
+<span class="green">NAME</span>
+   <span class="green">echo -- write arguments to the standard output</span>
+
+<span class="green">SYNOPSIS</span>
+   <span class="green">echo [-n] [string ...]</span>
+
+<span class="green">DESCRIPTION</span>
+   <span class="green">The echo utility writes any specified operands, separated by single blank
+   (` ') characters and followed by a newline (`\n') character, to the stan-
+   dard output.</span>
+
+   <span class="green">The following option is available:</span>
+
+   <span class="green">-n  Do not print the trailing newline character. This may also be
+      achieved by appending `\c' to the end of the string, as is done by
+      iBCS2 compatible systems. Note that this option as well as the
+      effect of `\c' are implementation-defined in IEEE Std 1003.1-2001
+      (``POSIX.1'') as amended by Cor. 1-2002. Applications aiming for
+      maximum portability are strongly encouraged to use printf(1) to
+      suppress the newline character.</span>
+<span class="back-yellow"><span class="green">:</span>                                                                           </span></pre>
+</div>
+<p class="indent">On the last line of <a href="ch01.xhtml#list1-3">Listing 1.3</a>, note the presence of a colon <span class="green"><code><strong>:</strong></code></span>, which indicates that there is more information below. The details of this last line are also system-dependent, but on any system you should be able to access subsequent information one line at a time by pressing the down arrow key, or one page at a time by pressing the spacebar. To exit the man page, press “q” (for “quit”). (This interface to the man pages is the same as for the <span class="green"><code><strong>less</strong></code></span> program, which we’ll learn about in <a href="ch03.xhtml#ch03lev3">Section 3.3</a>.)</p>
+<figure class="figure" id="fig1-10">
+<img src="graphics/01fig10.jpg" alt="Image" width="750" height="500"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.10:</strong> Applying <span class="green"><code><strong>man</strong></code></span> to <span class="green"><code><strong>man</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_17"></span>Because <span class="green"><code><strong>man</strong></code></span> itself is a command, we can apply <span class="green"><code><strong>man</strong></code></span> to <span class="green"><code><strong>man</strong></code></span> (<a href="ch01.xhtml#fig1-10">Figure 1.10</a>),<sup><a id="rfn1_8" href="ch01.xhtml#fn1_8">8</a></sup> as shown in <a href="ch01.xhtml#list1-4">Listing 1.4</a>.</p>
+<p class="footnote"><a id="fn1_8" href="ch01.xhtml#rfn1_8">8.</a> Image courtesy of Monkey Business Images/Shutterstock.</p>
+<p class="list-head" id="list1-4"><strong>Listing 1.4:</strong> The result of running <span class="green"><code><strong>man man</strong></code></span>.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis04" id="p01lis04a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> man man
+<span class="green">man(1)                                man(1)</span>
+
+<span class="green">NAME</span>
+   <span class="green">man - format and display the on-line manual pages</span>
+
+<span class="green">SYNOPSIS</span>
+    <span class="green">man [-acdfFhkKtwW] [--path] [-m system] [-p string] [-C config_file]</span>
+    <span class="green">[-M pathlist] [-P pager] [-B browser] [-H htmlpager] [-S section_list]</span>
+    <span class="green">[section] name ...</span>
+
+<span epub:type="pagebreak" id="page_18"></span><span class="green">DESCRIPTION</span>
+    <span class="green">man formats and displays the on-line manual pages. If you specify section,</span>
+    <span class="green">man only looks in that section of the manual. name is normally</span>
+    <span class="green">the name of the manual page, which is typically the name of a command,</span>
+    <span class="green">function, or file. However, if name contains a slash (/) then man</span>
+    <span class="green">interprets it as a file specification, so that you can do man ./foo.5</span>
+    <span class="green">or even man /cd/foo/bar.1.gz.</span>
+
+    <span class="green">See below for a description of where man looks for the manual page</span>
+    <span class="green">files.</span>
+
+<span class="green">OPTIONS</span>
+    <span class="green">-C config_file</span>
+<span class="green">:</span></pre>
+</div>
+<p class="indent">We can see from <a href="ch01.xhtml#list1-4">Listing 1.4</a> that the synopsis of <span class="green"><code><strong>man</strong></code></span> looks something like this:</p>
+<p class="codelink"><a href="ch01_images.xhtml#p018pro01" id="p018pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">man [-acdfFhkKtwW] [--path] [-m system] [-p string] ...</pre>
+<p class="noindent">This is what I meant above when I described man pages as “often cryptic”. Indeed, in many cases I find the details of man pages to be almost impossible to understand, but being able to scan over the man page to get a high-level overview of a command is a valuable skill, one well worth acquiring. To get used to reading man pages, I recommend running <span class="green"><code><strong>man &lt;command name&gt;</strong></code></span> when encountering a new command. Even if the details aren’t entirely clear, reading the man pages will help develop the valuable skill of <em>technical sophistication</em> (<a href="ch01.xhtml#box1-4">Box 1.4</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box1-4">Box 1.4: Technical Sophistication</p>
+<p class="box-no">In mathematics, many subjects can be developed by applying pure deduction to a small number of assumptions, or <em>axioms</em>; examples include algebra, geometry, number theory, and analysis. As a result, such subjects are completely self-contained, and thus have no formal prerequisites—in principle, even a small child could learn them. In practice, though, something else is required, and mathematicians often recommend the informal prerequisite of <em>mathematical maturity</em>, which consists of the experience and general sophistication needed to understand and write mathematical proofs.</p>
+<p class="box-ind">In technology, a similar skill (or, more accurately, set of skills) exists in the form of <em>technical sophistication</em>. In addition to “hard skills” like familiarity with text editors <span epub:type="pagebreak" id="page_19"></span>and the Unix command line, technical sophistication includes “soft skills” like looking for promising menu items and knowing the kinds of search terms to drop into Google (as illustrated in “Tech Support Cheat Sheet” (<a href="https://m.xkcd.com/627/">https://m.xkcd.com/627/</a>) from xkcd), along with an <em>attitude</em> of doing what it takes to make the machine do our bidding (<a href="ch01.xhtml#box1-1">Box 1.1</a>).</p>
+<p class="box-ind">These soft skills, and this attitude, are hard to teach directly, so as you progress through this and subsequent Learn Enough tutorials you should always be on the lookout for opportunities to increase your technical sophistication (such as, for example, learning how to get the gist of a program by scanning its man page (<a href="ch01.xhtml#ch01lev4">Section 1.4</a>)). Over time, the cumulative effect will be that, like the author of “Tech Support Cheat Sheet”, you’ll have the seemingly magical ability to do everything in every program.</p>
+<p class="box-ind">By the way, “Tech Support Cheat Sheet” is missing a few important techniques for solving common problems (listed here in increasing order of severity, which is the order in which you should try them):</p>
+<ol class="number">
+<li><p class="number">“Have you restarted the application?”</p></li>
+<li><p class="number">“Have you rebooted the device?” or (closely related) “Have you turned it off, waited 30 seconds, and turned it on again?” (This is known as <em>power cycling</em>.)</p></li>
+<li><p class="number">“Have you tried uninstalling and reinstalling the app?”</p></li>
+</ol>
+<p class="box-no">Step #2 alone probably solves 90% of unexplained computer problems.</p>
+</aside>
+<section>
+<h4 class="h4" id="ch01lev4sec1">1.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">According to the man page, what are the official short and long descriptions of <span class="green"><code><strong>echo</strong></code></span> on your system?</p></li>
+<li><p class="number">As seen in <a href="ch01.xhtml#list1-2">Listing 1.2</a>, by default the <span class="green"><code><strong>echo</strong></code></span> command prints its argument to the screen and then puts the new prompt on a new line. The way it does this is by appending a special character called a <em>newline</em> that literally puts the string on a new line. (The newline character is usually written as <span class="green"><code><strong>\n</strong></code></span>, pronounced “backslash n”.) Because <span class="green"><code><strong>echo</strong></code></span> is often used in programs to print out a sequence of strings <em>not</em> separated by newlines, there is a special command-line option to prevent the newline from being inserted.</p>
+<p class="noindent">By reading the man page for <span class="green"><code><strong>echo</strong></code></span>, determine the command needed to print out “hello” <em>without</em> the trailing newline, and verify using your terminal that it works as expected. <em>Hints</em>: To determine the placement of the command-line option, it <span epub:type="pagebreak" id="page_20"></span>may help to refer to <a href="ch01.xhtml#fig1-5">Figure 1.5</a>. By comparing your result with <a href="ch01.xhtml#list1-5">Listing 1.5</a> and <a href="ch01.xhtml#list1-6">Listing 1.6</a>, you should be able to verify that you’ve used the option properly. (<em>Note</em>: This exercise may fail when using the default terminal program on some older versions of macOS. In this case, I recommend installing iTerm (which isn’t a bad idea anyway).)</p></li>
+</ol>
+<p class="list-head" id="list1-5"><strong>Listing 1.5:</strong> The result of running <span class="green"><code><strong>echo</strong></code></span> with a newline (without option).</p>
+<div class="box2">
+<pre class="pre"><span class="green">hello</span>
+<span class="dblue"><strong>[~]$</strong></span></pre>
+</div>
+<p class="list-head" id="list1-6"><strong>Listing 1.6:</strong> The result of running <span class="green"><code><strong>echo</strong></code></span> without a newline (with option).</p>
+<div class="box2">
+<pre class="pre"><span class="green">hello[~]$</span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev5">1.5 Editing the Line</h3>
+<p class="noindent">Command lines include several features to make it easy to repeat previous commands, possibly in edited form. These and many other command-line features often involve special keys on the keyboard, so for reference <a href="ch01.xhtml#tab1-1">Table 1.1</a> shows these symbols for the various keys on a typical Macintosh keyboard. Apply your technical sophistication (<a href="ch01.xhtml#box1-4">Box 1.4</a>) if your keyboard differs.</p>
+<figure class="table" id="tab1-1">
+<p class="title-t"><strong>Table 1.1:</strong> Miscellaneous keyboard symbols.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Key</p></th>
+<th class="border"><p class="thead">Symbol</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para">Command</p></td>
+<td><p class="tab-para"><img src="graphics/command.jpg" alt="Image" width="18" height="18"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Control</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-1.jpg" alt="Image" width="9" height="8"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Shift</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-2.jpg" alt="Image" width="19" height="18"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Option</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-3.jpg" alt="Image" width="16" height="14"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Up, down, left, right</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-4.jpg" alt="Image" width="81" height="18"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Enter/Return</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-5.jpg" alt="Image" width="19" height="13"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Tab</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-6.jpg" alt="Image" width="19" height="15"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Delete</p></td>
+<td><p class="tab-para"><img src="graphics/pg20-7.jpg" alt="Image" width="22" height="16"/></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_21"></span>One of the most useful ways to edit the line is to “up arrow” ↑, which simply retrieves the previous command. Pressing up arrow again moves further up the list of commands, while “down arrow” ↓ goes back toward the bottom.</p>
+<p class="indent">Other common ways to edit the line use the control key, which (as we saw in <a href="ch01.xhtml#box1-3">Box 1.3</a>) is usually written as <span class="green"><code><strong>Ctrl</strong></code></span> or <span class="green"><code><strong>^</strong></code></span>. For example, when typing a new command, or dealing with a previous command, it is often convenient to be able to move quickly within the line. Suppose we typed</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> goodbye</pre>
+<p class="noindent">only to realize that we wanted to put <span class="green"><code><strong>echo</strong></code></span> in front of it. We could use the left arrow key ← to get to the beginning of the line, but it’s easier to type <span class="green"><code><strong>^A</strong></code></span>, which takes us there immediately. Similarly, <span class="green"><code><strong>^E</strong></code></span> moves to the end of the line.<sup><a id="rfn1_9" href="ch01.xhtml#fn1_9">9</a></sup> Finally, <span class="green"><code><strong>^U</strong></code></span> clears to the beginning of the line and lets us start over.</p>
+<p class="footnote"><a id="fn1_9" href="ch01.xhtml#rfn1_9">9.</a> There are also commands for moving one <em>word</em> at a time (the keyboard sequences <code>ESC F</code> and <code>ESC B</code>), but I hardly ever use them myself, so it’s clear they are not required to be <em>dangerous</em>.</p>
+<p class="indent">The combination of <span class="green"><code><strong>^A</strong></code></span>, <span class="green"><code><strong>^E</strong></code></span>, and <span class="green"><code><strong>^U</strong></code></span> will work on most systems, but they don’t do you much good if you’re editing a longer line, such as this one containing the first line of Sonnet 1 by William Shakespeare (<a href="ch01.xhtml#list1-7">Listing 1.7</a>).</p>
+<p class="list-head" id="list1-7"><strong>Listing 1.7:</strong> Printing the first line of Shakespeare’s first sonnet.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis07" id="p01lis07a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"From fairest creatures we desire increase,"</span></pre>
+</div>
+<p class="noindent">Suppose we wanted to change “From” to “FRom” to more closely match the text from the original sonnet (<a href="ch01.xhtml#fig1-11">Figure 1.11</a>).<sup><a id="rfn1_10" href="ch01.xhtml#fn1_10">10</a></sup> We could type <span class="green"><code><strong>^A</strong></code></span> followed by the right arrow key a few times, but on some systems it’s possible to move directly to the desired spot by combining the keyboard and mouse via Option-click. That is, you can hold down the Option key on your keyboard (if it exists),<sup><a id="rfn1_11" href="ch01.xhtml#fn1_11">11</a></sup> and then click with the mouse pointer <span epub:type="pagebreak" id="page_22"></span>on the place in the command where you want the cursor. This would let us move right to the “o” in “From”, allowing us to delete the “r” and yielding <a href="ch01.xhtml#list1-8">Listing 1.8</a> directly.</p>
+<figure class="figure" id="fig1-11">
+<img src="graphics/01fig11.jpg" alt="Image" width="609" height="458"/>
+<figcaption>
+<p class="title-f"><strong>Figure 1.11:</strong> The original appearance of Shakespeare’s first sonnet.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn1_10" href="ch01.xhtml#rfn1_10">10.</a> Note that the Original Pronunciation (OP) of Shakespearean English is different from modern pronunciation. Generally speaking, Shakespeare’s sonnets include many word pairs that don’t rhyme in modern English but do in OP. In the case of <a href="ch01.xhtml#fig1-11">Figure 1.11</a>, the word “memory” should be pronounced “MEM-or-aye”, leading to a rhyme between lines 2 and 4 (ending in <em>die</em> and <em>memory</em>, respectively).</p>
+<p class="footnote"><a id="fn1_11" href="ch01.xhtml#rfn1_11">11.</a> Some keyboards lack an Option key, so obviously this trick won’t work on such systems.</p>
+<p class="list-head" id="list1-8"><strong>Listing 1.8:</strong> The result of editing a longer command-line command.</p>
+<p class="codelink"><a href="ch01_images.xhtml#p01lis08" id="p01lis08a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"FRom fairest creatures we desire increase,"</span></pre>
+</div>
+<p class="indent">I usually move around the command line with a combination of <span class="green"><code><strong>^A</strong></code></span>, <span class="green"><code><strong>^E</strong></code></span>, and right &amp; left arrow keys, but for longer commands Option-click can be a big help. (I also frequently change my mind about the exact command I’m typing, in which case I usually find that hitting <span class="green"><code><strong>^U</strong></code></span> and starting over again is the fastest way to proceed.)</p>
+<section>
+<h4 class="h4" id="ch01lev5sec1"><span epub:type="pagebreak" id="page_23"></span>1.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using the up arrow, print to the screen the strings “fee”, “fie”, “foe”, and “fum” without retyping <span class="green"><code><strong>echo</strong></code></span> each time.</p></li>
+<li><p class="number">Starting with the line in <a href="ch01.xhtml#list1-7">Listing 1.7</a>, use any combination of <span class="green"><code><strong>^A</strong></code></span>, <span class="green"><code><strong>^E</strong></code></span>, arrow keys, or Option-click to change the occurrences of the short s to the archaic long s “⌠” in order to match the appearance of the original (<a href="ch01.xhtml#fig1-11">Figure 1.11</a>). In other words, the argument to <span class="green"><code><strong>echo</strong></code></span> should read “FRom fairest creatures we desire increase,”. <em>Hint</em>: It’s unlikely that your keyboard can produce “s” natively, so either copy it from the text of this tutorial or Google for it and copy it from the Internet. (If you have trouble copying and pasting into your terminal, I suggest applying the ideas in <a href="ch01.xhtml#box1-4">Box 1.4</a> to figure out how to do it on your system.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev6">1.6 Cleaning Up</h3>
+<p class="noindent">When using the command line, sometimes it’s convenient to be able to clean up by clearing the screen, which we can do with <span class="green"><code><strong>clear</strong></code></span>:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> clear</pre>
+<p class="noindent">A keyboard shortcut for this is <span class="green"><code><strong>^L</strong></code></span>.</p>
+<p class="indent">Similarly, when we are done with a terminal window (or tab) and are ready to exit, we can use the <span class="green"><code><strong>exit</strong></code></span> command:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">exit</span></pre>
+<p class="noindent">A keyboard shortcut for this is <span class="green"><code><strong>^D</strong></code></span>.</p>
+<section>
+<h4 class="h4" id="ch01lev6sec1">1.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Clear the contents of the current tab.</p></li>
+<li><p class="number">Open a new tab, execute <span class="green"><code><strong>echo 'hello'</strong></code></span>, and then exit.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev7"><span epub:type="pagebreak" id="page_24"></span>1.7 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch01.xhtml#tab1-2">Table 1.2</a>.</p>
+<figure class="table" id="tab1-2">
+<p class="title-t"><strong>Table 1.2:</strong> Important commands from <a href="ch01.xhtml#ch01">Chapter 1</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>echo &lt;string&gt;</code></p></td>
+<td><p class="tab-para">Print string to screen</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ echo hello</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>man &lt;command&gt;</code></p></td>
+<td><p class="tab-para">Display manual page for command</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ man echo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^C</code></p></td>
+<td><p class="tab-para">Get out of trouble</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ tail ^C</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^A</code></p></td>
+<td><p class="tab-para">Move to beginning of line</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^E</code></p></td>
+<td><p class="tab-para">Move to end of line</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^U</code></p></td>
+<td><p class="tab-para">Delete to beginning of line</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Option-click</p></td>
+<td><p class="tab-para">Move cursor to location clicked</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para">Up &amp; down arrow</p></td>
+<td><p class="tab-para">Scroll through previous commands</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>clear or ^L</code></p></td>
+<td><p class="tab-para">Clear screen</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ clear</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>exit or ^D</code></p></td>
+<td><p class="tab-para">Exit terminal</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ exit</span></strong></code></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<section>
+<h4 class="h4" id="ch01lev7sec1">1.7.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write a command to print the string <span class="green"><code><strong>Use "man echo"</strong></code></span>, <em>including</em> the quotes; i.e., take care not to print out <span class="green"><code><strong>Use man echo</strong></code></span> instead. <em>Hint</em>: Use double quotes in the inner string, and wrap the whole thing in single quotes.</p></li>
+<li><p class="number">By running <span class="green"><code><strong>man sleep</strong></code></span>, figure out how to make the terminal “sleep” for 5 seconds, and execute the command to do so.</p></li>
+<li><p class="number">Execute the command to sleep for 5000 seconds, realize that’s well over an hour, and then use the instructions from <a href="ch01.xhtml#box1-3">Box 1.3</a> to get out of trouble.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

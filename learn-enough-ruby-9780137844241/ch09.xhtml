@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch09"><span epub:type="pagebreak" id="page_239"></span>Chapter 9</h2>
+<h2 class="h2a">Shell Scripts</h2>
+<p class="noindent">In this chapter, we’ll build on the foundation laid in <a href="ch01.xhtml#sec1_4">Section 1.4</a> and write three <em>shell scripts</em> of increasing sophistication. Although web development is the most common application of Ruby programming nowadays, shell scripting is Ruby’s native habitat, so it’s a task at which Ruby understandably excels. Indeed, readers who have studied the <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_javascript/shell_scripts#sec-shell_scripts">analogous material</a></span> in the context of JavaScript may be impressed at how much more elegant and polished the Ruby versions are.</p>
+<p class="indent">In the first two programs ( <a href="ch09.xhtml#sec9_1">Section 9.1</a> and <a href="ch09.xhtml#sec9_2">Section 9.2</a>), we’ll take the Ruby gem developed in <a href="ch08.xhtml#ch08">Chapter 8</a> and put it to work detecting palindromes drawn from two different sources: a file, and the Web. In the process, we’ll learn how to read and write from files with Ruby, and also how to read from a live Web URL. (This latter example has an especially personal meaning to me, as I distinctly remember the first time I wrote an automated program to read and process text from the Web, which at the time seemed truly miraculous.)</p>
+<p class="indent">Finally, in <a href="ch09.xhtml#sec9_3">Section 9.3</a>, we’ll write a real-life utility program adapted from one I once wrote for myself. It includes an introduction to manipulation of the <span class="lblue"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">Document Object Model</a></span> (or <em>DOM</em>) in a context outside of a web browser.<sup><a id="fn9_1" href="ch09.xhtml#fn9_1a">1</a></sup></p>
+<p class="footnote"><sup><a id="fn9_1a" href="ch09.xhtml#fn9_1">1</a></sup>The Document Object Model was <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_css/introduction/start_stylin#sec-start_stylin">introduced</a></span> in <span class="lblue"><em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em></span> and is <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_javascript/dom_manipulation#cha-dom_manipulation">explored</a></span> in more depth in<span class="lblue"><em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em></span>.</p>
+<section>
+<h3 class="h3" id="sec9_1"><span epub:type="pagebreak" id="page_240"></span>9.1 Reading from Files</h3>
+<p class="noindent">Our first task is to read and process the contents of a file. The example is simple by design, but it demonstrates the necessary principles, and gives you the background needed to read more advanced documentation.</p>
+<p class="indent">We’ll start by using <code><strong><span class="green">curl</span></strong></code> to download a file of simple phrases (note that this should be in the <code><strong><span class="green">ruby_tutorial</span></strong></code> directory we used prior to <a href="ch08.xhtml#ch08">Chapter 8</a>, not the palindrome gem directory):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0240-01" id="f0240-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> <span class="lgreen">cd</span> ~/repos/ruby_tutorial/</strong>
+<strong><span class="blue">$</span> curl -OL https://cdn.learnenough.com/phrases.txt</strong></pre>
+</div>
+<p class="noindent">As you can confirm by running <code><strong><span class="green">less phrases.txt</span></strong></code> at the command line, this file contains a large number of phrases—some of which (surprise!) happen to be palindromes.</p>
+<p class="indent">Our specific task is to write a palindrome detector that iterates through each line in this file and prints out any phrases that are palindromes (while ignoring others). To do this, we’ll need to open the file and read its contents. We’ll then use the gem developed in <a href="ch08.xhtml#ch08">Chapter 8</a> to determine which phrases are palindromes.</p>
+<p class="indent">Most file operations in Ruby are handled by the <code><strong><span class="green">File</span></strong></code> <span class="lblue"><a href="https://ruby-doc.org/core-2.5.0/File.html">class</a></span>. (<a href="ch09.xhtml#sec9_1_1">Section 9.1.1</a> discusses the closely related <code><strong><span class="green">FileUtils</span></strong></code> module.) Let’s get started with the basic <code><strong><span class="green">read</span></strong></code> operation by looking at some examples in irb:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0240-02" id="f0240-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> text <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>read(<span class="brown1">'phrases.txt'</span>)</strong>
+<strong><span class="green">&lt;lots of output&gt;</span></strong></pre>
+</div>
+<p class="noindent">This reads the contents of <code><strong><span class="green">phrases.txt</span></strong></code> and puts it in the <code><strong><span class="green">text</span></strong></code> variable. Because default behavior in some versions of irb is to display the return value, this might also dump the contents to the screen. This can be inconvenient for longer files, but there’s a neat trick that exploits Ruby’s ability to separate statements using a semicolon instead of a newline:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_241"></span><a href="ch09_images.xhtml#f0241-01" id="f0241-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> s <span class="gray">=</span> <span class="brown1">'supercalifragilisticexpialidocious'</span>; <span class="gray">1 + 2</span></strong>
+<strong><span class="green">=&gt; 3</span></strong></pre>
+</div>
+<p class="noindent">Here we see the return value of <code><strong><span class="green">1 + 2</span></strong></code>, but not the <span class="lblue"><a href="https://en.wikipedia.org/wiki/Supercalifragilisticexpialidocious">long string</a></span> in the prior assignment.</p>
+<p class="indent">My personal convention with a statement whose contents I don’t want to display is to use a <code><strong><span class="green">0</span></strong></code> for the second statement, like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0241-02" id="f0241-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> text <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>read(<span class="brown1">'phrases.txt'</span>); <span class="gray">0</span></strong>
+<strong><span class="green">=&gt; 0</span></strong></pre>
+</div>
+<p class="noindent">This arranges to do the same assignment as before, but then just prints out the value of the second statement (<code><strong><span class="green">0</span></strong></code>). (Note that the default behavior for assignments has changed in more recent versions of irb, so this trick may be unnecessary on your system.)</p>
+<p class="indent">We can confirm that the assignment worked as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0241-03" id="f0241-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> text<span class="gray">.</span>length</strong>
+<strong><span class="green">=&gt; 1373</span></strong>
+<strong><span class="blue">&gt;&gt;</span> text<span class="gray">.</span>split(<span class="brown1">"</span><span class="dyellow">\n</span><span class="brown1">"</span>)<span class="gray">[0]</span>    <span class="ash-m"><em># Split on newlines and extract the 1st phrase.</em></span></strong>
+<strong><span class="green">=&gt; "A butt tuba"</span></strong></pre>
+</div>
+<p class="noindent">The second command here splits the text on the newline character <code><strong><span class="green">\n</span></strong></code> and selects the zeroth element, revealing the enigmatic first line of the file, “<span class="lblue"><a href="https://twitter.com/oatmeal/status/562818892121513984?lang=en">A butt tuba</a></span>”.</p>
+<p class="indent">Let’s take the ideas from irb and put them in a script to detect the palindromes in <code><strong><span class="green">phrases.txt</span></strong></code>:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> touch palindrome_file</strong>
+<strong><span class="blue">$</span> chmod +x palindrome_file</strong></pre>
+</div>
+<p class="noindent">We’ll then put in the necessary shebang line (<a href="ch01.xhtml#sec1_4">Section 1.4</a>) and require the palindrome gem, as shown in <a href="ch09.xhtml#ch09ex01">Listing 9.1</a>. You should use your gem if possible, but you can use <code><strong><span class="green">mhartl_palindrome</span></strong></code> if you didn’t publish your own.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex01"><span epub:type="pagebreak" id="page_242"></span><strong>Listing 9.1:</strong> Including the shebang line and gem.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0242-01" id="f0242-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+
+<strong><span class="lgreen">puts</span> <span class="brown1">"hello, world!"</span></strong></pre>
+</div>
+<p class="noindent">The final line in <a href="ch09.xhtml#ch09ex01">Listing 9.1</a> is a <span class="lblue"><a href="https://twitter.com/mhartl/status/998638994949734400">habit</a></span> I have of always making sure a script is in a working state before writing any more code:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> ./palindrome_file</strong>
+<strong><span class="green">hello, world!</span></strong></pre>
+</div>
+<p class="indent">The script itself is simple: We just open the file, split the contents on new-lines, and iterate through the resulting array, printing any line that’s a palindrome. The result, which at this stage you should aspire to read fairly easily, appears in <a href="ch09.xhtml#ch09ex02">Listing 9.2</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex02"><strong>Listing 9.2:</strong> Reading and processing the contents of a file.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0242-02" id="f0242-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+
+<strong>text <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>read(<span class="brown1">"phrases.txt"</span>)</strong>
+<strong>text<span class="gray">.</span>split(<span class="brown1">"</span><span class="dyellow">\n</span><span class="brown1">"</span>)<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>line<span class="gray">|</span></strong>
+  <strong><span class="lgreen">if</span> line<span class="gray">.</span>palindrome?</strong>
+    <strong><span class="lgreen">puts</span> <span class="brown1">"palindrome detected:</span> <span class="dpink">#{</span>line<span class="dpink">}</span><span class="brown1">"</span></strong>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Running the script at the command line confirms that there are quite a few palindromes in the file:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0242-03" id="f0242-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ./palindrome_file</strong>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span epub:type="pagebreak" id="page_243"></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>palindrome detected: Dennis sinned.</strong></span>
+<span class="green"><strong>palindrome detected: Dennis and Edna sinned.</strong></span>
+<span class="green"><strong>palindrome detected: Dennis, Nell, Edna, Leon, Nedra, Anita, Rolf, Nora,</strong></span>
+<span class="green"><strong>Alice, Carol, Leo, Jane, Reed, Dena, Dale, Basil, Rae, Penny, Lana, Dave,</strong></span>
+<span class="green"><strong>Denny, Lena, Ida, Bernadette, Ben, Ray, Lila, Nina, Jo, Ira, Mara, Sara,</strong></span>
+<span class="green"><strong>Mario, Jan, Ina, Lily, Arne, Bette, Dan, Reba, Diane, Lynn, Ed, Eva, Dana,</strong></span>
+<span class="green"><strong>Lynne, Pearl, Isabel, Ada, Ned, Dee, Rena, Joel, Lora, Cecil, Aaron, Flora,</strong></span>
+<span class="green"><strong>Tina, Arden, Noel, and Ellen sinned.</strong></span>
+<span class="green"><strong>palindrome detected: Go hang a salami, I'm a lasagna hog.</strong></span>
+<span class="green"><strong>palindrome detected: level</strong></span>
+<span class="green"><strong>palindrome detected: Madam, I'm Adam.</strong></span>
+<span class="green"><strong>palindrome detected: No "x" in "Nixon"</strong></span>
+<span class="green"><strong>palindrome detected: No devil lived on</strong></span>
+<span class="green"><strong>palindrome detected: Race fast, safe car</strong></span>
+<span class="green"><strong>palindrome detected: racecar</strong></span>
+<span class="green"><strong>palindrome detected: radar</strong></span>
+<span class="green"><strong>palindrome detected: Was it a bar or a bat I saw?</strong></span>
+<span class="green"><strong>palindrome detected: Was it a car or a cat I saw?</strong></span>
+<span class="green"><strong>palindrome detected: Was it a cat I saw?</strong></span>
+<span class="green"><strong>palindrome detected: Yo, banana boy!</strong></span></pre>
+</div>
+<p class="noindent">Among others, we see a rather elaborate expansion on the simple palindrome “Dennis sinned” (<a href="ch09.xhtml#ch09fig01">Figure 9.1</a>)!<sup><a id="fn9_2" href="ch09.xhtml#fn9_2a">2</a></sup></p>
+<figure class="figure" id="ch09fig01">
+<img src="graphics/f0244-01.jpg" alt="Images" width="891" height="571"/>
+<figcaption>
+<p class="title-f">Figure 9.1: Dennis, Nell, Edna, Leon, Nedra, and many others <span class="lblue"><a href="https://en.wikipedia.org/wiki/Sinners_in_the_Hands_of_an_Angry_God">sinned</a></span>.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn9_2a" href="ch09.xhtml#fn9_2">2</a></sup>Image courtesy of Historical Images Archive/Alamy Stock Photo.</p>
+<p class="indent">This is a great start, but in fact <code><strong><span class="green">File</span></strong></code> includes a <code><strong><span class="green">readlines</span></strong></code> method that reads all the lines by default, without needing the additional <code><strong><span class="green">split</span></strong></code>. Applying this to <a href="ch09.xhtml#ch09ex02">Listing 9.2</a> gives <a href="ch09.xhtml#ch09ex03">Listing 9.3</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex03"><strong>Listing 9.3:</strong> Switching to <code><strong><span class="green">readlines</span></strong></code>.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0243-02" id="f0243-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+
+<span class="bg-o"><strong>lines <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>readlines(<span class="brown1">"phrases.txt"</span>)</strong></span>
+<span class="bg-o"><strong>lines<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>line<span class="gray">|</span></strong></span>
+  <strong><span class="lgreen">if</span> line<span class="gray">.</span>palindrome?</strong>
+    <strong><span class="lgreen">puts</span> <span class="brown1">"palindrome detected:</span> <span class="dpink">#{</span>line<span class="dpink">}</span><span class="brown1">"</span></strong>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">You should confirm at the command line that the result is the same. <em>Note</em>: Each element in <code><strong><span class="green">File.readlines</span></strong></code> actually <em>includes</em> a newline, so one might think the printed output would have an extra return between lines, but it turns out that <code><strong><span class="green">puts</span></strong></code> takes this into account and ignores the first newline at the end of a string. This also means that we should <code><strong><span class="green">join</span></strong></code> the array on the empty string rather than a newline, a detail we’ll put to use in a moment.</p>
+<span epub:type="pagebreak" id="page_244"></span>
+<p class="indent"><span epub:type="pagebreak" id="page_245"></span>Finally, let’s look at how to <em>write</em> files in Ruby. It could hardly be simpler; the template looks like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0245-01" id="f0245-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="brown-d">File</span><span class="gray">.</span>write(filename, content_string)</strong></pre>
+</div>
+<p class="noindent">Using the <code><strong><span class="green">lines</span></strong></code> variable defined in <a href="ch09.xhtml#ch09ex03">Listing 9.3</a>, we can use the <code><strong><span class="green">select</span></strong></code> method from <a href="ch06.xhtml#sec6_2">Section 6.2</a> to make an array of all the palindromes, like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0245-02" id="f0245-02a">Click here to view code image</a></p>
+<pre class="pre"><strong>palindromes <span class="gray">=</span> lines<span class="gray">.</span>select { <span class="gray">|</span>line<span class="gray">|</span> line<span class="gray">.</span>palindrome? }</strong></pre>
+</div>
+<p class="noindent">Because the <code><strong><span class="green">palindrome?</span></strong></code> method is called on each <code><strong><span class="green">line</span></strong></code> itself, we can even use the “symbol-to-proc” notation also mentioned in <a href="ch06.xhtml#sec6_2">Section 6.2</a>, like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0245-03" id="f0245-03a">Click here to view code image</a></p>
+<pre class="pre"><strong>palindromes <span class="gray">=</span> lines<span class="gray">.</span>select(<span class="gray">&amp;</span><span class="lblue-1">:palindrome</span>?)</strong></pre>
+</div>
+<p class="noindent">Joining the array (<a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a>) and writing the resulting string to a <code><strong><span class="green">palindromes_file.txt</span></strong></code> file is then just two lines total, as seen in <a href="ch09.xhtml#ch09ex04">Listing 9.4</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex04"><strong>Listing 9.4:</strong> Writing out the palindromes.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0245-04" id="f0245-04a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+
+<strong>lines <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>readlines(<span class="brown1">"phrases.txt"</span>)</strong>
+<strong>lines<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>line<span class="gray">|</span></strong>
+  <strong><span class="lgreen">if</span> line<span class="gray">.</span>palindrome?</strong>
+    <strong><span class="lgreen">puts</span> <span class="brown1">"palindrome detected:</span> <span class="dpink">#{</span>line<span class="dpink">}</span><span class="brown1">"</span></strong>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+
+<span class="bg-o"><strong>palindromes <span class="gray">=</span> lines<span class="gray">.</span>select(<span class="gray">&amp;</span><span class="lblue-1">:palindrome</span>?)</strong></span>
+<span class="bg-o"><strong><span class="brown-d">File</span><span class="gray">.</span>write(<span class="brown1">'palindromes_file.txt'</span>, palindromes<span class="gray">.</span>join)</strong></span></pre>
+</div>
+<p class="noindent">Confirming that this works is left as an exercise (<a href="ch09.xhtml#sec9_1_1">Section 9.1.1</a>).</p>
+<section>
+<h4 class="h4" id="sec9_1_1"><span epub:type="pagebreak" id="page_246"></span>9.1.1 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">You may have noticed some duplication in <a href="ch09.xhtml#ch09ex04">Listing 9.4</a>: We first detect all palindromes, writing them out one at a time, and then find a list of all palindromes again (using <code><strong><span class="green">select</span></strong></code>). Show that we can eliminate this duplication by replacing the whole file with the much more compact code shown in <a href="ch09.xhtml#ch09ex05">Listing 9.5</a>.</p></li>
+<li><p class="num-1">Ruby has many utilities for replicating standard Unix-style filesystem operations like <code><strong><span class="green">mv</span></strong></code>, <code><strong><span class="green">cp</span></strong></code>, and <code><strong><span class="green">rm</span></strong></code>, mostly concentrated in the <code><strong><span class="green">FileUtils</span></strong></code> <span class="lblue"><a href="https://ruby-doc.org/stdlib-2.5.0/libdoc/fileutils/rdoc/FileUtils.html">module</a></span>. Using <code><strong><span class="green">File.exist?</span></strong></code> and <code><strong><span class="green">FileUtils.rm</span></strong></code>, write a program to remove the file <code><strong><span class="green">palindromes_file.txt</span></strong></code> if it exists (you can use a file or irb). What happens if you use <code><strong><span class="green">FileUtils.rm</span></strong></code> (<em>without</em> <code><strong><span class="green">File.exist?</span></strong></code>) after removing the file?</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex05"><strong>Listing 9.5:</strong> Writing out palindromes the unduplicated way.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0246-01" id="f0246-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+
+<strong>palindromes <span class="gray">=</span> <span class="brown-d">File</span><span class="gray">.</span>readlines(<span class="brown1">'phrases.txt'</span>)<span class="gray">.</span>select(<span class="gray">&amp;</span><span class="lblue-1">:palindrome?</span>)</strong>
+<span class="bg-o"><strong>palindromes<span class="gray">.</span>each { <span class="gray">|</span>palindrome<span class="gray">|</span> <span class="lgreen">puts</span> <span class="brown1">"palindrome detected:</span> <span class="dpink">#{</span>palindrome<span class="dpink">}</span><span class="brown1">"</span> }</strong></span>
+<strong><span class="brown-d">File</span><span class="gray">.</span>write(<span class="brown1">'palindromes_file.txt'</span>, palindromes<span class="gray">.</span>join)</strong></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec9_2">9.2 Reading from URLs</h3>
+<p class="noindent">In this section, we’ll write a script whose effect is identical to the one in <a href="ch09.xhtml#sec9_1">Section 9.1</a>, except that it reads the <code><strong><span class="green">phrases.txt</span></strong></code> file directly from its public URL. By itself, the program doesn’t do anything fancy, but realize what a miracle this is: The ideas aren’t specific to the URL we’re hitting, which means that after this section you’ll have the power to write programs to access and process practically any site on the Web. (This practice, sometimes called “<span class="lblue"><a href="https://en.wikipedia.org/wiki/Web_scraping">web scraping</a></span>”, should be done with <span class="lblue"><a href="http://www.storybench.org/to-scrape-or-not-to-scrape-the-technical-and-ethical-challenges-of-collecting-data-off-the-web/">due consideration and caution</a></span>.)</p>
+<p class="indent">The main trick is to use the <code><strong><span class="green">OpenURI</span></strong></code> <span class="lblue"><a href="https://ruby-doc.org/stdlib-2.5.0/libdoc/open-uri/rdoc/OpenURI.html">module</a></span>, which we can include like this:</p>
+<span epub:type="pagebreak" id="page_247"></span>
+<div class="sidebar">
+<pre class="pre"><strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong></pre>
+</div>
+<p class="noindent">As noted in the <span class="lblue"><a href="https://ruby-doc.org/stdlib-2.5.0/libdoc/open-uri/rdoc/OpenURI.html">documentation</a></span>, this module includes an <code><strong><span class="green">open</span></strong></code> method that can just, well, open a URI (also called a URL; the <span class="lblue"><a href="https://danielmiessler.com/study/url-uri/">difference</a></span> rarely matters). Indeed, it even has a <code><strong><span class="green">readlines</span></strong></code> method to parallel the one on the <code><strong><span class="green">File</span></strong></code> class in <a href="ch09.xhtml#ch09ex03">Listing 9.3</a>, which means we can just copy that code while replacing only one line!</p>
+<p class="indent">We can create our script as in <a href="ch09.xhtml#sec9_1">Section 9.1</a>:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> touch palindrome_url</strong>
+<strong><span class="blue">$</span> chmod +x palindrome_url</strong></pre>
+</div>
+<p class="noindent">The only <span class="lblue"><a href="https://en.wikipedia.org/wiki/Diff">diffs</a></span> between the new script and the one in <a href="ch09.xhtml#ch09ex03">Listing 9.3</a> are the extra <code><strong><span class="green">require</span></strong></code> statement and changing <code><strong><span class="green">File.readlines(filename)</span></strong></code> to <code><strong><span class="green">open-(url).readlines</span></strong></code>. The resulting <code><strong><span class="green">palindrome_url</span></strong></code> script appears in <a href="ch09.xhtml#ch09ex06">Listing 9.6</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex06"><strong>Listing 9.6:</strong> Reading a URL.<br/><code><em>palindrome_url</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0247-01" id="f0247-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'&lt;username&gt;_palindrome'</span></strong>
+<span class="bg-o"><strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong></span>
+
+<span class="bg-o"><strong>lines <span class="gray">=</span> <span class="brown1">URI</span><span class="gray">.</span>open(<span class="brown1">'https://cdn.learnenough.com/phrases.txt'</span>)<span class="gray">.</span>readlines</strong></span>
+<strong>lines<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>line<span class="gray">|</span></strong>
+  <strong><span class="lgreen">if</span> line<span class="gray">.</span>palindrome?</strong>
+    <strong><span class="lgreen">puts</span> <span class="brown1">"palindrome detected:</span> <span class="dpink">#{</span>line<span class="dpink">}</span><span class="brown1">"</span></strong>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span></pre>
+</div>
+<p class="indent">At this point, we’re ready to try the script out at the command line:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0247-02" id="f0247-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ./palindrome_url</strong>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span epub:type="pagebreak" id="page_248"></span>
+<strong><span class="green">palindrome detected: Dennis sinned.</span></strong>
+<strong><span class="green">palindrome detected: Dennis and Edna sinned.</span></strong>
+<strong><span class="green">palindrome detected: Dennis, Nell, Edna, Leon, Nedra, Anita, Rolf, Nora,</span></strong>
+<strong><span class="green">Alice, Carol, Leo, Jane, Reed, Dena, Dale, Basil, Rae, Penny, Lana, Dave,</span></strong>
+<strong><span class="green">Denny, Lena, Ida, Bernadette, Ben, Ray, Lila, Nina, Jo, Ira, Mara, Sara,</span></strong>
+<strong><span class="green">Mario, Jan, Ina, Lily, Arne, Bette, Dan, Reba, Diane, Lynn, Ed, Eva, Dana,</span></strong>
+<strong><span class="green">Lynne, Pearl, Isabel, Ada, Ned, Dee, Rena, Joel, Lora, Cecil, Aaron, Flora,</span></strong>
+<strong><span class="green">Tina, Arden, Noel, and Ellen sinned.</span></strong>
+<strong><span class="green">palindrome detected: Go hang a salami, I'm a lasagna hog.</span></strong>
+<strong><span class="green">palindrome detected: level</span></strong>
+<strong><span class="green">palindrome detected: Madam, I'm Adam.</span></strong>
+<strong><span class="green">palindrome detected: No "x" in "Nixon"</span></strong>
+<strong><span class="green">palindrome detected: No devil lived on</span></strong>
+<strong><span class="green">palindrome detected: Race fast, safe car</span></strong>
+<strong><span class="green">palindrome detected: racecar</span></strong>
+<strong><span class="green">palindrome detected: radar</span></strong>
+<strong><span class="green">palindrome detected: Was it a bar or a bat I saw?</span></strong>
+<strong><span class="green">palindrome detected: Was it a car or a cat I saw?</span></strong>
+<strong><span class="green">palindrome detected: Was it a cat I saw?</span></strong>
+<strong><span class="green">palindrome detected: Yo, banana boy!</span></strong></pre>
+</div>
+<p class="noindent">Amazing! The result is exactly as we saw in <a href="ch09.xhtml#sec9_1">Section 9.1</a>, but this time, we got the data right off the live Web.</p>
+<p class="indent">By the way, if you actually visit the URL <span class="lblue"><a href="https://cdn.learnenough.com/phrases.txt">cdn.learnenough.com/phrases.txt</a></span>, you’ll find that in fact it <em>forwards</em> (using a <span class="lblue"><a href="https://en.wikipedia.org/wiki/HTTP_301">301 redirect</a></span>) to a page on Amazon’s Simple Storage Service (S3), as seen in <a href="ch09.xhtml#ch09fig02">Figure 9.2</a>.</p>
+<figure class="figure" id="ch09fig02">
+<img src="graphics/f0249-01.jpg" alt="Images" width="879" height="679"/>
+<figcaption>
+<p class="title-f">Figure 9.2: Visiting the phrase URL.</p>
+</figcaption>
+</figure>
+<p class="indent">Luckily, the <code><strong><span class="green">open</span></strong></code> function we used in <a href="ch09.xhtml#ch09ex06">Listing 9.6</a> automatically follows such redirects, so the script worked as written, but this behavior is not universal among URL libraries. Depending on the exact library you use, you might have to manually configure the web requester to follow redirects.</p>
+<section>
+<h4 class="h4" id="sec9_2_1">9.2.1 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">In analogy with <a href="ch09.xhtml#ch09ex04">Listing 9.4</a>, add code to <a href="ch09.xhtml#ch09ex06">Listing 9.6</a> that writes out a file called <code><strong><span class="green">palindromes_url.txt</span></strong></code>. Confirm using the <code><strong><span class="green">diff</span></strong></code> <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/redirecting_and_appending#sec-redirecting_and_appending">utility</a></span> that the output is identical to the <code><strong><span class="green">palindromes_file.txt</span></strong></code> file from <a href="ch09.xhtml#sec9_1">Section 9.1</a>.</p></li>
+<li><p class="num-1">Modify <a href="ch09.xhtml#ch09ex06">Listing 9.6</a> to use the more compact programming style seen in <a href="ch09.xhtml#ch09ex05">Listing 9.5</a> (including the step to write out the file).</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_249"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec9_3"><span epub:type="pagebreak" id="page_250"></span>9.3 DOM Manipulation at the Command Line</h3>
+<p class="noindent">In this final section, we’re going to put the URL-reading tricks we learned in <a href="ch09.xhtml#sec9_2">Section 9.2</a> to good use by writing a version of an actual utility script I once wrote for myself. To begin, I’ll explain the context in which the script arose, and the problem it solves.</p>
+<p class="indent">In recent years, there has been an explosion in the resources available for learning foreign languages, including things like <span class="lblue"><a href="https://www.duolingo.com/">Duolingo</a></span>, <span class="lblue"><a href="https://translate.google.com/">Google Translate</a></span>, and native OS support for multilingual text-to-speech (TTS). A few years ago, I decided to take advantage of this opportunity to brush up on my high-school/college Spanish.</p>
+<p class="indent">One of the resources I found myself turning to was Wikipedia, with its huge number of articles in languages other than English. In particular, I discovered how useful it was to copy text from Spanish-language Wikipedia (<a href="ch09.xhtml#ch09fig03">Figure 9.3</a>) and drop it into Google Translate (<a href="ch09.xhtml#ch09fig04">Figure 9.4</a>). At that point, I could use the text-to-speech from either Google Translate (the red square in <a href="ch09.xhtml#ch09fig04">Figure 9.4</a>) or macOS to hear the words spoken in Spanish, while following along with either the native language or the translation. <span class="lblue"><a href="https://translate.google.com/#auto/en/Esmuy%C3%BAtil">Es muy útil</a>.</span></p>
+<figure class="figure" id="ch09fig03">
+<img src="graphics/f0251-01.jpg" alt="Images" width="878" height="679"/>
+<figcaption>
+<p class="title-f">Figure 9.3: <span class="lblue"><a href="https://translate.google.com/#auto/en/Unart%C3%ADculosobreRuby">Un artículo sobre Ruby</a></span>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch09fig04">
+<img src="graphics/f0252-01.jpg" alt="Images" width="878" height="679"/>
+<figcaption>
+<p class="title-f">Figure 9.4: An article about Ruby dropped into Google Translate.</p>
+</figcaption>
+</figure>
+<p class="indent">After a while, I noticed two consistent sources of friction:</p>
+<ul class="sq">
+<li><p class="bull">Copying a large number of paragraphs by hand was cumbersome.</p></li>
+<li><p class="bull">Hand-copying text often selected things that I didn’t want, particularly <em>reference numbers</em>, which the TTS system duly pronounced, resulting in random numbers in the middle of sentences (e.g., “siguiendo los principios de una buena interfaz de usuario.1” = “Following the principles of a good user interface.1[uno]” <span class="lblue"><a href="https://translate.google.com/#auto/en/%C2%BFQu%C3%A9pas%C3%B3?">¿Qué pasó</a></span>?).</p></li>
+</ul>
+<p class="noindent">Friction like this has inspired many a utility script, and thus was born <code><strong><span class="green">wikp</span></strong></code> (“Wikipedia paragraphs”), a program to download a Wikipedia article’s HTML source, extract its paragraphs, and eliminate its reference numbers, dumping all the results to the screen.</p>
+<p class="indent">The original <code><strong><span class="green">wikp</span></strong></code> program was written in Ruby; what appears here is a slightly simplified version. Let’s think about how it will work.</p>
+<span epub:type="pagebreak" id="page_251"></span>
+<span epub:type="pagebreak" id="page_252"></span>
+<p class="indent"><span epub:type="pagebreak" id="page_253"></span>We already know from <a href="ch09.xhtml#ch09ex06">Listing 9.6</a> how to download the source of a URL. The remaining tasks are then to:</p>
+<ul class="sq">
+<li><p class="bull">Take an arbitrary URL argument at the command line</p></li>
+<li><p class="bull">Manipulate the downloaded HTML using the DOM (<a href="ch09.xhtml#ch09fig05">Figure 9.5</a>)</p></li>
+<li><p class="bull">Remove the references</p></li>
+<li><p class="bull">Collect and print the paragraphs</p></li>
+</ul>
+<figure class="figure" id="ch09fig05">
+<img src="graphics/f0253-01.jpg" alt="Images" width="830" height="504"/>
+<figcaption>
+<p class="title-f">Figure 9.5: The Document Object Model (DOM).</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s get started by creating the initial script:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> touch wikp</strong>
+<strong><span class="blue">$</span> chmod +x wikp</strong></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_254"></span>Now we’re ready to get going on the main program. For each task above, I’ll include the kind of Google search you might use to figure out how to do it.</p>
+<p class="indent">The first step is to install a Ruby gem called <code>nokogiri</code> (named for a kind of <span class="lblue">Japanese saw</span>) that can manipulate the DOM <span class="lblue">(ruby dom manipulation</span>):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0254-01" id="f0254-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> gem install nokogiri -v <span class="gray">1</span>.8.5</strong>
+<strong><span class="green">Building native extensions. This could take a while...</span></strong></pre>
+</div>
+<p class="indent">Our principal task is sometimes known as “HTML <span class="lblue">parsing</span>”, and Nokogiri comes equipped with a powerful HTML parser. The <span class="lblue">official Nokogiri website</span> has a bunch of useful tutorials; for our purposes, the most important method looks like <a href="ch09.xhtml#ch09ex07">Listing 9.7</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex07"><strong>Listing 9.7:</strong> Parsing some HTML.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f0254-02" id="f0254-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="blue">&gt;&gt;</span> <span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+<strong><span class="blue">&gt;&gt;</span> html <span class="gray">=</span> <span class="brown1">'&lt;p&gt;lorem&lt;sup class="reference"&gt;1&lt;/sup&gt;&lt;/p&gt;&lt;p&gt;ipsum&lt;/p&gt;'</span></strong>
+<strong><span class="blue">&gt;&gt;</span> doc <span class="gray">=</span> <span class="brown-d">Nokogiri</span><span class="gray">::</span><span class="brown-d">HTML</span>(html)</strong>
+<strong><span class="green">=&gt; #&lt;Nokogiri::HTML::Document:0x3fd87e023b18...</span></strong></pre>
+</div>
+<p class="noindent">The resulting <code><strong><span class="green">doc</span></strong></code> variable is a Nokogiri document, in this case with two paragraphs, one of which contains a <code><strong><span class="green">sup</span></strong></code> (superscript) tag with CSS class <code><strong><span class="green">reference</span></strong></code>. Nokogiri documents can be manipulated in any number of ways.</p>
+<p class="indent">My favorite Nokogiri method for selecting elements is <code><strong><span class="green">css</span></strong></code>, which lets us pull out HTML tags (<span class="lblue">nokogiri select html tag</span>) and CSS ids/classes (<span class="lblue">nokogiri select css id class</span>) using an intuitive syntax. For example:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0254-03" id="f0254-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)</strong>
+<strong><span class="green">=&gt; [#&lt;Nokogiri::XML::Element:0x3fd87e022664 name="p"...</span></strong>
+<strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)<span class="gray">.</span>length</strong>
+<strong><span class="green">=&gt; 2</span></strong>
+<strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)<span class="gray">[0]</span>.content</strong>
+<strong><span class="green">=&gt; "lorem1"</span></strong></pre>
+</div>
+<p class="noindent">We see from the final line that we can get the content of a particular result using the <code><strong><span class="green">content</span></strong></code> method, which in this case includes the reference number <code><strong><span class="green">1</span></strong></code>. <span epub:type="pagebreak" id="page_255"></span>Meanwhile, we can grab the elements (in this case, only one) with a <code><strong><span class="green">reference</span></strong></code> class using the same dot notation as in CSS:<sup><a id="fn9_3" href="ch09.xhtml#fn9_3a">3</a></sup></p>
+<p class="footnote"><sup><a id="fn9_3a" href="ch09.xhtml#fn9_3">3</a></sup>By printing out the result of the <code><strong><span class="green">css</span></strong></code> method, you can confirm that it’s not actually an <code><strong><span class="green">Array</span></strong></code>, but rather a custom Nokogiri class. And yet, we can call <code><strong><span class="green">each</span></strong></code> on it just as we would an ordinary array. Ruby’s ability to manipulate objects in this way, based on how they act rather than on their formal class type, is called <em>duck typing</em>, based on the aphorism that “If it looks like a duck, and it quacks like a duck, it’s probably a duck.”</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0255-01" id="f0255-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)</strong>
+<strong><span class="green">=&gt; [#&lt;Nokogiri::XML::Element:0x3fd87e04d60c name="sup"...</span></strong>
+<strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)<span class="gray">.</span>length</strong>
+<strong><span class="green">=&gt; 1</span></strong></pre>
+</div>
+<p class="indent">Perhaps you can see where we’re going with this. We’re now in a position to parse an HTML document and select all the paragraphs and all the references (assuming, of course, they have class <code><strong><span class="green">reference</span></strong></code>). All we need now is a way to <em>remove</em> the references. As it happens, this is not hard at all (<span class="lblue"><a href="https://www.google.com/search?q=nokogiri+remove+element">nokogiri remove element</a></span>), as seen in <a href="ch09.xhtml#ch09ex08">Listing 9.8</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex08"><strong>Listing 9.8:</strong> Removing DOM elements.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f0255-02" id="f0255-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)<span class="gray">.</span>each { <span class="gray">|</span>reference<span class="gray">|</span> reference<span class="gray">.</span>remove }</strong></pre>
+</div>
+<p class="noindent">Then, we can collect all the paragraph content using <code><strong><span class="green">map</span></strong></code> from <a href="ch06.xhtml#sec6_1">Section 6.1</a>, as shown in <a href="ch09.xhtml#ch09ex09">Listing 9.9</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex09"><strong>Listing 9.9:</strong> Mapping paragraph content.</p>
+<p class="codelink"><a href="ch09_images.xhtml#f0255-03" id="f0255-03a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="blue">&gt;&gt;</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)<span class="gray">.</span>map { <span class="gray">|</span>paragraph<span class="gray">|</span> paragraph<span class="gray">.</span>content }</strong>
+<strong><span class="green">=&gt; ["lorem", "ipsum"]</span></strong></pre>
+</div>
+<p class="noindent">In the full script, we’ll join this on newlines to get a nicely formatted output of the paragraph content.</p>
+<p class="indent">First, we’ll take in the URL as a command-line argument (<span class="lblue"><a href="https://www.google.com/search?q=ruby+script+command+line+argument">ruby script command line argument</a></span>), as seen in <a href="ch09.xhtml#ch09ex010">Listing 9.10</a>. Note that we’ve included a <code><strong><span class="green">puts</span></strong></code> line as a temporary way to track our progress.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex010"><span epub:type="pagebreak" id="page_256"></span><strong>Listing 9.10:</strong> Accept a command-line argument.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0256-01" id="f0256-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+
+<span class="ash-m"><strong><em># Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></strong></span>
+<span class="ash-m"><strong><em># Especially useful for text-to-speech (both native and foreign).</em></strong></span>
+
+<span class="bg-o"><strong>url <span class="gray">=</span> <span class="brown-d">ARGV</span><span class="gray">[0]</span></strong></span>
+
+<strong><span class="lgreen">puts</span> url</strong></pre>
+</div>
+<p class="noindent">We can confirm that <a href="ch09.xhtml#ch09ex010">Listing 9.10</a> works as advertised:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0256-02" id="f0256-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ./wikp https://es.wikipedia.org/wiki/Ruby</strong>
+<strong><span class="green">https://es.wikipedia.org/wiki/Ruby</span></strong></pre>
+</div>
+<p class="indent">Next, we need to open the URL and read its contents. We saw both <code><strong><span class="green">File.-read</span></strong></code> and <code><strong><span class="green">File.readlines</span></strong></code> in <a href="ch09.xhtml#sec9_1">Section 9.1</a>, and <code><strong><span class="green">open(url).readlines</span></strong></code> in <a href="ch09.xhtml#sec9_2">Section 9.2</a>, so perhaps it won’t surprise you that you can read the full contents of a URL with <code><strong><span class="green">URL.open(url).read</span></strong></code> (<span class="lblue"><a href="https://www.google.com/search?q=ruby+open+url+read">ruby open url read</a></span>). Combining the result with the Nokogiri parsing in <a href="ch09.xhtml#ch09ex07">Listing 9.7</a> gives <a href="ch09.xhtml#ch09ex011">Listing 9.11</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex011"><strong>Listing 9.11:</strong> Parsing the live URL with Nokogiri.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0256-03" id="f0256-03a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+
+<span class="ash-m"><strong><em># Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></strong></span>
+<span class="ash-m"><strong><em># Especially useful for text-to-speech (both native and foreign).</em></strong></span>
+
+<strong>url <span class="gray">=</span> <span class="brown-d">ARGV</span><span class="gray">[0]</span></strong>
+<span class="bg-o"><strong>doc <span class="gray">=</span> <span class="brown-d">Nokogiri</span><span class="gray">::</span><span class="brown-d">HTML</span>(<span class="brown-d">URI</span><span class="gray">.</span>open(url)<span class="gray">.</span>read)</strong></span></pre>
+</div>
+<p class="indent">Now all we need to do is apply the reference removal and paragraph collection code from <a href="ch09.xhtml#ch09ex08">Listing 9.8</a> and <a href="ch09.xhtml#ch09ex09">Listing 9.9</a>. As hinted above, Wikipedia identifies its references with the <code><strong><span class="green">.reference</span></strong></code> class, which we can confirm using a <span epub:type="pagebreak" id="page_257"></span><span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_css/templates_and_frontmatter/pages-folders#sec-pages-folders">web inspector</a></span> (<a href="ch09.xhtml#ch09fig06">Figure 9.6</a>). This suggests the reference removal code shown in <a href="ch09.xhtml#ch09ex012">Listing 9.12</a>.</p>
+<figure class="figure" id="ch09fig06">
+<img src="graphics/f0257-01.jpg" alt="Images" width="878" height="679"/>
+<figcaption>
+<p class="title-f">Figure 9.6: Viewing a reference in the web inspector.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex012"><strong>Listing 9.12:</strong> Removing the references.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0257-02" id="f0257-02a">Click here to view code image</a></p>
+
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+
+<span class="ash-m"><strong><em># Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></strong></span>
+<span class="ash-m"><strong><em># Especially useful for text-to-speech (both native and foreign).</em></strong></span>
+<span epub:type="pagebreak" id="page_258"></span>
+<strong>url <span class="gray">=</span> <span class="brown-d">ARGV</span><span class="gray">[0]</span></strong>
+<strong>doc <span class="gray">=</span> <span class="brown-d">Nokogiri</span><span class="gray">::</span><span class="brown-d">HTML</span>(<span class="brown-d">URI</span><span class="gray">.</span>open(url)<span class="gray">.</span>read)</strong>
+<span class="bg-o"><strong>doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)<span class="gray">.</span>each { <span class="gray">|</span>reference<span class="gray">|</span> reference<span class="gray">.</span>remove }</strong></span></pre>
+</div>
+<p class="indent">Now all that’s left is to extract the paragraph content and print it out (<a href="ch09.xhtml#ch09ex013">Listing 9.13</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex013"><strong>Listing 9.13:</strong> Printing the content.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0258-02" id="f0258-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+
+<span class="ash-m"><strong><em># Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></strong></span>
+<span class="ash-m"><strong><em># Especially useful for text-to-speech (both native and foreign).</em></strong></span>
+
+<strong>url <span class="gray">=</span> <span class="brown-d">ARGV</span><span class="gray">[0]</span></strong>
+<strong>doc <span class="gray">=</span> <span class="brown-d">Nokogiri</span><span class="gray">::</span><span class="brown-d">HTML</span>(<span class="brown-d">URI</span><span class="gray">.</span>open(url)<span class="gray">.</span>read)
+doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)<span class="gray">.</span>each { <span class="gray">|</span>reference<span class="gray">|</span> reference<span class="gray">.</span>remove }</strong>
+<span class="bg-o"><strong>content_array <span class="gray">=</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)<span class="gray">.</span>map { <span class="gray">|</span>paragraph<span class="gray">|</span> paragraph<span class="gray">.</span>content }</strong></span>
+<span class="bg-o"><strong><span class="lgreen">puts</span> content_array<span class="gray">.</span>join(<span class="brown1">"</span><span class="dyellow">\n</span><span class="brown1">"</span>)</strong></span></pre>
+</div>
+<p class="indent">Let’s see how things went:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch09_images.xhtml#f0258-03" id="f0258-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ./wikp https://es.wikipedia.org/wiki/Ruby</strong>
+<span class="green"><strong>Ruby es un lenguaje de programación interpretado, reflexivo y orientado a</strong></span>
+<span class="green"><strong>objetos, creado por el programador japonés Yukihiro "Matz" Matsumoto, quien</strong></span>
+<span class="green"><strong>comenzó a trabajar en Ruby en 1993, y lo presentó públicamente en 1995.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>A partir de la versión 1.9.3 se opta por una licencia dual bajo las licencias</strong></span>
+<span class="green"><strong>BSD de dos cláusulas y Licencia pública Ruby.</strong></span></pre>
+</div>
+<p class="noindent">Success! By scrolling up in our terminal, we can now select all the text and drop it into Google Translate or a text editor of our choice. On macOS, we can do even better by <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_command_line/inspecting_files/making_heads_and_tails#sec-wordcount_and_pipes">piping</a></span> the results to <code><strong><span class="green">pbcopy</span></strong></code>, which automatically copies the results to the macOS <strong>p</strong>aste<strong>b</strong>oard (also called the “clipboard”):</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_259"></span><a href="ch09_images.xhtml#f0259-01" id="f0259-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> ./wikp https://es.wikipedia.org/wiki/Ruby | pbcopy</strong></pre>
+</div>
+<p class="noindent">At this point, pasting into Google Translate (or anywhere else) will paste the full text.</p>
+<p class="indent">As a final bit of polish, I can’t resist converting both the <code><strong><span class="green">each</span></strong></code> and <code><strong><span class="green">map</span></strong></code> lines to use the “symbol-to-proc” notation (which also makes it convenient to eliminate the <code><strong><span class="green">content_array</span></strong></code> variable), yielding the final <code><strong><span class="green">wikp</span></strong></code> script shown in <a href="ch09.xhtml#ch09ex014">Listing 9.14</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch09ex014"><strong>Listing 9.14:</strong> The final Wikipedia paragraph script.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#f0259-02" id="f0259-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong><span class="ash-m"><em>#!/usr/bin/env ruby</em></span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'open-uri'</span></strong>
+<strong><span class="lgreen">require</span> <span class="brown1">'nokogiri'</span></strong>
+
+<span class="ash-m"><strong><em># Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></strong></span>
+<span class="ash-m"><strong><em># Especially useful for text-to-speech (both native and foreign).</em></strong></span>
+
+<strong>url <span class="gray">=</span> <span class="brown-d">ARGV</span><span class="gray">[0]</span></strong>
+<strong>doc <span class="gray">=</span> <span class="brown-d">Nokogiri</span><span class="gray">::</span><span class="brown-d">HTML</span>(<span class="brown-d">URI</span><span class="gray">.</span>open(url)<span class="gray">.</span>read)</strong>
+<span class="bg-o"><strong>doc<span class="gray">.</span>css(<span class="brown1">'.reference'</span>)<span class="gray">.</span>each(<span class="gray">&amp;</span><span class="lblue-1">:remove</span>)</strong></span>
+<span class="bg-o"><strong><span class="lgreen">puts</span> doc<span class="gray">.</span>css(<span class="brown1">'p'</span>)<span class="gray">.</span>map(<span class="gray">&amp;</span><span class="lblue-1">:content</span>)<span class="gray">.</span>join(<span class="brown1">"</span><span class="dyellow">\n</span><span class="brown1">"</span>)</strong></span></pre>
+</div>
+<p class="indent">Consider how remarkable an accomplishment this is. The script in <a href="ch09.xhtml#ch09ex014">Listing 9.14</a> is a little tricky—and to get such a thing working completely on your own might involve more than a few <code><strong><span class="green">puts</span></strong></code> statements as you go along—but it’s really only four lines: <span class="lblue"><a href="https://www.youtube.com/watch?v=THNPmhBl-8I">not exactly rocket science</a></span>. And yet, it’s genuinely useful, something that (if you’re active in foreign-language learning) you might well use all the time. Moreover, the basic skills involved—including not just the programming, but also the technical sophistication (&lt;cough&gt;Googling&lt;/cough&gt;) —unlock a huge number of potential applications.</p>
+<section>
+<h4 class="h4" id="sec9_3_1">9.3.1 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">By moving the file or changing your system’s configuration, add the <code><strong><span class="green">wikp</span></strong></code> script to your environment’s PATH. (You may find the <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/writing_an_executable_script#sec-writing_an_executable_script">steps</a></span> in <em><span class="lblue"><a href="https://www.learnenough.com/text-editor">Learn <span epub:type="pagebreak" id="page_260"></span>Enough Text Editor to Be Dangerous</a></span></em> helpful.) Confirm that you can run <code><strong><span class="green">wikp</span></strong></code> without prepending <code><strong><span class="green">./</span></strong></code> to the command name. <em>Note</em>: If you have a conflicting <code><strong><span class="green">wikp</span></strong></code> program from following <em><span class="lblue"><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></span></em>, I suggest replacing it—thus demonstrating the principle that the file’s name is the user interface, and the implementation can change language without affecting users.</p></li>
+<li><p class="num-1">What happens if you run <code><strong><span class="green">wikp</span></strong></code> with no argument? Add code to your script to detect the absence of a command-line argument and output an appropriate usage statement. <em>Hint</em>: After printing out the usage statement, you will have to <em>exit</em>, which you can learn how to do with the search <span class="lblue"><a href="https://www.google.com/search?q=ruby+how+to+exit+script">ruby how to exit script</a></span>. <em>Extra credit</em>: Switch to using <code><strong><span class="green">Array#shift</span></strong></code> to extract the command-line argument. This is a common pattern in Ruby scripts, allowing multiple arguments to be processed in turn.</p></li>
+<li><p class="num-1">The “pipe to <code><strong><span class="green">pbcopy</span></strong></code>” trick mentioned in the text works only on macOS, but any Unix-compatible system can <span class="lblue"><a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/redirecting_and_appending#sec-redirecting_and_appending">redirect</a></span> the output to a file. What’s the command to redirect the output of <code><strong><span class="green">wikp</span></strong></code> to a file called <code><strong><span class="green">article.-txt</span></strong></code>? (You could then open this file, select all, and copy the contents, which has the same basic result as piping to <code><strong><span class="green">pbcopy</span></strong></code>.)</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

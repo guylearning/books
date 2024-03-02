@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch06"><span epub:type="pagebreak" id="page_149"></span>Chapter 6</h2>
+<h2 class="h2a">Functional Programming</h2>
+<p class="noindent">Having learned how to define functions and apply them in a couple of different contexts, now we’re going to take our programming to the next level by learning the basics of <em>functional programming</em>, a style of programming that emphasizes—you guessed it—functions. As we’ll see, functional programming in Python frequently employs a powerful (and very Pythonic) class of techniques called <em>comprehensions</em>, which typically involve using functions to conveniently construct Python objects with particular elements. The most common comprehensions are <em>list comprehensions</em> and <em>dictionary comprehensions</em>, which make lists and dictionaries, respectively. We’ll also see an example of how to use <em>generator comprehensions</em> to replicate the results of <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a>, as well as a brief introduction to <em>set comprehensions</em>.</p>
+<p class="indent">This is a challenging chapter, and you may have to get in some reps to fully grok it (<a href="ch06.xhtml#ch6box1">Box 6.1</a>), but the rewards are rich indeed.</p>
+<div class="box">
+<p class="box-title" id="ch6box1"><strong>Box 6.1: Getting in your reps</strong></p>
+<p class="sb-noindent">In contexts ranging from martial arts to chess to language learning, practitioners will reach a point where no amount of analysis or reflection will help them improve—they just need to get in some more repetitions, or “reps”.</p>
+<p class="sb-indent">It’s amazing how much you can improve by trying something, kinda-sorta (but maybe not quite) getting it, and then just <em>doing it again</em>. In the context of a tutorial like this one, sometimes that means rereading a particularly tricky section or chapter. Some people (including yours truly) will even reread an entire book.</p>
+<p class="sb-indent">One important aspect of getting in your reps is <em>suspending self-judgment</em>—allow yourself not to be good right away. (Many people—including, again, yours <span epub:type="pagebreak" id="page_150"></span>truly—often require practice to get good at being okay with not being good right away. Meta-reps, as it were.)</p>
+<p class="sb-indent">Give yourself a break, get in your reps, and watch your technical sophistication grow by the day.</p>
+</div>
+<p class="indent">Our general technique for approaching functional programming will be to perform a task involving a sequence of commands (called “imperative programming”,<sup><a id="fn6_1a" href="ch06.xhtml#fn6_1">1</a></sup> which is what we’ve mostly been doing so far), and then show how to do the same thing using functional programming.</p>
+<p class="footnote"><a id="fn6_1" href="ch06.xhtml#fn6_1a">1.</a> From Latin <em>imperātīvus</em>, “proceeding from a command.”</p>
+<p class="indent">For convenience, we’ll create a file for our explorations, rather than typing everything at the REPL:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch functional.py</code></pre>
+<section>
+<h3 class="h3" id="sec6_1">6.1 List Comprehensions</h3>
+<p class="noindent">We begin our study of functional programming with a technique that will give you an Einstein-level comprehension of Python (<a href="ch06.xhtml#ch6fig1">Figure 6.1</a><sup><a id="fn6_2a" href="ch06.xhtml#fn6_2">2</a></sup>). This technique, known as <em>list comprehensions</em>, lets us use functions to build up lists using a single command. Its effects are broadly similar to the <span class="pd_green-d"><code><strong>map</strong></code></span> function covered in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>) and <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>)—indeed, Python itself supports <span class="pd_green-d"><code><strong>map</strong></code></span>, but list comprehensions are much more Pythonic.</p>
+<figure class="image-c" id="ch6fig1">
+<img src="graphics/06fig01.jpg" alt="images" width="413" height="513"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.1:</strong> Albert Einstein was a master of comprehensions.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn6_2" href="ch06.xhtml#fn6_2a">2.</a> Image courtesy of GL Archive/Alamy.</p>
+<p class="indent">Let’s look at a concrete example. Suppose we had a list of mixed-case strings, and we wanted to create a corresponding list of lowercase strings joined on a hyphen (making the result appropriate for use in URLs), like this:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f150-01" id="f150-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">"North Dakota" -&gt; "north-dakota"</span></code></pre>
+<p class="noindent">Using previous techniques from this tutorial, we could do this as follows:</p>
+<ol class="number">
+<li><p class="number">Define a variable containing a list of strings.</p></li>
+<li><p class="number">Define a second variable (initially empty) for the URL-friendly list of strings.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_151"></span>For each item in the first list, <span class="pd_green-d"><code><strong>append()</strong></code></span> (<a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a>) a lowercase version (<a href="ch02.xhtml#sec2_5">Section 2.5</a>) that’s been split on whitespace (<a href="ch04.xhtml#sec4_3">Section 4.3</a>) and then joined (<a href="ch03.xhtml#sec3_4_4">Section 3.4.4</a>) on hyphens. (You could split on a single space <span class="pd_green-d"><code><strong>" "</strong></code></span> instead, but splitting on whitespace is so much more robust that it’s a good practice to use it by default.)</p></li>
+</ol>
+<p class="indent">Let’s build this up in the REPL before putting it into our file. We’ll start with an example of Step 3 for a single state:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f151-01" id="f151-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> state <span class="pd_gray">=</span> <span class="pd_red">"North Dakota"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> state<span class="pd_gray">.</span>lower()
+<span class="pd_green-d">'north dakota'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split()
+<span class="pd_green-d">['north', 'dakota']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"-"</span><span class="pd_gray">.</span>join(state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split())
+<span class="pd_green-d">'north-dakota'</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_152"></span>Note the use of the combination <span class="pd_green-d"><code><strong>lower().split()</strong></code></span>, which applies two methods in succession in a process known as <em>method chaining</em>. While not as prevalent in Python as in some other object-oriented languages (due in large part to Python’s use of iterators (<a href="ch05.xhtml#sec5_3">Section 5.3</a>)), it is still definitely worth knowing.</p>
+<p class="indent">Combining this <span class="pd_green-d"><code><strong>join()</strong></code></span> with the other steps outlined above gives us the code shown in <a href="ch06.xhtml#ch6list1">Listing 6.1</a>. This is fairly complicated code, so being able to read <a href="ch06.xhtml#ch6list1">Listing 6.1</a> is a good test of your growing technical sophistication. (If it isn’t easy to read, firing up the Python interpreter and getting it to work in the REPL is a good idea.)</p>
+<p class="listing" id="ch6list1"><strong>Listing 6.1:</strong> Making URL-appropriate strings from a list.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f152-01" id="f152-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+
+<span class="pd_blue1"><em># urls: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_urls</span>(states):
+    urls <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+      urls<span class="pd_gray">.</span>append(<span class="pd_red">"-"</span><span class="pd_gray">.</span>join(state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split()))
+    <span class="pd_green"><strong>return</strong></span> urls
+
+<span class="pd_green">print</span>(imperative_urls(states))</code></pre>
+</div>
+<p class="indent">The result of running <a href="ch06.xhtml#ch6list1">Listing 6.1</a> looks like this:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f152-02" id="f152-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']</span></code></pre>
+<p class="indent">Now let’s see how we can do the same thing using a list comprehension. We’ll start with a few simpler examples, beginning with one that simply replicates the <span class="pd_green-d"><code><strong>list()</strong></code></span> function:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f152-03" id="f152-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(<span class="pd_green">range</span>(<span class="pd_gray">10</span>))                  <span class="pd_blue1"><em># list() function</em></span>
+<span class="pd_green-d">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10</span>)]           <span class="pd_blue1"><em># List comprehension</em></span>
+<span class="pd_green-d">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span></code></pre>
+<p class="noindent">The second command—the list comprehension—creates a list consisting of each <span class="pd_green-d"><code><strong>n</strong></code></span> for <span class="pd_green-d"><code><strong>n</strong></code></span> in the range 0–9. What makes it more flexible than <span class="pd_green-d"><code><strong>list()</strong></code></span> is that we can use it with other operations as well, such as squaring:</p>
+<span epub:type="pagebreak" id="page_153"></span>
+<p class="codelink"><a href="ch06_images.xhtml#f153-01" id="f153-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [n<span class="pd_gray">*</span>n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10</span>)]
+<span class="pd_green-d">[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span></code></pre>
+<p class="noindent">Applying a similar technique to a list of strings lets us create a list of lowercase versions by calling the <span class="pd_green-d"><code><strong>lower()</strong></code></span> method (which is just a type of function) on each string in turn:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f153-02" id="f153-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [s<span class="pd_gray">.</span>lower() <span class="pd_green"><strong>for</strong></span> s <span class="pd_pink"><strong>in</strong></span> [<span class="pd_red">"ALICE"</span>, <span class="pd_red">"BOB"</span>, <span class="pd_red">"CHARLIE"</span>]]
+<span class="pd_green-d">['alice', 'bob', 'charlie']</span></code></pre>
+<p class="indent">Returning to our main example, we can think of the transformation “convert to lowercase then split then join” as a single operation, and use a list comprehension to apply that operation in sequence to each element in the list. The result is so compact that it easily fits in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f153-03" id="f153-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [<span class="pd_red">"-"</span><span class="pd_gray">.</span>join(state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split()) <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states]
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']</span></code></pre>
+<p class="indent">Pasting this into <span class="pd_green-d"><code><strong>functional.py</strong></code></span>, we see just how much shorter it is, as shown in <a href="ch06.xhtml#ch6list2">Listing 6.2</a>.</p>
+<p class="listing" id="ch6list2"><strong>Listing 6.2:</strong> Adding a functional technique using a list comprehension.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f153-04" id="f153-04a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+
+<span class="pd_blue1"><em># urls: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_urls</span>(states):
+    urls <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+      urls<span class="pd_gray">.</span>append(<span class="pd_red">"-"</span><span class="pd_gray">.</span>join(state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split()))
+    <span class="pd_green"><strong>return</strong></span> urls
+
+<span class="pd_green">print</span>(imperative_urls(states))
+
+<span class="pd_blue1"><em># urls: Functional version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">functional_urls</span>(states):
+    <span class="pd_green"><strong>return</strong></span> [<span class="pd_red">"-"</span><span class="pd_gray">.</span>join(state<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split()) <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states]
+
+<span class="pd_green">print</span>(functional_urls(states))</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_154"></span>
+<p class="indent">We can confirm at the command line that the results are the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f154-01" id="f154-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+['kansas', 'nebraska', 'north-dakota', 'south-dakota']</span></code></pre>
+<p class="noindent">With Python list comprehensions, we can process those states without a <span class="pd_green-d"><code><strong>map</strong></code></span> (<a href="ch06.xhtml#ch6fig2">Figure 6.2</a><sup><a id="fn6_3a" href="ch06.xhtml#fn6_3">3</a></sup>).</p>
+<figure class="image-c" id="ch6fig2">
+<img src="graphics/06fig02.jpg" alt="images" width="722" height="481"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.2:</strong> Some list comprehensions are equivalent to a <span class="pd_green-d"><code><strong>map</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn6_3" href="ch06.xhtml#fn6_3a">3.</a> Image courtesy of Creative Jen Designs/Shutterstock.</p>
+<p class="indent">As a final refinement, let’s factor the method chain responsible for making the strings URL-compatible into a separate auxiliary function called <span class="pd_green-d"><code><strong>urlify()</strong></code></span>:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f154-02" id="f154-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">urlify</span>(string):
+    <span class="pd_red"><em>"""Return a URL-friendly version of a string.</em></span>
+
+    <span class="pd_red"><em>Example: "North Dakota" -&gt; "north-dakota"</em></span>
+<span epub:type="pagebreak" id="page_155"></span>
+    <span class="pd_red"><em>"""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">"-"</span><span class="pd_gray">.</span>join(string<span class="pd_gray">.</span>lower()<span class="pd_gray">.</span>split())</code></pre>
+<p class="noindent">Note that we’ve included a multi-line docstring that includes an example of a successful operation. Defining this function in <span class="pd_green-d"><code><strong>functional.py</strong></code></span> and using it in the imperative and functional versions gives the code in <a href="ch06.xhtml#ch6list3">Listing 6.3</a>.</p>
+<p class="listing" id="ch6list3"><strong>Listing 6.3:</strong> Defining an auxiliary function.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f155-01" id="f155-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_blue1"><strong>urlify</strong></span>(<strong>string</strong>):</span>
+<span class="b-y">    <span class="pd_red"><em>"""Return a URL-friendly version of a string</em>.</span></span>
+
+<span class="b-y">    <span class="pd_red"><em>Example: "North Dakota" -&gt; "north-dakota"</em></span></span>
+<span class="b-y">    <span class="pd_red"><em>"""</em></span></span>
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">"-"</span>.join(string.lower().split())</span>
+
+<span class="pd_blue1"><em># urls: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_urls</span>(states):
+    urls <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+<span class="b-y">      urls.append(urlify(state))</span>
+    <span class="pd_green"><strong>return</strong></span> urls
+
+<span class="pd_green">print</span>(imperative_urls(states))
+
+<span class="pd_blue1"><em># urls: Functional version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">functional_urls</span>(states):
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> [urlify(state) <span class="pd_green">for</span> state <span class="pd_pink">in</span> states]</span>
+
+<span class="pd_green">print</span>(functional_urls(states))</code></pre>
+</div>
+<p class="noindent">As before, the results are the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f155-02" id="f155-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+['kansas', 'nebraska', 'north-dakota', 'south-dakota']</span></code></pre>
+<p class="indent">Compared to the imperative version, the functional version is a fourth as many lines (1 instead of 4), doesn’t mutate any variables (often an error-prone step in <span epub:type="pagebreak" id="page_156"></span>imperative programming), and indeed eliminates the intermediate list (<span class="pd_green-d"><code><strong>urls</strong></code></span>) entirely. This is the sort of thing that makes Mike Vanier very happy (<a href="ch06.xhtml#ch6fig3">Figure 6.3</a><sup><a id="fn6_4a" href="ch06.xhtml#fn6_4">4</a></sup>).</p>
+<figure class="image-c" id="ch6fig3">
+<img src="graphics/06fig03.jpg" alt="images" width="282" height="375"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.3:</strong> Functional programming makes Mike Vanier happiest of all.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn6_4" href="ch06.xhtml#fn6_4a">4.</a> Last I checked, Mike’s favorite language was a “purely functional” language called Haskell. Image © Mike Vanier.</p>
+<section>
+<h4 class="h4" id="sec6_1_1">6.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using a list comprehension, write a function that takes in the <span class="pd_green-d"><code><strong>states</strong></code></span> variable and returns a list of URLs of the form <span class="pd_green-d"><code><strong>https://example.com/&lt;urlifiedform&gt;</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_2">6.2 List Comprehensions with Conditions</h3>
+<p class="noindent">In addition to supporting the creation of lists using <span class="pd_green-d"><code><strong>for</strong></code></span>, Python list comprehensions also support the use of conditions using <span class="pd_green-d"><code><strong>if</strong></code></span> to select only elements satisfying particular criteria. In this way, list comprehensions with conditions can replicate the behavior of JavaScript’s <span class="pd_green-d"><code><strong>filter</strong></code></span> and Ruby’s <span class="pd_green-d"><code><strong>select</strong></code></span>. (As with <span class="pd_green-d"><code><strong>map</strong></code></span>, Python actually supports this directly via <span class="pd_green-d"><code><strong>filter</strong></code></span>; also as with <span class="pd_green-d"><code><strong>map</strong></code></span>, the comprehension version is far more Pythonic.)</p>
+<span epub:type="pagebreak" id="page_157"></span>
+<p class="indent">Suppose, for example, that we wanted to select the strings in our <span class="pd_green-d"><code><strong>states</strong></code></span> list that consist of more than one word, keeping the names that have only one. As in <a href="ch06.xhtml#sec6_1">Section 6.1</a>, we’ll write an imperative version first:</p>
+<ol class="number">
+<li><p class="number">Define a list to store single-word strings.</p></li>
+<li><p class="number">For each element in the list, <span class="pd_green-d"><code><strong>append()</strong></code></span> it to the storage list if splitting it on whitespace yields a list with length 1.</p></li>
+</ol>
+<p class="noindent">The result looks like <a href="ch06.xhtml#ch6list4">Listing 6.4</a>. Note that in <a href="ch06.xhtml#ch6list4">Listing 6.4</a> and subsequent listings the vertical dots indicate omitted code.</p>
+<p class="listing" id="ch6list4"><strong>Listing 6.4:</strong> Solving a filtering problem imperatively.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f157-01" id="f157-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+<span class="pd_gray">.
+.
+.</span>
+<span class="pd_blue1"><em># singles: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_singles</span>(states):
+    singles <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+        <span class="pd_green"><strong>if</strong> len</span>(state<span class="pd_gray">.</span>split()) <span class="pd_gray">== 1</span>:
+            singles<span class="pd_gray">.</span>append(state)
+    <span class="pd_green"><strong>return</strong></span> singles
+
+<span class="pd_green">print</span>(imperative_singles(states))</code></pre>
+</div>
+<p class="indent">Note in <a href="ch06.xhtml#ch6list4">Listing 6.4</a> the familiar pattern from <a href="ch06.xhtml#ch6list1">Listing 6.1</a>: We first define an auxiliary variable in order to maintain state (no pun intended); then loop over the original list, mutating the variable as necessary; then return the mutated result. It’s not particularly pretty, but it works:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f157-02" id="f157-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+<span class="b-y">['Kansas', 'Nebraska']  </span></span></code></pre>
+<p class="indent">Now let’s see how to do the same task using a list comprehension. As in <a href="ch06.xhtml#sec6_1">Section 6.1</a>, we’ll start with a simple numerical example in the REPL. We’ll begin by looking at the <em>modulo operator</em> <span class="pd_green-d"><code><strong>%</strong></code></span>, which returns the remainder after dividing an integer <span epub:type="pagebreak" id="page_158"></span>by another integer. In other words, <span class="pd_green-d"><code><strong>17 % 5</strong></code></span> (read “seventeen mod 5”) is <span class="pd_green-d"><code><strong>2</strong></code></span>, because 5 goes into 17 three times (giving 15), with a remainder of 17 − 15 = 2. In particular, considering integers modulo 2 divides them into two <em>equivalence classes</em>: even numbers (remainder 0 <em>(</em>mod 2<em>)</em>) and odd numbers (remainder 1 <em>(</em>mod 2<em>)</em>). In code:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">16 % 2</span>  <span class="pd_blue1"><em># even</em></span>
+<span class="pd_green-d">0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">17 % 2</span>  <span class="pd_blue1"><em># odd</em></span>
+<span class="pd_green-d">1</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">16 % 2 == 0</span>  <span class="pd_blue1"><em># even</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">17 % 2 == 0</span>  <span class="pd_blue1"><em># odd</em></span>
+<span class="pd_green-d">False</span></code></pre>
+<p class="indent">We can use <span class="pd_green-d"><code><strong>%</strong></code></span> in a list comprehension to process a list of numbers and include a number only if it is even:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f158-01" id="f158-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10</span>) <span class="pd_green"><strong>if</strong></span> n <span class="pd_gray">% 2 == 0</span>]
+<span class="pd_green-d">[0, 2, 4, 6, 8]</span></code></pre>
+<p class="noindent">This is exactly the same as a regular list comprehension but with an extra <span class="pd_green-d"><code><strong>if</strong></code></span>.</p>
+<p class="indent">Using this idea, we see that the functional version of <a href="ch06.xhtml#ch6list4">Listing 6.4</a> is much cleaner—indeed, as in <a href="ch06.xhtml#ch6list2">Listing 6.2</a>, it condenses to a single line, as we can see in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f158-02" id="f158-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [state <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states <span class="pd_green"><strong>if</strong> len</span>(state<span class="pd_gray">.</span>split()) <span class="pd_gray">== 1</span>]
+<span class="pd_green-d">['Kansas', 'Nebraska']</span></code></pre>
+<p class="noindent">Placing the result in our example file again underscores how much more compact the functional version is than the imperative version (<a href="ch06.xhtml#ch6list5">Listing 6.5</a>).</p>
+<p class="listing" id="ch6list5"><strong>Listing 6.5:</strong> Solving a selection problem functionally.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f158-03" id="f158-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+<span class="pd_gray">.
+.
+.</span>
+<span class="pd_blue1"><em># singles: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_singles</span>(states):
+    singles <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+<span epub:type="pagebreak" id="page_159"></span>
+        <span class="pd_green"><strong>if</strong> len</span>(state<span class="pd_gray">.</span>split()) <span class="pd_gray">== 1</span>:
+            singles<span class="pd_gray">.</span>append(state)
+    <span class="pd_green"><strong>return</strong></span> singles
+
+<span class="pd_green">print</span>(imperative_singles(states))
+
+<span class="pd_blue1"><em># singles: Functional version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">functional_singles</span>(states):
+<span class="b-y">      <span class="pd_green"><strong>return</strong></span> [state <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states <span class="pd_green"><strong>if</strong> len</span>(state.split()) == 1]</span>
+
+<span class="pd_green">print</span>(functional_singles(states))</code></pre>
+</div>
+<p class="noindent">As required, the result is the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f159-01" id="f159-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+['kansas', 'nebraska', 'north-dakota', 'south-dakota']
+['Kansas', 'Nebraska']
+['Kansas', 'Nebraska']</span></code></pre>
+<p class="indent">As compact as list comprehensions can be, it’s worth noting that there are limitations to their use. In particular, as the logic inside list comprehensions gets more complicated, they can quickly become unwieldy. It is therefore considered unPythonic to build up complicated list comprehensions; if you find yourself trying to squeeze too much content into a single comprehension, consider using a good old-fashioned <span class="pd_green-d"><code><strong>for</strong></code></span> loop instead.</p>
+<section>
+<h4 class="h4" id="sec6_2_1">6.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Write two equivalent list comprehensions that return the Dakotas: one using <span class="pd_green-d"><code><strong>in</strong></code></span> (<a href="ch02.xhtml#sec2_5">Section 2.5</a>) to test for the presence of the string “Dakota” and one that tests for the length of the split list being <span class="pd_green-d"><code><strong>2</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_3">6.3 Dictionary Comprehensions</h3>
+<p class="noindent">Our next example of functional programming uses <em>dictionary comprehensions</em>, giving us functional powers on par with the great lexicographer Dr Samuel Johnson (<a href="ch06.xhtml#ch6fig4">Figure 6.4</a><sup><a id="fn6_5a" href="ch06.xhtml#fn6_5">5</a></sup>). This technique is broadly equivalent to the <span class="pd_green-d"><code><strong>reduce</strong></code></span> and <span class="pd_green-d"><code><strong>inject</strong></code></span> <span epub:type="pagebreak" id="page_160"></span>functions introduced in <em>Learn Enough JavaScript to Be Dangerous</em> and <em>Learn Enough Ruby to Be Dangerous</em>, respectively; readers of the corresponding and rather tricky sections in those tutorials may appreciate how much simpler dictionary comprehensions can be. (Python 2 actually includes a <span class="pd_green-d"><code><strong>reduce()</strong></code></span> method, but it was removed from default Python 3; it is, however, still available via the <span class="pd_green-d"><code><strong>functools</strong></code></span> module.)</p>
+<figure class="image-c" id="ch6fig4">
+<img src="graphics/06fig04.jpg" alt="images" width="413" height="568"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.4:</strong> Dr Johnson, master of dictionary comprehensions.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn6_5" href="ch06.xhtml#fn6_5a">5.</a> Image courtesy of Rosenwald Collection. N.B. The omission of the period after “Dr”, which is a common British convention, is frequently followed when referring to Dr Johnson.</p>
+<p class="indent">Our example will build on the list comprehensions from <a href="ch06.xhtml#sec6_1">Section 6.1</a> and <a href="ch06.xhtml#sec6_2">Section 6.2</a> involving the names of a few U.S. states. In particular, we’ll make a dictionary that associates state names to the length of each name, with a result that will look like this:<sup><a id="fn6_6a" href="ch06.xhtml#fn6_6">6</a></sup></p>
+<p class="footnote"><a id="fn6_6" href="ch06.xhtml#fn6_6a">6.</a> Note that conventions on formatting dictionaries vary widely, and it’s a good idea to pick one and generally stick to it.</p>
+<span epub:type="pagebreak" id="page_161"></span>
+<pre class="pre1"><code>{
+    <span class="pd_red">"Kansas"</span>: <span class="pd_gray">6</span>,
+    <span class="pd_red">"Nebraska"</span>: <span class="pd_gray">8</span>,
+    <span class="pd_red">"North Dakota"</span>: <span class="pd_gray">12</span>,
+    <span class="pd_red">"South Dakota"</span>: <span class="pd_gray">12</span>
+}</code></pre>
+<p class="noindent">We can accomplish this imperatively by initializing a <span class="pd_green-d"><code><strong>lengths</strong></code></span> object and then iterating through the states, setting <span class="pd_green-d"><code><strong>lengths[dictionary]</strong></code></span> equal to the corresponding length:</p>
+<pre class="pre1"><code>lengths[state] <span class="pd_gray">=</span> <span class="pd_green">len</span>(state)</code></pre>
+<p class="noindent">The full example appears in <a href="ch06.xhtml#ch6list6">Listing 6.6</a>.</p>
+<p class="listing" id="ch6list6"><strong>Listing 6.6:</strong> An imperative solution for state–length correspondence.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f161-01" id="f161-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_gray">.
+.
+.</span>
+<span class="pd_blue1"><em># lengths: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_lengths</span>(states):
+    lengths <span class="pd_gray">=</span> {}
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+        lengths[state] <span class="pd_gray">=</span> <span class="pd_green">len</span>(state)
+    <span class="pd_green"><strong>return</strong></span> lengths
+
+<span class="pd_green">print</span>(imperative_lengths(states))</code></pre>
+</div>
+<p class="indent">If we run the program at the command line, the desired dictionary appears as the final part of the output:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f161-02" id="f161-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">.
+.
+.
+{'Kansas': 6, 'Nebraska': 8, 'North Dakota': 12, 'South Dakota': 12}</span></code></pre>
+<p class="indent">The functional version is almost absurdly simple. As with list comprehensions, we use <span class="pd_green-d"><code><strong>for</strong></code></span> to create an element in the comprehension for each element in the list; for dictionary comprehensions, we just use curly braces instead of square brackets and a <span epub:type="pagebreak" id="page_162"></span>key–value pair instead of a single element. In the present case, it looks like this in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f162-01" id="f162-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {state: <span class="pd_green">len</span>(state) <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states}
+<span class="pd_green-d">{'Kansas': 6, 'Nebraska': 8, 'North Dakota': 12, 'South Dakota': 12}</span></code></pre>
+<p class="noindent">Pasting this into our file then yields <a href="ch06.xhtml#ch6list7">Listing 6.7</a>.</p>
+<p class="listing" id="ch6list7"><strong>Listing 6.7:</strong> A functional solution for state–length correspondence.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f162-02" id="f162-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_gray">.
+.
+.</span>
+<span class="pd_blue1"><em># lengths: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_lengths</span>(states):
+    lengths <span class="pd_gray">=</span> {}
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+        lengths[state] <span class="pd_gray">=</span> <span class="pd_green">len</span>(state)
+    <span class="pd_green"><strong>return</strong></span> lengths
+
+<span class="pd_green">print</span>(imperative_lengths(states))
+
+<span class="pd_blue1"><em># lengths: Functional version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">functional_lengths</span>(states):
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> {state: <span class="pd_green">len</span>(state) <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states}</span>
+
+<span class="pd_green">print</span>(functional_lengths(states))</code></pre>
+</div>
+<p class="noindent">Running this at the command line yields the expected result:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f162-03" id="f162-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">.
+.
+.
+{'Kansas': 6, 'Nebraska': 8, 'North Dakota': 12, 'South Dakota': 12}
+{'Kansas': 6, 'Nebraska': 8, 'North Dakota': 12, 'South Dakota': 12}</span></code></pre>
+<p class="noindent">As with the examples in <a href="ch06.xhtml#sec6_1">Section 6.1</a> and <a href="ch06.xhtml#sec6_2">Section 6.2</a>, the dictionary comprehension condenses the functionality of the imperative version to a single line. This is not <em>always</em> the case, but such large compressions are a common feature of functional programming. (This is but one of many reasons why “LOC” or “lines of code” is a dubious metric of program size or programmer productivity.)</p>
+<span epub:type="pagebreak" id="page_163"></span>
+<section>
+<h4 class="h4" id="sec6_3_1">6.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using a dictionary comprehension, write a function that associates each element in <span class="pd_green-d"><code><strong>states</strong></code></span> with its URL-compatible versions. <em>Hint</em>: Reuse the <span class="pd_green-d"><code><strong>urlify()</strong></code></span> function defined in <a href="ch06.xhtml#ch6list3">Listing 6.3</a>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_4">6.4 Generator and Set Comprehensions</h3>
+<p class="noindent">In this section, we’ll replicate the result from <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a> using comprehensions, starting with a list comprehension and then using a <em>generator comprehension</em>. We’ll also include a brief example of <em>set comprehensions</em>.</p>
+<section>
+<h4 class="h4" id="sec6_4_1">6.4.1 Generator Comprehensions</h4>
+<p class="noindent">Recall from <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a> that we defined a function to find a number containing all digits 0–9, as reproduced in <a href="ch06.xhtml#ch6list8">Listing 6.8</a>.</p>
+<p class="listing" id="ch6list8"><strong>Listing 6.8:</strong> Finding a number with all ten digits (again).</p>
+<p class="codelink"><a href="ch06_images.xhtml#f163-01" id="f163-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">has_all_digits</span>(numbers):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> numbers:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>if</strong> set</span>(<span class="pd_green">str</span>(n)) <span class="pd_gray">==</span> <span class="pd_green">set</span>(<span class="pd_red">"0123456789"</span>):
+<span class="pd_blue"><strong>...</strong></span>             <span class="pd_green"><strong>return</strong></span> n
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return None</strong></span></code></pre>
+</div>
+<p class="indent">In <a href="ch05.xhtml#ch5list20">Listing 5.20</a>, we used an imperative solution to build up a list of <em>perfect squares</em>, but gave up because it was taking too long. With the techniques in <a href="ch06.xhtml#sec6_1">Section 6.1</a>, we’re now in a position to create the same list using a list comprehension:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f163-02" id="f163-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> squares <span class="pd_gray">=</span> [n<span class="pd_gray">**2</span> <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10**8 + 1</span>)]</code></pre>
+<p class="noindent">Unfortunately, although syntactically nicer, this code still has to iterate over the entire range and create the entire list in memory. As in <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a>, I lost patience and hit <code>Ctrl-C</code> to interrupt the execution before it was finished.</p>
+<p class="indent">Now for the analogue of <a href="ch05.xhtml#ch5list21">Listing 5.21</a>, which used <span class="pd_green-d"><code><strong>yield</strong></code></span> to yield each squared number in turn. We can create this behavior even more conveniently using a generator comprehension, which looks just like a list comprehension except with parentheses instead of square brackets:</p>
+<span epub:type="pagebreak" id="page_164"></span>
+<p class="codelink"><a href="ch06_images.xhtml#f164-01" id="f164-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> squares <span class="pd_gray">=</span> (n<span class="pd_gray">**2</span> <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10**8 + 1</span>))</code></pre>
+<p class="noindent">As with the generator in <a href="ch05.xhtml#ch5list21">Listing 5.21</a>, this supplies the next number only when required, which means we can find the first perfect squares with all ten digits as we did in <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> has_all_digits(squares)
+<span class="pd_green-d">1026753849</span></code></pre>
+<p class="noindent">This is the same answer of 1<em>,</em> 026<em>,</em> 753<em>,</em> 849 = 32<em>,</em> 043<sup>2</sup> that we got in <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a>, but with <em>much</em> less code.</p>
+</section>
+<section>
+<h4 class="h4" id="sec6_4_2">6.4.2 Set Comprehensions</h4>
+<p class="noindent">Set comprehensions can be used to quickly make sets if the rules can be specified simply. The syntax both without and with conditions is nearly identical to the syntax for list comprehensions in <a href="ch06.xhtml#sec6_1">Section 6.1</a> and <a href="ch06.xhtml#sec6_2">Section 6.2</a>, just with curly braces in place of square brackets.</p>
+<p class="indent">For example, we can make a set of all the numbers between 5 and 20 as follows:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f164-02" id="f164-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">5</span>, <span class="pd_gray">21</span>)}
+<span class="pd_green-d">{5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}</span></code></pre>
+<p class="noindent">And we can make a set of the even numbers greater than 0 like this:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f164-03" id="f164-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10</span>) <span class="pd_green"><strong>if</strong></span> n <span class="pd_gray">% 2 == 0</span>}
+<span class="pd_green-d">{0, 2, 4, 6, 8}</span></code></pre>
+<p class="noindent">Set operations such as intersection (<span class="pd_green-d"><code><strong>&amp;</strong></code></span>) work as usual:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f164-04" id="f164-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">5</span>, <span class="pd_gray">21</span>)} <span class="pd_gray">&amp;</span> {n <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10</span>) <span class="pd_green"><strong>if</strong></span> n <span class="pd_gray">% 2 == 0</span>}
+<span class="pd_green-d">{8, 6}</span></code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec6_4_3">6.4.3 Exercise</h4>
+<p class="noindent">1. Write a generator comprehension that returns the first 50 even numbers.</p>
+<span epub:type="pagebreak" id="page_165"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_5">6.5 Other Functional Techniques</h3>
+<p class="noindent">Although comprehensions are among the most common and powerful functional techniques in Python, the language includes many other techniques as well. One example is summing the elements in a list (or range), which we can do iteratively using the code in <a href="ch06.xhtml#ch6list9">Listing 6.9</a>. Note the familiar pattern of initializing a variable (in this case, <span class="pd_green-d"><code><strong>total</strong></code></span>) and then adding to it in some way (in this case, literally adding a number).<sup><a id="fn6_7a" href="ch06.xhtml#fn6_7">7</a></sup></p>
+<p class="footnote"><a id="fn6_7" href="ch06.xhtml#fn6_7a">7.</a> Because it’s conventional to speak of summing the numbers between 1 and 100—rather than the numbers between 0 and 100—<a href="ch06.xhtml#ch6list9">Listing 6.9</a> uses <span class="pd_green-d"><code><strong>range(1, 101)</strong></code></span> to generate the number range 1–100, but of course the answer would be the same if we used <span class="pd_green-d"><code><strong>range(101)</strong></code></span> since adding 0 doesn’t change the sum.</p>
+<p class="listing" id="ch6list9"><strong>Listing 6.9:</strong> An imperative solution for summing integers.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f165-01" id="f165-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_gray">.
+.
+.</span>
+numbers <span class="pd_gray">=</span> <span class="pd_green">range</span>(<span class="pd_gray">1</span>, <span class="pd_gray">101</span>)      <span class="pd_blue1"><em># 1 up to 100</em></span>
+
+<span class="pd_blue1"><em># sum: Imperative solution</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_sum</span>(numbers):
+    total <span class="pd_gray">= 0</span>
+    <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> numbers:
+      total <span class="pd_gray">+=</span> n
+    <span class="pd_green"><strong>return</strong></span> total
+
+<span class="pd_green">print</span>(imperative_sum(numbers))</code></pre>
+</div>
+<p class="noindent">The result is 5050 as required:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f165-02" id="f165-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">.
+.
+.
+5050</span></code></pre>
+<p class="indent">The functional (and very Pythonic) solution is to use the built-in <span class="pd_green-d"><code><strong>sum()</strong></code></span> function:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">sum</span>(<span class="pd_green">range</span>(<span class="pd_gray">1</span>, <span class="pd_gray">101</span>))
+<span class="pd_green-d">5050</span></code></pre>
+<span epub:type="pagebreak" id="page_166"></span>
+<p class="noindent">Using this in our functional file gives us the one additional line shown in <a href="ch06.xhtml#ch6list10">Listing 6.10</a>.</p>
+<p class="listing" id="ch6list10"><strong>Listing 6.10:</strong> A fully Pythonic solution for summing integers.<br/><code><em>functional.py</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f166-01" id="f166-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_gray">.
+.
+.</span>
+numbers <span class="pd_gray">=</span> <span class="pd_green">range</span>(<span class="pd_gray">1</span>, <span class="pd_gray">11</span>)  <span class="pd_blue1"><em># 1 up to 10</em></span>
+
+<span class="pd_blue1"><em># sum: Imperative solution</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_sum</span>(numbers):
+    total <span class="pd_gray">= 0</span>
+    <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> numbers:
+      total <span class="pd_gray">+=</span> n
+    <span class="pd_green"><strong>return</strong></span> total
+
+<span class="pd_green">print</span>(imperative_sum(numbers))
+<span class="b-y"><span class="pd_green">print</span>(<span class="pd_green">sum</span>(numbers))</span></code></pre>
+</div>
+<p class="indent">We can confirm at the command line that the results agree:</p>
+<p class="codelink"><a href="ch06_images.xhtml#f166-02" id="f166-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 functional.py
+<span class="pd_green-d">.
+.
+.
+5050
+5050</span></code></pre>
+<p class="indent">A similar facility is the <span class="pd_green-d"><code><strong>prod()</strong></code></span> function in the <span class="pd_green-d"><code><strong>math</strong></code></span> module, which returns the product of the list elements. The <span class="pd_green-d"><code><strong>itertools</strong></code></span> module includes a large variety of similar tools.</p>
+<section>
+<h4 class="h4" id="sec6_5_1">6.5.1 Functional Programming and TDD</h4>
+<p class="noindent">In many cases, the imperative approach offers the most straightforward solution to a problem, which can make imperative solutions a good place to start even though they are usually longer than their functional counterparts. Indeed, we might not even know the latter exists; a common situation is to write an imperative solution for a particular task, such as the sum shown in <a href="ch06.xhtml#ch6list9">Listing 6.9</a>, only to discover later on that <span epub:type="pagebreak" id="page_167"></span>there’s a functional way to do it (in this case, using the built-in <span class="pd_green-d"><code><strong>sum()</strong></code></span> function). But making changes to working code can be risky, which might make us understandably reluctant to change to the functional version.</p>
+<p class="indent">My favorite technique for managing this challenge is <em>test-driven development</em> (TDD), which involves writing an <em>automated test</em> that captures the desired behavior in code. We can then get the test to pass using any method we want, including an ugly but easy-to-understand imperative solution. At that point, we can <em>refactor</em> the code—changing its form but not its function—to use a more concise functional solution. As long as the test still passes, we can be confident that the code still works.</p>
+<p class="indent">In <a href="ch08.xhtml#ch08">Chapter 8</a>, we’ll apply this exact technique to the principal object developed in <a href="ch07.xhtml#ch07">Chapter 7</a>. In particular, we’ll use TDD to implement a fancy extension to the <span class="pd_green-d"><code><strong>is-palindrome()</strong></code></span> function first seen in <a href="ch05.xhtml#sec5_3">Section 5.3</a>, one that detects such complicated palindromes as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch6fig5">Figure 6.5</a><sup><a id="fn6_8a" href="ch06.xhtml#fn6_8">8</a></sup>).</p>
+<figure class="image-c" id="ch6fig5">
+<img src="graphics/06fig05.jpg" alt="images" width="572" height="475"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.5:</strong> Teddy Roosevelt was a man with a plan.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn6_8" href="ch06.xhtml#fn6_8a">8.</a> Image courtesy of Everett Collection Historical/Alamy Stock Photo.</p>
+<span epub:type="pagebreak" id="page_168"></span>
+</section>
+<section>
+<h4 class="h4" id="sec6_5_2">6.5.2 Exercise</h4>
+<ol class="number">
+<li><p class="number">Use <span class="pd_green-d"><code><strong>math.prod()</strong></code></span> to find the product of the numbers in the range 1–10. How does this compare to <span class="pd_green-d"><code><strong>math.factorial(10)</strong></code></span>?</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

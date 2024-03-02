@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch09"><span epub:type="pagebreak" id="page_187"></span>Chapter 9</h2>
+<h2 class="chap-title">Events and DOM Manipulation</h2>
+<p class="noindent">In this chapter, we return to JavaScript’s native environment and put our newly created Node module to work in the browser. Specifically, we’ll be making a simple single-page JavaScript application that takes in a string from the user and indicates whether or not that string is a palindrome.</p>
+<p class="indent">Our approach involves gradually increasing levels of sophistication, starting with a simple “hello, world”–style proof-of-concept (<a href="ch09.xhtml#ch9lev1">Section 9.1</a>). We’ll then add a prompt/-alert design that will motivate the introduction of <em>event listeners</em> (<a href="ch09.xhtml#ch9lev2">Section 9.2</a>). In <a href="ch09.xhtml#ch9lev3">Section 9.3</a>, we’ll replace the alert with dynamic HTML inserted on the page itself—our first example of manipulating the Document Object Model tree. Finally, in <a href="ch09.xhtml#ch9lev4">Section 9.4</a> we’ll add an HTML <em>form</em>, which is a more convenient method for entering data than a JavaScript prompt.</p>
+<section>
+<h3 class="h3" id="ch9lev1">9.1 A Working Palindrome Page</h3>
+<p class="noindent">To get started with our palindrome detector, we’ll create both an HTML file and our site’s main JavaScript file, called <a href="http://palindrome.html"><span class="pd_green"><code><strong>palindrome.html</strong></code></span></a> and <span class="pd_green"><code><strong>main.js</strong></code></span>, respectively:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c187pro01" id="c187pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> <span class="pd_green1">cd</span> ~/repos/js_tutorial
+<span class="pd_blue"><strong>$</strong></span> touch palindrome.html main.js</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_188"></span>As in <a href="ch01.xhtml#ch01">Chapter 1</a>, we’ll make a minimal “hello, world” app just to prove that everything is basically working. To do this, we need to install the <span class="pd_green"><code><strong>&lt;username&gt;-palindrome</strong></code></span> module created in <a href="ch08.xhtml#ch8lev1">Section 8.1</a>:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c188pro01" id="c188pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install &lt;username&gt;-palindrome   <span class="pd_blue1"><em># Replace &lt;username&gt; with your username.</em></span></pre>
+<p class="noindent">If for any reason you didn’t complete <a href="ch08.xhtml#ch8lev1">Section 8.1</a>, you can use my version of the module, <span class="pd_green"><code><strong>mhartl-palindrome</strong></code></span>.</p>
+<p class="indent">To use the <span class="pd_green"><code><strong>Phrase</strong></code></span> object exported by the module (<a href="ch08.xhtml#ch8list2">Listing 8.2</a>), all we need to do is edit <span class="pd_green"><code><strong>main.js</strong></code></span> and use <span class="pd_green"><code><strong>let</strong></code></span> to bind the name <span class="pd_green"><code><strong>Phrase</strong></code></span> to the result of the <span class="pd_green"><code><strong>require</strong></code></span> function, as shown in <a href="ch09.xhtml#ch9list1">Listing 9.1</a>.</p>
+<p class="listing" id="ch9list1"><strong>Listing 9.1:</strong> Adding a proof-of-concept.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis01" id="c09lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+alert(<span class="v1"><strong>new</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>).palindrome());</pre>
+<p class="noindent"><a href="ch09.xhtml#ch9list1">Listing 9.1</a> also includes an <span class="pd_green"><code><strong>alert</strong></code></span>, which if it works will tell us that the <span class="pd_green"><code><strong>require</strong></code></span> succeeded.</p>
+<p class="indent">Recall from <a href="ch05.xhtml#ch5lev2">Section 5.2</a> that we can include external JavaScript files using the <span class="pd_green"><code><strong>src</strong></code></span> attribute of the <span class="pd_green"><code><strong>script</strong></code></span> tag (<a href="ch05.xhtml#ch5list5">Listing 5.5</a>):</p>
+<p class="codelink"><a href="ch09_images.xhtml#c188pro02" id="c188pro02a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"filename.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</pre>
+<p class="noindent">You might think that we could just include <span class="pd_green"><code><strong>main.js</strong></code></span> directly, like this:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c188pro03" id="c188pro03a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"main.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</pre>
+<p class="noindent">Unfortunately, because browsers don’t support <span class="pd_green"><code><strong>require</strong></code></span>, this won’t work. Instead, we need to use an NPM module called <span class="pd_green"><code><strong>browserify</strong></code></span> (Google “<a href="https://www.google.com/search?q=require+node+module+into+browser">require node module into browser</a>”):</p>
+<p class="codelink"><a href="ch09_images.xhtml#c188pro04" id="c188pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install --global browserify</pre>
+<p class="noindent">The <span class="pd_green"><code><strong>browserify</strong></code></span> utility takes our offline code and bundles it up in a way that browsers can understand, as shown in <a href="ch09.xhtml#ch9list2">Listing 9.2</a>.</p>
+<p class="listing" id="ch9list2"><span epub:type="pagebreak" id="page_189"></span><strong>Listing 9.2:</strong> Using <span class="pd_green"><code><strong>browserify</strong></code></span> to prepare a JavaScript bundle for the browser.</p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis02" id="c09lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> browserify main.js -o bundle.js</pre>
+<p class="noindent">Using the <span class="pd_green"><code><strong>-o</strong></code></span> (output file) flag, <a href="ch09.xhtml#ch9list2">Listing 9.2</a> arranges to create a file called <span class="pd_green"><code><strong>bundle.js</strong></code></span> that <em>can</em> be included in a browser.<sup><a id="ch9fn-1" href="ch09.xhtml#ch9fn_1">1</a></sup> (How does browserify do this? I have no idea. Being able to use modules whose inner workings are mysterious is an important part of technical sophistication.)</p>
+<p class="footnote"><a id="ch9fn_1" href="ch09.xhtml#ch9fn-1">1</a>. The <span class="pd_green"><code><strong>browserify</strong></code></span> program defaults to dumping the results to the screen (STDOUT), so <a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/redirecting_and_appending#sec-redirecting_and_appending">redirecting</a> (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending">https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending</a>) via <span class="pd_green"><code><strong>browserify main.js &gt; bundle.js</strong></code></span> works as well.</p>
+<p class="indent"><em>Note</em>: Making changes in <span class="pd_green"><code><strong>main.js</strong></code></span> but forgetting to rerun <span class="pd_green"><code><strong>browserify</strong></code></span> is a common source of errors, so be sure to try rerunning <a href="ch09.xhtml#ch9list2">Listing 9.2</a> if you ever find that your expected changes aren’t showing up on the page. I also suggest looking at the <a href="https://www.npmjs.com/package/watchify">watchify</a> (<a href="https://www.npmjs.com/package/watchify">https://www.npmjs.com/package/watchify</a>) package, which is designed to re-build the bundled version automatically.</p>
+<p class="indent">At this point, our JavaScript is properly bundled for use on a web page, so we can include it using the <span class="pd_green"><code><strong>src</strong></code></span> attribute as developed in <a href="ch05.xhtml#ch5lev2">Section 5.2</a>. The resulting <span class="pd_green"><code><strong><a href="http://palin-drome.html">palindrome.html</a></strong></code></span>, which includes a minimal HTML skeleton as well, appears in <a href="ch09.xhtml#ch9list3">Listing 9.3</a>.</p>
+<p class="listing" id="ch9list3"><strong>Listing 9.3:</strong> Creating the palindrome page, including the JavaScript source.<br/><code><em><a href="http://palindrome.html">palindrome.html</a></em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis03" id="c09lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1"><strong>src</strong></span><span class="gray">=</span><span class="pd_red"><strong>"bundle.js"</strong></span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">The result should be a working alert, as shown in <a href="ch09.xhtml#ch9fig1">Figure 9.1</a>. If things don’t work on your system, follow the suggestions in <a href="ch05.xhtml#ch5box1">Box 5.1</a> to resolve the discrepancy.</p>
+<span epub:type="pagebreak" id="page_190"></span>
+<figure class="figure" id="ch9fig1">
+<img src="graphics/09fig01.jpg" alt="images" width="694" height="535"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.1:</strong> Confirming that the module has been loaded.</p>
+</figcaption>
+</figure>
+<p class="indent">Amazingly, we can already get a working (if rudimentary) palindrome detector working. All we need to do is use the <span class="pd_green"><code><strong>prompt</strong></code></span> function, which prompts the user for some input (and returns the result):</p>
+<p class="codelink"><a href="ch09_images.xhtml#c190pro01" id="c190pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+<span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);</pre>
+<p class="noindent">The user’s input is automatically returned, allowing us to create a new <span class="pd_green"><code><strong>Phrase</strong></code></span> instance and test whether it’s a palindrome or not:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c190pro02" id="c190pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+<span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+  alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+} <span class="pd_green1"><strong>else</strong></span> {
+  alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_191"></span>Putting everything together gives the result shown in <a href="ch09.xhtml#ch9list4">Listing 9.4</a>.</p>
+<p class="listing" id="ch9list4"><strong>Listing 9.4:</strong> Our first working palindrome detector.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis04" id="c09lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+<span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+<span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+<span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+  alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+} <span class="pd_green1"><strong>else</strong></span> {
+  alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+}</pre>
+<p class="indent">All we need to do now is rerun <span class="pd_green"><code><strong>browserify</strong></code></span> and reload the browser:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c191pro01" id="c191pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> browserify main.js -o bundle.js</pre>
+<p class="noindent">Refreshing <a href="http://palindrome.html"><span class="pd_green"><code><strong>palindrome.html</strong></code></span></a> now immediately prompts us for a string, as shown in <a href="ch09.xhtml#ch9fig2">Figure 9.2</a>.</p>
+<figure class="figure" id="ch9fig2">
+<img src="graphics/09fig02.jpg" alt="images" width="702" height="533"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.2:</strong> A string prompt.</p>
+</figcaption>
+</figure>
+<p class="indent">The user experience may not be all that great, but, as seen in <a href="ch09.xhtml#ch9fig3">Figure 9.3</a>, it actually works!</p>
+<figure class="figure" id="ch9fig3">
+<img src="graphics/09fig03.jpg" alt="images" width="698" height="540"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.3:</strong> Alerted to a valid palindrome.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch9lev1sec1">9.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">By following the steps from <a href="ch01.xhtml#ch1lev2sec1">Section 1.2.1</a>, deploy the palindrome detector to production. It might be necessary to add a file to tell GitHub Pages to treat the site as ordinary HTML instead of using the Jekyll static site builder (which sometimes causes errors when processing Node modules), as shown in <a href="ch09.xhtml#ch9list5">Listing 9.5</a>. (Some readers have reported that it currently works without this step.) Does the code work on the live site?</p></li>
+</ol>
+<p class="listing" id="ch9list5"><strong>Listing 9.5:</strong> Telling GitHub Pages not to use the Jekyll static site builder.</p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis05" id="c09lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> touch .nojekyll
+<span class="pd_blue"><strong>$</strong></span> git add -A
+<span class="pd_blue"><strong>$</strong></span> git commit -m <span class="pd_red">"Prevent Jekyll build"</span></pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch9lev2"><span epub:type="pagebreak" id="page_192"></span>9.2 Event Listeners</h3>
+<p class="noindent">In <a href="ch09.xhtml#ch9lev1">Section 9.1</a>, we somewhat miraculously got a live palindrome detector working, but the user experience wasn’t all that great: Users visiting the page are immediately hit with a prompt, without even a chance to see what the page is about.</p>
+<p class="indent">In this section, we’ll make the palindrome page a little friendlier by adding a <em>button</em> that gives the user the option to initiate the action. It’s also nicer for detecting palindromes more than once, since users will be able to click the button again rather than having to refresh the entire page.</p>
+<p class="indent">Our first step is to add the button itself, as shown in <a href="ch09.xhtml#ch9list6">Listing 9.6</a>, which shows how to use the HTML <span class="pd_green"><code><strong>button</strong></code></span> tag.</p>
+<p class="listing" id="ch9list6"><span epub:type="pagebreak" id="page_193"></span><strong>Listing 9.6:</strong> Adding a button.<br/><code><em>palindrome.html</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis06" id="c09lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"bundle.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>button</strong></span> <span class="g1"><strong>id</strong></span><span class="gray">=</span><span class="pd_red"><strong>"palindromeTester"</strong></span>&gt;Is it a palindrome?&lt;/<span class="pd_green1"><strong>button</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_194"></span>Note that the button in <a href="ch09.xhtml#ch9list6">Listing 9.6</a> uses a CSS id. This is in line with the recommendations <a href="https://www.learnenough.com/r/css_and_layout/style-of-style/css_why#sec-css_why">discussed</a> (<a href="https://www.learnenough.com/css-and-layout-tutorial/style-of-style#sec-css_why">https://www.learnenough.com/css-and-layout-tutorial/style-of-style#sec-css_why</a>) in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>), which recommended not using ids for styling (preferring classes instead), and reserving them for use in things like JavaScript applications (a time that now has come!).</p>
+<p class="indent">After refreshing the page, we see the button appear (<a href="ch09.xhtml#ch9fig4">Figure 9.4</a>).</p>
+<figure class="figure" id="ch9fig4">
+<img src="graphics/09fig04.jpg" alt="images" width="701" height="537"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.4:</strong> <a href="http://knowyourmeme.com/memes/a-wild-x-appears-wild-x-appeared">A wild button</a> appears.</p>
+</figcaption>
+</figure>
+<p class="indent">As you can confirm by clicking it, the button currently does nothing, but we can change that using a JavaScript <em>event listener</em>, which is a piece of code that waits for a particular event to happen and then responds appropriately. In this case, the response will be the palindrome test itself, so we’ll factor the corresponding code from <a href="ch09.xhtml#ch9list4">Listing 9.4</a> into a separate function, as shown in <a href="ch09.xhtml#ch9list7">Listing 9.7</a>.</p>
+<p class="listing" id="ch9list7"><span epub:type="pagebreak" id="page_195"></span><strong>Listing 9.7:</strong> Factoring the palindrome tester into a function.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis07" id="c09lis07a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+  } <span class="pd_green1"><strong>else</strong></span> {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+  }
+}</pre>
+<p class="indent">Next, we’ll create a special object that represents the button itself. The way to do this is to use the powerful <span class="pd_green"><code><strong>querySelector</strong></code></span> function, which lets us find an element in the page’s DOM using its id:<sup><a id="ch9fn-2" href="ch09.xhtml#ch9fn_2">2</a></sup></p>
+<p class="footnote"><a id="ch9fn_2" href="ch09.xhtml#ch9fn-2">2</a>. I originally intended to cover the popular <a href="https://jquery.com/">jQuery</a> library in this tutorial, but using it does introduce some overhead and a third-party dependency, so I was pleased to discover that <span class="pd_green"><code><strong>querySelector</strong></code></span> and the closely related <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> (<a href="ch11.xhtml#ch11lev2">Section 11.2</a>) have made vanilla JavaScript plenty powerful for our purposes.</p>
+<p class="codelink"><a href="ch09_images.xhtml#c195pro01" id="c195pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);</pre>
+<p class="noindent">Note here that JavaScript knows to look for a CSS id (and not a CSS class) because <span class="pd_green"><code><strong>#palindromeTester</strong></code></span> starts with a hash symbol <span class="pd_green"><code><strong>#</strong></code></span>. <a href="https://www.learnenough.com/r/css_and_layout/style-of-style/naming_things#sec-naming_things">Recall</a> (<a href="https://www.learnenough.com/css-and-layout-tutorial/style-of-style#sec-naming_things">https://www.learnenough.com/css-and-layout-tutorial/style-of-style#sec-naming_things</a>) from <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> that is the same notation to select a CSS id in CSS itself.</p>
+<p class="indent">(The <span class="pd_green"><code><strong>querySelector</strong></code></span> method is a rare case where Googling can lead you astray; as of this writing, searching for <a href="https://www.google.com/search?q=javascript+find+element+by+id">javascript find element by id</a> leads mainly to <span class="pd_green"><code><strong>getElementById</strong></code></span>, which does in fact work, but which is not as powerful and flexible as the newer <span class="pd_green"><code><strong>querySelector</strong></code></span> method.)</p>
+<p class="indent">Having created an object to represent the button, we can now add the <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener">event listener</a> and set it to listen for a “click” using <span class="pd_green"><code><strong>addEventListener</strong></code></span>:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c195pro02" id="c195pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+<span class="bg1">button.addEventListener(<span class="pd_red"><strong>"click"</strong></span>, <span class="pd_green1"><strong>function</strong></span>() {
+  palindromeTester();
+});</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_196"></span>The first argument here is the kind of event, while the second is a function that will be executed when the click happens. (A function of this sort that executes when something else happens is called a <em><a href="https://en.wikipedia.org/wiki/Callback_(computer_programming)">callback</a></em>.) In this case, we could actually have written</p>
+<p class="codelink"><a href="ch09_images.xhtml#c196pro01" id="c196pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+<span class="bg1">button.addEventListener(<span class="pd_red"><strong>"click"</strong></span>, palindromeTester);</span></pre>
+<p class="noindent">but we’ve used an anonymous function instead to emphasize the general case where there might be more than one line.</p>
+<p class="indent">Putting everything together, the resulting <span class="pd_green"><code><strong>main.js</strong></code></span> appears as in <a href="ch09.xhtml#ch9list8">Listing 9.8</a>.</p>
+<p class="listing" id="ch9list8"><strong>Listing 9.8:</strong> The initial event listener code.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis08" id="c09lis08a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+<span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+  } <span class="pd_green1"><strong>else</strong></span> {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+  }
+}
+
+<span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+button.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  palindromeTester();
+});</pre>
+<p class="indent">Running <a href="ch09.xhtml#ch9list2">Listing 9.2</a>, refreshing the page, and clicking the button shows that… still nothing happens. Taking a look at the console gives us a hint why (<a href="ch09.xhtml#ch9fig5">Figure 9.5</a>). Somehow, the <span class="pd_green"><code><strong>button</strong></code></span> object isn’t being defined.</p>
+<figure class="figure" id="ch9fig5">
+<img src="graphics/09fig05.jpg" alt="images" width="694" height="529"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.5:</strong> An unexpected <span class="pd_green"><code><strong>null</strong></code></span> object.</p>
+</figcaption>
+</figure>
+<p class="indent">The solution to this mystery also addresses something we glossed over when building up to <a href="ch09.xhtml#ch9list8">Listing 9.8</a>: Namely, what is <span class="pd_green"><code><strong>document</strong></code></span>? The answer is that <span class="pd_green"><code><strong>document</strong></code></span> (surprise!) represents the document itself. The problem we’re facing is that, at the time that <span class="pd_green"><code><strong>main.js</strong></code></span> (via <span class="pd_green"><code><strong>bundle.js</strong></code></span>) gets loaded, <em>the document content hasn’t finished</em> <span epub:type="pagebreak" id="page_197"></span><em>loading yet</em>. As a result, while the <span class="pd_green"><code><strong>document</strong></code></span> object exists, there is not yet an element with id <span class="pd_green"><code><strong>palindromeTester</strong></code></span>, so the <span class="pd_green"><code><strong>querySelector</strong></code></span> in <a href="ch09.xhtml#ch9list8">Listing 9.8</a> turns up a big fat <span class="pd_green"><code><strong>null</strong></code></span>. When we try calling <span class="pd_green"><code><strong>addEventListener</strong></code></span> on this <span class="pd_green"><code><strong>null</strong></code></span>, it raises the error shown in <a href="ch09.xhtml#ch9fig5">Figure 9.5</a>.</p>
+<p class="indent">This is a common issue when programming in JavaScript, and the solution is to use a <em>second</em> listener, one that waits for the Document Object Model content to be loaded.</p>
+<p class="indent">As noted briefly in <a href="ch01.xhtml#ch01">Chapter 1</a>, the Document Object Model, or DOM, is the hierarchical model used to describe the contents of a web page (<a href="ch09.xhtml#ch9fig6">Figure 9.6</a>). When rendering a page, the browser constructs the DOM using the content of the page, and fires off an event notification when the DOM content is loaded. For our button listener to work, this event—called, appropriately enough, <span class="pd_green"><code><strong>"DOMContentLoaded"</strong></code></span>—needs a listener of its own:</p>
+<span epub:type="pagebreak" id="page_198"></span>
+<figure class="figure" id="ch9fig6">
+<img src="graphics/09fig06.jpg" alt="images" width="715" height="434"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.6:</strong> The DOM.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch09_images.xhtml#c198pro01" id="c198pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1"><span class="pd_green1"><strong>document</strong></span>.addEventListener(<span class="pd_red"><strong>"DOMContentLoaded"</strong></span>, <span class="pd_green1"><strong>function</strong></span>() {</span>
+  <span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+  button.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    palindromeTester();
+
+<span class="bg1"> });</span>
+});</pre>
+<p class="indent">Let’s put this expanded code into <span class="pd_green"><code><strong>main.js</strong></code></span> (<a href="ch09.xhtml#ch9list9">Listing 9.9</a>) and see what happens.</p>
+<p class="listing" id="ch9list9"><strong>Listing 9.9:</strong> An event listener for the loading of the DOM.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis09" id="c09lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+<span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+
+<span epub:type="pagebreak" id="page_199"></span>
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+  } <span class="pd_green1"><strong>else</strong></span> {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+  }
+}
+<span class="bg1"><span class="pd_green1"><strong>document</strong></span>.addEventListener(<span class="pd_red"><strong>"DOMContentLoaded"</strong></span>, <span class="pd_green1"><strong>function</strong></span>() {</span>
+  <span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+  button.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    palindromeTester();
+<span class="bg1"> });</span>
+});</pre>
+<p class="indent">Rerunning <a href="ch09.xhtml#ch9list2">Listing 9.2</a>, refreshing the browser, and clicking the button shows that it’s working! The result appears in <a href="ch09.xhtml#ch9fig7">Figure 9.7</a>.</p>
+<figure class="figure" id="ch9fig7">
+<img src="graphics/09fig07.jpg" alt="images" width="692" height="535"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.7:</strong> Clicking the button after waiting for the DOM to load.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_200"></span>As with the initial version in <a href="ch09.xhtml#ch9lev1">Section 9.1</a>, the current page displays the results in an <span class="pd_green"><code><strong>alert</strong></code></span>, as seen in <a href="ch09.xhtml#ch9fig8">Figure 9.8</a>.</p>
+<figure class="figure" id="ch9fig8">
+<img src="graphics/09fig08.jpg" alt="images" width="696" height="536"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.8:</strong> Still an alert.</p>
+</figcaption>
+</figure>
+<p class="indent">This is an excellent start. In <a href="ch09.xhtml#ch9lev3">Section 9.3</a>, we’ll learn how to display the result in the HTML itself.</p>
+<section>
+<h4 class="h4" id="ch9lev2sec1">9.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">The most common way to handle a button is to put it in an HTML <em>form</em> (discussed further in <a href="ch09.xhtml#ch9lev4">Section 9.4</a>). Confirm using the code in <a href="ch09.xhtml#ch9list10">Listing 9.10</a> and <a href="ch09.xhtml#ch9list11">Listing 9.11</a> that it’s possible to combine a form, a button, and a listener on the <span class="pd_green"><code><strong>submit</strong></code></span> event to achieve the same behavior as a plain button. (Don’t forget to rerun <span class="pd_green"><code><strong>browserify</strong></code></span> to update <span class="pd_green"><code><strong>bundle.js</strong></code></span>.)</p></li>
+</ol>
+<p class="listing" id="ch9list10"><span epub:type="pagebreak" id="page_201"></span><strong>Listing 9.10:</strong> Adding a simple HTML form.<br/><code><em><a href="http://palindrome.html">palindrome.html</a></em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis10" id="c09lis10a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"bundle.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>form</strong></span> <span class="g1"><strong>id</strong></span><span class="gray">=</span><span class="pd_red"><strong>"palindromeTester"</strong></span>&gt;</span>
+<span class="bg1">      &lt;<span class="pd_green1"><strong>button</strong></span> <span class="g1"><strong>type</strong></span><span class="gray">=</span><span class="pd_red"><strong>"submit"</strong></span>&gt;Is it a palindrome?&lt;/<span class="pd_green1"><strong>button</strong></span>&gt;</span>
+<span class="bg1">    &lt;/<span class="pd_green1"><strong>form</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="listing" id="ch9list11"><strong>Listing 9.11:</strong> Listening for the <span class="pd_green"><code><strong>submit</strong></code></span> event.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis11" id="c09lis11a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+<span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+  } <span class="pd_green1"><strong>else</strong></span> {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+  }
+}
+
+<span class="pd_green1">document</span>.addEventListener(<span class="pd_red">"DOMContentLoaded"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> form = <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>"#palindromeTester"</strong></span>);</span>
+<span class="bg1">  form.addEventListener(<span class="pd_red"><strong>"submit"</strong></span>, <span class="pd_green1"><strong>function</strong></span>() {</span>
+    palindromeTester();
+  });
+});</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch9lev3"><span epub:type="pagebreak" id="page_202"></span>9.3 Dynamic HTML</h3>
+<p class="noindent">We left off in <a href="ch09.xhtml#ch9lev2">Section 9.2</a> with a working palindrome detector, but displaying the results in an <span class="pd_green"><code><strong>alert</strong></code></span> is a little cumbersome. In this section, we’ll improve the design by updating the page HTML directly. (Accepting input via a <span class="pd_green"><code><strong>prompt</strong></code></span> is also cumbersome; we’ll address that issue in <a href="ch09.xhtml#ch9lev4">Section 9.4</a>.)</p>
+<p class="indent">To prepare for this, let’s add another heading and a paragraph with a CSS id for the result (<a href="ch09.xhtml#ch9list12">Listing 9.12</a>).</p>
+<p class="listing" id="ch9list12"><strong>Listing 9.12:</strong> Adding HTML for a palindrome result.<br/><code><em><a href="http://palindrome.html">palindrome.html</a></em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis12" id="c09lis12a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"bundle.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+
+    &lt;<span class="pd_green1"><strong>button</strong></span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"palindromeTester"</span>&gt;Test palindrome&lt;/<span class="pd_green1"><strong>button</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;Result&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt; </span>
+
+<span class="bg1">    &lt;<span class="pd_green1"><strong>p</strong></span> <span class="g1"><strong>id</strong></span><span class="gray">=</span><span class="pd_red"><strong>"palindromeResult"</strong></span>&gt;&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="noindent">Note that the paragraph in <a href="ch09.xhtml#ch9list12">Listing 9.12</a> is <em>empty</em>; this is because we’re going to fill its contents dynamically with JavaScript.</p>
+<p class="indent">Amazingly, updating our code to use dynamic HTML instead of an alert requires adding only one line, while making minor edits to two others. We first need to use the same <span class="pd_green"><code><strong>querySelector</strong></code></span> method from <a href="ch09.xhtml#ch9list9">Listing 9.9</a> to grab the HTML element with the <span class="pd_green"><code><strong>palindromeResult</strong></code></span> id:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c202pro01" id="c202pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> palindromeResult = <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>"#palindromeResult"</strong></span>);</span>
+
+<span epub:type="pagebreak" id="page_203"></span>  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>);
+  } <span class="pd_green1"><strong>else</strong></span> {
+    alert(<span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>)
+  }
+}</pre>
+<p class="noindent">Then, instead of using an <span class="pd_green"><code><strong>alert</strong></code></span>, we can simply assign the notification strings to the <span class="pd_green"><code><strong>innerHTML</strong></code></span> attribute of the <span class="pd_green"><code><strong>palindromeResult</strong></code></span> object:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c203pro02" id="c203pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+  <span class="pd_green1"><strong>let</strong></span> palindromeResult <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeResult"</span>);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+
+<span class="bg1">    palindromeResult.innerHTML =<span class="pd_red"> <strong>`"</strong></span><span class="pd_red">${</span>phrase.content<span class="pd_red">}</span><span class="pd_red"><strong>" is a palindrome!`</strong></span>;</span>
+
+  } <span class="pd_green1"><strong>else</strong></span> {
+
+<span class="bg1">    palindromeResult.innerHTML =<span class="pd_red"> <strong>`"</strong></span><span class="pd_red">${</span>phrase.content<span class="pd_red">}</span><span class="pd_red"><strong>" is not a palindrome.`</strong></span>;</span>
+
+  }
+}</pre>
+<p class="indent">The full <span class="pd_green"><code><strong>main.js</strong></code></span> now appears as in <a href="ch09.xhtml#ch9list13">Listing 9.13</a>.</p>
+<p class="listing" id="ch9list13"><strong>Listing 9.13:</strong> Adding the notification to the result area.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis13" id="c09lis13a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+
+<span class="pd_green1"><strong>function</strong></span> palindromeTester() {
+  <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> prompt(<span class="pd_red">"Please enter a string for palindrome testing:"</span>);
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(string);
+  <span class="pd_green1"><strong>let</strong></span> palindromeResult <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeResult"</span>);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    palindromeResult.innerHTML <span class="gray">=</span> <span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    palindromeResult.innerHTML <span class="gray">=</span> <span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>;
+  }
+}
+
+<span class="pd_green1">document</span>.addEventListener(<span class="pd_red">"DOMContentLoaded"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>let</strong></span> button <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeTester"</span>);
+
+<span epub:type="pagebreak" id="page_204"></span>  button.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    palindromeTester();
+  });
+});</pre>
+<p class="indent">Upon rerunning <a href="ch09.xhtml#ch9list2">Listing 9.2</a> and refreshing the browser, the result area is now ready to display the notification previously seen in the alert (<a href="ch09.xhtml#ch9fig9">Figure 9.9</a>).</p>
+<figure class="figure" id="ch9fig9">
+<img src="graphics/09fig09.jpg" alt="images" width="709" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.9:</strong> The result area.</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s see if our detector can correctly identify one of the most ancient palindromes, the so-called <a href="https://en.wikipedia.org/wiki/Sator_Square">Sator Square first</a> found in the ruins of <a href="https://en.wikipedia.org/wiki/Pompeii">Pompeii</a> (<a href="ch09.xhtml#ch9fig10">Figure 9.10</a>).<sup><a id="ch9fn-3" href="ch09.xhtml#ch9fn_3">3</a></sup> (Authorities differ on the exact meaning of the Latin words in the square, but the likeliest translation is “The sower [farmer] Arepo holds the wheels with effort.”)</p>
+<p class="footnote"><a id="ch9fn_3" href="ch09.xhtml#ch9fn-3">3</a>. Image courtesy of CPA Media Pte Ltd/Alamy Stock Photo.</p>
+<span epub:type="pagebreak" id="page_205"></span>
+<figure class="figure" id="ch9fig10">
+<img src="graphics/09fig10.jpg" alt="images" width="375" height="373"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.10:</strong> A Latin palindrome from the lost city of Pompeii.</p>
+</figcaption>
+</figure>
+<p class="indent">Clicking the button and entering “SATOR AREPO TENET OPERA ROTAS” (<a href="ch09.xhtml#ch9fig11">Figure 9.11</a>) leads to the results being displayed directly in the HTML, as seen in <a href="ch09.xhtml#ch9fig12">Figure 9.12</a>.</p>
+<figure class="figure" id="ch9fig11">
+<img src="graphics/09fig11.jpg" alt="images" width="706" height="545"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.11:</strong> A Latin palindrome.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch9fig12">
+<img src="graphics/09fig12.jpg" alt="images" width="704" height="545"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.12:</strong> HTML dynamicus.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch9lev3sec1">9.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">In order to make the result in <a href="ch09.xhtml#ch9fig12">Figure 9.12</a> easier to read, make the palindrome itself bold using the <span class="pd_green"><code><strong>strong</strong></code></span> tag, as in “ ‘<strong>SATOR AREPO TENET OPERA ROTAS</strong>’ is a palindrome!”</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch9lev4">9.4 Form Handling</h3>
+<p class="noindent">As a final touch, in this section we’ll replace the <span class="pd_green"><code><strong>prompt</strong></code></span> used in previous sections with a more natural <em>HTML form</em>. Although form handling in general requires having a back-end web application on the server (such as that provided by <a href="https://www.learnenough.com/ruby">Sinatra</a> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>) or <a href="https://www.railstutorial.org/">Rails</a> (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>)), we can fake it with JavaScript by adding an event listener to intercept the resulting <span class="pd_green"><code><strong>"submit"</strong></code></span> event.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_206"></span>The first step is to wrap the <span class="pd_green"><code><strong>button</strong></code></span> tag (<a href="ch09.xhtml#ch9list12">Listing 9.12</a>) in a form:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c206pro01" id="c206pro01a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>form</strong></span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"palindromeTester"</span>&gt;
+  &lt;<span class="pd_green1"><strong>textarea</strong></span> <span class="g1">name</span><span class="gray">=</span><span class="pd_red">"phrase"</span> <span class="g1">rows</span><span class="gray">=</span><span class="pd_red">"10"</span> <span class="g1">cols</span><span class="gray">=</span><span class="pd_red">"30"</span>&gt;&lt;/<span class="pd_green1"><strong>textarea</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>br</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>button</strong></span> <span class="g1">type</span><span class="gray">=</span><span class="pd_red">"submit"</span>&gt;Is it a palindrome?&lt;/<span class="pd_green1"><strong>button</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>form</strong></span>&gt;</pre>
+<p class="noindent">Here we’ve transferred the CSS id to the <span class="pd_green"><code><strong>form</strong></code></span> tag itself, and have introduced the HTML <span class="pd_green"><code><strong>textarea</strong></code></span> tag (10 rows tall and 30 columns wide), while also identifying the <span class="pd_green"><code><strong>button</strong></code></span> as being of type <span class="pd_green"><code><strong>"submit"</strong></code></span>. Note also that the <span class="pd_green"><code><strong>textarea</strong></code></span> has a <span class="pd_green"><code><strong>name</strong></code></span> attribute (with value <span class="pd_green"><code><strong>"phrase"</strong></code></span>); this will become important in a moment.</p>
+<p class="indent">Placing the form on our palindrome page leads to the code shown in <a href="ch09.xhtml#ch9list14">Listing 9.14</a>. The result appears in <a href="ch09.xhtml#ch9fig13">Figure 9.13</a>.</p>
+<figure class="figure" id="ch9fig13">
+<img src="graphics/09fig13.jpg" alt="images" width="706" height="538"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.13:</strong> Our palindrome page with a fancy new form.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch9list14"><span epub:type="pagebreak" id="page_207"></span><strong>Listing 9.14:</strong> Adding a form to the palindrome page.<br/><code><em>palindrome.html</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis14" id="c09lis14a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"bundle.js"</span>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Palindrome Tester&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>form</strong></span> <span class="g1"><strong>id</strong></span><span class="gray">=</span><span class="pd_red"><strong>"palindromeTester"</strong></span>&gt;</span>
+<span class="bg1">      &lt;<span class="pd_green1"><strong>textarea</strong></span> <span class="pd_orange"><strong>nam</strong></span><span class="gray"><strong>e</strong></span><span class="gray">=</span><span class="pd_red"><strong>"phrase"</strong></span> <span class="pd_orange"><strong>row</strong></span><span class="gray"><strong>s</strong></span><span class="gray">=</span><span class="pd_red"><strong>"10"</strong></span> <span class="pd_orange"><strong>col</strong></span><span class="gray"><strong>s</strong></span><span class="gray">=</span><span class="pd_red"><strong>"30"</strong></span>&gt;&lt;/<span class="pd_green1"><strong>textarea</strong></span>&gt;</span>
+<span class="bg1">      &lt;<span class="pd_green1"><strong>br</strong></span>&gt;</span>
+<span class="bg1">      &lt;<span class="pd_green1"><strong>button</strong></span> <span class="g1"><strong>type</strong></span><span class="gray">=</span><span class="pd_red"><strong>"submit"</strong></span>&gt;Is it a palindrome?&lt;/<span class="pd_green1"><strong>button</strong></span>&gt;</span>
+<span class="bg1">    &lt;/<span class="pd_green1"><strong>form</strong></span>&gt;</span>
+<span epub:type="pagebreak" id="page_208"></span>    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;Result&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+
+    &lt;<span class="pd_green1"><strong>p</strong></span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"palindromeResult"</span>&gt;&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">Since we’ve changed the event type, we need to update our listener, changing from <span class="pd_green"><code><strong>"click"</strong></code></span>to <span class="pd_green"><code><strong>"submit"</strong></code></span>:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c208pro01" id="c208pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1">document</span>.addEventListener(<span class="pd_red">"DOMContentLoaded"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> tester = <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>"#palindromeTester"</strong></span>);</span>
+<span class="bg1">  tester.addEventListener(<span class="pd_red"><strong>"submit"</strong></span>, <span class="pd_green1"><strong>function</strong></span>(event) {</span>
+<span class="bg1">    palindromeTester(event);</span>
+
+  });
+});</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_209"></span>Note that we’ve also added the <span class="pd_green"><code><strong>event</strong></code></span> parameter to the function argument and when calling <span class="pd_green"><code><strong>palindromeTester</strong></code></span>; more on this in a moment.</p>
+<p class="indent">Then, in the <span class="pd_green"><code><strong>palindromeTester</strong></code></span> method, we have to make two minor changes. The first involves preventing the <em>default behavior</em> of the form, which is to submit information back to the server. Since our “server” is just a static web page, we can’t handle such a submission, so we need to prevent this default behavior as follows:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c209pro01" id="c209pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1"><span class="pd_green1"><strong>function</strong></span> palindromeTester(event) {</span>
+<span class="bg1">  event.preventDefault();</span>
+   .
+   .
+   .
+}</pre>
+<p class="noindent">Here <span class="pd_green"><code><strong>event</strong></code></span> is a special object that JavaScript provides for just this sort of case.</p>
+<p class="indent">The second change is that, instead of grabbing the phrase string from a <span class="pd_green"><code><strong>prompt</strong></code></span>, we’ll get it directly from the form submission. This is where the <span class="pd_green"><code><strong>name</strong></code></span> attribute from the <span class="pd_green"><code><strong>textarea</strong></code></span> in <a href="ch09.xhtml#ch9list14">Listing 9.14</a> comes in: We can access the phrase from the <em>target</em> of the <span class="pd_green"><code><strong>event</strong></code></span>. In this case, the <span class="pd_green"><code><strong>event</strong></code></span> target is just a <span class="pd_green"><code><strong>form</strong></code></span> object, so <span class="pd_green"><code><strong>event.target</strong></code></span> is the form itself. Moreover, because of the <span class="pd_green"><code><strong>name="phrase"</strong></code></span> key–value pair in the <span class="pd_green"><code><strong>textarea</strong></code></span> of the form, <span class="pd_green"><code><strong>event.target</strong></code></span> has an attribute whose <em>value</em> is the submitted string. In other words, if we entered, say, the phrase “Madam, I’m Adam.”, we could extract the value as follows:</p>
+<p class="codelink"><a href="ch09_images.xhtml#c209pro02" id="c209pro02a">Click here to view code image</a></p>
+<pre class="pre1">event.target.phrase.value    <span class="pd_blue1"><em>// would be "Madam, I'm Adam."</em></span></pre>
+<p class="indent">Applying this to the <span class="pd_green"><code><strong>palindromeTester</strong></code></span> function and combining with the new listener gives the result shown in <a href="ch09.xhtml#ch9list15">Listing 9.15</a>. By the way, the inclusion of <span class="pd_green"><code><strong>event</strong></code></span> in <span class="pd_green"><code><strong>function(event)</strong></code></span> isn’t necessary on some systems, but should be included for maximum cross-browser compatibility.</p>
+<p class="listing" id="ch9list15"><strong>Listing 9.15:</strong> Handling form submission in JavaScript.<br/><code><em>main.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis15" id="c09lis15a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+<span class="bg1"><span class="pd_green1"><strong>function</strong></span> palindromeTester(event) {</span>
+<span class="bg1">  event.preventDefault();</span>
+
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> phrase = <span class="v1"><strong>new</strong></span> Phrase(event.target.phrase.value);</span>
+
+<span epub:type="pagebreak" id="page_210"></span>  <span class="pd_green1"><strong>let</strong></span> palindromeResult <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector(<span class="pd_red">"#palindromeResult"</span>);
+
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    palindromeResult.innerHTML <span class="gray">=</span> <span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is a palindrome!`</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    palindromeResult.innerHTML <span class="gray">=</span> <span class="pd_red">`"</span><span class="pink"><strong>${</strong></span>phrase.content<span class="pink"><strong>}</strong></span><span class="pd_red">" is not a palindrome.`</span>;
+  }
+}
+
+<span class="pd_green1">document</span>.addEventListener(<span class="pd_red">"DOMContentLoaded"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> tester = <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>"#palindromeTester"</strong></span>);</span>
+<span class="bg1">  tester.addEventListener(<span class="pd_red"><strong>"submit"</strong></span>, <span class="pd_green1"><strong>function</strong></span>(event) {</span>
+<span class="bg1">     palindromeTester(event);</span>
+  });
+});</pre>
+<p class="indent">Rerunning <a href="ch09.xhtml#ch9list2">Listing 9.2</a>, refreshing, and filling the textarea with one of my favorite looooong palindromes (<a href="ch09.xhtml#ch9fig14">Figure 9.14</a>) gives the result shown in <a href="ch09.xhtml#ch9fig15">Figure 9.15</a>.<sup><a id="ch9fn-4" href="ch09.xhtml#ch9fn_4">4</a></sup></p>
+<p class="footnote"><a id="ch9fn_4" href="ch09.xhtml#ch9fn-4">4</a>. The amazingly long palindrome in <a href="ch09.xhtml#ch9fig14">Figure 9.14</a> was created in 1983 by pioneering computer scientist <a href="https://en.wikipedia.org/wiki/Guy_L._Steele_Jr.">Guy Steele</a> with the aid of a custom program.</p>
+<figure class="figure" id="ch9fig14">
+<img src="graphics/09fig14.jpg" alt="images" width="710" height="546"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.14:</strong> Entering a long string in the form’s textarea field.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch9fig15">
+<img src="graphics/09fig15.jpg" alt="images" width="701" height="533"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.15:</strong> That long string is a palindrome!</p>
+</figcaption>
+</figure>
+<p class="indent">And with that—“A man, a plan, a canoe, pasta, heros, rajahs, a coloratura, maps, snipe, percale, macaroni, a gag, a banana bag, a tan, a tag, a banana bag again (or a camel), a crepe, pins, Spam, a rut, a Rolo, cash, a jar, sore hats, a peon, a canal—Panama!”—we’re done with the web version of our JavaScript palindrome detector. Whew!</p>
+<section>
+<h4 class="h4" id="ch9lev4sec1">9.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Confirm by submitting an empty form that an empty string is currently considered to be a palindrome (<a href="ch09.xhtml#ch9fig16">Figure 9.16</a>). This is true in a <a href="https://en.wiktionary.org/wiki/vacuous">vacuous</a> sense, but it’s probably not the behavior we want.</p>
+<figure class="figure" id="ch9fig16">
+<img src="graphics/09fig16.jpg" alt="images" width="425" height="506"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.16:</strong> Oops—our application thinks the empty string is a palindrome!</p>
+</figcaption>
+</figure></li>
+<li><p class="number">To fix this issue, follow the procedure outlined in <a href="ch08.xhtml#ch8box2">Box 8.2</a> and write a <span class="red"><span class="smallcaps">RED</span></span> test asserting that the empty string is <em>not</em> a palindrome (<a href="ch09.xhtml#ch9list16">Listing 9.16</a>), then confirm that the application code in <a href="ch09.xhtml#ch9list17">Listing 9.17</a> gets the test <span class="pd_green"><span class="smallcaps">GREEN</span></span>.</p></li>
+<li><p class="number">Bump the version number using the guidelines in <a href="ch08.xhtml#ch8box1">Box 8.1</a>, publish your new module as in <a href="ch08.xhtml#ch8lev5sec1">Section 8.5.1</a>, and then update it using the <span class="pd_green"><code><strong>npm update</strong></code></span> command (<a href="ch09.xhtml#ch9list18">Listing 9.18</a>). Does your application now correctly identify <span class="pd_green"><code><strong>""</strong></code></span> as not being a palindrome (<a href="ch09.xhtml#ch9fig17">Figure 9.17</a>)? (<em>Hint</em>: Don’t forget to rerun <a href="ch09.xhtml#ch9list2">Listing 9.2</a>.)</p>
+<figure class="figure" id="ch9fig17">
+<img src="graphics/09fig17.jpg" alt="images" width="423" height="504"/>
+<figcaption>
+<p class="title-f"><strong>Figure 9.17:</strong> Confirming that the empty string is <em>not</em> a palindrome.</p>
+</figcaption>
+</figure></li>
+</ol>
+<p class="listing" id="ch9list16"><span epub:type="pagebreak" id="page_211"></span><strong>Listing 9.16:</strong> Template for asserting that the empty string isn’t a palindrome. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis16" id="c09lis16a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> assert <span class="gray">=</span> require(<span class="pd_red">"assert"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"../index.js"</span>);
+
+describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    .
+    .
+    .
+    it(<span class="pd_red">"should return false for an empty string"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> emptyPhrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(<span class="pd_red">""</span>);
+<span class="bg1">      assert(FILL_IN);</span>
+    });
+  }
+}</pre>
+<p class="listing" id="ch9list17"><span epub:type="pagebreak" id="page_212"></span><strong>Listing 9.17:</strong> Application code for <a href="ch09.xhtml#ch9list16">Listing 9.16</a>. <span class="pd_green"><span class="smallcaps">GREEN</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis17" id="c09lis17a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  .
+  .
+  .
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>if</strong></span> (<span class="pd_green1"><strong>this</strong></span>.processedContent()) {
+      <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+
+<span epub:type="pagebreak" id="page_213"></span>    } <span class="pd_green1"><strong>else</strong></span> {
+      <span class="pd_green1"><strong>return false</strong></span>;
+    }
+  }
+}</pre>
+<p class="listing" id="ch9list18"><strong>Listing 9.18:</strong> Updating an NPM module.</p>
+<p class="codelink"><a href="ch09_images.xhtml#c09lis18" id="c09lis18a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> npm update &lt;username&gt;-palindrome</pre>
+<span epub:type="pagebreak" id="page_214"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

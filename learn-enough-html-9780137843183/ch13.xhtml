@@ -1,0 +1,968 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch13"><span epub:type="pagebreak" id="page_429"></span>Chapter 13</h2>
+<h2 class="chap-title">Mobile Media Queries</h2>
+<p class="noindent">At this point, our site is really coming together. We’ve got a nicely styled homepage, a proto-gallery with a three-column layout, and the ability to add an arbitrary number of nicely styled blog posts. In this chapter and the next, we’ll add a few new levels of polish needed for a professional-grade site. Here we’ll start adding the styles necessary to make our site look good on both desktop and mobile devices, a practice known as <em>responsive design</em>. Then in <a href="ch14.xhtml#ch14">Chapter 14</a> we’ll add miscellaneous polish like custom fonts, meta tags, and a favicon.</p>
+<section>
+<h3 class="h3" id="sec13_1">13.1 Getting Started with Mobile Designs</h3>
+<p class="noindent">The reason we need to add new styles for mobile devices is because websites made for big desktop screens that have lots of available space don’t look great when shrunk down to be shown on small screens. Conversely, sites designed for small screens— where interactive elements need to be big for UI purposes—look terrible when blown up on a big screen (<a href="ch13.xhtml#ch13fig1">Figure 13.1</a>).</p>
+<figure class="figure" id="ch13fig1">
+<img src="graphics/13fig01.jpg" alt="images" width="600" height="361"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.1:</strong> Big on small, small on big = bad for all.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_430"></span>Web designers used to use a little bit of code that would detect what size screen you were using, and then serve two totally different pages depending on your screen size. Unfortunately, doing that sort of thing means that you end up needing to maintain two different sets of code… and that is the worst kind of repeating yourself (<a href="ch05.xhtml#box5_2">Box 5.2</a>).</p>
+<p class="indent">To avoid this maintenance nightmare, modern development practices use special sections of CSS called <em>media queries</em> that can be set to apply only when the screen is a certain size or has a certain attribute. An example of a media query appears in <a href="ch13.xhtml#ch13list1">Listing 13.1</a>.</p>
+<p class="listing" id="ch13list1"><strong>Listing 13.1:</strong> Applying different styles if the screen is less than 800px wide.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list01a" id="p13list01">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="pd_green1"><strong>html</strong></span> {
+    <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  }
+  .<span class="blue-v"><strong>post-aside</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  }
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_431"></span>The <span class="green-d"><code><strong>@media (max-width: 800px)</strong></code></span> part of the CSS in <a href="ch13.xhtml#ch13list1">Listing 13.1</a> is the media query itself, and inside that is just regular CSS. What is happening is that if a screen is <span class="green-d"><code><strong>800px</strong></code></span> or less (called the <em>breakpoint</em>), then the browser will apply the styles that are contained inside (and recall from <a href="ch06.xhtml#ch6tab1">Table 6.1</a> that “media type” has a very high priority). There are a number of different media queries that let you style things so that your site looks different when printed or when seen on a mobile device held in portrait vs. landscape orientation (<a href="ch13.xhtml#ch13fig2">Figure 13.2</a>). We are going to keep things very simple, but if you want to know more, the Mozilla developer page for media queries (<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries">https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries</a>) has a lot more information.</p>
+<figure class="figure" id="ch13fig2">
+<img src="graphics/13fig02.jpg" alt="images" width="526" height="267"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.2:</strong> Portrait vs. landscape.</p>
+</figcaption>
+</figure>
+<p class="indent">After adding the contents of <a href="ch13.xhtml#ch13list1">Listing 13.1</a> to the bottom of <span class="green-d"><code><strong>main.css</strong></code></span>, you should find that the layout changes when you change the width of your browser window (<a href="ch13.xhtml#ch13fig3">Figure 13.3</a>). (Note that <a href="ch13.xhtml#ch13fig3">Figure 13.3</a> and subsequent screenshots incorporate the result of the newest blog post exercise (<a href="ch12.xhtml#ch12list11">Listing 12.11</a>).)</p>
+<figure class="figure" id="ch13fig3">
+<img src="graphics/13fig03.jpg" alt="images" width="676" height="471"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.3:</strong> A bit of a difference between the bigger window and the narrower one.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_432"></span>The media query we added in <a href="ch13.xhtml#ch13list1">Listing 13.1</a> also gets rid of the padding and black border around the site, and then also changes the <span class="green-d"><code><strong>display</strong></code></span> property of the <span class="green-d"><code><strong>.post-aside</strong></code></span> to <span class="green-d"><code><strong>none</strong></code></span> to hide it. So as you change the browser window’s size, you’ll see the aside disappear on the narrower screen. When you make the window bigger, it pops back into existence.</p>
+<p class="indent">When designing content to fit on a small screen, there are often elements of a page that aren’t strictly necessary but are nice to have if there is a ton of room, so we can omit them when designing for a smaller screen. In order to make good design decisions, we need to think about what is necessary to clearly communicate our content to users in a usable way, rather than trying to cram every single function of the site into the mobile version… unless of course most users will be seeing the site on mobile first (<a href="ch13.xhtml#box13_1">Box 13.1</a>).</p>
+<p class="indent">The general idea is that you should set a number of breakpoints, with different styles that get applied to elements at different window sizes, so that the entire page fits better in the window across devices.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box13_1">
+<p class="sb-title1"><span epub:type="pagebreak" id="page_433"></span><strong>Box 13.1: Style Note: Mobile First, or Desktop First?</strong></p>
+<p class="sb-noindent">These days, mobile traffic to sites keeps growing because smartphones are pretty much ubiquitous (sorry if you are still hanging onto that RAZR).</p>
+<p class="sb-indent">As a result, many front-end developers actually start their styling by looking at how the page will look on mobile first, since that can be the more difficult design constraint—a practice known as <em>mobile-first development</em>.</p>
+<p class="sb-indent">If you think that most of your users are going to be visiting your page while on a mobile device, or if you just don’t know, it would be a good idea to consider starting your styling with the browser window shrunk down to approximate a mobile screen. This is especially true for content sites likes blogs or informational sites about real-world businesses—in those cases, lots of people will be visiting your site from a phone, and you should make things easy for them.</p>
+<p class="sb-indent">However, if you have a product or service that is mostly going to be used by people who are sitting in front of a computer, it might make more sense to start with desktop design first, and then adapt down to mobile. For instance, if you are making a site that helps other developers to do better work while coding (<a href="https://www.learnenough.com/">https://www.learnenough.com/</a>), it is pretty unlikely that they are going to be doing their coding work from a phone. In this case, you might as well start with a desktop-first design to take full advantage of the screen real estate.</p>
+<p class="sb-indent">Like everything else in business, it’s important to know your customer…</p>
+</aside>
+<p class="indent">Part of mobile development is understanding how to build a site in a way that allows you to easily adapt the content for small screens with a minimum of extra styling. The nightmare scenario is one where you have to give every single element a new set of CSS styles—this would make your application incredibly brittle when it comes to handling changes without breaking the site.</p>
+<p class="indent">We’ve actually done quite a bit of that in this tutorial without your noticing— there are lots of elements that are set to resize to fill a container, and we just need to sprinkle in some styling to adapt what we’ve built.</p>
+<section>
+<h4 class="h4" id="sec13_1_1">13.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Add a second break point with a new media query to target windows that are narrower than <span class="green-d"><code><strong>600px</strong></code></span>, and use it to hide the <span class="green-d"><code><strong>.half-hero</strong></code></span>.</p></li>
+</ol>
+</section>
+<section>
+<h4 class="h4" id="sec13_1_2"><span epub:type="pagebreak" id="page_434"></span>13.1.2 How to See in Mobile (Without Looking at Your Phone)</h4>
+<p class="noindent">Before we get started with the full mobile restyling, we should find a way to make it easy to see our page at the approximate size of a mobile screen. We could resize the window, of course, but Chrome and Safari don’t actually let you shrink the window far enough to fully approximate a mobile window. Luckily, both browsers have modes that you can turn on that exactly resize the content area of the browser for precisely this case. Let’s see how it works in Safari and then in Chrome.</p>
+<p class="indent">In Safari, you first need to go to Preferences, and then in the “Advanced” section check the box that says “Show Develop menu in menu bar” (<a href="ch13.xhtml#ch13fig4">Figure 13.4</a>).</p>
+<figure class="figure" id="ch13fig4">
+<img src="graphics/13fig04.jpg" alt="images" width="601" height="491"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.4:</strong> Enabling the Safari developer tools.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_435"></span>Once the developer tools are enabled, you should see a new menu option at the top of your screen called “Develop,” and in the dropdown menu there will now be an option to “Enter Responsive Design Mode” (<a href="ch13.xhtml#ch13fig5">Figure 13.5</a>).</p>
+<figure class="figure" id="ch13fig5">
+<img src="graphics/13fig05.jpg" alt="images" width="676" height="452"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.5:</strong> Enabling the responsive design mode in Safari.</p>
+</figcaption>
+</figure>
+<p class="indent">When you enter that mode, your window will now show the content at a variety of mobile sizes (<a href="ch13.xhtml#ch13fig6">Figure 13.6</a>).</p>
+<figure class="figure" id="ch13fig6">
+<img src="graphics/13fig06.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.6:</strong> The site viewed in the smaller Safari mobile view.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_436"></span>Now that you have the responsive design mode open, right-click (or two-finger click) anywhere on the page and select “Inspect.” to open up the Safari web inspector (<a href="ch13.xhtml#ch13fig7">Figure 13.7</a>). Web inspectors are handy tools that do a lot of things that aid developers, but most importantly for our purposes they let us see the styling that has been applied to every element on a page. Even better, they let us make test changes and see the <span epub:type="pagebreak" id="page_437"></span>results immediately (so that we don’t always have to change the code, save the changes, and then refresh the browser).</p>
+<figure class="figure" id="ch13fig7">
+<img src="graphics/13fig07.jpg" alt="images" width="721" height="282"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.7:</strong> The Safari web inspector.</p>
+</figcaption>
+</figure>
+<p class="indent">Chrome has a similar mode, but you have to take a different path to enabling it. Right-click anywhere on the page to bring up the menu, and then click “Inspect.” That will bring up the same sort of web inspector that we just opened in Safari (<a href="ch13.xhtml#ch13fig8">Figure 13.8</a>).</p>
+<figure class="figure" id="ch13fig8">
+<img src="graphics/13fig08.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.8:</strong> Getting to the Chrome web inspector.</p>
+</figcaption>
+</figure>
+<p class="indent">To resize the current page in a mobile view, click the little button near the top level of the inspector, the one that kind of looks like a phone in front of a page (<a href="ch13.xhtml#ch13fig9">Figure 13.9</a>).</p>
+<figure class="figure" id="ch13fig9">
+<img src="graphics/13fig09.jpg" alt="images" width="676" height="471"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.9:</strong> The sample site in the Chrome mobile view.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_438"></span>Now that we can see an approximation of the site on our computers, let’s jump into reformatting the pages to display better on small screens.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec13_2">13.2 Mobile Adaptation</h3>
+<p class="noindent">So, where to start with our mobile adaptation? It’s a good idea to do a first round of navigating around the site using the mobile view browser setting before making any changes. Doing that gives you an overview of the areas that might need attention, and usually will allow you to quickly identify parts of the site that just don’t work well on mobile. Here are some of the issues to look for:</p>
+<ul class="bullet">
+<li><p class="bullet">Any element that has a set width should be given a relative width.</p></li>
+<li><p class="bullet">Any page that has columns of content next to each other in a small space should have the content changed so that the sections stack vertically.</p></li>
+<li><p class="bullet">Fonts should be resized for better readability.</p></li>
+<li><p class="bullet"><span epub:type="pagebreak" id="page_439"></span>Details that are nice to have on the big screen can be dropped if it doesn’t fundamentally affect the way users experience the site.</p></li>
+<li><p class="bullet">Navigation that uses more exotic styling like fixed positioning should be changed to something that moves with the page so that you aren’t taking up precious space. (Or, if you want the navigation always to be visible, then it is generally a good idea to make it a bit smaller for mobile.)</p></li>
+</ul>
+<p class="indent">Let’s take a look at our sample site and make a list of the areas that need to be addressed.</p>
+<p class="indent"><strong>Global</strong></p>
+<ul class="bullet">
+<li><p class="bullet">Header positioning and size</p></li>
+<li><p class="bullet">Navigation layout</p></li>
+</ul>
+<p class="indent"><strong>Homepage</strong></p>
+<ul class="bullet">
+<li><p class="bullet">Hero title</p></li>
+<li><p class="bullet">Bio boxes need to be vertical</p></li>
+</ul>
+<p class="indent"><strong>Three-Column Page</strong></p>
+<ul class="bullet">
+<li><p class="bullet">Switch to stacked layout</p></li>
+</ul>
+<p class="indent"><strong>Blog Index</strong></p>
+<ul class="bullet">
+<li><p class="bullet">Drop sidebar</p></li>
+<li><p class="bullet">Have previews take up the full width</p></li>
+</ul>
+<p class="indent"><strong>Blog Post</strong></p>
+<ul class="bullet">
+<li><p class="bullet">Check headline font size</p></li>
+<li><p class="bullet">Make images not float</p>
+<p class="noindent">Let’s start with the header since, as seen in <a href="ch13.xhtml#ch13fig10">Figure 13.10</a>, it doesn’t quite fit.</p></li>
+</ul>
+<figure class="figure" id="ch13fig10">
+<img src="graphics/13fig10.jpg" alt="images" width="601" height="269"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.10:</strong> Not a good look for the header.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_440"></span>In <a href="ch13.xhtml#sec13_4">Section 13.4</a> and <a href="ch13.xhtml#sec13_5">Section 13.5</a>, we are going to add dropdown menus to the header, and also make mobile-friendly dropdown menus that open with a click. For now, though, we’ll just make everything fit. To do this, we’ll add in the styles shown in <a href="ch13.xhtml#ch13list2">Listing 13.2</a>. Note that we’ve added a CSS comment to separate the blog styles from those for the header.</p>
+<p class="listing" id="ch13list2"><strong>Listing 13.2:</strong> Making the header work better for mobile.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list02a" id="p13list02">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="pd_green1"><strong>html</strong></span> {
+    <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  }
+
+  <span class="pd_blue1"><em>/* HEADER STYLES */</em></span>
+  .<span class="blue-v"><strong>header-nav</strong></span> {
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>vh</strong></span> <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0</span> 0;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>li</strong></span> {
+    <span class="pd_green1"><strong>margin-left</strong></span>: <span class="grey">0.25</span><span class="pd_red"><strong>em</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>li</strong></span> <span class="grey">~</span> <span class="pd_green1"><strong>li</strong></span> {
+    <span class="pd_green1"><strong>padding-left</strong></span>: <span class="grey">0.25</span><span class="pd_red"><strong>em</strong></span>;
+  }
+  .<span class="blue-v"><strong>nav-links</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+    <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">3.25</span><span class="pd_red"><strong>vw</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-logo</strong></span> {
+    <span class="pd_green1"><strong>left</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  }
+
+   <span class="pd_blue1"><em>/* BLOG STYLES */</em></span>
+   .<span class="blue-v"><strong>post-aside</strong></span> {
+     <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+   }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_441"></span>These numbers are a quick fix that we arrived at by using the code inspector in the browser to play with different values for the properties until we arrived at a decent outcome. The result is that now our site’s header fits on the screen (<a href="ch13.xhtml#ch13fig11">Figure 13.11</a>).</p>
+<figure class="figure" id="ch13fig11">
+<img src="graphics/13fig11.jpg" alt="images" width="676" height="473"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.11:</strong> Reformatted header to better fit mobile screens.</p>
+</figcaption>
+</figure>
+<p class="indent">Overall, that was a fairly simple edit, since all that needed to happen was a little adjustment of margins and padding. Let’s now take a look at a couple of sections of the site that are going to need some reorganization in order to be readable on mobile.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_442"></span>Looking at the homepage, the first thing we notice is that the callout section no longer looks nicely laid out, as seen in <a href="ch13.xhtml#ch13fig12">Figure 13.12</a>.</p>
+<figure class="figure" id="ch13fig12">
+<img src="graphics/13fig12.jpg" alt="images" width="666" height="514"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.12:</strong> The callout section needs changes to better fit on a small screen.</p>
+</figcaption>
+</figure>
+<p class="indent">Scrolling down the homepage to the bio section, we’ll see that the layout there also isn’t well-adapted to a mobile view (<a href="ch13.xhtml#ch13fig13">Figure 13.13</a>).</p>
+<figure class="figure" id="ch13fig13">
+<img src="graphics/13fig13.jpg" alt="images" width="668" height="467"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.13:</strong> There isn’t enough room for the floated bios.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_443"></span>The easy fix for these problems is to stack the elements on top of each other and let them take up the full width of the screen, so that both the images and the text can expand and be more readable. To accomplish this, let’s add the styling shown in <a href="ch13.xhtml#ch13list3">Listing 13.3</a>.</p>
+<p class="listing" id="ch13list3"><strong>Listing 13.3:</strong> Stacking elements on mobile devices.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list03a" id="p13list03">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* HOME STYLES */</em></span>
+  .<span class="blue-v"><strong>home-callout</strong></span> {
+    <span class="pd_green1"><strong>flex-direction</strong></span>: <span class="pd_green1"><strong>column</strong></span>;
+   }
+   .<span class="blue-v"><strong>callout-copy</strong></span> {
+     <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+   }
+   .<span class="blue-v"><strong>bio-box</strong></span> {
+     <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+     <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1.3</span><span class="pd_red"><strong>rem</strong></span>;
+     <span class="pd_green1"><strong>width</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+   }
+   <span class="pd_blue1"><em>/* BLOG STYLES */</em></span>
+   <span class="grey">.</span>
+   <span class="grey">.</span>
+   <span class="grey">.</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_444"></span>You can see that after we got rid of the widths and dropped the <span class="green-d"><code><strong>float</strong></code></span>, all the content stretched to fill the page (<a href="ch13.xhtml#ch13fig14">Figure 13.14</a>).</p>
+<figure class="figure" id="ch13fig14">
+<img src="graphics/13fig14.jpg" alt="images" width="668" height="467"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.14:</strong> The stacked bios fit much better.</p>
+</figcaption>
+</figure>
+<p class="indent">At this point, you should be getting the hang of this: You look at each page, see where something doesn’t fit well, and then alter sizing so that the content better fills the screen—usually removing a width where it was set or making columns out of rows. We also hope you can see now why it is a bad idea to use tables for layouts (<a href="ch11.xhtml#box11_1">Box 11.1</a>)—if we had arranged those bios using tables, there would be no way to stack them in a column.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_445"></span>Now let’s swing through the other changes.</p>
+<p class="indent">On the gallery page from <a href="ch11.xhtml#sec11_5">Section 11.5</a>, we are going to restack the elements and make the thumbnails run across the top of the image horizontally. One thing to notice: For the mobile styling, we’re not going to target the column layout style classes like <span class="green-d"><code><strong>.col</strong></code></span> or <span class="green-d"><code><strong>.col-three</strong></code></span> (<a href="ch11.xhtml#ch11list8">Listing 11.8</a>), but rather the gallery-specific classes that we added in <a href="ch11.xhtml#ch11list8">Listing 11.8</a> and <a href="ch11.xhtml#ch11list12">Listing 11.12</a> (<span class="green-d"><code><strong>.gallery</strong></code></span>, <span class="green-d"><code><strong>.gallery-thumbs</strong></code></span>, etc.). The reasoning here is that there is a conceivable world where we would want to have a three-column layout with everything horizontal even on mobile, but in the specific case of the gallery we don’t want that. So instead of changing the column layout for <em>all</em> three-column layouts across the site, we’re just going to target the gallery.</p>
+<p class="indent">We’ll first use <span class="green-d"><code><strong>flex-direction: column</strong></code></span> to switch the layout to be vertical, and also lessen the amount of padding on each <span class="green-d"><code><strong>.col</strong></code></span>:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p445pro01a" id="p445pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery</strong></span> {
+  <span class="pd_green1"><strong>flex-direction</strong></span>: <span class="pd_green1"><strong>column</strong></span>;
+}
+.<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>col</strong></span> {
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Then we’ll change the <span class="green-d"><code><strong>.gallery-thumbs</strong></code></span> to get rid of the height that we set before, and instead give the element a fixed <span class="green-d"><code><strong>100vw</strong></code></span> width (<a href="ch07.xhtml#sec7_7">Section 7.7</a>) so that it will horizontally scroll if there are a lot of thumbnails:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p445pro02a" id="p445pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>gallery-thumbs</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1 1</span> 0;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>white-space</strong></span>: <span class="pd_green1"><strong>nowrap</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vw</strong></span>;
+}</pre>
+<p class="indent">We’ll change the thumbnails to have a set height instead of a set width like they had before, update the margins and padding, and also change the flex properties for both the <span class="green-d"><code><strong>.gallery-thumbs</strong></code></span> and <span class="green-d"><code><strong>.gallery-info</strong></code></span> so that they will expand to fill space (while also no longer having a <span class="green-d"><code><strong>flex-basis</strong></code></span> that forces a set width):</p>
+<p class="codelink"><a href="ch13_images.xhtml#p445pro03a" id="p445pro03">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>gallery-thumbs</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>white-space</strong></span>: <span class="pd_green1"><strong>nowrap</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vw</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>div</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 10</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0</span> 0;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+}
+.<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>gallery-info</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_446"></span>Putting all these changes together gives the updated CSS shown in <a href="ch13.xhtml#ch13list4">Listing 13.4</a>.</p>
+<p class="listing" id="ch13list4"><strong>Listing 13.4:</strong> Horizontal gallery thumbnails with a vertical page build.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list04a" id="p13list04">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* GALLERY STYLES */</em></span>
+  .<span class="blue-v"><strong>gallery</strong></span> {
+    <span class="pd_green1"><strong>flex-direction</strong></span>: <span class="pd_green1"><strong>column</strong></span>;
+  }
+  .<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>col</strong></span> {
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  }
+  .<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>gallery-thumbs</strong></span> {
+    <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+    <span class="pd_green1"><strong>height</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+    <span class="pd_green1"><strong>white-space</strong></span>: <span class="pd_green1"><strong>nowrap</strong></span>;
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vw</strong></span>;
+  }
+  .<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>div</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  }
+  .<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+    <span class="pd_green1"><strong>height</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vh</strong></span>;
+    <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 10</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0</span> 0;
+    <span class="pd_green1"><strong>width</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  }
+  .<span class="blue-v"><strong>gallery</strong></span> .<span class="blue-v"><strong>gallery-info</strong></span> {
+    <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+  }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_447"></span>The end result should look something like <a href="ch13.xhtml#ch13fig15">Figure 13.15</a>.</p>
+<figure class="figure" id="ch13fig15">
+<img src="graphics/13fig15.jpg" alt="images" width="676" height="473"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.15:</strong> A newly redone gallery styled for mobile.</p>
+</figcaption>
+</figure>
+<p class="indent">Note from <a href="ch13.xhtml#ch13list4">Listing 13.4</a> that there’s a new style on the <span class="green-d"><code><strong>.gallery-thumbs</strong></code></span> that specifies <span class="green-d"><code><strong>white-space: nowrap</strong></code></span>. That style forces an element to stay on one line instead of wrapping onto two, which is important for this gallery because we want the thumbnails to be in a long horizontal row. If we hadn’t added that property, and if there were a lot of thumbnails, the gallery would look like <a href="ch13.xhtml#ch13fig16">Figure 13.16</a>.</p>
+<figure class="figure" id="ch13fig16">
+<img src="graphics/13fig16.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.16:</strong> Not the thumbnail navigation that we want, and no scrolling.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_448"></span>The blog needs some help too, and unlike the gallery, in this situation we are not going to rearrange the columns on the index, but rather hide the aside instead (<a href="ch13.xhtml#ch13list5">Listing 13.5</a>).</p>
+<p class="listing" id="ch13list5"><strong>Listing 13.5:</strong> Simplifying the blog index.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list05a" id="p13list05">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* BLOG STYLES */</em></span>
+  .<span class="blue-v"><strong>blog-recent</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  }
+  .<span class="blue-v"><strong>blog-previews</strong></span> {
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_449"></span>Simple removal of elements and padding took a view from looking like a mess to one that looks nice (<a href="ch13.xhtml#ch13fig17">Figure 13.17</a>). Sometimes mobile styling ends up being pretty easy!</p>
+<figure class="figure" id="ch13fig17">
+<img src="graphics/13fig17.jpg" alt="images" width="601" height="478"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.17:</strong> Just removing a couple of rules can make a big difference.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec13_2_1">13.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Instead of hiding the recent posts on the blog index page, try using CSS to have them show at the very top of the pages above the post previews.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec13_3">13.3 Mobile Viewport</h3>
+<p class="noindent">The work in <a href="ch13.xhtml#sec13_1">Section 13.1</a> and <a href="ch13.xhtml#sec13_2">Section 13.2</a> was an excellent start, but in fact our site isn’t quite yet mobile-ready.</p>
+<p class="indent">There are several ways to see this. The most convenient in the long run is to install an <em>iOS simulator</em>, which lets you view a simulation of an iPhone inside macOS, as seen in <a href="ch13.xhtml#ch13fig18">Figure 13.18</a>. (If you’re on a Mac, you need to install Xcode, start Xcode from the Applications folder, then select Xcode &gt; Open Developer Tool &gt; Simulator.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_450"></span>We can see the same result without using the iOS simulator by deploying the site to production, as shown in <a href="ch13.xhtml#ch13list6">Listing 13.6</a>.</p>
+<p class="listing" id="ch13list6"><strong>Listing 13.6:</strong> Deploying the mobile-ready prototype.</p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list06a" id="p13list06">Click here to view code image</a></p>
+<pre class="pre2"><span class="b-nilam"><strong>$</strong></span> git add -A
+<span class="b-nilam"><strong>$</strong></span> git commit -m <span class="pd_red">"Finish mobile prototype"</span>
+<span class="b-nilam"><strong>$</strong></span> git push</pre>
+<p class="noindent">After waiting a moment for the site to build, using an ordinary browser (in mobile mode) to visit the production site (<a href="ch13.xhtml#ch13list7">Listing 13.7</a>) should show the same problem seen in <a href="ch13.xhtml#ch13fig18">Figure 13.18</a>.</p>
+<figure class="figure" id="ch13fig18">
+<img src="graphics/13fig18.jpg" alt="images" width="601" height="498"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.18:</strong> How it looks (left), and how you want it to look (right).</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch13list7"><strong>Listing 13.7:</strong> The template for a GitHub Pages URL.</p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list07a" id="p13list07">Click here to view code image</a></p>
+<pre class="pre2"><span class="green-d">https://&lt;username&gt;.github.io/blog</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_451"></span>(There’s a third, more advanced option as well, which is covered in <a href="ch13.xhtml#box13_2">Box 13.2</a>.)</p>
+<aside epub:type="sidebar" class="sidebar1" id="box13_2">
+<p class="sb-title1"><strong>Box 13.2: Viewing a Local Server</strong></p>
+<p class="sb-noindent">One alternative to using the iOS simulator (which works only on macOS) or deploying to production (which is slow and inconvenient) is to view the site directly using the local Internet Protocol (IP) address. This technique involves finding the IP address on the local network and then visiting it with your mobile device.</p>
+<p class="sb-indent">On many systems, the local IP can be found using the command-line program <code>ifconfig</code> (“interface configure”) as follows:</p>
+<pre class="pre">$ ifconfig | grep 192</pre>
+<p class="sb-noindent">The <code>ifconfig</code> command has been deprecated on many Linux distributions, so if you’re using Linux, you might want to use the <code>ip</code> command instead:</p>
+<pre class="pre">$ ip -4 a | grep 192</pre>
+<p class="sb-noindent">These examples pipe the output of the given IP command to the <code>grep</code> utility covered in <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>). The result is to pick out addresses that start with <code>192</code>, which on most networks identifies local addresses. By typing the resulting IP number into a mobile browser and appending the proper port number (<a href="ch09.xhtml#box9_1">Box 9.1</a>), you can then visit the local Jekyll site.</p>
+<p class="sb-indent">On some systems, you’ll need to quit Jekyll and restart it with a <code>host</code> argument to make the site available to other devices on the same local network, as follows:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p451pro01a" id="p451pro01">Click here to view code image</a></p>
+<pre class="pre">$ bundle _2.3.14_ exec jekyll serve --host 0.0.0.0</pre>
+<p class="sb-noindent">With this running, you should then be able to use something like</p>
+<pre class="pre">http://192.168.1.160:4000</pre>
+<p class="sb-noindent">to view the site locally (where the exact IP number will depend on your particular system).</p>
+</aside>
+<p class="indent">Unfortunately, despite our previous efforts, it doesn’t look so good—everything looks really small (<a href="ch13.xhtml#ch13fig18">Figure 13.18</a>).<sup><a id="fn13_1a" href="ch13.xhtml#fn13_1">1</a></sup> The reason is that, due to a quirk in the way the <span epub:type="pagebreak" id="page_452"></span>mobile Web developed, the site loaded as though we are on a desktop, and then zoomed out to fit it all on the smaller screen.</p>
+<p class="footnote"><a id="fn13_1" href="ch13.xhtml#fn13_1a">1</a>. Now you know what is happening when you go to a site that looks really tiny (but not broken) on mobile, where you have to zoom in to read the content.</p>
+<p class="indent">The culprit here is a decision that was made when smartphones were first being developed. People realized that the Web experience was really bad if you tried to show a standard/non-mobile-optimized site at the native resolution of the device, and because there really weren’t enough phones with real browsers on the market, there also weren’t many mobile-optimized sites. As a result, browser makers decided that mobile browsers could have two modes: (1) do nothing and act like a regular browser with a tiny screen size; or (2) act like a much bigger screen and load any given website as though the user were browsing on a desktop, shrinking things down to fit as necessary.</p>
+<p class="indent">Because phone developers didn’t want to confuse the users with having to make choices about how to view a site, they created a new HTML <span class="green-d"><code><strong>meta</strong></code></span> property that lets the developer switch between modes. That way, if you’ve made your site mobile-optimized, you can set the viewport to show the mobile-friendly view. Otherwise, the site will load as though it were being viewed on a desktop. Since we haven’t yet set that <span class="green-d"><code><strong>meta</strong></code></span> tag, the site currently appears as in the left side of <a href="ch13.xhtml#ch13fig18">Figure 13.18</a>.</p>
+<p class="indent">To fix the issue, all we need to do is set the tag, which controls what is called the <em>viewport</em>. The specific declaration, which should go in <span class="green-d"><code><strong>_includes/head.html</strong></code></span>, appears as shown in <a href="ch13.xhtml#ch13list8">Listing 13.8</a>. (There are a bunch of other options for controlling the mobile viewport that we aren’t going to dive into, but rest assured you can find more info about them online.)</p>
+<p class="listing" id="ch13list8"><strong>Listing 13.8:</strong> The viewport <span class="green-d"><code><strong>meta</strong></code></span> tag to control the appearance on mobile.<br/><code><em>_includes/head.html</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list08a" id="p13list08">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Test Page: Don’t panic&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"utf-8"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green"><strong>name</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"viewport"</strong></span> <span class="light-green"><strong>content</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"width=device-width, initial-scale=1"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>link</strong></span> <span class="light-green1">rel</span><span class="grey">=</span><span class="pd_red">"stylesheet"</span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/css/main.css"</span>&gt;
+&lt;/<span class="pd_green1"><strong>head</strong></span>&gt;</pre>
+<p class="indent">This viewport setting in <a href="ch13.xhtml#ch13list8">Listing 13.8</a> tells the browser that the page should be drawn at the size of the device screen instead of the virtual screen size, while setting the zoom scaling to 1 (which means no scaling). This setting will cause a page to look <span epub:type="pagebreak" id="page_453"></span>absolutely terrible if you try to force an unoptimized site to render at such a small size, which is why we’ve gone to such trouble to make our site responsive.<sup><a id="fn13_2a" href="ch13.xhtml#fn13_2">2</a></sup></p>
+<p class="footnote"><a id="fn13_2" href="ch13.xhtml#fn13_2a">2</a>. In order to preserve the entire site design and layout regardless of the screen size, some sites don’t change the viewport setting at all, and there’s nothing wrong with that. There’s no right answer for this sort of thing—it all depends on the number of mobile users you get and the kind of content you are showing.</p>
+<section>
+<h4 class="h4" id="sec13_3_1">13.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Try setting the <span class="green-d"><code><strong>width=</strong></code></span> to a hard pixel value like <span class="green-d"><code><strong>500</strong></code></span>, which is equivalent to 500px (the unit is left off in the viewport <span class="green-d"><code><strong>meta</strong></code></span> tag). Forcing a mobile browser to show your site only at a very specific size can be helpful when trying to develop very precise mobile layouts.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec13_4">13.4 Dropdown Menu</h3>
+<p class="noindent">Another bit of polish we can add to show off the power of CSS is a <em>dropdown menu</em>, which is a common design pattern on the Web (<a href="ch13.xhtml#ch13fig19">Figure 13.19</a>). In particular, when you are designing a site that has a lot of different pages, product categories, etc., you will <span epub:type="pagebreak" id="page_454"></span>often find yourself in a situation where you just don’t have enough room in the site header to link to all the stuff that you need to link to—something especially important on tiny mobile screens. Dropdown menus are a convenient solution to this problem.</p>
+<figure class="figure" id="ch13fig19">
+<img src="graphics/13fig19.jpg" alt="images" width="676" height="490"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.19:</strong> A fancy dropdown menu (with submenu) on <a href="http://Amazon.com">Amazon.com</a>.</p>
+</figcaption>
+</figure>
+<p class="indent">You can theoretically get incredibly complicated with menus that use all sorts of JavaScript to do wild things, but you can also build dropdown menus with simple techniques using only HTML and CSS. The concept is simple: You place one HTML element inside another one, set the child to <span class="green-d"><code><strong>display: none</strong></code></span> so that it isn’t visible, and then use the <span class="green-d"><code><strong>:hover</strong></code></span> pseudo-class (<a href="ch09.xhtml#sec9_7">Section 9.7</a>) to show the hidden element when a user hovers over the menu. Mobile is a little trickier, since there is no hover action, but we’ll discuss a solution in <a href="ch13.xhtml#sec13_5">Section 13.5</a>.</p>
+<section>
+<h4 class="h4" id="sec13_4_1">13.4.1 The Hitbox</h4>
+<p class="noindent">To get our dropdown menu working, the first thing that we need to cover is the <em>hitbox</em>. If you play video games, you might already be familiar with the term, but if you don’t, it is the area on-screen where an action has an effect. In terms of a web page, this usually refers to the area of the screen where links and buttons are active—i.e., areas that will respond when touched. For example, <a href="ch13.xhtml#ch13fig20">Figure 13.20</a> uses the inspector tool (<a href="ch13.xhtml#sec13_1_2">Section 13.1.2</a>) to show the hitboxes on the homepage of our sample site.</p>
+<figure class="figure" id="ch13fig20">
+<img src="graphics/13fig20.jpg" alt="images" width="670" height="462"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.20:</strong> The rectangles show where the links are active.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_455"></span>In <a href="ch13.xhtml#ch13fig20">Figure 13.20</a>, you can see the rectangles around clickable elements where those elements can be activated, and those rectangles grow or shrink depending on the size of the content inside, the dimensions, and the padding. (Margins around an element don’t count.)</p>
+<p class="indent">Why is this important? Well, to make hover rollovers work you need to make sure that the hitboxes of the element that the user rolls over, as well as the dropdown menu itself, are contiguous (with no gap). Otherwise, as soon as the user tries to move the mouse to the menu, the menu will close (something that has probably spawned a million “What is wrong with my menu?” posts on the Internet). The diagram in <a href="ch13.xhtml#ch13fig21">Figure 13.21</a> illustrates what you want to avoid.</p>
+<figure class="figure" id="ch13fig21">
+<img src="graphics/13fig21.jpg" alt="images" width="676" height="390"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.21:</strong> Mind the gap.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec13_4_2">13.4.2 Making the Dropdown</h4>
+<p class="noindent">Now let’s get into actually making the dropdown menu. We are first going to edit the HTML in the <span class="green-d"><code><strong>_includes/nav-links</strong></code></span> file to add in the submenu, along with a <span class="green-d"><code><strong>dropdown</strong></code></span> class on the <span class="green-d"><code><strong>li</strong></code></span>. The result appears in <a href="ch13.xhtml#ch13list9">Listing 13.9</a>.</p>
+<p class="listing" id="ch13list9"><span epub:type="pagebreak" id="page_456"></span><strong>Listing 13.9:</strong> Adding in the HTML for our dropdown.<br/><code><em>_includes/nav-links.html</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list09a" id="p13list09">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/gallery"</span>&gt;Gallery&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">&lt;<span class="pd_green1"><strong>li</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"dropdown"</strong></span>&gt;</span>
+<span class="bg1">  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"drop-trigger"</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"/blog"</strong></span>&gt;Blog&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+<span class="bg1">  &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"drop-menu"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green1"><strong>li</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</span>
+<span class="bg1">    {% for post in site.posts limit:5 %}</span>
+<span class="bg1">      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ post.url }}"</strong></span>&gt;{{ post.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</span>
+<span class="bg1">    {% endfor %}</span>
+<span class="bg1">  &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;</span>
+<span class="bg1">&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</span>
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ site.posts.first.url }}"</span>&gt;Newest Post&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</pre>
+<p class="indent">With the HTML shown in <a href="ch13.xhtml#ch13list9">Listing 13.9</a>, we now have an unordered list inside the <span class="green-d"><code><strong>li</strong></code></span> of another unordered list, which is the reason why way back in <a href="ch08.xhtml#sec8_5">Section 8.5</a> we targeted the styles for the navigation <span class="green-d"><code><strong>li</strong></code></span>s using the child selector; we didn’t want those styles to also apply to any <span class="green-d"><code><strong>li</strong></code></span>s that are part of a nested <span class="green-d"><code><strong>ul</strong></code></span>. Also note that we left in the “Blog” link, which means that a user will still be able to click the word “Blog” and go to the blog index (or they can click the links that will show up below).</p>
+<p class="indent">In some situations, you might want to change the link inside the <span class="green-d"><code><strong>.dropdown</strong></code></span> container to a non-link element like a <span class="green-d"><code><strong>span</strong></code></span> so that only the links in the dropdown menu are clickable. Remember in <a href="ch06.xhtml#sec6_4">Section 6.4</a> when we mentioned that you might sometimes want to make a non-link element look like a link? This is why! The reason that we’re keeping the “Blog” link in this example is that in the footer we are going to block the dropdown from showing (to keep things simple down at the bottom of the site), and we’ll still want the “Blog” link to be functional in that part of the page. In the interest of being complete, though, we should make this work both ways.</p>
+<p class="indent">We’ll start by updating the styling for the navigation as shown in <a href="ch13.xhtml#ch13list10">Listing 13.10</a>, so that the link style gets applied to <span class="green-d"><code><strong>span</strong></code></span>s or whatever else we apply the <span class="green-d"><code><strong>.drop-trigger</strong></code></span> class to.</p>
+<p class="listing" id="ch13list10"><strong>Listing 13.10:</strong> Making spans look like links.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list10a" id="p13list10">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">.<span class="blue-v"><strong>header-nav</strong></span> <span class="pd_green1"><strong>a</strong></span>,</span>
+<span class="bg1">.<span class="blue-v"><strong>drop-trigger</strong></span> {</span>
+  <span class="pd_green1"><strong>color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>fff</strong></span><span class="grey">;</span>
+}
+<span class="bg1">.<span class="blue-v"><strong>nav-links</strong></span> <span class="pd_green1"><strong>a</strong></span>,</span>
+.<span class="blue-v"><strong>drop-trigger</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.8</strong></span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>font-weight</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>bold</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>text-decoration</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>none</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>text-transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>uppercase</strong></span><span class="grey">;</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_457"></span>Let’s now add CSS to make this work, including adding in a downward-pointing triangle to act as an indicator to users that this menu item triggers a dropdown menu.</p>
+<p class="indent">What we’ll do (in order of the style added) is set the <span class="green-d"><code><strong>.dropdown</strong></code></span> to <span class="green-d"><code><strong>position: relative</strong></code></span> so that the submenu can be positioned below it using <span class="green-d"><code><strong>position: absolute</strong></code></span>. Then we’ll add styles to give the <span class="green-d"><code><strong>.drop-trigger</strong></code></span> a little bit of padding, and also use the <span class="green-d"><code><strong>:after</strong></code></span> pseudo-element to add a downward-pointing triangle:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p457pro01a" id="p457pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>dropdown</strong></span> {
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>padding-right</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span> <span class="pd_green1"><strong>solid</strong></span>;
+  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey">#fff</span> <span class="pd_green1"><strong>transparent transparent</strong></span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">""</span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>top</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">0</span>;
+}</pre>
+<p class="indent">After that, we’ll style the <span class="green-d"><code><strong>.drop-menu</strong></code></span> to have a little bit of padding at the top to give it some distance from the <span class="green-d"><code><strong>.drop-trigger</strong></code></span>, and set the element to <span class="green-d"><code><strong>display: none</strong></code></span> to hide it:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p457pro02a" id="p457pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0</span> 0;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>z-index</strong></span>: <span class="grey">9</span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_458"></span>Then we’ll style the <span class="green-d"><code><strong>li</strong></code></span>s and the <span class="green-d"><code><strong>a</strong></code></span>s so that they can be seen:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p458pro01a" id="p458pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#fff</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#33</span>3;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+}</pre>
+<p class="indent">Lastly, we’ll add the style rule that displays the menu when a user hovers over an element with the <span class="green-d"><code><strong>dropdown</strong></code></span> class:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p458pro02a" id="p458pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+}</pre>
+<p class="indent">Putting everything together gives the CSS shown in <a href="ch13.xhtml#ch13list11">Listing 13.11</a>.</p>
+<p class="listing" id="ch13list11"><strong>Listing 13.11:</strong> The dropdown CSS.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list11a" id="p13list11">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* DROPDOWN STYLES */</em></span>
+.<span class="blue-v"><strong>dropdown</strong></span> {
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>padding-right</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span> <span class="pd_green1"><strong>solid</strong></span>;
+  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey">#fff</span> <span class="pd_green1"><strong>transparent transparent</strong></span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">""</span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>top</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0</span> 0;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>z-index</strong></span>: <span class="grey">9</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#fff</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#33</span>3;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_459"></span>After you save the CSS and refresh the browser, rolling over the “Blog” trigger in the header should cause the ugly but functional dropdown to appear (<a href="ch13.xhtml#ch13fig22">Figure 13.22</a>).</p>
+<figure class="figure" id="ch13fig22">
+<img src="graphics/13fig22.jpg" alt="images" width="676" height="343"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.22:</strong> Our functional dropdown menu showing on hover.</p>
+</figcaption>
+</figure>
+<p class="indent">So that works… but it is really unattractive. Let’s style it up using the code in <a href="ch13.xhtml#ch13list12">Listing 13.12</a> so that the menu looks presentable. A warning: This is going to be a <span epub:type="pagebreak" id="page_460"></span>bit complicated so that we have a nice final product! Applying the result, shown in <a href="ch13.xhtml#ch13list12">Listing 13.12</a>, is an excellent exercise in reading CSS.</p>
+<p class="listing" id="ch13list12"><strong>Listing 13.12:</strong> Improving the dropdown styling.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list12a" id="p13list12">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* DROPDOWN STYLES */</em></span>
+.<span class="blue-v"><strong>dropdown</strong></span> {
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+}
+.<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey">#ed6e2f</span> <span class="pd_green1"><strong>transparent transparent</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>padding-right</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span> <span class="pd_green1"><strong>solid</strong></span>;
+  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey">#fff</span> <span class="pd_green1"><strong>transparent transparent</strong></span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">""</span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>top</strong></span>: <span class="grey">0.3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> {
+  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="grey">0 0 10</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0</span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0<span class="grey">,</span>0<span class="grey">,</span>0<span class="grey">,0.</span>2);
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0</span> 0;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>z-index</strong></span>: <span class="grey">9</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span>:<span class="v1">before</span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">0.6</span><span class="pd_red"><strong>em</strong></span> <span class="pd_green1"><strong>solid</strong></span>;
+  <span class="pd_green1"><strong>border-color</strong></span>: <span class="pd_green1"><strong>transparent transparent</strong></span> <span class="grey">#fff</span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">""</span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>right</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>top</strong></span>: <span class="grey">-0.1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#fff</span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span> <span class="grey">~</span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>border-top</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>dotted</strong></span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0<span class="grey">,</span>0<span class="grey">,</span>0<span class="grey">,0.</span>1)
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span>:<span class="v1">first-child</span> {
+  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">5</span><span class="pd_red"><strong>px</strong></span> <span class="grey">5</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0</span> 0;
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#99</span>9;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">1</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0.25</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>li</strong></span>:<span class="v1">last-child</span> {
+  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">0 0 5</span><span class="pd_red"><strong>px</strong></span> <span class="grey">5</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#33</span>3;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+  <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>normal</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span> <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>white-space</strong></span>: <span class="pd_green1"><strong>nowrap</strong></span>;
+}
+.<span class="blue-v"><strong>drop-menu</strong></span> <span class="pd_green1"><strong>a</strong></span>:<span class="v1">hover</span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="pd_green1">rgb</span>a<span class="grey">(</span>0<span class="grey">,</span>0<span class="grey">,</span>0<span class="grey">,0.</span>1);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#33</span>3;
+}
+<span class="pd_blue1"><em>/* HIDE IN THE FOOTER */</em></span>
+.<span class="blue-v"><strong>footer</strong></span> .<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-menu</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>footer</strong></span> .<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+}
+.<span class="blue-v"><strong>footer</strong></span> .<span class="blue-v"><strong>drop-trigger</strong></span> {
+  <span class="pd_green1"><strong>padding-right</strong></span>: <span class="grey">0</span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_461"></span>When you add <a href="ch13.xhtml#ch13list12">Listing 13.12</a> into your CSS file and save the work, you’ll now see a nicely styled dropdown menu when you hover over the “Blog” text in the header navigation (<a href="ch13.xhtml#ch13fig23">Figure 13.23</a>).</p>
+<figure class="figure" id="ch13fig23">
+<img src="graphics/13fig23.jpg" alt="images" width="676" height="346"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.23:</strong> Muuuuch better. Our dropdown menu no longer looks like a mistake.</p>
+</figcaption>
+</figure>
+<p class="indent">From looking at <a href="ch13.xhtml#ch13fig23">Figure 13.23</a>, it might not seem like the hitboxes of the elements are touching, due to the transparent background of the <span class="green-d"><code><strong>.drop-menu</strong></code></span> and the padding <span epub:type="pagebreak" id="page_462"></span>that was added. As noted in <a href="ch13.xhtml#ch13fig21">Figure 13.21</a>, this would be a problem, but by temporarily adding in a bit of background on <a href="ch13.xhtml#ch13fig24">Figure 13.24</a> we can see the <span class="green-d"><code><strong>.dropdown</strong></code></span> and the <span class="green-d"><code><strong>.drop-menu</strong></code></span> are actually touching.</p>
+<figure class="figure" id="ch13fig24">
+<img src="graphics/13fig24.jpg" alt="images" width="601" height="250"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.24:</strong> Our hitboxes are touching, as required.</p>
+</figcaption>
+</figure>
+<p class="indent">If you want to see how it works having a non-clickable link as the target, replace the <span class="green-d"><code><strong>a</strong></code></span> tags with a span, making sure to keep the <span class="green-d"><code><strong>drop-trigger</strong></code></span> class (<a href="ch13.xhtml#ch13list13">Listing 13.13</a>).</p>
+<p class="listing" id="ch13list13"><span epub:type="pagebreak" id="page_463"></span><strong>Listing 13.13:</strong> An alternate version of the dropdown where the target isn’t clickable.<br/><code><em>_includes/nav-links.html</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list13a" id="p13list13">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/gallery"</span>&gt;Gallery&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"dropdown"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>span</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"drop-trigger"</strong></span>&gt;Blog&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"drop-menu"</span>&gt;
+    &lt;<span class="pd_green1"><strong>li</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    {% for post in site.posts limit:5 %}
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ post.url }}"</span>&gt;{{ post.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    {% endfor %}
+  &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ site.posts.first.url }}"</span>&gt;Newest Post&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</pre>
+<p class="indent">You can use this technique for any type of hidden menu where you need to get the user to click on something in order to show the menu, like the dropdown we just made. (The trigger element can’t be a link, since clicking on that would send you to a page specified in the link’s <span class="green-d"><code><strong>href</strong></code></span>.)</p>
+</section>
+<section>
+<h4 class="h4" id="sec13_4_3">13.4.3 Exercise</h4>
+<ol class="number">
+<li><p class="number">Instead of hiding the dropdown in the footer, see if you can adapt the styling so that the menu appears above the trigger. You’ll also need to flip around and reposition the arrows that we created using the <span class="green-d"><code><strong>:after</strong></code></span> pseudo-element.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec13_5">13.5 Mobile Dropdown Menu</h3>
+<p class="noindent">Now let’s adapt the ideas from <a href="ch13.xhtml#sec13_4">Section 13.4</a> to make a mobile version of the dropdown menu. The first thing that we need to do is learn about a couple of new HTML tags, <span class="green-d"><code><strong>label</strong></code></span> and <span class="green-d"><code><strong>input</strong></code></span> (in this case, with the attribute <span class="green-d"><code><strong>type="checkbox"</strong></code></span>).</p>
+<p class="indent">We haven’t used these elements before, but you’ve seen them practically every time that you’ve used the Internet. The <span class="green-d"><code><strong>input</strong></code></span> tag allows a user to input information, such as a text box, a password, or a checkbox. The <span class="green-d"><code><strong>label</strong></code></span> tag is used to give context to the <span class="green-d"><code><strong>input</strong></code></span>, e.g., <span class="green-d"><code><strong>name</strong></code></span> for inputting a name. An example appears in <a href="ch13.xhtml#ch13fig25">Figure 13.25</a>, which shows labels and inputs on the login page for <a href="http://LearnEnough.com">LearnEnough.com</a> (<a href="https://www.learnenough.com/login">https://www.learnenough.com/login</a>).</p>
+<figure class="figure" id="ch13fig25">
+<img src="graphics/13fig25.jpg" alt="images" width="676" height="432"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.25:</strong> Labels and inputs.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_464"></span>The specific features that we are going to take advantage of for our mobile menu are as follows:</p>
+<ul class="bullet">
+<li><p class="bullet">The <span class="green-d"><code><strong>:checked</strong></code></span> pseudo-class (<a href="ch13.xhtml#box13_3">Box 13.3</a>), which can be used to determine whether an <span class="green-d"><code><strong>input type=”checkbox”</strong></code></span> has been checked or unchecked.</p></li>
+<li><p class="bullet">The ability of a <span class="green-d"><code><strong>label</strong></code></span> to have a special <span class="green-d"><code><strong>for=""</strong></code></span>attribute. If the <span class="green-d"><code><strong>for</strong></code></span> attribute matches the CSS id of a checkbox input, then a user can set the checkbox by clicking on either the input or the text in the label.</p></li>
+</ul>
+<aside epub:type="sidebar" class="sidebar1" id="box13_3">
+<p class="sb-title1"><strong>Box 13.3: Inputs Pseudo-Classes</strong></p>
+<p class="sb-noindent">HTML <em>inputs</em>—elements like text input fields, text areas, checkboxes, buttons, select dropdowns, etc.—all have their own pseudo-classes, which allow developers to style the different states the inputs can have as a user is interacting with them.</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_465"></span>We aren’t adding any HTML <code>form</code> tags to the sample site in this tutorial, but this table gives you an idea of some of the more common pseudo-classes and what they allow you to control:</p>
+<table class="all">
+<tbody>
+<tr>
+<td><p class="tab-para"><code>:checked</code></p></td>
+<td><p class="tab-para">Targets checkboxes that have been clicked by a user to add a checkmark</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:disabled</code></p></td>
+<td><p class="tab-para">Targets inputs that have been set to <code>disabled</code> so that they don’t respond to user clicks</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:enabled</code></p></td>
+<td><p class="tab-para">Targets inputs that are not disabled</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:focus</code></p></td>
+<td><p class="tab-para">Targets an input that a user is actively interacting with, like when you are typing text in a text box</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:invalid</code></p></td>
+<td><p class="tab-para">Targets inputs that have entries that are invalid (to draw a user’s attention to the element to fix their entry)</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:read-only</code></p></td>
+<td><p class="tab-para">Targets inputs that a user cannot write in, but in which they can click and select text</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>:valid</code></p></td>
+<td><p class="tab-para">Targets inputs that have valid data</p></td>
+</tr>
+</tbody>
+</table>
+<p class="sb-indent">See the MDN discussion of pseudo-classes (<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes">https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes</a>) for more information.</p>
+</aside>
+<p class="indent">To make these ideas more concrete, let’s try it out on the page in <a href="ch13.xhtml#ch13list14">Listing 13.14</a> <em>without</em> setting the <span class="green-d"><code><strong>label</strong></code></span>’s <span class="green-d"><code><strong>for</strong></code></span> attribute.</p>
+<p class="listing" id="ch13list14"><strong>Listing 13.14:</strong> Adding a label and a checkbox input.<br/><code><em>_includes/header.html</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list14a" id="p13list14">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header"</span>&gt;
+  &lt;<span class="pd_green1"><strong>nav</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>input</strong></span> <span class="light-green"><strong>type</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"checkbox"</strong></span> <span class="light-green"><strong>id</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"mobile-menu"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"mobile-menu-check"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green1"><strong>label</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"show-mobile-menu"</strong></span>&gt;Menu&lt;/<span class="pd_green1"><strong>label</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header-nav nav-links"</span>&gt;
+      {% include nav-links.html %}
+    &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>nav</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header-logo"</span>&gt;
+    &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"/images/logo.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Learn Enough"</span>&gt;
+  &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>header</strong></span>&gt;</pre>
+<p class="indent">When you save and refresh your browser, you’ll see that there is now the word “MENU” and a checkbox up in the top-left corner. If you click on the checkbox, you’ll see that it becomes checked. But if you click on the text, nothing happens (<a href="ch13.xhtml#ch13fig26">Figure 13.26</a>).</p>
+<figure class="figure" id="ch13fig26">
+<img src="graphics/13fig26.jpg" alt="images" width="601" height="259"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.26:</strong> The label and checkbox with no <span class="green-d"><code><strong>for</strong></code></span> attribute on the label.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_466"></span>Now in the label, add in a <span class="green-d"><code><strong>for=""</strong></code></span> attribute, and give it the CSS id name that we added to the checkbox (<a href="ch13.xhtml#ch13list15">Listing 13.15</a>).</p>
+<p class="listing" id="ch13list15"><strong>Listing 13.15:</strong> Setting the <span class="green-d"><code><strong>for</strong></code></span> attribute on the label.<br/><code><em>_includes/header.html</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list15a" id="p13list15">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header"</span>&gt;
+  &lt;<span class="pd_green1"><strong>nav</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>input</strong></span> <span class="light-green1">type</span><span class="grey">=</span><span class="pd_red">"checkbox"</span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"mobile-menu"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"mobile-menu-check"</span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>label</strong></span> <span class="light-green"><strong>for</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"mobile-menu"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"show-mobile-menu"</strong></span>&gt;Menu&lt;/label&gt;</span>
+    &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header-nav nav-links"</span>&gt;
+      {% include nav-links.html %}
+    &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>nav</strong></span>&gt;
+ &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"header-logo"</span>&gt;
+   &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"/images/logo.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Learn Enough"</span>&gt;
+  &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>header</strong></span>&gt;</pre>
+<p class="noindent">Now when you click on <em>either</em> the text <em>or</em> the checkbox, the check mark gets set or unset.</p>
+<p class="indent">Let’s use our newfound ability to check and uncheck things to control elements on the page. At this point, you should switch to the mobile view in whatever browser you are using (<a href="ch13.xhtml#sec13_1_2">Section 13.1.2</a>).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_467"></span>The first thing that we are going to do is to hide the checkbox and the label for users who are not visiting the site on a mobile device. Add the code in <a href="ch13.xhtml#ch13list16">Listing 13.16</a> below the dropdown section of styles in the CSS file.</p>
+<p class="listing" id="ch13list16"><strong>Listing 13.16:</strong> Hiding the elements that we are going to use on mobile.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list16a" id="p13list16">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* HEADER STYLES */</em></span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+}
+<span class="pd_blue1"><em>/* MOBILE MENU */</em></span>
+.<span class="blue-v"><strong>mobile-menu-check</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>show-mobile-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+}</pre>
+<p class="indent">Next, we are going to show these elements to users on mobile devices by adding styles in the media query that we added to the CSS file when we made changes to adapt the site to better fit small screens (<a href="ch13.xhtml#sec13_1">Section 13.1</a>). We are also going to hide the site header’s navigation, and add a style rule to show it when the (now hidden) checkbox is checked.</p>
+<p class="indent">The styles we added for <span class="green-d"><code><strong>.show-mobile-menu</strong></code></span> include a <span class="green-d"><code><strong>display: block</strong></code></span> to undo the <span class="green-d"><code><strong>display: none</strong></code></span> that we set for non-mobile users. Then we’ll add some padding and positioning:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p467pro01a" id="p467pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>show-mobile-menu</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_468"></span>We’ll also add some <span class="green-d"><code><strong>.header-nav</strong></code></span> styles, which might look a little weird. Instead of hiding the navigation with <span class="green-d"><code><strong>display: none</strong></code></span>, what we’ll do is make the maximum height of the element <span class="green-d"><code><strong>0</strong></code></span>, and then use <span class="green-d"><code><strong>overflow: hidden</strong></code></span> to hide the contents. Then, to show the navigation, we’ll set the <span class="green-d"><code><strong>max-height</strong></code></span> of the <span class="green-d"><code><strong>.header-nav</strong></code></span> to a high number when the <span class="green-d"><code><strong>.mobile-menu-check</strong></code></span> input is checked. This lets the element expand to be as tall as the content inside:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p468pro01a" id="p468pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>header-nav</strong></span> {
+  <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>transition</strong></span>: <span class="pd_green1"><strong>all</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span>;
+}
+.<span class="blue-v"><strong>mobile-menu-check</strong></span>:<span class="v1">checked</span> <span class="grey">~</span> .<span class="blue-v"><strong>header-nav</strong></span> {
+  <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">1000</span><span class="pd_red"><strong>px</strong></span>;
+}</pre>
+<p class="noindent">(We’ll have more to say about what the sibling selector is doing in this declaration in a moment.)</p>
+<p class="indent">The full results appear in <a href="ch13.xhtml#ch13list17">Listing 13.17</a>.</p>
+<p class="listing" id="ch13list17"><strong>Listing 13.17:</strong> Optimizing the menu for small screens.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list17a" id="p13list17">Click here to view code image</a></p>
+<pre class="pre2">@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* HEADER STYLES */</em></span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* MOBILE MENU */</em></span>
+  .<span class="blue-v"><strong>show-mobile-menu</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+    <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+    <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+    <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>vh</strong></span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+    <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+    <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> {
+    <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>transition</strong></span>: <span class="pd_green1"><strong>all</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span>;
+  }
+  .<span class="blue-v"><strong>mobile-menu-check</strong></span>:<span class="v1">checked</span> <span class="grey">~</span> .<span class="blue-v"><strong>header-nav</strong></span> {
+    <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">1000</span><span class="pd_red"><strong>px</strong></span>;
+  }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_469"></span>When you refresh your browser, you now see the “MENU” label, and if you click it the site navigation will appear (though it is going to need more styling). Clicking “MENU” again will hide the navigation (<a href="ch13.xhtml#ch13fig27">Figure 13.27</a>).</p>
+<figure class="figure" id="ch13fig27">
+<img src="graphics/13fig27.jpg" alt="images" width="601" height="495"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.27:</strong> The site navigation, hidden and visible when a user clicks “MENU”.</p>
+</figcaption>
+</figure>
+<p class="indent">The little bit of <span class="green-d"><code><strong>max-height</strong></code></span> styling trickery that we used, combined with the <span class="green-d"><code><strong>transition</strong></code></span> style, makes it so that the menu animates onto the page in a way that is a little more interesting than if it just appeared or disappeared.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_470"></span>Let’s look a little closer at the functional bit of code that shows and hides the menu:</p>
+<p class="codelink"><a href="ch13_images.xhtml#p470pro01a" id="p470pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>mobile-menu-check</strong></span>:<span class="v1">checked</span> <span class="grey">~</span> .<span class="blue-v"><strong>header-nav</strong></span></pre>
+<p class="indent">What that is doing is applying the styles that are in the declaration to the nearby <span class="green-d"><code><strong>.header-nav</strong></code></span> (using the general sibling selector from <a href="ch09.xhtml#sec9_7_5">Section 9.7.5</a>) whenever an input with the class <span class="green-d"><code><strong>.mobile-menu-check</strong></code></span> has been checked in the same parent element. It’s a neat trick that takes advantage of the fact that the sibling selector can apply styling to elements that come after the initial target element—so as long as the checkbox is above the menu in the HTML, we can add styles depending on the state of the checkbox.</p>
+<p class="indent">So now let’s make it look better. Add the styles from <a href="ch13.xhtml#ch13list18">Listing 13.18</a> (including the extra class <span class="green-d"><code><strong>.show-mobile-menu</strong></code></span>) to the media query styles that we added above.</p>
+<p class="listing" id="ch13list18"><strong>Listing 13.18:</strong> Styling the whole mobile navigation.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch13_images.xhtml#p13list18a" id="p13list18">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>nav-links</strong></span> <span class="pd_green1"><strong>a</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>drop-trigger</strong></span><span class="grey">,</span>
+<span class="bg1">.<span class="blue-v"><strong>show-mobile-menu</strong></span> {</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.8</strong></span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>font-weight</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>bold</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>text-decoration</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>none</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>text-transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>uppercase</strong></span><span class="grey">;</span>
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+@<span class="pd_green1"><strong>media</strong></span> <span class="grey">(</span><span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>800px</strong></span><span class="grey">)</span> {
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="pd_blue1"><em>/* MOBILE MENU */</em></span>
+  .<span class="blue-v"><strong>show-mobile-menu</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+    <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+    <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>vh</strong></span>
+    <span class="pd_green1"><strong>padding</strong></span><span class="grey">: 1.5</span><span class="pd_red"><strong>em</strong></span>;
+    <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> {
+    <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#44</span>4;
+    <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+    <span class="pd_green1"><span epub:type="pagebreak" id="page_471"></span><strong>left</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+    <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+    <span class="pd_green1"><strong>top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+    <span class="pd_green1"><strong>transition</strong></span>: <span class="pd_green1"><strong>all</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span>;
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vw</strong></span>;
+    <span class="pd_green1"><strong>z-index</strong></span>: <span class="grey">9</span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="pd_green1"><strong>li</strong></span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+    <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="pd_green1"><strong>li</strong></span> <span class="grey">~</span> <span class="pd_green1"><strong>li</strong></span> {
+    <span class="pd_green1"><strong>border</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="pd_green1"><strong>li</strong></span>:<span class="v1">last-child</span> {
+    <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> <span class="pd_green1"><strong>li</strong></span>:<span class="v1">first-child</span> <span class="pd_green1"><strong>a</strong></span> {
+    <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+  }
+  <span class="pd_blue1"><em>/* HIDE DROPDOWN IN THE NAV MENU */</em></span>
+  .<span class="blue-v"><strong>header-nav</strong></span> .<span class="blue-v"><strong>dropdown</strong></span>:<span class="v1">hover</span> .<span class="blue-v"><strong>drop-menu</strong></span><span class="grey">,</span>
+  .<span class="blue-v"><strong>header-nav</strong></span> .<span class="blue-v"><strong>drop-trigger</strong></span>:<span class="v1">after</span> {
+    <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  }
+  .<span class="blue-v"><strong>header-nav</strong></span> .<span class="blue-v"><strong>drop-trigger</strong></span> {
+    <span class="pd_green1"><strong>padding-right</strong></span>: <span class="grey">0</span>;
+  }
+  .<span class="blue-v"><strong>mobile-menu-check</strong></span>:<span class="v1">checked</span> <span class="grey">~</span> .<span class="blue-v"><strong>header-nav</strong></span> {
+    <span class="pd_green1"><strong>max-height</strong></span>: <span class="grey">1000</span><span class="pd_red"><strong>px</strong></span>;
+  }
+  .<span class="blue-v"><strong>mobile-menu-check</strong></span>:<span class="v1">checked</span> <span class="grey">~</span> .<span class="blue-v"><strong>show-mobile-menu</strong></span>:<span class="v1">after</span> {
+    <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#00</span>0;
+    <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#ed6e2</span>f;
+    <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">"CLOSE"</span>;
+    <span class="pd_green1"><strong>left</strong></span>: <span class="grey">0</span>;
+    <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+    <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+    <span class="pd_green1"><strong>top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+  }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_472"></span>When you save your work and refresh the browser, you should see a nice menu that animates down from the header, like in <a href="ch13.xhtml#ch13fig28">Figure 13.28</a>.</p>
+<figure class="figure" id="ch13fig28">
+<img src="graphics/13fig28.jpg" alt="images" width="301" height="534"/>
+<figcaption>
+<p class="title-f"><strong>Figure 13.28:</strong> The finished site navigation.</p>
+</figcaption>
+</figure>
+<p class="indent">A lot of the CSS in <a href="ch13.xhtml#ch13list18">Listing 13.18</a> was just rearranging the menu so that everything builds nicely on the page, with a little dash of hiding the desktop dropdown styling (since it doesn’t work on mobile) and setting the first navigational link color to white.</p>
+<p class="indent">Also, notice that we used the same <span class="green-d"><code><strong>:checked</strong></code></span> and sibling selector trick to change the text of the button from “MENU” to “CLOSE” using an <span class="green-d"><code><strong>:after</strong></code></span> pseudo-element. It’s the gift that keeps on giving!</p>
+<p class="indent">Without this CSS trick, you would have to use JavaScript to achieve the same effect.</p>
+<section>
+<h4 class="h4" id="sec13_5_1"><span epub:type="pagebreak" id="page_473"></span>13.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Try changing the text in the <span class="green-d"><code><strong>:after</strong></code></span> psuedo-element from “CLOSE” to just an “X”. Overlaying a pseudo-element with text in it is pretty much the only way to change textual content without needing to use JavaScript, and it is very handy for menus.</p></li>
+<li><p class="number">Instead of the <span class="green-d"><code><strong>max-height</strong></code></span> trick to show and hide the menu, try setting the closed height to <span class="green-d"><code><strong>0</strong></code></span> and then the open height to <span class="green-d"><code><strong>90vh</strong></code></span> to take up the entire screen. Using a big menu that fills the mobile browser can be useful for menus with lots of options.<span epub:type="pagebreak" id="page_474"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

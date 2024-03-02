@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch12"><span epub:type="pagebreak" id="page_397"></span>Chapter 12</h2>
+<h2 class="chap-title">Adding a Blog</h2>
+<p class="noindent">Now that we’ve polished up our site layout using flexbox (<a href="ch11.xhtml#ch11">Chapter 11</a>), the time has come to make a second Jekyll layout. This will take place within the context of adding blog capabilities to our sample website, thereby fulfilling the promise made in <a href="ch09.xhtml#sec9_3">Section 9.3</a>. Adding a blog to our site will give us a chance to apply many of the CSS rules we’ve covered so far, including fonts, margins, padding, selectors, and—you guessed it—flexbox.</p>
+<p class="indent">Jekyll is a “blog-aware” framework, which means that right out of the box it is configured to understand how to read and process content to make blog-like sites. Unlike some other blogging platforms that you might be familiar with (<a href="ch12.xhtml#ch12fig1">Figure 12.1</a>), with a Jekyll blog there is no content management system where you go and type the content of your post into text boxes on a website. Instead, Jekyll uses individual files written in Markdown (the lightweight markup format referenced in <a href="ch09.xhtml#sec9_2">Section 9.2</a> and first mentioned in <em>Learn Enough Text Editor to Be Dangerous</em> <span epub:type="pagebreak" id="page_398"></span>(<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>)), previewed and stored in a folder on the local computer, and deployed only when ready.</p>
+<figure class="figure" id="ch12fig1">
+<img src="graphics/12fig01.jpg" alt="images" width="601" height="184"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.1:</strong> WYSIWYG content management works great for people who are afraid of HTML and CSS.</p>
+</figcaption>
+</figure>
+<p class="indent">The result of this design is that you can write your post using the text editor of your choice, you have complete control over the content and style of your blog, and you aren’t at the mercy of a third-party platform (which could shut down at any time).<sup><a id="fn12_1a" href="ch12.xhtml#fn12_1">1</a></sup> Moreover, by putting the project under version control with Git, you also have a complete archive of the site’s history. Finally, with GitHub Pages you have both an online backup and free deployment. (We use all of these tools for our own Learn Enough News site (<a href="https://news.learnenough.com/">https://news.learnenough.com/</a>), and they are also the technologies behind the personal website (<a href="https://www.michaelhartl.com/">https://www.michaelhartl.com/</a>) of one of your authors. So you can see that static site generators are useful even when you know how to use a full-strength web development framework (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>).)</p>
+<p class="footnote"><a id="fn12_1" href="ch12.xhtml#fn12_1a">1</a>. Anyone who’s ever been burned by a third-party service shutting down, whether due to business failure or an acquisition, knows how important avoiding unnecessary dependencies can be. I made the mistake of putting the original Rails Tutorial news feed on a service that was acquired and subsequently shut down, and vowed never again to relinquish control of such an important piece of infrastructure. —Michael</p>
+<p class="indent">To put together a blog with the reasonable minimum set of features, we are going to end up creating two different template views. First, we’ll make a blog index page that shows some of the recent posts with a bit of preview content, and which features a sidebar that contains a list of all the recent posts (<a href="ch12.xhtml#sec12_1">Section 12.1</a> and <a href="ch12.xhtml#sec12_2">Section 12.2</a>). We’ll also adapt the flexbox methods from <a href="ch11.xhtml#sec11_4">Section 11.4</a> to make a two-column layout. Then we’ll make a page for individual posts (<a href="ch12.xhtml#sec12_3">Section 12.3</a>), which will include the content of the blog post and a small sidebar that could be used for information about the author (or as a place to add social sharing).</p>
+<section>
+<h3 class="h3" id="sec12_1">12.1 Adding Blog Posts</h3>
+<p class="noindent">We’ll start by adding a sample blog post file so that our index page has something to display. By convention, Jekyll blog posts are located in a directory called <span class="green-d"><code><strong>_posts</strong></code></span>, with filenames that identify the approximate date of the post, in the format <span class="green-d"><code><strong>YYYY-MM-DD-post-title.md</strong></code></span> (year, month, date, title). (We say “approximate” because you can override the exact date in the post’s frontmatter, which is especially useful for posts that start as drafts but only get published later on.) The date is used by Jekyll to <span epub:type="pagebreak" id="page_399"></span>automatically organize posts by the filename date, and the title of the post is used to generate the URL.</p>
+<p class="indent">We can create the required directory and an empty post as follows:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p399pro01a" id="p399pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> mkdir _posts
+<span class="b-nilam"><strong>$</strong></span> touch _posts/2016-11-03-title-of-post.md</pre>
+<p class="noindent">At this point, your site’s structure should look something like <a href="ch12.xhtml#ch12fig2">Figure 12.2</a>.</p>
+<figure class="figure" id="ch12fig2">
+<img src="graphics/12fig02.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.2:</strong> The blog index with an initial post.</p>
+</figcaption>
+</figure>
+<p class="indent">The content for the stub post appears in <a href="ch12.xhtml#ch12list1">Listing 12.1</a>, which you should copy and paste into the post file.<sup><a id="fn12_2a" href="ch12.xhtml#fn12_2">2</a></sup> Note that <a href="ch12.xhtml#ch12list1">Listing 12.1</a> includes extensive YAML frontmatter (<a href="ch09.xhtml#sec9_3">Section 9.3</a>), together with a mix of Markdown and HTML. (By design, Markdown is a <em>superset</em> of HTML, so technically every valid HTML page is also valid Markdown.)</p>
+<p class="footnote"><a id="fn12_2" href="ch12.xhtml#fn12_2a">2</a>. Recall that the code listings are available at <a href="https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings">https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings</a>.</p>
+<p class="listing" id="ch12list1"><span epub:type="pagebreak" id="page_400"></span><strong>Listing 12.1:</strong> The first Jekyll blog post on the sample site.<br/><code><em>_posts/2016-11-03-title-of-post.md</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list01a" id="p12list01">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: post
+title: This is the title of the post
+postHero: /images/shark.jpg
+author: Me, Myself, and I
+authorTwitter: https://twitter.com/mhartl
+gravatar: https://gravatar.com/avatar/ffda7d145b83c4b118f982401f962ca6?s=150
+postFooter: Additional information, and maybe a &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"#"</span>&gt;link or two&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+---
+
+Call me *Ishmael*. Some years ago–*never mind how long
+precisely*–having little or no money in my purse, and nothing
+particular to interest me on shore, I thought I would sail about a little
+and see the watery part of the world. It is a way I have of driving off
+the spleen and regulating the circulation.
+
+&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"pull-left"</span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/200"</span>
+     <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"kitten"</span>&gt;
+
+Whenever I find myself growing grim about the mouth; whenever it is a damp,
+drizzly November in my soul; whenever I find myself involuntarily pausing
+before coffin warehouses, and bringing up the rear of every funeral I meet;
+and especially whenever my hypos get such an upper hand of me, that it
+requires a strong moral principle to prevent me from deliberately stepping
+into the street, and methodically knocking people’s hats off—then, I
+account it high time to get to sea as soon as I can. This is my substitute
+for pistol and ball.
+
+With a philosophical flourish Cato throws himself upon
+his sword; I quietly take to the ship. There is nothing surprising in this.
+If they but knew it, almost all men in their degree, some time or other,
+cherish very nearly the same feelings towards the ocean with me.</pre>
+<p class="indent">“Hold up a second,” you might be saying. “What is <span class="green-d"><code><strong>layout: post</strong></code></span> doing in that file? I thought we had only the default layout. And what’s all that other stuff in the frontmatter?”</p>
+<p class="indent">It turns out that Jekyll allows layouts to be nested inside layouts, which gives us the ability to customize how we’d like all posts to be shown without needing to make a full top-level layout that includes things like the HTML <span class="green-d"><code><strong>head</strong></code></span> (<a href="ch10.xhtml#ch10list1">Listing 10.1</a>). Then <span epub:type="pagebreak" id="page_401"></span>that layout can be built into the base <span class="green-d"><code><strong>default</strong></code></span> layout, which has all that necessary HTML stuff (yes, more stuff inside stuff (<a href="ch12.xhtml#ch12fig3">Figure 12.3</a>)).<sup><a id="fn12_3a" href="ch12.xhtml#fn12_3">3</a></sup></p>
+<p class="footnote"><a id="fn12_3" href="ch12.xhtml#fn12_3a">3</a>. Image courtesy of Maciej Wlodarczyk/Shutterstock.</p>
+<figure class="figure" id="ch12fig3">
+<img src="graphics/12fig03.jpg" alt="images" width="376" height="272"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.3:</strong> Layouts in layouts, includes in includes… it’s just turtles all the way down.</p>
+</figcaption>
+</figure>
+<p class="indent">The rest of the content in the frontmatter are <em>page variables</em> (<a href="ch12.xhtml#box12_1">Box 12.1</a>), which let us easily create and set values that can add content to the page, change how it looks, or include information (such as author name or user avatar like Gravatar) that might change from post to post. For example, in <a href="ch12.xhtml#sec12_2">Section 12.2</a> we’ll be able to link to the post using the title and URL defined in <a href="ch12.xhtml#ch12list1">Listing 12.1</a> using the following Liquid code:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p401pro01a" id="p401pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>h2</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ post.url }}"</span>&gt;{{ post.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;</pre>
+<p class="noindent">This sort of per-page customization is one of many things you can’t do with static HTML but which all good static site generators make easy.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box12_1">
+<p class="sb-title1"><strong>Box 12.1: More on Variables</strong></p>
+<p class="sb-noindent">If you are thinking, “Dear Lord, more variables?! I hated algebra,” don’t worry. You aren’t going to have to solve any equations for .. Recall from <a href="ch10.xhtml#box10_1">Box 10.1</a> that you can think of variables as boxes that you put information into—information you can retrieve by referencing the name of the box. The exact details depend on the system you’re using (like Jekyll or a programming language such as Ruby), but ultimately they are just containers for information.</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_402"></span>In the Jekyll blog post example from <a href="ch12.xhtml#ch12list1">Listing 12.1</a>, we are setting <em>page variables</em>, which are accessible only on the page that is loading the frontmatter. For example, consider the effect of setting a <code>title</code> variable in a page’s frontmatter, like this:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p402pro01a" id="p402pro01">Click here to view code image</a></p>
+<pre class="pre1">---
+title: This is the title of the post
+---</pre>
+<p class="sb-noindent">That title can later be pulled out and placed on the page using a Liquid tag, as follows:</p>
+<pre class="pre1">{{ page.title }}</pre>
+<p class="sb-noindent">This sort of flexibility allows us to define different variables for different pages, so that a single template can look different from one blog post to the next.</p>
+<p class="sb-indent">It is also possible to set <em>global variables</em>, which work on any page on the site. Defining global variables requires creating a new configuration file, which is beyond the scope of this tutorial, but you can read about config files and global variables in the Jekyll documentation (<a href="https://jekyllrb.com/docs/">https://jekyllrb.com/docs/</a>).</p>
+</aside>
+<section>
+<h4 class="h4" id="sec12_1_1">12.1.1 Blog Index Structure</h4>
+<p class="noindent">The blog itself will live in <span class="green-d"><code><strong>index.html</strong></code></span> inside a folder called <span class="green-d"><code><strong>blog</strong></code></span>, which will lead to a public URL of the form <a href="https://example.com/blog/">https://example.com/blog/</a> for the blog’s index page. We can get started as follows:</p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> mkdir blog
+<span class="b-nilam"><strong>$</strong></span> touch blog/index.html</pre>
+<p class="indent">For the blog index page, we’ll start with a hard-coded stub version to get an idea of how it works, and we’ll generate it automatically from the actual posts in <a href="ch12.xhtml#sec12_2">Section 12.2</a>. The basic design will follow the conventions we’ve mentioned several times before (e.g., <a href="ch05.xhtml#ch5fig2">Figure 5.2</a>), with standard headers and footers, a hero image (in this case specific to the blog), a space for the post’s headline and content, and an aside box on the right-hand side with additional information (<a href="ch12.xhtml#ch12fig4">Figure 12.4</a>).</p>
+<figure class="figure" id="ch12fig4">
+<img src="graphics/12fig04.jpg" alt="images" width="599" height="673"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.4:</strong> A mock-up for a blog post.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_403"></span>This initial stub content appears in <a href="ch12.xhtml#ch12list2">Listing 12.2</a>. (A couple of tags are dedented so they will fit in the listing, but you should feel free to indent them to the proper level.) Note that <a href="ch12.xhtml#ch12list2">Listing 12.2</a> uses the default layout defined in <a href="ch10.xhtml#ch10list1">Listing 10.1</a>.</p>
+<p class="listing" id="ch12list2"><strong>Listing 12.2:</strong> The basic structure for our blog index page.<br/><code><em>blog/index.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list02a" id="p12list02">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+<span epub:type="pagebreak" id="page_404"></span>&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"page blog-index"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Bloggie Blog&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col-two blog-cols"</span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-aside blog-recent"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h4</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>h4</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-title-list"</span>&gt;
+        &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;Blog post title&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>span</strong></span>&gt;Posted: Month Day, Year&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-content blog-previews"</span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-posts"</span>&gt;
+        &lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-header"</span>&gt;
+          &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;I am the title of an article&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-byline"</span>&gt;
+&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://gravatar.com/avatar/ffda7d145b83c4b118f982401f962ca6?s=150"</span>&gt;
+           &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"#"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+           by: Me, Myself, and I
+           &lt;<span class="pd_green1"><strong>span</strong></span>&gt; - Month Day, year&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+         &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+       &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"posts-image"</span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"background-image:url('/images/shark.jpg')"</span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+          Blurb
+       &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">Now that we have the beginning of our blog index page, we’ll need to give users a way to navigate there. Open up <span class="green-d"><code><strong>_includes/nav-links.html</strong></code></span> and change the third link to direct users to the blog (<a href="ch12.xhtml#ch12list3">Listing 12.3</a>).</p>
+<p class="listing" id="ch12list3"><strong>Listing 12.3:</strong> If a page has no link… does it exist?<br/><code><em>_includes/nav-links.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list03a" id="p12list03">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/gallery"</span>&gt;Gallery&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">&lt;<span class="pd_green2"><strong>li</strong></span>&gt;&lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"/blog"</strong></span>&gt;Blog&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;&lt;/<span class="pd_green2"><strong>li</strong></span>&gt;</span>
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;Nav 3&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_405"></span>Perfect! Now we’ll be able to get to the blog from the site navigation.</p>
+<p class="indent">Now let’s click through to the blog’s index page and see how we’re doing. At this point, you probably anticipated that the page wouldn’t look nice, and in fact (apart from the handsome Gravatar image) it is ugly, as expected (<a href="ch12.xhtml#ch12fig5">Figure 12.5</a>).</p>
+<figure class="figure" id="ch12fig5">
+<img src="graphics/12fig05.jpg" alt="images" width="669" height="473"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.5:</strong> Ugly page is ugly.</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s add some styling to make the blog’s index page look a little better. We’ll start with a two-column layout modeled on the three-column layout defined in <a href="ch11.xhtml#ch11list9">Listing 11.9</a>:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p405pro01a" id="p405pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>col-two</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+}
+.<span class="blue-v"><strong>col-two</strong></span> .<span class="blue-v"><strong>col-aside</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 0 20</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>order</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>col-two</strong></span> .<span class="blue-v"><strong>col-content</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_406"></span>Here we’ve defined an aside column that won’t grow or shrink and has a <span class="green-d"><code><strong>20em</strong></code></span> flex basis (<span class="green-d"><code><strong>flex: 0 0 20em</strong></code></span>). The content, meanwhile, has the same <span class="green-d"><code><strong>flex: 1</strong></code></span> value used for the columns in <a href="ch11.xhtml#ch11list10">Listing 11.10</a>. Together, these rules arrange for one big block that will change size as the window changes, and a smaller fixed-size column on the right.</p>
+<p class="indent">There’s also an entirely new flexbox style in the <span class="green-d"><code><strong>.col-two .col-aside</strong></code></span> declaration: the <span class="green-d"><code><strong>order</strong></code></span> property. This useful CSS style allows us to arbitrarily control where on a page an element is drawn. You might have noticed in <a href="ch12.xhtml#ch12list2">Listing 12.2</a> that the aside was placed <em>first</em> in the HTML—if we didn’t style it to behave differently, it would show up either on the top (if we weren’t using flexbox) or on the left-hand side of the page. The <span class="green-d"><code><strong>order</strong></code></span> property accepts a simple number as a value, with the default value being <span class="green-d"><code><strong>0</strong></code></span>. By setting the value to <span class="green-d"><code><strong>1</strong></code></span>, we arrange for the browser to build our aside after any elements that are in the same parent and have a lower number.</p>
+<p class="indent">Why use <span class="green-d"><code><strong>order</strong></code></span>? We added it here because it is a powerful tool that allows us to reorder elements on a page without needing to actually move the HTML.</p>
+<p class="indent">In addition to the flexbox rules, there are a lot of other styles that we are going to include. In the global section we will add a styling that will make all <span class="green-d"><code><strong>h4</strong></code></span>s look the same across the site:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p406pro01a" id="p406pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>h4</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#999</span>;
+  <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}</pre>
+<p class="noindent">We’ll also include some <span class="green-d"><code><strong>max-width</strong></code></span> styling to the <span class="green-d"><code><strong>.page</strong></code></span> class that wraps our column layout:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p406pro02a" id="p406pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>page</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span> <span class="pd_green1"><strong>auto</strong></span> <span class="grey">15</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey">980</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">85</span><span class="pd_red"><strong>vw</strong></span>;
+}</pre>
+<p class="noindent">These styles format the <span class="green-d"><code><strong>.page</strong></code></span> wrapper to expand to fit the window, but only until it reaches <span class="green-d"><code><strong>980px</strong></code></span> in width. Why 980px? It’s an old convention that was used for site widths to make sure that they would fit into a full-screen browser on a 1024x768px resolution screen (e.g., an iPad).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_407"></span>You can make the page bigger if your content needs the extra space, but there is something to consider if your content is mostly text: People generally find it hard to read text that is stretched too wide on a page, or text that is squished into too narrow of a wrapper. Ideally, you want to keep text to be displayed so that there are about 40 to 70 characters (including spaces) per line, and while 980px is wider than that, if you add in a side menu like we did, then there is enough space for both.</p>
+<p class="indent">We will also style the headers on the page so that all of the content pages will have identical headers, but by constraining them to apply only inside the <span class="green-d"><code><strong>.page</strong></code></span> class we’ll have the flexibility not to have to restyle anything on the homepage:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p407pro01a" id="p407pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h1</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h2</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h4</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Finally, we have all of the blog index styling, using rules which at this point should start looking familiar. The result is a good exercise in reading CSS, and we especially recommend applying the comment-out trick mentioned in <a href="ch05.xhtml#box5_1">Box 5.1</a>:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p407pro02a" id="p407pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>blog-recent</strong></span> {
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> {
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> <span class="pd_green1"><strong>li</strong></span> <span class="grey">~</span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> <span class="pd_green1"><strong>span</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#99</span>9;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>font-style</strong></span>: <span class="pd_green1"><strong>italic</strong></span>;
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+
+<span epub:type="pagebreak" id="page_408"></span>.<span class="blue-v"><strong>blog-posts</strong></span> <span class="grey">~</span> .<span class="blue-v"><strong>blog-posts</strong></span> {
+  <span class="pd_green1"><strong>border-top</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>dotted</strong></span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0, <span class="grey">0</span>, <span class="grey">0</span>, <span class="grey">0.</span>1);
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">4</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">4</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>blog-posts</strong></span> .<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> <span class="pd_green1"><strong>img</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>post-header</strong></span> .<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>margin-right</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">99</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>vertical-align</strong></span>: <span class="pd_green1"><strong>middle</strong></span>;
+}
+.<span class="blue-v"><strong>posts-image</strong></span> {
+  <span class="pd_green1"><strong>background-position</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">6</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">The right-hand navigation has the bullets removed from the <span class="green-d"><code><strong>ul</strong></code></span>, and a bit of text styling for the <span class="green-d"><code><strong>span</strong></code></span>s so that the information contained in them, which is just there to provide extra detail for the titles, isn’t too visually distracting. We also styled the <span class="green-d"><code><strong>.blog-posts</strong></code></span> class using the general sibling selector so that multiple <span class="green-d"><code><strong>.blog-posts</strong></code></span> in a column will have some separation from each other and a faint border. Everything else was just adding margins to separate content from other content, styling the author image to be a little circle, and giving the <span class="green-d"><code><strong>.posts-image</strong></code></span> some dimensions so you can see the background image.</p>
+<p class="indent">All together, our new addition to the CSS can be seen in <a href="ch12.xhtml#ch12list4">Listing 12.4</a>. If you get stuck, we suggest you add each style one by one to see what they do (<a href="ch05.xhtml#box5_1">Box 5.1</a>). We’ll give an overview of some of the styles and their effects in a moment.</p>
+<p class="listing" id="ch12list4"><span epub:type="pagebreak" id="page_409"></span><strong>Listing 12.4:</strong> Styling for a two-column layout using flexbox.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list04a" id="p12list04">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>h4</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#99</span>9;
+  <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}
+
+<span class="pd_blue1"><em>/* COLUMN STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>col-two</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+}
+.<span class="blue-v"><strong>col-two</strong></span> .<span class="blue-v"><strong>col-aside</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 0 20</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>order</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>col-two</strong></span> .<span class="blue-v"><strong>col-content</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+}
+
+<span class="pd_blue1"><em>/* PAGE STYLES */</em></span>
+.<span class="blue-v"><strong>page</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span> <span class="pd_green1"><strong>auto</strong></span> <span class="grey">15</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey">980</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">85</span><span class="pd_red"><strong>vw</strong></span>;
+}
+.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h1</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h2</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>page</strong></span> <span class="pd_green1"><strong>h4</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="pd_blue1"><em>/* BLOG STYLES */</em></span>
+.<span class="blue-v"><strong>blog-recent</strong></span> {
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> {
+
+  <span class="pd_green1"><span epub:type="pagebreak" id="page_410"></span><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> <span class="pd_green1"><strong>li</strong></span> <span class="grey">~</span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>blog-title-list</strong></span> <span class="pd_green1"><strong>span</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#99</span>9;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>font-style</strong></span>: <span class="pd_green1"><strong>italic</strong></span>;
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>blog-posts</strong></span> <span class="grey">~</span> .<span class="blue-v"><strong>blog-posts</strong></span> {
+  <span class="pd_green1"><strong>border-top</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>dotted</strong></span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0, <span class="grey">0</span>, <span class="grey">0</span>, <span class="grey">0.</span>1);
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">4</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">4</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>blog-posts</strong></span> .<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> <span class="pd_green1"><strong>img</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>post-header</strong></span> .<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>margin-right</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post-header</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">99</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>vertical-align</strong></span>: <span class="pd_green1"><strong>middle</strong></span>;
+}
+.<span class="blue-v"><strong>posts-image</strong></span> {
+  <span class="pd_green1"><strong>background-position</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">6</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="noindent">At this point, saving and refreshing should give you a blog index page with a slightly more polished appearance (<a href="ch12.xhtml#ch12fig6">Figure 12.6</a>).</p>
+<figure class="figure" id="ch12fig6">
+<img src="graphics/12fig06.jpg" alt="images" width="667" height="457"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.6:</strong> A more organized blog index page.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec12_1_2"><span epub:type="pagebreak" id="page_411"></span>12.1.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Something cool happened in the footer of the new blog index page shown in <a href="ch12.xhtml#ch12fig5">Figure 12.5</a>. What happened, and why? <em>Hint</em>: Recall the DRY principle (<a href="ch05.xhtml#box5_2">Box 5.2</a>).</p></li>
+<li><p class="number">Many (probably most) blogs include the ability for readers to leave comments, but because Jekyll is a static site generator with no database, it isn’t possible to support comments natively. Luckily, there are ways to add in comments using third-party services. Use your technical sophistication and Google-fu to see if you can find a comment system that you can drop into a static site.</p></li>
+<li><p class="number">Try setting the <span class="green-d"><code><strong>order:</strong></code></span> property for the <span class="green-d"><code><strong>.col-two .col-aside</strong></code></span> to <span class="green-d"><code><strong>0</strong></code></span>. Now change the <span class="green-d"><code><strong>flex-direction</strong></code></span> to <span class="green-d"><code><strong>column</strong></code></span>; the aside should be at the top of the page. Now try setting it back to <span class="green-d"><code><strong>1</strong></code></span> to push it to the bottom.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec12_2">12.2 Blog Index Content Loop</h3>
+<p class="noindent"><span epub:type="pagebreak" id="page_412"></span>Now that we have the page set up, let’s fix up the index page from <a href="ch12.xhtml#ch12list2">Listing 12.2</a> to generate a list of posts dynamically based on the contents of the <span class="green-d"><code><strong>_posts</strong></code></span> folder. The key is that Jekyll automatically provides a variable called <span class="green-d"><code><strong>site.posts</strong></code></span> that contains a list of posts. We can then <em>loop</em> through the posts (<a href="ch12.xhtml#ch12fig7">Figure 12.7</a><sup><a id="fn12_4a" href="ch12.xhtml#fn12_4">4</a></sup> and <a href="ch12.xhtml#box12_2">Box 12.2</a>) and generate the HTML corresponding to each one.</p>
+<p class="footnote"><a id="fn12_4" href="ch12.xhtml#fn12_4a">4</a>. Image courtesy of sirtravelalot/Shutterstock.</p>
+<figure class="figure" id="ch12fig7">
+<img src="graphics/12fig07.jpg" alt="images" width="601" height="401"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.7:</strong> Did you say utes? No, <em>loops</em>.</p>
+</figcaption>
+</figure>
+<aside epub:type="sidebar" class="sidebar1" id="box12_2">
+<p class="sb-title1"><strong>Box 12.2: What’s a Loop?</strong></p>
+<p class="sb-noindent">When you are dealing with data in a program, you often find yourself in a situation where you want to do an action a number of times until you either run out of source data or some other condition is met.</p>
+<p class="sb-indent">For example, suppose you were to deal from a deck of cards until there were no cards left. In this case, dealing cards is the repeating action, and running out <span epub:type="pagebreak" id="page_413"></span>of cards is what stops the operation. If the card-dealing were implemented as a computer program, we might write the loop using pseudocode like this:</p>
+<pre class="pre1">for card in deck
+   deal_card(card)
+end</pre>
+<p class="sb-noindent">The loop would terminate automatically when the deck ran out of cards.</p>
+<p class="sb-indent">In Jekyll, we are going to use Liquid to loop through our posts, but in later Learn Enough tutorials we’ll learn how to use other languages (specifically, JavaScript and Ruby) as well. We’ll see that there are slight differences in the details, but in the end they all work basically the same way, so the material here is an excellent foundation for more general-purpose programming later on.</p>
+</aside>
+<p class="indent">Our first Jekyll loop is going to look like this:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p413pro02a" id="p413pro02">Click here to view code image</a></p>
+<pre class="pre1">{% for post in site.posts %}
+  ...Liquid code...
+{% endfor %}</pre>
+<p class="noindent">This is known as a <em>for loop</em> (or, in some languages, a <em>foreach loop</em>), and what it does is execute the enclosed Liquid code for each element in the site’s posts.</p>
+<p class="indent">Let’s break the syntax down in more detail. The <span class="green-d"><code><strong>for</strong></code></span> loop has a starting tag that indicates the form of the loop—i.e., looping through the posts with <span class="green-d"><code><strong>{% for post in site.posts %}</strong></code></span>—and ends with the <span class="green-d"><code><strong>{% endfor %}</strong></code></span>, which causes the loop to stop when we reach the last post. At that point, Jekyll knows that we’ve reached the end of the loop, and will continue processing normal Markdown or HTML content.</p>
+<p class="indent">But where does <span class="green-d"><code><strong>site.posts</strong></code></span> come from? In the introduction to this section, we described Jekyll as “blog-aware,” and this is part of what we mean: Because of the existence of the <span class="green-d"><code><strong>_posts</strong></code></span> directory, Jekyll automatically makes a Liquid variable called <span class="green-d"><code><strong>site.posts</strong></code></span> available in our pages. Moreover, because of the date convention in the post filenames (<a href="ch12.xhtml#sec12_1">Section 12.1</a>), Jekyll even knows how to order them (most-recent first, as required by the conventions of blogging).</p>
+<p class="indent">Inside the loop, <span class="green-d"><code><strong>for post in site.posts</strong></code></span> arranges for a variable called <span class="green-d"><code><strong>post</strong></code></span> to be available for making the corresponding HTML. In this context, <span class="green-d"><code><strong>post</strong></code></span> is what’s known as an <em>object</em>, which just means it gives us access to a list of standard post attributes, such as the URL and date, as well as any post attributes defined by the YAML front-matter (e.g., <a href="ch12.xhtml#ch12list1">Listing 12.1</a>). The syntax to access object attributes is common to many <span epub:type="pagebreak" id="page_414"></span>different so-called “object-oriented” languages: Simply use the name of the object followed by a dot and then the name of the attribute. For example,</p>
+<pre class="pre1">post<span class="grey">.</span>url</pre>
+<p class="noindent">is the post’s URL, and</p>
+<pre class="pre1">post<span class="grey">.</span>authorTwitter</pre>
+<p class="noindent">is the author’s Twitter page (a variable we added via the frontmatter in <a href="ch12.xhtml#ch12list1">Listing 12.1</a>).</p>
+<p class="indent">Here’s a list of the attributes we’ll need in constructing the full blog post:</p>
+<ul class="bullet">
+<li><p class="bullet"><span class="green-d"><code><strong>{{ post.url }}</strong></code></span>: This looks at the post’s filename and builds a URL to the post. If you click one, you’ll see that the URL path is something like <span class="green-d"><code><strong><a href="http://localhost:4000/2016/11/04/second-post">http://localhost:4000/2016/11/04/second-post</a></strong></code></span>. Jekyll takes the date part of the filename and turns the year, month, and day into nested folders that can be used on the blog to do things like show all the posts from a specific day, month, or year.</p></li>
+<li><p class="bullet"><span class="green-d"><code><strong>{{ post.title }}</strong></code></span>, <span class="green-d"><code><strong>{{ post.gravatar }}</strong></code></span>, <span class="green-d"><code><strong>{{post.authorTwitter}}</strong></code></span>, <span class="green-d"><code><strong>{{ post.postHero }}</strong></code></span>: All of these tags look at the site’s frontmatter for variables with the same name, and then if there was information added to that variable it will put the variable’s content on the page. You can add as many variables as you want.</p></li>
+<li><p class="bullet"><span class="green-d"><code><strong>{{ post.date | date: ’%B %d, %Y’ }</strong></code></span>: The date tag contains the post’s date as encoded in the filename (<a href="ch12.xhtml#sec12_1">Section 12.1</a>) or in the frontmatter (which allows you to override the value from the filename). The content after the <em>pipe</em> character <span class="green-d"><code><strong>|</strong></code></span> tells Jekyll how we want the date to be formatted before being added to the page. There are a bunch of options for formatting dates and times, and if you’d like to know more you can read about Jekyll date formatting here (<a href="https://learn.cloudcannon.com/jekyll/date-formatting/">https://learn.cloudcannon.com/jekyll/date-formatting/</a>). In our case, the format <span class="green-d"><code><strong>’%B %d, %Y’</strong></code></span> arranges to display the date in the form <span class="green-d"><code><strong>November 03, 2016</strong></code></span>.</p></li>
+<li><p class="bullet"><span class="green-d"><code><strong>{{ post.excerpt }}</strong></code></span>: This final tag tells Jekyll to look at the post content (everything after the frontmatter in the Markdown files) and create an excerpt by pulling out the first paragraph. If you were to leave off the <span class="green-d"><code><strong>excerpt</strong></code></span> and just add the tag <span class="green-d"><code><strong>{{ post }}</strong></code></span> then the entire post would be shown on the page.</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_415"></span>To insert the value of any attribute, we just apply the same Liquid syntax used to insert the content in <a href="ch11.xhtml#ch11list2">Listing 11.2</a>. For example,</p>
+<pre class="pre1">{{ post.url }}</pre>
+<p class="noindent">inserts the value of the post’s URL at that exact place in the Liquid template (and so on for other attributes). By comparing the stubbed-out version of the index page from <a href="ch12.xhtml#ch12list2">Listing 12.2</a> with the variables listed above, see if you can figure out what the new blog index page should look like.</p>
+<p class="indent">The HTML/Liquid result appears in <a href="ch12.xhtml#ch12list5">Listing 12.5</a>. Note that we’ve replaced the dummy post in <a href="ch12.xhtml#ch12list2">Listing 12.2</a> with the loop.</p>
+<p class="listing" id="ch12list5"><strong>Listing 12.5:</strong> Building the blog index using a loop.<br/><code><em>blog/index.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list05a" id="p12list05">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"page blog-index"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Bloggie Blog&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col-two blog-cols"</span>&gt;
+     &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-aside blog-recent"</span>&gt;
+        &lt;<span class="pd_green1"><strong>h4</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>h4</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-title-list"</span>&gt;
+          &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+            &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;Blog post title&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+            &lt;<span class="pd_green1"><strong>span</strong></span>&gt;Posted: Month Day, Year&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+       &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="bg1">     &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"col col-content blog-previews"</strong></span>&gt;</span>
+<span class="bg1">       {% for post in site.posts %}</span>
+<span class="bg1">         &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"blog-posts"</strong></span>&gt;</span>
+<span class="bg1">           &lt;<span class="pd_green2"><strong>header</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"post-header"</strong></span>&gt;</span>
+<span class="bg1">             &lt;<span class="pd_green2"><strong>h2</strong></span>&gt;&lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ post.url }}"</strong></span>&gt;{{ post.title }}&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;&lt;/<span class="pd_green2"><strong>h2</strong></span>&gt;</span>
+<span class="bg1">             &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"post-byline"</strong></span>&gt;</span>
+<span class="bg1">               &lt;<span class="pd_green2"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ post.gravatar }}"</strong></span> /&gt;</span>
+<span class="bg1">               &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ post.authorTwitter }}"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Tw&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">               by: post.author</span>
+<span class="bg1">               &lt;<span class="pd_green2"><strong>span</strong></span>&gt; - {{ post.date | date: '%B %d, %Y' }}&lt;/<span class="pd_green2"><strong>span</strong></span>&gt;</span>
+<span class="bg1">           &lt;/<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+<span class="bg1">         &lt;/<span class="pd_green2"><strong>header</strong></span>&gt;</span>
+<span class="bg1">         &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"posts-image"</strong></span></span>
+<span class="bg1">              <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"background-image:url({{ post.postHero }})"</strong></span>&gt;&lt;/<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+<span class="bg1">          post.excerpt</span>
+<span class="bg1">      &lt;/<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+<span class="bg1">    {% endfor %}</span>
+<span class="bg1">  &lt;/<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_416"></span>Now when you refresh the page, you should see that the stubbed-out content has been replaced by the information specific to the real post.</p>
+<p class="indent">As you may already have figured out, the index page so far isn’t really much of a “loop”—there’s only one post, so the loop simply runs once and exits. In other words, we’re not yet really using the <span class="green-d"><code><strong>for</strong></code></span> loop part in <a href="ch12.xhtml#ch12list5">Listing 12.5</a>.</p>
+<p class="indent">To remedy this situation, let’s copy the current post to a slightly later date:</p>
+<p class="codelink"><a href="ch12_images.xhtml#p416pro01a" id="p416pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> cp _posts/2016-11-03-title-of-post.md _posts/2016-11-04-title-of-second-post.md</pre>
+<p class="indent">When you refresh now, you should see that there are two posts instead of only one (<a href="ch12.xhtml#ch12fig8">Figure 12.8</a>). This means that the <span class="green-d"><code><strong>for</strong></code></span> loop is working, and as we add new posts they will automatically appear on the blog index page.</p>
+<figure class="figure" id="ch12fig8">
+<img src="graphics/12fig08.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.8:</strong> Building the blog index dynamically by looping through posts.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_417"></span>Pretty cool, right? You can see how much easier it is with a site generator like Jekyll to build fairly complex sites that don’t require a lot of upkeep. Instead of needing to directly edit a bunch of different pages for every blog post, you just drop a properly formatted file into the right folder and everything automagically updates.</p>
+<p class="indent">As a final touch, let’s add another loop that will add the correct links into the menu on the right. Change the <span class="green-d"><code><strong>blog/index.html</strong></code></span> file to match <a href="ch12.xhtml#ch12list6">Listing 12.6</a>.</p>
+<p class="listing" id="ch12list6"><strong>Listing 12.6:</strong> Creating a second “Recent Posts” loop.<br/><code><em>blog/index.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list06a" id="p12list06">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"page blog-index"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Bloggie Blog&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col-two blog-cols"</span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-aside blog-recent"</span>&gt;
+    &lt;<span class="pd_green1"><strong>h4</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>h4</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>ul</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"blog-title-list"</strong></span>&gt;</span>
+<span class="bg1">     {% for post in site.posts limit:5 %}</span>
+<span class="bg1">        &lt;<span class="pd_green2"><strong>li</strong></span>&gt;</span>
+<span class="bg1">          &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ post.url }}"</strong></span>&gt;{{ post.title }}&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">          &lt;<span class="pd_green2"><strong>span</strong></span>&gt;Posted: post.date | date: '%B %d, %Y' &lt;/<span class="pd_green2"><strong>span</strong></span>&gt;</span>
+<span class="bg1">        &lt;/<span class="pd_green2"><strong>li</strong></span>&gt; {% endfor %}</span>
+<span class="bg1">    &lt;/<span class="pd_green2"><strong>ul</strong></span>&gt;</span>
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-content blog-previews"</span>&gt;
+      {% for post in site.posts %}
+         &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-posts"</span>&gt;
+           &lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-header"</span>&gt;
+             &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ post.url }}"</span>&gt;{{ post.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+             &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-byline"</span>&gt;
+              &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"{{ post.gravatar }}"</span> /&gt;
+              &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ post.authorTwitter }}"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+              by: {{ post.author }}
+              &lt;<span class="pd_green1"><strong>span</strong></span>&gt; - {{ post.date | date: '%B %d, %Y' }}&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+            &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"posts-image"</span>
+               <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"background-image:url({{ post.postHero }})"</span>&gt;&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+          {{ post.excerpt }}
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+     {% endfor %}
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_418"></span><a href="ch12.xhtml#ch12list6">Listing 12.6</a> uses the same ideas as <a href="ch12.xhtml#ch12list5">Listing 12.5</a>; the only novelty is the use of <span class="green-d"><code><strong>limit:5</strong></code></span> to restrict the loop to show only the five most recent posts.</p>
+<p class="indent">When you save and refresh, you should see the post names and links in the right-hand column (<a href="ch12.xhtml#ch12fig9">Figure 12.9</a>).</p>
+<figure class="figure" id="ch12fig9">
+<img src="graphics/12fig09.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.9:</strong> Blog index… now with a Recent Posts list!</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec12_2_1">12.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using your new knowledge of Jekyll variables and how they work with loops, add in the author name and avatar to the “Recent Posts” side menu.</p></li>
+<li><p class="number">Edit the second blog post that we created and change up the text that makes up the body copy, the main image, and the author name and avatar (all of which are in the frontmatter).</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec12_3"><span epub:type="pagebreak" id="page_419"></span>12.3 A Blog Post Page</h3>
+<p class="noindent">Now that we have a working blog index, we’re ready to take a look at individual posts. We can get started by clicking one of the links on the blog index, which takes us to a totally unstyled page with the individual post content. As seen in <a href="ch12.xhtml#ch12fig10">Figure 12.10</a>, the post page currently doesn’t even have basic elements like the site header. Let’s fix that.</p>
+<figure class="figure" id="ch12fig10">
+<img src="graphics/12fig10.jpg" alt="images" width="676" height="294"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.10:</strong> The kitten is cute, but the page isn’t.</p>
+</figcaption>
+</figure>
+<p class="indent">The problem is that in the blog post frontmatter (<a href="ch12.xhtml#ch12list1">Listing 12.1</a>) we told Jekyll that these pages should be built using the <span class="green-d"><code><strong>post</strong></code></span> layout… which doesn’t yet exist. The first step is to create a new file called <span class="green-d"><code><strong>post.html</strong></code></span> in the <span class="green-d"><code><strong>layouts</strong></code></span> folder, and then add in the frontmatter and Liquid tag shown in <a href="ch12.xhtml#ch12list7">Listing 12.7</a>.</p>
+<p class="listing" id="ch12list7"><strong>Listing 12.7:</strong> The most basic post page possible.<br/><code><em>_layouts/post.html</em></code></p>
+<pre class="pre2">---
+layout: default
+---
+
+{{ content }}</pre>
+<p class="noindent">As promised in <a href="ch12.xhtml#sec12_1">Section 12.1</a>, <a href="ch12.xhtml#ch12list7">Listing 12.7</a> includes a layout (<span class="green-d"><code><strong>default</strong></code></span>) within a layout (<a href="ch12.xhtml#ch12fig3">Figure 12.3</a>). This is the simplest that we can make the page, and it still doesn’t look right, but at least the rest of the site interface is back.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_420"></span>What do we do next? If you guessed “add a bunch of wrappers and styles,” you just won a gold star.<sup><a id="fn12_5a" href="ch12.xhtml#fn12_5">5</a></sup> Unlike the blog index, in <a href="ch12.xhtml#ch12list8">Listing 12.8</a> we are just going to jump in and add both the HTML structure and all the Liquid tags to correctly pull information from the blog post file and build it onto the page. This is an excellent exercise in reading markup, applying the lessons from both <a href="part01.xhtml#part01">Part I</a> and <a href="part02.xhtml#part02">Part II</a>.</p>
+<p class="footnote"><a id="fn12_5" href="ch12.xhtml#fn12_5a">5</a>. Gold star is not legal tender, offer not valid in Saskatchewan.</p>
+<p class="indent">There is one key difference between the post page and the blog index from <a href="ch12.xhtml#ch12list5">Listing 12.5</a>; in the case of the index, we had a loop variable called <span class="green-d"><code><strong>post</strong></code></span> (defined by us via <span class="green-d"><code><strong>for post in ...</strong></code></span>), whereas in the post itself we use a variable called <span class="green-d"><code><strong>page</strong></code></span>. This variable is supplied automatically by Liquid. The result, which you should read carefully, appears in <a href="ch12.xhtml#ch12list8">Listing 12.8</a>, and a brief explanation follows.</p>
+<p class="listing" id="ch12list8"><strong>Listing 12.8:</strong> Adding in the blog post page structure.<br/><code><em>_layouts/post.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list08a" id="p12list08">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post"</span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"half-hero"</span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"background-image:url({{ page.postHero }})"</span>&gt;&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+  &lt;<span class="pd_green1"><strong>article</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"page"</span>&gt;
+    &lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-header"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;{{ page.title }}&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-byline"</span>&gt;
+        &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"{{ page.gravatar }}"</span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ page.authorTwitter }}"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        by: {{ page.author }}
+        &lt;<span class="pd_green1"><strong>span</strong></span>&gt; - {{ page.date | date: '%B %d, %Y' }}&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>aside</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-aside"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h4</strong></span>&gt;Recent Posts&lt;/<span class="pd_green1"><strong>h4</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-title-list"</span>&gt;
+        {% for post in site.posts limit:5 %}
+          &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+            &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ post.url }}"</span>&gt;{{ post.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+            &lt;<span class="pd_green1"><strong>span</strong></span>&gt;Posted: {{ post.date | date: '%B %d, %Y' }}&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+        {% endfor %}
+     &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>aside</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-content"</span>&gt;
+     {{ content }}
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>footer</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-footer"</span>&gt;
+     {{ page.postFooter }}
+   &lt;/<span class="pd_green1"><strong>footer</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>article</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_421"></span>In <a href="ch12.xhtml#ch12list8">Listing 12.8</a>, we’ve used a new element, the <span class="green-d"><code><strong>article</strong></code></span> tag, which was created specifically to wrap sections of content that could stand on their own if you were to cut them out of the site and display them separately. So a blog post would be a good place to use <span class="green-d"><code><strong>article</strong></code></span> (as we have here), but the bios on the homepage wouldn’t be (because they’re specific to that page).</p>
+<p class="indent">As shown in <a href="ch12.xhtml#ch12list8">Listing 12.8</a>, it’s a good practice to use headers and footers inside <span class="green-d"><code><strong>article</strong></code></span> to contain things like the title and byline, or (in the case of the footer) things like tags, sharing, footnotes, or anything else that would normally go at the bottom.</p>
+<p class="indent">We’ve added another new HTML5 element on the page, the <span class="green-d"><code><strong>aside</strong></code></span> tag. This is supposed to be used for extra content that is related to the contents of an article. In the context of a blog, it could be a list of recent blog posts or related posts, or it could be something like links for social sharing (Twitter, Facebook, etc.).</p>
+<p class="indent">When you save and refresh your browser, you should now see that the content has been organized and is ready for us to style (<a href="ch12.xhtml#ch12fig11">Figure 12.11</a>).</p>
+<figure class="figure" id="ch12fig11">
+<img src="graphics/12fig11.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.11:</strong> Things are looking up.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_422"></span>Now let’s add in a bunch of post-specific styling, as shown in <a href="ch12.xhtml#ch12list9">Listing 12.9</a>.</p>
+<p class="listing" id="ch12list9"><strong>Listing 12.9:</strong> Formatting the post page with CSS to finish the layout.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list09a" id="p12list09">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* BLOG STYLES*/</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>post</strong></span> {
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}
+.<span class="blue-v"><strong>post-content</strong></span><span class="grey">,</span>
+.<span class="blue-v"><strong>post-footer</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">85</span><span class="pd_red"><strong>vw</strong></span>;
+}
+.<span class="blue-v"><strong>pull-left</strong></span> {
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">-2</span><span class="pd_red"><strong>%</strong></span>;
+}
+.<span class="blue-v"><strong>pull-right</strong></span> {
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">-2</span><span class="pd_red"><strong>%</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post-aside</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="pd_green1">rgb</span>a<span class="grey">(</span>0, <span class="grey">0</span>, <span class="grey">0</span>, <span class="grey">0.0</span>1);
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 0 2</span><span class="pd_red"><strong>em</strong></span> <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>post</strong></span> .<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>post-content</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1.1</span><span class="pd_red"><strong>rem</strong></span>;
+}
+.<span class="blue-v"><strong>post-footer</strong></span> {
+  <span class="pd_green1"><strong>border-top</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0, <span class="grey">0</span>, <span class="grey">0</span>, <span class="grey">0.</span>1);
+  <span class="pd_green1"><strong>font-style</strong></span>: <span class="pd_green1"><strong>italic</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">3</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_423"></span>In case you are wondering why that <span class="green-d"><code><strong>.half-hero</strong></code></span> at the top wasn’t showing on the post page, it isn’t visible because it needs a height, and while we are editing that we will also do some background sizing and positioning, as seen in <a href="ch12.xhtml#ch12list10">Listing 12.10</a>.</p>
+<p class="listing" id="ch12list10"><strong>Listing 12.10:</strong> The <span class="green-d"><code><strong>.half-hero</strong></code></span> on the post page needed dimensions to be seen.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list10a" id="p12list10">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>half-hero</strong></span> {
+  <span class="pd_green1"><strong>background-position</strong></span>: <span class="pd_green1"><strong>center center</strong></span>;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>vh</strong></span>;
+}</pre>
+<p class="indent">Flipping between the two pages, you’ll see that things are looking pretty organized, and the content is looking good (<a href="ch12.xhtml#ch12fig12">Figure 12.12</a>). Notice that for the post content we bumped up the font size of the text to <span class="green-d"><code><strong>1.1rem</strong></code></span>. It is always nice to have slightly larger type for sections of content that are text-heavy for readability—a font size in the range of being equivalent to <span class="green-d"><code><strong>16px</strong></code></span> to <span class="green-d"><code><strong>18px</strong></code></span> is a good target.</p>
+<figure class="figure" id="ch12fig12">
+<img src="graphics/12fig12.jpg" alt="images" width="671" height="1019"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_424"></span><strong>Figure 12.12:</strong> Our finished blog post page.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_425"></span>One last little Jekyll Liquid tag trick before we move on: You might at some point want to add a link on the site, or a small description, that can direct users to the most recent blog post. Let’s first add a link in the header as the last navigation link. Open up <span class="green-d"><code><strong>_includes/nav-links.html</strong></code></span> and add in the changes in <a href="ch12.xhtml#ch12list11">Listing 12.11</a>.</p>
+<p class="listing" id="ch12list11"><strong>Listing 12.11:</strong> Adding a “newest post” link to the site navigation.<br/><code><em>_includes/nav-links.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list11a" id="p12list11">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/gallery"</span>&gt;Gallery&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/blog"</span>&gt;Blog&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">&lt;<span class="pd_green2"><strong>li</strong></span>&gt;&lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"{{ site.posts.first.url }}"</strong></span>&gt;Newest Post&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;&lt;/<span class="pd_green2"><strong>li</strong></span>&gt;</span></pre>
+<p class="indent">Now you have a link that always goes to the most recent post!</p>
+<p class="indent">You can use the same formatting to pull over information from the newest post. So if you wanted to put a little preview on the homepage, it would be easy. Open up the homepage <span class="green-d"><code><strong>index.html</strong></code></span>, and add in a new <span class="green-d"><code><strong>.home-section</strong></code></span>, like in <a href="ch12.xhtml#ch12list12">Listing 12.12</a>, right above the section with the bios.</p>
+<p class="listing" id="ch12list12"><strong>Listing 12.12:</strong> A preview of the newest post on the homepage.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list12a" id="p12list12">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-section"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h4</strong></span>&gt;Most recent post&lt;/<span class="pd_green1"><strong>h4</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"blog-posts"</span>&gt;
+    &lt;<span class="pd_green1"><strong>header</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-header"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ site.posts.first.url }}"</span>&gt;
+        {{ site.posts.first.title }}&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"post-byline"</span>&gt;
+        &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"{{ site.posts.first.gravatar }}"</span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"{{ site.posts.first.authorTwitter }}"</span>
+        <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        by: {{ site.posts.first.author }}
+        &lt;<span class="pd_green1"><strong>span</strong></span>&gt; - {{ site.posts.first.date | date: '%B %d, %Y' }}&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"posts-image"</span>
+    <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"background-image:url({{ site.posts.first.postHero }})"</span>&gt;&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    {{ site.posts.first.excerpt }}
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-section"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;THE FOUNDERS&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+  .
+  .
+  .</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_426"></span>And then add in a little bit of styling to keep everything tidy (<a href="ch12.xhtml#ch12list13">Listing 12.13</a>).</p>
+<p class="listing" id="ch12list13"><strong>Listing 12.13:</strong> Styling the width of the homepage’s new post preview.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch12_images.xhtml#p12list13a" id="p12list13">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>home-section</strong></span> <span class="pd_green1"><strong>h2</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>home-section</strong></span> <span class="pd_green1"><strong>h4</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">0.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>home-section</strong></span> .<span class="blue-v"><strong>post-header</strong></span> {
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>home-section</strong></span> .<span class="blue-v"><strong>blog-posts</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">75</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent">After saving and refreshing, you now have a nicely formatted preview that will always show information from and a link to the most recent blog post (<a href="ch12.xhtml#ch12fig13">Figure 12.13</a>).</p>
+<figure class="figure" id="ch12fig13">
+<img src="graphics/12fig13.jpg" alt="images" width="667" height="466"/>
+<figcaption>
+<p class="title-f"><strong>Figure 12.13:</strong> Preview of the most recent blog post on the homepage.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec12_3_1"><span epub:type="pagebreak" id="page_427"></span>12.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number"><em>Sacrebleu!</em> Is your programmer’s itch acting up again? Do you see what we’ve repeated on both the blog index page and blog detail page? This repetition cannot stand! Refactor the site by moving the recent post list into its own include, and then load that include on both the blog index and detail pages.</p></li>
+<li><p class="number">Try playing around by adding new posts, changing the date, changing the filename to see how Jekyll builds URLs, and changing the frontmatter to have different titles, authors, etc. You now have a super-simple blog! Jekyll has a lot more bells and whistles that can make your blog even fancier, which you can learn about by reading the Jekyll documentation.<span epub:type="pagebreak" id="page_428"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch07"><span epub:type="pagebreak" id="page_135"></span>Chapter 7</h2>
+<h2 class="chap-title">Objects and Prototypes</h2>
+<p class="noindent">In <a href="ch04.xhtml#ch4lev4">Section 4.4</a>, we learned how to make plain objects, which we used as simple associative arrays of key–value pairs. In this chapter, we’ll make more general versions of JavaScript objects, ones that have both properties (data) and methods (functions) attached to them.</p>
+<section>
+<h3 class="h3" id="ch7lev1">7.1 Defining Objects</h3>
+<p class="noindent">There is a <a href="https://stackoverflow.com/a/30097697/57750">dizzying variety</a> of ways to define objects in JavaScript, but we’ll focus on one of the most classic ways, which is to use functions (<a href="ch05.xhtml#ch05">Chapter 5</a>). The result will be an object <em>constructor function</em> that can be used to create (or <em>instantiate</em>) a new object (called an <em>instance</em>) using the <span class="pd_green"><code><strong>new</strong></code></span> syntax we first saw in <a href="ch04.xhtml#ch4lev2">Section 4.2</a>.</p>
+<p class="indent">We’ll start by defining a <span class="pd_green"><code><strong>Phrase</strong></code></span> object. Eventually, we’ll use <span class="pd_green"><code><strong>Phrase</strong></code></span> to represent a phrase like “Madam, I’m Adam.” that can qualify as a palindrome even if it’s not technically the same forward and backward. At first, though, all we’ll do is define a <span class="pd_green"><code><strong>Phrase</strong></code></span> constructor function that takes in an argument (the <span class="pd_green"><code><strong>content</strong></code></span>) and sets the property <span class="pd_green"><code><strong>content</strong></code></span>. We’ll put this in a file in a moment, but for now let’s work in the REPL:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c135pro01" id="c135pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+     <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  }</pre>
+<p class="noindent">Inside the <span class="pd_green"><code><strong>Phrase</strong></code></span> function, <span class="pd_green"><code><strong>this</strong></code></span> represents the object itself, and we can assign it a property just as we did with plain objects in <a href="ch04.xhtml#ch4lev4">Section 4.4</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_136"></span>The effect of defining <span class="pd_green"><code><strong>Phrase</strong></code></span> is that we can create a new phrase using <span class="pd_green"><code><strong>new Phrase</strong></code></span>:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c136pro01" id="c136pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> greeting <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Hello, world!"</span>);</pre>
+<p class="noindent">As with, e.g., the <span class="pd_green"><code><strong>length</strong></code></span> property of <span class="pd_green"><code><strong>String</strong></code></span> objects (<a href="ch02.xhtml#ch2lev4">Section 2.4</a>), we can access a phrase’s content using the familiar dot notation:</p>
+<pre class="pre1"><span class="gray">&gt;</span> greeting.content;
+<span class="pd_red">'Hello, world!'</span></pre>
+<p class="indent">Note that object names are conventionally written in CamelCase (<a href="ch02.xhtml#ch2fig3">Figure 2.3</a>) with a leading capital letter (unlike variables, which start with a lowercase letter). All of the native objects we’ve seen so far—including <span class="pd_green"><code><strong>String</strong></code></span>, <span class="pd_green"><code><strong>Array</strong></code></span>, <span class="pd_green"><code><strong>Date</strong></code></span>, and <span class="pd_green"><code><strong>RegExp</strong></code></span>—follow this consistent naming convention.</p>
+<p class="indent">Because we’ll be building up to a <span class="pd_green"><code><strong>Phrase</strong></code></span> object that can detect palindromes, we’ll work in the <span class="pd_green"><code><strong>palindrome.js</strong></code></span> file we created in <a href="ch05.xhtml#ch5lev3">Section 5.3</a>. For reference, the file contents are repeated below, along with our simple <span class="pd_green"><code><strong>Phrase</strong></code></span> object definition (<a href="ch07.xhtml#ch7list1">Listing 7.1</a>). Note that <a href="ch07.xhtml#ch7list1">Listing 7.1</a> uses the improved version of <span class="pd_green"><code><strong>reverse</strong></code></span> developed in <a href="ch05.xhtml#ch5list11">Listing 5.11</a>.</p>
+<p class="listing" id="ch7list1"><strong>Listing 7.1:</strong> Our initial <span class="pd_green"><code><strong>Phrase</strong></code></span> object definition.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis01" id="c07lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Returns true for a palindrome, false otherwise.</em></span>
+<span class="pd_green1"><strong>function</strong></span> palindrome(string) {
+  <span class="pd_green1"><strong>let</strong></span> processedContent <span class="gray">=</span> string.toLowerCase();
+  <span class="pd_green1"><strong>return</strong></span> processedContent <span class="gray">===</span> reverse(processedContent);
+}
+
+<span class="bg1"><span class="pd_blue1">//</span> <span class="pd_blue1"><em>Defines a Phrase object</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1"><span class="pd_green1"><strong>function</strong></span> Phrase(content) {</span>
+<span class="bg1">  <span class="pd_green1"><strong>this</strong></span>.content<span class="gray"> <strong>=</strong></span> content;</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_137"></span>Just as a reality check, it’s a good idea to run it in the REPL to catch any syntax errors, etc.:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c137pro01" id="c137pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Racecar"</span>);
+<span class="gray">&gt;</span> phrase.content;
+<span class="pd_red">'Racecar'</span></pre>
+<p class="indent">As a next step, we’ll move the <span class="pd_green"><code><strong>palindrome</strong></code></span> function into the <span class="pd_green"><code><strong>Phrase</strong></code></span> object, adding it as a method. The way to do this is to assign a <span class="pd_green"><code><strong>function</strong></code></span> directly to a <span class="pd_green"><code><strong>palindrome</strong></code></span> property—a method is, in effect, a property that’s bound to a function.</p>
+<p class="indent">Because the desired <span class="pd_green"><code><strong>content</strong></code></span> string is available inside the method as <span class="pd_green"><code><strong>this.content</strong></code></span>, the <span class="pd_green"><code><strong>palindrome</strong></code></span> function no longer needs to take it as an argument. This allows us to change <span class="pd_green"><code><strong>palindrome</strong></code></span> from a function of one variable to a function of zero variables. In other words, we’ll change this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c137pro02" id="c137pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1"><span class="pd_green1"><strong>function</strong></span> palindrome(string) {</span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> processedContent<span class="gray"> <strong>=</strong></span> string.toLowerCase();</span>
+
+   <span class="pd_green1"><strong>return</strong></span> processedContent <span class="gray">===</span> reverse(processedContent);
+}</pre>
+<p class="noindent">to this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c137pro03" id="c137pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>this</strong></span>.palindrome = <span class="pd_green1"><strong>function</strong></span> palindrome() {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> processedContent = <span class="pd_green1"><strong>this</strong></span>.content.toLowerCase();</span>
+
+   <span class="pd_green1"><strong>return</strong></span> processedContent <span class="gray">===</span> reverse(processedContent);
+}</pre>
+<p class="indent">Putting the <span class="pd_green"><code><strong>palindrome</strong></code></span> method into the appropriate place in the <span class="pd_green"><code><strong>Phrase</strong></code></span> method gives the code shown in <a href="ch07.xhtml#ch7list2">Listing 7.2</a>. Note that we can use the <span class="pd_green"><code><strong>reverse</strong></code></span> method even inside an object definition; we’ll implement an even nicer way of <span class="pd_green"><code><strong>reverse</strong></code></span>-ing strings in <a href="ch07.xhtml#ch7lev3">Section 7.3</a>.</p>
+<p class="listing" id="ch7list2"><strong>Listing 7.2:</strong> Moving <span class="pd_green"><code><strong>palindrome</strong></code></span> into a method.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis02" id="c07lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span epub:type="pagebreak" id="page_138"></span><span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+<span class="bg1">  <span class="pd_blue1">//</span> <span class="pd_blue1"><em>Returns true if the phrase is a palindrome, false otherwise</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1">  <span class="pd_green1"><strong>this</strong></span>.palindrome<span class="gray"> <strong>=</strong></span> <span class="pd_green1"><strong>function</strong></span> palindrome() {</span>
+<span class="bg1">    <span class="pd_green1"><strong>let</strong></span> processedContent<span class="gray"> <strong>=</strong></span> <span class="pd_green1"><strong>this</strong></span>.content.toLowerCase();</span>
+<span class="bg1">    <span class="pd_green1"><strong>return</strong></span> processedContent<span class="gray"> <strong>===</strong></span> reverse(processedContent);</span>
+<span class="bg1">  }</span>
+}</pre>
+<p class="indent">Loading the file in the REPL shows that it worked (<a href="ch07.xhtml#ch7fig1">Figure 7.1</a>):<sup><a id="ch7fn-1" href="ch07.xhtml#ch7fn_1">1</a></sup></p>
+<p class="footnote"><a id="ch7fn_1" href="ch07.xhtml#ch7fn-1">1</a>. Image courtesy of msyaraafiq/Shutterstock.</p>
+<figure class="figure" id="ch7fig1">
+<img src="graphics/07fig01.jpg" alt="images" width="638" height="366"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.1:</strong> A <a href="https://en.wikipedia.org/wiki/Formula_One">Formula One</a> palindrome.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch07_images.xhtml#c138pro01" id="c138pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Racecar"</span>);
+<span class="gray">&gt;</span> phrase.palindrome();
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent">The palindrome detector in <a href="ch07.xhtml#ch7list2">Listing 7.2</a> is fairly rudimentary, but we now have a good foundation for building (and testing) a more sophisticated palindrome detector in <a href="ch08.xhtml#ch08">Chapter 8</a>.</p>
+<section>
+<h4 class="h4" id="ch7lev1sec1"><span epub:type="pagebreak" id="page_139"></span>7.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">By filling in the code in <a href="ch07.xhtml#ch7list3">Listing 7.3</a>, add a <span class="pd_green"><code><strong>louder</strong></code></span> method to the <span class="pd_green"><code><strong>Phrase</strong></code></span> object that returns a LOUDER (all-caps) version of the content. Confirm in the REPL that the result appears as in <a href="ch07.xhtml#ch7list4">Listing 7.4</a>.</p></li>
+</ol>
+<p class="listing" id="ch7list3"><strong>Listing 7.3:</strong> Making the content LOUDER.<br/><code><em>palindrome.js</em></code></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Makes the phrase LOUDER.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.louder <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+<span class="bg1">    <span class="pd_green1">//</span><span class="pd_green1"> <em>FILL IN</em></span></span>
+  };
+}</pre>
+<p class="listing" id="ch7list4"><strong>Listing 7.4:</strong> Using <span class="pd_green"><code><strong>louder</strong></code></span> in the REPL.</p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis04" id="c07lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> p <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("yo adrian!"</span>);
+<span class="gray">&gt;</span> p.louder();
+<span class="pd_red">'YO ADRIAN!'</span></pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch7lev2">7.2 Prototypes</h3>
+<p class="noindent">If you look around for details on JavaScript’s object system, you’ll quickly find that it is “prototype-based”. For example, the <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes">Mozilla Developer Network article</a> (<a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes">https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes</a>) on object prototypes says the following:</p>
+<p class="blockquote">JavaScript is often described as a <strong>prototype-based language</strong> — each object has a <strong>prototype object</strong>, which acts as a template object that it inherits methods and properties from. An object’s prototype object may also have a prototype object, which it inherits methods and properties from, and so on. This is often referred to as a <strong>prototype chain</strong>, and explains why different objects have properties and methods defined on other objects available to them.</p>
+<p class="noindent"><span epub:type="pagebreak" id="page_140"></span>This explanation is perfectly correct, but in my experience it can be confusing unless you already know what it’s saying, and I don’t think anyone ever understood object systems by reading definitions like this one. In my view, generalizing from concrete examples is a better way to go.</p>
+<p class="indent">Our strategy will be to create a new object called <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>, using <span class="pd_green"><code><strong>Phrase</strong></code></span> as its prototype. We’ll start by reviewing the <span class="pd_green"><code><strong>Phrase</strong></code></span> object defined in <a href="ch07.xhtml#ch7list2">Listing 7.2</a>, which has a <span class="pd_green"><code><strong>content</strong></code></span> property and a <span class="pd_green"><code><strong>palindrome</strong></code></span> method (<a href="ch07.xhtml#ch7list5">Listing 7.5</a>).</p>
+<p class="listing" id="ch7list5"><strong>Listing 7.5:</strong> The current state of the <span class="pd_green"><code><strong>Phrase</strong></code></span> object.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis05" id="c07lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>let</strong></span> processedContent <span class="gray">=</span> <span class="pd_green1"><strong>this</strong></span>.content.toLowerCase();
+    <span class="pd_green1"><strong>return</strong></span> processedContent <span class="gray">===</span> reverse(processedContent);
+  }
+}</pre>
+<p class="indent">Our next step is to factor <span class="pd_green"><code><strong>processedContent</strong></code></span> into its own method, since logically it is a separate operation, and is something we might want to change later on (which indeed will be the case in just a moment). The result appears in <a href="ch07.xhtml#ch7list6">Listing 7.6</a>.</p>
+<p class="listing" id="ch7list6"><strong>Listing 7.6:</strong> Moving <span class="pd_green"><code><strong>processedContent</strong></code></span> into a method.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis06" id="c07lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+<span class="bg1">  <span class="pd_blue1">//</span> <span class="pd_blue1"><em>Returns content processed for palindrome testing</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1">  <span class="pd_green1"><strong>this</strong></span>.processedContent<span class="gray"> <strong>=</strong></span> <span class="pd_green1"><strong>function</strong></span></span> processedContent() {
+<span epub:type="pagebreak" id="page_141"></span>
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();</span>
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.processedContent()<span class="gray"> <strong>===</strong></span> reverse(<span class="pd_green1"><strong>this</strong></span>.processedContent());</span>
+  }
+}</pre>
+<p class="indent">Now we’re ready to add a second kind of phrase, <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>, which has content <em>and</em> a translation. We’ll start by defining two properties, <span class="pd_green"><code><strong>content</strong></code></span> and <span class="pd_green"><code><strong>translation</strong></code></span>, as seen in <a href="ch07.xhtml#ch7list7">Listing 7.7</a>.</p>
+<p class="listing" id="ch7list7"><strong>Listing 7.7:</strong> Defining a <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis07" id="c07lis07a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_blue1"><em>// Defines a TranslatedPhrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> TranslatedPhrase(content, translation) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  <span class="pd_green1"><strong>this</strong></span>.translation <span class="gray">=</span> translation;
+}</pre>
+<p class="indent">Now, in order to endow <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> with a <span class="pd_green"><code><strong>palindrome</strong></code></span> method, we could copy-and-paste the methods from <span class="pd_green"><code><strong>Phrase</strong></code></span>, like this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c141pro01" id="c141pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>function</strong></span> TranslatedPhrase(content, translation) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  <span class="pd_green1"><strong>this</strong></span>.translation <span class="gray">=</span> translation;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+     <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+     <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> reverse(<span class="pd_green1"><strong>this</strong></span>.processedContent());
+  }
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_142"></span>But this would result in a terrible duplication of code, a clear violation of the DRY Principle (<a href="ch07.xhtml#ch7box1">Box 7.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch7box1"><strong>Box 7.1: Don’t Repeat Yourself</strong></h1>
+</header>
+<p class="box-no">If you’ve been poking around the Internet in places where developers <a href="https://www.urbandictionary.com/define.php?term=talking%20shop">talk shop</a>, you might have noticed someone mention staying <em>DRY</em>, with “dry” in all caps. They aren’t talking about relative moisture levels. What they are talking about is a core principle in programming: <em><a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">Don’t Repeat Yourself</a></em>.</p>
+<p class="box-ind">The idea behind DRY is that good coding should include as few instances of unnecessary repetition as humanly possible, simply because if you have the same code in a bunch of places, then every time you want to make a change you’ll have to update all the different spots in the application where that code is repeated. For example, if you wanted to change the definition of the <span class="pd_green"><code><strong>palindrome</strong></code></span> method, you’d have to make the same change in <em>every</em> object that defines it. With only two objects, this might be ugly but manageable, but for a bigger project it would be a nightmare.</p>
+<p class="box-ind">Programmers are a special sort of lazy—especially when it comes to doing something repetitive that could be done more efficiently with a little bit of extra programming. To make it easier to be lazy, enterprising programmers spend countless hours creating systems that allow other developers not to have to repeat themselves. We all benefit from developers who at some point decided they were going to work really hard <em>now</em> so they could work less hard in the future.</p>
+<p class="box-ind"><em>Inheritance</em> is one of these ideas. It allows objects to <em>inherit</em> the properties of other objects, so that any methods they have in common need to be defined only once. The result is that we can define a <span class="pd_green"><code><strong>palindrome</strong></code></span> method <em>once</em>, and then have other objects inherit <span class="pd_green"><code><strong>palindrome</strong></code></span> from the parent method. In JavaScript, the mechanism for doing this is called the <em>prototype system</em>.</p>
+</aside>
+<p class="indent">Instead, we’ll use an important idea in object-oriented programming called <em>inheritance</em>, and arrange for <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> to inherit the desired <span class="pd_green"><code><strong>palindrome</strong></code></span> method directly from <span class="pd_green"><code><strong>Phrase</strong></code></span>. The way to do this in JavaScript is to set the <em>prototype</em> of the second object type equal to an instance of the first; i.e., we need to set <span class="pd_green"><code><strong>TranslatedPhrase.prototype</strong></code></span> to <span class="pd_green"><code><strong>new Phrase()</strong></code></span>, as shown in <a href="ch07.xhtml#ch7list8">Listing 7.8</a>.</p>
+<p class="listing" id="ch7list8"><span epub:type="pagebreak" id="page_143"></span><strong>Listing 7.8:</strong> Defining a <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object with a <span class="pd_green"><code><strong>Phrase</strong></code></span> prototype.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis08" id="c07lis08a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_blue1"><em>// Defines a TranslatedPhrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> TranslatedPhrase(content, translation) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  <span class="pd_green1"><strong>this</strong></span>.translation <span class="gray">=</span> translation;
+}
+<span class="bg1">TranslatedPhrase.prototype = <span class="v1"><strong>new</strong></span> Phrase();</span></pre>
+<p class="indent">Because the <span class="pd_green"><code><strong>prototype</strong></code></span> property of <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> has been set to a <span class="pd_green"><code><strong>Phrase</strong></code></span> object, an instance of <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> automatically has all the methods of a <span class="pd_green"><code><strong>Phrase</strong></code></span> instance, including <span class="pd_green"><code><strong>palindrome</strong></code></span>. Let’s create a variable called <span class="pd_green"><code><strong>frase</strong></code></span> (pronounced “FRAH-seh”, Spanish for “phrase”) to see how it works (<a href="ch07.xhtml#ch7list9">Listing 7.9</a>).</p>
+<p class="listing" id="ch7list9"><strong>Listing 7.9:</strong> Defining a <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis09" id="c07lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> frase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> TranslatedPhrase<span class="pd_red">("recognize"</span>, <span class="pd_red">"reconocer"</span>);
+<span class="gray">&gt;</span> frase.palindrome();
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent">We see that <span class="pd_green"><code><strong>frase</strong></code></span> has a <span class="pd_green"><code><strong>palindrome()</strong></code></span> method as claimed, and that it returns <span class="pd_green"><code><strong>false</strong></code></span> because “recognize” isn’t a palindrome.</p>
+<p class="indent">But what if we wanted to use the <em>translation</em> instead of the content for determining whether the translated phrase is a palindrome or not? Because we factored <span class="pd_green"><code><strong>processedContent</strong></code></span> into a separate method (<a href="ch07.xhtml#ch7list6">Listing 7.6</a>), we can do this by <em>overriding</em> the <span class="pd_green"><code><strong>processedContent</strong></code></span> method in <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>, as seen in <a href="ch07.xhtml#ch7list10">Listing 7.10</a>.</p>
+<p class="listing" id="ch7list10"><strong>Listing 7.10:</strong> Overriding a method.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis10" id="c07lis10a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span epub:type="pagebreak" id="page_144"></span><span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> reverse(<span class="pd_green1"><strong>this</strong></span>.processedContent());
+  }
+}
+
+<span class="pd_blue1"><em>// Defines a TranslatedPhrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> TranslatedPhrase(content, translation) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  <span class="pd_green1"><strong>this</strong></span>.translation <span class="gray">=</span> translation;
+
+<span class="bg1">    <span class="pd_blue1">//</span> <span class="pd_blue1"><em>Returns translation processed for palindrome testing</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1">  <span class="pd_green1"><strong>this</strong></span>.processedContent = <span class="pd_green1"><strong>function</strong></span> processedContent() {</span>
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.translation.toLowerCase();</span>
+<span class="bg1">  }</span>
+}
+
+TranslatedPhrase.prototype <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase();</pre>
+<p class="indent">The key point in <a href="ch07.xhtml#ch7list10">Listing 7.10</a> is that we’re using <span class="pd_green"><code><strong>this.translation</strong></code></span> instead of <span class="pd_green"><code><strong>this.content</strong></code></span> in the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> version of <span class="pd_green"><code><strong>processedContent</strong></code></span>, so JavaScript knows to use that one instead of the one in <span class="pd_green"><code><strong>Phrase</strong></code></span>. Because the translation “reconocer” <em>is</em> a palindrome, we get a different result from the one we got in <a href="ch07.xhtml#ch7list9">Listing 7.9</a>, as shown in <a href="ch07.xhtml#ch7list11">Listing 7.11</a>. (Note that we need to reassign <span class="pd_green"><code><strong>frase</strong></code></span> in order to use the updated version of <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>.)</p>
+<p class="listing" id="ch7list11"><strong>Listing 7.11:</strong> After defining <span class="pd_green"><code><strong>processedContent</strong></code></span> for <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis11" id="c07lis11a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> frase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> TranslatedPhrase<span class="pd_red">("recognize"</span>, <span class="pd_red">"reconocer"</span>);
+<span class="gray">&gt;</span> frase.palindrome();
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_145"></span>This practice of overriding gives us great flexibility. We can trace the execution of <span class="pd_green"><code><strong>frase.palindrome()</strong></code></span> for the two different cases:</p>
+<p class="noindent">Case 1: <a href="ch07.xhtml#ch7list8">Listing 7.8</a> and <a href="ch07.xhtml#ch7list9">Listing 7.9</a></p>
+<ol class="number">
+<li><p class="number"><span class="pd_green"><code><strong>frase.palindrome()</strong></code></span> calls <span class="pd_green"><code><strong>palindrome()</strong></code></span> on the <span class="pd_green"><code><strong>frase</strong></code></span> instance, which is a <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>. Since there is no <span class="pd_green"><code><strong>palindrome()</strong></code></span> method in the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object, JavaScript uses the one from <span class="pd_green"><code><strong>Phrase</strong></code></span>.</p></li>
+<li><p class="number">The <span class="pd_green"><code><strong>palindrome()</strong></code></span> method in <span class="pd_green"><code><strong>Phrase</strong></code></span> calls the <span class="pd_green"><code><strong>processedContent()</strong></code></span> method. Since there is no <span class="pd_green"><code><strong>processedContent()</strong></code></span> method in the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object, JavaScript uses the one from <span class="pd_green"><code><strong>Phrase</strong></code></span>.</p></li>
+<li><p class="number">The result is to compare the processed version of <span class="pd_green"><code><strong>this.content</strong></code></span> with its own reverse. Since “recognize” isn’t a palindrome, the result is <span class="pd_green"><code><strong>false</strong></code></span>.</p></li>
+</ol>
+<p class="noindent">Case 2: <a href="ch07.xhtml#ch7list10">Listing 7.10</a> and <a href="ch07.xhtml#ch7list11">Listing 7.11</a></p>
+<ol class="number">
+<li><p class="number"><span class="pd_green"><code><strong>frase.palindrome()</strong></code></span> calls <span class="pd_green"><code><strong>palindrome()</strong></code></span> on the <span class="pd_green"><code><strong>frase</strong></code></span> instance, which is a <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span>. As in Case 1, there is no <span class="pd_green"><code><strong>palindrome()</strong></code></span> method in the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object, so JavaScript uses the one from <span class="pd_green"><code><strong>Phrase</strong></code></span>.</p></li>
+<li><p class="number">The <span class="pd_green"><code><strong>palindrome()</strong></code></span> method in <span class="pd_green"><code><strong>Phrase</strong></code></span> calls the <span class="pd_green"><code><strong>processedContent()</strong></code></span> method. Since there now <em>is</em> a <span class="pd_green"><code><strong>processedContent()</strong></code></span> method in the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object, JavaScript uses the one from <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> instead of the one in <span class="pd_green"><code><strong>Phrase</strong></code></span>.</p></li>
+<li><p class="number">The result is to compare the processed version of <span class="pd_green"><code><strong>this.translation</strong></code></span> with its own reverse. Since “reconocer” <em>is</em> a palindrome, the result is <span class="pd_green"><code><strong>true</strong></code></span>.</p></li>
+</ol>
+<p class="indent"><em>¿Puedes «reconocer» un palíndromo en español?</em> (Can you “reconocer” [recognize] a palindrome in Spanish?) (<a href="ch07.xhtml#ch7fig2">Figure 7.2</a>).<sup><a id="ch7fn-2" href="ch07.xhtml#ch7fn_2">2</a></sup></p>
+<p class="footnote"><a id="ch7fn_2" href="ch07.xhtml#ch7fn-2">2</a>. Image courtesy of Archivart/Alamy Stock Photo.</p>
+<figure class="figure" id="ch7fig2">
+<img src="graphics/07fig02.jpg" alt="images" width="604" height="428"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.2:</strong> <a href="https://es.wikipedia.org/wiki/Narciso_(mitolog%C3%ADa)">Narciso</a> se reconoce. (<a href="https://en.wikipedia.org/wiki/Narcissus_(mythology)">Narcissus</a> recognizes himself.)</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch7lev2sec1">7.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">After filling in the code in <a href="ch07.xhtml#ch7list10">Listing 7.10</a>, both <span class="pd_green"><code><strong>Phrase</strong></code></span> and <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> have explicit calls to the <span class="pd_green"><code><strong>toLowerCase</strong></code></span> method. Eliminate this duplication by <span epub:type="pagebreak" id="page_146"></span>filling in <a href="ch07.xhtml#ch7list12">Listing 7.12</a> to define an appropriate <span class="pd_green"><code><strong>processor</strong></code></span> method that returns the lowercase version of the content.</p></li>
+</ol>
+<p class="listing" id="ch7list12"><strong>Listing 7.12:</strong> Eliminating duplication with a <span class="pd_green"><code><strong>processor</strong></code></span> method.<br/><code><em>palindrome.js</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis12" id="c07lis12a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Reverses a string.</em></span>
+<span class="pd_green1"><strong>function</strong></span> reverse(string) {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(string).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_green1"><strong>this</strong></span>.processor <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>(string) {
+<span class="bg1">    <span class="pd_green1">//</span><span class="pd_green1"> <em>FILL IN</em></span></span>
+  }
+
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.processor(<span class="pd_green1"><strong>this</strong></span>.content);</span>
+  }
+
+<span epub:type="pagebreak" id="page_147"></span>  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> reverse(<span class="pd_green1"><strong>this</strong></span>.processedContent());
+  }
+}
+
+<span class="pd_green1"><strong>function</strong></span> TranslatedPhrase(content, translation) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+  <span class="pd_green1"><strong>this</strong></span>.translation <span class="gray">=</span> translation;
+
+  <span class="pd_blue1"><em>// Returns translation processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.processor(<span class="pd_green1"><strong>this</strong></span>.translation);</span>
+  }
+}</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch7lev3">7.3 Modifying Native Objects</h3>
+<p class="noindent">As a final step in understanding the JavaScript prototype chain, we’re going to learn how to modify native JavaScript objects. Specifically, we’re going to add the <span class="pd_green"><code><strong>reverse</strong></code></span> function from <a href="ch05.xhtml#ch5list11">Listing 5.11</a> as a method on <span class="pd_green"><code><strong>String</strong></code></span> objects.</p>
+<p class="indent">The reader should be warned that what we’re about to do is controversial. As the Mozilla Developer Network <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">puts it</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain</a>) (emphasis in original):</p>
+<p class="blockquote"><strong>Bad practice: Extension of native prototypes</strong></p>
+<p class="blockquoteb">One <a href="http://www.catb.org/jargon/html/M/misfeature.html">misfeature</a> that is often used is to extend <span class="pd_green"><code><strong>Object.prototype</strong></code></span> or one of the other built-in prototypes.</p>
+<p class="blockquotei">This technique is called <a href="https://en.wikipedia.org/wiki/Monkey_patch">monkey patching</a> and breaks <em><a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulation</a></em>. While used by popular frameworks such as Prototype.js, there is still no good reason for cluttering built-in types with additional <em>non-standard</em> functionality.</p>
+<p class="blockquotei">The <strong>only</strong> good reason for extending a built-in prototype is to backport the features of newer JavaScript engines, like <span class="pd_green"><code><strong>Array.forEach</strong></code></span>.</p>
+<p class="indentt">This advice reminds me of a <a href="https://www.youtube.com/watch?v=fiY2UHAgTJo">scene</a> from the movie <em><a href="https://en.wikipedia.org/wiki/Troy_(film)">Troy</a></em>, in which <a href="https://en.wikipedia.org/wiki/Achilles">Achilles</a> (Ἀχιλλεύς), the greatest warrior in Greece, is training his close confidant <a href="https://en.wikipedia.org/wiki/Patroclus">Patroclus</a> (Πάτροκλος, depicted in the film as Achilles’ cousin). At one point in their mock swordfight, Achilles switches his wooden training sword from his right hand to his left, holding it up to Patroclus’s neck. In response, Patroclus exclaims, “You told me <span epub:type="pagebreak" id="page_148"></span>never to change sword hands!” “Yes,” replies Achilles. “When you know how to use it, you won’t be taking <em>my</em> orders.”</p>
+<p class="indent">Likewise, once we know when and why to extend built-in prototypes, we won’t be taking orders from the Mozilla Developer Network (<a href="ch07.xhtml#ch7fig3">Figure 7.3</a>).<sup><a id="ch7fn-3" href="ch07.xhtml#ch7fn_3">3</a></sup></p>
+<p class="footnote"><a id="ch7fn_3" href="ch07.xhtml#ch7fn-3">3</a>. Image courtesy of Historic Images/Alamy Stock Photo.</p>
+<figure class="figure" id="ch7fig3">
+<img src="graphics/07fig03.jpg" alt="images" width="604" height="407"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.3:</strong> Patroclus and Achilles respectfully decline the advice of the Mozilla Developer Network.</p>
+</figcaption>
+</figure>
+<p class="indent">The ability to modify native objects is a powerful one, to be sure—a “sharp knife”, as it were. But instead of passively accepting MDN’s advice, we’ll adhere to the philosophy espoused by <a href="http://david.heinemeierhansson.com/">David Heinemeier Hansson</a>, creator of the <a href="http://rubyonrails.org/">Ruby on Rails</a> web framework. As DHH <a href="https://twitter.com/dhh/status/965618592606638080">puts it</a> (<a href="https://twitter.com/dhh/status/965618592606638080">https://twitter.com/dhh/status/965618592606638080</a>) (<a href="ch07.xhtml#ch7fig4">Figure 7.4</a>): “Don’t let anyone tell you that a powerful technique is too scary or dangerous for you. Let it pique your curiosity instead.”</p>
+<figure class="figure" id="ch7fig4">
+<img src="graphics/07fig04.jpg" alt="images" width="685" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.4:</strong> <a href="https://twitter.com/dhh/status/965618592606638080">DHH agrees</a> that sharp knives are OK (when used with care).</p>
+</figcaption>
+</figure>
+<p class="indent">With those caveats in mind, let’s see how to add <span class="pd_green"><code><strong>reverse</strong></code></span> to <span class="pd_green"><code><strong>String</strong></code></span>. The trick is to assign a function directly to the <span class="pd_green"><code><strong>String.prototype</strong></code></span> property, as we can see directly in the REPL:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c149pro01" id="c149pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_149"></span><span class="gray">&gt;</span> <span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+    <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+  }</pre>
+<p class="noindent">With this assignment made, we can now call <span class="pd_green"><code><strong>reverse</strong></code></span> directly on literal strings:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"foobar"</span>.reverse();
+<span class="pd_red">'raboof'</span>
+<span class="gray">&gt;</span> <span class="pd_red">"Racecar"</span>.reverse();
+<span class="pd_red">'racecaR'</span></pre>
+<p class="noindent">It also works on string variables:</p>
+<p class="codelink"><a href="ch07_images.xhtml#c149pro03" id="c149pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> string <span class="gray">=</span> <span class="pd_red">"Able was I ere I saw Elba"</span>;
+<span class="gray">&gt;</span> string.reverse();
+<span class="pd_red">'ablE was I ere I saw elbA'</span></pre>
+<p class="indent">Replacing <span class="pd_green"><code><strong>reverse</strong></code></span> in <span class="pd_green"><code><strong>palindrome.js</strong></code></span> with the code above gives <a href="ch07.xhtml#ch7list13">Listing 7.13</a>. (We’ve removed the <span class="pd_green"><code><strong>TranslatedPhrase</strong></code></span> object now that it’s no longer needed for demonstration purposes.)</p>
+<p class="listing" id="ch7list13"><span epub:type="pagebreak" id="page_150"></span><strong>Listing 7.13:</strong> Using the <span class="pd_green"><code><strong>reverse</strong></code></span> method in <span class="pd_green"><code><strong>processedContent</strong></code></span>.<br/><em>palindrome.js</em></p>
+<p class="codelink"><a href="ch07_images.xhtml#c07lis13" id="c07lis13a">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1"><span class="pd_blue1">//</span> <span class="pd_blue1"><em>Adds `reverse` to all strings</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1"><span class="pd_green1"><strong>String</strong></span>.prototype.reverse <span class="gray"><strong>=</strong></span> <span class="pd_green1"><strong>function</strong></span>() {</span>
+<span class="bg1">  <span class="pd_green1"><strong>return Array</strong></span>.from(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red"><strong>""</strong></span>);</span>
+<span class="bg1">}</span>
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();
+  }
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.processedContent()<span class="gray"> <strong>===</strong></span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();</span>
+  }
+}</pre>
+<p class="indent">As required, our code still finds palindromes correctly (<a href="ch07.xhtml#ch7fig5">Figure 7.5</a>):<sup><a id="ch7fn-4" href="ch07.xhtml#ch7fn_4">4</a></sup></p>
+<p class="footnote"><a id="ch7fn_4" href="ch07.xhtml#ch7fn-4">4</a>. Image courtesy of Everett Collection/Shutterstock.</p>
+<figure class="figure" id="ch7fig5">
+<img src="graphics/07fig05.jpg" alt="images" width="601" height="995"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.5:</strong> Napoleon Bonaparte was <a href="https://en.wikipedia.org/wiki/Napoleon#Ruler_of_France">able</a> before being <a href="https://en.wikipedia.org/wiki/Napoleon#Exile_to_Elba">exiled</a> to <a href="https://en.wikipedia.org/wiki/Elba">Elba</a>.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch07_images.xhtml#c150pro01" id="c150pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> .load palindrome.js
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> napoleonsLament <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Able was I ere I saw Elba"</span>);
+<span class="gray">&gt;</span> napoleonsLament.palindrome();
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent">As one final comment, it’s worth asking whether we might add the <span class="pd_green"><code><strong>palindrome()</strong></code></span> method to <span class="pd_green"><code><strong>String</strong></code></span> itself. The answer depends in part on the culture of the language. Some languages, such as Ruby, are relatively tolerant of adding methods to native objects, as long as the privilege isn’t abused. In the case of JavaScript, per MDN’s admonition not to add <em>non-standard</em> functionality, we’ll stick with adding only <span class="pd_green"><code><strong>reverse</strong></code></span>, which arguably belongs in the language as part of the <span class="pd_green"><code><strong>String</strong></code></span> object (and indeed some languages do include a native string <span class="pd_green"><code><strong>reverse</strong></code></span> method). But if you want to add <span class="pd_green"><code><strong>palindrome()</strong></code></span> to <span class="pd_green"><code><strong>String</strong></code></span> yourself, neither I nor Achilles is going to stop you.<span epub:type="pagebreak" id="page_151"></span></p>
+<section>
+<h4 class="h4" id="ch7lev3sec1"><span epub:type="pagebreak" id="page_152"></span>7.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Add a <span class="pd_green"><code><strong>blank</strong></code></span> method to the <span class="pd_green"><code><strong>String</strong></code></span> object prototype that returns <span class="pd_green"><code><strong>true</strong></code></span> if the string is empty <em>or</em> consists solely of whitespace (spaces, tabs, or newlines). <em>Hint</em>: Use a regular expression (<a href="ch04.xhtml#ch4lev3sec2">Section 4.3.2</a>). You will need the regex syntax for the start and end of a string (<a href="ch07.xhtml#ch7fig6">Figure 7.6</a>).</p>
+<figure class="figure" id="ch7fig6">
+<img src="graphics/07fig06.jpg" alt="images" width="721" height="359"/>
+<figcaption>
+<p class="title-f"><strong>Figure 7.6:</strong> Start to end, a blank string is all whitespace.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Using whichever method you prefer (direct indexing or slicing), add a <span class="pd_green"><code><strong>last</strong></code></span> method to the <span class="pd_green"><code><strong>Array</strong></code></span> object prototype that returns the last element of an array. <em>Hint</em>: Refer to <a href="ch03.xhtml#ch3lev3">Section 3.3</a>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

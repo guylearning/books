@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch04"><span epub:type="pagebreak" id="page_91"></span>Chapter 4</h2>
+<h2 class="h2a">Other Native Objects</h2>
+<p class="noindent">Now that we’ve taken a look at strings and lists (plus tuples and sets), we’ll continue with a tour of some other important Python features and objects: math, dates, regular expressions, and dictionaries.</p>
+<section>
+<h3 class="h3" id="sec4_1">4.1 Math</h3>
+<p class="noindent">Like most programming languages, Python supports a large number of mathematical operations:</p>
+<pre class="pre1"><code><span class="pd_green-d">$ source venv/bin/activate
+(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">1 + 1</span>
+<span class="pd_green-d">2</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">2 - 3</span>
+<span class="pd_green-d">-1</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">2 * 3</span>
+<span class="pd_green-d">6</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">10/5</span>
+<span class="pd_green-d">2.0</span></code></pre>
+<p class="indent">Note that division gives you the answer that you’d expect:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">10/4</span>
+<span class="pd_green-d">2.5</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">2/3</span>
+<span class="pd_green-d">0.6666666666666666</span></code></pre>
+<p class="noindent">We see here that Python uses <em>floating-point</em> division by default. This stands in contrast to some other languages, such as C and Ruby, in which <span class="pd_green-d"><code><strong>/</strong></code></span> is <em>integer division</em> that returns <span epub:type="pagebreak" id="page_92"></span>the number of times the denominator goes into the numerator. In other words, <span class="pd_green-d"><code><strong>10/4</strong></code></span> in a language like C is <span class="pd_green-d"><code><strong>2</strong></code></span> instead of <span class="pd_green-d"><code><strong>2.5</strong></code></span>; to perform the same operation in Python, we can use <em>two</em> slashes instead of one:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f092-01" id="f092-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">10//4</span>   <span class="pd_blue1"><em># Integer division</em></span>
+<span class="pd_green-d">2</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">2//3</span>
+<span class="pd_green-d">0</span></code></pre>
+<p class="indent">Because of its great numerical capabilities, many programmers, including me, find it convenient to fire up a Python interpreter and use it as a simple calculator when the need arises. It’s not fancy, but it’s quick and relatively powerful, and the ability to define variables often comes in handy as well.</p>
+<section>
+<h4 class="h4" id="sec4_1_1">4.1.1 More Advanced Operations</h4>
+<p class="noindent">Python supports more advanced mathematical operations via the <span class="pd_green-d"><code><strong>math</strong></code></span> object (which is technically a <em>module</em>, a special kind of object we’ll learn more about starting in <a href="ch07.xhtml#ch07">Chapter 7</a>). The <span class="pd_green-d"><code><strong>math</strong></code></span> module has utilities for things like mathematical constants, roots, and trigonometric functions:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>math</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>pi
+<span class="pd_green-d">3.141592653589793</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>sqrt(<span class="pd_gray">2</span>)
+<span class="pd_green-d">1.4142135623730951</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>cos(<span class="pd_gray">0</span>)
+<span class="pd_green-d">1.0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>cos(<span class="pd_gray">2*</span>math<span class="pd_gray">.</span>pi)
+<span class="pd_green-d">1.0</span></code></pre>
+<p class="noindent">We see here that the way to use the <span class="pd_green-d"><code><strong>math</strong></code></span> module is to load it using <span class="pd_green-d"><code><strong>import math</strong></code></span> and then access the module contents using <span class="pd_green-d"><code><strong>math.</strong></code></span> (the module name followed by a dot). This is a general pattern with Python modules; the use of the <span class="pd_green-d"><code><strong>math.</strong></code></span> prefix is known as a <em>namespace</em>.</p>
+<p class="indent">There is one gotcha for those coming from high school (and even college) textbooks that use ln <em>x</em> for the natural logarithm (base <em>e</em>). Like most other programming languages, Python uses log <em>x</em> instead:<sup><a id="fn4_1a" href="ch04.xhtml#fn4_1">1</a></sup></p>
+<p class="footnote"><a id="fn4_1" href="ch04.xhtml#fn4_1a">1.</a> It is unclear why introductory math textbooks settled on using ln <em>x</em> for the natural logarithm when mathematicians generally write it as log <em>x</em>, and even when they write it as ln <em>x</em> they still often <em>pronounce</em> it as “log <em>x</em>”.</p>
+<span epub:type="pagebreak" id="page_93"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log(math<span class="pd_gray">.</span>e)
+<span class="pd_green-d">1</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log(<span class="pd_gray">10</span>)
+<span class="pd_green-d">2.302585092994046</span></code></pre>
+<p class="indent">Mathematicians typically indicate base-ten logarithms using log<sub>10</sub>, and Python follows suit with <span class="pd_green-d"><code><strong>log10</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log10(<span class="pd_gray">10</span>)
+<span class="pd_green-d">1.0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log10(<span class="pd_gray">1000000</span>)
+<span class="pd_green-d">6.0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log10(<span class="pd_gray">1_000_000</span>)
+<span class="pd_green-d">6.0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>log10(math<span class="pd_gray">.</span>e)
+<span class="pd_green-d">0.4342944819032518</span></code></pre>
+<p class="noindent">Note here that we can use underscores in a number as a separator to make it easier to read—thus, <span class="pd_green-d"><code><strong>1000000</strong></code></span> and <span class="pd_green-d"><code><strong>1_000_000</strong></code></span> both represent the number one million.</p>
+<p class="indent">Finally, Python also supports exponentiation via the <span class="pd_green-d"><code><strong>**</strong></code></span> operator:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">2**3</span>
+<span class="pd_green-d">8</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>e<span class="pd_gray">**100</span>
+<span class="pd_green-d">2.6881171418161212e+43</span></code></pre>
+<p class="noindent">The final result here, using a number followed by <span class="pd_green-d"><code><strong>e+43</strong></code></span>, is Python’s way of expressing the scientific notation for <em>e</em><sup>100</sup> ≈ 2<em>.</em>6881171418161212 × 10<sup>43</sup>.</p>
+<p class="indent">The <span class="pd_green-d"><code><strong>math</strong></code></span> documentation (<a href="https://docs.python.org/3/library/math.html">https://docs.python.org/3/library/math.html</a>) includes a more comprehensive list of further operations.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_1_2">4.1.2 Math to String</h4>
+<p class="noindent">We discussed in <a href="ch03.xhtml#ch03">Chapter 3</a> how to get from strings to arrays (and vice versa) using <span class="pd_green-d"><code><strong>split()</strong></code></span> and <span class="pd_green-d"><code><strong>join()</strong></code></span>. Similarly, Python allows us to convert between numbers and strings.</p>
+<p class="indent">Probably the most common way to convert from a number to a string is using the <span class="pd_green-d"><code><strong>str()</strong></code></span> function, which we saw briefly before in <a href="ch03.xhtml#sec3_4_4">Section 3.4.4</a>. For example, <a href="ch04.xhtml#ch4list1">Listing 4.1</a> shows how to use <span class="pd_green-d"><code><strong>str()</strong></code></span> to convert the circle constant <span class="pd_green-d"><code><strong>tau</strong></code></span> (<a href="ch04.xhtml#ch4box1">Box 4.1</a> and <a href="ch04.xhtml#ch4fig1">Figure 4.1</a>) to a string.</p>
+<figure class="image-c" id="ch4fig1">
+<img src="graphics/04fig01.jpg" alt="images" width="453" height="456"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.1:</strong> Some special angles in terms of τ = <em>C/r</em>.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_94"></span>
+<p class="listing" id="ch4list1"><strong>Listing 4.1:</strong> Using <span class="pd_green-d"><code><strong>tau</strong></code></span> for the circle constant.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> math<span class="pd_gray">.</span>tau
+<span class="pd_green-d">6.283185307179586</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">str</span>(math<span class="pd_gray">.</span>tau)
+<span class="pd_green-d">'6.283185307179586'</span></code></pre>
+</div>
+<div class="box">
+<p class="box-title" id="ch4box1"><strong>Box 4.1: The rise of tau</strong></p>
+<p class="sb-noindent">In the corresponding math sections of <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>) and <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>), I had to add the definition of <code>tau</code> by hand, but in <a href="ch04.xhtml#ch4list1">Listing 4.1</a> note that <code>math.tau</code> is part of Python’s official math library.</p>
+<p class="sb-indent">This is a point of particular satisfaction for me, since the use of tau (<em>τ</em> ) to represent the circle constant <em>C/r</em> = 6<em>.</em>283185 <em>. . .</em> was proposed in a math essay I published in 2010 called <em>The Tau Manifesto</em> (<a href="https://tauday.com/tau-manifesto">https://tauday.com/tau-manifesto</a>) (which also established the math holiday Tau Day (<a href="https://tauday.com/">https://tauday.com/</a>)). Up until that point, the constant <em>C/r</em> had no commonly used name (other than “2<em>π</em>”), but <em>τ</em> has seen increasing adoption over the years, including support in Google’s online calculator, Khan Academy, and computer languages such as Microsoft .NET, Julia, and Rust (and of course Python!) (<a href="https://tauday.com/state-of-the-tau">https://tauday.com/state-of-the-tau</a>).</p>
+<p class="sb-indent">Although adding tau to Python was not without controversy, ultimately it was included in Python 3.6 (and later) as an Easter egg for the kinds of math, science, and computer nerds who enjoy that sort of thing. I hope you might be one of them!</p>
+</div>
+<p class="indent">The <span class="pd_green-d"><code><strong>str()</strong></code></span> function also works on bare numbers:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">str</span>(<span class="pd_gray">6.283185307179586</span>)
+<span class="pd_green-d">'6.283185307179586'</span></code></pre>
+<p class="noindent">To go the other direction, we can use the <span class="pd_green-d"><code><strong>int()</strong></code></span> (“integer”) and <span class="pd_green-d"><code><strong>float()</strong></code></span> functions:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f094-01" id="f094-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(<span class="pd_red">"6"</span>)
+<span class="pd_green-d">6</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">float</span>(<span class="pd_red">"6.283185307179586"</span>)
+<span class="pd_green-d">6.283185307179586</span></code></pre>
+<span epub:type="pagebreak" id="page_95"></span>
+<p class="indent">Be careful not to use <span class="pd_green-d"><code><strong>int()</strong></code></span> on a string that looks like a <span class="pd_green-d"><code><strong>float()</strong></code></span>; in many languages, this returns the integer part of the string (so that <span class="pd_green-d"><code><strong>"6.28"</strong></code></span> and <span class="pd_green-d"><code><strong>"6.98"</strong></code></span> both yield <span class="pd_green-d"><code><strong>6</strong></code></span>), but in Python it raises an error:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f095-01" id="f095-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(<span class="pd_red">"6.28"</span>)
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">ValueError</span>: invalid literal for int() with base 10: '6.28'</code></pre>
+<p class="indent">It is valid to call <span class="pd_green-d"><code><strong>int()</strong></code></span> on a float, though, which has the expected result:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(<span class="pd_gray">6.28</span>)
+<span class="pd_green-d">6</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(<span class="pd_gray">6.9</span>)
+<span class="pd_green-d">6</span></code></pre>
+<p class="noindent">This means we can convert a string to an integer by calling the two functions in sequence:</p>
+<span epub:type="pagebreak" id="page_96"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(<span class="pd_green">float</span>(<span class="pd_red">"6.28"</span>))
+<span class="pd_green-d">6</span></code></pre>
+<p class="noindent">By the way, there’s a useful trick to retrieve the result of the previously executed command in the REPL using an underscore <span class="pd_green-d"><code><strong>_</strong></code></span>, which represents the value of the previously executed command:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">float</span>(<span class="pd_red">"6.28"</span>)
+<span class="pd_green-d">6.28</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">int</span>(_)
+<span class="pd_green-d">6</span></code></pre>
+<p class="indent">Finally, it’s sometimes convenient to be able to leave off the module name if you’re doing lots of calculations with a constant or function. In such cases, you can use the <span class="pd_green-d"><code><strong>from &lt;module&gt; import &lt;things&gt;</strong></code></span> syntax (<a href="ch04.xhtml#ch4list2">Listing 4.2</a>).</p>
+<p class="listing" id="ch4list2"><strong>Listing 4.2:</strong> Importing specific items from a module.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f096-01" id="f096-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>math</strong></span> <span class="pd_green"><strong>import</strong></span> sin, cos, tau    <span class="pd_blue1"><em># Pythonic</em></span></code></pre>
+</div>
+<p class="noindent">This lets us use <span class="pd_green-d"><code><strong>sin()</strong></code></span>, <span class="pd_green-d"><code><strong>cos()</strong></code></span>, and <span class="pd_green-d"><code><strong>tau</strong></code></span> without the <span class="pd_green-d"><code><strong>math.</strong></code></span> namespace prefix:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f096-02" id="f096-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> cos(tau)
+<span class="pd_green-d">1.0</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> sin(tau<span class="pd_gray">/3</span>)
+<span class="pd_green-d">0.8660254037844387</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> cos(tau<span class="pd_gray">/3</span>)
+<span class="pd_green-d">-0.49999999999999983</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> sin(tau<span class="pd_gray">/3</span>)<span class="pd_gray">**2 +</span> cos(tau<span class="pd_gray">/3</span>)<span class="pd_gray">**2</span>
+<span class="pd_green-d">1.0</span></code></pre>
+<p class="noindent">Note that cos<em>(τ/</em>3<em>)</em>, which is exactly equal to <img src="graphics/pg96-01.jpg" alt="images" width="28" height="29"/>, is displayed as</p>
+<pre class="pre1"><code>-0.49999999999999983</code></pre>
+<p class="noindent">due to numerical roundoff error. (Also, there’s nothing special in the last line about <em>τ/</em>3—sin<sup>2</sup> <em>θ</em> + cos<sup>2</sup> <em>θ</em> = 1 for any angle <em>θ</em>.)</p>
+<p class="indent"><em>Note</em>: You will sometimes see people import <em>all</em> the contents of a module as follows:</p>
+<span epub:type="pagebreak" id="page_97"></span>
+<p class="codelink"><a href="ch04_images.xhtml#f097-01" id="f097-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>math</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_gray">*</span>    <span class="pd_blue1"><em># Dangerous and extremely unPythonic</em></span></code></pre>
+<p class="noindent">This practice is strongly discouraged because it carries a high risk of <em>collisions</em>, where two functions or variables have the same name. Avoiding collisions is part of why, in the words of Tim Peters’ “The Zen of Python” (<a href="ch01.xhtml#ch1list6">Listing 1.6</a>), “Namespaces are one honking great idea—let’s do more of those!”</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_1_3">4.1.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">What happens when you call <span class="pd_green-d"><code><strong>float()</strong></code></span> on the string <span class="pd_green-d"><code><strong>"1.24e6"</strong></code></span>? What about if you call <span class="pd_green-d"><code><strong>str()</strong></code></span> on the result?</p></li>
+<li><p class="number">Show that <span class="pd_green-d"><code><strong>int(6.28)</strong></code></span> and <span class="pd_green-d"><code><strong>int(6.98)</strong></code></span> both equal <span class="pd_green-d"><code><strong>6</strong></code></span>. This is the same behavior as the <em>floor function</em> (written in mathematics as ⌊<em>x</em>⌋. Show that Python’s <span class="pd_green-d"><code><strong>math</strong></code></span> module has a <span class="pd_green-d"><code><strong>floor()</strong></code></span> function with the same effect as <span class="pd_green-d"><code><strong>int()</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_2">4.2 Times and Datetimes</h3>
+<p class="noindent">Other frequently used built-in objects are the closely related <span class="pd_green-d"><code><strong>time</strong></code></span> and <span class="pd_green-d"><code><strong>datetime</strong></code></span> modules. For example, we can get the current time using the <span class="pd_green-d"><code><strong>time()</strong></code></span> method:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>time</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> time<span class="pd_gray">.</span>time()
+<span class="pd_green-d">1661191145.946213</span></code></pre>
+<p class="noindent">This returns the number of seconds since the <em>epoch</em>, defined as January 1, 1970. We can get a more conveniently formatted string using the <span class="pd_green-d"><code><strong>ctime()</strong></code></span> method (the documentation doesn’t say, but this probably stands for “convert time”):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> time<span class="pd_gray">.</span>ctime()
+<span class="pd_green-d">'Mon Aug 22 11:00:32 2022'</span></code></pre>
+<p class="indent">Python puts a lot of other useful methods in the <span class="pd_green-d"><code><strong>datetime</strong></code></span> module. As with other Python objects, <span class="pd_green-d"><code><strong>datetime</strong></code></span> objects include a variety of methods:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f097-02" id="f097-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>datetime</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now <span class="pd_gray">=</span> datetime<span class="pd_gray">.</span>datetime<span class="pd_gray">.</span>now()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>year
+<span epub:type="pagebreak" id="page_98"></span>
+<span class="pd_green-d">2022</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>month
+<span class="pd_green-d">8</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>day
+<span class="pd_green-d">22</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>hour
+<span class="pd_green-d">16</span></code></pre>
+<p class="noindent">Because many useful methods are defined on the separate <span class="pd_green-d"><code><strong>datetime</strong></code></span> object within the <span class="pd_green-d"><code><strong>datetime</strong></code></span> module, it’s often more convenient to use <span class="pd_green-d"><code><strong>from</strong></code></span> to import just that one object (using the same basic syntax seen in <a href="ch04.xhtml#ch4list2">Listing 4.2</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#f098-01" id="f098-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now <span class="pd_gray">=</span> datetime<span class="pd_gray">.</span>now()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>year
+<span class="pd_green-d">2022</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>day
+<span class="pd_green-d">22</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>month
+<span class="pd_green-d">8</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>hour
+<span class="pd_green-d">16</span></code></pre>
+<p class="noindent">This can be a bit confusing, and indeed it’s quite unusual for a module to define an object with exactly the same name as the module itself.</p>
+<p class="indent">It’s also possible to initialize <span class="pd_green-d"><code><strong>datetime</strong></code></span> objects with specific dates and times, such as the first Moon landing (<a href="ch04.xhtml#ch4fig2">Figure 4.2</a><sup><a id="fn4_2a" href="ch04.xhtml#fn4_2">2</a></sup>):</p>
+<figure class="image-c" id="ch4fig2">
+<img src="graphics/04fig02.jpg" alt="images" width="352" height="450"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.2:</strong> Buzz Aldrin and Neil Armstrong somehow got to the Moon (and back!) without Python.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn4_2" href="ch04.xhtml#fn4_2a">2.</a> Image courtesy of Castleski/Shutterstock.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f098-02" id="f098-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moon_landing <span class="pd_gray">=</span> datetime(<span class="pd_gray">1969</span>, <span class="pd_gray">7</span>, <span class="pd_gray">20</span>, <span class="pd_gray">20</span>, <span class="pd_gray">17</span>, <span class="pd_gray">40</span>)
+<span class="pd_green-d">1969-07-20 20:17:40 -0700</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moon_landing<span class="pd_gray">.</span>day
+<span class="pd_green-d">20</span></code></pre>
+<p class="indent">By default, <span class="pd_green-d"><code><strong>datetime</strong></code></span> uses the local time zone, but this introduces weird location dependence to the operations, so it’s a good practice to use UTC instead:<sup><a id="fn4_3a" href="ch04.xhtml#fn4_3">3</a></sup></p>
+<p class="footnote"><a id="fn4_3" href="ch04.xhtml#fn4_3a">3.</a> For most practical purposes, Coordinated Universal Time (UTC) is the same as Greenwich Mean Time. But why call it UTC? From the NIST Time and Frequency FAQ: <strong>Q:</strong> Why is UTC used as the acronym for Coordinated Universal Time instead of CUT? <strong>A:</strong> In 1970 the Coordinated Universal Time system was devised by an international advisory group of technical experts within the International Telecommunication Union (ITU). The ITU felt it was best to designate a single abbreviation for use in all languages in order to minimize confusion. Since unanimous agreement could not be achieved on using either the English word order, CUT, or the French word order, TUC, the acronym UTC was chosen as a compromise.</p>
+<span epub:type="pagebreak" id="page_99"></span>
+<p class="codelink"><a href="ch04_images.xhtml#f099-01" id="f099-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> timezone
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now <span class="pd_gray">=</span> datetime<span class="pd_gray">.</span>now(timezone<span class="pd_gray">.</span>utc)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(now)
+<span class="pd_green-d">2022-08-22 18:28:03.943097+00:00</span></code></pre>
+<p class="indent">To make a <span class="pd_green-d"><code><strong>datetime</strong></code></span> object for the Moon landing, we need to pass the time zone as a <em>keyword argument</em> (first seen in <a href="ch02.xhtml#sec2_3">Section 2.3</a> and discussed further in <a href="ch05.xhtml#sec5_1_2">Section 5.1.2</a>) using <span class="pd_green-d"><code><strong>tzinfo</strong></code></span> (short for “time zone information”):</p>
+<p class="codelink"><a href="ch04_images.xhtml#f099-02" id="f099-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moon_landing <span class="pd_gray">=</span> datetime(<span class="pd_gray">1969</span>, <span class="pd_gray">7</span>, <span class="pd_gray">20</span>, <span class="pd_gray">20</span>, <span class="pd_gray">17</span>, <span class="pd_gray">40</span>, tzinfo<span class="pd_gray">=</span>timezone<span class="pd_gray">.</span>utc)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(moon_landing)
+<span class="pd_green-d">1969-07-20 20:17:40+00:00</span></code></pre>
+<p class="noindent">Finally, <span class="pd_green-d"><code><strong>datetime</strong></code></span> objects can be subtracted from each other:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(now <span class="pd_gray">-</span> moon_landing)
+<span class="pd_green-d">19390 days, 22:15:36.779053</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_100"></span>The result here is the number of days, hours, minutes, and seconds since the day and time of the Moon landing. (Your results, of course, will vary, because time marches on, and your value for <span class="pd_green-d"><code><strong>datetime.now</strong></code></span> will differ.)</p>
+<p class="indent">You may have noticed that the month and day are returned as <em>unit-offset</em> values, which differs from the zero-offset indexing used for lists (<a href="ch03.xhtml#sec3_2">Section 3.2</a>). For example, in the eighth month (August), the return value of <span class="pd_green-d"><code><strong>now.month()</strong></code></span> is <span class="pd_green-d"><code><strong>8</strong></code></span> rather than <span class="pd_green-d"><code><strong>7</strong></code></span> (as it would be if months were being treated like indices of a zero-offset list). There is one important value that <em>is</em> returned as a zero-offset index, though:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moon_landing<span class="pd_gray">.</span>weekday()
+<span class="pd_green-d">6</span></code></pre>
+<p class="noindent">Here <span class="pd_green-d"><code><strong>weekday</strong></code></span> returns the index of the weekday, and because it’s zero-offset the <span class="pd_green-d"><code><strong>6</strong></code></span> index indicates that the Moon landing happened on the seventh day of the week.</p>
+<p class="indent">We have to be careful here, because in many places (including the United States) day <span class="pd_green-d"><code><strong>0</strong></code></span> is Sunday, and indeed some programming languages (such as JavaScript and Ruby) follow this convention. But the official international standard is that Monday is the first day, and Python follows this convention instead.</p>
+<p class="indent">As a result, we can get the name of the day of the week by making a list of strings for the days of the week (assigned to an ALL CAPS identifier, a common Python convention indicating a constant), and then using the return value of <span class="pd_green-d"><code><strong>weekday</strong></code></span> as an index in the list with the square bracket notation (<a href="ch03.xhtml#sec3_1">Section 3.1</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#f100-01" id="f100-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> DAYNAMES <span class="pd_gray">=</span> [<span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+<span class="pd_blue"><strong>...</strong></span>             <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>, <span class="pd_red">"Sunday"</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> DAYNAMES[moon_landing<span class="pd_gray">.</span>weekday()]
+<span class="pd_green-d">'Sunday'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> DAYNAMES[datetime<span class="pd_gray">.</span>now(<span class="pd_gray">)</span>.weekday()]
+<span class="pd_green-d">'Monday'</span></code></pre>
+<p class="noindent">(These day names are actually available as part of the <span class="pd_green-d"><code><strong>calendar</strong></code></span> module via <span class="pd_green-d"><code><strong>calendar.day_name</strong></code></span>. You just have to run <span class="pd_green-d"><code><strong>import calendar</strong></code></span> to load the module. See <a href="ch04.xhtml#sec4_2_1">Section 4.2.1</a> for an example.) Your results for the last line will vary, of course, unless you happen to be reading this on a Monday.</p>
+<p class="indent">As a final exercise, let’s update our Flask hello app from <a href="ch01.xhtml#ch1list11">Listing 1.11</a> with a greeting including the day of the week. The code appears in <a href="ch04.xhtml#ch4list3">Listing 4.3</a>, with the result as shown in <a href="ch04.xhtml#ch4fig3">Figure 4.3</a>. (Refer to <a href="ch01.xhtml#sec1_5">Section 1.5</a> for the commands to run the Flask app.) Note that <a href="ch04.xhtml#ch4list3">Listing 4.3</a> follows the convention of importing system libraries first (e.g., <span class="pd_green-d"><code><strong>datetime</strong></code></span>), followed by third-party libraries (e.g., <span class="pd_green-d"><code><strong>flask</strong></code></span>), separated by newlines and <span epub:type="pagebreak" id="page_101"></span>followed by two newlines. Fixing the unPythonic location of <span class="pd_green-d"><code><strong>DAYNAMES</strong></code></span> in <a href="ch04.xhtml#ch4list3">Listing 4.3</a> is left as an exercise (<a href="ch04.xhtml#sec4_2_1">Section 4.2.1</a>).</p>
+<figure class="image-c" id="ch4fig3">
+<img src="graphics/04fig03.jpg" alt="images" width="724" height="576"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.3:</strong> A greeting customized just for today.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list3"><strong>Listing 4.3:</strong> Adding a greeting customized to the day of the week.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f101-01" id="f101-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    <span class="pd_blue1"><em># UnPythonic location</em></span>
+<span epub:type="pagebreak" id="page_102"></span>
+    DAYNAMES <span class="pd_gray">=</span> [<span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>, <span class="pd_red">"Sunday"</span>]
+    dayname <span class="pd_gray">=</span> DAYNAMES[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.&lt;/p&gt;"</span></code></pre>
+</div>
+<section>
+<h4 class="h4" id="sec4_2_1">4.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use Python to calculate how many seconds after the Moon landing you were born. (Or maybe you were even born <em>before</em> the Moon landing—in which case, lucky you! I hope you got to watch it on TV.)</p></li>
+<li><p class="number">Show that <a href="ch04.xhtml#ch4list3">Listing 4.3</a> works even if you pull <span class="pd_green-d"><code><strong>DAYNAMES</strong></code></span> out of the <span class="pd_green-d"><code><strong>hello_world</strong></code></span> function, as shown in <a href="ch04.xhtml#ch4list4">Listing 4.4</a>. (This is the preferred location for constants in general—under library imports and separated from the rest of the file by two newlines.) Then use the <span class="pd_green-d"><code><strong>calendar</strong></code></span> module to eliminate the constant entirely (<a href="ch04.xhtml#ch4list5">Listing 4.5</a>).</p></li>
+</ol>
+<p class="listing" id="ch4list4"><strong>Listing 4.4:</strong> Pulling <span class="pd_green-d"><code><strong>DAYNAMES</strong></code></span> out of the function.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f102-01" id="f102-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+DAYNAMES <span class="pd_gray">=</span> [<span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+            <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>, <span class="pd_red">"Sunday"</span>]
+
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    dayname <span class="pd_gray">=</span> DAYNAMES[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.&lt;/p&gt;"</span></code></pre>
+</div>
+<p class="listing" id="ch4list5"><strong>Listing 4.5:</strong> Using the built-in day names.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f102-02" id="f102-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+<span class="b-y"><span class="pd_green"><strong>import</strong></span> <strong>calendar</strong></span>
+<span epub:type="pagebreak" id="page_103"></span>
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+<span class="b-y">    dayname <span class="pd_gray">=</span> calendar<span class="pd_gray">.</span>day_name[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]</span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.&lt;/p&gt;"</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_3">4.3 Regular Expressions</h3>
+<p class="noindent">Python has full support for <em>regular expressions</em>, often called <em>regexes</em> or <em>regexps</em> for short, which are a powerful mini-language for matching patterns in text. A full mastery of regular expressions is beyond the scope of this book (and perhaps beyond the scope of human ability), but the good news is that there are many resources available for learning about them incrementally. (Some such resources are mentioned in “Grepping” (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-grepping">https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-grepping</a>) in <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) and “Global find and replace” in <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-global_find_and_replace">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-global_find_and_replace</a>).) The most important thing to know about is the general idea of regular expressions; you can fill in the details as you go along.</p>
+<p class="indent">Regexes are notoriously terse and error-prone; as programmer Jamie Zawinski famously said:</p>
+<p class="blockquote">Some people, when confronted with a problem, think “I know, I’ll use regular expressions.” Now they have two problems.</p>
+<p class="noindent">Luckily, this situation is greatly ameliorated by web applications like regex101, which let us build up regexes interactively (<a href="ch04.xhtml#ch4fig4">Figure 4.4</a>). Moreover, such resources typically include a quick reference to assist us in finding the code for matching particular patterns (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>).</p>
+<figure class="image-c" id="ch4fig4">
+<img src="graphics/04fig04.jpg" alt="images" width="725" height="526"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.4:</strong> An online regex builder.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch4fig5">
+<img src="graphics/04fig05.jpg" alt="images" width="724" height="328"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.5:</strong> A close-up of the regex reference.</p>
+</figcaption>
+</figure>
+<p class="indent">Note that regex101 includes Python-specific regexes (which you can tell has been selected in <a href="ch04.xhtml#ch4fig4">Figure 4.4</a> due to the <strong>Python</strong> line having a checkmark next to it). In practice, languages differ little in their implementation of regular expressions, but it’s wise to use the correct language-specific settings when available, and always to double-check when moving a regex to a different language.<span epub:type="pagebreak" id="page_104"></span></p>
+<p class="indent"><span epub:type="pagebreak" id="page_105"></span>Let’s take a look at some simple regex matches in Python. A basic regex consists of a sequence of characters that matches a particular pattern. We can create a new regex using a string, which is nearly always a raw string (<a href="ch02.xhtml#sec2_2_2">Section 2.2.2</a>) so that it handles special characters like backslashes automatically. For example, here’s a regex that matches standard American ZIP codes (<a href="ch04.xhtml#ch4fig6">Figure 4.6</a><sup><a id="fn4_4a" href="ch04.xhtml#fn4_4">4</a></sup>), consisting of five digits in a row:</p>
+<figure class="image-c" id="ch4fig6">
+<img src="graphics/04fig06.jpg" alt="images" width="600" height="453"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.6:</strong> 90210 (Beverly Hills) is one of the most expensive ZIP codes in America.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn4_4" href="ch04.xhtml#fn4_4a">4.</a> Image courtesy of 4kclips/123RF.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> zip_code <span class="pd_gray">=</span> <span class="pd_red">r"\d</span><span class="pd_lpink"><strong>{5}</strong></span><span class="pd_red">"</span></code></pre>
+<p class="noindent">If you use regular expressions a lot, eventually you’ll memorize many of these rules, but you can always look them up in a quick reference (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>).</p>
+<p class="indent">Now let’s see how to tell if a string matches a regex. The way to do this in Python is with the <span class="pd_green-d"><code><strong>re</strong></code></span> module, which includes a <span class="pd_green-d"><code><strong>search</strong></code></span> method:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f105-01" id="f105-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>search(zip_code, <span class="pd_red">"no match"</span>)</code></pre>
+<span epub:type="pagebreak" id="page_106"></span>
+<p class="noindent">Here <span class="pd_green-d"><code><strong>re.search</strong></code></span> returned <span class="pd_green-d"><code><strong>None</strong></code></span> (which we can infer from the REPL not showing any result), indicating no match. Because <span class="pd_green-d"><code><strong>None</strong></code></span> is <span class="pd_green-d"><code><strong>False</strong></code></span> in a boolean context (<a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a>), we can use this result with <span class="pd_green-d"><code><strong>if</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f106-01" id="f106-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(zip_code, <span class="pd_red">"no match"</span>):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"It's got a ZIP code!"</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"No match!"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">No match!</span></code></pre>
+<p class="indent">Now let’s take a look at a valid match:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f106-02" id="f106-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>search(zip_code, <span class="pd_red">"Beverly Hills 90210"</span>)
+<span class="pd_green-d">&lt;re.Match object; span=(14, 19), match='90210'&gt;</span></code></pre>
+<p class="noindent">This result is a somewhat cryptic <span class="pd_green-d"><code><strong>re.Match</strong></code></span> object; in practice, its main use is in boolean contexts as above, like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f106-03" id="f106-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(zip_code, <span class="pd_red">"Beverly Hills 90210"</span>):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"It's got a ZIP code!"</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"No match!"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">It's got a ZIP code!</span></code></pre>
+<p class="indent">Another common and instructive regex operation involves creating a list of <em>all</em> the matches. We’ll start by defining a longer string, one with two ZIP codes (<a href="ch04.xhtml#ch4fig7">Figure 4.7</a><sup><a id="fn4_5a" href="ch04.xhtml#fn4_5">5</a></sup>):</p>
+<figure class="image-c" id="ch4fig7">
+<img src="graphics/04fig07.jpg" alt="images" width="675" height="365"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.7:</strong> 91125 is a dedicated ZIP code for the campus of the California Institute of Technology (Caltech).</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn4_5" href="ch04.xhtml#fn4_5a">5.</a> Image courtesy of Kitleong/123RF.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f106-04" id="f106-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">=</span> <span class="pd_red">"Beverly Hills 90210 was a '90s TV show set in Los Angeles."</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">+=</span> <span class="pd_red">" 91125 is another ZIP code in the Los Angeles area."</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s
+<span class="pd_green-d">"Beverly Hills 90210 was a '90s TV show set in Los Angeles. 91125 is another
+ZIP code in the Los Angeles area."</span></code></pre>
+<p class="noindent">You should be able to use your technical sophistication (<a href="ch01.xhtml#ch1box2">Box 1.2</a>) to infer what the <span class="pd_green-d"><code><strong>+=</strong></code></span> operator does here if you haven’t seen it before (which might involve doing a quick Google search).</p>
+<span epub:type="pagebreak" id="page_107"></span>
+<p class="indent">To find out whether the string matches the regex, we can use the <span class="pd_green-d"><code><strong>findall()</strong></code></span> method to find a list of matches:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>findall(zip_code, s)
+<span class="pd_green-d">['90210', '91125']</span></code></pre>
+<p class="noindent">It’s also easy to use a literal regex directly, such as this <span class="pd_green-d"><code><strong>findall()</strong></code></span> to find all multi-letter words that are in ALL CAPS:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f107-01" id="f107-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"[A-Z]{2,}"</span>, s)
+<span class="pd_green-d">['TV', 'ZIP']</span></code></pre>
+<p class="noindent">See if you can find the rules in <a href="ch04.xhtml#ch4fig5">Figure 4.5</a> used to make the regex above.</p>
+<section>
+<h4 class="h4" id="sec4_3_1">4.3.1 Splitting on Regexes</h4>
+<p class="noindent">Our final example of regexes combines the power of pattern matching with the <span class="pd_green-d"><code><strong>split</strong></code></span> method we saw in <a href="ch03.xhtml#sec3_1">Section 3.1</a>. In that section, we saw how to split on spaces, like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f107-02" id="f107-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant bat cat duck"</span><span class="pd_gray">.</span>split(<span class="pd_red">" "</span>)
+<span class="pd_green-d">['ant', 'bat', 'cat', 'duck']</span></code></pre>
+<span epub:type="pagebreak" id="page_108"></span>
+<p class="indent">We can obtain the same result in a more robust way by splitting on whitespace. Consulting the quick reference (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>), we find that the regex for whitespace is <span class="pd_green-d"><code><strong>\s</strong></code></span>, and the way to indicate “one or more” is with the plus sign <span class="pd_green-d"><code><strong>+</strong></code></span>. Thus, we can split on whitespace as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f108-01" id="f108-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>split(<span class="pd_red">r"\s+"</span>, <span class="pd_red">"ant bat cat duck"</span>)
+<span class="pd_green-d">["ant", "bat", "cat", "duck"]</span></code></pre>
+<p class="noindent">The reason this is so nice is that now we can get the same result if the strings are separated by multiple spaces, tabs, newlines, etc.:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f108-02" id="f108-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>split(<span class="pd_red">r"\s+"</span>, <span class="pd_red">"ant    bat</span><span class="pd_orange"><strong>\t</strong></span><span class="pd_red">cat</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">duck"</span>)
+<span class="pd_green-d">["ant", "bat", "cat", "duck"]</span></code></pre>
+<p class="noindent">As we saw in <a href="ch03.xhtml#sec3_1">Section 3.1</a>, this pattern is so useful that it’s actually the default behavior for <span class="pd_green-d"><code><strong>split()</strong></code></span>. When we call <span class="pd_green-d"><code><strong>split()</strong></code></span> with zero arguments, Python splits on whitespace automatically:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f108-03" id="f108-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span>  <span class="pd_red">"ant    bat</span><span class="pd_orange"><strong>\t</strong></span><span class="pd_red">cat</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">duck"</span><span class="pd_gray">.</span>split()
+<span class="pd_green-d">["ant", "bat", "cat", "duck"]</span></code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec4_3_2">4.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write a regex that matches the extended-format ZIP code consisting of five digits, a hyphen, and a four-digit extension (such as 10118-0110). Confirm that it works using <span class="pd_green-d"><code><strong>re.search()</strong></code></span> and the caption in <a href="ch04.xhtml#ch4fig8">Figure 4.8</a>.<sup><a id="fn4_6a" href="ch04.xhtml#fn4_6">6</a></sup></p>
+<figure class="image-c" id="ch4fig8">
+<img src="graphics/04fig08.jpg" alt="images" width="674" height="450"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.8:</strong> ZIP code 10118-0110 (the Empire State Building).</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn4_6" href="ch04.xhtml#fn4_6a">6.</a> Image courtesy of Jordi2r/123RF.</p></li>
+<li><p class="number">Write a regex that splits only on newlines. Such regexes are useful for splitting a block of text into separate lines. In particular, test your regex by pasting the poem in <a href="ch04.xhtml#ch4list6">Listing 4.6</a> into the console and using <span class="pd_green-d"><code><strong>sonnet.split(/your regex/)</strong></code></span>. What is the length of the resulting list?</p></li>
+</ol>
+<p class="listing" id="ch4list6"><strong>Listing 4.6:</strong> Some text with newlines.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f108-04" id="f108-04a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>sonnet <span class="pd_gray">=</span> <span class="pd_red">"""Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,</span>
+<span epub:type="pagebreak" id="page_109"></span>
+<span class="pd_red">Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.</span>
+<span class="pd_red">   If this be error and upon me proved,</span>
+<span class="pd_red">   I never writ, nor no man ever loved."""</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_4">4.4 Dictionaries</h3>
+<p class="noindent">Our final example of a simple Python data type is a <em>dictionary</em>, which in most other languages is called a <em>hash</em> or an <em>associative array</em>. You can think of dictionaries as being like lists but with generic labels rather than integers as indices, so instead of <span class="pd_green-d"><code><strong>a[0] = 0</strong></code></span> we could have <span class="pd_green-d"><code><strong>d["name"] = "Michael"</strong></code></span>. Each element is thus a pair of values: a label (the <em>key</em>) and an element of any type (the <em>value</em>). These elements are also known <span epub:type="pagebreak" id="page_110"></span>as <em>key–value pairs</em>, much like language dictionaries consist of words (keys) and their associated definitions (values).</p>
+<p class="indent">The most familiar choice for key labels is strings (<a href="ch02.xhtml#ch02">Chapter 2</a>); indeed, this is by far the most common choice in languages that support associative arrays. We’ll thus focus on creating dictionaries using string keys. As a simple example, let’s create an object to store the first and last names of a user, such as we might have in a web application:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f110-01" id="f110-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user <span class="pd_gray">=</span> {}                         <span class="pd_blue1"><em># {} is an empty dictionary.</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user[<span class="pd_red">"first_name"</span>] <span class="pd_gray">=</span> <span class="pd_red">"Michael"</span>    <span class="pd_blue1"><em># Key "first_name", value "Michael"</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user[<span class="pd_red">"last_name"</span>] <span class="pd_gray">=</span> <span class="pd_red">"Hartl"</span>       <span class="pd_blue1"><em># Key "last_name", value "Hartl"</em></span></code></pre>
+<p class="noindent">As you can see, an empty dictionary is represented by curly braces, which is why we needed to use <span class="pd_green-d"><code><strong>set()</strong></code></span> in <a href="ch03.xhtml#sec3_6">Section 3.6</a> for an empty set. We can also assign values using the same square bracket syntax as for lists. We can retrieve values in the same way:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f110-02" id="f110-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user[<span class="pd_red">"first_name"</span>]      <span class="pd_blue1"><em># Element access is like lists</em></span>
+<span class="pd_green-d">'Michael'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user[<span class="pd_red">"last_name"</span>]
+<span class="pd_green-d">'Hartl'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user[<span class="pd_red">"nonexistent"</span>]
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">KeyError</span>: 'nonexistent</code></pre>
+<p class="noindent">Note in the last example that dictionaries raise an error when the key doesn’t exist. This won’t generally happen when iterating over keys (<a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>), but in contexts where you don’t know whether the key exists the <span class="pd_green-d"><code><strong>get()</strong></code></span> method is more convenient:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f110-03" id="f110-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user<span class="pd_gray">.</span>get(<span class="pd_red">"last_name"</span>)
+<span class="pd_green-d">'Hartl'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user<span class="pd_gray">.</span>get(<span class="pd_red">"nonexistent"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">repr</span>(user<span class="pd_gray">.</span>get(<span class="pd_red">"nonexistent"</span>))
+<span class="pd_green-d">'None'</span></code></pre>
+<p class="noindent">Here we’ve included a call to <span class="pd_green-d"><code><strong>repr()</strong></code></span> just to emphasize that the result of <span class="pd_green-d"><code><strong>get()</strong></code></span> is <span class="pd_green-d"><code><strong>None</strong></code></span> when the key is nonexistent since the REPL won’t generally display it.</p>
+<p class="indent">If we take a look at how dictionaries are represented, we see that they consist of keys and values separated by colons:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f110-04" id="f110-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> user
+<span class="pd_green-d">{'first_name': 'Michael', 'last_name': 'Hartl'}</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_111"></span>It is possible (and often convenient) to use this syntax to define dictionaries directly:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f111-01" id="f111-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonman <span class="pd_gray">=</span> {<span class="pd_red">"first_name"</span>: <span class="pd_red">"Buzz"</span>, <span class="pd_red">"last_name"</span>: <span class="pd_red">"Aldrin"</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonman
+<span class="pd_green-d">{'first_name': 'Buzz', 'last_name': 'Aldrin'}</span></code></pre>
+<p class="indent">Let’s take a look at a bigger dictionary consisting of keys equal to prominent moonwalkers and values corresponding to the dates of their first moonwalks:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f111-02" id="f111-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonwalks <span class="pd_gray">=</span> {<span class="pd_red">"Neil Armstrong"</span>: <span class="pd_gray">1969</span>,
+<span class="pd_blue"><strong>...</strong></span>              <span class="pd_red">"Buzz Aldrin"</span>: <span class="pd_gray">1969</span>,
+<span class="pd_blue"><strong>...</strong></span>              <span class="pd_red">"Alan Shepard"</span>: <span class="pd_gray">1971</span>,
+<span class="pd_blue"><strong>...</strong></span>              <span class="pd_red">"Eugene Cernan"</span>: <span class="pd_gray">1972</span>,
+<span class="pd_blue"><strong>...</strong></span>              <span class="pd_red">"Michael Jackson"</span>: <span class="pd_gray">1983</span>}</code></pre>
+<p class="noindent">We can look at the keys and values separately, which (as of Python 3.6 and later) are stored <em>in order</em> in special-purpose Python objects:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f111-03" id="f111-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonwalks<span class="pd_gray">.</span>keys()
+<span class="pd_green-d">dict_keys(['Neil Armstrong', 'Buzz Aldrin', 'Alan Shepard',
+'Eugene Cernan', 'Michael Jackson'])</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonwalks<span class="pd_gray">.</span>values()
+<span class="pd_green-d">dict_values([1969, 1969, 1971, 1972, 1983])</span></code></pre>
+<p class="noindent">Note that earlier versions of Python didn’t order dictionary elements, so you should take care when making any assumptions about ordering.</p>
+<p class="indent">Like a list index, a dictionary key maps to only one value at a time. This means that we can replace the value corresponding to a key but we can’t have two identical keys. As a result, it’s sometimes useful to think of dictionary keys as being like an ordered set, since (like sets) they can’t have repeated elements. Indeed, the special-purpose <span class="pd_green-d"><code><strong>keys()</strong></code></span> object mentioned above, technically known as a <em>view</em>, can be treated like a set in some contexts; for example, the following code performs a set intersection as in <a href="ch03.xhtml#sec3_6">Section 3.6</a>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f111-04" id="f111-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> apollo_11 <span class="pd_gray">=</span> {<span class="pd_red">"Neil Armstrong"</span>, <span class="pd_red">"Buzz Aldrin"</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonwalks<span class="pd_gray">.</span>keys() <span class="pd_gray">&amp;</span> apollo_11
+<span class="pd_green-d">{'Neil Armstrong', 'Buzz Aldrin'}</span></code></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_112"></span>By the way, we can test for the inclusion of a particular dictionary key using the same <span class="pd_green-d"><code><strong>in</strong></code></span> keyword that works for lists (<a href="ch03.xhtml#sec3_4_1">Section 3.4.1</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#f112-01" id="f112-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"Buzz Aldrin"</span> <span class="pd_pink"><strong>in</strong></span> moonwalks
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">Note here that we can omit the <span class="pd_green-d"><code><strong>keys()</strong></code></span> part and just use <span class="pd_green-d"><code><strong>in</strong></code></span> with the full dictionary. We’ll see another example of this convention in <a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>.</p>
+<section>
+<h4 class="h4" id="sec4_4_1">4.4.1 Dictionary Iteration</h4>
+<p class="noindent">As with lists, tuples, and sets, one of the most common dictionary tasks is iterating over the elements. You might be tempted to iterate over the keys as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f112-02" id="f112-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> key <span class="pd_pink"><strong>in</strong></span> moonwalks<span class="pd_gray">.</span>keys():    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>key<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">first performed a moonwalk in</span> <span class="pd_lpink"><strong>{</strong></span>moonwalks[key]<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Neil Armstrong first performed a moonwalk in 1969
+Buzz Aldrin first performed a moonwalk in 1969
+Alan Shepard first performed a moonwalk in 1971
+Eugene Cernan first performed a moonwalk in 1972
+Michael Jackson first performed a moonwalk in 1983</span></code></pre>
+<p class="noindent">As noted in the comment, this isn’t Pythonic. The reason is that iterating over the keys is the default:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f112-03" id="f112-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> key <span class="pd_pink"><strong>in</strong></span> moonwalks:           <span class="pd_blue1"><em># Somewhat Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>key<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">first performed a moonwalk in</span> <span class="pd_lpink"><strong>{</strong></span>moonwalks[key]<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Neil Armstrong first performed a moonwalk in 1969
+Buzz Aldrin first performed a moonwalk in 1969
+Alan Shepard first performed a moonwalk in 1971
+Eugene Cernan first performed a moonwalk in 1972
+Michael Jackson first performed a moonwalk in 1983</span></code></pre>
+<p class="noindent">This is somewhat Pythonic, but when using both keys and values (as we are here) it’s even better to iterate over the dictionary’s <span class="pd_green-d"><code><strong>items()</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f112-04" id="f112-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> moonwalks<span class="pd_gray">.</span>items()
+<span class="pd_green-d">dict_items([('Neil Armstrong', 1969), ('Buzz Aldrin', 1969), ('Alan
+Shepard', 1971), ('Eugene Cernan', 1972), ('Michael Jackson', 1983)])</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_113"></span>This leads to the elegant iteration shown in <a href="ch04.xhtml#ch4list7">Listing 4.7</a>.</p>
+<p class="listing" id="ch4list7"><strong>Listing 4.7:</strong> Iterating through a dictionary’s <span class="pd_green-d"><code><strong>items()</strong></code></span>.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f113-01" id="f113-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> name, year <span class="pd_pink"><strong>in</strong></span> moonwalks<span class="pd_gray">.</span>items():   <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>name<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">first performed a moonwalk in</span> <span class="pd_lpink"><strong>{</strong></span>year<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Neil Armstrong first performed a moonwalk in 1969
+Buzz Aldrin first performed a moonwalk in 1969
+Alan Shepard first performed a moonwalk in 1971
+Eugene Cernan first performed a moonwalk in 1972
+Michael Jackson first performed a moonwalk in 1983</span></code></pre>
+</div>
+<p class="noindent">Note that we’ve also changed to meaningful names in <a href="ch04.xhtml#ch4list7">Listing 4.7</a>, using <span class="pd_green-d"><code><strong>name, year</strong></code></span> in preference to the less specific <span class="pd_green-d"><code><strong>key, value</strong></code></span>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_4_2">4.4.2 Merging Dictionaries</h4>
+<p class="noindent">One common operation is <em>merging</em> dictionaries, where the elements of two dictionaries are combined into one. For example, consider two dictionaries consisting of academic subjects with corresponding test scores:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f113-02" id="f113-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> tests1 <span class="pd_gray">=</span> {<span class="pd_red">"Math"</span>: <span class="pd_gray">75</span>, <span class="pd_red">"Physics"</span>: <span class="pd_gray">99</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> tests2 <span class="pd_gray">=</span> {<span class="pd_red">"History"</span>: <span class="pd_gray">77</span>, <span class="pd_red">"English"</span>: <span class="pd_gray">93</span>}</code></pre>
+<p class="noindent">It would be nice to be able to create a <span class="pd_green-d"><code><strong>tests</strong></code></span> dictionary combining all four subject–score combinations.</p>
+<p class="indent">Older versions of Python didn’t natively support merging dictionaries at all, but Python 3.5 added this <span class="pd_green-d"><code><strong>**</strong></code></span> syntax:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f113-03" id="f113-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {<span class="pd_gray">**</span>tests1, <span class="pd_gray">**</span>tests2}    <span class="pd_blue1"><em># Kind of Pythonic</em></span>
+<span class="pd_green-d">{'Math': 75, 'Physics': 99, 'History': 77, 'English': 93}</span></code></pre>
+<p class="noindent">That’s pretty strange-looking syntax if you ask me, and it’s included here mainly because you might encounter it in other people’s code. Luckily, as of Python 3.9 there’s a great way to merge dictionaries using the pipe operator <span class="pd_green-d"><code><strong>|</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f113-04" id="f113-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> tests1 <span class="pd_gray">|</span> tests2         <span class="pd_blue1"><em># Very Pythonic</em></span>
+<span class="pd_green-d">{'Math': 75, 'Physics': 99, 'History': 77, 'English': 93}</span></code></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_114"></span>When the dictionaries have no overlapping keys, merging them simply involves combining all key–value pairs. But if the second dictionary does have one or more keys in common, then its values take precedence. In this case, we can think of <em>updating</em> the first dictionary with the contents of the second.<sup><a id="fn4_7a" href="ch04.xhtml#fn4_7">7</a></sup> For example, suppose we combine the tests into a single variable using a merge:</p>
+<p class="footnote"><a id="fn4_7" href="ch04.xhtml#fn4_7a">7.</a> For this reason, dictionary (or, rather, hash) merges in Ruby use the <span class="pd_green-d"><code><strong>update</strong></code></span> method.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f114-01" id="f114-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> test_scores <span class="pd_gray">=</span> tests1 <span class="pd_gray">|</span> tests2
+<span class="pd_green-d">{'Math': 75, 'Physics': 99, 'History': 77, 'English': 93}</span></code></pre>
+<p class="noindent">Now suppose the student is allowed to retake tests for the two lowest scores:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f114-02" id="f114-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> retests <span class="pd_gray">=</span> {<span class="pd_red">"Math"</span>: <span class="pd_gray">97</span>, <span class="pd_red">"History"</span>: <span class="pd_gray">94</span>}</code></pre>
+<p class="noindent">At this point, we can update the original test scores with the updated values from the retests (<a href="ch04.xhtml#ch4list8">Listing 4.8</a>).</p>
+<p class="listing" id="ch4list8"><strong>Listing 4.8:</strong> Updating a dictionary using a merge.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f114-03" id="f114-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> test_scores <span class="pd_gray">|</span> retests
+<span class="pd_green-d">{'Math': 97, 'Physics': 99, 'History': 94, 'English': 93}</span></code></pre>
+</div>
+<p class="noindent">We see that the <span class="pd_green-d"><code><strong>"Math"</strong></code></span> and <span class="pd_green-d"><code><strong>"History"</strong></code></span> scores have been updated with the values from the second dictionary.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_4_3">4.4.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Define a dictionary for a <span class="pd_green-d"><code><strong>user</strong></code></span> with three attributes (keys): <span class="pd_green-d"><code><strong>"username"</strong></code></span>, <span class="pd_green-d"><code><strong>"password"</strong></code></span>, and <span class="pd_green-d"><code><strong>"password_confirmation"</strong></code></span>. How would you test if the password matches the confirmation?</p></li>
+<li><p class="number">We’ve seen in <a href="ch02.xhtml#ch2list29">Listing 2.29</a> and <a href="ch03.xhtml#ch3list10">Listing 3.10</a> that Python strings and lists support an <span class="pd_green-d"><code><strong>enumerate()</strong></code></span> function in cases where we need the iteration index. Confirm that we can do the same thing with dictionaries using code like <a href="ch04.xhtml#ch4list9">Listing 4.9</a>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_115"></span>By reversing the elements in <a href="ch04.xhtml#ch4list8">Listing 4.8</a>, show that dictionary merges aren’t symmetric, so <span class="pd_green-d"><code><strong>d1 | d2</strong></code></span> is not in general the same as <span class="pd_green-d"><code><strong>d2 | d1</strong></code></span>. When are they the same?</p></li>
+</ol>
+<p class="listing" id="ch4list9"><strong>Listing 4.9:</strong> Using <span class="pd_green-d"><code><strong>enumerate()</strong></code></span> with a dictionary.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f115-01" id="f115-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i, (name, year) <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">enumerate</span>(moonwalks<span class="pd_gray">.</span>items()):   <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>i<span class="pd_gray">+1</span><span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.</span> <span class="pd_lpink"><strong>{</strong></span>name<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">first performed a moonwalk in</span> <span class="pd_lpink"><strong>{</strong></span>year<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">1. Neil Armstrong first performed a moonwalk in 1969
+2. Buzz Aldrin first performed a moonwalk in 1969
+3. Alan Shepard first performed a moonwalk in 1971
+4. Eugene Cernan first performed a moonwalk in 1972
+5. Michael Jackson first performed a moonwalk in 1983</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_5">4.5 Application: Unique Words</h3>
+<p class="noindent">Let’s apply the dictionaries from <a href="ch04.xhtml#sec4_4">Section 4.4</a> to a challenging exercise, consisting of our longest program so far. Our task is to extract all the unique words in a fairly long piece of text, and count how many times each word appears.</p>
+<p class="indent">Because the sequence of commands is rather extensive, our main tool will be a Python file (<a href="ch01.xhtml#sec1_3">Section 1.3</a>), executed using the <span class="pd_green-d"><code><strong>python3</strong></code></span> command. (We’re not going to make it a self-contained shell script as in <a href="ch01.xhtml#sec1_4">Section 1.4</a> because we don’t intend for this to be a general-purpose utility program.) At each stage, I suggest using Python to execute the code interactively if you have any question about the effects of a given command.</p>
+<p class="indent">Let’s start by creating our file:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch count.py</code></pre>
+<p class="noindent">Now fill it with a string containing the text, which we’ll choose to be Shakespeare’s Sonnet 116<sup><a id="fn4_8a" href="ch04.xhtml#fn4_8">8</a></sup> (<a href="ch04.xhtml#ch4fig9">Figure 4.9</a><sup><a id="fn4_9a" href="ch04.xhtml#fn4_9">9</a></sup>), as borrowed from <a href="ch04.xhtml#ch4list6">Listing 4.6</a> and shown again in <a href="ch04.xhtml#ch4list10">Listing 4.10</a>.</p>
+<p class="footnote"><a id="fn4_8" href="ch04.xhtml#fn4_8a">8.</a> Note that in the original pronunciation used in Shakespeare’s time, words like “love” and “remove” rhymed, as did “come” and “doom”.</p>
+<span epub:type="pagebreak" id="page_116"></span>
+<figure class="image-c" id="ch4fig9">
+<img src="graphics/04fig09.jpg" alt="images" width="600" height="477"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.9:</strong> Sonnet 116 compares love’s constancy to the guide star for a wandering bark (ship).</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn4_9" href="ch04.xhtml#fn4_9a">9.</a> Image courtesy of Psychoshadowmaker/123RF.</p>
+<p class="listing" id="ch4list10"><strong>Listing 4.10:</strong> Adding some text.<br/><code><em>count.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f116-01" id="f116-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+sonnet <span class="pd_gray">=</span> <span class="pd_red">"""Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+   If this be error and upon me proved,
+   I never writ, nor no man ever loved."""</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_117"></span>
+<p class="indent">Our plan will be to use a dictionary called <span class="pd_green-d"><code><strong>uniques</strong></code></span> with keys equal to the unique words and values equal to the number of occurrences in the text:</p>
+<pre class="pre1"><code>uniques <span class="pd_gray">=</span> {}</code></pre>
+<p class="noindent">For the purposes of this exercise, we’ll define a “word” as a run of one or more <em>word characters</em> (i.e., letters or numbers, though there are none of the latter in the present text). This match can be accomplished with a regular expression (<a href="ch04.xhtml#sec4_3">Section 4.3</a>), which includes a pattern (<span class="pd_green-d"><code><strong>\w</strong></code></span>) for exactly this case (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#f117-01" id="f117-01a">Click here to view code image</a></p>
+<pre class="pre1"><code>words <span class="pd_gray">=</span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"\w+"</span>, sonnet)</code></pre>
+<p class="noindent">This uses the <span class="pd_green-d"><code><strong>findall()</strong></code></span> method from <a href="ch04.xhtml#sec4_3">Section 4.3</a> to return a list of all the strings that match “one or more word characters in a row”. (Extending this pattern to include apostrophes (so that it matches, e.g., “wand’ring” as well) is left as an exercise (<a href="ch04.xhtml#sec4_5_1">Section 4.5.1</a>).)</p>
+<p class="indent">At this point, the file should look like <a href="ch04.xhtml#ch4list11">Listing 4.11</a>.</p>
+<p class="listing" id="ch4list11"><strong>Listing 4.11:</strong> Adding an object and the matching words.<br/><code><em>count.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f117-02" id="f117-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+sonnet <span class="pd_gray">=</span> <span class="pd_red">"""Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+   If this be error and upon me proved,
+   I never writ, nor no man ever loved."""</span>
+
+uniques <span class="pd_gray">=</span> {}
+words <span class="pd_gray">=</span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"\w+"</span>, sonnet)</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_118"></span>
+<p class="indent">Now for the heart of our program. We’re going to iterate through the <span class="pd_green-d"><code><strong>words</strong></code></span> list and do the following:</p>
+<ol class="number">
+<li><p class="number">If the word already has an entry in the <span class="pd_green-d"><code><strong>uniques</strong></code></span> object, increment its count by <span class="pd_green-d"><code><strong>1</strong></code></span>.</p></li>
+<li><p class="number">If the word doesn’t have an entry yet in <span class="pd_green-d"><code><strong>uniques</strong></code></span>, initialize it to <span class="pd_green-d"><code><strong>1</strong></code></span>.</p></li>
+</ol>
+<p class="noindent">The result, using the <span class="pd_green-d"><code><strong>+=</strong></code></span> operator we met briefly in <a href="ch04.xhtml#sec4_3">Section 4.3</a>, looks like this:</p>
+<pre class="pre1"><code><span class="pd_green"><strong>for</strong></span> word <span class="pd_pink"><strong>in</strong></span> words:
+    <span class="pd_green"><strong>if</strong></span> word <span class="pd_pink"><strong>in</strong></span> uniques:
+        uniques[word] <span class="pd_gray">+= 1</span>
+    <span class="pd_green"><strong>else</strong></span>:
+        uniques[word] <span class="pd_gray">= 1</span></code></pre>
+<p class="noindent">Finally, we’ll print out the result to the terminal:</p>
+<pre class="pre1"><code><span class="pd_green">print</span>(uniques)</code></pre>
+<p class="noindent">The full program (with added comments) appears as in <a href="ch04.xhtml#ch4list12">Listing 4.12</a>.</p>
+<p class="listing" id="ch4list12"><strong>Listing 4.12:</strong> A program to count words in text.<br/><code><em>count.py</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f118-01" id="f118-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code>sonnet <span class="pd_gray">=</span> <span class="pd_red">"""Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+   If this be error and upon me proved,
+   I never writ, nor no man ever loved."""</span>
+
+<span class="pd_blue1"><em># Unique words</em></span>
+uniques <span class="pd_gray">=</span> {}
+<span class="pd_blue1"><em># All words in the text</em></span>
+words <span class="pd_gray">=</span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"\w+"</span>, sonnet)
+
+<span class="pd_blue1"><em># Iterate through `words` and build up a dictionary of unique words.</em></span>
+
+<span epub:type="pagebreak" id="page_119"></span><span class="pd_green"><strong>for</strong></span> word <span class="pd_pink"><strong>in</strong></span> words:
+    <span class="pd_green"><strong>if</strong></span> word <span class="pd_pink"><strong>in</strong></span> uniques:
+        uniques[word] <span class="pd_gray">+= 1</span>
+    <span class="pd_green"><strong>else</strong></span>:
+        uniques[word] <span class="pd_gray">= 1</span>
+
+<span class="pd_green">print</span>(uniques)</code></pre>
+</div>
+<p class="indent">The result of running <span class="pd_green-d"><code><strong>count.py</strong></code></span> in the terminal looks something like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#f119-01" id="f119-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 count.py
+<span class="pd_green-d">{'Let': 1, 'me': 2, 'not': 4, 'to': 4, 'the': 4, 'marriage': 1, 'of': 2,
+'true': 1, 'minds': 1, 'Admit': 1, 'impediments': 1, 'Love': 3, 'is': 4,
+'love': 1, 'Which': 1, 'alters': 2, 'when': 1, 'it': 3, 'alteration': 1,
+'finds': 1, 'Or': 1, 'bends': 1, 'with': 2, 'remover': 1, 'remove': 1,
+'O': 1, 'no': 2, 'an': 1, 'ever': 2, 'fixed': 1, 'mark': 1, 'That': 1,
+'looks': 1, 'on': 1, 'tempests': 1, 'and': 4, 'never': 2, 'shaken': 1,
+'It': 1, 'star': 1, 'every': 1, 'wand': 1, 'ring': 1, 'bark': 1, 'Whose': 1,
+'worth': 1, 's': 4, 'unknown': 1, 'although': 1, 'his': 3, 'height': 1,
+'be': 2, 'taken': 1, 'time': 1, 'fool': 1, 'though': 1, 'rosy': 1, 'lips': 1,
+'cheeks': 1, 'Within': 1, 'bending': 1, 'sickle': 1, 'compass': 1, 'come': 1,
+'brief': 1, 'hours': 1, 'weeks': 1, 'But': 1, 'bears': 1, 'out': 1, 'even': 1,
+'edge': 1, 'doom': 1, 'If': 1, 'this': 1, 'error': 1, 'upon': 1, 'proved': 1,
+'I': 1, 'writ': 1, 'nor': 1, 'man': 1, 'loved': 1}</span></code></pre>
+<p class="indent">This constitutes a good example of a solution “by hand” that is reasonably Pythonic but has a version that is even more Pythonic, though also substantially more advanced (<a href="ch04.xhtml#sec4_5_1">Section 4.5.1</a>). As noted in <a href="ch01.xhtml#ch1box1">Box 1.1</a>, “Pythonic” is a sliding scale, and the program in <a href="ch04.xhtml#ch4list12">Listing 4.12</a> is an excellent start.</p>
+<section>
+<h4 class="h4" id="sec4_5_1">4.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Extend the regex used in <a href="ch04.xhtml#ch4list12">Listing 4.12</a> to include an apostrophe, so it matches, e.g., “wand’ring”. <em>Hint</em>: Combine the first reference regex at regex101 (<a href="ch04.xhtml#ch4fig10">Figure 4.10</a>) with <span class="pd_green-d"><code><strong>\w</strong></code></span>, an apostrophe, and the plus operator <span class="pd_green-d"><code><strong>+</strong></code></span>.</p>
+<figure class="image-c" id="ch4fig10">
+<img src="graphics/04fig10.jpg" alt="images" width="725" height="366"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.10:</strong> An exercise hint.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">By running the code in <a href="ch04.xhtml#ch4list13">Listing 4.13</a>, show that we can effectively replicate the results of <a href="ch04.xhtml#ch4list12">Listing 4.12</a> using the powerful <span class="pd_green-d"><code><strong>Counter()</strong></code></span> function from the Python <span class="pd_green-d"><code><strong>collections</strong></code></span> module. See this excellent video (<a href="https://www.youtube.com/watch?v=8OKTAedgFYg&amp;t=364s">https://www.youtube.com/watch?v=8OKTAedgFYg&amp;t=364s</a>) for more detail on this subject.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_120"></span>
+<p class="listing" id="ch4list13"><strong>Listing 4.13:</strong> Using the powerful <span class="pd_green-d"><code><strong>Counter()</strong></code></span> function.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f120-01" id="f120-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>collections</strong></span> <span class="pd_green"><strong>import</strong></span> Counter
+
+
+sonnet <span class="pd_gray">=</span> <span class="pd_red">"""Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+   If this be error and upon me proved,
+   I never writ, nor no man ever loved."""</span>
+
+words <span class="pd_gray">=</span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"\w+"</span>, sonnet)
+<span class="pd_green">print</span>(Counter(words))</code></pre>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

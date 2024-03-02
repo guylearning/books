@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch05"><span epub:type="pagebreak" id="page_121"></span>Chapter 5</h2>
+<h2 class="h2a">Functions and Iterators</h2>
+<p class="noindent">So far in this tutorial, we’ve seen several examples of Python functions, which are one of the most important ideas in Python, and indeed in all of computing. In this chapter, we’ll learn how to define functions of our own (<a href="ch05.xhtml#ch5fig1">Figure 5.1</a>). We’ll also learn a bit more about iterators (mentioned briefly in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>), both because Python often uses such objects as the return values of built-in functions and because they’re important in their own right.</p>
+<figure class="image-c" id="ch5fig1">
+<img src="graphics/05fig01.jpg" alt="images" width="600" height="98"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.1:</strong> Time to level up.</p>
+</figcaption>
+</figure>
+<p class="indent">In case you’re not running the Python shell already, you should activate the virtual environment and start the REPL as usual:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span> python3</code></pre>
+<section>
+<h3 class="h3" id="sec5_1">5.1 Function Definitions</h3>
+<p class="noindent">As we’ve seen with functions like <span class="pd_green-d"><code><strong>print()</strong></code></span> (<a href="ch02.xhtml#sec2_3">Section 2.3</a>), <span class="pd_green-d"><code><strong>len()</strong></code></span> (<a href="ch02.xhtml#sec2_4">Section 2.4</a>), and <span class="pd_green-d"><code><strong>sorted()</strong></code></span> and <span class="pd_green-d"><code><strong>reversed()</strong></code></span> (<a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>), function calls in Python consist of a <em>name</em> and zero or more arguments in parentheses:</p>
+<pre class="pre1"><code><span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_122"></span>One of the most important tasks in programming involves defining our own functions, which in Python can be done using the <span class="pd_green-d"><code><strong>def</strong></code></span> keyword. (As discussed in <a href="ch02.xhtml#sec2_5">Section 2.5</a>, functions attached to objects (such as <span class="pd_green-d"><code><strong>split()</strong></code></span> and <span class="pd_green-d"><code><strong>islower()</strong></code></span>) are also called <em>methods</em>. We’ll learn how to define methods of our own in <a href="ch07.xhtml#ch07">Chapter 7</a>.)</p>
+<p class="indent">Let’s take a look at a simple example of a function definition in the REPL. We’ll start with a function that takes a single numerical argument and returns the square, as shown in <a href="ch05.xhtml#ch5list1">Listing 5.1</a>.<sup><a id="fn5_1a" href="ch05.xhtml#fn5_1">1</a></sup></p>
+<p class="footnote"><a id="fn5_1" href="ch05.xhtml#fn5_1a">1.</a> Python doesn’t have a type mechanism to enforce, say, numerical arguments to functions. There is a <span class="pd_green-d"><code><strong>typing</strong></code></span> library, though, with support for type hints.</p>
+<p class="listing" id="ch5list1"><strong>Listing 5.1:</strong> Defining a function.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">square</span>(x):
+<span class="pd_blue"><strong>...</strong></span>    <span class="pd_green"><strong>return</strong></span> x<span class="pd_gray">*</span>x
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> square(<span class="pd_gray">10</span>)
+<span class="pd_green-d">100</span></code></pre>
+</div>
+<p class="noindent">(Here we could also use <span class="pd_green-d"><code><strong>x**2</strong></code></span>, which would be the same thing.) The function ends with the <span class="pd_green-d"><code><strong>return</strong></code></span> keyword followed by the return value for the function.</p>
+<p class="indent">In the case of <span class="pd_green-d"><code><strong>square()</strong></code></span>, the ending of the function was also the beginning because it’s only one line. But, as you might expect, a function can also consist of multiple steps, such as the function shown in <a href="ch05.xhtml#ch5list2">Listing 5.2</a> to return a list of squares from <span class="pd_green-d"><code><strong>0</strong></code></span> up to <span class="pd_green-d"><code><strong>(n-1)**2</strong></code></span> (in accordance with the usual behavior of <span class="pd_green-d"><code><strong>range()</strong></code></span>).</p>
+<p class="listing" id="ch5list2"><strong>Listing 5.2:</strong> Returning a list of squares.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f122-01" id="f122-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">squares_list</span>(n):
+<span class="pd_blue"><strong>...</strong></span>     squares <span class="pd_gray">=</span> []
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(n<span class="pd_gray">+1</span>):
+<span class="pd_blue"><strong>...</strong></span>         squares<span class="pd_gray">.</span>append(i<span class="pd_gray">**2</span>)
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return</strong></span> squares
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> squares_list(<span class="pd_gray">11</span>)
+<span class="pd_green-d">[0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></code></pre>
+</div>
+<p class="noindent"><a href="ch05.xhtml#ch5list2">Listing 5.2</a> includes a common pattern of initializing a variable, changing it, and then returning the changed value. We’ll see how to replace this pattern with a more compact version in <a href="ch06.xhtml#ch06">Chapter 6</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_123"></span>It’s worth noting that <span class="pd_green-d"><code><strong>return</strong></code></span> acts immediately, much like the <span class="pd_green-d"><code><strong>break</strong></code></span> keyword we saw in <a href="ch03.xhtml#ch3list11">Listing 3.11</a>, so we can use it to interrupt a loop. Indeed, <span class="pd_green-d"><code><strong>return</strong></code></span> interrupts the entire <em>function</em>, so as soon as Python sees an occurrence of <span class="pd_green-d"><code><strong>return</strong></code></span> it leaves the function entirely. For example, we can write a function to return the first number in a list bigger than 10, or <span class="pd_green-d"><code><strong>None</strong></code></span> if no such number exists, as shown in <a href="ch05.xhtml#ch5list3">Listing 5.3</a>.</p>
+<p class="listing" id="ch5list3"><strong>Listing 5.3:</strong> Using <span class="pd_green-d"><code><strong>return</strong></code></span> to return immediately from a <span class="pd_green-d"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f123-01" id="f123-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">bigger_than_10</span>(numbers):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> numbers:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>if</strong></span> n <span class="pd_gray">&gt; 10</span>:
+<span class="pd_blue"><strong>...</strong></span>             <span class="pd_green"><strong>return</strong></span> n
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return None</strong></span>
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> bigger_than_10(squares_list(<span class="pd_gray">11</span>))
+<span class="pd_green-d">16</span></code></pre>
+</div>
+<p class="noindent">Note that we’ve included an explicit <span class="pd_green-d"><code><strong>return None</strong></code></span> in <a href="ch05.xhtml#ch5list3">Listing 5.3</a>, but in fact returning <span class="pd_green-d"><code><strong>None</strong></code></span> is the default, so you can actually leave that step off. We’ll include it for now but we’ll drop it starting in <a href="ch05.xhtml#ch5list21">Listing 5.21</a>.</p>
+<p class="indent">Now that we’ve seen a few example functions, let’s write a function that we’ll actually use in an application—in this case, the Flask web app created in <a href="ch01.xhtml#sec1_5">Section 1.5</a>. In particular, we’ll define a function called <span class="pd_green-d"><code><strong>dayname()</strong></code></span> that takes a single <span class="pd_green-d"><code><strong>datetime</strong></code></span> argument (<a href="ch04.xhtml#sec4_2">Section 4.2</a>) and returns the day of the week represented by the given time.</p>
+<p class="indent">Recall from <a href="ch04.xhtml#sec4_2">Section 4.2</a> that a <span class="pd_green-d"><code><strong>datetime</strong></code></span> object has a method called <span class="pd_green-d"><code><strong>weekday()</strong></code></span> representing the (zero-offset) index of the day of the week:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f123-02" id="f123-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now <span class="pd_gray">=</span> datetime<span class="pd_gray">.</span>now()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> now<span class="pd_gray">.</span>weekday()
+<span class="pd_green-d">3</span></code></pre>
+<p class="noindent">In that same section, we mentioned briefly that the <span class="pd_green-d"><code><strong>calendar</strong></code></span> library includes an object for the days of the week:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f123-03" id="f123-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>calendar</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> calendar<span class="pd_gray">.</span>day_name
+<span class="pd_green-d">&lt;calendar._localized_day object at 0x100f13910&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(calendar<span class="pd_gray">.</span>day_name)
+<span class="pd_green-d">['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_124"></span>Here we’ve used the <span class="pd_green-d"><code><strong>list()</strong></code></span> function to convert the “localized day” object into a list for easier viewing.</p>
+<p class="indent">The <span class="pd_green-d"><code><strong>day_name</strong></code></span> object allows us to find the day of the week as follows:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f124-01" id="f124-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(calendar<span class="pd_gray">.</span>day_name)[<span class="pd_gray">0</span>]
+<span class="pd_green-d">'Monday'</span></code></pre>
+<p class="noindent">Here we’ve used a bracket with an index to access the corresponding element of the list (<a href="ch03.xhtml#sec3_2">Section 3.2</a>), but it turns out you can use the same syntax with the “localized day” object directly:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> calendar<span class="pd_gray">.</span>day_name[<span class="pd_gray">0</span>]
+<span class="pd_green-d">'Monday'</span></code></pre>
+<p class="noindent">This is exactly the kind of behavior you might not have been able to guess ahead of time, and is a great example of the value of the REPL for experimentation (a key component of technical sophistication (<a href="ch01.xhtml#ch1box2">Box 1.2</a>)).</p>
+<p class="indent">Putting <span class="pd_green-d"><code><strong>weekday()</strong></code></span> and <span class="pd_green-d"><code><strong>day_name</strong></code></span> together lets us find the day of the week corresponding to the numerical index:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f124-02" id="f124-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> calendar<span class="pd_gray">.</span>day_name[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]
+<span class="pd_green-d">'Thursday'</span></code></pre>
+<p class="indent">This works just fine, but it is getting rather long. It would be convenient to <em>encapsulate</em> this definition and logic in a <span class="pd_green-d"><code><strong>dayname()</strong></code></span> function, so that we could write</p>
+<pre class="pre1"><code>dayname(datetime<span class="pd_gray">.</span>now())</code></pre>
+<p class="noindent">By combining the elements above, we can accomplish this as shown in <a href="ch05.xhtml#ch5list4">Listing 5.4</a>.</p>
+<p class="listing" id="ch5list4"><strong>Listing 5.4:</strong> Defining <span class="pd_green-d"><code><strong>dayname()</strong></code></span> in the REPL.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f124-03" id="f124-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">dayname</span>(time):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_red"><em>"""Return the name of the day of the week for the given time."""</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return</strong></span> calendar<span class="pd_gray">.</span>day_name[time<span class="pd_gray">.</span>weekday()]
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">&gt;&gt;&gt;</span></code></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_125"></span>We see in <a href="ch05.xhtml#ch5list4">Listing 5.4</a> that a Python function starts with the <span class="pd_green-d"><code><strong>def</strong></code></span> keyword followed by the function name and any arguments; next, there’s an optional but highly recommended <em>docstring</em> (not usually used in the REPL but included here for reasons we’ll see in a moment); then, there’s the function <em>body</em>, which determines the return value of the function using the <span class="pd_green-d"><code><strong>return</strong></code></span> keyword (which in this case is the <em>only</em> line in the body, not counting the docstring); finally, the function is ended by a newline. Note that this final fact contrasts with nearly all other programming languages, which typically end function definitions with a closing curly brace (e.g., C, C++, Perl, PHP, Java, and JavaScript), a closing parenthesis (most varieties of Lisp), or a special keyword like <span class="pd_green-d"><code><strong>end</strong></code></span> (e.g., Ruby).</p>
+<p class="indent">We can test the newly defined function as follows:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> dayname(datetime<span class="pd_gray">.</span>now())
+<span class="pd_green-d">'Thursday'</span></code></pre>
+<p class="noindent">This might not seem like a big improvement, but note that it’s conceptually simpler because we don’t have to think about the implementation (i.e., finding the element of an object corresponding to the value of <span class="pd_green-d"><code><strong>weekday()</strong></code></span>). This sort of <em>abstraction layer</em> between function name and implementation is useful even if the function definition is only one or two lines. (Indeed, I consider one- or two-line functions to be a sign of good program design.) We’ll put this function to good use in <a href="ch05.xhtml#sec5_2">Section 5.2</a> to simplify the customized greeting in our hello app (<a href="ch04.xhtml#ch4list3">Listing 4.3</a>).</p>
+<p class="indent">As noted in <a href="ch02.xhtml#sec2_1">Section 2.1</a>, including a triple-quoted docstring as in <a href="ch05.xhtml#ch5list4">Listing 5.4</a> is a standard practice with Python functions.<sup><a id="fn5_2a" href="ch05.xhtml#fn5_2">2</a></sup> In addition to being useful to people reading the code, the docstring itself is available in the REPL via the <span class="pd_green-d"><code><strong>help()</strong></code></span> function:</p>
+<p class="footnote"><a id="fn5_2" href="ch05.xhtml#fn5_2a">2.</a> Python docstrings typically use the imperative mood, so “Return the name” rather than “Returns the name”.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> help(dayname)</code></pre>
+<p class="noindent">The result of running <span class="pd_green-d"><code><strong>help()</strong></code></span> is system-dependent; on my system, running <span class="pd_green-d"><code><strong>help(dayname)</strong></code></span> in a terminal gives the result shown in <a href="ch05.xhtml#ch5fig2">Figure 5.2</a>. (This uses the <span class="pd_green-d"><code><strong>less</strong></code></span> interface covered (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-less_is_more">https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-less_is_more</a>) in <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>), so I typed <span class="pd_green-d"><code><strong>q</strong></code></span> to quit.)</p>
+<span epub:type="pagebreak" id="page_126"></span>
+<figure class="image-c" id="ch5fig2">
+<img src="graphics/05fig02.jpg" alt="images" width="725" height="589"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.2:</strong> The result of running <span class="pd_green-d"><code><strong>help(dayname)</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">As previously noted, we wouldn’t ordinarily include a docstring in a function defined in the REPL, but we included it in <a href="ch05.xhtml#ch5list4">Listing 5.4</a> so that we could illustrate <span class="pd_green-d"><code><strong>help()</strong></code></span> as in <a href="ch05.xhtml#ch5fig2">Figure 5.2</a>. Because built-in Python functions generally define docstrings, using <span class="pd_green-d"><code><strong>help()</strong></code></span> in the REPL is useful with them as well (<a href="ch05.xhtml#sec5_1_3">Section 5.1.3</a>).</p>
+<section>
+<h4 class="h4" id="sec5_1_1">5.1.1 First-Class Functions</h4>
+<p class="noindent">One possibly surprising feature of Python functions is that they can be treated as regular variables in many ways (sometimes referred to as <em>first-class objects</em>). For example, let’s take another look at the <span class="pd_green-d"><code><strong>square()</strong></code></span> function defined in <a href="ch05.xhtml#ch5list1">Listing 5.1</a>:</p>
+<span epub:type="pagebreak" id="page_127"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">square</span>(x):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return</strong></span> x<span class="pd_gray">*</span>x
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> square(<span class="pd_gray">10</span>)
+<span class="pd_green-d">100</span></code></pre>
+<p class="noindent">We can actually assign this to a new variable and call it just as before:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> pow2 <span class="pd_gray">=</span> square
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> pow2(<span class="pd_gray">7</span>)
+<span class="pd_green-d">49</span></code></pre>
+<p class="indent">Perhaps even cooler, we can pass functions as arguments to other functions. For example, we can create a function to apply another function and then add 1 like this:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">function_adder</span>(x, f):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return</strong></span> f(x) <span class="pd_gray">+ 1</span>
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">&gt;&gt;&gt;</span></code></pre>
+<p class="noindent">We can then pass <span class="pd_green-d"><code><strong>square</strong></code></span> as an argument (<em>without</em> parentheses, so not <span class="pd_green-d"><code><strong>square()</strong></code></span>):</p>
+<p class="codelink"><a href="ch05_images.xhtml#f127-01" id="f127-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> function_adder(<span class="pd_gray">10</span>, square)
+<span class="pd_green-d">101</span></code></pre>
+<p class="noindent">Built-in Python functions work the same way:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f127-02" id="f127-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>math</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> function_adder(<span class="pd_gray">100</span>, math<span class="pd_gray">.</span>log10)
+<span class="pd_green-d">3.0</span></code></pre>
+<p class="noindent">This last result follows because log<sub>10</sub> 100 = log<sub>10</sub> 10<sup>2</sup> = 2 and 2 + 1 = 3. (Why does Python display it as <span class="pd_green-d"><code><strong>3.0</strong></code></span>?)<sup><a id="fn5_3a" href="ch05.xhtml#fn5_3">3</a></sup></p>
+<p class="footnote"><a id="fn5_3" href="ch05.xhtml#fn5_3a">3.</a> <em>Answer</em>: The <span class="pd_green-d"><code><strong>math.log10()</strong></code></span> function returns floating-point values rather than integers.</p>
+</section>
+<section>
+<h4 class="h4" id="sec5_1_2">5.1.2 Variable and Keyword Arguments</h4>
+<p class="noindent">In addition to regular arguments, Python functions support variable-length arguments and keyword arguments. While we won’t need to define functions with these sorts <span epub:type="pagebreak" id="page_128"></span>of arguments in this tutorial, we will need them in a few places since many built-in Python functions use them. They are also valuable for more advanced work in Python. Let’s take a quick look at how they work.</p>
+<p class="indent">Suppose we define a function <span class="pd_green-d"><code><strong>foo()</strong></code></span> with two arguments, <span class="pd_green-d"><code><strong>bar</strong></code></span> and <span class="pd_green-d"><code><strong>baz</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">foo</span>(bar, baz):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>((bar, baz))
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> foo(<span class="pd_red">"hello"</span>, <span class="pd_red">"world"</span>)
+<span class="pd_green-d">('hello', 'world')</span></code></pre>
+<p class="noindent">Here we’ve printed out a tuple (<a href="ch03.xhtml#sec3_6">Section 3.6</a>) of the two arguments as a way of showing what their values are.</p>
+<p class="indent">But what if we didn’t know how many arguments we wanted? For example, this won’t work:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f128-01" id="f128-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> foo(<span class="pd_red">"hello"</span>, <span class="pd_red">"world"</span>, <span class="pd_red">"good day!"</span>)
+  <span class="pd_green-d">File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
+<span class="pd_green-d">TypeError: foo() takes 2 positional arguments but 3 were given</span></code></pre>
+<p class="noindent">Python supports a variable number of arguments via the special asterisk or “star” syntax <span class="pd_green-d"><code><strong>*args</strong></code></span> (often pronounced “star args”):<sup><a id="fn5_4a" href="ch05.xhtml#fn5_4">4</a></sup></p>
+<p class="footnote"><a id="fn5_4" href="ch05.xhtml#fn5_4a">4.</a> You could use <span class="pd_green-d"><code><strong>*anything</strong></code></span>, but <span class="pd_green-d"><code><strong>*args</strong></code></span> is conventional.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f128-02" id="f128-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">foo</span>(<span class="pd_gray">*</span>args):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(args)
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> foo(<span class="pd_red">"hello"</span>, <span class="pd_red">"world"</span>, <span class="pd_red">"good day!"</span>)
+<span class="pd_green-d">('hello', 'world', 'good day!')</span></code></pre>
+<p class="noindent">We see here that Python has automatically created a tuple of the arguments, which works for any number:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f128-03" id="f128-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> foo(<span class="pd_red">"This"</span>, <span class="pd_red">"is a bunch"</span>, <span class="pd_red">"of arguments"</span>, <span class="pd_red">"to the function"</span>)
+<span class="pd_green-d">('This', 'is a bunch', 'of arguments', 'to the function')</span></code></pre>
+<p class="indent">A related construction uses a double-asterisk or double-star syntax for <em>keywords</em>, which are key–value pairs separated with an equals sign. The analogue of <span class="pd_green-d"><code><strong>*args</strong></code></span> in <span epub:type="pagebreak" id="page_129"></span>this case is called <span class="pd_green-d"><code><strong>**kwargs</strong></code></span> (often pronounced “star star kwargs” or “star star keyword args”); if <span class="pd_green-d"><code><strong>*args</strong></code></span> results in a tuple, see if you can guess what <span class="pd_green-d"><code><strong>**kwargs</strong></code></span> does:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f129-01" id="f129-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">foo</span>(<span class="pd_gray">**</span>kwargs):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(kwargs)
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> foo(a<span class="pd_gray">=</span><span class="pd_red">"hello"</span>, b<span class="pd_gray">=</span><span class="pd_red">"world"</span>, bar<span class="pd_gray">=</span><span class="pd_red">"good day!"</span>)
+<span class="pd_green-d">{'a': 'hello', 'b': 'world', 'bar': 'good day!'}</span></code></pre>
+<p class="noindent">As you might have guessed, <span class="pd_green-d"><code><strong>**kwargs</strong></code></span> automatically converts the key–value pairs in the argument into Python’s standard data type for such pairs, namely, a dictionary (<a href="ch04.xhtml#sec4_4">Section 4.4</a>).</p>
+<p class="indent">One common pattern is to combine <span class="pd_green-d"><code><strong>*args</strong></code></span> and <span class="pd_green-d"><code><strong>**kwargs</strong></code></span>, resulting in the ability to accept a large variety of argument types. A simple example appears in <a href="ch05.xhtml#sec5_1_3">Section 5.1.3</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec5_1_3">5.1.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Run <span class="pd_green-d"><code><strong>help(len)</strong></code></span> in the Python interpreter to confirm that <span class="pd_green-d"><code><strong>help()</strong></code></span> works on built-in functions as well. What is the result of running the command <span class="pd_green-d"><code><strong>help(print)</strong></code></span>? (The result in this case is called a multi-line docstring.)</p></li>
+<li><p class="number">Define a <span class="pd_green-d"><code><strong>deriver()</strong></code></span> function as shown in <a href="ch05.xhtml#ch5list5">Listing 5.5</a> that takes in a function and returns how much it changes over a small interval <span class="pd_green-d"><code><strong>h</strong></code></span>. Confirm that you get the result shown for the <span class="pd_green-d"><code><strong>square()</strong></code></span> function mentioned at the beginning of <a href="ch05.xhtml#sec5_1_1">Section 5.1.1</a> (which was first defined in <a href="ch05.xhtml#ch5list1">Listing 5.1</a>). What is the result of evaluating <span class="pd_green-d"><code><strong>deriver(math.cos, math.tau/2)</strong></code></span>?<sup><a id="fn5_5a" href="ch05.xhtml#fn5_5">5</a></sup></p>
+<p class="footnote"><a id="fn5_5" href="ch05.xhtml#fn5_5a">5.</a> Some alert readers may recognize <span class="pd_green-d"><code><strong>deriver()</strong></code></span> as the quotient that approaches the derivative as <em>h</em> → 0. Since the derivative of cos <em>x</em> is 0 at <em>τ/</em>2 (corresponding to a minimum), the value of <span class="pd_green-d"><code><strong>deriver(math.cos, math.tau/2)</strong></code></span> should be close to 0 as well. The derivative of <em>x</em><sup>2</sup>, meanwhile, is 2<em>x</em>, which accounts for the value shown in <a href="ch05.xhtml#ch5list5">Listing 5.5</a> for the <span class="pd_green-d"><code><strong>square()</strong></code></span> function when <em>x</em> = 3.</p></li>
+<li><p class="number">Define a function <span class="pd_green-d"><code><strong>foo()</strong></code></span> with both <span class="pd_green-d"><code><strong>*args</strong></code></span> and <span class="pd_green-d"><code><strong>**kwargs</strong></code></span> as shown in <a href="ch05.xhtml#ch5list6">Listing 5.6</a>. What do you get when you execute the function as shown in the final statement of <a href="ch05.xhtml#ch5list6">Listing 5.6</a>? (Note that you should not type <span class="pd_green-d"><code><strong>...</strong></code></span> in the call to <span class="pd_green-d"><code><strong>foo()</strong></code></span>; as we have seen when defining functions, those are continuation characters added automatically by the Python interpreter.)</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_130"></span>
+<p class="listing" id="ch5list5"><strong>Listing 5.5:</strong> Deriving the rate of change over a small interval.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f130-01" id="f130-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">deriver</span>(f, x):
+<span class="pd_blue"><strong>...</strong></span>     h <span class="pd_gray">= 0.00001</span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return</strong></span> (f(x<span class="pd_gray">+</span>h) <span class="pd_gray">-</span> f(x))<span class="pd_gray">/</span>h
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> deriver(square, <span class="pd_gray">3</span>)
+<span class="pd_green-d">6.000009999951316</span></code></pre>
+</div>
+<p class="listing" id="ch5list6"><strong>Listing 5.6:</strong> Defining a function with both <span class="pd_green-d"><code><strong>*args</strong></code></span> and <span class="pd_green-d"><code><strong>**kwargs</strong></code></span>.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f130-02" id="f130-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">foo</span>(<span class="pd_gray">*</span>args, <span class="pd_gray">**</span>kwargs):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(args)
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(kwargs)
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> foo(<span class="pd_red">"This"</span>, <span class="pd_red">"is a bunch"</span>, <span class="pd_red">"of arguments"</span>, <span class="pd_red">"to the function"</span>,
+<span class="pd_blue"><strong>...</strong></span>     a<span class="pd_gray">=</span><span class="pd_red">"hello"</span>, b<span class="pd_gray">=</span><span class="pd_red">"world"</span>, bar<span class="pd_gray">=</span><span class="pd_red">"good day!"</span>)</code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec5_2">5.2 Functions in a File</h3>
+<p class="noindent">Although defining functions in a REPL is convenient for demonstration purposes, it’s a bit cumbersome, and a better practice is to put them in a file (as we did with the script in <a href="ch04.xhtml#sec4_5">Section 4.5</a>). We’ll start by moving the function defined in <a href="ch05.xhtml#sec5_1">Section 5.1</a> into <span class="pd_green-d"><code><strong>hello_app.py</strong></code></span>, and we’ll then move it to an even more convenient external file.</p>
+<p class="indent">Using such an external resource requires the presence of a somewhat mysterious file called <span class="pd_green-d"><code><strong>__init__.py</strong></code></span>, which causes Python to interpret our project directory as a <em>package</em>. The file doesn’t have to have any content, though—it just has to <em>exist</em>, which we can arrange with <span class="pd_green-d"><code><strong>touch</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch __init__.py</code></pre>
+<p class="noindent">(We’ll learn a little more about this file requirement when we make a proper package in <a href="ch08.xhtml#ch08">Chapter 8</a>.) With that, we’re ready to run our Flask app at the command line as in <a href="ch01.xhtml#sec1_5">Section 1.5</a>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f130-03" id="f130-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> flask --app hello_app.py --debug run</code></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_131"></span>Let’s recall the current state of our hello application, which looks like <a href="ch05.xhtml#ch5list7">Listing 5.7</a>. (This is the same as <a href="ch04.xhtml#ch4list3">Listing 4.3</a>; your code may differ if you solved the exercises in <a href="ch04.xhtml#sec4_2_1">Section 4.2.1</a>.)</p>
+<p class="listing" id="ch5list7"><strong>Listing 5.7:</strong> The current state of our hello app.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f131-01" id="f131-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    DAYNAMES <span class="pd_gray">=</span> [<span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>, <span class="pd_red">"Sunday"</span>]
+    dayname <span class="pd_gray">=</span> DAYNAMES[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.&lt;/p&gt;"</span></code></pre>
+</div>
+<p class="indent">Our first step is to put the function definition from <a href="ch05.xhtml#sec5_1">Section 5.1</a> into this file, as shown in <a href="ch05.xhtml#ch5list8">Listing 5.8</a>.</p>
+<p class="listing" id="ch5list8"><strong>Listing 5.8:</strong> Adding a function for the day of the week.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f131-02" id="f131-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+<span class="b-y"><span class="pd_green"><strong>import calendar</strong></span></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+<span class="b-y"><span class="pd_green"><strong>def dayname</strong></span>(<strong>time</strong>):</span>
+<span class="b-y">  <span class="pd_red">"""<em><strong>Return the name of the day of the week for the given time</strong></em>."""</span></span>
+<span class="b-y">  <span class="pd_green"><strong>return</strong></span> <strong>calendar</strong><span class="pd_gray"><strong>.</strong></span><strong>day_name</strong>[<strong>time</strong><span class="pd_gray"><strong>.</strong></span><strong>weekday</strong>()]</span>
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    DAYNAMES <span class="pd_gray">=</span> [<span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>, <span class="pd_red">"Sunday"</span>]
+    dayname <span class="pd_gray">=</span> DAYNAMES[datetime<span class="pd_gray">.</span>now()<span class="pd_gray">.</span>weekday()]
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">.&lt;/p&gt;"</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_132"></span>Then, we can use the <span class="pd_green-d"><code><strong>dayname()</strong></code></span> function to delete the unneeded lines and edit the body of <span class="pd_green-d"><code><strong>hello_world()</strong></code></span> down to a single line, as shown in <a href="ch05.xhtml#ch5list9">Listing 5.9</a>. At this point, you should be able to confirm that the app is working, as shown in <a href="ch05.xhtml#ch5fig3">Figure 5.3</a>.</p>
+<figure class="image-c" id="ch5fig3">
+<img src="graphics/05fig03.jpg" alt="images" width="725" height="539"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.3:</strong> The result of a functional greeting.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch5list9"><strong>Listing 5.9:</strong> Replacing the greeting.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f132-01" id="f132-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+<span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>calendar</strong></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">dayname</span>(time):
+  <span class="pd_red"><em>"""Return the name of the day of the week for the given time."""</em></span>
+  <span class="pd_green"><strong>return</strong></span> calendar<span class="pd_gray">.</span>day_name[time<span class="pd_gray">.</span>weekday()]
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <span class="pd_red"><strong>f"&lt;p&gt;Hello, world! Happy</strong></span> <span class="pd_pink"><strong>{</strong></span><strong>dayname(datetime.now())</strong><span class="pd_pink"><strong>}</strong></span><span class="pd_red"><strong>.&lt;/p&gt;</strong>"</span></span></code></pre>
+</div>
+<p class="indent">We can make the code in <a href="ch05.xhtml#ch5list9">Listing 5.9</a> even cleaner by factoring the <span class="pd_green-d"><code><strong>dayname()</strong></code></span> function into a separate file and then including it into our app. We’ll start by cutting the function and pasting it into a new file, <span class="pd_green-d"><code><strong>day.py</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch day.py</code></pre>
+<p class="noindent">The resulting files appear as in <a href="ch05.xhtml#ch5list10">Listing 5.10</a> and <a href="ch05.xhtml#ch5list11">Listing 5.11</a>.<sup><a id="fn5_6a" href="ch05.xhtml#fn5_6">6</a></sup> Note that we’ve slightly updated the greeting in <a href="ch05.xhtml#ch5list11">Listing 5.11</a> so that we can tell our new code is actually working.</p>
+<p class="footnote"><a id="fn5_6" href="ch05.xhtml#fn5_6a">6.</a> In some editors, you can use Shift-Command-V to paste in a selection using the local indentation level, which saves us the trouble of dedenting it by hand.</p>
+<p class="listing" id="ch5list10"><strong>Listing 5.10:</strong> The <span class="pd_green-d"><code><strong>dayname()</strong></code></span> function in a file.<br/><code><em>day.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f132-02" id="f132-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>calendar</strong></span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">dayname</span>(time):
+
+<span epub:type="pagebreak" id="page_133"></span>
+  <span class="pd_red"><em>"""Return the name of the day of the week for the given time."""</em></span>
+  <span class="pd_green"><strong>return</strong></span> calendar<span class="pd_gray">.</span>day_name[time<span class="pd_gray">.</span>weekday()]</code></pre>
+</div>
+<p class="listing" id="ch5list11"><strong>Listing 5.11:</strong> Our greeting with the function cut.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f133-01" id="f133-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">f"&lt;p&gt;Hello, world! Happy</span> <span class="pd_lpink"><strong>{</strong></span>dayname(datetime<span class="pd_gray">.</span>now())<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">from a file!&lt;/p&gt;"</span></code></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_134"></span>As you can verify by reloading the browser, the app doesn’t work—it crashes immediately, and all we get is the Flask error page (<a href="ch05.xhtml#ch5fig4">Figure 5.4</a>), which indicates that there was an <em>exception</em> of type <span class="pd_green-d"><code><strong>NoMethodError</strong></code></span>. (Exceptions are simply a standardized way of indicating particular kinds of errors in a program.) We can find out more about what went wrong by looking at the error message, which indicates that the <span class="pd_green-d"><code><strong>dayname()</strong></code></span> method isn’t defined; zooming in on the message, we see that it even tells us the exact line that has the problem (<a href="ch05.xhtml#ch5fig5">Figure 5.5</a>).</p>
+<figure class="image-c" id="ch5fig4">
+<img src="graphics/05fig04.jpg" alt="images" width="724" height="546"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.4:</strong> A sure sign our app isn’t working.</p>
+</figcaption>
+</figure>
+<figure class="image-c" id="ch5fig5">
+<img src="graphics/05fig05.jpg" alt="images" width="725" height="170"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.5:</strong> Using the Flask crash page to find an error.</p>
+</figcaption>
+</figure>
+<p class="indent">This practice is a powerful debugging technique: If your Python program crashes, inspecting the error message should be your method of first resort. Moreover, if you can’t see right away what went wrong, Googling the error message will often yield useful results (<a href="ch05.xhtml#ch5box1">Box 5.1</a>).</p>
+<span epub:type="pagebreak" id="page_135"></span>
+<div class="box">
+<p class="box-title" id="ch5box1"><strong>Box 5.1: Debugging Python</strong></p>
+<p class="sb-noindent">One skill that’s an essential part of technical sophistication is <em>debugging</em>: the art of finding and correcting errors in computer programs. While there’s no substitute for experience, here are some techniques that should give you a leg up when tracking down the inevitable glitches in your code:</p>
+<ul class="sq">
+<li><p class="bull"><em>Trace the execution with</em> <code>print</code>. When trying to figure out why a particular program is going awry, it’s often helpful to display variable values with temporary <code>print</code> statements, which can be removed when the bug is fixed. This technique is especially useful when combined with the <code>repr()</code> function, which returns a literal representation of the object (<a href="ch04.xhtml#sec4_3">Section 4.3</a>), as in <code>print(repr(a))</code>.</p></li>
+<li><p class="bull"><em>Comment out code.</em> It’s sometimes a good idea to comment out code you suspect is unrelated to the problem to allow you to focus on the code that isn’t working.</p></li>
+<li><p class="bull"><em>Use the REPL.</em> Firing up the Python interpreter and pasting in the problematic code is frequently an excellent way to isolate the problem. When debugging a script, calling it with <span class="pd_green-d"><code><strong>python3</strong></code></span> <span class="pd_green-d"><code><strong>-i</strong></code></span> <span class="pd_green-d"><code><strong>script.py</strong></code></span> will drop you into the REPL when an error is reached. (A more advanced version of the REPL technique is <em>pdb</em>, the Python Debugger.)</p></li>
+<li><p class="bull"><em>Google it.</em> Googling error messages or other search terms related to the bug (which often leads to helpful threads at Stack Overflow) is an essential skill for every modern software developer (<a href="ch05.xhtml#ch5fig6">Figure 5.6</a>).</p></li>
+</ul>
+<figure class="image-c" id="ch5fig6">
+<img src="graphics/05fig06.jpg" alt="images" width="725" height="541"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.6:</strong> How did people ever debug before Google?</p>
+</figcaption>
+</figure>
+</div>
+<span epub:type="pagebreak" id="page_136"></span>
+<p class="indent">The reason for the crash is that we’ve removed <span class="pd_green-d"><code><strong>dayname()</strong></code></span> from <span class="pd_green-d"><code><strong>hello_app.py</strong></code></span>, so naturally our app has no idea what it is. The solution is to import it in much the same way that we imported <span class="pd_green-d"><code><strong>flask</strong></code></span>, <span class="pd_green-d"><code><strong>datetime</strong></code></span>, and <span class="pd_green-d"><code><strong>calendar</strong></code></span>, as shown in <a href="ch05.xhtml#ch5list12">Listing 5.12</a>. Note that the import statement in <a href="ch05.xhtml#ch5list11">Listing 5.11</a> includes the current directory (<span class="pd_green-d"><code><strong>python_tutorial/day</strong></code></span>), which is necessary because our project directory isn’t on the Python include path by default.<sup><a id="fn5_7a" href="ch05.xhtml#fn5_7">7</a></sup> (This is fine for now, but among other things it prevents the app as written from being deployed to production (<a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a>). Utilities intended to be used more often, or in production environments, should be included as <em>packages</em>, a subject we’ll take up in <a href="ch08.xhtml#ch08">Chapter 8</a> and apply in <a href="ch09.xhtml#ch09">Chapter 9</a> and <a href="ch10.xhtml#ch10">Chapter 10</a>.)</p>
+<p class="footnote"><a id="fn5_7" href="ch05.xhtml#fn5_7a">7.</a> How would you figure out how to add the current directory to the import path? Here’s how I’d do it: python add to import path.</p>
+<p class="indent">It’s worth noting at this time that <a href="ch05.xhtml#ch5list12">Listing 5.12</a> includes a full set of imports—modules from the standard library (<span class="pd_green-d"><code><strong>datetime</strong></code></span>), a third-party library (<span class="pd_green-d"><code><strong>flask</strong></code></span>), and a <span epub:type="pagebreak" id="page_137"></span>custom library (<span class="pd_green-d"><code><strong>python_tutorial.day</strong></code></span>)—which by convention are separated from each other by newlines (and from the rest of the file by two newlines).</p>
+<p class="listing" id="ch5list12"><strong>Listing 5.12:</strong> Using a function from an external file.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f137-01" id="f137-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+<span class="b-y"><span class="pd_green"><strong>from python_tutorial.day import</strong></span> <strong>dayname</strong></span>
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <span class="pd_red"><strong>f"&lt;p&gt;Hello, world! Happy</strong></span> <span class="pd_pink"><strong>{</strong></span><strong>dayname</strong>(<strong>datetime.now</strong>())<span class="pd_pink"><strong>}</strong></span> <span class="pd_red"><strong>from a file!&lt;/p&gt;"</strong></span></span></code></pre>
+</div>
+<p class="indent">At this point, the app is working! The result should look something like <a href="ch05.xhtml#ch5fig7">Figure 5.7</a>.</p>
+<figure class="image-c" id="ch5fig7">
+<img src="graphics/05fig07.jpg" alt="images" width="725" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.7:</strong> An updated greeting.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_138"></span>
+<section>
+<h4 class="h4" id="sec5_2_1">5.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Let’s replace the interpolated string in <a href="ch05.xhtml#ch5list11">Listing 5.11</a> with a <span class="pd_green-d"><code><strong>greeting()</strong></code></span> function in <span class="pd_green-d"><code><strong>day.py</strong></code></span>. Fill in the code labeled <span class="pd_green-d"><code><strong>FILL_IN</strong></code></span> in <a href="ch05.xhtml#ch5list13">Listing 5.13</a> to get <a href="ch05.xhtml#ch5list14">Listing 5.14</a> to work.</p></li>
+</ol>
+<p class="listing" id="ch5list13"><strong>Listing 5.13:</strong> Defining a <span class="pd_green-d"><code><strong>greeting()</strong></code></span> function.<br/><code><em>day.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f138-01" id="f138-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>calendar</strong></span>
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">dayname</span>(time):
+  <span class="pd_red"><em>"""Return the name of the day of the week for the given time."""</em></span>
+  <span class="pd_green"><strong>return</strong></span> calendar<span class="pd_gray">.</span>day_name[time<span class="pd_gray">.</span>weekday()]
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">greeting</span>(time):
+  <span class="pd_red"><em>"""Return a friendly greeting based on the current time."""</em></span>
+<span class="b-y">  <span class="pd_green"><strong>return</strong></span> <strong>FILL_IN</strong></span></code></pre>
+</div>
+<p class="listing" id="ch5list14"><strong>Listing 5.14:</strong> Importing and using the <span class="pd_green-d"><code><strong>greeting()</strong></code></span> function.<br/><code><em>hello_app.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f138-02" id="f138-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>datetime</strong></span> <span class="pd_green"><strong>import</strong></span> datetime
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>flask</strong></span> <span class="pd_green"><strong>import</strong></span> Flask
+
+<span class="b-y"><span class="pd_green"><strong>from python_tutorial.day import</strong></span> <strong>dayname</strong></span>
+
+app <span class="pd_gray">=</span> Flask(<span class="pd_blue">__name__</span>)
+
+<span class="pd_pink">@app</span><span class="pd_gray">.</span>route(<span class="pd_red">"/"</span>)
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">hello_world</span>():
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <strong>greeting(datetime.now())</strong></span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec5_3">5.3 Iterators</h3>
+<p class="noindent">In this section, we’ll start developing the palindrome theme mentioned in the introduction (<a href="ch01.xhtml#ch01">Chapter 1</a>). Our goal is to write a function called <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> that returns <span class="pd_green-d"><code><strong>True</strong></code></span> if its argument is the same forward and backward, and <span class="pd_green-d"><code><strong>False</strong></code></span> otherwise. <span epub:type="pagebreak" id="page_139"></span>We can express the simplest possible definition of a palindrome as “a string is equal to the string reversed.” (We’ll steadily expand this definition over time.) In order to do this, we need to be able to reverse a string.</p>
+<p class="indent">One straightforward way to reverse a string would be to combine the <span class="pd_green-d"><code><strong>list()</strong></code></span> and <span class="pd_green-d"><code><strong>join()</strong></code></span> functions (<a href="ch03.xhtml#sec3_4_4">Section 3.4.4</a>) with the ability to reverse a list using <span class="pd_green-d"><code><strong>reverse()</strong></code></span> (<a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">=</span> <span class="pd_red">"foobar"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> <span class="pd_green">list</span>(s)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>reverse()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(a)
+<span class="pd_green-d">'raboof'</span></code></pre>
+<p class="noindent">This would work, but a far more elegant method comes from observing that the <span class="pd_green-d"><code><strong>reversed()</strong></code></span> function, which we saw applied to lists in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>, also works on strings:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f139-01" id="f139-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>)
+<span class="pd_green-d">&lt;reversed object at 0x104858d60&gt;</span></code></pre>
+<p class="noindent">As noted in the Python documentation, <span class="pd_green-d"><code><strong>reversed()</strong></code></span> returns a reverse <em>iterator</em>. An iterator is a powerful Python facility that represents a stream of data—in this case, a string of characters—that gets accessed in sequence. We’ll see how to define a special kind of iterator known as a <em>generator</em> in <a href="ch05.xhtml#sec5_3_1">Section 5.3.1</a>, and we’ll implement a full custom iterator in <a href="ch07.xhtml#sec7_2">Section 7.2</a>.</p>
+<p class="indent">One way to see the result of <span class="pd_green-d"><code><strong>reversed()</strong></code></span> is to iterate through the reversed object using <span class="pd_green-d"><code><strong>for</strong></code></span> (<a href="ch05.xhtml#ch5list15">Listing 5.15</a>):</p>
+<p class="listing" id="ch5list15"><strong>Listing 5.15:</strong> Using a <span class="pd_green-d"><code><strong>for</strong></code></span> loop on an iterator.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f139-02" id="f139-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>):
+<span class="pd_blue"><strong>...</strong></span>    <span class="pd_green">print</span>(c)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">r
+a
+b
+o
+o
+f</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_140"></span>We can also use <span class="pd_green-d"><code><strong>list()</strong></code></span> to look at the elements directly:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f140-01" id="f140-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(<span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>))
+<span class="pd_green-d">['r', 'a', 'b', 'o', 'o', 'f']</span></code></pre>
+<p class="noindent">We see here that <span class="pd_green-d"><code><strong>list()</strong></code></span> runs through the reversed iterator and gives us the actual list of characters. Note that, unlike the code in <a href="ch05.xhtml#ch5list15">Listing 5.15</a>, using <span class="pd_green-d"><code><strong>list()</strong></code></span> creates the full object in memory. For a small list like the one here it makes little difference, but for large lists the difference could be significant.<sup><a id="fn5_8a" href="ch05.xhtml#fn5_8">8</a></sup></p>
+<p class="footnote"><a id="fn5_8" href="ch05.xhtml#fn5_8a">8.</a> Indeed, it’s possible to create iterators for <em>infinite</em> sets, such as the natural numbers, which can’t be instantiated in memory even in principle.</p>
+<p class="indent">We saw in <a href="ch03.xhtml#sec3_4_4">Section 3.4.4</a> how to use <span class="pd_green-d"><code><strong>join()</strong></code></span> to combine such a list (in this case, on the empty space <span class="pd_green-d"><code><strong>""</strong></code></span>):</p>
+<p class="codelink"><a href="ch05_images.xhtml#f140-02" id="f140-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">list</span>(<span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>)))
+<span class="pd_green-d">'raboof'</span></code></pre>
+<p class="noindent">This is excellent progress toward being able to detect palindromes, as we now have a way to find the reverse of a string, but it turns out that <span class="pd_green-d"><code><strong>join()</strong></code></span> also automatically runs through an iterable object, so we can actually eliminate the intermediate call to <span class="pd_green-d"><code><strong>list()</strong></code></span>:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f140-03" id="f140-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>))
+<span class="pd_green-d">'raboof'</span></code></pre>
+<p class="indent">At this point, we’re in a position to test for a palindrome by comparing a string with its own reverse:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f140-04" id="f140-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"foobar"</span> <span class="pd_gray">==</span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(<span class="pd_red">"foobar"</span>))
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"racecar"</span> <span class="pd_gray">==</span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(<span class="pd_red">"racecar"</span>))
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">With this technique in our toolkit, we’re ready to write the first version of our palindrome method.</p>
+<p class="indent">Let’s put our function for detecting palindromes into its own file, which we’ll call <span class="pd_green-d"><code><strong>palindrome.py</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> touch palindrome.py</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_141"></span>What should we call the palindrome-detecting function? Well, the palindrome detector should take in a string and return <span class="pd_green-d"><code><strong>True</strong></code></span> when the string is a palindrome and <span class="pd_green-d"><code><strong>False</strong></code></span> otherwise. This makes it a boolean method. Recall from <a href="ch02.xhtml#sec2_5">Section 2.5</a> that boolean methods in Python generally start with the word “is”, which suggests the definition in <a href="ch05.xhtml#ch5list16">Listing 5.16</a>. (Actually, for such a <em>module-level</em> function, not attached to an object, the snake-case name <span class="pd_green-d"><code><strong>is_palindrome</strong></code></span> might be more conventional. But we <em>are</em> planning to attach it to an object; see <a href="ch07.xhtml#ch07">Chapter 7</a>.)</p>
+<p class="listing" id="ch5list16"><strong>Listing 5.16:</strong> Our initial <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> function.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f141-01" id="f141-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(string):
+    <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> string <span class="pd_gray">==</span> reverse(string)</code></pre>
+</div>
+<p class="noindent">The code in <a href="ch05.xhtml#ch5list16">Listing 5.16</a> uses the <span class="pd_green-d"><code><strong>==</strong></code></span> comparison operator (<a href="ch02.xhtml#sec2_4">Section 2.4</a>) to return the right boolean value.</p>
+<p class="indent">We can test the code in <a href="ch05.xhtml#ch5list16">Listing 5.16</a> by importing the palindrome file in the Python interpreter:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>palindrome</strong></span></code></pre>
+<p class="noindent">This makes <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> available through the module name:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f141-02" id="f141-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"racecar"</span>)
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"Racecar"</span>)
+<span class="pd_green-d">False</span></code></pre>
+<p class="indent">As seen in the second example, our palindrome detector says “Racecar” isn’t a palindrome, so to make our detector a little more general we can use <span class="pd_green-d"><code><strong>lower()</strong></code></span> to make the string lowercase before the comparison. A working version appears in <a href="ch05.xhtml#ch5list17">Listing 5.17</a>.</p>
+<span epub:type="pagebreak" id="page_142"></span>
+<p class="listing" id="ch5list17"><strong>Listing 5.17:</strong> Detecting palindromes independent of case.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f142-01" id="f142-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(string):
+    <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <strong>string</strong><span class="pd_gray"><strong>.</strong></span><strong>lower()</strong> <span class="pd_gray">==</span> <strong>reverse(string</strong><span class="pd_gray"><strong>.</strong></span><strong>lower</strong>())</span></code></pre>
+</div>
+<p class="noindent">Returning to the REPL, we can reload the detector (using the convenient <span class="pd_green-d"><code><strong>reload()</strong></code></span> function from the <span class="pd_green-d"><code><strong>importlib</strong></code></span> module)<sup><a id="fn5_9a" href="ch05.xhtml#fn5_9">9</a></sup> and apply it as follows:</p>
+<p class="footnote"><a id="fn5_9" href="ch05.xhtml#fn5_9a">9.</a> This is exactly the kind of thing you should think to Google (<a href="ch01.xhtml#ch1box2">Box 1.2</a>), using, say, python how to reload a module.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f142-02" id="f142-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>importlib</strong></span> <span class="pd_green"><strong>import</strong></span> reload
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"Racecar"</span>)
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">Success!</p>
+<p class="indent">As a final refinement, let’s follow the Don’t Repeat Yourself (or “DRY”) principle and eliminate the duplication in <a href="ch05.xhtml#ch5list17">Listing 5.17</a>. Inspecting the code, we see that <span class="pd_green-d"><code><strong>string.lower()</strong></code></span> gets used twice, which suggests declaring a variable (which we’ll call <span class="pd_green-d"><code><strong>processed_content</strong></code></span>) to represent the actual string that gets compared to its own reverse (<a href="ch05.xhtml#ch5list18">Listing 5.18</a>).</p>
+<p class="listing" id="ch5list18"><strong>Listing 5.18:</strong> Eliminating some duplication.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f142-03" id="f142-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(string):
+    <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+<span class="b-y">    <strong>processed_content</strong> <span class="pd_gray">=</span> <strong>string</strong><span class="pd_gray"><strong>.</strong></span><strong>lower</strong>()</span>
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> <strong>processed_content</strong> <span class="pd_gray">==</span> <strong>reverse</strong>(<strong>processed_content</strong>)</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_143"></span>
+<p class="noindent"><a href="ch05.xhtml#ch5list18">Listing 5.18</a> eliminates one call to <span class="pd_green-d"><code><strong>lower()</strong></code></span> at the cost of an extra line, so it’s not obviously better than <a href="ch05.xhtml#ch5list17">Listing 5.17</a>, but we’ll see starting in <a href="ch08.xhtml#ch08">Chapter 8</a> that having a separate variable gives us much greater flexibility in detecting more complex palindromes.</p>
+<p class="indent">As a final step, we should check that the <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> function is still working as advertised:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f143-01" id="f143-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> reload(palindrome)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"Racecar"</span>)
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"Able was I ere I saw Elba"</span>)
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">As you might guess, confirming such things by hand quickly gets tedious, and we’ll see in <a href="ch08.xhtml#ch08">Chapter 8</a> how to write <em>automated tests</em> to check our code’s behavior automatically.</p>
+<section>
+<h4 class="h4" id="sec5_3_1">5.3.1 Generators</h4>
+<p class="noindent">A <em>generator</em>, which we first saw in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>, is a special kind of iterator built using a special operation called <span class="pd_green-d"><code><strong>yield</strong></code></span>. The effect of <span class="pd_green-d"><code><strong>yield</strong></code></span> is to produce each element of the sequence in turn.</p>
+<p class="indent">For example, we can create a string generator by yielding each character in the string:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f143-02" id="f143-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">characters</span>(string):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> string:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>yield</strong></span> c
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return None</strong></span>
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> characters(<span class="pd_red">"foobar"</span>)
+<span class="pd_green-d">&lt;generator object characters at 0x11f9c1540</span></code></pre>
+<p class="noindent">(We’ve returned <span class="pd_green-d"><code><strong>None</strong></code></span> here, but we’ll see in <a href="ch05.xhtml#ch5list21">Listing 5.21</a> that we can actually leave off <span class="pd_green-d"><code><strong>return</strong></code></span> since <span class="pd_green-d"><code><strong>None</strong></code></span> is the default.)</p>
+<p class="indent">Now calling <span class="pd_green-d"><code><strong>characters()</strong></code></span> on a string returns a generator object, which we can iterate over as usual:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f143-03" id="f143-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> characters(<span class="pd_red">"foobar"</span>):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(c)
+<span class="pd_blue"><strong>...</strong></span>
+<span epub:type="pagebreak" id="page_144"></span><span class="pd_green-d">f</span>
+<span class="pd_green-d">o
+o
+b
+a
+r</span></code></pre>
+<p class="noindent">We can <span class="pd_green-d"><code><strong>join()</strong></code></span> it as well:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f144-01" id="f144-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(characters(<span class="pd_red">"foobar"</span>))
+<span class="pd_green-d">'foobar'</span></code></pre>
+<p class="indent">Converting a string to an iterator is instructive but not very useful since we can already iterate over regular strings. Let’s take a look at a more interesting example that shows off the virtues of generators.</p>
+<p class="indent">Suppose we wanted to write a function to find numbers that contain all of the digits 0–9.<sup><a id="fn5_10a" href="ch05.xhtml#fn5_10">10</a></sup> One clever way of doing this is noting that the <span class="pd_green-d"><code><strong>set()</strong></code></span> function introduced in <a href="ch03.xhtml#sec3_6">Section 3.6</a> can actually take a string as an argument, and returns the set of characters that make up the string:</p>
+<p class="footnote"><a id="fn5_10" href="ch05.xhtml#fn5_10a">10.</a> Thanks to Tom Repetti for this example and for his help in preparing this section.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">set</span>(<span class="pd_red">"1231231234"</span>)
+<span class="pd_green-d">{'2', '4', '3', '1'}</span></code></pre>
+<p class="noindent">Note that, as required for sets, repeated elements are simply ignored. (Also recall that the order of the elements doesn’t matter.)</p>
+<p class="indent">This observation suggests that we can detect a number having all ten digits by converting it to a string as in <a href="ch04.xhtml#sec4_1_2">Section 4.1.2</a> and then comparing it to the set corresponding to all digits:</p>
+<p class="codelink"><a href="ch05_images.xhtml#f144-02" id="f144-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">str</span>(<span class="pd_gray">132459360782</span>)
+<span class="pd_green-d">'132459360782'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">set</span>(<span class="pd_green">str</span>(<span class="pd_gray">132459360782</span>))
+<span class="pd_green-d">{'8', '7', '9', '3', '4', '0', '2', '6', '1', '5'}</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">set</span>(<span class="pd_green">str</span>(<span class="pd_gray">130245936782</span>)) <span class="pd_gray">==</span> <span class="pd_green">set</span>(<span class="pd_red">"0123456789"</span>)
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">A function to return the first such occurrence then appears in <a href="ch05.xhtml#ch5list19">Listing 5.19</a>, with an example showing how it works on a short list of integers. Note that <a href="ch05.xhtml#ch5list19">Listing 5.19</a> uses <span epub:type="pagebreak" id="page_145"></span>the same technique shown in <a href="ch05.xhtml#ch5list3">Listing 5.3</a> to return from the function immediately once a particular condition is satisfied.</p>
+<p class="listing" id="ch5list19"><strong>Listing 5.19:</strong> Finding a number with all ten digits.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f145-01" id="f145-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">has_all_digits</span>(numbers):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> numbers:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>if</strong> set</span>(<span class="pd_green">str</span>(n)) <span class="pd_gray">==</span> <span class="pd_green">set</span>(<span class="pd_red">"0123456789"</span>):
+<span class="pd_blue"><strong>...</strong></span>             <span class="pd_green"><strong>return</strong></span> n
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>return None</strong></span>
+<span class="pd_blue"><strong>...</strong></span>
+<span class="b-y"><span class="pd_blue">&gt;&gt;&gt;</span> <strong>has_all_digits</strong>([<span class="pd_gray"><strong>1424872341</strong></span>, <span class="pd_gray"><strong>1236490835741</strong></span>, <span class="pd_gray"><strong>12341960523</strong></span>])</span>
+<span class="b-y"><span class="pd_green"><strong>1236490835741</strong></span></span></code></pre>
+</div>
+<p class="indent">Now let’s use our function to find the first <em>perfect square</em> with all of the digits 0–9. One way of doing this is to create a list using all the numbers up to some big number; since we don’t know how high to go, let’s try a hundred million, or 10<sup>8</sup> (with a +1 because <span class="pd_green-d"><code><strong>range(n)</strong></code></span> ends at <span class="pd_green-d"><code><strong>n-1</strong></code></span>, although it doesn’t really matter). The result appears in <a href="ch05.xhtml#ch5list20">Listing 5.20</a>.</p>
+<p class="listing" id="ch5list20"><strong>Listing 5.20:</strong> Creating a big list of squares.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f145-02" id="f145-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> squares <span class="pd_gray">=</span> []
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10**8 + 1</span>):
+<span class="pd_blue"><strong>...</strong></span>     squares<span class="pd_gray">.</span>append(n)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">&gt;&gt;&gt;</span></code></pre>
+</div>
+<p class="noindent">(We’ll see a better way to make this list in <a href="ch06.xhtml#sec6_4_1">Section 6.4.1</a>.) As of this writing, the above code takes a loooong time even on a relatively new computer, to the point where I just hit <code>Ctrl-C</code> to break out of the loop. (As it turns out, we don’t have to go all the way to 10<sup>8</sup>, but we don’t know that ahead of time, and this demonstrates the principle.)</p>
+<p class="indent">The reason the solution in <a href="ch05.xhtml#ch5list20">Listing 5.20</a> takes so long is that the entire range has to be iterated over and the entire list has to be created in memory. A far better solution uses <span class="pd_green-d"><code><strong>yield</strong></code></span> to create a generator, which supplies the next square only when needed. We can create such a squares generator as shown in <a href="ch05.xhtml#ch5list21">Listing 5.21</a>; note that we have left off the <span class="pd_green-d"><code><strong>return</strong></code></span>, so <span class="pd_green-d"><code><strong>None</strong></code></span> will be returned by default.</p>
+<span epub:type="pagebreak" id="page_146"></span>
+<p class="listing" id="ch5list21"><strong>Listing 5.21:</strong> A squares generator.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f146-01" id="f146-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">squares_generator</span>():
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>for</strong></span> n <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">10**8 + 1</span>):
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>yield</strong></span> n<span class="pd_gray">**2</span>
+<span class="pd_blue"><strong>...
+&gt;&gt;&gt;</strong></span> squares <span class="pd_gray">=</span> squares_generator()</code></pre>
+</div>
+<p class="noindent">By the way, you may wonder why the call to <span class="pd_green-d"><code><strong>range()</strong></code></span> in <a href="ch05.xhtml#ch5list21">Listing 5.21</a> doesn’t just create exactly the list we’re trying to avoid. The answer is that it used to, and you had to use <span class="pd_green-d"><code><strong>xrange()</strong></code></span> to avoid creating the whole thing in memory. But as of Python 3, the <span class="pd_green-d"><code><strong>range()</strong></code></span> function does precisely what we want, producing the next element in the range only when needed. This pattern is known as <em>lazy evaluation</em>, and indeed is exactly the behavior produced by a generator as well.</p>
+<p class="indent">With the final assignment in <a href="ch05.xhtml#ch5list21">Listing 5.21</a>, we’re ready to find the first square containing all the digits:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> has_all_digits(squares)
+<span class="pd_green-d">1026753849</span></code></pre>
+<p class="noindent">Putting in commas for readability gives the result 1<em>,</em> 026<em>,</em> 753<em>,</em> 849, and you can confirm using <span class="pd_green-d"><code><strong>math.sqrt()</strong></code></span> that it is equal to 32<em>,</em> 043<sup>2</sup>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec5_3_2">5.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using the Python interpreter, determine whether or not your system supports using the <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> function from <a href="ch05.xhtml#ch5list17">Listing 5.17</a> on emojis. (You may find the Emojipedia links to the racing car and fox face emojis helpful.) If your system supports emojis in this context, the result should look something like <a href="ch05.xhtml#ch5fig8">Figure 5.8</a>. (Note that an emoji is a “palindrome” if it’s the same when you flip it horizontally, so the fox-face emoji is a palindrome but the racecar emoji isn’t, even though the <em>word</em> “racecar” <em>is</em> a palindrome.)</p>
+<figure class="image-c" id="ch5fig8">
+<img src="graphics/05fig08.jpg" alt="images" width="600" height="300"/>
+<figcaption>
+<p class="title-f"><strong>Figure 5.8:</strong> Detecting palindromic emojis.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Using the code in <a href="ch05.xhtml#ch5list22">Listing 5.22</a>, show that it’s possible to express the <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> function in one line using the advanced slice operator <span class="pd_green-d"><code><strong>[::-1]</strong></code></span> discussed in <a href="ch03.xhtml#sec3_3">Section 3.3</a>. (Some Python programmers may prefer this approach, but I believe the decrease in length doesn’t justify the loss in clarity.)</p></li>
+<li><p class="number">Write a generator function that returns the first 50 even numbers.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_147"></span>
+<p class="listing" id="ch5list22"><strong>Listing 5.22:</strong> A compact but rather obscure version of <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span>.<br/><code><em>palindrome.py</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f147-01" id="f147-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(string):
+    <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+<span class="b-y">    <span class="pd_green"><strong>return</strong></span> string.lower() == string.lower()[::-1]</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_148"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

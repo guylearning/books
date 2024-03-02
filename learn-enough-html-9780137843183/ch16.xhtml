@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch16"><span epub:type="pagebreak" id="page_593"></span>Chapter 16</h2>
+<h2 class="chap-title">A Name of Our Own</h2>
+<p class="noindent">In <a href="part03.xhtml#part03">Part III</a> of <em>Learn Enough HTML, CSS and Layout to Be Dangerous</em>, we’ll add a final bit of polish to the kind of websites created in <a href="part01.xhtml#part01">Part I</a> and <a href="part02.xhtml#part02">Part II</a>: using custom URLs for our site instead of using URLs at GitHub Pages. In other words, instead of having a site at someone else’s domain, like <a href="http://example.someoneelsesdomain.com">example.someoneelsesdomain.com</a>, we’re going to learn how to use our own <em>custom domain</em> like <a href="http://example.com">example.com</a>.<sup><a id="fn16_1a" href="ch16.xhtml#fn16_1">1</a></sup></p>
+<p class="footnote"><a id="fn16_1" href="ch16.xhtml#fn16_1a">1</a>. Because the custom-domains material is intended mainly for reference, there are no exercises in <a href="part03.xhtml#part03">Part III</a>.</p>
+<p class="indent">In this chapter, we’ll cover how to register a custom domain (<a href="ch16.xhtml#sec16_1">Section 16.1</a>), how to configure its settings for the Domain Name System (DNS) using Cloudflare (<a href="ch16.xhtml#sec16_2">Section 16.2</a>), and how to connect a custom domain to a site running at GitHub Pages (<a href="ch16.xhtml#sec16_3">Section 16.3</a>).<sup><a id="fn16_2a" href="ch16.xhtml#fn16_2">2</a></sup> The result will be a fast, professional-grade website running on a domain of your choice. Then, in <a href="ch17.xhtml#ch17">Chapter 17</a>, we’ll show how to use Google Workspace to send and receive email using addresses at your custom domain (so that you can use <a href="http://yourname@example.com">yourname@example.com</a> instead of <a href="http://yourname152@gmail.com">yourname152@gmail.com</a>). As a special bonus, we’ll show you how to monitor the traffic on your site using Google Analytics.</p>
+<p class="footnote"><a id="fn16_2" href="ch16.xhtml#fn16_2a">2</a>. See the free online version of <em>Learn Enough Custom Domains to Be Dangerous</em> (<a href="https://www.learnenough.com/custom-domains">https://www.learnenough.com/custom-domains</a>) for a bonus section covering custom domains for dynamic web applications (such as those created in <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>) and the <em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>)).</p>
+<p class="indent">Because of how quickly things change on the Web, it is entirely possible that some of the information in this guide might be out of date due to services changing interfaces or features. Even with the steps detailed here, in all likelihood you’ll still have <span epub:type="pagebreak" id="page_594"></span>to apply some of your technical sophistication (<a href="ch05.xhtml#box5_1">Box 5.1</a>) in order to get everything to work. That’s just how it goes on the World Wide Web!<sup><a id="fn16_3a" href="ch16.xhtml#fn16_3">3</a></sup></p>
+<p class="footnote"><a id="fn16_3" href="ch16.xhtml#fn16_3a">3</a>. An expanded version of <a href="part03.xhtml#part03">Part III</a> is available for free online as <em>Learn Enough Custom Domains to Be Dangerous</em>.</p>
+<section>
+<h3 class="h3" id="sec16_1">16.1 Custom Domain Registration</h3>
+<p class="noindent">You may or may not know this, but when you open up your browser and type in the address of a site like <a href="http://google.com">google.com</a>, you aren’t <em>actually</em> entering a real address where the Google server can be found. Instead, <a href="http://google.com">google.com</a> can be thought of more as a screen name, or <em>domain name</em>, that is an easier way to get to Google’s web services than if you had to remember the real machine address, which is generally something like 142.251.32.46.<sup><a id="fn16_4a" href="ch16.xhtml#fn16_4">4</a></sup> This latter monstrosity is known as an <em>IP number</em> or <em>IP address</em>, where “IP” stands for Internet Protocol, which is the name of the protocol that computers on the Internet use to communicate with each other. Because they are so much easier to remember, custom domains are almost universally preferred to raw IP numbers.</p>
+<p class="footnote"><a id="fn16_4" href="ch16.xhtml#fn16_4a">4</a>. You can actually type this number directly into your browser’s address bar, like this: <a href="http://142.251.32.46/">http://142.251.32.46/</a>.</p>
+<p class="indent">The first step to using a custom domain yourself is to <em>register</em> one. Domain names have to be registered through an authorized registrar, and there are a bunch of them. You may even have seen some of their bad commercials on TV. The domain registrar we recommend is <a href="http://Hover.com">Hover.com</a>, which has good customer service, reasonable prices, an intuitive interface, and a free domain privacy service.</p>
+<p class="indent">In general, domains aren’t property that you own outright, like real estate. Instead, domains are more like an office you lease from a property owner, but with the right to renew the lease in perpetuity. The rights to the domain can be transferred and sold, but ultimately someone has to regularly pay the registrar for the right to the domain; otherwise, it will be released back to the pool of possible domains, where someone else can buy it.</p>
+<section>
+<h4 class="h4" id="sec16_1_1">16.1.1 What to Register?</h4>
+<p class="noindent">Most registrars allow you to register domains with a variety of <em>top-level domains</em> (TLDs), which are the final part of the domain name (.com, .org, .info, .io, and so on). The cost of the domain depends on the domain’s TLD, and most registrars offer discounts on the yearly cost if you pay for a number of years at once. You’ll also have to provide <span epub:type="pagebreak" id="page_595"></span>a bunch of required information when you register the domain, as the registrars are required by law to know who owns domains, and they have to make this information public. Most registrars offer a privacy service that will keep your personal information off the Internet, though.</p>
+<p class="indent">You’ve probably noticed that most global services and corporations use custom domains ending in the top-level domain .com (“dot-com”), which is generally considered to be the most desirable TLD. This TLD was created for general commercial activity by ICANN (“EYE-can”), the organization responsible for managing Internet names.<sup><a id="fn16_5a" href="ch16.xhtml#fn16_5">5</a></sup></p>
+<p class="footnote"><a id="fn16_5" href="ch16.xhtml#fn16_5a">5</a>. ICANN was originally under the control of the US government (via the Department of Commerce), but since 2016 it has been free from US government oversight.</p>
+<p class="indent">So, which TLD should you pick? Well, a lot of that depends on what you want to do online, who your audience is, and the availability of the domain name that you want. If you are a big enough company or have enough name recognition in other media, you could just pick any TLD that has a domain name available that incorporates your established name. Unless you have a good reason to choose otherwise, a .com domain is probably the way to go, though there are a lot of different possibilities:</p>
+<ul class="bullet">
+<li><p class="bullet">There are <em>generic</em> TLDs, like .com, .info, .net, and .org, which can be used for general purposes.</p></li>
+<li><p class="bullet">There are <em>generic restricted</em> TLDs, like .biz, .name, and .pro, where there are rules on how domains registered to the TLD can be used.</p></li>
+<li><p class="bullet">Each country has its own TLD, such as .us (United States), .uk (United Kingdom),<sup><a id="fn16_6a" href="ch16.xhtml#fn16_6">6</a></sup> .it (Italy), .ly (Libya), .co (Colombia), and .io (Indian Ocean territories). The .io domain has become popular in the tech industry, especially for a quality domain name whose .com equivalent is already in use or (especially) when it is being held hostage by a domain squatter.<sup><a id="fn16_7a" href="ch16.xhtml#fn16_7">7</a></sup></p>
+<p class="footnote"><a id="fn16_6" href="ch16.xhtml#fn16_6a">6</a>. The UK actually has its own sub-TLD, so many UK sites end in something like .co.uk.</p>
+<p class="footnote"><a id="fn16_7" href="ch16.xhtml#fn16_7a">7</a>. Technically, <em>domain squatting</em> refers only to the bad-faith registration of domains, such as those corresponding to known trademarks. In practice, though, the supposedly benign practice of “domaining” (buying up domains for future resale but doing nothing useful with them in the interim) is so annoying that many people use the term “squatter” for those who engage in either practice.</p></li>
+<li><p class="bullet">There are the current <em>sponsored generic</em> TLDs, like .aero, .asia, .cat (not about cats but rather the Catalan linguistic and cultural community), .coop, .edu, .gov, .in, <span epub:type="pagebreak" id="page_596"></span>.jobs, .mil, .mobi, .tel, .travel, and .xxx (which can be used only for purposes within a particular industry that you can probably guess).</p></li>
+<li><p class="bullet">Finally, there is the “new generic TLD (gTLD) program,” which seeks to add an unlimited number of gTLDs (i.e., non-country TLDs). Any person or organization that wishes to have their own TLD can pay a hefty fee and apply to have their own TLD—some examples are things like .xyz, .ninja, .limo, as well as a large assortment of TLDs that use writing systems other than the Latin alphabet. Most of these new TLDs will be for entirely generic use, and some will be sponsored generic TLDs that can be used only for a specific purpose.</p></li>
+</ul>
+<p class="indent">You should know, though, that many people consider these new domains, and any business that uses one, to be less reliable than the old ones, probably because they aren’t as familiar. Some of the country TLDs have become pretty well-accepted, such as .io mentioned above, though they often still cause confusion for less tech-savvy people. The problem is that if you tell a non-tech-savvy person to go to a site like <a href="http://bit.ly">http://bit.ly</a>, you might find that they try to go to <a href="http://bit.ly.com">http://bit.ly.com</a>. The key takeaway here is that you need to know your audience: You don’t want a domain that scares off potential users, you don’t want a TLD with lots of bad sites, and you don’t want a name that confuses people.</p>
+<p class="indent">With those considerations in mind, let’s get back to registering a domain. The first step is to visit the <a href="http://Hover.com">Hover.com</a> homepage. At this point, you’ll have to choose a domain. For this tutorial, we’ll use <a href="http://codedangerously.com">codedangerously.com</a>, but of course you’ll need your own (since we already registered that one!).</p>
+<p class="indent">If you don’t already have an idea for a domain name, there are actually a lot of free tools that are specifically designed to help you come up with one. They generally allow you to enter a bunch of different words or phrases to generate suggested domain names that are available to be registered. A couple of popular sites that we’ve used are <a href="http://instantdomainsearch.com">instantdomainsearch.com</a> and <a href="http://domainr.com">domainr.com</a>. Or you can just use the domain registrar itself, which is what we’ll do here.</p>
+<p class="indent">On Hover, finding out if the domain name is available is as easy as entering the name in the giant input field on the homepage and pressing enter. At this point, Hover will give you a long list of TLDs for which your name of choice is still available (<a href="ch16.xhtml#ch16fig1">Figure 16.1</a>), as well as suggested domains containing word substitutions (farther down the page).</p>
+<figure class="figure" id="ch16fig1">
+<img src="graphics/16fig01.jpg" alt="images" width="665" height="480"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.1:</strong> The different TLD options that are available to register.</p>
+</figcaption>
+</figure>
+<p class="indent">You might have noticed that even when you find a domain name that you like, there are often a lot of very similar variations available on different TLDs, as well as <span epub:type="pagebreak" id="page_597"></span>domains that are close in spelling to your domain. If you have the extra money to spend, you can buy as many misspelled domains as you want and then permanently redirect users to the appropriate domain. (We’ll look at how to do domain forwarding ourselves in <a href="ch16.xhtml#sec16_3_3">Section 16.3.3</a>.)</p>
+<p class="indent">When you’ve selected all the domains that you want to buy (just the .com is probably fine), go ahead and go through all the checkout steps, including providing the necessary contact info, and if you’ve made it through all these steps, congratulations! You are now the proud owner (or at least long-term leaser) of virtual digital property on the Internet (<a href="ch16.xhtml#ch16fig2">Figure 16.2</a>).<sup><a id="fn16_8a" href="ch16.xhtml#fn16_8">8</a></sup></p>
+<figure class="figure" id="ch16fig2">
+<img src="graphics/16fig02.jpg" alt="images" width="451" height="603"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.2:</strong> Your very own fantasy castle floating in the Internet sky!</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn16_8" href="ch16.xhtml#fn16_8a">8</a>. Castle image courtesy of egal/123RF; silhouetted house image courtesy of ArtMari/Shutterstock.</p>
+</section>
+<section>
+<h4 class="h4" id="sec16_1_2"><span epub:type="pagebreak" id="page_598"></span>16.1.2 You’ve Got a Domain, Now What?</h4>
+<p class="noindent">The <em>Domain Name System</em> (DNS) serves to associate domain names with IP addresses, so it is DNS that makes it possible to type a custom domain like <a href="http://google.com">google.com</a> instead of a raw IP address like 142.251.32.46.<sup><a id="fn16_9a" href="ch16.xhtml#fn16_9">9</a></sup> Once you’ve registered a domain, the next step is to set up the <em>DNS records</em> for your domain so that it can be added to the Domain Name System. This involves editing the so-called <em>nameservers</em>, which are the computers that tell DNS exactly which server should be queried to find the domain details (such as which subdomains exist, which URLs should be forwarded, etc.).</p>
+<p class="footnote"><a id="fn16_9" href="ch16.xhtml#fn16_9a">9</a>. See the online version of <em>Learn Enough Custom Domains to Be Dangerous</em> at <a href="https://www.learnenough.com/custom-domains">https://www.learnenough.com/custom-domains</a> for more information on the Domain Name System.</p>
+<p class="indent">Right after you purchase a domain, the nameservers are usually set to the registrar’s servers, and in the case of Hover that would be something like <a href="ch16.xhtml#ch16list1">Listing 16.1</a>.</p>
+<p class="listing" id="ch16list1"><span epub:type="pagebreak" id="page_599"></span><strong>Listing 16.1:</strong> Typical <a href="http://Hover.com">Hover.com</a> nameservers.</p>
+<pre class="pre2"><span class="green-d">ns1.hover.com</span>
+<span class="green-d">ns2.hover.com</span></pre>
+<p class="noindent">Although you would be perfectly fine using the default DNS controls to complete this tutorial, we are going to set up a third-party service that provides a bunch of additional useful features. Setting up this service will involve changing the nameservers on the registrar to point to the new nameservers so that they can be the first point of contact for domain names in DNS lookups. Making these changes, and configuring the result, is the subject of <a href="ch16.xhtml#sec16_2">Section 16.2</a>.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec16_2">16.2 Cloudflare Setup</h3>
+<p class="noindent">Although the default nameservers at most domain registrars are perfectly fine for many purposes, we prefer to use a third-party service called <em>Cloudflare</em> that includes a bunch of useful features. Cloudflare sits between the Internet and a website to provide the following benefits:</p>
+<ul class="bullet">
+<li><p class="bullet">Fast DNS management using a nice interface</p></li>
+<li><p class="bullet">The ability to set up a secure connection to the site using Transport Layer Security (TLS), the successor to Secure Sockets Layer (SSL)</p></li>
+<li><p class="bullet"><em>Edge caching</em> to make the site’s content easy to access across the world</p></li>
+<li><p class="bullet">Protection from anyone who might try to take the site offline using a <em>Distributed Denial of Service</em> (DDoS) attack</p></li>
+</ul>
+<p class="noindent">...and the basic service is <em>free to use</em> (with inexpensive pay plans as your website’s needs grow).</p>
+<p class="indent">It would probably be useful to quickly explain what these features are in case you aren’t familiar with them.</p>
+<section>
+<h4 class="h4" id="sec16_2_1">16.2.1 Cloudflare Features</h4>
+<p class="noindent">As noted in <a href="ch16.xhtml#sec16_1_2">Section 16.1.2</a>, most registrars allow you to do DNS management via their default nameservers, but the interfaces can be less than optimal (to put it generously). Additionally, when you make DNS record changes on a registrar (like pointing to a new server IP address), the changes often aren’t immediate; instead, they have to <span epub:type="pagebreak" id="page_600"></span>propagate throughout the DNS system—a process which can take 24–72 hours to complete as your update bounces around the DNS network (<a href="ch16.xhtml#ch16fig3">Figure 16.3</a>).</p>
+<figure class="figure" id="ch16fig3">
+<img src="graphics/16fig03.jpg" alt="images" width="566" height="495"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.3:</strong> Potentially slow DNS propagation.</p>
+</figcaption>
+</figure>
+<p class="indent">Because Cloudflare sits between your servers and the world while passing web requests through, any server changes stay internal to the Cloudflare service. To the outside world, all requests still go to the Cloudflare IP address first. This means that the propagation of DNS changes (like subdomains and redirects) is nearly instantaneous—a feature that can be critical when administering a working site.</p>
+<p class="indent">Transport Layer Security (TLS) is a method for encrypting web traffic from a user’s computer to the server (<a href="ch16.xhtml#ch16fig4">Figure 16.4</a>). As mentioned before, Transport Layer Security has replaced an older technology called Secure Sockets Layer (SSL), but <span epub:type="pagebreak" id="page_601"></span>because nothing in the world of the Web can be simple, people often still use the older name or abbreviation even when they are actually talking about TLS. We’ve chosen to abbreviate that as SSL/TLS for this tutorial to familiarize you with both, and if you see SSL without TLS in the wild you are duly authorized to have a brief flash of annoyance on our behalf at how tech silliness seems to continually cause confusion and complexity. You’ve actually been using SSL/TLS for years, possibly without even knowing it: Every time you go to a site with a little lock next to the site’s domain name, you’re using SSL/TLS (<a href="ch16.xhtml#ch16fig5">Figure 16.5</a>).<sup><a id="fn16_10a" href="ch16.xhtml#fn16_10">10</a></sup></p>
+<p class="footnote"><a id="fn16_10" href="ch16.xhtml#fn16_10a">10</a>. The Internet is a dangerous place, and you can never be certain that you really are safe, but SSL/TLS increases the chances considerably.</p>
+<figure class="figure" id="ch16fig4">
+<img src="graphics/16fig04.jpg" alt="images" width="643" height="374"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.4:</strong> Encrypting data using SSL/TLS.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch16fig5">
+<img src="graphics/16fig05.jpg" alt="images" width="601" height="136"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.5:</strong> An SSL/TLS lock icon.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_602"></span>SSL/TLS works by turning the packets of information sent between your browser and a server from plain old text into a jumble of letters and other characters. This makes it virtually impossible for someone to intercept the traffic and see what is being sent back and forth. In many cases, there is a lot of ceremony and pain associated with setting up SSL/TLS for a site, but when you use Cloudflare everything is already set up for you for free. Because non-SSL/TLS sites are so insecure, you shouldn’t run a site these days without SSL/TLS—not even a static site like a blog.</p>
+<p class="indent">Next up on the Cloudflare feature list is <em>edge caching</em> (<a href="ch16.xhtml#ch16fig6">Figure 16.6</a>). Edge caching involves automatically saving your site’s content on servers around the world, allowing users to access the content from the server nearest to them (which speeds load times).</p>
+<figure class="figure" id="ch16fig6">
+<img src="graphics/16fig06.jpg" alt="images" width="667" height="571"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.6:</strong> Optimizing load times with edge caching.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_603"></span>Lastly, Cloudflare protects the site from DDoS attacks. You might have heard of these on the news in reference to some group being accused of “hacking” another organization. DDoS attacks are online disruptions that try to make entire sites inaccessible by flooding their servers with fake requests—imagine millions of fake users that all ask a server for a site at the same time.</p>
+<p class="indent">There are a limited number of requests that a single server can handle at once, so if there are enough fake users making requests, real users won’t be able to get to the site. Cloudflare has the ability to notice when this type of attack is happening and can filter out the fake users to keep your site online and available (<a href="ch16.xhtml#ch16fig7">Figure 16.7</a>). As with the other features, you don’t have to configure anything to get this benefit.</p>
+<figure class="figure" id="ch16fig7">
+<img src="graphics/16fig07.jpg" alt="images" width="653" height="586"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.7:</strong> Protecting against DDoS attacks.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_604"></span>These days, our first step after registering a domain is immediately setting up Cloudflare. The benefits are great, and unless you have a fairly complicated application, the service is free.<sup><a id="fn16_11a" href="ch16.xhtml#fn16_11">11</a></sup> What’s not to love? Let’s get started.<sup><a id="fn16_12a" href="ch16.xhtml#fn16_12">12</a></sup></p>
+<p class="footnote"><a id="fn16_11" href="ch16.xhtml#fn16_11a">11</a>. We use the professional, paid tier for more complicated sites like <a href="http://learnenough.com">learnenough.com</a> and <a href="http://railstutorial.org">railstutorial.org</a>, which is but one of many indications that Cloudflare’s freemium business model is working well.</p>
+<p class="footnote"><a id="fn16_12" href="ch16.xhtml#fn16_12a">12</a>. For more details on all of the steps in this section, including a large number of additional screenshots, see the online version at <a href="https://www.learnenough.com/custom-domains">https://www.learnenough.com/custom-domains</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec16_2_2">16.2.2 Cloudflare Signup</h4>
+<p class="noindent">The first step in using Cloudflare (just like pretty much any service on the Internet) is to create an account. One added benefit, though, is that the signup process also walks you through adding a domain to Cloudflare. So, head on over to <a href="http://cloudflare.com">cloudflare.com</a> and click the Sign Up button at the top right of the page in the site header to get to the registration page.</p>
+</section>
+<section>
+<h4 class="h4" id="sec16_2_3">16.2.3 Connecting Registrar Nameservers</h4>
+<p class="noindent">After you’ve created your account, Cloudflare automatically kicks you into the first step to add a domain to their service. Enter your newly purchased domain in the box and press the Add Site button, and then on the next screen select the free plan for this tutorial. It should take less than a minute for Cloudflare to pull in the domain records, and when it’s done the next page will show you the result of the scan from the last step: a report with all of the DNS records associated with your domain.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_605"></span>The initial DNS settings are displayed on a page that should look something like <a href="ch16.xhtml#ch16fig8">Figure 16.8</a>, which includes several kinds of records. The <em>A records</em> are initially set to flow through Cloudflare (indicated by the orange cloud icons in <a href="ch16.xhtml#ch16fig8">Figure 16.8</a>). The <em>CNAME record</em> is initially set up to skip the Cloudflare service (indicated by the gray cloud icon in <a href="ch16.xhtml#ch16fig8">Figure 16.8</a>). Don’t worry about the details—we’ll discuss about these record types in more detail in <a href="ch16.xhtml#sec16_3_1">Section 16.3.1</a>. Since we just purchased this domain, the current records aren’t very complicated, and there’s nothing to configure on step.</p>
+<figure class="figure" id="ch16fig8">
+<img src="graphics/16fig08.jpg" alt="images" width="672" height="496"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.8:</strong> Our domain’s DNS settings at Cloudflare.</p>
+</figcaption>
+</figure>
+<p class="indent">After confirming the initial DNS details, you’ll be taken to the last step of the signup and domain-addition process: nameserver configuration. On this page, you’ll see a listing of the current nameservers for your domain (the ones from Hover mentioned in <a href="ch16.xhtml#sec16_1_2">Section 16.1.2</a>), and the new Cloudflare servers that you need to set for your domain. For the account we created, the nameservers appear as follows:</p>
+<pre class="pre1"><span class="green-d">vern.ns.cloudflare.com</span>
+<span class="green-d">zara.ns.cloudflare.com</span></pre>
+<p class="noindent">Cloudflare has many different nameservers, though, so your results may differ.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_606"></span>At this point, you’ll have to switch back to Hover (either in a different window or in a browser tab) and then click the Edit link in the header of the nameservers box. Switch back to the Cloudflare tab, copy the Cloudflare nameservers, and then paste the new addresses into the two fields, overwriting the old ones. The page will reload, and you should see your new nameservers on the box on the overview page.</p>
+<p class="indent">Now, switch back to the Cloudflare window or tab and press the “Done, check nameservers” button, and then on the next page that pops up go ahead and click the button to do the quick start guide. Make sure that the Automatic HTTPS Rewrites and Always Use HTTPS options are enabled (you can ignore the other options). Click Finish to save the changes and you’ll be taken to the overview page for the domain.</p>
+<p class="indent">It shouldn’t take too long for your domain’s nameserver change to resolve; you can hit the button to recheck the nameservers page every so often if you’d like to force Cloudflare to check again. When the updates are public on your registrar, your domain will be active on Cloudflare… congratulations! You’re done.</p>
+<p class="indent">But, what on Earth did we just do?</p>
+<p class="indent">Well, now all page or DNS requests that are directed at your domain will first go through the Cloudflare service, which means that we can change the way those requests are handled using Cloudflare’s user interface. For example, we’ll be able to set up subdomains (<a href="ch16.xhtml#sec16_3_1">Section 16.3.1</a>), URL redirects (<a href="ch16.xhtml#sec16_3_3">Section 16.3.3</a>), and automatic forwarding to the secure version of our site. Best of all, since Cloudflare sits in the middle now, any changes you make will immediately take effect instead of potentially taking hours to propagate around the DNS network.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec16_3">16.3 Custom Domains at GitHub Pages</h3>
+<p class="noindent">In this section, we’ll explain how to connect a custom domain to GitHub Pages. This is a great (free!) option for hosting static websites on custom domains.<sup><a id="fn16_13a" href="ch16.xhtml#fn16_13">13</a></sup> (Indeed, the Learn Enough blog (<a href="https://news.learnenough.com/">https://news.learnenough.com/</a>) runs on a custom (sub)domain <span epub:type="pagebreak" id="page_607"></span>at GitHub Pages.) It’s also a good exercise even if your primary interest is hosting dynamic websites since many of the steps are the same.<sup><a id="fn16_14a" href="ch16.xhtml#fn16_14">14</a></sup></p>
+<p class="footnote"><a id="fn16_13" href="ch16.xhtml#fn16_13a">13</a>. Here <em>static</em> refers to static server-side assets like HTML, CSS, JavaScript, etc. The site’s behavior itself still might be dynamic, typically due to JavaScript executing on the user’s browser. An example of a statically generated site yielding dynamic client-side behavior appears in the image gallery developed in the final chapter (<a href="https://www.learnenough.com/javascript-tutorial/sample_app_image_gallery">https://www.learnenough.com/javascript-tutorial/sample_app_image_gallery</a>) of <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>), which uses the gallery layout developed in <a href="ch11.xhtml#ch11">Chapter 11</a>.</p>
+<p class="footnote"><a id="fn16_14" href="ch16.xhtml#fn16_14a">14</a>. See <a href="https://www.learnenough.com/custom-domains-tutorial/dns_management#sec-heroku-config">https://www.learnenough.com/custom-domains-tutorial/dns_management#sec-heroku-config</a> for details on how to set up custom domains with Heroku.</p>
+<p class="indent">For the purposes of this section, we’ll assume you’ve already set up an example website at GitHub Pages as described in <a href="part01.xhtml#part01">Part I</a> and <a href="part02.xhtml#part02">Part II</a>. If you don’t have such a site, you should set one up at this time.</p>
+<section>
+<h4 class="h4" id="sec16_3_1">16.3.1 Configuring Cloudflare for GitHub Pages</h4>
+<p class="noindent">Our first step is to tell Cloudflare that our site is located at GitHub Pages. To get started, click on the DNS menu item to go to the DNS settings for your domain. The result should be a list of DNS records that looks something like <a href="ch16.xhtml#ch16fig9">Figure 16.9</a>.</p>
+<figure class="figure" id="ch16fig9">
+<img src="graphics/16fig09.jpg" alt="images" width="659" height="434"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.9:</strong> The initial DNS settings.</p>
+</figcaption>
+</figure>
+<p class="indent">So, what are these different types of records? We’ll go in order and make the changes needed to have our site served from GitHub Pages.</p>
+<section>
+<h5 class="h5" id="sec16_3_1_1"><span epub:type="pagebreak" id="page_608"></span>A Records</h5>
+<p class="noindent">The <em>A records</em> that you see in <a href="ch16.xhtml#ch16fig9">Figure 16.9</a> are also known as <em>address records</em> (mentioned briefly in <a href="ch16.xhtml#sec16_2_3">Section 16.2.3</a>); the A record corresponding to the domain name itself is known as an <em>apex record</em>. These settings are usually used to define the way that the <em>root domain</em> (e.g., <span class="green-d"><code><strong><a href="http://codedangerously.com">codedangerously.com</a></strong></code></span>, without the <span class="green-d"><code><strong>www.</strong></code></span>) is handled, and they should always point to a valid IP address.</p>
+<p class="indent">In the default settings transferred over from Hover, the <span class="green-d"><code><strong>www</strong></code></span> subdomain is set up with an A record that also points to a server’s IP address. There are a lot of technical reasons why it’s a good idea to use a <span class="green-d"><code><strong>www</strong></code></span> subdomain, but the simplest reason is that in the future it gives you much more flexibility in how you deal with the traffic coming to your site. For our example site, we are going to get rid of this A record for the subdomain, and instead add a CNAME record for the <span class="green-d"><code><strong>www</strong></code></span> subdomain.</p>
+<p class="indent">Let’s start the cleanup. Go ahead and click the Edit link on the right-hand side of the screen for the <span class="green-d"><code><strong>www</strong></code></span> DNS record, and delete the record. (If you are using a registrar that didn’t automatically add an A record for <span class="green-d"><code><strong>www</strong></code></span>, you don’t need to do anything at this point.)</p>
+<p class="indent">Depending on which registrar you used, you may or may not also have an A record with an asterisk <span class="green-d"><code><strong>*</strong></code></span> in the name field (the first field in <a href="ch16.xhtml#ch16fig9">Figure 16.9</a>). That’s a wildcard record that handles requests to any random subdomain of your URL, which allows requests like <a href="http://blarglebargle.codedangerously.com">blarglebargle.codedangerously.com</a> to pass through to the server. But notice that there is no little orange cloud icon by the <span class="green-d"><code><strong>*</strong></code></span> record in <a href="ch16.xhtml#ch16fig9">Figure 16.9</a>—that means the traffic to those random addresses is not being handled by Cloudflare, and will instead flow straight to the server, which we definitely don’t want. To prevent this unwanted behavior, remove the wildcard A record, as well as the CNAME record pointing to <span class="green-d"><code><strong>mail.hover.com.cust.hostedmail</strong></code></span> (we’ll set up a different mail system in <a href="ch17.xhtml#ch17">Chapter 17</a> that won’t need a CNAME record).</p>
+<p class="indent">Now, to have our site be served from GitHub Pages, we need to point the A record at Cloudflare to the IP addresses of GitHub’s servers instead of to the current address (yes, you could have just edited the A records, but we wanted to step you through removing and adding things from scratch). You can find the addresses in the GitHub Pages documentation (<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site">https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site</a>); at the time of this writing, the IP numbers for the GitHub Pages servers are as follows:</p>
+<pre class="pre1"><span class="green-d">185.199.108.153</span>
+<span class="green-d">185.199.109.153</span>
+<span class="green-d">185.199.110.153</span>
+<span class="green-d">185.199.111.153</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_609"></span>Where there was a single A record before, we are going to add a second backup server address (you don’t want your site to be unavailable because of a server issue that you can’t control, do you?).</p>
+<p class="indent">We’ll start by editing the A record at Cloudflare corresponding to the main domain name. Click on the Edit link and paste in one of the GitHub IPs (like <span class="green-d"><code><strong>185.199.108.153</strong></code></span>) and then save the changes. Next, we’ll add a second record as a backup (<a href="ch16.xhtml#ch16fig10">Figure 16.10</a>). Above the list of records, you’ll see a button that is labeled “Add record”; clicking that causes Cloudflare to reveal a row of inputs. Make sure that the dropdown menu is set to <span class="green-d"><code><strong>A</strong></code></span>, and then add <a href="http://yourdomain.com">yourdomain.com</a> in the Name field and the second GitHub IP number (e.g., <span class="green-d"><code><strong>185.199.109.153</strong></code></span>) in the address field. Then click Save to finish.</p>
+<figure class="figure" id="ch16fig10">
+<img src="graphics/16fig10.jpg" alt="images" width="672" height="496"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.10:</strong> Adding the second alternate GitHub Pages server IP.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_610"></span>If you see two A records with GitHub IP addresses in the list, good job! You did it!</p>
+</section>
+<section>
+<h5 class="h5" id="sec16_3_1_2">CNAME Records</h5>
+<p class="noindent">Let’s now take a look at <em>CNAME records</em>, which are <em>canonical name</em> records. They are a type of DNS record that allows you to point traffic to any domain you want (such as a URL like <span class="green-d"><code><strong><a href="http://codedangerously.com">codedangerously.com</a></strong></code></span>). This is in contrast to A records, which point only to IP addresses (like <span class="green-d"><code><strong>185.199.108.153</strong></code></span>).</p>
+<p class="indent">CNAMEs are often used to create aliases on sites so that visitors who go to a subdomain like <a href="http://help.codedangerously.com">help.codedangerously.com</a> are instead permanently redirected to, say, <a href="http://docs.codedangerously.com">docs.codedangerously.com</a>. In our case, we want traffic that comes to our site using a www subdomain—i.e., <a href="http://www.codedangerously.com">www.codedangerously.com</a>—to see the site’s homepage, which we can do by adding a CNAME record called <span class="green-d"><code><strong>www</strong></code></span> that points to the root domain.</p>
+<p class="indent">To start, click “Add record” as in <a href="ch16.xhtml#ch16fig10">Figure 16.10</a>, and this time select CNAME instead of A from the list. Then add <span class="green-d"><code><strong>www</strong></code></span> in the Name field and add your site domain in the Target field. Hit the Save button and you’re done!</p>
+<p class="indent">That’s all the DNS setup needed to get our new domain to work with GitHub Pages. There is one last DNS record at the bottom, the <em>MX record</em>. That is a <em>mail exchanger</em> record that directs email traffic to your email server (which we will deal with in <a href="ch17.xhtml#ch17">Chapter 17</a>).</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="sec16_3_2">16.3.2 Configuring GitHub Pages</h4>
+<p class="noindent">Now that we’ve configured Cloudflare for GitHub Pages, all we need to do is tell Pages about our custom domain. To get started, point your browser at your repository’s GitHub page, click on the Settings tab, and then click the Pages option in the menu on the left (<a href="ch16.xhtml#ch16fig11">Figure 16.11</a>).</p>
+<figure class="figure" id="ch16fig11">
+<img src="graphics/16fig11.jpg" alt="images" width="674" height="540"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.11:</strong> Settings for GitHub Pages.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_611"></span>Click on the dropdown menu that is likely showing the text None, and select the name of your project’s default branch. When we initially wrote this tutorial, the standard default branch name was <span class="green-d"><code><strong>master</strong></code></span>, but the current GitHub default is now <span class="green-d"><code><strong>main</strong></code></span> (although you can easily change the default branch name to <span class="green-d"><code><strong>master</strong></code></span> or any other name of your choice).<sup><a id="fn16_15a" href="ch16.xhtml#fn16_15">15</a></sup> After selecting the branch, add your site’s domain name into the Custom Domain input field, and that’s it!</p>
+<p class="footnote"><a id="fn16_15" href="ch16.xhtml#fn16_15a">15</a>. See the Learn Enough blog post “Default Git Branch Name with Learn Enough and the Rails Tutorial” (<a href="https://news.learnenough.com/default-git-branch-name-with-learn-enough-and-the-rails-tutorial">https://news.learnenough.com/default-git-branch-name-with-learn-enough-and-the-rails-tutorial</a>) for more information.</p>
+<p class="indent">If you open up a new tab or window in your browser and go to your custom domain, you should now see your GitHub Pages site (<a href="ch16.xhtml#ch16fig12">Figure 16.12</a>).</p>
+<figure class="figure" id="ch16fig12">
+<img src="graphics/16fig12.jpg" alt="images" width="668" height="464"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.12:</strong> Can you believe all the steps it took to get to this place?</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_612"></span>At this point, the only major task left is to arrange for our site to use only <em>canonical URLs</em> to ensure a consistent and secure experience for all users. (The word “canonical” has its origins in religious canon, and is now used in a variety of technical contexts (<a href="ch16.xhtml#ch16fig13">Figure 16.13</a>).)<sup><a id="fn16_16a" href="ch16.xhtml#fn16_16">16</a></sup> In our case, standardizing our site’s URLs to use a canonical form involves two steps:</p>
+<figure class="figure" id="ch16fig13">
+<img src="graphics/16fig13.jpg" alt="images" width="676" height="426"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.13:</strong> This is the wrong type of cannon to be thinking of.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn16_16" href="ch16.xhtml#fn16_16a">16</a>. Image courtesy of Veniamin Kraskov/Shutterstock.</p>
+<ol class="number">
+<li><p class="number">Ensure that connections to the site are always secure.</p></li>
+<li><p class="number">Ensure that all pages use the standard <span class="green-d"><code><strong>www</strong></code></span> form of the site rather than the root domain.</p></li>
+</ol>
+<p class="noindent"><span epub:type="pagebreak" id="page_613"></span>The first step is already complete since secure connections are enforced automatically by the Always Use HTTPS setting enabled in <a href="ch16.xhtml#sec16_2_3">Section 16.2.3</a>. Completing the second step is the goal of <a href="ch16.xhtml#sec16_3_3">Section 16.3.3</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec16_3_3">16.3.3 Cloudflare Page Rules</h4>
+<p class="noindent">At this point, our website is properly configured to serve the homepage from the address <a href="http://www.codedangerously.com">www.codedangerously.com</a>. In order to avoid serving content from two different domains (which can complicate things like session cookies), we’d like to arrange for the www version to be the <em>only</em> address for the homepage for our website. In particular, we want any traffic pointed at the root domain <a href="http://codedangerously.com">codedangerously.com</a> to be automatically redirected to <a href="http://www.codedangerously.com">www.codedangerously.com</a>. We can accomplish these kinds of redirects using Cloudflare <em>page rules</em>.</p>
+<p class="indent">Page rules are a powerful and flexible tool, and we’ll barely be scratching the surface here, but performing a redirect is one of their most common and important applications. To get started, click on Rules &gt; Page Rules on the main Cloudflare menu, and then click the Create Page Rule button to open the Page Rule interface (<a href="ch16.xhtml#ch16fig14">Figure 16.14</a>).</p>
+<figure class="figure" id="ch16fig14">
+<img src="graphics/16fig14.jpg" alt="images" width="558" height="393"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.14:</strong> Creating a new page rule.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_614"></span>One thing we could do is to forward <em>everything</em> at the root domain to the <span class="green-d"><code><strong>www</strong></code></span> equivalent:</p>
+<p class="codelink"><a href="ch16_images.xhtml#p614pro01a" id="p614pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d">codedangerously.com -&gt; www.codedangerously.com</span></pre>
+<p class="noindent">There’s one problem, though: What if someone hits a subpage of our site? Instead of doing this:</p>
+<p class="codelink"><a href="ch16_images.xhtml#p614pro02a" id="p614pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d">codedangerously.com/blarg -&gt; www.codedangerously.com</span></pre>
+<p class="noindent">we’d rather do this:</p>
+<p class="codelink"><a href="ch16_images.xhtml#p614pro03a" id="p614pro03">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d">codedangerously.com/blarg -&gt; www.codedangerously.com/blarg</span></pre>
+<p class="noindent">This way the root and <span class="green-d"><code><strong>www</strong></code></span> domains will truly be equivalent, and <em>any</em> attempt to access the site via the root URL will end up being forwarded to the corresponding <span class="green-d"><code><strong>www</strong></code></span> version.</p>
+<p class="indent">We can arrange for the desired behavior using a <em>wildcard</em> (a concept mentioned briefly in <a href="ch16.xhtml#sec16_3_1">Section 16.3.1</a>), which will dynamically match whatever the user enters <span epub:type="pagebreak" id="page_615"></span>after the domain name and keep it intact after the redirect. So if they enter <span class="green-d"><code><strong><a href="http://codedangerously.com/blarg">codedangerously.com/blarg</a></strong></code></span>, the page rule will make sure they are forwarded automatically to <span class="green-d"><code><strong><a href="http://www.codedangerously.com/blarg">www.codedangerously.com/blarg</a></strong></code></span>. We don’t want to lose that <span class="green-d"><code><strong>/blarg</strong></code></span> at the end of the address!</p>
+<p class="indent">To arrange for this sort of redirect, go to the form field under Create a Page Rule and add your domain name, a forward slash, and then an asterisk to represent the wildcard. For us, this looks like this:</p>
+<pre class="pre1"><span class="green-d">codedangerously.com/*</span></pre>
+<p class="noindent">but of course you should use your own custom domain instead. Next, in the dropdown menu choose Forwarding URL. You’ll now see more options, including two kinds of <em>redirects</em>: 301 and 302 (<a href="ch16.xhtml#box16_1">Box 16.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box16_1">
+<p class="sb-title1"><strong>Box 16.1: 301 vs. 302 Redirects</strong></p>
+<p class="sb-noindent">There are two main types of redirects used on the Web: <em>301 - permanent</em> and <em>302 - temporary</em>. You can probably guess the intended purpose of these redirects from their names, but what you might not realize is that your choice has an effect on search engine results.</p>
+<p class="sb-indent">If you choose a 302 redirect, then search engines like Google will assume that at some point the redirect will be removed and the page in question will be a destination that users can reach. That means that the search engines don’t combine the traffic—both URLs exist as separate objects. That isn’t good for analytics or search engine optimization (SEO) if you really intended for the redirect to be permanent.</p>
+<p class="sb-indent">If you set the redirect to 301, then search engines consider the URLs to be exactly the same. So even if a user came to your site through a redirected URL, your main URL would still get credit for purposes of traffic estimates and SEO.</p>
+<p class="sb-indent">In practice, the vast majority of page rule redirects will be 301s. Indeed, such permanent redirects are so common that “301” is often used as a verb, as in “Please 301 your old links instead of breaking them.”</p>
+</aside>
+<p class="indent">For canonical URLs, we want the redirects to be permanent, so set Status Code to 301 - Permanent Redirect, and in the Destination URL field add in the full URL for your site (including the protocol string <span class="green-d"><code><strong>https://</strong></code></span>) followed by <span class="green-d"><code><strong>/$1</strong></code></span>:</p>
+<pre class="pre1"><span class="green-d"><code>https://www.example.com/$</code></span><span class="grey"><code>1</code></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_616"></span>Here <span class="green-d"><code><strong>$1</strong></code></span> represents the text matched by the first wildcard. In other words,</p>
+<pre class="pre1"><span class="green-d"><code>example.com/*</code></span></pre>
+<p class="noindent">matches</p>
+<pre class="pre1"><span class="green-d"><code>example.com/blarg</code></span></pre>
+<p class="noindent">and makes the string <span class="green-d"><code><strong>blarg</strong></code></span> available as <span class="green-d"><code><strong>$1</strong></code></span>. As a result, the code</p>
+<p class="codelink"><a href="ch16_images.xhtml#p616pro01a" id="p616pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d"><code>https://www.example.com/$</code></span><span class="grey"><code>1</code></span></pre>
+<p class="noindent">produces the canonical URL</p>
+<p class="codelink"><a href="ch16_images.xhtml#p616pro02a" id="p616pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d"><code>https://www.example.com/blarg</code></span></pre>
+<p class="indent">In the present case, there is only one wildcard, but it’s possible to match on multiple wildcards as well (<a href="ch16.xhtml#box16_2">Box 16.2</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box16_2">
+<p class="sb-title1"><strong>Box 16.2: Matching URLs</strong></p>
+<p class="sb-noindent">As you might be able to guess, page rule matches are numbered sequentially, so if we had two wildcards in a rule they would be available as <code>$1</code> and <code>$2</code>. For example, <code>*.codedangerously.com/*</code> is a pattern to match any subdomain; in this case, <code>foo.codedangerously.com/bar</code> would put <code>foo</code> in <code>$1</code> and <code>bar</code> in <code>$2</code>. (Note that the free Cloudflare tier supports subdomain wildcards only for CNAME records that are defined explicitly. Redirecting <em>all</em> subdomains requires upgrading to the Business plan.)</p>
+<p class="sb-indent">The same permanent forwarding can be used to direct users who requested a completely different domain over to your main site. So if we purchased <code>dangerouscoding.com</code>, we could forward any <code>dangerouscoding.com</code> URL to <code><a href="http://codedangerously.com">codedangerously.com</a></code> using the above wildcard method to preserve the specific page they requested. The matching rule in this case would be</p>
+<pre class="pre1">*dangerouscoding.com/*</pre>
+<p class="sb-noindent"><span epub:type="pagebreak" id="page_617"></span>where the leading wildcard matches all subdomains as well as the root domain (i.e., both <code><a href="http://subdomain.dangerouscoding.com">subdomain.dangerouscoding.com</a></code> and <code><a href="http://dangerouscoding.com">dangerouscoding.com</a></code>). Assuming we want to ignore the subdomain, the 301 redirect would then be</p>
+<p class="codelink"><a href="ch16_images.xhtml#p617pro01a" id="p617pro01">Click here to view code image</a></p>
+<pre class="pre1">https://www.codedangerously.com/$2</pre>
+<p class="sb-noindent">where we use <code>$2</code> because the subpage is matched by the second wildcard.</p>
+</aside>
+<p class="indent">In our case, the forwarding URL is:</p>
+<p class="codelink"><a href="ch16_images.xhtml#p617pro02a" id="p617pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d"><code>https://www.codedangerously.com/$</code></span><span class="grey"><code>1</code></span></pre>
+<p class="noindent">Click the Save and Deploy button to save your new rule. To see if the redirect worked, you can try visiting the root domain in your browser. For example, if we enter code-dangerously.com into a browser we get redirected to <a href="http://www.codedangerously.com">www.codedangerously.com</a>, as shown in <a href="ch16.xhtml#ch16fig15">Figure 16.15</a>.</p>
+<figure class="figure" id="ch16fig15">
+<img src="graphics/16fig15.jpg" alt="images" width="676" height="30"/>
+<figcaption>
+<p class="title-f"><strong>Figure 16.15:</strong> It works! It really works!</p>
+</figcaption>
+</figure>
+<p class="indent">Another convenient way of checking URL forwarding is to use the <span class="green-d"><code><strong>curl</strong></code></span> command at the command line (as covered (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files">https://www.learnenough.com/command-line-tutorial/inspecting_files</a>) in <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>)). In particular, we can use the <span class="green-d"><code><strong>--head</strong></code></span> option to return just the HTTP header (rather than the whole page):</p>
+<p class="codelink"><a href="ch16_images.xhtml#p617pro03a" id="p617pro03">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg2"><span class="grey2">1</span></span> <span class="bg1"><span class="blue-v"><strong>$</strong></span> curl --head codedangerously.com</span>
+<span class="bg2"><span class="grey2">2</span></span> <span class="bg1"><span class="pd_green2">HTTP/1.1 301 Moved Permanently</span></span>
+<span class="bg2"><span class="grey2">3</span></span> <span class="pd_green1">Date: Thu, 13 Feb 2020 16:47:00 GMT</span>
+<span class="bg2"><span class="grey2">4</span></span> <span class="pd_green1">Connection: keep-alive</span>
+<span class="bg2"><span class="grey2">5</span></span> <span class="pd_green1">Cache-Control: max-age=3600</span>
+<span class="bg2"><span class="grey2">6</span></span> <span class="pd_green1">Expires: Thu, 13 Feb 2020 17:47:00 GMT</span>
+<span class="bg2"><span class="grey2">7</span></span> <span class="bg1"><span class="pd_green2">Location: https://www.codedangerously.com/</span></span>
+<span class="bg2"><span class="grey2">8</span></span> <span class="pd_green1">Server: cloudflare</span>
+<span class="bg2"><span class="grey2">9</span></span> <span class="pd_green1">CF-RAY: 5648481ded567896-LAX</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_618"></span>We see in line 2 that the HTTP status code is <span class="green-d"><code><strong>301</strong></code></span> as required, with the forwarding URL (line 7) including the subdomain <span class="green-d"><code><strong>www</strong></code></span> and the secure HTTP protocol indicator <span class="green-d"><code><strong>https://</strong></code></span> (where the “s” stands for “secure”).</p>
+</section>
+<section>
+<h4 class="h4" id="sec16_3_4">16.3.4 Profit!!</h4>
+<p class="noindent">With all the work done in this chapter, you now have a professional-grade website on a custom domain that is protected from DDoS attacks, is edge-cached, and is blazingly fast. And, amazingly, it’s all for free! The only big thing left is being able to send and receive email using your domain. This is the subject of <a href="ch17.xhtml#ch17">Chapter 17</a>.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

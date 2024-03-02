@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch05"><span epub:type="pagebreak" id="page_111"></span>Chapter 5</h2>
+<h2 class="h2a">Functions and Blocks</h2>
+<p class="noindent">So far in this tutorial, we’ve seen several examples of Ruby functions, blocks, and methods. In this chapter, we’ll learn how to define our own functions, we’ll deepen our understanding of blocks, and we’ll learn how to <em>chain</em> methods. As we’ll see, the three are closely related, and in fact all of them are variations on the same basic functional theme—one of the most important ideas in Ruby, and indeed in all of computing (<a href="ch05.xhtml#ch05fig01">Figure 5.1</a>).</p>
+<figure class="figure" id="ch05fig01">
+<img src="graphics/f0111-01.jpg" alt="Images" width="877" height="173"/>
+<figcaption>
+<p class="title-f">Figure 5.1: Time to level up.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="sec5_1">5.1 Function Definitions</h3>
+<p class="noindent">As we saw in <a href="ch01.xhtml#sec1_2">Section 1.2</a>, function calls in Ruby consist of a <em>name</em> and zero or more arguments:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_112"></span><a href="ch05_images.xhtml#f0112-01" id="f0112-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span><span class="green1"><strong>puts</strong></span> <span class="red-s"><strong>"hello, world!"</strong></span>
+<span class="green"><strong>hello, world!</strong></span></pre>
+</div>
+<p class="noindent">Although it’s conventional with <code><span class="green1"><strong>puts</strong></span></code> to omit parentheses, as with all Ruby functions it works either way:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0112-02" id="f0112-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span><strong>(</strong><span class="red-s"><strong>"hello, world!"</strong></span><strong>)</strong>
+<span class="green"><strong>hello, world!</strong></span></pre>
+</div>
+<p class="noindent">As discussed in <a href="ch02.xhtml#sec2_5">Section 2.5</a>, functions attached to objects (such as <code><span class="green"><strong>empty?</strong></span></code> in <code><span class="green"><strong>"badger".empty?</strong></span></code>) are also called <em>methods</em>. We’ll learn how to define methods of our own in <a href="ch07.xhtml#ch07">Chapter 7</a>.</p>
+<p class="indent">One of the most important tasks in programming involves defining our own functions, which in Ruby can be done using the <code><span class="green"><strong>def</strong></span></code> keyword. Let’s take a look at a simple example in the REPL. We’ll define a function called <code><span class="green"><strong>day_of_-the_week</strong></span></code> that takes a single <code><span class="green"><strong>Time</strong></span></code> argument (<a href="ch04.xhtml#sec4_2">Section 4.2</a>) and returns the day of the week represented by the time.</p>
+<p class="indent">Recall from <a href="ch04.xhtml#sec4_2">Section 4.2</a> that a <code><span class="green"><strong>Time</strong></span></code> object has a method called <code><span class="green"><strong>wday</strong></span></code> representing the (zero-offset) index of the day of the week:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0112-04" id="f0112-04a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong>
+<span class="green"><strong>=&gt; 4</strong></span></pre>
+</div>
+<p class="noindent">In that same section, we mentioned briefly that the closely related <code><span class="green"><strong>Date</strong></span></code> library defines a constant for the days of the week:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0112-03" id="f0112-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'date'</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span>
+<span class="green"><strong>=&gt; ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]</strong></span></pre>
+</div>
+<p class="noindent">This allows us to find the day of the week as follows:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_113"></span><a href="ch05_images.xhtml#f0113-01" id="f0113-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="green"><strong>=&gt; "Thursday"</strong></span></pre>
+</div>
+<p class="indent">It would be convenient to <em>encapsulate</em> this definition and logic in a <code><span class="green"><strong>day_-of_the_week</strong></span></code> function, so that we could write</p>
+<div class="sidebar">
+<pre class="pre"><strong>day_of_the_week(</strong><span class="brown1"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now)</strong></pre>
+</div>
+<p class="noindent">By combining the elements above, we can accomplish this as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0113-02" id="f0113-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>day_of_the_week</strong></span><strong>(time)</strong>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green1"><strong>return</strong></span> <span class="brown"><strong>Date</strong></span><span class="gray"><strong>:</strong></span><span class="brown"><strong>:DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">We see here that a Ruby function starts with the <code><span class="green"><strong>def</strong></span></code> keyword followed by the function name and any arguments; then, there’s the function <em>body</em>, which determines the return value of the function; finally, the function is ended by the <code><span class="green"><strong>end</strong></span></code> keyword (roughly the equivalent of a closing curly brace <code><span class="green"><strong>}</strong></span></code> in a C-like language like JavaScript). We can test it as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0113-03" id="f0113-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>day_of_the_week(</strong><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now)</strong>
+<span class="green"><strong>=&gt; "Thursday"</strong></span></pre>
+</div>
+<p class="noindent">This might not seem like a big improvement, but note that it’s conceptually simpler because we don’t have to think about the implementation (i.e., finding the element of an array corresponding to the value of <code><span class="green"><strong>wday</strong></span></code>). This sort of <em>abstraction layer</em> between function name and implementation is useful even if the function definition is only a single line. (Indeed, I consider single-line functions to be a sign of good program design.)</p>
+<p class="indent">In the definition above, we see that, as in many other languages, Ruby supports returning a value via the <code><span class="green"><strong>return</strong></span></code> keyword, but in fact the <code><span class="green"><strong>return</strong></span></code> is unnecessary. Far more common is using Ruby’s <em>implicit return</em>, whereby the last expression evaluated in the body of the function is returned automatically. This means we can rewrite the <code><span class="green"><strong>day_of_the_week</strong></span></code> function as follows:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_114"></span><a href="ch05_images.xhtml#f0114-01" id="f0114-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>day_of_the_week</strong></span><strong>(time)</strong>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">We’ll put this function to good use in <a href="ch05.xhtml#sec5_2">Section 5.2</a> to simplify the customized greeting in our hello app (<a href="ch04.xhtml#ch04ex02">Listing 4.2</a>).</p>
+<section>
+<h4 class="h4" id="sec5_1_1">5.1.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Using <code><span class="green"><strong>def</strong></span></code>, define a <code><span class="green"><strong>square</strong></span></code> function that returns the square of a number.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec5_2">5.2 Functions in a File</h3>
+<p class="noindent">Although defining functions in a REPL is convenient for demonstration purposes, it’s a bit cumbersome, and a better practice is to put them in a file (as we did with the script in <a href="ch04.xhtml#sec4_5">Section 4.5</a>). We’ll start by moving the function defined in <a href="ch05.xhtml#sec5_1">Section 5.1</a> into <code><span class="green"><strong>hello_app.rb</strong></span></code>, and we’ll then move it to an even more convenient external file.</p>
+<p class="indent">Let’s recall the current state of our hello application, which looks like <a href="ch05.xhtml#ch05ex01">Listing 5.1</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex01"><strong>Listing 5.1:</strong> The current state of our hello app.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0114-02" id="f0114-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown"><strong>DAYNAMES</strong></span> <span class="gray"><strong>= [</strong></span><span class="brown1"><strong>"Sunday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Monday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Tuesday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Wednesday"</strong></span><strong>,</strong>
+              <span class="brown1"><strong>"Thursday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Friday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Saturday"</strong></span><span class="gray"><strong>]</strong></span>
+  <strong>dayname</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span><span class="pinkr"> <strong>#</strong></span><strong>{dayname</strong><span class="pinkr"><strong>}</strong></span><span class="brown"><strong>."</strong></span>
+<span class="green1"><strong>end</strong></span></pre></div>
+<p class="indent">Our first step is to put the function definition from <a href="ch05.xhtml#sec5_1">Section 5.1</a> into this file, as shown in <a href="ch05.xhtml#ch05ex02">Listing 5.2</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex02"><span epub:type="pagebreak" id="page_115"></span><strong>Listing 5.2:</strong> Adding a function for the day of the week.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0115-01" id="f0115-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+
+<span class="bg-o"><span class="blue1"><strong><em># Returns the day of the week for the given Time object.</em></strong></span></span>
+<span class="bg-o"><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>day_of_the_week</strong></span><strong>(time)</strong></span>
+  <span class="bg-o"><span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray">.</span><strong>wday</strong><span class="gray">]</span></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown"><strong>DAYNAMES</strong></span> <span class="gray"><strong>= [</strong></span><span class="brown1"><strong>"Sunday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Monday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Tuesday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Wednesday"</strong></span><strong>,</strong>
+              <span class="brown1"><strong>"Thursday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Friday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Saturday"</strong></span><span class="gray"><strong>]</strong></span>
+  <strong>dayname</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span><span class="pinkr"> <strong>#{</strong></span><strong>dayname</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>."</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Then, we can edit the body of <code><span class="green"><strong>get</strong></span></code> down to a single line, as shown in <a href="ch05.xhtml#ch05ex03">Listing 5.3</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex03"><strong>Listing 5.3:</strong> Replacing the greeting.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0115-02" id="f0115-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+
+<span class="blue1"><strong><em># Returns the day of the week for the given Time object.</em></strong></span>
+<span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>day_of_the_week</strong></span><strong>(time)</strong>
+  <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="bg-o"><span class="brown1"><strong>"Hello, world! Happy</strong></span><span class="pinkr"> <strong>#{</strong></span><strong>day_of_the_week(</strong><span class="brown1"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>)</strong></span><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>."</strong></span></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">At this point, you should be able to confirm that the app is working:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>ruby hello_app.rb</strong></pre>
+</div>
+<p class="noindent">The result appears in <a href="ch05.xhtml#ch05fig02">Figure 5.2</a>.</p>
+<figure class="figure" id="ch05fig02">
+<img src="graphics/f0116-01.jpg" alt="Images" width="878" height="679"/>
+<figcaption>
+<p class="title-f">Figure 5.2: The result of a functional greeting.</p>
+</figcaption>
+</figure>
+<p class="indent">We can make the code in <a href="ch05.xhtml#ch05ex03">Listing 5.3</a> even cleaner by factoring the <code><span class="green"><strong>day_-of_the_week</strong></span></code> function into a separate file and then including it into our app. We’ll start by cutting the function and pasting it into a new file, <code><span class="green"><strong>day.rb</strong></span></code>:<span epub:type="pagebreak" id="page_116"></span></p>
+<div class="sidebar">
+<pre class="pre"><span epub:type="pagebreak" id="page_117"></span><span class="blue"><strong>$</strong></span> <strong>touch day.rb</strong></pre>
+</div>
+<p class="noindent">The resulting files appear as in <a href="ch05.xhtml#ch05ex04">Listing 5.4</a> and <a href="ch05.xhtml#ch05ex05">Listing 5.5</a>.<sup><a id="fn5_1" href="ch05.xhtml#fn5_1a">1</a></sup> Note that we’ve slightly updated the greeting in <a href="ch05.xhtml#ch05ex05">Listing 5.5</a> so that we can tell our new code is actually working. In particular, recall from <a href="ch01.xhtml#sec1_5">Section 1.5</a> that you have to restart the Sinatra server to see updates to the site.</p>
+<p class="footnote"><sup><a id="fn5_1a" href="ch05.xhtml#fn5_1">1</a></sup>In some editors, you can use Shift-Command-V to paste in a selection using the local indentation level, which saves us the trouble of dedenting it by hand.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex04"><strong>Listing 5.4:</strong> The <code><span class="green"><strong>day_of_the_week</strong></span></code> function in a file.<code><em>day.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0117-01" id="f0117-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'date'</strong></span>
+
+<span class="blue1"><strong><em># Returns the day of the week for the given Time object.</em></strong></span>
+<span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>day_of_the_week</strong></span><strong>(time)</strong>
+  <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex05"><strong>Listing 5.5:</strong> Our greeting with the function cut.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0117-02" id="f0117-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span><span class="pinkr"> <strong>#{</strong></span><strong>day_of_the_week(</strong><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>)</strong></span><span class="brown1"><strong>}—now from a file!"</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">As you can verify by restarting the server and reloading the browser, the app doesn’t work—it crashes immediately, and all we get is the Sinatra error page (<a href="ch05.xhtml#ch05fig03">Figure 5.3</a>), which indicates that there was an <em>exception</em> of type <code><span class="green"><strong>NoMethod-Error</strong></span></code>. (Exceptions are simply a standardized way of indicating particular kinds of errors in a program.) We can find out more about what went wrong by looking at the error message, which indicates that the <code><span class="green"><strong>day_of_the_week</strong></span></code> method isn’t defined; zooming in on the message, we see that it even tells us the exact line that has the problem (<a href="ch05.xhtml#ch05fig04">Figure 5.4</a>).<span epub:type="pagebreak" id="page_118"></span></p>
+<figure class="figure" id="ch05fig03">
+<img src="graphics/f0118-01.jpg" alt="Images" width="878" height="679"/>
+<figcaption>
+<p class="title-f">Figure 5.3: A sure sign our app isn’t working.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch05fig04">
+<img src="graphics/f0118-02.jpg" alt="Images" width="846" height="173"/>
+<figcaption>
+<p class="title-f">Figure 5.4: Using the Sinatra crash page to find an error.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_119"></span>This practice is a powerful debugging technique: If your Ruby program crashes, inspecting the error message should be your method of first resort. Moreover, if you can’t see right away what went wrong, Googling the error message will often yield useful results (<a href="ch05.xhtml#box5_1">Box 5.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box5_1">
+<p class="sb-title">Box 5.1. Debugging Ruby</p>
+<p class="indent">One skill that’s an essential part of technical sophistication is <em>debugging</em>: the art of finding and correcting errors in computer programs. While there’s no substitute for experience, here are some techniques that should give you a leg up when tracking down the inevitable glitches in your code:</p>
+<ul class="bull">
+<li><p class="bull"><em>Trace the execution with</em> <code><em>puts</em></code>. When trying to figure out why a particular program is going awry, it’s often helpful to display variable values with temporary <code>puts</code> statements, which can be removed when the bug is fixed. This technique is especially useful when combined with the <code>inspect</code> method, which returns a literal representation of the object (<a href="ch04.xhtml#sec4_4_2">Section 4.4.2</a>), as in <code>puts array.inspect</code> (which can actually be written using the <code>p</code> function as <code>p array</code>).</p></li>
+<li><p class="bull"><em>Stop the execution with</em> <code><em>raise</em></code><em>.</em> The <code>raise</code> function, which raises an exception, is an especially heavy-handed technique because it stops the program execution entirely—but this is sometimes exactly what you want. Even more than with <code>puts</code>, using <code>inspect</code> is highly recommended, as in <code>raise array.inspect</code>.</p></li>
+<li><p class="bull"><em>Comment out code.</em> It’s sometimes a good idea to comment out code you suspect is unrelated to the problem to allow you to focus on the code that isn’t working.</p></li>
+<li><p class="bull"><em>Use the REPL.</em> Firing up irb and pasting in the problematic code is frequently an excellent way to isolate the problem. (A more advanced version of this technique is <em><a href="http://pry.github.io/">Pry</a></em>, which lets you run irb right inside your program.)</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_120"></span><em>Google it.</em> Googling error messages or other search terms related to the bug (which often leads to helpful threads at <a href="https://stackoverflow.com/questions/7156955/whats-the-difference-between-equal-eql-and">Stack Overflow</a>) is an essential skill for every modern software developer (<a href="ch05.xhtml#ch05fig05">Figure 5.5</a>).</p>
+<figure class="figure" id="ch05fig05">
+<img src="graphics/f0121-01.jpg" alt="Images" width="891" height="889"/>
+<figcaption>
+<p class="title-f">Figure 5.5: How did people ever debug before Google?</p>
+</figcaption>
+</figure></li>
+</ul>
+</aside>
+<p class="indent">The reason for the crash is that we’ve removed <code><span class="green"><strong>day_of_the_week</strong></span></code> from <code><span class="green"><strong>hello_app.rb</strong></span></code>, so naturally our app has no idea what it is. The solution is to <code><span class="green"><strong>require</strong></span></code> it in much the same way that we required <code><span class="green"><strong>sinatra</strong></span></code>, as shown in <a href="ch05.xhtml#ch05ex06">Listing 5.6</a>. Note that the <code><span class="green"><strong>require</strong></span></code> in <a href="ch05.xhtml#ch05ex05">Listing 5.5</a> includes the path to the file relative to the current directory (<code><span class="green"><strong>./day</strong></span></code>), which is necessary because our project directory isn’t on the Ruby include path by default.<sup><a id="fn5_2" href="ch05.xhtml#fn5_2a">2</a></sup></p>
+<p class="footnote"><sup><a id="fn5_2a" href="ch05.xhtml#fn5_2">2</a></sup>How would you figure out how to add the current directory to the load path? Here’s how I’d do it: <a href="https://www.google.com/search?q=ruby+add+to+load+path">ruby add to load path</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex06"><strong>Listing 5.6:</strong> Using a function from an external file.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0120-01" id="f0120-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+<span class="bg-o"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'./day'</strong></span></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span><span class="pinkr"> <strong>#{</strong></span><strong>day_of_the_week(</strong><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>)</strong></span><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>—now from a file!"</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">At this point, the app is working! The result should look something like <a href="ch05.xhtml#ch05fig06">Figure 5.6</a>.</p>
+<figure class="figure" id="ch05fig06">
+<img src="graphics/f0122-01.jpg" alt="Images" width="879" height="677"/>
+<figcaption>
+<p class="title-f">Figure 5.6: An updated greeting.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec5_2_1">5.2.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Let’s replace the interpolated string in <a href="ch05.xhtml#ch05ex05">Listing 5.5</a> with a <code><span class="green"><strong>greeting</strong></span></code> function in <code><span class="green"><strong>day.rb</strong></span></code>. Fill in the code in <a href="ch05.xhtml#ch05ex07">Listing 5.7</a> to get <a href="ch05.xhtml#ch05ex08">Listing 5.8</a> to work.<span epub:type="pagebreak" id="page_121"></span><span epub:type="pagebreak" id="page_122"></span></p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex07"><span epub:type="pagebreak" id="page_123"></span><strong>Listing 5.7:</strong> Defining a <code><span class="green"><strong>greeting</strong></span></code> function.<code><em>day.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0123-01" id="f0123-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'date'</strong></span>
+
+<span class="blue1"><strong><em># Returns the day of the week for the given Time object.</em></strong></span>
+<span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>day_of_the_week</strong></span><strong>(time)</strong>
+  <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>time</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="blue1"><strong><em># Returns a friendly greeting.</em></strong></span>
+<span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>greeting</strong></span><strong>(time)</strong>
+  <span class="bg-o"><span class="blue1"><strong><em># FILL IN</em></strong></span></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex08"><strong>Listing 5.8:</strong> Using the <code><span class="green"><strong>greeting</strong></span></code> function.<code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0123-02" id="f0123-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+<span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'./day'</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="bg-o"><strong>greeting(</strong><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now)</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec5_3">5.3 Method Chaining</h3>
+<p class="noindent">In this section, we’ll start developing the palindrome theme mentioned in the introduction. Our goal is to write a function called <code><span class="green"><strong>palindrome?</strong></span></code> that returns <code><span class="green"><strong>true</strong></span></code> if its argument is the same forward and backward, and <code><span class="green"><strong>false</strong></span></code> otherwise.</p>
+<p class="indent">We can express the simplest possible definition of a palindrome as “a string and the string reversed are the same.” (We’ll steadily expand this definition over time.) In order to do this, we need to be able to reverse a string.</p>
+<p class="indent">One way to do this is with <em>method chaining</em>, which involves calling a series of messages on a particular object. We saw in <a href="ch03.xhtml#sec3_1">Section 3.1</a> that we can form an array of characters from a string by splitting on the empty string:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_124"></span><a href="ch05_images.xhtml#f0124-01" id="f0124-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"racecar"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>""</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["r", "a", "c", "e", "c", "a", "r"]</strong></span></pre>
+</div>
+<p class="noindent">We saw in <a href="ch03.xhtml#sec3_4_1">Section 3.4.1</a> how to reverse an array:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0124-02" id="f0124-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>= [ 17</strong></span><strong>,</strong> <span class="gray"><strong>42</strong></span><strong>,</strong> <span class="gray"><strong>8</strong></span><strong>,</strong> <span class="gray"><strong>99 ]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong>
+<span class="green"><strong>=&gt; [99, 8, 42, 17]</strong></span></pre>
+</div>
+<p class="noindent">Finally, we learned in <a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a> that the <code><span class="green"><strong>join</strong></span></code> method effectively undoes a split:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0124-03" id="f0124-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>[</strong></span><span class="brown1"><strong>"r"</strong></span><strong>,</strong> <span class="brown1"><strong>"a"</strong></span><strong>,</strong> <span class="brown1"><strong>"c"</strong></span><strong>,</strong> <span class="brown1"><strong>"e"</strong></span><strong>,</strong> <span class="brown1"><strong>"c"</strong></span><strong>,</strong> <span class="brown1"><strong>"a"</strong></span><strong>,</strong> <span class="brown1"><strong>"r"</strong></span><span class="gray"><strong>].</strong></span><strong>join</strong>
+<span class="green"><strong>=&gt; "racecar"</strong></span></pre>
+</div>
+<p class="noindent">This discussion suggests reversing a string with method chaining as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0124-04" id="f0124-04a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Racecar"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>""</strong></span><strong>)</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong><span class="gray"><strong>.</strong></span><strong>join</strong>
+<span class="green"><strong>=&gt; "racecaR"</strong></span></pre>
+</div>
+<p class="noindent">We can also simplify it slightly by using the <code><span class="green"><strong>String#chars</strong></span></code> method, which simply returns a string’s characters as an array:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0124-05" id="f0124-05a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Racecar"</strong></span><span class="gray"><strong>.</strong></span><strong>chars</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong><span class="gray"><strong>.</strong></span><strong>join</strong>
+<span class="green"><strong>=&gt; "racecaR"</strong></span></pre>
+</div>
+<p class="indent">This method is perfectly valid, and indeed is necessary in languages (like JavaScript) that don’t have native support for reversing strings. As it happens, though, Ruby <em>does</em> have <a href="https://ruby-doc.org/core-2.5.0/String.html#method-i-reverse">native support</a> for string reversal, via the <code><span class="green"><strong>String#-reverse</strong></span></code> method:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_125"></span><a href="ch05_images.xhtml#f00125-01a" id="f00125-01aa">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Racecar"</strong></span><span class="gray"><strong>.</strong></span><strong>reverse</strong>
+<span class="green"><strong>=&gt; "racecaR"</strong></span></pre>
+</div>
+<p class="noindent">We can still benefit from method chaining, though, because we’d like to detect palindromes like “Racecar”, so we need to combine reversing and <em>downcasing</em> strings (seen before in <a href="ch02.xhtml#sec2_5">Section 2.5</a>):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0125-01" id="f0125-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Racecar"</strong></span><span class="gray"><strong>.</strong></span><strong>downcase</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong>
+<span class="green1"><strong>=&gt; "racecar"</strong></span></pre>
+</div>
+<p class="noindent">With this in our toolkit, we’re ready to write the first version of our palindrome method.</p>
+<p class="indent">Let’s put our function for detecting palindromes into its own file, which we’ll call <code><span class="green"><strong>palindrome.rb</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>touch palindrome.rb</strong></pre>
+</div>
+<p class="noindent">What should we call the palindrome-detecting function? Well, the palindrome detector should take in a string and return <code><span class="green"><strong>true</strong></span></code> when the string is a palindrome and <code><span class="green"><strong>false</strong></span></code> otherwise. This makes it a boolean method. Recall from <a href="ch02.xhtml#sec2_5">Section 2.5</a> that boolean methods in Ruby generally end in question marks, which suggests the definition in <a href="ch05.xhtml#ch05ex09">Listing 5.9</a>. (We’ll add the <code><span class="green"><strong>downcase</strong></span></code> refinement in a moment.)</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex09"><strong>Listing 5.9:</strong> Our initial <code><span class="green"><strong>palindrome?</strong></span></code> function.<code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0125-02" id="f0125-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+<span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>palindrome?</strong></span><strong>(string)
+  string</strong> <span class="gray"><strong>==</strong></span> <strong>string</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">The code in <a href="ch05.xhtml#ch05ex09">Listing 5.9</a> uses the <code><span class="green"><strong>==</strong></span></code> comparison operator (<a href="ch02.xhtml#sec2_4">Section 2.4</a>) and Ruby’s implicit return (<a href="ch05.xhtml#sec5_1">Section 5.1</a>) to automatically return the right boolean value.</p>
+<p class="indent">We can test the code in <a href="ch05.xhtml#ch05ex09">Listing 5.9</a> by <em>loading</em> the palindrome file into irb:</p>
+<div class="sidebar">
+<pre class="pre"><span epub:type="pagebreak" id="page_126"></span><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>load</strong></span> <span class="brown1"><strong>'./palindrome.rb'</strong></span></pre>
+</div>
+<p class="noindent">(Using <code><span class="green"><strong>load</strong></span></code> is better than using <code><span class="green"><strong>require</strong></span></code> as in <a href="ch05.xhtml#ch05ex06">Listing 5.6</a> because it allows us to <em>re</em>-load files if we make changes, which <code><span class="green"><strong>require</strong></span></code> doesn’t let you do.) This makes <code><span class="green"><strong>palindrome?</strong></span></code> available in the REPL:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f00126-02a" id="f00126-02aa">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>palindrome?(</strong><span class="brown1"><strong>"racecar</strong></span><strong>")</strong>
+<span class="green1"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>palindrome?(</strong><span class="brown1"><strong>"Racecar</strong></span><strong>")</strong>
+<span class="green1"><strong>=&gt; false</strong></span></pre>
+</div>
+<p class="indent">As seen in the second example, our palindrome detector says “Racecar” isn’t a palindrome, so to make our detector more general we can <code><span class="green"><strong>downcase</strong></span></code> the string before the comparison. A working version appears in <a href="ch05.xhtml#ch05ex010">Listing 5.10</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex010"><strong>Listing 5.10:</strong> Detecting palindromes independent of case.<code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0126-01" id="f0126-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+<span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>palindrome?</strong></span><strong>(string)</strong>
+  <span class="bg-o"><strong>string</strong><span class="gray"><strong>.</strong></span><strong>downcase</strong> <span class="gray"><strong>==</strong></span> <strong>string</strong><span class="gray"><strong>.</strong></span><strong>downcase</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Returning to irb, we can reload the detector and apply it as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0126-02" id="f0126-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>load</strong></span> <span class="brown1"><strong>'./palindrome.rb'</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>palindrome?(</strong><span class="brown1"><strong>"Racecar"</strong></span><strong>)</strong>
+<span class="green1"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">Success!</p>
+<p class="indent">As a final refinement, let’s follow the Don’t Repeat Yourself (or “DRY”) principle and eliminate the duplication in <a href="ch05.xhtml#ch05ex010">Listing 5.10</a>. Inspecting the code, we see that <code><span class="green"><strong>string.downcase</strong></span></code> gets used twice, which suggests declaring a variable (which we’ll called <code><span class="green"><strong>processed_content</strong></span></code>) to represent the actual string that gets compared to its own reverse (<a href="ch05.xhtml#ch05ex011">Listing 5.11</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex011"><span epub:type="pagebreak" id="page_127"></span><strong>Listing 5.11:</strong> Eliminating some duplication.<code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0127-01" id="f0127-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+<span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>palindrome?</strong></span><strong>(string)</strong>
+  <span class="bg-o"><strong>processed_content</strong> <span class="gray"><strong>=</strong></span> <strong>string</strong><span class="gray"><strong>.</strong></span><strong>downcase</strong></span>
+  <span class="bg-o"><strong>processed_content</strong> <span class="gray"><strong>==</strong></span> <strong>processed_content</strong><span class="gray"><strong>.</strong></span><strong>reverse</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent"><a href="ch05.xhtml#ch05ex011">Listing 5.11</a> eliminates one call to <code><span class="green"><strong>downcase</strong></span></code> at the cost of an extra line, so it’s not obviously better than <a href="ch05.xhtml#ch05ex010">Listing 5.10</a>, but we’ll see starting in <a href="ch08.xhtml#ch08">Chapter 8</a> that having a separate variable gives us much greater flexibility in detecting more complex palindromes.</p>
+<p class="indent">As a final step, we should check that the <code><span class="green"><strong>palindrome?</strong></span></code> method is still working as advertised:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0127-02" id="f0127-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>load</strong></span> <span class="brown1"><strong>'./palindrome.rb'</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>palindrome?(</strong><span class="brown1"><strong>"Racecar"</strong></span><strong>)</strong>
+<span class="green1"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>palindrome?(</strong><span class="brown1"><strong>"Able was I ere I saw Elba"</strong></span><strong>)</strong>
+<span class="green1"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">As you might guess, confirming such things by hand quickly gets tedious, and we’ll see in <a href="ch08.xhtml#ch08">Chapter 8</a> how to write <em>automated tests</em> to check our code’s behavior automatically.</p>
+<section>
+<h4 class="h4" id="sec5_3_1">5.3.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Using method chaining, write a function <code><span class="green"><strong>email_parts</strong></span></code> (<a href="ch05.xhtml#ch05ex012">Listing 5.12</a>) to return an array of the username and domain for a standard email address of the form <code><span class="green"><strong>username@example.com</strong></span></code>. <em>Note</em>: Make sure your function returns the same result for <code><span class="green"><strong>USERNAME@EXAMPLE.COM</strong></span></code>.</p></li>
+<li><p class="num">Using irb, determine whether or not your system supports using the <code><span class="green"><strong>palindrome?</strong></span></code> function from <a href="ch05.xhtml#ch05ex010">Listing 5.10</a> on emojis. (You may find the <a href="https://emojipedia.org/">Emojipedia</a> links to the <a href="https://emojipedia.org/">racing car</a> and <a href="https://emojipedia.org/fox-face/">fox face</a> emojis helpful.) If your system <span epub:type="pagebreak" id="page_128"></span>supports emojis in this context, the result should look something like <a href="ch05.xhtml#ch05fig07">Figure 5.7</a>. (Note that an emoji is a “palindrome” if it’s the same when you flip it horizontally, so the fox-face emoji is a palindrome but the racecar emoji isn’t, even though the <em>word</em> “racecar” <em>is</em> a palindrome.)</p>
+<figure class="figure" id="ch05fig07">
+<img src="graphics/f0128-01.jpg" alt="Images" width="891" height="444"/>
+<figcaption>
+<p class="title-f">Figure 5.7: Detecting palindromic emojis.</p>
+</figcaption>
+</figure></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex012"><strong>Listing 5.12:</strong> Returning the parts of an email.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f0128-02" id="f0128-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>def</strong></span><span class="bluer-n"> <strong>email_parts</strong></span><strong>(email)</strong>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="blue1"><strong><em># FILL IN</em></strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec5_4">5.4 Blocks</h3>
+<p class="noindent"><em>Blocks</em> are one of the most characteristic and useful constructs in Ruby. So far we’ve seen examples in <a href="ch01.xhtml#sec1_5">Section 1.5</a>, <a href="ch03.xhtml#sec3_5">Section 3.5</a>, and <a href="ch04.xhtml#sec4_4">Section 4.4</a>; in this section, we’ll look at blocks in more detail and gain a deeper understanding of how they work.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_129"></span>Let’s start with a simple block that prints out the first five powers of 2:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0129-01" id="f0129-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>(<span class="gray">1..5</span>)</strong><span class="gray"><strong>.</strong></span><strong>each {</strong> <span class="gray"><strong>|</strong></span><strong>i</strong><span class="gray"><strong>|</strong></span> <span class="green"><strong>puts</strong></span> <span class="gray"><strong>2**</strong></span><strong>i }</strong>
+<span class="green"><strong>2</strong></span>
+<span class="green"><strong>4</strong></span>
+<span class="green"><strong>8</strong></span>
+<span class="green"><strong>16</strong></span>
+<span class="green"><strong>32</strong></span></pre>
+</div>
+<p class="noindent">This code calls the <code><span class="green"><strong>each</strong></span></code> method on the range <code><span class="green"><strong>(1..5)</strong></span></code> and passes it the block <code><span class="green"><strong>{ |i| puts 2**i }</strong></span></code>. The vertical bars around the variable name in <code><span class="green"><strong>|i|</strong></span></code> are the Ruby syntax for a <em>block variable</em>, and it’s up to the method to know what to do with the block. In this case, the range’s <code><span class="green"><strong>each</strong></span></code> method can handle a block with a single local variable, which we’ve called <code><span class="green"><strong>i</strong></span></code>, and it just executes the block for each value in the range.</p>
+<p class="indent">Curly braces are one way to indicate a block, but there is a second way as well:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0129-02" id="f0129-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>(</strong><span class="gray"><strong>1..5</strong></span><strong>)</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>i</strong><span class="gray"><strong>|</strong></span>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green"><strong>puts</strong></span> <span class="gray"><strong>2**</strong></span><strong>i</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green"><strong>end</strong></span>
+<span class="green"><strong>2</strong></span>
+<span class="green"><strong>4</strong></span>
+<span class="green"><strong>8</strong></span>
+<span class="green"><strong>16</strong></span>
+<span class="green"><strong>32</strong></span>
+<span class="green"><strong>=&gt; 1..5</strong></span></pre>
+</div>
+<p class="noindent">This is the version of the block syntax we’ve seen before, in things like</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f00129-02a" id="f00129-02aa">Click here to view code image</a></p>
+<pre class="pre"><strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown1"><strong>'hello, world!'</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">(<a href="ch01.xhtml#ch01ex08">Listing 1.8</a>) and</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_130"></span><a href="ch05_images.xhtml#f00129-03a" id="f00129-03aa">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><strong>a</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>element</strong><span class="gray"><strong>|</strong></span>
+  <span class="green1"><strong>puts</strong></span> <strong>element</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">(<a href="ch03.xhtml#ch03ex04">Listing 3.4</a>).</p>
+<p class="indent">Blocks can be more than one line, and often are. In this tutorial, we’ll follow the common convention of using curly braces only for short one-line blocks and the <code><span class="green"><strong>do..end</strong></span></code> syntax for some one-liners and for all multiline blocks:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0130-01" id="f0130-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>(</strong><span class="gray"><strong>1..5</strong></span><strong>)</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>number</strong><span class="gray"><strong>|</strong></span>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green"><strong>puts</strong></span> <span class="gray"><strong>2 **</strong></span> <strong>number</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="green"><strong>puts</strong></span> <span class="brown1"><strong>'--'</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green"><strong>end</strong></span>
+<span class="green"><strong>2</strong></span>
+<span class="green"><strong>--</strong></span>
+<span class="green"><strong>4</strong></span>
+<span class="green"><strong>--</strong></span>
+<span class="green"><strong>8</strong></span>
+<span class="green"><strong>--</strong></span>
+<span class="green"><strong>16</strong></span>
+<span class="green"><strong>--</strong></span>
+<span class="green"><strong>32</strong></span>
+<span class="green"><strong>--</strong></span></pre>
+</div>
+<p class="noindent">Here I’ve used <code><span class="green"><strong>number</strong></span></code> in place of <code><span class="green"><strong>i</strong></span></code> just to emphasize that any variable name will do.</p>
+<p class="indent">One way to think about blocks is that they are <em>anonymous (unnamed) functions</em> that we can create right when they’re needed. If you’ve studied JavaScript (as in <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>), you might recognize this usage in code like <a href="ch05.xhtml#ch05ex013">Listing 5.13</a>, which includes an explicit unnamed <code><span class="green"><strong>function</strong></span></code> to print out the elements of a JavaScript array.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex013"><strong>Listing 5.13:</strong> A <code><span class="green"><strong>forEach</strong></span></code> loop and an anonymous function in JavaScript.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f0130-02" id="f0130-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="bg-o"><span class="gray"><strong>&gt;</strong></span> <strong>[</strong><span class="brown1"><strong>"ant"</strong></span><strong>,</strong> <span class="brown1"><strong>"bat"</strong></span><strong>,</strong> <span class="brown1"><strong>"cat"</strong></span><strong>,</strong> <span class="gray"><strong>42</strong></span><strong>].forEach(</strong><span class="green1"><strong>function</strong></span><strong>(element) {</strong></span>
+  <strong>console.log(element);</strong>
+<strong>});</strong>
+<strong>ant</strong>
+<strong>bat</strong>
+<strong>cat</strong>
+<span class="gray"><strong>42</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_131"></span>A Ruby block can be seen as a way to do the same thing as <a href="ch05.xhtml#ch05ex013">Listing 5.13</a> without having to include an explicit function, as seen in <a href="ch05.xhtml#ch05ex014">Listing 5.14</a>. The result is code that feels more like a natural and integrated part of the language (or, at least, that is the practical experience of many Ruby developers).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex014"><strong>Listing 5.14:</strong> An <code><span class="green"><strong>each</strong></span></code> loop with a block.</p>
+<p class="codelink"><a href="ch05_images.xhtml#f0131-01" id="f0131-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="bg-o"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>[</strong></span><span class="brown1"><strong>"ant"</strong></span><strong>,</strong> <span class="brown1"><strong>"bat"</strong></span><strong>,</strong> <span class="brown1"><strong>"cat"</strong></span><strong>,</strong> <span class="gray"><strong>42]</strong></span><strong>.each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>element</strong><span class="gray"><strong>|</strong></span></span>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green1"><strong>puts</strong></span> <strong>element</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>ant</strong></span>
+<span class="green"><strong>bat</strong></span>
+<span class="green"><strong>cat</strong></span>
+<span class="green"><strong>42</strong></span></pre>
+</div>
+<p class="indent">Although <code><span class="green"><strong>each</strong></span></code> is probably the most commonly used method that takes a block, there are many others. For example, the <code><span class="green"><strong>times</strong></span></code> method repeats the given block a <a href="https://youtu.be/Ot11DMJKhj8">certain number of times</a>:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0131-02" id="f0131-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>3.</strong></span><strong>times {</strong> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"Betelgeuse!"</strong></span> <strong>}</strong>    <span class="blue1"><strong><em># `times` takes a block with no variables.</em></strong></span>
+<span class="green"><strong>"Betelgeuse!"</strong></span>
+<span class="green"><strong>"Betelgeuse!"</strong></span>
+<span class="green"><strong>"Betelgeuse!"</strong></span></pre>
+</div>
+<p class="noindent">We’ll see several more examples in <a href="ch06.xhtml#ch06">Chapter 6</a>.</p>
+<section>
+<h4 class="h4" id="sec5_4_1">5.4.1 Yield</h4>
+<p class="noindent">We can develop our understanding of blocks by using them in some of our own functions. The key observations are that (1) <em>every</em> Ruby method can take a block and (2) we can invoke the block using the <code><span class="green"><strong>yield</strong></span></code> keyword. Let’s take a look at some concrete examples to see how this works.<sup><a id="fn5_3" href="ch05.xhtml#fn5_3a">3</a></sup></p>
+<p class="footnote"><sup><a id="fn5_3a" href="ch05.xhtml#fn5_3">3</a></sup>Several of the examples in this section are adapted from the excellent article “Mastering Ruby blocks in less than 5 minutes” by Cezar Halmagean. (Unfortunately, as of this writing, the article appears to have been deleted.)</p>
+<p class="indent">For convenience, we’ll work in a file called <code><span class="green"><strong>blocks.rb</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre"><span epub:type="pagebreak" id="page_132"></span><span class="blue"><strong>$</strong></span> <strong>touch blocks.rb</strong></pre>
+</div>
+<p class="noindent">We’ll start by defining a function called <code><span class="green"><strong>sandwich</strong></span></code> that yields a block between two <code><span class="green"><strong>puts</strong></span></code> statements (<a href="ch05.xhtml#ch05ex015">Listing 5.15</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex015"><strong>Listing 5.15:</strong> Defining a <code><span class="green"><strong>sandwich</strong></span></code> function.<code><em>blocks.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f00132-02a" id="f00132-02aa">Click here to view code image</a></p>
+<pre class="pre"><span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>sandwich</strong></span>
+  <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"top bread"</strong></span>
+  <span class="green1"><strong>yield</strong></span>
+  <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"bottom bread"</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">What does it mean to “yield a block”? The best way to see is to pass <code><span class="green"><strong>sandwich</strong></span></code> a block (<a href="ch05.xhtml#ch05ex016">Listing 5.16</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex016"><strong>Listing 5.16:</strong> Passing a block to <code><span class="green"><strong>sandwich</strong></span></code>.<code><em>blocks.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0132-01" id="f0132-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green"><strong>def</strong></span> <span class="bluer-n"><strong>sandwich</strong></span>
+  <span class="green"><strong>puts</strong></span> <span class="brown1"><strong>"top bread"</strong></span>
+  <span class="green"><strong>yield</strong></span>
+  <span class="green"><strong>puts</strong></span> <span class="brown1"><strong>"bottom bread"</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="bg-o"><strong>sandwich</strong> <span class="green"><strong>do</strong></span></span>
+   <span class="bg-o"><span class="green"><strong>puts</strong></span> <span class="brown1"><strong>"mutton, lettuce, and tomato"</strong></span></span>
+<span class="green"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Running the file then gives us a <a href="https://youtu.be/RUV4e58SkXc">nice MLT</a> (mutton, lettuce, and tomato sandwich):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f00132-03" id="f00132-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>ruby blocks.rb</strong>
+<span class="green"><strong>top bread</strong></span>
+<span class="green"><strong>mutton, lettuce, and tomato</strong></span>
+<span class="green"><strong>bottom bread</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_133"></span>One of the advantages of Ruby blocks is that they don’t get evaluated until the <code><span class="green"><strong>yield</strong></span></code> keyword appears. This is why in <a href="ch05.xhtml#ch05ex016">Listing 5.16</a> we can pass a function that operates using a side effect, which wouldn’t work with a normal function parameter. We’ll take a closer look at exactly what this means in the exercises (<a href="ch05.xhtml#sec5_4_2">Section 5.4.2</a>), and we’ll see how to use it to our advantage when we learn how to write to a file in <a href="ch09.xhtml#ch09">Chapter 9</a>.</p>
+<p class="indent">Our final example of blocks involves a <code><span class="green"><strong>tag</strong></span></code> function that wraps some text in a given HTML tag, which gives us a chance to see how to use a block variable. We’ll start by using interpolation (<a href="ch02.xhtml#sec2_2">Section 2.2</a>) to make HTML code based on the tag name and text, and then yield the result to the block (<a href="ch05.xhtml#ch05ex017">Listing 5.17</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex017"><strong>Listing 5.17:</strong> Defining a <code><span class="green"><strong>tag</strong></span></code> function.<code><em>blocks.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0133-01" id="f0133-01a">Click here to view code image</a></p>
+<pre class="pre"><strong>.</strong>
+<strong>.</strong>
+<strong>.</strong>
+<span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>tag</strong></span><strong>(tagname, text)
+  html</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"&lt;</strong></span><span class="pinkr"><strong>#{</strong></span><strong>tagname</strong><span class="brown1"><strong>}&gt;</strong></span><span class="pinkr"><strong>#{</strong></span><strong>text</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>&lt;</strong></span><span class="pinkr"><strong>/#{</strong></span><strong>tagname</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>&gt;"</strong></span>
+  <span class="green1"><strong>yield</strong></span> <strong>html</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Note that <a href="ch05.xhtml#ch05ex017">Listing 5.17</a> shows how to define a function with <em>multiple</em> parameters: They’re simply separated by commas (and, conventionally, a space).</p>
+<p class="indent">With the definition in <a href="ch05.xhtml#ch05ex017">Listing 5.17</a>, we can now pass the <code><span class="green"><strong>tag</strong></span></code> function both its two required parameters (<code><span class="green"><strong>tagname</strong></span></code> and <code><span class="green"><strong>text</strong></span></code>) and a block representing the HTML markup (<a href="ch05.xhtml#ch05ex018">Listing 5.18</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex018"><strong>Listing 5.18:</strong> Passing a block (with block variable) to <code><span class="green"><strong>tag</strong></span></code>.<code><em>blocks.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0133-02" id="f0133-02a">Click here to view code image</a></p>
+<pre class="pre"><strong>.</strong>
+<strong>.</strong>
+<strong>.</strong>
+<span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>tag</strong></span><strong>(tagname, text)
+  html</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"&lt;</strong></span><span class="pinkr"><strong>#{</strong></span><strong>tagname</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>&gt;</strong></span><span class="pinkr"><strong>#{</strong></span><strong>text</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>&lt;/</strong></span><span class="pinkr"><strong>#{</strong></span><strong>tagname</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>&gt;"</strong></span>
+  <span class="green1"><strong>yield</strong></span> <strong>html</strong>
+<span class="green1"><strong>end</strong></span>
+
+<span class="blue1"><strong><em># Wrap some text in a paragraph tag.</em></strong></span></pre>
+</div>
+<p class="codelink"><span epub:type="pagebreak" id="page_134"></span><a href="ch05_images.xhtml#f0134-01" id="f0134-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="bg-o"><strong>tag(</strong><span class="brown1"><strong>"p"</strong></span><strong>,</strong> <span class="brown1"><strong>"Lorem ipsum dolor sit amet"</strong></span><strong>)</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>markup</strong><span class="gray"><strong>|</strong></span></span>
+  <span class="green1"><strong>puts</strong></span> <strong>markup</strong>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Running the program at the command line gives us the expected result:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch05_images.xhtml#f0134-02" id="f0134-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>ruby blocks.rb</strong>
+<span class="green"><strong>top bread</strong></span>
+<span class="green"><strong>mutton, lettuce, and tomato</strong></span>
+<span class="green"><strong>bottom bread</strong></span>
+<span class="green"><span class="bg-o"><strong>&lt;p&gt;Lorem ipsum dolor sit amet&lt;/p&gt;</strong></span></span></pre>
+</div>
+</section>
+<section>
+<h4 class="h4" id="sec5_4_2">5.4.2 Exercises</h4>
+<ol class="num">
+<li><p class="num">Use the <code><span class="green"><strong>downto</strong></span></code> <a href="https://ruby-doc.org/core-2.5.0/Integer.html#method-i-downto">method</a> to print out the strings <span class="green1"><code><strong>"99 bottles of beer on the wall"</strong></code></span> down to <code><span class="green"><strong>"1 bottle of beer on the wall"</strong></span></code>. (Take care to get the <em>n</em> = 1 case right, so that <code><span class="green"><strong>"bottle"</strong></span></code> is singular.)</p></li>
+<li><p class="num">Using the code in <a href="ch05.xhtml#ch05ex019">Listing 5.19</a>, confirm that a regular function can’t replicate the behavior achieved with a block in <a href="ch05.xhtml#ch05ex016">Listing 5.16</a>.</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch05ex019"><strong>Listing 5.19:</strong> Trying to make a sandwich with a regular function.<code><em>blocks.rb</em></code></p>
+<p class="codelink"><a href="ch05_images.xhtml#f0134-03" id="f0134-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="green1"><strong>def</strong></span> <span class="bluer-n"><strong>bad_sandwich</strong></span><strong>(contents)</strong>
+  <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"top bread"</strong></span>
+  <strong>contents</strong>
+  <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"bottom bread"</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong>bad_sandwich(</strong><span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"mutton, lettuce, and tomato"</strong></span><strong>)</strong></pre>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

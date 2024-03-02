@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch02"><span epub:type="pagebreak" id="page_25"></span>Chapter 2</h2>
+<h2 class="chap-title">Strings</h2>
+<p class="noindent"><em>Strings</em> are probably the most important data structure on the Web, since web pages ultimately consist of strings of characters sent from the server to the browser, and many other kinds of programs also require string manipulation. As a result, strings make an excellent place to start our JavaScript programming journey.</p>
+<section>
+<h3 class="h3" id="ch2lev1">2.1 String Basics</h3>
+<p class="noindent">Strings are made up of sequences of characters in a particular order. We’ve already seen several examples in the context of our “hello, world” programs in <a href="ch01.xhtml#ch01">Chapter 1</a>. Let’s see what happens if we type a string by itself (without <span class="pd_green"><code><strong>console.log</strong></code></span>) into a Node session:</p>
+<pre class="pre1">$ node
+<span class="gray">&gt;</span> <span class="pd_red">"hello, world!"</span>
+<span class="pd_red">'hello, world!'</span></pre>
+<p class="noindent">A sequence of characters typed literally is called a <em>string literal</em>, which we’ve created here using the double quote character <span class="pd_green"><code><strong>"</strong></code></span>. The REPL prints the result of evaluating the line, which in the case of a string literal is just the string itself.</p>
+<p class="indent">There’s one detail you might have noticed above: We entered the string using double quotes, but the REPL returned it using single quotes. This detail is system-dependent (for example, the console in browsers like Chrome and Safari uses double quotes for string return values), so you shouldn’t be concerned if your system differs. But this small discrepancy gives us an opportunity to learn about the difference between single and double quotes in JavaScript.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_26"></span>Unlike many other languages, JavaScript uses double and single quotes interchangeably for almost all practical purposes. The main exception is that apostrophes have to be <em>escaped out</em> with a backslash when included inside single-quoted strings:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c026pro01" id="c026pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"It's not easy being green"</span>
+<span class="pd_red">'It\'s not easy being green'</span></pre>
+<p class="noindent">Here the output includes a backslash in front of the apostrophe in “It’s”. If we were to type the same string without escaping the apostrophe, the REPL would think that the string ended after “It”, leading to a syntax error:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c026pro02" id="c026pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">'It\'s not easy being green'</span>
+<span class="pd_red">'It\'s not easy being green'</span>
+<span class="gray">&gt;</span> <span class="pd_red">'It'</span>s not easy being green<span class="pd_red">'</span>
+<span class="pd_red">'</span>It<span class="pd_red">'s not easy being green'</span>
+    ^
+<span class="pd_red"><strong>SyntaxError</strong></span><span class="gray">:</span> Unexpected identifier</pre>
+<p class="noindent">What’s happening here is that JavaScript sees a bare letter <span class="pd_green"><code><strong>s</strong></code></span> after the string <span class="pd_green"><code><strong>'It'</strong></code></span>. Since there’s no identifier called <span class="pd_green"><code><strong>s</strong></code></span>, the REPL raises an error (<a href="ch02.xhtml#ch2fig1">Figure 2.1</a>).<sup><a id="ch2fn-1" href="ch02.xhtml#ch2fn_1">1</a></sup> (We’ll have more to say about identifiers in <a href="ch02.xhtml#ch2lev2">Section 2.2</a> (<a href="ch02.xhtml#ch2box2">Box 2.2</a>).)</p>
+<p class="footnote"><a id="ch2fn_1" href="ch02.xhtml#ch2fn-1">1</a>. <a href="https://pxhere.com/en/photo/819154">Image</a> courtesy of LorraineHudgins/Shutterstock.</p>
+<figure class="figure" id="ch2fig1">
+<img src="graphics/02fig01.jpg" alt="images" width="601" height="427"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.1:</strong> Sometimes <a href="https://www.youtube.com/watch?v=hpiIWMWWVco">it’s not easy</a> dealing with syntax errors.</p>
+</figcaption>
+</figure>
+<p class="indent">Similarly, inside double-quoted strings, literal double quotes have to be escaped out:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c026pro03" id="c026pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"Let's write a \"hello, world\" program!"
+'Let\'s write a "hello, world" program!'</span></pre>
+<p class="noindent">As you might have guessed, the return value shows how no escaping of double quotes is necessary inside a single-quoted string.</p>
+<p class="indent">A particularly important string is one with no content, consisting simply of two quotes. This is known as an <em>empty string</em> (or sometimes <em>the</em> empty string):</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">""</span>
+<span class="pd_red">''</span></pre>
+<p class="noindent">We’ll have more to say about the empty string in <a href="ch02.xhtml#ch2lev4sec2">Section 2.4.2</a> and <a href="ch03.xhtml#ch3lev1">Section 3.1</a>.</p>
+<section>
+<h4 class="h4" id="ch2lev1sec1"><span epub:type="pagebreak" id="page_27"></span>2.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">JavaScript supports common special characters such as <a href="https://en.wikipedia.org/wiki/Tab_key#Tab_characters">tabs</a> (<span class="pd_green"><code><strong>\t</strong></code></span>) and <a href="https://en.wikipedia.org/wiki/Newline">newlines</a> (<span class="pd_green"><code><strong>\n</strong></code></span>). Show that both of these special characters work with both single- and double-quoted strings. What are their effects?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch2lev2">2.2 Concatenation and Interpolation</h3>
+<p class="noindent">Two of the most important string operations are <em>concatenation</em> (joining strings together) and <em>interpolation</em> (putting variable content into strings).</p>
+<p class="indent">Whether we use single- or double-quoted strings, we can concatenate (join) them with the <span class="pd_green"><code><strong>+</strong></code></span> operator:<sup><a id="ch2fn-2" href="ch02.xhtml#ch2fn_2">2</a></sup></p>
+<p class="footnote"><a id="ch2fn_2" href="ch02.xhtml#ch2fn-2">2</a>. This use of <span class="pd_green"><code><strong>+</strong></code></span> for string concatenation is common in programming languages, but in one respect it’s an unfortunate choice, because addition is the canonical <a href="https://en.wikipedia.org/wiki/Commutative_property">commutative</a> operation in mathematics: <em>a</em> + <em>b</em> = <em>b</em> + <em>a</em>. (In contrast, multiplication is in some cases non-commutative; for example, when <a href="https://en.wikipedia.org/wiki/Matrix_multiplication#Non-commutativity">multiplying matrices</a> it’s often the case that <em>AB</em> ≠ <em>BA</em>.) In the case of string concatenation, though, <span class="pd_green"><code><strong>+</strong></code></span> is most definitely <em>not</em> a commutative operation, since, e.g., <span class="pd_green"><code><strong>"foo" + "bar"</strong></code></span> is <span class="pd_green"><code><strong>"foobar"</strong></code></span>, whereas <span class="pd_green"><code><strong>"bar" + "foo"</strong></code></span> is <span class="pd_green"><code><strong>"barfoo"</strong></code></span>. Partially for this reason, some languages (such as <a href="https://en.wikipedia.org/wiki/PHP">PHP</a>) use a different symbol for concatenation, such as a dot <span class="pd_green"><code><strong>·</strong></code></span> (yielding <span class="pd_green"><code><strong>"foo" · "bar"</strong></code></span>).</p>
+<p class="codelink"><a href="ch02_images.xhtml#c028pro01" id="c028pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_28"></span>$ node
+<span class="gray">&gt;</span> <span class="pd_red">"foo"</span> <span class="gray">+</span> <span class="pd_red">"bar"</span>;        <span class="pd_blue1"><em>// String concatenation</em></span>
+<span class="pd_red">'foobar'</span></pre>
+<p class="noindent">Here the result of evaluating <span class="pd_green"><code><strong>"foo"</strong></code></span> plus <span class="pd_green"><code><strong>"bar"</strong></code></span> is the string <span class="pd_green"><code><strong>"foobar"</strong></code></span>. (The meaning of the odd names “foo” and “bar” is <a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/listing#aside-foo_bar">discussed</a> (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#aside-foo_bar">https://www.learnenough.com/command-line-tutorial/manipulating_files#aside-foo_bar</a>) in <em><a href="https://www.learnenough.com/command-line">Learn Enough Command Line to Be Dangerous</a></em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>).) Note also that the concatenation example includes a descriptive JavaScript <em>comment</em> (<a href="ch02.xhtml#ch2box1">Box 2.1</a>), which you wouldn’t ordinarily include in a REPL session, but will sometimes be added in this tutorial for clarity.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch2box1"><strong>Box 2.1: A Comment About Comments</strong></h1>
+</header>
+<p class="box-no">JavaScript <em>comments</em> start with two slash characters <code>//</code> and extend to the end of the line. Comments are ignored when JavaScript is executed, but they are useful for human readers (including, often, the original author!). In the code</p>
+<p class="codelink"><a href="ch02_images.xhtml#c028pro02" id="c028pro02a">Click here to view code image</a></p>
+<pre class="prei">// Prints a greeting to the console.
+console.log("hello, world!");  // The command itself</pre>
+<p class="box-no">the first line is a comment indicating the purpose of the subsequent line, whereas the second line contains both some code and a comment describing the purpose of the line.</p>
+<p class="box-ind">Sometimes you’ll want to add comments to several lines at a time (which is particularly useful for “commenting out” multiple lines of code when debugging (<a href="ch05.xhtml#ch5box1">Box 5.1</a>)). Any good <a href="https://learnenough.com/text-editor">text editor</a> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) will allow you to select multiple lines and comment or uncomment them all simultaneously, yielding things like this:</p>
+<pre class="prei">// console.log("foobar");
+// console.log("racecar");
+// console.log("Racecar");</pre>
+<p class="box-no">The details vary from editor to editor, so use your technical sophistication (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) to figure out the command for your editor of choice.</p>
+<p class="box-ind">JavaScript also supports multiline comments enclosed in <code>/* … */</code>, like this:</p>
+<pre class="prei">/* console.log("foobar");
+console.log("racecar");
+console.log("Racecar"); */</pre>
+<p class="box-no"><span epub:type="pagebreak" id="page_29"></span>Because of the ease with which modern text editors can apply single-line comments to multiple lines, in practice I find that I rarely use the <code>/* … */</code> syntax.</p>
+<p class="box-ind">You wouldn’t ordinarily include comments in console sessions, but for instructional purposes I’ll sometimes include comments in what follows, like this:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c029pro01" id="c029pro01a">Click here to view code image</a></p>
+<pre class="prei">$ node
+&gt; 17 + 42   // Integer addition
+59</pre>
+<p class="box-no">If you follow along by typing or copying-and-pasting commands into your own console, you can omit the comments if you like; the console will ignore them in any case.</p>
+</aside>
+<p class="indent">Let’s take another look at string concatenation in the context of <em>variables</em>, which you can think of as named boxes that contain some value (as <a href="https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#aside-variable">mentioned</a> in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>) and discussed further in <a href="ch02.xhtml#ch2box2">Box 2.2</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch2box2"><strong>Box 2.2: Variables and Identifiers</strong></h1>
+</header>
+<p class="box-no">If you’ve never programmed a computer before, you may be unfamiliar with the term <em>variable</em>, which is an essential idea in computer science. You can think of a variable as a named box that can hold different (or “variable”) content.</p>
+<p class="box-ind">As a concrete analogy, consider the labeled boxes that many elementary schools provide for students to store clothing, books, backpacks, etc. (<a href="ch02.xhtml#ch2fig2">Figure 2.2</a><sup><a id="ch2fn-3" href="ch02.xhtml#ch2fn_3">3</a></sup>). The variable is the location of the box, the label for the box is the variable name (also called an <em>identifier</em>), and the content of the box is the variable value.</p>
+<figure class="figure" id="ch2fig2">
+<img src="graphics/02fig02.jpg" alt="images" width="473" height="447"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.2:</strong> A concrete analogue of computer variables.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="ch2fn_3" href="ch02.xhtml#ch2fn-3">3</a>. Image courtesy of Africa Studio/Shutterstock.</p>
+<p class="box-ind">In practice, these different definitions are frequently <a href="https://en.wiktionary.org/wiki/conflate#English">conflated</a>, and “variable” is often used for any of the three concepts (location, label, or value).</p>
+</aside>
+<p class="indent">We can create variables for a first name and a last name using the JavaScript command <span class="pd_green"><code><strong>let</strong></code></span>, as shown in <a href="ch02.xhtml#ch2list1">Listing 2.1</a>.</p>
+<p class="listing" id="ch2list1"><strong>Listing 2.1:</strong> Using <span class="pd_green"><code><strong>let</strong></code></span> to assign variables.</p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> firstName <span class="gray">=</span> <span class="pd_red">"Michael"</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> lastName  <span class="gray">=</span> <span class="pd_red">"Hartl</span>";</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_30"></span>Here <span class="pd_green"><code><strong>let</strong></code></span> associates the identifier <span class="pd_green"><code><strong>firstName</strong></code></span> with the string <span class="pd_green"><code><strong>"Michael"</strong></code></span> and the identifier <span class="pd_green"><code><strong>lastName</strong></code></span> with the string <span class="pd_green"><code><strong>"Hartl"</strong></code></span>.</p>
+<p class="indent">The identifiers <span class="pd_green"><code><strong>firstName</strong></code></span> and <span class="pd_green"><code><strong>lastName</strong></code></span> in <a href="ch02.xhtml#ch2list1">Listing 2.1</a> are written in so-called <a href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a> (named for the resemblance of the capital letters to humps of a camel (<a href="ch02.xhtml#ch2fig3">Figure 2.3</a>)),<sup><a id="ch2fn-4" href="ch02.xhtml#ch2fn_4">4</a></sup> which is a common naming convention for JavaScript variables. Variable names conventionally start with a lowercase character, whereas <em>object prototypes</em> like <span class="pd_green"><code><strong>String</strong></code></span> (<a href="ch07.xhtml#ch07">Chapter 7</a>) start with a capital letter.</p>
+<p class="footnote"><a id="ch2fn_4" href="ch02.xhtml#ch2fn-4">4</a>. Image courtesy of Utsav Academy and Art Studio. Pearson India Education Services Pvt. Ltd.</p>
+<figure class="figure" id="ch2fig3">
+<img src="graphics/02fig03.jpg" alt="images" width="561" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.3:</strong> The origin of CamelCase.</p>
+</figcaption>
+</figure>
+<p class="indent">Having defined the variable names in <a href="ch02.xhtml#ch2list1">Listing 2.1</a>, we can use them to concatenate the first and last names, while also inserting a space in between (<a href="ch02.xhtml#ch2list2">Listing 2.2</a>).</p>
+<p class="listing" id="ch2list2"><strong>Listing 2.2:</strong> Concatenating string variables (and a string literal).</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis02" id="c02lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> firstName <span class="gray">+</span> <span class="pd_red">"  "</span> <span class="gray">+</span> lastName;
+<span class="pd_red">'Michael Hartl'</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_31"></span>By the way, the use of <span class="pd_green"><code><strong>let</strong></code></span> in <a href="ch02.xhtml#ch2list1">Listing 2.1</a> is characteristic of modern JavaScript (often referred to as <a href="https://en.wikipedia.org/wiki/ECMAScript#Versions">ES6</a> because of the significant upgrade represented by version 6 of the ECMAScript standard (<a href="ch01.xhtml#ch1box2">Box 1.2</a>)). In this book, we’ll always use <span class="pd_green"><code><strong>let</strong></code></span> (or the closely related <span class="pd_green"><code><strong>const</strong></code></span>, which we’ll first see in <a href="ch04.xhtml#ch4lev2">Section 4.2</a>) for variable assignment, but you should be aware that the use of the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let">nearly equivalent</a> <span class="pd_green"><code><strong>var</strong></code></span> is still <em>extremely</em> common (<a href="ch02.xhtml#ch2list3">Listing 2.3</a>), so it’s important to understand both.</p>
+<p class="listing" id="ch2list3"><strong>Listing 2.3:</strong> Using the slightly outdated <span class="pd_green"><code><strong>var</strong></code></span> to assign variables.</p>
+<pre class="pre2"><span class="pd_green"><strong>var</strong></span> firstName <span class="gray">=</span> <span class="pd_red">"Michael"</span>;
+<span class="pd_green"><strong>var</strong></span> lastName  <span class="gray">=</span> <span class="pd_red">"Hartl"</span>;</pre>
+<p class="noindent">(You shouldn’t type in <a href="ch02.xhtml#ch2list3">Listing 2.3</a>; it’s shown only for purposes of illustration.)</p>
+<section>
+<h4 class="h4" id="ch2lev2sec1">2.2.1 The Backtick Syntax</h4>
+<p class="noindent">Another way to build up strings is via <em>interpolation</em> using a special ES6 backtick syntax known as <em>template literals</em>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c032pro01" id="c032pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_32"></span><span class="gray">&gt;</span> <span class="pink"><strong>`${</strong></span>firstName<span class="pink"><strong>}</strong></span> <span class="pd_red">is my first name.`</span>
+<span class="pd_red">'Michael is my first name.'</span></pre>
+<p class="noindent">Here we have a string enclosed in backticks <span class="pd_green"><code><strong>'…'</strong></code></span>, with the variable to be interpolated introduced with a dollar sign <span class="pd_green"><code><strong>$</strong></code></span> and enclosed in curly braces <span class="pd_green"><code><strong>{…}</strong></code></span>. JavaScript automatically inserts, or <em>interpolates</em>, the value of the variable <span class="pd_green"><code><strong>firstName</strong></code></span> into the string at the appropriate place.<sup><a id="ch2fn-5" href="ch02.xhtml#ch2fn_5">5</a></sup></p>
+<p class="footnote"><a id="ch2fn_5" href="ch02.xhtml#ch2fn-5">5</a>. Programmers familiar with Perl or PHP should compare this to the automatic interpolation of dollar sign variables in expressions like <span class="pd_green"><code><strong>"Michael $lastName"</strong></code></span>.</p>
+<p class="indent">We can use the backtick syntax to replicate the result of <a href="ch02.xhtml#ch2list2">Listing 2.2</a>, as shown in <a href="ch02.xhtml#ch2list4">Listing 2.4</a>.</p>
+<p class="listing" id="ch2list4"><strong>Listing 2.4:</strong> Concatenation review, then interpolating with backticks.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis04" id="c02lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> firstName <span class="gray">+</span> <span class="pd_red">"  "</span> <span class="gray">+</span> lastName;    <span class="pd_blue1"><em>// Concatenation, with a space in between</em></span>
+<span class="pd_red">'Michael Hartl'</span>
+<span class="gray">&gt;</span> <span class="pd_red">`</span><span class="pink"><strong>${</strong></span>firstName<span class="pink"><strong>} ${</strong></span>lastName<span class="pink"><strong>}</strong></span><span class="pd_red">`</span>;    <span class="pd_blue1"><em>// The equivalent interpolation</em></span>
+<span class="pd_red">'Michael Hartl'</span></pre>
+<p class="noindent">The two expressions shown in <a href="ch02.xhtml#ch2list4">Listing 2.4</a> are equivalent, but I generally prefer the interpolated version because having to add the single space <span class="pd_green"><code><strong>" "</strong></code></span> in between strings feels a bit awkward.</p>
+</section>
+<section>
+<h4 class="h4" id="ch2lev2sec2">2.2.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">What happens if you use <span class="pd_green"><code><strong>let</strong></code></span> a second time with the same variable name? What if you use <span class="pd_green"><code><strong>var</strong></code></span> instead?</p></li>
+<li><p class="number">Assign variables <span class="pd_green"><code><strong>city</strong></code></span> and <span class="pd_green"><code><strong>state</strong></code></span> to your current city and state of residence. (If residing outside the U.S., substitute appropriate analogues.) Using interpolation, print a string consisting of the city and state separated by a comma and a space, as in “Los Angeles, CA”.</p></li>
+<li><p class="number">Repeat the previous exercise but with the city and state separated by a tab character.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch2lev3"><span epub:type="pagebreak" id="page_33"></span>2.3 Printing</h3>
+<p class="noindent">As we saw in <a href="ch01.xhtml#ch1lev3">Section 1.3</a> and subsequent sections, the JavaScript way to print a string to the screen is to use the <span class="pd_green"><code><strong>console.log</strong></code></span> function:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c033pro01" id="c033pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> console.log(<span class="pd_red">"hello, world!"</span>);     <span class="pd_blue1"><em>// Print output</em></span>
+hello, world<span class="gray">!</span></pre>
+<p class="noindent">This function operates as a <em><a href="https://en.wikipedia.org/wiki/Side_effect_(computer_science)">side effect</a></em>, which refers to anything a function does other than returning a value. In particular, the expression</p>
+<pre class="pre1">console.log(<span class="pd_red">"hello, world!"</span>);</pre>
+<p class="noindent">prints the string to the screen and then returns nothing. This is why some consoles display <span class="pd_green"><code><strong>undefined</strong></code></span> after the printed value (<a href="ch02.xhtml#ch2fig4">Figure 2.4</a>). We’ll generally omit <span class="pd_green"><code><strong>undefined</strong></code></span> when showing results in the REPL, but it’s good to distinguish between functions that return values (almost all of them) and those like <span class="pd_green"><code><strong>console.log</strong></code></span> that operate using side effects.</p>
+<figure class="figure" id="ch2fig4">
+<img src="graphics/02fig04.jpg" alt="images" width="601" height="131"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.4:</strong> An undefined return value in Node.</p>
+</figcaption>
+</figure>
+<p class="indent">In contrast to many other languages—whose print functions are things like <span class="pd_green"><code><strong>print</strong></code></span>, <span class="pd_green"><code><strong>printf</strong></code></span> (“print format”), and <span class="pd_green"><code><strong>puts</strong></code></span> (“put string”)—the print function in JavaScript is rather long and cumbersome, requiring calling a method on the <span class="pd_green"><code><strong>console</strong></code></span> object and using the rather unintuitive name <span class="pd_green"><code><strong>log</strong></code></span>. This is due to the origins of JavaScript as a language designed specifically to run inside web browsers, rather than being designed as a general-purpose programming language.</p>
+<p class="indent">The name <span class="pd_green"><code><strong>console.log</strong></code></span> is a hint of its original purpose: to write a <a href="https://en.wikipedia.org/wiki/Log_file">log</a> to the browser console—a task at which it still excels, and which is useful in debugging. For example, we can write to the index page’s console log by adding a line inside the <span class="pd_green"><code><strong>script</strong></code></span> tag, as shown in <a href="ch02.xhtml#ch2list5">Listing 2.5</a>.</p>
+<p class="listing" id="ch2list5"><span epub:type="pagebreak" id="page_34"></span><strong>Listing 2.5:</strong> Writing to the console log.<br/><code><em><a href="http://index.html">index.html</a></em></code></p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis05" id="c02lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      alert(<span class="pd_red">"hello, world!"</span>);
+<span class="bg1">      console.log(<span class="pd_red">"This page contains a friendly greeting."</span>);</span>
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;Hello, world!&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;This page includes an alert written in JavaScript.&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="noindent">The result is that the index page (after displaying the alert) logs the message to the console, as shown in <a href="ch02.xhtml#ch2fig5">Figure 2.5</a>.</p>
+<figure class="figure" id="ch2fig5">
+<img src="graphics/02fig05.jpg" alt="images" width="712" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.5:</strong> The console log message on the index page.</p>
+</figcaption>
+</figure>
+<p class="indent">Finally, it’s worth noting that (as seen briefly in <a href="ch01.xhtml#ch1lev4sec1">Section 1.4.1</a>) the default behavior for <span class="pd_green"><code><strong>console.log</strong></code></span> is to insert a space:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c034pro01" id="c034pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> console.log(firstName, lastName);
+Michael Hartl</pre>
+<p class="noindent">This does you little good if you actually want a string representing the combination (as in <a href="ch02.xhtml#ch2lev2">Section 2.2</a>), but it does mean you can omit the concatenation or interpolation if all you’re interested in is the output.</p>
+<section>
+<h4 class="h4" id="ch2lev3sec1">2.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Define <span class="pd_green"><code><strong>firstName</strong></code></span> and <span class="pd_green"><code><strong>lastName</strong></code></span> variables (as in <a href="ch02.xhtml#ch2lev2">Section 2.2</a>) inside <span class="pd_green"><code><strong>index.html</strong></code></span>, and output them in the browser console using <span class="pd_green"><code><strong>console.log</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch2lev4"><span epub:type="pagebreak" id="page_35"></span>2.4 Properties, Booleans, and Control Flow</h3>
+<p class="noindent">Almost everything in JavaScript, including strings, is an object. This means that we can get useful information about strings and do useful things with them using the dot notation introduced in <a href="ch01.xhtml#ch1lev3sec1">Section 1.3.1</a>.</p>
+<p class="indent">We’ll start by accessing a string <em>property</em> (also called an <em><a href="https://en.wikipedia.org/wiki/Attribute_(computing)">attribute</a></em>), which is a piece of data attached to an object. In particular, in the console we can use the <span class="pd_green"><code><strong>length</strong></code></span> property to find the number of characters in a string:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c035pro01" id="c035pro01a">Click here to view code image</a></p>
+<pre class="pre1">$ node
+<span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length;   <span class="pd_blue1"><em>// Accessing the "length" property of a string</em></span>
+<span class="gray">6</span>
+<span class="gray">&gt;</span> <span class="pd_red">""</span>.length          <span class="pd_blue1"><em>// The empty string has zero length.</em></span>
+<span class="pd_red">0</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_36"></span>As it happens, <span class="pd_green"><code><strong>length</strong></code></span> is the <em>only</em> property of string objects, as you can verify using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">MDN entry on String</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String</a>) and using your browser’s “Find” capability to search for the string “properties”.</p>
+<p class="indent">The <span class="pd_green"><code><strong>length</strong></code></span> property is especially useful in comparisons, such as checking the length of a string to see how it compares to a particular value (note that the REPL supports “up arrow” to retrieve previous lines, just like the command-line terminal):</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length <span class="gray">&gt; 3</span>;
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length <span class="gray">&gt; 6</span>;
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length <span class="gray">&gt;= 6</span>;
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length <span class="gray">&lt; 10</span>;
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_red">"badger"</span>.length <span class="gray">== 6</span>;
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent">The last line uses the equality comparison operator <span class="pd_green"><code><strong>==</strong></code></span>, which JavaScript shares with many other languages, but there’s a huge <a href="https://en.wiktionary.org/wiki/gotcha#Etymology_2">gotcha</a>:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"1"</span> <span class="gray">== 1</span>;     <span class="pd_blue1"><em>// Uh, oh!</em></span>
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent">In other words, JavaScript considers the string <span class="pd_green"><code><strong>"1"</strong></code></span> to be equal to the number <span class="pd_green"><code><strong>1</strong></code></span>, at least when using <span class="pd_green"><code><strong>==</strong></code></span> to do the comparison.</p>
+<p class="indent">As programming languages go, this behavior is unusual, so it can be a source of frustrating bugs for people coming to JavaScript from other languages. In order to avoid confusion, it’s best to use <em>triple equals</em> instead:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c036pro03" id="c036pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"1"</span> <span class="gray">=== 1</span>;     <span class="pd_blue1"><em>// This is probably what you want.</em></span>
+<span class="pd_green1"><code><strong>false</strong></code></span></pre>
+<p class="noindent">Throughout the rest of this tutorial, we’ll always do equality comparisons with <span class="pd_green"><code><strong>===</strong></code></span>.</p>
+<p class="indent">The return values in the comparisons above, which are always either <span class="pd_green"><code><strong>true</strong></code></span> or <span class="pd_green"><code><strong>false</strong></code></span>, are known as <em>boolean</em> values, after mathematician and logician <a href="https://en.wikipedia.org/wiki/George_Boole">George Boole</a> (<a href="ch02.xhtml#ch2fig6">Figure 2.6</a>).<sup><a id="ch2fn-6" href="ch02.xhtml#ch2fn_6">6</a></sup></p>
+<p class="footnote"><a id="ch2fn_6" href="ch02.xhtml#ch2fn-6">6</a>. Image courtesy of Yogi Black/Alamy Stock Photo.</p>
+<span epub:type="pagebreak" id="page_37"></span>
+<figure class="figure" id="ch2fig6">
+<img src="graphics/02fig06.jpg" alt="images" width="365" height="488"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.6:</strong> True or false? This is a picture of George Boole.</p>
+</figcaption>
+</figure>
+<p class="indent">Boolean values are especially useful for <em>control flow</em>, which lets us take actions based on the result of a comparison (<a href="ch02.xhtml#ch2list6">Listing 2.6</a>).</p>
+<p class="listing" id="ch2list6"><strong>Listing 2.6:</strong> Control flow with <span class="pd_green"><code><strong>if</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis06" id="c02lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> password <span class="gray">=</span> <span class="pd_red">"foo"</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (password.length <span class="gray">&lt; 6</span>) {
+    <span class="pd_red">"Password is too short."</span>;
+  }
+<span class="pd_red">'Password is too short.'</span></pre>
+<p class="noindent">Note in <a href="ch02.xhtml#ch2list6">Listing 2.6</a> that the comparison after <span class="pd_green"><code><strong>if</strong></code></span> is in parentheses, and the string is inside curly braces <span class="pd_green"><code><strong>{…}</strong></code></span>.<sup><a id="ch2fn-7" href="ch02.xhtml#ch2fn_7">7</a></sup> We also followed a consistent indentation convention, <span epub:type="pagebreak" id="page_38"></span>which is irrelevant to JavaScript but is important for human readers of the code (<a href="ch02.xhtml#ch2box3">Box 2.3</a>).</p>
+<p class="footnote"><a id="ch2fn_7" href="ch02.xhtml#ch2fn-7">7</a>. Such curly braces are characteristic of C-like languages, that is, languages with syntax similar to that of the C programming language.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch2box3"><strong>Box 2.3: Code Formatting</strong></h1>
+</header>
+<p class="box-no">The code samples in this tutorial, including those in the REPL, are designed to show how to format JavaScript in a way that maximizes readability and code comprehension. The programs executing JavaScript, whether Node or the browser itself, don’t care about these aspects of the code, but human developers do.</p>
+<p class="box-ind">While exact styles differ, here are some general guidelines for good code formatting:</p>
+<ul class="sq">
+<li><p class="bull"><em>Indent code to indicate block structure</em>. Pretty much every time you see an opening curly brace <code>{</code>, you’ll end up indenting the subsequent line. (Some text editors even do this automatically.)</p></li>
+<li><p class="bull"><em>Use two spaces (typically via</em> <a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/writing_source_code#sec-indenting_and_dedenting">emulated tabs</a> <em>(<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-indenting_and_dedenting">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-indenting_and_dedenting</a>)) for indentation</em>. Many developers use four or even eight spaces, but I find that two spaces are enough to indicate block structure visually while conserving scarce horizontal space.</p></li>
+<li><p class="bull"><em>Add newlines to indicate logical structure</em>. One thing I particularly like to do is add an extra newline after a series of <span class="pd_green"><code><strong>let</strong></code></span> and <span class="pd_green"><code><strong>const</strong></code></span> declarations, in order to give a visual indication that the setup is done and the real coding can begin. An example appears in <a href="ch04.xhtml#ch4list6">Listing 4.6</a>.</p></li>
+<li><p class="bull"><em>Limit lines to 80 characters (also called “columns”)</em>. This is an old constraint, one that dates back to the early days of 80-character-width terminals. Many modern developers routinely violate this constraint, considering it outdated, but in my experience the 80-character limit is a good source of discipline, and will <a href="https://idioms.thefreedictionary.com/save+your+neck">save your neck</a> when using command-line programs like <code>less</code> (or when using your code in a document with more stringent width requirements, such as a <a href="https://www.learnenough.com/buy/301?option=ebooks">book</a> (<a href="https://www.learnenough.com/courses#">https://www.learnenough.com/courses#</a>)). A line that breaks 80 characters is a hint that you should introduce a new variable name, break an operation into multiple steps, etc., to make the code clearer for anyone reading it.</p></li>
+</ul>
+<p class="box-no">We’ll see several examples of more advanced code-formatting conventions as we proceed throughout the rest of this tutorial.</p>
+<p class="box-ind">To reinforce good code-formatting practices, I’ll generally format code in the Node REPL the same way I would in a file, but it’s important to note that this is not <span epub:type="pagebreak" id="page_39"></span>necessarily what you will see in the actual REPL. For example, many implementations of the Node REPL automatically insert triple dots <code>…</code> after an opening curly brace (<a href="ch02.xhtml#ch2fig7">Figure 2.7</a>) to indicate a new block of code. This difference is not cause for concern, and you should use your technical sophistication (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) to resolve the discrepancy between the REPL code samples and the exact appearance on your system.</p>
+<figure class="figure" id="ch2fig7">
+<img src="graphics/02fig07.jpg" alt="images" width="711" height="499"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.7:</strong> The appearance of code in the REPL doesn’t necessarily follow indentation conventions.</p>
+</figcaption>
+</figure>
+</aside>
+<p class="indent">We can add a second behavior using <span class="pd_green"><code><strong>else</strong></code></span>, which serves as the default result if the first comparison is <span class="pd_green"><code><strong>false</strong></code></span> (<a href="ch02.xhtml#ch2list7">Listing 2.7</a>).</p>
+<p class="listing" id="ch2list7"><strong>Listing 2.7:</strong> Control flow with <span class="pd_green"><code><strong>if</strong></code></span> and <span class="pd_green"><code><strong>else</strong></code></span>.</p>
+<pre class="pre2"><span class="gray">&gt;</span> password <span class="gray">=</span> <span class="pd_red">"foobar"</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (password.length <span class="gray">&lt; 6</span>) {
+    <span class="pd_red">"Password is too short."</span>;
+<span epub:type="pagebreak" id="page_40"></span>  } <span class="pd_green1"><strong>else</strong></span> {
+    <span class="pd_red">"Password is long enough."</span>;
+  }
+<span class="pd_red">'Password is long enough.'</span></pre>
+<p class="noindent">The first line in <a href="ch02.xhtml#ch2list7">Listing 2.7</a> <em>redefines</em> <span class="pd_green"><code><strong>password</strong></code></span> by assigning it a new value (with no <span class="pd_green"><code><strong>let</strong></code></span> required since it was already defined before). After reassignment, the <span class="pd_green"><code><strong>password</strong></code></span> variable has length 6, so <span class="pd_green"><code><strong>password.length &lt; 6</strong></code></span> is <span class="pd_green"><code><strong>false</strong></code></span>. As a result, the <span class="pd_green"><code><strong>if</strong></code></span> part of the statement (known as the <span class="pd_green"><code><strong>if</strong></code></span> <em>branch</em>) doesn’t get evaluated; instead, JavaScript evaluates the <span class="pd_green"><code><strong>else</strong></code></span> branch, resulting in a message indicating that the password is long enough.</p>
+<section>
+<h4 class="h4" id="ch2lev4sec1">2.4.1 Combining and Inverting Booleans</h4>
+<p class="noindent">Booleans can be combined or inverted using the <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span> (“and”), <span class="pd_green"><code><strong>||</strong></code></span> (“or”), and <span class="pd_green"><code><strong>!</strong></code></span> (“bang” or “not”) operators.</p>
+<p class="indent">Let’s start with <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span>. When comparing two booleans with <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span>, <em>both</em> have to be <span class="pd_green"><code><strong>true</strong></code></span> for the combination to be <span class="pd_green"><code><strong>true</strong></code></span>. For example, if I said I wanted both french fries <em>and</em> a baked potato, the only way the combination could be true is if I could answer “yes” (true) to both of the questions “Do you want french fries?” and “Do you want a baked potato?” The resulting combinations of possibilities are collectively known as a <em><a href="https://en.wikipedia.org/wiki/Truth_table">truth table</a></em>; the truth table for <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span> appears in <a href="ch02.xhtml#ch2list8">Listing 2.8</a>.</p>
+<p class="listing" id="ch2list8"><strong>Listing 2.8:</strong> The truth table for <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span> (“and”).</p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>true</strong></span> <span class="gray">&amp;&amp;</span> <span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>false</strong></span> <span class="gray">&amp;&amp;</span> <span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>true</strong></span> <span class="gray">&amp;&amp;</span> <span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>false</strong></span> <span class="gray">&amp;&amp;</span> <span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="indent">We can apply this to a conditional as shown in <a href="ch02.xhtml#ch2list9">Listing 2.9</a>.</p>
+<p class="listing" id="ch2list9"><span epub:type="pagebreak" id="page_41"></span><strong>Listing 2.9:</strong> Using the <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis09" id="c02lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> x <span class="gray">=</span> <span class="pd_red">"foo"</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> y <span class="gray">=</span> <span class="pd_red">""</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (x.length <span class="gray">=== 0 &amp;&amp;</span> y.length <span class="gray">=== 0</span>) {
+    <span class="pd_red">"Both strings are empty!"</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    <span class="pd_red">"At least one of the strings is nonempty."</span>;
+  }
+<span class="pd_red">'At least one of the strings is nonempty.'</span></pre>
+<p class="noindent">In <a href="ch02.xhtml#ch2list9">Listing 2.9</a>, <span class="pd_green"><code><strong>y.length</strong></code></span> is in fact <span class="pd_green"><code><strong>0</strong></code></span>, but <span class="pd_green"><code><strong>x.length</strong></code></span> isn’t, so the combination is <span class="pd_green"><code><strong>false</strong></code></span> (in agreement with <a href="ch02.xhtml#ch2list8">Listing 2.8</a>), and JavaScript evaluates the <span class="pd_green"><code><strong>else</strong></code></span> branch.</p>
+<p class="indent">In contrast to <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span>, <span class="pd_green"><code><strong>||</strong></code></span> lets us take action if <em>either</em> comparison (or both) is true (<a href="ch02.xhtml#ch2list10">Listing 2.10</a>).</p>
+<p class="listing" id="ch2list10"><strong>Listing 2.10:</strong> The truth table for <span class="pd_green"><code><strong>||</strong></code></span> (“or”).</p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>true</strong></span> <span class="gray">||</span> <span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>true</strong></span> <span class="gray">||</span> <span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>false</strong></span> <span class="gray">||</span> <span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>false</strong></span> <span class="gray">||</span> <span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="indent">We can use <span class="pd_green"><code><strong>||</strong></code></span> in a conditional as shown in <a href="ch02.xhtml#ch2list11">Listing 2.11</a>.</p>
+<p class="listing" id="ch2list11"><strong>Listing 2.11:</strong> Using the <span class="pd_green"><code><strong>||</strong></code></span> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis11" id="c02lis11a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (x.length <span class="gray">=== 0 ||</span> y.length <span class="gray">=== 0</span>) {
+    <span class="pd_red">"At least one of the strings is empty!"</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    <span class="pd_red">"Neither of the strings is empty."</span>;
+  }
+<span class="pd_red">'At least one of the strings is empty!'</span></pre>
+<p class="indent">Note from <a href="ch02.xhtml#ch2list10">Listing 2.10</a> that <span class="pd_green"><code><strong>||</strong></code></span> isn’t <em>exclusive</em>, meaning that the result is true even when <em>both</em> statements are true. This stands in contrast to colloquial usage, where a <span epub:type="pagebreak" id="page_42"></span>statement like “I want fries or a baked potato” implies that you want either fries <em>or</em> a baked potato, but you don’t want both (<a href="ch02.xhtml#ch2fig8">Figure 2.8</a>).<sup><a id="ch2fn-8" href="ch02.xhtml#ch2fn_8">8</a></sup></p>
+<p class="footnote"><a id="ch2fn_8" href="ch02.xhtml#ch2fn-8">8</a>. Image courtesy of Rikaphoto/Shutterstock.</p>
+<figure class="figure" id="ch2fig8">
+<img src="graphics/02fig08.jpg" alt="images" width="598" height="399"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.8:</strong> Turns out I only wanted fries.</p>
+</figcaption>
+</figure>
+<p class="indent">In addition to <span class="pd_green"><code><strong>&amp;&amp;</strong></code></span> and <span class="pd_green"><code><strong>||</strong></code></span>, JavaScript supports <em>negation</em> via the “<a href="https://www.youtube.com/watch?v=fhIdbRp6xeg">not</a>” operator <span class="pd_green"><code><strong>!</strong></code></span> (often pronounced “bang”), which just converts <span class="pd_green"><code><strong>true</strong></code></span> to <span class="pd_green"><code><strong>false</strong></code></span> and <span class="pd_green"><code><strong>false</strong></code></span> to <span class="pd_green"><code><strong>true</strong></code></span> (<a href="ch02.xhtml#ch2list12">Listing 2.12</a>).</p>
+<p class="listing" id="ch2list12"><strong>Listing 2.12:</strong> The truth table for <span class="pd_green"><code><strong>!</strong></code></span>.</p>
+<pre class="pre2"><span class="gray">&gt; !</span><span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt; !</span><span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent">We can use <span class="pd_green"><code><strong>!</strong></code></span> in a conditional as shown in <a href="ch02.xhtml#ch2list13">Listing 2.13</a>.</p>
+<p class="listing" id="ch2list13"><span epub:type="pagebreak" id="page_43"></span><strong>Listing 2.13:</strong> Using the <span class="pd_green"><code><strong>!</strong></code></span> operator in a conditional.</p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (<span class="gray">!</span>(x.length <span class="gray">=== 0</span>)) {
+  <span class="pd_red">"x is not empty."</span>;
+} <span class="pd_green1"><strong>else</strong></span> {
+  <span class="pd_red">"x is empty."</span>;
+}
+<span class="pd_red">'x is not empty.'</span></pre>
+<p class="indent">The code in <a href="ch02.xhtml#ch2list13">Listing 2.13</a> is valid JavaScript, as it simply negates the test <span class="pd_green"><code><strong>x.length === 0</strong></code></span>, yielding <span class="pd_green"><code><strong>true</strong></code></span>:</p>
+<pre class="pre1"><span class="gray">&gt;</span> (<span class="gray">!</span>(x.length <span class="gray">=== 0</span>))
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent">In this case, though, it’s more common to use <span class="pd_green"><code><strong>!==</strong></code></span> (“not equals”):</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (x.length <span class="gray">!== 0</span>) {
+    <span class="pd_red">"x is not empty."</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+  <span class="pd_red">"x is empty."</span>;
+  }
+<span class="pd_red">'x is not empty'</span></pre>
+</section>
+<section>
+<h4 class="h4" id="ch2lev4sec2">2.4.2 Bang Bang</h4>
+<p class="noindent">Not all booleans are the result of comparisons, and in fact every JavaScript object has a value of either <span class="pd_green"><code><strong>true</strong></code></span> or <span class="pd_green"><code><strong>false</strong></code></span> in a boolean context. We can force JavaScript to use such a boolean context with <span class="pd_green"><code><strong>!!</strong></code></span> (pronounced “bang bang”); because <span class="pd_green"><code><strong>!</strong></code></span> converts between <span class="pd_green"><code><strong>true</strong></code></span> and <span class="pd_green"><code><strong>false</strong></code></span>, using <em>two</em> exclamation points returns us back to the original boolean:</p>
+<pre class="pre1"><span class="gray">&gt; !!</span><span class="pd_green1"><strong>true</strong></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt; !!</span><span class="pd_green1"><strong>false</strong></span>
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent">Using this trick allows us to see that a string like <span class="pd_green"><code><strong>"foo"</strong></code></span> is <span class="pd_green"><code><strong>true</strong></code></span> in a boolean context:</p>
+<pre class="pre1"><span class="gray">&gt; !!</span><span class="pd_red">"foo"</span>
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_44"></span>As it happens, the empty string is <em>false</em> in a boolean context:<sup><a id="ch2fn-9" href="ch02.xhtml#ch2fn_9">9</a></sup></p>
+<p class="footnote"><a id="ch2fn_9" href="ch02.xhtml#ch2fn-9">9</a>. This is the sort of detail that varies from language to language. In Ruby, for example, even the empty string is <span class="pd_green"><code><strong>true</strong></code></span> in a boolean context.</p>
+<pre class="pre1"><span class="gray">&gt; !!</span><span class="pd_red">""</span>
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent">As a result, we can rewrite code like <a href="ch02.xhtml#ch2list9">Listing 2.9</a> more compactly by omitting the length comparison (while negating <span class="pd_green"><code><strong>x</strong></code></span> and <span class="pd_green"><code><strong>y</strong></code></span>), as shown in <a href="ch02.xhtml#ch2list14">Listing 2.14</a>.</p>
+<p class="listing" id="ch2list14"><strong>Listing 2.14:</strong> Using a conditional to force a boolean context.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis14" id="c02lis14a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (<span class="gray">!</span>x <span class="gray">&amp;&amp; !</span>y) {
+    <span class="pd_red">"Both strings are empty!"</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    <span class="pd_red">"At least one of the strings is nonempty."</span>;
+  }
+<span class="pd_red">'At least one of the strings is nonempty.'</span></pre>
+</section>
+<section>
+<h4 class="h4" id="ch2lev4sec3">2.4.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">If <span class="pd_green"><code><strong>x</strong></code></span> is <span class="pd_green"><code><strong>"foo"</strong></code></span> and <span class="pd_green"><code><strong>y</strong></code></span> is <span class="pd_green"><code><strong>""</strong></code></span> (the empty string), what is the value of <span class="pd_green"><code><strong>x &amp;&amp; y</strong></code></span>? Verify using the “bang bang” notation that <span class="pd_green"><code><strong>x &amp;&amp; y</strong></code></span> is false in a boolean context. <em>Hint</em>: When applying <span class="pd_green"><code><strong>!!</strong></code></span> to a compound expression, wrap the whole thing in parentheses.</p></li>
+<li><p class="number">What is <span class="pd_green"><code><strong>x || y</strong></code></span>? What is it in a boolean context? Rewrite <a href="ch02.xhtml#ch2list14">Listing 2.14</a> to use <span class="pd_green"><code><strong>x || y</strong></code></span>, ensuring that the result is the same. (<em>Hint</em>: Switch the order of the strings.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch2lev5">2.5 Methods</h3>
+<p class="noindent">As noted in <a href="ch02.xhtml#ch2lev4">Section 2.4</a>, JavaScript string objects have only one property (<span class="pd_green"><code><strong>length</strong></code></span>), but they support a wide variety of methods.<sup><a id="ch2fn-10" href="ch02.xhtml#ch2fn_10">10</a></sup> In the language of object-oriented programming, a particular string, or <em>string instance</em>, is said to “respond to” a particular method, indicated using the dot notation first seen in <a href="ch01.xhtml#ch1lev3sec1">Section 1.3.1</a>.</p>
+<p class="footnote"><a id="ch2fn_10" href="ch02.xhtml#ch2fn-10">10</a>. Recall from <a href="ch01.xhtml#ch1lev3sec1">Section 1.3.1</a> that a method is a particular kind of function, one attached to an object and invoked using the dot notation.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_45"></span>For example, strings respond to the instance method <span class="pd_green"><code><strong>toLowerCase()</strong></code></span>, which (surprise!) converts the string to all lowercase letters (<a href="ch02.xhtml#ch2fig9">Figure 2.9</a>):<sup><a id="ch2fn-11" href="ch02.xhtml#ch2fn_11">11</a></sup></p>
+<p class="footnote"><a id="ch2fn_11" href="ch02.xhtml#ch2fn-11">11</a>. <a href="https://en.wikipedia.org/wiki/File:Honey_badger.jpg">Image</a> courtesy of Pavel Kovaricek/Shutterstock.</p>
+<figure class="figure" id="ch2fig9">
+<img src="graphics/02fig09.jpg" alt="images" width="599" height="398"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.9:</strong> This honey badger used to be a HONEY BADGER, but <a href="http://knowyourmeme.com/memes/honey-badger">he don’t care</a>.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch02_images.xhtml#c045pro01" id="c045pro01a">Click here to view code image</a></p>
+<pre class="pre1">$ node
+<span class="gray">&gt;</span> <span class="pd_red">"HONEY BADGER"</span>.toLowerCase();
+<span class="pd_red">'honey badger'</span></pre>
+<p class="indent">This is the sort of method that could be useful, for example, when standardizing on lowercase letters in an email address:<sup><a id="ch2fn-12" href="ch02.xhtml#ch2fn_12">12</a></sup></p>
+<p class="footnote"><a id="ch2fn_12" href="ch02.xhtml#ch2fn-12">12</a>. If you’ve exited and re-entered your Node console, <span class="pd_green"><code><strong>firstName</strong></code></span> might no longer be defined, as such definitions don’t persist from session to session. If this is the case, apply your technical sophistication (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) to figure out what to do.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c045pro02" id="c045pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> username <span class="gray">=</span> firstName.toLowerCase();
+<span class="gray">&gt;</span> <span class="pd_red">`</span><span class="pink"><strong>${</strong></span>username<span class="pink"><strong>}</strong></span><span class="pd_red">@example.com`</span>;   <span class="pd_blue1"><em>// Sample email address</em></span>
+<span class="pd_red">'michael@example.com'</span></pre>
+<p class="noindent">Note that, in contrast to the <span class="pd_green"><code><strong>length</strong></code></span> property, a method has to be called with arguments, even if there aren’t any. That’s why</p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_46"></span>toLowerCase()</pre>
+<p class="noindent">ends with opening and closing parentheses: <span class="pd_green"><code><strong>toLowerCase</strong></code></span> is a function that takes zero arguments. Also note that official JavaScript string methods follow the same capitalization convention (CamelCase with a lowercase letter to start) that we introduced ourselves in <a href="ch02.xhtml#ch2lev2">Section 2.2</a>.</p>
+<p class="indent">As you might be able to guess, JavaScript supports the opposite operation as well; before looking at the example below, see if you can guess the method for converting a string to uppercase (<a href="ch02.xhtml#ch2fig10">Figure 2.10</a>).<sup><a id="ch2fn-13" href="ch02.xhtml#ch2fn_13">13</a></sup></p>
+<p class="footnote"><a id="ch2fn_13" href="ch02.xhtml#ch2fn-13">13</a>. Image courtesy of arco1/123RF.</p>
+<figure class="figure" id="ch2fig10">
+<img src="graphics/02fig10.jpg" alt="images" width="676" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.10:</strong> Early typesetters kept large letters in the “upper case” and small letters in the “lower case”.</p>
+</figcaption>
+</figure>
+<p class="indent">I’m betting you got the right answer:</p>
+<pre class="pre1"><span class="gray">&gt;</span> lastName.toUpperCase();
+<span class="pd_red">'HARTL'</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_47"></span>Being able to guess answers like this is a hallmark of technical sophistication, but as noted in <a href="ch01.xhtml#ch1box1">Box 1.1</a> another key skill is being able to use the documentation. In particular, the Mozilla Developer Network page on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String"><span class="pd_green"><code><strong>String</strong></code></span> objects</a> has a long list of useful string instance methods.<sup><a id="ch2fn-14" href="ch02.xhtml#ch2fn_14">14</a></sup> Let’s take a look at some of them (<a href="ch02.xhtml#ch2fig11">Figure 2.11</a>).</p>
+<p class="footnote"><a id="ch2fn_14" href="ch02.xhtml#ch2fn-14">14</a>. You can find such pages by going directly to the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">MDN website</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">https://developer.mozilla.org/en-US/docs/Web/JavaScript</a>), but the truth is that I nearly always find such pages by <a href="https://www.google.com/search?q=javascript+string">Googling things like “javascript string”</a>.</p>
+<figure class="figure" id="ch2fig11">
+<img src="graphics/02fig11.jpg" alt="images" width="653" height="492"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.11:</strong> Some JavaScript string methods.</p>
+</figcaption>
+</figure>
+<p class="indent">Inspecting the methods in <a href="ch02.xhtml#ch2fig11">Figure 2.11</a>, we see on the bottom some code that looks like this:</p>
+<pre class="pre1"><span class="pd_green1">String</span>.prototype.includes()</pre>
+<p class="noindent">followed by a brief description. What does <span class="pd_green"><code><strong>String.prototype</strong></code></span> mean here? We’ll find out in <a href="ch07.xhtml#ch07">Chapter 7</a>, but the real answer is <em>we don’t have to know exactly what it means to use the documentation</em>. Selective ignorance is classic technical sophistication.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_48"></span>Clicking through on the <span class="pd_green"><code><strong>String.prototype.includes()</strong></code></span> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes">link</a> and scrolling down shows us a bunch of examples (<a href="ch02.xhtml#ch2fig12">Figure 2.12</a>). Notice that, as <a href="https://en.wiktionary.org/wiki/prophesied">prophesied</a> in <a href="ch02.xhtml#ch2lev2">Section 2.2</a>, the use of <span class="pd_green"><code><strong>var</strong></code></span> instead of <span class="pd_green"><code><strong>let</strong></code></span> is very common; being able to tolerate these slight mismatches is yet another application of technical sophistication.</p>
+<figure class="figure" id="ch2fig12">
+<img src="graphics/02fig12.jpg" alt="images" width="726" height="233"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.12:</strong> Examples for the string <span class="pd_green"><code><strong>includes()</strong></code></span> method.</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s try out the examples shown in <a href="ch02.xhtml#ch2fig12">Figure 2.12</a>, with the following modifications:</p>
+<ol class="number">
+<li><p class="number">Use <span class="pd_green"><code><strong>let</strong></code></span> instead of <span class="pd_green"><code><strong>var</strong></code></span>.</p></li>
+<li><p class="number">Use <span class="pd_green"><code><strong>soliloquy</strong></code></span> instead of <span class="pd_green"><code><strong>str</strong></code></span>.</p></li>
+<li><p class="number">Use double-quoted strings instead of single-quoted strings.</p></li>
+<li><p class="number">Change the quote to use a colon as in the <a href="https://en.wikipedia.org/wiki/To_be,_or_not_to_be">original</a> (<a href="ch02.xhtml#ch2fig13">Figure 2.13</a>).<sup><a id="ch2fn-15" href="ch02.xhtml#ch2fn_15">15</a></sup></p>
+<p class="footnote"><a id="ch2fn_15" href="ch02.xhtml#ch2fn-15">15</a>. Image courtesy of Everett Collection/Shutterstock.</p>
+<figure class="figure" id="ch2fig13">
+<img src="graphics/02fig13.jpg" alt="images" width="335" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.13:</strong> <a href="http://shakespeare.mit.edu/hamlet/">Hamlet</a>, Prince of Denmark, asks: “To be, or <a href="https://en.wikipedia.org/wiki/Suicide">not to be</a>, that is the question.”</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Omit the use of <span class="pd_green"><code><strong>console.log</strong></code></span>.</p></li>
+<li><p class="number">Omit the current comments, while adding some of our own.</p></li>
+</ol>
+<p class="indent">The result in a Node REPL looks something like <a href="ch02.xhtml#ch2list15">Listing 2.15</a>.</p>
+<p class="listing" id="ch2list15"><strong>Listing 2.15:</strong> Includes or does not include? That is the question.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis15" id="c02lis15a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> soliloquy <span class="gray">=</span> <span class="pd_red">"To be, or not to be, that is the question:"</span>;
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"To be"</span>);        <span class="pd_blue1"><em>// Does it include the substring "To be"?</em></span>
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"question"</span>);     <span class="pd_blue1"><em>// What about "question"?</em></span>
+<span epub:type="pagebreak" id="page_49"></span><span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"nonexistent"</span>);  <span class="pd_blue1"><em>// This string doesn't appear.</em></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"TO BE"</span>);        <span class="pd_blue1"><em>// String inclusion is case-sensitive.</em></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"To be"</span>, <span class="gray">1</span>);     <span class="pd_blue1"><em>// Can you guess what this one means?</em></span>
+<span class="pd_green1"><strong>false</strong></span>
+<span class="gray">&gt;</span> soliloquy.includes(<span class="pd_red">"o be,"</span>, <span class="gray">1</span>);     <span class="pd_blue1"><em>// A hint for the previous one</em></span>
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="indent">Of the lines in <a href="ch02.xhtml#ch2list15">Listing 2.15</a>, the only two that you might not be able to figure out right away are the last two. You’ll find the solution to this mystery, as well as pointers to some other common string methods, in the section exercises.</p>
+<section>
+<h4 class="h4" id="ch2lev5sec1">2.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write the JavaScript code to test whether the string “hoNeY BaDGer” includes the string “badger” without regard to case.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_50"></span>What does <span class="pd_green"><code><strong>includes(string, i)</strong></code></span> do for any integer <span class="pd_green"><code><strong>i</strong></code></span>? <em>Hint</em>: Counting in JavaScript starts at <span class="pd_green"><code><strong>0</strong></code></span> rather than <span class="pd_green"><code><strong>1</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch2lev6">2.6 String Iteration</h3>
+<p class="noindent">Our final topic on strings is <em>iteration</em>, which is the practice of repeatedly stepping through an object one element at a time. Iteration is a common theme in computer programming, and we’ll see some other examples later in this tutorial (<a href="ch03.xhtml#ch3lev5">Section 3.5</a> and <a href="ch05.xhtml#ch5lev4">Section 5.4</a>). We’ll also see how one sign of your growing power as a developer is learning how to <em>avoid</em> iteration entirely (as discussed in <a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#ch8lev5">Section 8.5</a>).</p>
+<p class="indent">In the case of strings, we’ll be learning how to iterate one <em>character</em> at a time. There are two main prerequisites to this: First, we need to learn how to access a particular character in a string, and second, we need to learn how to make a <em>loop</em>.</p>
+<p class="indent">We can figure out how to access a particular string character by consulting the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">list of <span class="pd_green"><code><strong>String</strong></code></span> methods</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String</a>), which includes the following entry:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c050pro01" id="c050pro01a">Click here to view code image</a></p>
+<pre class="prei">String.prototype.charAt()
+Returns the character (exactly one UTF-16 code unit) at the specified index.</pre>
+<p class="noindent">Drilling down into the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt">documentation</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt</a>) for the method itself, we see from the examples what <span class="pd_green"><code><strong>charAt</strong></code></span> and “index” mean in this context. Using the <span class="pd_green"><code><strong>soliloquy</strong></code></span> string from <a href="ch02.xhtml#ch2lev5">Section 2.5</a>, we can illustrate this as shown in <a href="ch02.xhtml#ch2list16">Listing 2.16</a>.</p>
+<p class="listing" id="ch2list16"><strong>Listing 2.16:</strong> Investigating the behavior of <span class="pd_green"><code><strong>charAt</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis16" id="c02lis16a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> console.log(soliloquy);   <span class="pd_blue1"><em>// Just a reminder of what the string is</em></span>
+To be, or not to be, that is the question:
+<span class="gray">&gt;</span> soliloquy.charAt(<span class="gray">0</span>);
+<span class="pd_red">'T'</span>
+<span class="gray">&gt;</span> soliloquy.charAt(<span class="gray">1</span>);
+<span class="pd_red">'o'</span>
+<span class="gray">&gt;</span> soliloquy.charAt(<span class="gray">2</span>);
+<span class="pd_red">' '</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_51"></span>We see in <a href="ch02.xhtml#ch2list16">Listing 2.16</a> that <span class="pd_green"><code><strong>charAt(0)</strong></code></span> returns the first character, <span class="pd_green"><code><strong>charAt(1)</strong></code></span> returns the second, and so on. (We’ll discuss this possibly counter-intuitive numbering convention, called “zero-offset”, further in <a href="ch03.xhtml#ch3lev1">Section 3.1</a>.) Each number <span class="pd_green"><code><strong>0</strong></code></span>, <span class="pd_green"><code><strong>1</strong></code></span>, <span class="pd_green"><code><strong>2</strong></code></span>, etc., is called an <em>index</em> (plural <em><a href="https://en.wiktionary.org/wiki/indexes#English">indexes</a></em> or <em><a href="https://en.wiktionary.org/wiki/indices#English">indices</a></em>).</p>
+<p class="indent">Now let’s look at our first example of a loop. In particular, we’ll use a <span class="pd_green"><code><strong>for</strong></code></span> loop that defines an index value <span class="pd_green"><code><strong>i</strong></code></span> and increments its value until it reaches some maximum (<a href="ch02.xhtml#ch2list17">Listing 2.17</a>).</p>
+<p class="listing" id="ch2list17"><strong>Listing 2.17:</strong> A simple <span class="pd_green"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis17" id="c02lis17a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt; 5</span>; i<span class="gray">++</span>) {
+  console.log(i);
+}
+<span class="gray">0</span>
+<span class="gray">1</span>
+<span class="gray">2</span>
+<span class="gray">3</span>
+<span class="gray">4</span></pre>
+<p class="noindent">This sort of loop (with only minor variations in syntax) is common across an astonishing variety of programming languages, from C and C++ to Java, Perl, PHP, and (as we’ve just seen) JavaScript. <a href="ch02.xhtml#ch2list17">Listing 2.17</a> shows how, after using <span class="pd_green"><code><strong>let</strong></code></span> to create <span class="pd_green"><code><strong>i</strong></code></span> and set it to <span class="pd_green"><code><strong>0</strong></code></span>, the index variable gets incremented by <span class="pd_green"><code><strong>1</strong></code></span> until it reaches <span class="pd_green"><code><strong>5</strong></code></span>, at which point <span class="pd_green"><code><strong>i &lt; 5</strong></code></span> is <span class="pd_green"><code><strong>false</strong></code></span> and the loop stops. The notation <span class="pd_green"><code><strong>i++</strong></code></span>, meanwhile, is an <em>increment</em> statement that bumps up the value of <span class="pd_green"><code><strong>i</strong></code></span> by one at a time.</p>
+<p class="indent">If you find the code in <a href="ch02.xhtml#ch2list17">Listing 2.17</a> confusing or ugly, you’re in good company. I consider it a hallmark of good programming to <em>avoid</em> using <span class="pd_green"><code><strong>for</strong></code></span> loops as much as possible, preferring instead <span class="pd_green"><code><strong>forEach</strong></code></span> loops (<a href="ch05.xhtml#ch5lev4">Section 5.4</a>) or avoiding loops entirely using functional programming (<a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#ch8lev5">Section 8.5</a>). As computer scientist (and personal friend) <a href="http://users.cms.caltech.edu/~mvanier/">Mike Vanier</a> (<a href="ch02.xhtml#ch2fig14">Figure 2.14</a>) once <a href="http://paulgraham.com/vanlfsp.html">put it</a> in an email to <a href="http://paulgraham.com/">Paul Graham</a>:</p>
+<figure class="figure" id="ch2fig14">
+<img src="graphics/02fig14.jpg" alt="images" width="192" height="194"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.14:</strong> Just a few more <span class="pd_green"><code><strong>for</strong></code></span> loops and Mike Vanier will be a millionaire.</p>
+</figcaption>
+</figure>
+<p class="blockquote">This [tedious repetition] grinds you down after a while; if I had a nickel for every time I’ve written “for (i = 0; i &lt; N; i++)” in C I’d be a millionaire.</p>
+<p class="indent">Note how the <span class="pd_green"><code><strong>for</strong></code></span> loop syntax in Mike’s email is almost identical to that in <a href="ch02.xhtml#ch2list17">Listing 2.17</a>; the only differences are the absence of <span class="pd_green"><code><strong>let</strong></code></span> and the use of <span class="pd_green"><code><strong>N</strong></code></span>, which we can infer from context represents some upper bound on the loop’s index.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_52"></span>We’ll see how to avoid getting ground down starting in <a href="ch06.xhtml#ch06">Chapter 6</a>, but for now <a href="ch02.xhtml#ch2list17">Listing 2.17</a> is the best we can do.</p>
+<p class="indent">Let’s combine <a href="ch02.xhtml#ch2list16">Listing 2.16</a> and <a href="ch02.xhtml#ch2list17">Listing 2.17</a> to iterate through all the characters in the first line of Hamlet’s famous soliloquy. The only new thing we need is the index for when the loop should stop. In <a href="ch02.xhtml#ch2list17">Listing 2.17</a>, we hard-coded the upper limit (<span class="pd_green"><code><strong>i &lt; 5</strong></code></span>), and we could do the same here if we wanted. The <span class="pd_green"><code><strong>soliloquy</strong></code></span> variable is a bit long to count the characters by hand, though, so let’s ask JavaScript to tell us using the <span class="pd_green"><code><strong>length</strong></code></span> property (<a href="ch02.xhtml#ch2lev4">Section 2.4</a>):</p>
+<pre class="pre1"><span class="gray">&gt;</span> soliloquy.length
+<span class="gray">42</span></pre>
+<p class="noindent">This <a href="http://www.independent.co.uk/life-style/history/42-the-answer-to-life-the-universe-and-everything-2205734.html">exceptionally auspicious</a> result suggests writing code like this:</p>
+<p class="codelink"><a href="ch02_images.xhtml#c052pro01" id="c052pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt; 42</span>; i<span class="gray">++</span>) {
+  console.log(soliloquy.charAt(i));
+}</pre>
+<p class="noindent">This code will work, and it is in perfect analogy with <a href="ch02.xhtml#ch2list17">Listing 2.17</a>, but it also raises a question: Why hard-code the length when we can just use the <span class="pd_green"><code><strong>length</strong></code></span> property in the loop itself?</p>
+<p class="indent">The answer is that we shouldn’t, and when looping it’s common practice to use the <span class="pd_green"><code><strong>length</strong></code></span> property whenever possible. The resulting improved <span class="pd_green"><code><strong>for</strong></code></span> loop (with result) appears in <a href="ch02.xhtml#ch2list18">Listing 2.18</a>.</p>
+<p class="listing" id="ch2list18"><span epub:type="pagebreak" id="page_53"></span><strong>Listing 2.18:</strong> Combining <span class="pd_green"><code><strong>charAt</strong></code></span> and a <span class="pd_green"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch02_images.xhtml#c02lis18" id="c02lis18a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> soliloquy.length; <span class="gray">i++</span>) {
+  console.log(soliloquy.charAt(i));
+}
+T
+o
+b
+e
+.
+.
+.
+t
+i
+o
+n
+<span class="gray">:</span></pre>
+<p class="indent">As noted above, <span class="pd_green"><code><strong>for</strong></code></span> loops are best avoided if at all possible, but this less elegant style of looping is still an excellent place to start. As we’ll see in <a href="ch08.xhtml#ch08">Chapter 8</a>, one powerful technique is to write a <em>test</em> for the functionality we want, then get it passing any way we can, and then <em>refactor</em> the code to use a more elegant method. The second step in this process (called <em>test-driven development</em>, or TDD) often involves writing inelegant but easy-to-understand code—a task at which the humble <span class="pd_green"><code><strong>for</strong></code></span> loop excels.</p>
+<section>
+<h4 class="h4" id="ch2lev6sec1">2.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use <span class="pd_green"><code><strong>let</strong></code></span> to define a variable <span class="pd_green"><code><strong>N</strong></code></span> that’s equal to the length of <span class="pd_green"><code><strong>soliloquy</strong></code></span>, and show that the code in Mike Vanier’s <span class="pd_green"><code><strong>for</strong></code></span> loop actually works in JavaScript exactly as written. (In particular, you can sometimes get away with omitting <span class="pd_green"><code><strong>let</strong></code></span>, though this <a href="https://stackoverflow.com/questions/1470488/what-is-the-purpose-of-the-var-keyword-and-when-should-i-use-it-or-omit-it">isn’t a good practice</a>.)</p></li>
+<li><p class="number">Show that you can replace the <span class="pd_green"><code><strong>charAt</strong></code></span> method in <a href="ch02.xhtml#ch2list18">Listing 2.18</a> with a literal bracket notation, like this: <span class="pd_green"><code><strong>soliloquy[i]</strong></code></span>.<span epub:type="pagebreak" id="page_54"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

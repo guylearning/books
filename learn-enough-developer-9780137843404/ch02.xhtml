@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch02"><span epub:type="pagebreak" id="page_25"></span>Chapter 2</h2>
+<h2 class="chap-title">Manipulating Files</h2>
+<p class="noindent">Having covered how to run a basic command, we’re now ready to learn how to manipulate files, one of the most important tasks at the command line. Because <a href="part01.xhtml#part01">Part I</a> assumes no technical prerequisites, we’re not going to require any familiarity with programs designed to edit text. (As noted in <a href="ch01.xhtml#ch01">Chapter 1</a>, such programs, called <em>text editors</em>, are the subject of <a href="part02.xhtml#part02">Part II</a>.) This means that we’ll need to create files by hand at the command line. But this is a feature, not a bug (<a href="ch02.xhtml#box2-1">Box 2.1</a>), because learning to create files at the command line is a valuable skill in itself.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box2-1">Box 2.1: Learning to Speak “Geek”</p>
+<p class="box-no">One important part of learning software development is becoming familiar with the hacker, nerd, and geek culture from which much of it springs. For example, the phrase “It’s not a bug, it’s a feature” is a common way of recasting a seeming flaw as a virtue.</p>
+<p class="box-ind">The Jargon File, which includes an enormous and entertaining lexicon of hacker terms, expands on this theme in its entry on <em>feature</em>:</p>
+<p class="block12">“Undocumented feature” is a common, allegedly humorous euphemism for a <em>bug</em>. There’s a related joke that is sometimes referred to as the “one-question geek test”. You say to someone “I saw a Volkswagen Beetle today with a vanity license plate that read FEATURE”. If he/she laughs, he/she is a <em>geek</em>.</p>
+<p class="box-no"><span epub:type="pagebreak" id="page_26"></span>The joke here is that, because “bug” is a common slang term for a Volkswagen Beetle, a Beetle with the vanity plate FEATURE is a real-life manifestation of “It’s not a bug, it’s a feature” (<a href="ch02.xhtml#fig2-1">Figure 2.1</a>).<sup><a id="rfn2_1" href="ch02.xhtml#fn2_1">1</a></sup></p>
+<p class="footnote"><a id="fn2_1" href="ch02.xhtml#rfn2_1">1.</a> Image courtesy of Wirestock Creators/Shutterstock.</p>
+<figure class="figure" id="fig2-1">
+<img src="graphics/02fig01.jpg" alt="Image" width="744" height="494"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.1:</strong> It’s not a bug, it’s a feature.</p>
+</figcaption>
+</figure>
+<p class="box-ind">Even if you’re not a geek or nerd yourself, learning to “speak geek” will help you navigate both the technological landscape and the social world that surrounds it.</p>
+</aside>
+<section>
+<h3 class="h3" id="ch02lev1">2.1 Redirecting and Appending</h3>
+<p class="noindent">Let’s pick up (more or less) where we left off in <a href="ch01.xhtml#ch01">Chapter 1</a>, with an <span class="green"><code><strong>echo</strong></code></span> command to print out the first line of Shakespeare’s first sonnet (<a href="ch01.xhtml#list1-7">Listing 1.7</a>):</p>
+<span epub:type="pagebreak" id="page_27"></span>
+<p class="codelink"><a href="ch02_images.xhtml#p027pro01" id="p027pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"From fairest creatures we desire increase,"</span>
+<span class="green">From fairest creatures we desire increase,</span></pre>
+<p class="noindent">Our task now is to create a file containing this line. Even without the benefit of a text editor, it is possible to do this using the <em>redirect operator</em> <span class="green"><code><strong>&gt;</strong></code></span>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p027pro02" id="p027pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"From fairest creatures we desire increase,"</span> &gt; sonnet_1.txt</pre>
+<p class="noindent">(Recall that you can use up arrow to retrieve the previous command rather than typing it from scratch.) Here the right angle bracket <span class="green"><code><strong>&gt;</strong></code></span> takes the string output from <span class="green"><code><strong>echo</strong></code></span> and redirects its contents to a file called <span class="green"><code><strong>sonnet_1.txt</strong></code></span>.</p>
+<p class="indent">How can we tell if the redirect worked? We’ll learn some more advanced command-line tools for inspecting files in <a href="ch03.xhtml#ch03">Chapter 3</a>, but for now we’ll use the <span class="green"><code><strong>cat</strong></code></span> command, which simply dumps the contents of the file to the screen:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p027pro03" id="p027pro03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> cat sonnet_1.txt
+<span class="green">From fairest creatures we desire increase,</span></pre>
+<p class="noindent">The name <span class="green"><code><strong>cat</strong></code></span> is short for “concatenate”, which is a hint that it can be used to combine the contents of multiple files, but the usage above (to dump the contents of a single file to the screen) is extremely common. Think of <span class="green"><code><strong>cat</strong></code></span> as a “quick-and-dirty” way to view the contents of a particular file (<a href="ch02.xhtml#fig2-2">Figure 2.2</a>).<sup><a id="rfn2_2" href="ch02.xhtml#fn2_2">2</a></sup></p>
+<p class="footnote"><a id="fn2_2" href="ch02.xhtml#rfn2_2">2.</a> Image courtesy of garetsworkshop/Shutterstock.</p>
+<figure class="figure" id="fig2-2">
+<img src="graphics/02fig02.jpg" alt="Image" width="744" height="496"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.2:</strong> Viewing a file with <span class="green"><code><strong>cat</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">In order to add the second line of the sonnet (in modernized spelling), we can use the <em>append operator</em> <span class="green"><code><strong>&gt;&gt;</strong></code></span> as follows:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p027pro04" id="p027pro04a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"That thereby beauty's Rose might never die,"</span> &gt;&gt; sonnet_1.txt</pre>
+<p class="noindent">This just adds the line to the end of the given file. As before, we can see the result using <span class="green"><code><strong>cat</strong></code></span>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p027pro05" id="p027pro05a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> cat sonnet_1.txt
+<span class="green">From fairest creatures we desire increase,</span>
+<span class="green">That thereby beauty's Rose might never die,</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_28"></span>(To get to this command, I hope you just hit up arrow twice instead of retyping it. If so, you’re definitely getting the hang of this.) The result above shows that the double right angle bracket <span class="green"><code><strong>&gt;&gt;</strong></code></span> appended the string from <span class="green"><code><strong>echo</strong></code></span> to the file <span class="green"><code><strong>sonnet_1.txt</strong></code></span> as expected.</p>
+<p class="indent">Modernized treatments of the <em>Sonnets</em> sometimes emend <em>Rose</em> to <em>rose</em> (thereby obscuring the likely meaning), and we can make a second file following this convention using two more calls to <span class="green"><code><strong>echo</strong></code></span>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p028pro01" id="p028pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"From fairest creatures we desire increase,"</span> &gt; sonnet_1_lower_case.txt
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"That thereby beauty's rose might never die,"</span> &gt;&gt; sonnet_1_lower_case.txt</pre>
+<p class="noindent">In order to facilitate the comparison of files that are similar but not identical, Unix systems come with the helpful <span class="green"><code><strong>diff</strong></code></span> command:</p>
+<span epub:type="pagebreak" id="page_29"></span>
+<p class="codelink"><a href="ch02_images.xhtml#p029pro01" id="p029pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">$ diff sonnet_1.txt sonnet_1_lower_case.txt
+&lt; That thereby beauty's Rose might never die,
+<span class="dred">---</span>
+&gt; That thereby beauty's rose might never die,</pre>
+<p class="noindent">When discussing computer files, <em>diff</em> is frequently employed both as a noun (“What’s the diff between those files?”) and as a verb (“You should diff the files to see what changed.”). As with many technical terms, this sometimes bleeds over into common usage, such as “Diff present ideas against those of various past cultures, and see what you get.”<sup><a id="rfn2_3" href="ch02.xhtml#fn2_3">3</a></sup></p>
+<p class="footnote"><a id="fn2_3" href="ch02.xhtml#rfn2_3">3.</a> From the essay “What You Can’t Say” (<a href="http://www.paulgraham.com/say.html">http://www.paulgraham.com/say.html</a>) by Paul Graham (2004). As Graham notes:</p>
+<p class="footnote-block">The verb “diff” is computer jargon, but it’s the only word with exactly the sense I want. It comes from the Unix <code>diff</code> utility, which yields a list of all the differences between two files. More generally it means an unselective and microscopically thorough comparison between two versions of something.</p>
+<section>
+<h4 class="h4" id="ch02lev1sec1">2.1.1 Exercises</h4>
+<p class="noindent">At the end of each of the exercises below, use the <span class="green"><code><strong>cat</strong></code></span> command to verify your answer.</p>
+<ol class="number">
+<li><p class="number">Using <span class="green"><code><strong>echo</strong></code></span> and <span class="green"><code><strong>&gt;</strong></code></span>, make files called <span class="green"><code><strong>line_1.txt</strong></code></span> and <span class="green"><code><strong>line_2.txt</strong></code></span> containing the first and second lines of Sonnet 1, respectively.</p></li>
+<li><p class="number">Replicate the original <span class="green"><code><strong>sonnet_1.txt</strong></code></span> (containing the first two lines of the sonnet) by first redirecting the contents of <span class="green"><code><strong>line_1.txt</strong></code></span> and then appending the contents of <span class="green"><code><strong>line_2.txt</strong></code></span>. Call the new file <span class="green"><code><strong>sonnet_1_copy.txt</strong></code></span>, and confirm using <span class="green"><code><strong>diff</strong></code></span> that it’s identical to <span class="green"><code><strong>sonnet_1.txt</strong></code></span>. <em>Hint</em>: When there is no diff between two files, <span class="green"><code><strong>diff</strong></code></span> simply outputs nothing.</p></li>
+<li><p class="number">Use <span class="green"><code><strong>cat</strong></code></span> to combine the contents of <span class="green"><code><strong>line_1.txt</strong></code></span> and <span class="green"><code><strong>line_2.txt</strong></code></span> in reverse order using a <em>single</em> command, yielding the file <span class="green"><code><strong>sonnet_1_reversed.txt</strong></code></span>. <em>Hint</em>: The <span class="green"><code><strong>cat</strong></code></span> command can take multiple arguments.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev2"><span epub:type="pagebreak" id="page_30"></span>2.2 Listing</h3>
+<p class="noindent">Perhaps the most frequently typed command on the Unix command line is <span class="green"><code><strong>ls</strong></code></span>, short for “list” (<a href="ch02.xhtml#list2-1">Listing 2.1</a>).</p>
+<p class="list-head" id="list2-1"><strong>Listing 2.1:</strong> Listing files and directories with <span class="green"><code><strong>ls</strong></code></span>. (Output will vary.)</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> ls
+<span class="green">Desktop</span>
+<span class="green">Downloads</span>
+<span class="green">sonnet_1.txt</span>
+<span class="green">sonnet_1_reversed.txt</span></pre>
+</div>
+<p class="noindent">The <span class="green"><code><strong>ls</strong></code></span> command simply lists all the files and directories in the current directory (except for those that are <em>hidden</em>, which we’ll learn more about in a moment). In this sense, it’s effectively a command-line version of the graphical browser used to show files and directories (also called “folders”), as seen in <a href="ch02.xhtml#fig2-3">Figure 2.3</a>. (We’ll sharpen our understanding of directories and folders in <a href="ch04.xhtml#ch04">Chapter 4</a>.) As with a graphical file browser, the output in <a href="ch02.xhtml#list2-1">Listing 2.1</a> is just a sample, and results will differ based on the details of your system. (This goes for all the <span class="green"><code><strong>ls</strong></code></span> examples, so don’t be concerned if there are minor differences in output.)</p>
+<figure class="figure" id="fig2-3">
+<img src="graphics/02fig03.jpg" alt="Image" width="744" height="353"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.3:</strong> The graphical equivalent of <span class="green"><code><strong>ls</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">The <span class="green"><code><strong>ls</strong></code></span> command can be used to check if a file (or directory) exists, because trying to <span class="green"><code><strong>ls</strong></code></span> a nonexistent file results in an error message, as seen in <a href="ch02.xhtml#list2-2">Listing 2.2</a>.</p>
+<span epub:type="pagebreak" id="page_31"></span>
+<p class="list-head" id="list2-2"><strong>Listing 2.2:</strong> Running <span class="green"><code><strong>ls</strong></code></span> on a nonexistent file.</p>
+<p class="codelink"><a href="ch02_images.xhtml#p02lis02" id="p02lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> ls foo
+<span class="green">ls: foo: No such file or directory</span>
+<span class="dblue"><strong>$</strong></span> touch foo
+<span class="dblue"><strong>$</strong></span> ls foo
+<span class="green">foo</span></pre>
+</div>
+<p class="noindent"><a href="ch02.xhtml#list2-2">Listing 2.2</a> uses the <span class="green"><code><strong>touch</strong></code></span> command to create an empty file with the name <span class="green"><code><strong>foo</strong></code></span> (<a href="ch02.xhtml#box2-2">Box 2.2</a>), so the second time we run <span class="green"><code><strong>ls</strong></code></span> the error message is gone. (The stated purpose of <span class="green"><code><strong>touch</strong></code></span> is to change the modification time on files or directories, but (ab)using <span class="green"><code><strong>touch</strong></code></span> to create empty files as in <a href="ch02.xhtml#list2-2">Listing 2.2</a> is a common Unix idiom.)</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box2-2">Box 2.2: Foo, Bar, Baz, etc.</p>
+<p class="box-no">When reading about computers, you will encounter certain strange words—words like <em>foo</em>, <em>bar</em>, and <em>baz</em>—with surprising frequency. Indeed, in addition to <code>ls foo</code> and <code>touch foo</code>, we have already seen three such references in this tutorial: in a typical command-line command (<a href="ch01.xhtml#fig1-2">Figure 1.2</a>), when getting out of trouble (<code>grep foobar</code> in <a href="ch01.xhtml#box1-3">Box 1.3</a>), and yet again in a man page (<a href="ch01.xhtml#list1-4">Listing 1.4</a>). The first two were my own uses, but the last I had nothing to do with:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p031pro01" id="p031pro01a">Click here to view code image</a></p>
+<pre class="pre">...if name contains a slash (/) then man interprets
+it as a file specification, so that you can do man
+./foo.5 or even man /cd/foo/bar.1.gz.</pre>
+<p class="box-no">Here we see both <em>foo</em> and <em>bar</em> making an appearance in the man page for <code>man</code> itself—an unambiguous testament to their ubiquity in computing.</p>
+<p class="box-ind">What is the origin of these odd terms? As usual, the Jargon File (via its entry on <em>foo</em>) enlightens us:</p>
+<p class="box-ind1"><strong>foo</strong>: /foo/</p>
+<ol class="number-b">
+<li><p class="number-b">interj. Term of disgust.</p></li>
+<li><p class="number-b">[very common] Used very generally as a sample name for absolutely anything, esp. programs and files (esp. scratch files).</p></li>
+<li><p class="number-b">First on the standard list of metasyntactic variables used in syntax examples. See also bar, baz, qux, quux, etc.</p></li>
+</ol>
+<p class="block-i">When ‘foo’ is used in connection with ‘bar’ it has generally traced to the WWIIera Army slang acronym <em>FUBAR</em> [see original meaning], later modified to <em>foobar</em>. Early versions of the Jargon File <span epub:type="pagebreak" id="page_32"></span>interpreted this change as a post-war bowdlerization, but it now seems more likely that FUBAR was itself a derivative of ‘foo’ perhaps influenced by German <em>furchtbar</em> (terrible) — ‘foobar’ may actually have been the <em>original</em> form.</p>
+<p class="box-no">Following the link to metasyntactic variables (<a href="http://www.catb.org/jargon/html/M/metasyntactic-variable.html">http://www.catb.org/jargon/html/M/metasyntactic-variable.html</a>), we then find the following:</p>
+<p class="block1"><strong>metasyntactic variable</strong>: n.</p>
+<p class="block-i">A name used in examples and understood to stand for whatever thing is under discussion, or any random member of a class of things under discussion. The word foo is the canonical example. To avoid confusion, hackers never (well, hardly ever) use “foo” or other words like it as permanent names for anything. In filenames, a common convention is that any filename beginning with a metasyntactic-variable name is a scratch file that may be deleted at any time.</p>
+<p class="block-i">Metasyntactic variables are so called because (1) they are variables in the metalanguage used to talk about programs, etc.; (2) they are variables whose values are often variables (as in usages like “the value of f(foo,bar) is the sum of foo and bar”). However, it has been plausibly suggested that the real reason for the term “metasyntactic variable” is that it sounds good.</p>
+<p class="box-ind1">In other words, if you want to create a file, and the name doesn’t matter, the name is usually “foo”. Once you’ve used “foo”, the next file is called “bar”, the one after that “baz”. Continuations from there vary (“quux” is one common choice), but in many cases three is enough.</p>
+</aside>
+<p class="indent">A common pattern when using the command line is changing directories using <span class="green"><code><strong>cd</strong></code></span> (covered in <a href="ch04.xhtml#ch04">Chapter 4</a>) and then immediately typing <span class="green"><code><strong>ls</strong></code></span> to view the contents of the directory. This lets us orient ourselves, and is a good first step toward whatever our next action might be.</p>
+<p class="indent">One useful ability of <span class="green"><code><strong>ls</strong></code></span> is support for the <em>wildcard character</em> <span class="green"><code><strong>*</strong></code></span> (read “star”). For example, to list all files ending in “.txt”, we would type this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls *.txt
+<span class="green">sonnet_1.txt</span>
+<span class="green">sonnet_1_reversed.txt</span></pre>
+<p class="noindent">Here <span class="green"><code><strong>*.txt</strong></code></span> (read “star dot tee-ex-tee”) automatically expands to all the filenames that match the pattern “any string followed by .txt”.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_33"></span>There are three particularly important optional forms of <span class="green"><code><strong>ls</strong></code></span>, starting with the “long form”, using the option <span class="green"><code><strong>-l</strong></code></span> (read “dash-ell”):</p>
+<p class="codelink"><a href="ch02_images.xhtml#p033pro01" id="p033pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -l *.txt
+<span class="green">total 16</span>
+<span class="green">-rw-r--r-- 1 mhartl staff 87 Jul 20 18:05 sonnet_1.txt</span>
+<span class="green">-rw-r--r-- 1 mhartl staff 294 Jul 21 12:09 sonnet_1_reversed.txt</span></pre>
+<p class="noindent">For now, you can safely ignore most of the information output by <span class="green"><code><strong>ls -l</strong></code></span>, but note that the long form lists a date and time indicating the last time the file was modified. The number before the date is the <em>size</em> of the file, in bytes.<sup><a id="rfn2_4" href="ch02.xhtml#fn2_4">4</a></sup></p>
+<p class="footnote"><a id="fn2_4" href="ch02.xhtml#rfn2_4">4.</a> A <em>bit</em> is one piece of yes-or-no information (such as a 1 or a 0), and a <em>byte</em> is eight bits. Bytes are probably most familiar from “megabytes” and “gigabytes”, which represent a million and a billion bytes, respectively. (The official story is a little more complicated, but the level of detail here is certainly enough to be <em>dangerous</em>.)</p>
+<p class="indent">A second powerful <span class="green"><code><strong>ls</strong></code></span> variant is “list by <strong>r</strong>eversed <strong>t</strong>ime of modification (<strong>l</strong>ong format)”, or <span class="green"><code><strong>ls -rtl</strong></code></span>, which lists the long form of each file or directory in order of how recently it was modified (<em>reversed</em> so that the most recently modified entries appear at the bottom of the screen for easy inspection). This is particularly useful when there are a lot of files in the directory but you really only care about seeing the ones that have been modified recently, such as when confirming a file download. We’ll see an example of this in <a href="ch03.xhtml#ch03lev1">Section 3.1</a>, but you are free to try it now:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -rtl
+<span class="green">&lt;results system-dependent&gt;</span></pre>
+<p class="noindent">By the way, <span class="green"><code><strong>-rtl</strong></code></span> is the commonly used compact form, but you can also pass the options individually, like this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -r -t -l</pre>
+<p class="noindent">In addition, their order is irrelevant, so typing <span class="green"><code><strong>ls -trl</strong></code></span> gives the same result.</p>
+<section>
+<h4 class="h4" id="ch02lev2sec1">2.2.1 Hidden Files</h4>
+<p class="noindent">Finally, Unix has the concept of “hidden files (and directories)”, which don’t show up by default when listing files. Hidden files and directories are identified by starting with <span epub:type="pagebreak" id="page_34"></span>a dot <span class="green"><code><strong>.</strong></code></span>, and are commonly used for things like storing user preferences. For example, in <a href="part03.xhtml#part03">Part III</a>, we’ll create a file called <span class="green"><code><strong>.gitignore</strong></code></span> that tells a particular program (Git) to ignore files matching certain patterns. As a concrete example, to ignore all files ending in “.txt”, we could do this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"*.txt"</span> &gt; .gitignore
+<span class="dblue"><strong>$</strong></span> cat .gitignore
+<span class="green">*.txt</span></pre>
+<p class="noindent">If we then run <span class="green"><code><strong>ls</strong></code></span>, the file won’t show up, because it’s hidden:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls
+<span class="green">sonnet_1.txt</span>
+sonnet_1_reversed.txt</pre>
+<p class="noindent">To get <span class="green"><code><strong>ls</strong></code></span> to display hidden files and directories, we need to pass it the <span class="green"><code><strong>-a</strong></code></span> option (for “all”):</p>
+<p class="codelink"><a href="ch02_images.xhtml#p034pro02" id="p034pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -a
+<span class="green">.        .gitignore        sonnet_1_reversed.txt</span>
+<span class="green">..       sonnet_1.txt</span></pre>
+<p class="noindent">Now <span class="green"><code><strong>.gitignore</strong></code></span> shows up, as expected. (We’ll learn what <span class="green"><code><strong>.</strong></code></span> and <span class="green"><code><strong>..</strong></code></span> refer to in <a href="ch04.xhtml#ch04lev3">Section 4.3</a>.)</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec2">2.2.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">What’s the command to list all the non-hidden files and directories that start with the letter “s”?</p></li>
+<li><p class="number">What is the command to list all the non-hidden files that contain the string “onnet”, long-form by reverse modification time? <em>Hint</em>: Use the wildcard operator at both the beginning and the end.</p></li>
+<li><p class="number">What is the command to list <em>all</em> files (including hidden ones) by reverse modification time, in long form?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev3"><span epub:type="pagebreak" id="page_35"></span>2.3 Renaming, Copying, Deleting</h3>
+<p class="noindent">Next to listing files, probably the most common file operations involve renaming, copying, and deleting them. As with listing files, most modern operating systems provide a graphical user interface to such tasks, but in many contexts it is more convenient to perform them at the command line. <em>Note</em>: If you’re using macOS, you should follow the instructions in <a href="ch02.xhtml#box2-3">Box 2.3</a> at this time.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box2-3">Box 2.3: Switching macOS to Bash</p>
+<p class="box-no">If you’re using macOS, at this point you should make sure you’re using the right shell program for this tutorial. The default shell as of macOS Catalina is <em>Z shell</em> (Zsh), but to get results consistent with this tutorial you should switch to the shell known as <em>Bash</em>.</p>
+<p class="box-ind">The first step is to determine which shell your system is running, which you can do using the <code>echo</code> command (<a href="ch01.xhtml#ch01lev3">Section 1.3</a>):</p>
+<pre class="pre">$ echo $SHELL
+/bin/bash</pre>
+<p class="box-no">This prints out the <code>$SHELL</code> environment variable. If you see the result shown above, indicating that you’re already using Bash, you’re done and can proceed with the rest of the tutorial. (In rare cases, <code>$SHELL</code> may differ from the current shell, but the procedure below will still correctly change from one shell to another.) The alert shown in <a href="ch01.xhtml#list1-1">Listing 1.1</a> is safe to ignore. For more information, including how to switch to and use Z shell with this tutorial, see the Learn Enough blog post “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>).</p>
+<p class="box-ind">The other possible result of <code>echo</code> is this:</p>
+<pre class="pre">$ echo $SHELL
+/bin/zsh</pre>
+<p class="box-no">If that’s the result you get, you should use the <code>chsh</code> (“change shell”) command as follows:</p>
+<pre class="pre">$ chsh -s /bin/bash</pre>
+<p class="box-no">You’ll almost certainly be prompted to type your system password at this point, which you should do. Then completely exit your shell program using Command-Q and relaunch it.</p>
+<p class="box-ind"><span epub:type="pagebreak" id="page_36"></span>You can confirm that the change succeeded using <code>echo</code>:</p>
+<pre class="pre">$ echo $SHELL
+/bin/bash</pre>
+<p class="box-no">At this point, you will probably start seeing the alert shown in <a href="ch01.xhtml#list1-1">Listing 1.1</a>, which you should ignore.</p>
+<p class="box-ind">Note that the procedure above is entirely reversible, so there is no need to be concerned about damaging your system. See “Using Z Shell on Macs with the Learn Enough Tutorials” for more information.</p>
+</aside>
+<p class="indent">The way to rename a file is with the <span class="green"><code><strong>mv</strong></code></span> command, short for “move”:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p036pro01" id="p036pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> <span class="brown">"test text"</span> &gt; <span class="lgreen">test</span>
+
+<span class="back-yellow"><span class="dblue"><strong>$</strong></span> mv <span class="bgreen">test</span> test_file.txt</span>
+
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">test_file.txt</span></pre>
+<p class="noindent">This renames the file called <span class="green"><code><strong>test</strong></code></span> to <span class="green"><code><strong>test_file.txt</strong></code></span>. The final step in the example runs <span class="green"><code><strong>ls</strong></code></span> to confirm that the file renaming was successful, but system-specific files other than the test file are omitted from the output shown. (The name “move” comes from the general use of <span class="green"><code><strong>mv</strong></code></span> to move a file to a different directory (<a href="ch04.xhtml#ch04">Chapter 4</a>), possibly renaming it en route. When the origin and target directories coincide, such a “move” reduces to a simple renaming.)</p>
+<p class="indent">The way to copy a file is with <span class="green"><code><strong>cp</strong></code></span>, short for “copy”:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p036pro02" id="p036pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="back-yellow"><span class="dblue"><strong>$</strong></span> cp test_file.txt second_test.txt</span>
+
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">second_test.txt</span>
+<span class="green">test_file.txt</span></pre>
+<p class="noindent">Finally, the command for deleting a file is <span class="green"><code><strong>rm</strong></code></span>, for “remove”:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p036pro03" id="p036pro03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="back-yellow"><span class="dblue"><strong>$</strong></span> rm second_test.txt</span>
+
+<span class="green">remove second_test.txt? y</span>
+<span class="dblue"><strong>$</strong></span> ls second_test.txt
+<span class="green">ls: second_test.txt: No such file or directory</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_37"></span>Note that, on many systems, by default you will be prompted to confirm the removal of the file. Any answer starting with the letter “y” or “Y” will cause the file to be deleted, and any other answers will prevent the deletion from occurring.</p>
+<p class="indent">By the way, in the calls to <span class="green"><code><strong>cp</strong></code></span> and <span class="green"><code><strong>rm</strong></code></span> above, I would almost certainly not type out <span class="green"><code><strong>test_file.txt</strong></code></span> or <span class="green"><code><strong>second_test.txt</strong></code></span>. Instead, I would type something like <span class="green"><code><strong>test</strong></code></span> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> or <span class="green"><code><strong>sec</strong></code></span> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> (where <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/> represents the tab key (<a href="ch01.xhtml#tab1-1">Table 1.1</a>)), thereby making use of <em>tab completion</em> (<a href="ch02.xhtml#box2-4">Box 2.4</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box2-4">Box 2.4: Tab Completion</p>
+<p class="box-no">Most modern command-line programs (shells) support <em>tab completion</em>, which involves automatically completing a word if there’s only one valid match on the system. For example, if the only file starting with the letters “tes” is <code>test_file</code>, we could create the command to remove it as follows:</p>
+<pre class="pre">$ rm tes <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/></pre>
+<p class="box-no">where <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/> is the tab key (<a href="ch01.xhtml#tab1-1">Table 1.1</a>). The shell would then complete the filename, yielding <code>rm test_file</code>. Especially with longer filenames (or directories), tab completion can save a huge amount of typing. It also lowers the <em>cognitive load</em>, since it means you don’t have to remember the full name of the file—only its first few letters.</p>
+<p class="box-ind">If the match is ambiguous, as would happen if we had files called <code>foobarquux</code> and <code>foobazquux</code>, the word will be completed only as far as possible, so</p>
+<pre class="pre">$ ls foo <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/></pre>
+<p class="box-no">would be completed to</p>
+<pre class="pre">$ ls fooba</pre>
+<p class="box-no">If we then hit tab <em>again</em>, we would see a list of matches:</p>
+<pre class="pre">$ ls fooba <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/>
+foobarquux foobazquux</pre>
+<p class="box-no">We could then type more letters to resolve the ambiguity, so typing the <code>r</code> after <code>fooba</code> and hitting <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/> would yield</p>
+<pre class="pre">$ ls foobar <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/></pre>
+<p class="box-no"><span epub:type="pagebreak" id="page_38"></span>which would be completed to <code>foobarquux</code>. This situation is common enough that experienced command-line users will often just hit something like <code>f</code><img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/><img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/> to get the shell to show all the possibilities:</p>
+<p class="codelink"><a href="ch02_images.xhtml#p038pro01" id="p038pro01a">Click here to view code image</a></p>
+<pre class="pre">$ ls f <img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/><img src="graphics/arrow1.jpg" alt="images" width="17" height="13"/>
+figure_1.png foobarquux   foobazquux</pre>
+<p class="box-no">Additional letters would then be typed as usual to resolve the ambiguity.</p>
+</aside>
+<p class="indent">The default behavior of <span class="green"><code><strong>rm</strong></code></span> on an unconfigured Unix system is actually to remove the file without confirmation, but (because deletion is irreversible) many systems <em>alias</em> the <span class="green"><code><strong>rm</strong></code></span> command to use an option to turn on confirmation. (As you can verify by running <span class="green"><code><strong>man rm</strong></code></span>, this option is <span class="green"><code><strong>-i</strong></code></span>, so in fact <span class="green"><code><strong>rm</strong></code></span> is really <span class="green"><code><strong>rm -i</strong></code></span>.) There are many situations where confirmation is inconvenient, though, such as when you’re deleting a list of files and don’t want to have to confirm each one. This is especially common when using the wildcard <span class="green"><code><strong>*</strong></code></span> introduced in <a href="ch02.xhtml#ch02lev2">Section 2.2</a>. For example, to remove all the files ending with “.txt” using a single command, <em>without</em> having to confirm each one, you can type this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> rm -f *.txt</pre>
+<p class="noindent">Here <span class="green"><code><strong>-f</strong></code></span> (for “force”) overrides the implicit <span class="green"><code><strong>-i</strong></code></span> option and removes all files immediately. (N.B. You are now in a position to understand the command in <a href="ch01.xhtml#fig1-2">Figure 1.2</a>.)</p>
+<section>
+<h4 class="h4" id="ch02lev3sec1">2.3.1 Unix Terseness</h4>
+<p class="noindent">One thing you might notice is that the commands in this section and in <a href="ch02.xhtml#ch02lev2">Section 2.2</a> are short: Instead of <span class="green"><code><strong>list</strong></code></span>, <span class="green"><code><strong>move</strong></code></span>, <span class="green"><code><strong>copy</strong></code></span>, and <span class="green"><code><strong>remove</strong></code></span>, we have <span class="green"><code><strong>ls</strong></code></span>, <span class="green"><code><strong>mv</strong></code></span>, <span class="green"><code><strong>cp</strong></code></span>, and <span class="green"><code><strong>rm</strong></code></span>. Because the former command names are easier to understand and memorize, you may wonder why the actual commands aren’t longer (<a href="ch02.xhtml#fig2-4">Figure 2.4</a>).</p>
+<figure class="figure" id="fig2-4">
+<img src="graphics/02fig04.jpg" alt="Image" width="625" height="468"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.4:</strong> The terseness of Unix commands can be a source of confusion.</p>
+</figcaption>
+</figure>
+<p class="indent">The answer is that Unix dates from a time when most computer users logged on to centralized servers over slow connections, and there could be a noticeable delay between the time users pressed a key and the time it appeared on the terminal. For frequently used commands like listing files, the difference between <span class="green"><code><strong>list</strong></code></span> and <span class="green"><code><strong>ls</strong></code></span> or <span class="green"><code><strong>remove</strong></code></span> and <span class="green"><code><strong>rm</strong></code></span> could be significant. As a result, the most commonly used Unix commands tend to be only two or three letters long. Because it makes them more difficult <span epub:type="pagebreak" id="page_39"></span>to memorize, this can be a minor inconvenience when learning them, but over a lifetime of command-line use the savings represented by, say, <span class="green"><code><strong>mv</strong></code></span> really add up.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev3sec2">2.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use the <span class="green"><code><strong>echo</strong></code></span> command and the redirect operator <span class="green"><code><strong>&gt;</strong></code></span> to make a file called <span class="green"><code><strong>foo.txt</strong></code></span> containing the text “hello, world”. Then, using the <span class="green"><code><strong>cp</strong></code></span> command, make a copy of <span class="green"><code><strong>foo.txt</strong></code></span> called <span class="green"><code><strong>bar.txt</strong></code></span>. Using the <span class="green"><code><strong>diff</strong></code></span> command, confirm that the contents of both files are the same.</p></li>
+<li><p class="number">By combining the <span class="green"><code><strong>cat</strong></code></span> command and the redirect operator <span class="green"><code><strong>&gt;</strong></code></span>, create a copy of <span class="green"><code><strong>foo.txt</strong></code></span> called <span class="green"><code><strong>baz.txt</strong></code></span> <em>without</em> using the <span class="green"><code><strong>cp</strong></code></span> command.</p></li>
+<li><p class="number">Create a file called <span class="green"><code><strong>quux.txt</strong></code></span> containing the contents of <span class="green"><code><strong>foo.txt</strong></code></span> followed by the contents of <span class="green"><code><strong>bar.txt</strong></code></span>. <em>Hint</em>: As noted in <a href="ch02.xhtml#ch02lev1sec1">Section 2.1.1</a>, <span class="green"><code><strong>cat</strong></code></span> can take multiple arguments.</p></li>
+<li><p class="number">How do <span class="green"><code><strong>rm nonexistent</strong></code></span> and <span class="green"><code><strong>rm -f nonexistent</strong></code></span> differ for a nonexistent file?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev4"><span epub:type="pagebreak" id="page_40"></span>2.4 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch02.xhtml#tab2-1">Table 2.1</a>.</p>
+<figure class="table" id="tab2-1">
+<p class="title-t"><strong>Table 2.1:</strong> Important commands from <a href="ch02.xhtml#ch02">Chapter 2</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>&gt;</code></p></td>
+<td><p class="tab-para">Redirect output to filename</p></td>
+<td><p class="tab-para"><code><span class="green"><strong>$ echo foo &gt; foo.txt</strong></span></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>&gt;&gt;</code></p></td>
+<td><p class="tab-para">Append output to filename</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ echo bar &gt;&gt; foo.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cat &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Print contents of file to screen</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cat hello.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>diff &lt;f1&gt; &lt;f2&gt;</code></p></td>
+<td><p class="tab-para">Diff files 1 &amp; 2</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ diff foo.txt bar.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ls</code></p></td>
+<td><p class="tab-para">List directory or file</p></td>
+<td><p class="tab-para"><code><span class="green">$ ls hello.txt</span></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ls -l</code></p></td>
+<td><p class="tab-para">List long form</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ ls -l hello.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ls -rtl</code></p></td>
+<td><p class="tab-para">Long by reverse modification time</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ ls -rtl</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ls -a</code></p></td>
+<td><p class="tab-para">List all (including hidden)</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ ls -a</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>touch &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Create an empty file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ touch foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>mv &lt;old&gt; &lt;new&gt;</code></p></td>
+<td><p class="tab-para">Rename (move) from old to new</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ mv foo bar</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cp &lt;old&gt; &lt;new&gt;</code></p></td>
+<td><p class="tab-para">Copy old to new</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cp foo bar</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>rm &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Remove (delete) file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ rm foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>rm -f &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Force-remove file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ rm -f bar</span></strong></code></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<section>
+<h4 class="h4" id="ch02lev4sec1">2.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By copying and pasting the text from the HTML version (<a href="https://www.learnenough.com/sonnet">https://www.learnenough.com/sonnet</a>) of <a href="ch02.xhtml#fig2-5">Figure 2.5</a>, use <span class="green"><code><strong>echo</strong></code></span> to make a file called <span class="green"><code><strong>sonnet_1_complete.txt</strong></code></span> containing the full (original) text of Shakespeare’s first sonnet. <em>Hint</em>: You may recall getting stuck when <span class="green"><code><strong>echo</strong></code></span> was followed by an unmatched double quote (<a href="ch01.xhtml#ch01lev3">Section 1.3</a> and <a href="ch01.xhtml#box1-3">Box 1.3</a>), as in <span class="green"><code><strong>echo "</strong></code></span>, but in fact this construction allows you to print out a multi-line block of text. Just remember to put a closing quote at the end, and then redirect to a file with the appropriate name. Check that the contents are correct using <span class="green"><code><strong>cat</strong></code></span> (<a href="ch02.xhtml#fig2-2">Figure 2.2</a>).</p>
+<figure class="figure" id="fig2-5">
+<img src="graphics/02fig05.jpg" alt="Image" width="469" height="365"/>
+<figcaption>
+<p class="title-fl"><strong>Figure 2.5:</strong> Shakespeare’s first sonnet (copy-and-pastable version is available at <a href="https://www.learnenough.com/sonnet">https://www.learnenough.com/sonnet</a>).</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Type the sequence of commands needed to create an empty file called <span class="green"><code><strong>foo</strong></code></span>, rename it to <span class="green"><code><strong>bar</strong></code></span>, and copy it to <span class="green"><code><strong>baz</strong></code></span>.</p></li>
+<li><p class="number">What is the command to list only the files starting with the letter “b”? <em>Hint</em>: Use a wildcard.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_41"></span>Remove both <span class="green"><code><strong>bar</strong></code></span> and <span class="green"><code><strong>baz</strong></code></span> using a <em>single</em> call to <span class="green"><code><strong>rm</strong></code></span>. <em>Hint</em>: If those are the only two files in the current directory that start with the letter “b”, you can use the wildcard pattern from the previous exercise.<span epub:type="pagebreak" id="page_42"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

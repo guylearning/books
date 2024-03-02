@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch10"><span epub:type="pagebreak" id="page_215"></span>Chapter 10</h2>
+<h2 class="chap-title">Shell Scripts with Node.js</h2>
+<p class="noindent">In this chapter, we’ll return to the world of the command line and use Node.js to write three <em>shell scripts</em> of increasing sophistication. This use of JavaScript is currently less common than JavaScript in the browser, but it can be expected to grow as JavaScript (especially via Node and NPM) continues to expand past its original web-programming niche. These programs also serve as a useful foundation for similar programs written in languages more traditionally thought of as “scripting languages”, such as Perl, Python, and Ruby.</p>
+<p class="indent">Perhaps surprisingly, we’ll discover en route that the DOM manipulation skills developed in <a href="ch09.xhtml#ch09">Chapter 9</a> are still useful in shell scripts. Indeed, we’ll extend our capabilities significantly, in exactly the direction needed for the more advanced manipulations used in <a href="ch11.xhtml#ch11">Chapter 11</a>.</p>
+<p class="indent">The first program (<a href="ch10.xhtml#ch10lev1">Section 10.1</a>) shows how to use JavaScript to read and process the contents of a file from the filesystem. The program in <a href="ch10.xhtml#ch10lev2">Section 10.2</a> then shows how to accomplish the similar feat of reading the contents of a URL. (This has personal meaning to me, as I distinctly remember the first time I wrote an automated program to read and process text from the Web, which at the time seemed truly miraculous.) Finally, in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>, we’ll write a real-life utility program adapted from one I once wrote for myself; it includes an introduction (alluded to above) to DOM manipulation in a context outside of a web browser.</p>
+<section>
+<h3 class="h3" id="ch10lev1"><span epub:type="pagebreak" id="page_216"></span>10.1 Reading from Files</h3>
+<p class="noindent">Our first task is to read and process the contents of a file. The example is simple by design, but it demonstrates the necessary principles, and gives you the background needed to read more advanced documentation.</p>
+<p class="indent">We’ll start by using <span class="pd_green"><code><strong>curl</strong></code></span> to download a file of simple phrases (note that this should be in the <span class="pd_green"><code><strong>js_tutorial</strong></code></span> directory we used prior to <a href="ch08.xhtml#ch08">Chapter 8</a>, not the palindrome package directory):</p>
+<p class="codelink"><a href="ch10_images.xhtml#c216pro01" id="c216pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> <span class="pd_green1">cd</span> ~/repos/js_tutorial/
+<span class="pd_blue"><strong>$</strong></span> curl -OL https://cdn.learnenough.com/phrases.txt</pre>
+<p class="noindent">As you can confirm by running <span class="pd_green"><code><strong>less phrases.txt</strong></code></span> at the command line, this file contains a large number of phrases—some of which (surprise!) happen to be palindromes.</p>
+<p class="indent">Our specific task is to write a palindrome detector that iterates through each line in this file and prints out any phrases that are palindromes (while ignoring others). To do this, we’ll need to open the file and read its contents.</p>
+<p class="indent">When I started writing this tutorial, <em>I</em> didn’t know how to do this in JavaScript. But I applied my technical sophistication (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) and dropped “<a href="https://www.google.com/search?q=node+open+file">node open file</a>” into Google. (Why not “javascript open file”? That might have worked, but I suspected—correctly, as it turned out—that JavaScript’s browser-centric origins made “node” a more promising search term.) This search quickly turned up the <a href="https://nodejs.org/api/fs.html">File System module</a> <span class="pd_green"><code><strong>fs</strong></code></span>, which solves exactly the problem we have:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install --global fs</pre>
+<p class="indent">The documentation for File System can be a bit overwhelming, so I dug a little deeper and found the post “<a href="https://code-maven.com/reading-a-file-with-nodejs">Reading a file with Node.js</a>” (<a href="https://code-maven.com/reading-a-file-with-nodejs">https://code-maven.com/reading-a-file-with-nodejs</a>), which described the exact solution to our problem. Adapted to our current filename and programming conventions (e.g., <span class="pd_green"><code><strong>let</strong></code></span> in place of <span class="pd_green"><code><strong>var</strong></code></span>, double quotes), it looks like this in the REPL:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c216pro03" id="c216pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> fs <span class="gray">=</span> require(<span class="pd_red">"fs"</span>);
+<span class="gray">&gt;</span><span class="pd_green1"> <strong>let</strong></span> text <span class="gray">=</span> fs.readFileSync(<span class="pd_red">"phrases.txt</span>", <span class="pd_red">"utf-8</span>");</pre>
+<p class="noindent">Here we’ve opted for the “Sync” (synchronous) version of the <span class="pd_green"><code><strong>readFile</strong></code></span> function, mainly because we have no need to run more than one of these programs at a time (which is what “asynchronous” is for). We’ve also included <span epub:type="pagebreak" id="page_217"></span>(following the blog post) a second argument to indicate that the source is UTF-8, the <a href="https://en.wikipedia.org/wiki/Unicode">Unicode</a> character set <a href="https://www.learnenough.com/r/learn_enough_html/html_intro/an_html_skeleton#sec-an_html_skeleton">discussed</a> (<a href="https://www.learnenough.com/html-tutorial/html_intro#sec-an_html_skeleton">https://www.learnenough.com/html-tutorial/html_intro#sec-an_html_skeleton</a>) in <em><a href="https://www.learnenough.com/html">Learn Enough HTML to Be Dangerous</a></em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>).</p>
+<p class="indent">The result of running this code is to load the full contents of the text file into the <span class="pd_green"><code><strong>text</strong></code></span> variable:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c217pro01" id="c217pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> text.length;
+<span class="gray">1373</span>
+<span class="gray">&gt;</span> text.split(<span class="pd_red">"\n</span>")[<span class="gray">0</span>];     <span class="pd_blue1"><em>// Split on newlines and extract the 1st phrase.</em></span>
+<span class="pd_red">'A butt tuba'</span></pre>
+<p class="noindent">The second command here splits the text on the newline character <span class="pd_green"><code><strong>\n</strong></code></span> and selects the zeroth element, revealing the enigmatic first line of the file, “<a href="https://twitter.com/oatmeal/status/562818892121513984?lang=en">A butt tuba</a>”.</p>
+<p class="indent">Let’s take the ideas from the REPL and put them in a script:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c217pro02" id="c217pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch palindrome_file
+<span class="pd_blue"><strong>$</strong></span> chmod +x palindrome_file</pre>
+<p class="indent">The script itself is simple: We just open the file, split the contents on newlines, and iterate through the resulting array, printing any line that’s a palindrome. The result, which at this stage you should aspire to read fairly easily, appears in <a href="ch10.xhtml#ch10list1">Listing 10.1</a>. (In this and subsequent examples, make sure that your shebang line matches the result of <span class="pd_green"><code><strong>which node</strong></code></span> on your system if it differs from mine.)</p>
+<p class="listing" id="ch10list1"><strong>Listing 10.1:</strong> Reading and processing the contents of a file.<br/><code><em>palindrome_file</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis01" id="c10lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> fs <span class="gray">=</span> require(<span class="pd_red">"fs</span>");
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome</span>");
+
+<span class="pd_green1"><strong>let</strong></span> text <span class="gray">=</span> fs.readFileSync(<span class="pd_red">"phrases.txt</span>", <span class="pd_red">"utf-8</span>");
+text.split(<span class="pd_red">"\n"</span>).forEach(<span class="pd_green1"><strong>function</strong></span>(line) {
+  <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(line);
+  <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+    console.log(<span class="pd_red">"palindrome detected:</span>", line);
+  }
+});</pre>
+<p class="noindent">Note that the code in <a href="ch10.xhtml#ch10list1">Listing 10.1</a> will work only if the <span class="pd_green"><code><strong>palindrome</strong></code></span> module was installed correctly (<a href="ch09.xhtml#ch9lev1">Section 9.1</a>).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_218"></span>Running the script at the command line confirms that there are quite a few palindromes in the file:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c218pro01" id="c218pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> ./palindrome_file
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">palindrome detected: Dennis sinned.</span>
+<span class="pd_green">palindrome detected: Dennis and Edna sinned.</span>
+<span class="pd_green">palindrome detected: Dennis, Nell, Edna, Leon, Nedra, Anita, Rolf, Nora,</span>
+<span class="pd_green">Alice, Carol, Leo, Jane, Reed, Dena, Dale, Basil, Rae, Penny, Lana, Dave,</span>
+<span class="pd_green">Denny, Lena, Ida, Bernadette, Ben, Ray, Lila, Nina, Jo, Ira, Mara, Sara,</span>
+<span class="pd_green">Mario, Jan, Ina, Lily, Arne, Bette, Dan, Reba, Diane, Lynn, Ed, Eva, Dana,</span>
+<span class="pd_green">Lynne, Pearl, Isabel, Ada, Ned, Dee, Rena, Joel, Lora, Cecil, Aaron, Flora,</span>
+<span class="pd_green">Tina, Arden, Noel, and Ellen sinned.</span>
+<span class="pd_green">palindrome detected: Go hang a salami, I'm a lasagna hog.</span>
+<span class="pd_green">palindrome detected: level</span>
+<span class="pd_green">palindrome detected: Madam, I’m Adam.</span>
+<span class="pd_green">palindrome detected: No "x" in "Nixon"</span>
+<span class="pd_green">palindrome detected: No devil lived on</span>
+<span class="pd_green">palindrome detected: Race fast, safe car</span>
+<span class="pd_green">palindrome detected: racecar</span>
+<span class="pd_green">palindrome detected: radar</span>
+<span class="pd_green">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green">palindrome detected: Was it a car or a cat I saw?</span>
+<span class="pd_green">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green">palindrome detected: Yo, banana boy!</span></pre>
+<p class="noindent">Among others, we see a rather elaborate expansion on the simple palindrome “Dennis sinned” (<a href="ch10.xhtml#ch10fig1">Figure 10.1</a>)!<sup><a id="ch10fn-1" href="ch10.xhtml#ch10fn_1">1</a></sup></p>
+<p class="footnote"><a id="ch10fn_1" href="ch10.xhtml#ch10fn-1">1</a>. Image courtesy of Historical Images Archive/Alamy Stock Photo.</p>
+<figure class="figure" id="ch10fig1">
+<img src="graphics/10fig01.jpg" alt="images" width="720" height="462"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.1:</strong> Dennis, Nell, Edna, Leon, Nedra, and many others <a href="https://en.wikipedia.org/wiki/Sinners_in_the_Hands_of_an_Angry_God">sinned</a>.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch10lev1sec1">10.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using whichever method you prefer (such as searching for <a href="https://www.google.com/search?q=node+write+file">node write file</a>), add code to the script in <a href="ch10.xhtml#ch10list1">Listing 10.1</a> to write all detected palindromes to a file called <span class="pd_green"><code><strong>palindromes.txt</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev2">10.2 Reading from URLs</h3>
+<p class="noindent">In this section, we’ll write a script whose effect is identical to the one in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, except that it reads the <span class="pd_green"><code><strong>phrases.txt</strong></code></span> file directly from its public URL. By itself, <span epub:type="pagebreak" id="page_219"></span>the program doesn’t do anything fancy, but realize what a miracle this is: The ideas aren’t specific to the URL we’re hitting, which means that after this section you’ll have the power to write programs to access and process practically any public site on the Web. (This practice, sometimes called “<a href="https://en.wikipedia.org/wiki/Web_scraping">web scraping</a>”, should be done with <a href="http://www.storybench.org/to-scrape-or-not-to-scrape-the-technical-and-ethical-challenges-of-collecting-data-off-the-web/">due consideration and caution</a>.)</p>
+<p class="indent">As in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, installing an NPM module is a necessary prerequisite. As is often the case with NPM modules, there are multiple different ways to accomplish the same task. Based on the results of the web search <a href="https://www.google.com/search?q=node+read+web+page+url">node read web page url</a> and a list of the <a href="https://github.com/request/request/issues/3143">alternatives to <span class="pd_green"><code><strong>request</strong></code></span></a>,<sup><a id="ch10fn-2" href="ch10.xhtml#ch10fn_2">2</a></sup> we’ll use the <span class="pd_green"><code><strong>urllib</strong></code></span> module, which we can install as follows:<sup><a id="ch10fn-3" href="ch10.xhtml#ch10fn_3">3</a></sup></p>
+<p class="footnote"><a id="ch10fn_2" href="ch10.xhtml#ch10fn-2">2</a>. The original version of this tutorial used <span class="pd_green"><code><strong>request</strong></code></span>, but it has since been <a href="https://github.com/request/request/#deprecated">deprecated</a>.</p>
+<p class="footnote"><a id="ch10fn_3" href="ch10.xhtml#ch10fn-3">3</a>. For reasons I don’t really understand, <span class="pd_green"><code><strong>urllib</strong></code></span> module global installation doesn’t work, at least on my system, so here we install it locally.</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install urllib</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_220"></span>Then we can create our script as in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch palindrome_url
+<span class="pd_blue"><strong>$</strong></span> chmod +x palindrome_url</pre>
+<p class="indent">Consulting the <span class="pd_green"><code><strong>urllib</strong></code></span> <a href="https://www.npmjs.com/package/urllib">documentation</a> (<a href="https://www.npmjs.com/package/urllib">https://www.npmjs.com/package/urllib</a>), we find (as of this writing) the example code in <a href="ch10.xhtml#ch10list2">Listing 10.2</a>.</p>
+<p class="listing" id="ch10list2"><strong>Listing 10.2:</strong> Example code for reading the contents of a URL.</p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis02" id="c10lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>var</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">'urllib'</span>);
+
+urllib.request(<span class="pd_red">'http://cnodejs.org/'</span>,<span class="pd_green1"> <strong>function</strong></span> (err, data, res) {
+  <span class="pd_green1"><strong>if</strong></span> (err) {
+    <span class="pd_green1"><strong>throw</strong></span> err; <span class="pd_blue1"><em>// you need to handle error</em></span>
+  }
+  console.log(res.statusCode);
+  console.log(res.headers);
+  <span class="pd_blue1"><em>// data is Buffer instance</em></span>
+  console.log(data.toString());
+});</pre>
+<p class="noindent"><a href="https://en.wiktionary.org/wiki/bootstrap">Bootstrapping</a> off of code examples like <a href="ch10.xhtml#ch10list2">Listing 10.2</a> is an excellent practice. Indeed, it’s not a bad idea to actually execute the code at each stage, but for brevity I’ll omit the output until the script is done.</p>
+<p class="indent">We can modify the default code for our purposes by updating the conventions (such as using <span class="pd_green"><code><strong>let</strong></code></span> in place of <span class="pd_green"><code><strong>var</strong></code></span>), using more descriptive names, and eliminating lines that we definitely don’t need:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c220pro02" id="c220pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+urllib.request(<span class="pd_red">"http://www.cnodejs.org/"</span>,<span class="pd_green1"> <strong>function</strong></span>(error, data, response) {
+  console.log(<span class="pd_red">'body:'</span>, data.toString());
+});</pre>
+<p class="noindent">We begin to see the shape of a solution. The <span class="pd_green"><code><strong>urllib</strong></code></span> module opens a web <em>request</em> for the given URL, and takes a function with three arguments: an error (if any), a data object containing the body of the page (which is the <em>full</em> page, not to be confused with the HTML <span class="pd_green"><code><strong>body</strong></code></span> tag), and a <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">response object</a>.</p>
+<p class="indent">It’s important to emphasize at this point that <em>I don’t know exactly what these objects are</em>, so you don’t have to either. What I do know—what I can reasonably infer from the <span epub:type="pagebreak" id="page_221"></span>example code in <a href="ch10.xhtml#ch10list2">Listing 10.2</a>—is that <span class="pd_green"><code><strong>data.toString()</strong></code></span> is a string that can take the place of <span class="pd_green"><code><strong>text</strong></code></span> in <a href="ch10.xhtml#ch10list1">Listing 10.1</a>. (Recall that we saw the <span class="pd_green"><code><strong>toString()</strong></code></span> method applied to numbers in <a href="ch04.xhtml#ch4lev1sec2">Section 4.1.2</a>.) This is enough to solve our problem, because it means that we can replace the cnodejs.org URL in <a href="ch10.xhtml#ch10list2">Listing 10.2</a> with the one for <span class="pd_green"><code><strong>phrases.txt</strong></code></span>, and replace</p>
+<p class="codelink"><a href="ch10_images.xhtml#c221pro01" id="c221pro01a">Click here to view code image</a></p>
+<pre class="pre1">console.log(<span class="pd_red">'body:'</span>, data.toString());</pre>
+<p class="noindent">with the palindrome-detecting logic from <a href="ch10.xhtml#ch10list1">Listing 10.1</a>.</p>
+<p class="indent">There’s one final subtlety, which is that the URL for <span class="pd_green"><code><strong>phrases.txt</strong></code></span> is actually a <em>redirect</em>: If you visit <a href="https://cdn.learnenough.com/phrases.txt">https://cdn.learnenough.com/phrases.txt</a>, you’ll find that in fact it <em>forwards</em> (using a <a href="https://en.wikipedia.org/wiki/HTTP_301">301 redirect</a>) to a page on Amazon’s Simple Storage Service (S3), as seen in <a href="ch10.xhtml#ch10fig2">Figure 10.2</a>.</p>
+<figure class="figure" id="ch10fig2">
+<img src="graphics/10fig02.jpg" alt="images" width="704" height="533"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.2:</strong> Visiting the phrase URL.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_222"></span>Some URL libraries follow redirects by default, but <span class="pd_green"><code><strong>urllib</strong></code></span> does not, so we have to add an option (as <a href="https://www.npmjs.com/package/urllib#api-doc">described</a> (<a href="https://www.npmjs.com/package/urllib#api-doc">https://www.npmjs.com/package/urllib#api-doc</a>) in the <span class="pd_green"><code><strong>urllib</strong></code></span> documentation):</p>
+<p class="codelink"><a href="ch10_images.xhtml#c222pro01" id="c222pro01a">Click here to view code image</a></p>
+<pre class="pre1">urllib.request(url, { followRedirect<span class="gray">:</span><span class="pd_green1"> <strong>true</strong></span> },<span class="pd_green1"> <strong>function</strong></span>(error, data, response)</pre>
+<p class="noindent">With the <span class="pd_green"><code><strong>followRedirect</strong></code></span> option set to <span class="pd_green"><code><strong>true</strong></code></span>, <span class="pd_green"><code><strong>urllib</strong></code></span> will follow the 301 redirect to S3, so the final code appears as in <a href="ch10.xhtml#ch10list3">Listing 10.3</a>.</p>
+<p class="listing" id="ch10list3"><strong>Listing 10.3:</strong> A URL-reading script.<br/><code><em>palindrome_url</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis03" id="c10lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"mhartl-palindrome"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> <span class="pd_red">'https://cdn.learnenough.com/phrases.txt'</span>
+
+urllib.request(url, { followRedirect<span class="gray">:</span> <span class="pd_green1"><strong>true</strong></span> }, <span class="pd_green1"><strong>function</strong></span>(error, data, response) {
+  <span class="pd_green1"><strong>let</strong></span> body <span class="gray">=</span> data.toString();
+  body.split(<span class="pd_red">"\n"</span>).forEach(<span class="pd_green1"><strong>function</strong></span>(line) {
+    <span class="pd_green1"><strong>let</strong></span> phrase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase(line);
+    <span class="pd_green1"><strong>if</strong></span> (phrase.palindrome()) {
+      console.log(<span class="pd_red">"palindrome detected:</span>", line);
+    }
+  });
+});</pre>
+<p class="indent">At this point, we’re ready to try the script out at the command line:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c222pro02" id="c222pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> ./palindrome_url
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">palindrome detected: Dennis sinned.</span>
+<span class="pd_green">palindrome detected: Dennis and Edna sinned.</span>
+<span class="pd_green">palindrome detected: Dennis, Nell, Edna, Leon, Nedra, Anita, Rolf, Nora,</span>
+<span class="pd_green">Alice, Carol, Leo, Jane, Reed, Dena, Dale, Basil, Rae, Penny, Lana, Dave,</span>
+<span class="pd_green">Denny, Lena, Ida, Bernadette, Ben, Ray, Lila, Nina, Jo, Ira, Mara, Sara,</span>
+<span class="pd_green">Mario, Jan, Ina, Lily, Arne, Bette, Dan, Reba, Diane, Lynn, Ed, Eva, Dana,</span>
+<span class="pd_green">Lynne, Pearl, Isabel, Ada, Ned, Dee, Rena, Joel, Lora, Cecil, Aaron, Flora,</span>
+<span class="pd_green">Tina, Arden, Noel, and Ellen sinned.</span>
+<span class="pd_green">palindrome detected: Go hang a salami, I'm a lasagna hog.</span>
+<span class="pd_green">palindrome detected: level</span>
+<span class="pd_green">palindrome detected: Madam, I’m Adam.</span>
+<span epub:type="pagebreak" id="page_223"></span><span class="pd_green">palindrome detected: No "x" in "Nixon"</span>
+<span class="pd_green">palindrome detected: No devil lived on</span>
+<span class="pd_green">palindrome detected: Race fast, safe car</span>
+<span class="pd_green">palindrome detected: racecar</span>
+<span class="pd_green">palindrome detected: radar</span>
+<span class="pd_green">palindrome detected: Was it a bar or a bat I saw?</span>
+<span class="pd_green">palindrome detected: Was it a car or a cat I saw?</span>
+<span class="pd_green">palindrome detected: Was it a cat I saw?</span>
+<span class="pd_green">palindrome detected: Yo, banana boy!</span></pre>
+<p class="noindent">Amazing! The result is exactly as we saw in <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, but this time, we got the data right off the live Web.</p>
+<section>
+<h4 class="h4" id="ch10lev2sec1">10.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">It’s often useful to have a separate variable with a list of the items you’re selecting for (in this case, palindromes). Using the <span class="pd_green"><code><strong>filter</strong></code></span> method discussed in <a href="ch06.xhtml#ch6lev2">Section 6.2</a>, create a <span class="pd_green"><code><strong>palindromes</strong></code></span> variable with an array of palindromes, as shown in <a href="ch10.xhtml#ch10list4">Listing 10.4</a>. Is the output the same as the output of <a href="ch10.xhtml#ch10list3">Listing 10.3</a>?</p></li>
+</ol>
+<p class="listing" id="ch10list4"><strong>Listing 10.4:</strong> Reading a URL the functional way.<br/><code><em>palindrome_url</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis04" id="c10lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require(<span class="pd_red">"&lt;username&gt;-palindrome"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> <span class="pd_red">'https://cdn.learnenough.com/phrases.txt'</span>
+
+urllib.request(url, { followRedirect<span class="gray">:</span> <span class="pd_green1"><strong>true</strong></span> }, <span class="pd_green1"><strong>function</strong></span>(error, data, response) {
+  <span class="pd_green1"><strong>let</strong></span> body <span class="gray">=</span> data.toString();
+  <span class="pd_green1"><strong>let</strong></span> lines <span class="gray">=</span> body.split(<span class="pd_red">"\n"</span>);
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> palindromes = lines.filter(line =&gt; <span class="pd_blue1"><em>/* FILL IN */</em></span>);</span>
+  palindromes.forEach(<span class="pd_green1"><strong>function</strong></span>(palindrome) {
+    console.log(<span class="pd_red">"palindrome detected:</span>", palindrome);
+  });
+});</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev3"><span epub:type="pagebreak" id="page_224"></span>10.3 DOM Manipulation at the Command Line</h3>
+<p class="noindent">In this final section, we’re going to put the URL-reading tricks we learned in <a href="ch10.xhtml#ch10lev2">Section 10.2</a> to good use by writing a version of an actual utility script I once wrote for myself. To begin, I’ll explain the context in which the script arose, and the problem it solves.</p>
+<p class="indent">In recent years, there has been an explosion in the resources available for learning foreign languages, including things like <a href="https://www.duolingo.com/">Duolingo</a>, <a href="https://translate.google.com/">Google Translate</a>, and native OS support for multilingual text-to-speech (TTS). A few years ago, I decided to take advantage of this opportunity to brush up on my high-school/college Spanish.</p>
+<p class="indent">One of the resources I found myself turning to was Wikipedia, with its huge number of articles in languages other than English. In particular, I discovered how useful it was to copy text from Spanish-language Wikipedia (<a href="ch10.xhtml#ch10fig3">Figure 10.3</a>) and drop it into Google Translate (<a href="ch10.xhtml#ch10fig4">Figure 10.4</a>). At that point, I could use the text-to-speech from either Google Translate (the red square in <a href="ch10.xhtml#ch10fig4">Figure 10.4</a>) or macOS to hear the words spoken in Spanish, while following along with either the native language or the translation. <a href="https://translate.google.com/#auto/en/Esmuy%C3%BAtil">Es muy útil</a>.</p>
+<figure class="figure" id="ch10fig3">
+<img src="graphics/10fig03.jpg" alt="images" width="691" height="533"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.3:</strong> <a href="https://translate.google.com/#auto/en/">Un artículo sobre JavaScript</a>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch10fig4">
+<img src="graphics/10fig04.jpg" alt="images" width="698" height="535"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.4:</strong> An article about JavaScript dropped into Google Translate.</p>
+</figcaption>
+</figure>
+<p class="indent">After a while, I noticed two consistent sources of friction:</p>
+<ul class="sq">
+<li><p class="bull">Copying a large number of paragraphs by hand was cumbersome.</p></li>
+<li><p class="bull">Hand-copying text often selected things that I didn’t want, particularly <em>reference numbers</em>, which the TTS system duly pronounced, resulting in random numbers in the middle of sentences (e.g., “Se define como orientado a objetos, 3 [tres] basado en prototipos” = “It’s defined as object-oriented, 3 [three] based on prototypes.” <a href="https://translate.google.com/#auto/en/%C2%BFQu%C3%A9pas%C3%B3?">¿Qué pasó?</a>).</p></li>
+</ul>
+<p class="noindent">Friction like this has inspired many a utility script, and thus was born <span class="pd_green"><code><strong>wikp</strong></code></span> (“Wikipedia paragraphs”), a program to download a Wikipedia article’s HTML source, extract its paragraphs, and eliminate its reference numbers, dumping all the results to the screen.</p>
+<p class="indent">The original <span class="pd_green"><code><strong>wikp</strong></code></span> program was written in Ruby, but it’s just as easy (and arguably easier) in JavaScript. We already know from <a href="ch10.xhtml#ch10list3">Listing 10.3</a> how to download the source. The remaining tasks are then to:</p>
+<ol class="number">
+<li><p class="number">Take an arbitrary URL argument at the command line.</p></li>
+<li><p class="number">Manipulate the downloaded HTML as if it were a regular DOM (<a href="ch09.xhtml#ch9lev3">Section 9.3</a>).</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_225"></span>Remove the references.</p></li>
+<li><p class="number">Output the paragraphs.</p></li>
+</ol>
+<p class="noindent">I want to emphasize that, when I began writing this tutorial, <em>I couldn’t do any of these things in JavaScript</em>. So this section isn’t just about telling you how to do them; it’s about teaching you how to figure these sorts of things out on your own—in other words, classic technical sophistication.</p>
+<p class="indent">Let’s get started by creating the initial script:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch wikp
+<span class="pd_blue"><strong>$</strong></span> chmod +x wikp</pre>
+<p class="noindent">Now we’re ready to get going on the main program. For each task above, I’ll include the kind of Google search you might use to figure out how to do it.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_226"></span>First, we’ll take in the URL as a command-line argument (<a href="https://www.google.com/search?q=javascript+node+command+line+arguments">javascript node command line arguments</a>), as seen in <a href="ch10.xhtml#ch10list5">Listing 10.5</a>. Note that we’ve included a <span class="pd_green"><code><strong>console.log</strong></code></span> line as a temporary way to track our progress.</p>
+<p class="listing" id="ch10list5"><strong>Listing 10.5:</strong> Accept a command-line argument.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis05" id="c10lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_blue1"><em>// Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> process.argv[<span class="gray">2</span>];
+
+console.log(url);</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_227"></span>We can confirm that <a href="ch10.xhtml#ch10list5">Listing 10.5</a> works as advertised:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c227pro01" id="c227pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/JavaScript
+<span class="pd_green">https://es.wikipedia.org/wiki/JavaScript</span></pre>
+<p class="indent">Next, we need to learn how to parse HTML with Node (<a href="https://www.google.com/search?q=node+parse+html">node parse html</a>), for which there are several possibilities. The one that connects best with what we already know is <a href="https://github.com/jsdom/jsdom">JSDOM</a>:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install jsdom</pre>
+<p class="noindent">Adding JSDOM to our script gives <a href="ch10.xhtml#ch10list6">Listing 10.6</a>.</p>
+<p class="listing" id="ch10list6"><strong>Listing 10.6:</strong> Adding JSDOM.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis06" id="c10lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_blue1"><em>// Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> process.argv[<span class="gray">2</span>];
+<span class="bg1"><span class="pd_green1"><strong>const</strong></span> jsdom = require(<span class="pd_red"><strong>"jsdom"</strong></span>);</span>
+<span class="bg1"><span class="pd_green1"><strong>const</strong></span> { JSDOM } = jsdom;</span></pre>
+<p class="noindent">Why does <a href="ch10.xhtml#ch10list5">Listing 10.5</a> have this weird-looking assignment?</p>
+<pre class="pre1"><span class="pd_green1"><strong>const</strong></span> { JSDOM } <span class="gray">=</span> jsdom;</pre>
+<p class="noindent">The answer is, I don’t know offhand; I copied-and-pasted the code directly from the <a href="https://github.com/jsdom/jsdom#basic-usage">JSDOM documentation</a> (<a href="https://github.com/jsdom/jsdom#basic-usage">https://github.com/jsdom/jsdom#basic-usage</a>). This is an essential skill for every developer (<a href="ch10.xhtml#ch10fig5">Figure 10.5</a>).</p>
+<figure class="figure" id="ch10fig5">
+<img src="graphics/10fig05.jpg" alt="images" width="705" height="409"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.5:</strong> There’s nothing wrong with a little copy-and-paste.</p>
+</figcaption>
+</figure>
+<p class="indent">We’ll have to do a little more work to see the effects of JSDOM. Following the <a href="https://github.com/jsdom/jsdom">documentation</a>, we see that we can create a simulated <span class="pd_green"><code><strong>document</strong></code></span> object—just like the one we saw in <a href="ch09.xhtml#ch9list8">Listing 9.8</a>—using this code:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c227pro04" id="c227pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> { <span class="pd_green1">document</span> } <span class="gray">=</span> (<span class="v1"><strong>new</strong></span> JSDOM(body))<span class="pd_green1">.windo</span>w;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_228"></span>(The JSDOM documentation uses <span class="pd_green"><code><strong>const</strong></code></span>, but we’ll use <span class="pd_green"><code><strong>let</strong></code></span> as a signal that we might change the document, which indeed we will (by removing references).)</p>
+<p class="indent">Combining this with the download code from <a href="ch10.xhtml#ch10list3">Listing 10.3</a> gives <a href="ch10.xhtml#ch10list7">Listing 10.7</a>.</p>
+<p class="listing" id="ch10list7"><strong>Listing 10.7:</strong> Adding a simulated DOM.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis07" id="c10lis07a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_blue1"><em>// Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> process.argv[<span class="gray">2</span>];
+
+<span epub:type="pagebreak" id="page_229"></span><span class="pd_green1"><strong>const</strong></span> jsdom <span class="gray">=</span> require(<span class="pd_red">"jsdom"</span>);
+<span class="pd_green1"><strong>const</strong></span> { JSDOM } <span class="gray">=</span> jsdom;
+
+urllib.request(url, { followRedirect<span class="gray">:</span> <span class="pd_green1"><strong>true</strong></span> }, <span class="pd_green1"><strong>function</strong></span>(error, data, response) {
+  <span class="pd_green1"><strong>let</strong></span> body <span class="gray">=</span> data.toString();
+  <span class="pd_blue1"><em>// Simulate a Document Object Model.</em></span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> { <span class="pd_green1"><strong>document</strong></span> } = (<span class="v1"><strong>new</strong></span> JSDOM(body)).<span class="pd_green1"><strong>window</strong></span>;</span>
+});</pre>
+<p class="indent">Our next task is to grab all the paragraphs and references. Since we have a simulated DOM, we can use something like the <span class="pd_green"><code><strong>querySelector</strong></code></span> function we first saw in <a href="ch09.xhtml#ch9lev2">Section 9.2</a>. That function returned only <em>one</em> DOM element, but we can guess how we might find them all (<a href="https://www.google.com/search?q=javascript+queryselector+return+all+elements">javascript queryselector return all elements</a>). Indeed, as of this writing, the solution is the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll#Obtaining_a_list_of_matches">first example</a> on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll">first Google hit</a>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c229pro01" id="c229pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> paragraphs <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelectorAll(<span class="pd_red">"p"</span>);</pre>
+<p class="noindent">(The only change I made was to modify <span class="pd_green"><code><strong>var matches</strong></code></span> to read <span class="pd_green"><code><strong>let paragraphs</strong></code></span>.)</p>
+<p class="indent">Similar code applies to finding all the references, but here we need to know a little about Wikipedia’s source. We can use the web inspector (<a href="ch01.xhtml#ch1lev3sec1">Section 1.3.1</a>) to see that the references all have CSS class <span class="pd_green"><code><strong>reference</strong></code></span>, as shown in <a href="ch10.xhtml#ch10fig6">Figure 10.6</a>.</p>
+<figure class="figure" id="ch10fig6">
+<img src="graphics/10fig06.jpg" alt="images" width="701" height="544"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.6:</strong> Viewing a reference in the web inspector.</p>
+</figcaption>
+</figure>
+<p class="indent">Now, if I told you that the code</p>
+<p class="codelink"><a href="ch10_images.xhtml#c229pro02" id="c229pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1">document</span>.querySelector(<span class="pd_red">"#palindromeTester"</span>);</pre>
+<p class="noindent">returned the element with CSS id <span class="pd_green"><code><strong>palindromeTester</strong></code></span> (as in <a href="ch09.xhtml#ch9list9">Listing 9.9</a>), what would you guess is the code to find <em>all</em> the elements with CSS <em>class</em> equal to <span class="pd_green"><code><strong>reference</strong></code></span>? The CSS notation for a class involves preceding it with a dot <span class="pd_green"><code><strong>.</strong></code></span> instead of a <span class="pd_green"><code><strong>#</strong></code></span>, and we just learned how to find them all using <span class="pd_green"><code><strong>querySelectorAll</strong></code></span>, which means you can probably guess that it’s this:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c229pro03" id="c229pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> references <span class="gray">=</span> <span class="pd_green1">document</span>.querySelectorAll(<span class="pd_red">".reference"</span>);</pre>
+<p class="noindent">Adding these assignments to the script yields <a href="ch10.xhtml#ch10list8">Listing 10.8</a>.</p>
+<p class="listing" id="ch10list8"><span epub:type="pagebreak" id="page_230"></span><strong>Listing 10.8:</strong> Pulling out the paragraphs and references.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis08" id="c10lis08a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_blue1"><em>// Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> process.argv[<span class="gray">2</span>];
+
+<span class="pd_green1"><strong>const</strong></span> jsdom <span class="gray">=</span> require(<span class="pd_red">"jsdom"</span>);
+<span class="pd_green1"><strong>const</strong></span> { JSDOM } <span class="gray">=</span> jsdom;
+
+urllib.request(url, { followRedirect<span class="gray">:</span> <span class="pd_green1"><strong>true</strong></span> }, <span class="pd_green1"><strong>function</strong></span>(error, data, response) {
+  <span class="pd_green1"><strong>let</strong></span> body <span class="gray">=</span> data.toString();
+  <span class="pd_blue1"><em>// Simulate a Document Object Model.</em></span>
+  <span class="pd_green1"><strong>let</strong></span> { <span class="pd_green1">document</span> } <span class="gray">=</span> (<span class="v1"><strong>new</strong></span> JSDOM(body))<span class="pd_green1">.window;</span>
+
+<span epub:type="pagebreak" id="page_231"></span>  <span class="pd_blue1"><em>// Grab all the paragraphs and references.</em></span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> paragraphs = <span class="pd_green1"><strong>document</strong></span>.querySelectorAll(<span class="pd_red">"p"</span>);</span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> references = <span class="pd_green1"><strong>document</strong></span>.querySelectorAll(<span class="pd_red">".reference"</span>);</span>
+});</pre>
+<p class="indent">At this point, we’re almost done. We just need to remove the references and then print out the contents of each paragraph. The first task is easy, as there’s a native <span class="pd_green"><code><strong>remove</strong></code></span> method to remove an HTML “node” (an element in the Document Object Model tree; <a href="https://www.google.com/search?q=javascript+dom+remove+element">javascript dom remove element</a>):</p>
+<p class="codelink"><a href="ch10_images.xhtml#c231pro01" id="c231pro01a">Click here to view code image</a></p>
+<pre class="pre1">references.forEach(<span class="pd_green1"><strong>function</strong></span>(reference) {
+  reference.remove();
+});</pre>
+<p class="noindent">Note that this involves guessing that <span class="pd_green"><code><strong>references</strong></code></span> is a collection that can be iterated through using <span class="pd_green"><code><strong>forEach</strong></code></span>, which at this point should be within your powers of technical sophistication. (Technically, <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> returns not an array, but rather a “<a href="https://developer.mozilla.org/en-US/docs/Web/API/NodeList">NodeList</a>”. Nevertheless, this object can be traversed using <span class="pd_green"><code><strong>forEach</strong></code></span> just the same.)</p>
+<p class="indent">The second task is also simple once we know that each element has a <span class="pd_green"><code><strong>textCon-tent</strong></code></span> property (<a href="https://www.google.com/search?q=javascript+dom+element+print+content">javascript dom element print content</a>):</p>
+<p class="codelink"><a href="ch10_images.xhtml#c231pro02" id="c231pro02a">Click here to view code image</a></p>
+<pre class="pre1">paragraphs.forEach(<span class="pd_green1"><strong>function</strong></span>(paragraph) {
+  console.log(paragraph.textContent);
+});</pre>
+<p class="indent">Putting everything together gives the <span class="pd_green"><code><strong>wikp</strong></code></span> script shown in <a href="ch10.xhtml#ch10list9">Listing 10.9</a>.</p>
+<p class="listing" id="ch10list9"><strong>Listing 10.9:</strong> The final Wikipedia paragraph script.<br/><code><em>wikp</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#c10lis09" id="c10lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>#!/usr/local/bin/node</em></span>
+
+<span class="pd_blue1"><em>// Returns the paragraphs from a Wikipedia link, stripped of reference numbers.</em></span>
+
+<span class="pd_green1"><strong>let</strong></span> urllib <span class="gray">=</span> require(<span class="pd_red">"urllib"</span>);
+<span class="pd_green1"><strong>let</strong></span> url <span class="gray">=</span> process.argv[<span class="gray">2</span>];
+
+<span class="pd_green1"><strong>const</strong></span> jsdom <span class="gray">=</span> require(<span class="pd_red">"jsdom"</span>);
+<span class="pd_green1"><strong>const</strong></span> { JSDOM } <span class="gray">=</span> jsdom;
+
+urllib.request(url, { followRedirect<span class="gray">:</span> <span class="pd_green1"><strong>true</strong></span> }, <span class="pd_green1"><strong>function</strong></span>(error, data, response) {
+
+<span epub:type="pagebreak" id="page_232"></span>  <span class="pd_green1"><strong>let</strong></span> body <span class="gray">=</span> data.toString();
+  <span class="pd_blue1"><em>// Simulate a Document Object Model.</em></span>
+  <span class="pd_green1"><strong>let</strong></span> { <span class="pd_green1">document</span> } <span class="gray">=</span> (<span class="v1"><strong>new</strong></span> JSDOM(body))<span class="pd_green1">.window;</span>
+
+  <span class="pd_blue1"><em>// Grab all the paragraphs and references.</em></span>
+  <span class="pd_green1"><strong>let</strong></span> paragraphs <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelectorAll(<span class="pd_red">"p"</span>);
+  <span class="pd_green1"><strong>let</strong></span> references <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelectorAll(<span class="pd_red">".reference"</span>);
+
+  <span class="pd_blue1"><em>// Remove any references.</em></span>
+<span class="bg1">  references.forEach(<span class="pd_green1"><strong>function</strong></span>(reference) {</span>
+<span class="bg1">    reference.remove();</span>
+<span class="bg1">  });</span>
+  <span class="pd_blue1"><em>// Print out all of the paragraphs.</em></span>
+<span class="bg1">  paragraphs.forEach(<span class="pd_green1"><strong>function</strong></span>(paragraph) {</span>
+<span class="bg1">    console.log(paragraph.textContent);</span>
+<span class="bg1">  });</span>
+});</pre>
+<p class="indent">Let’s see how things went:</p>
+<p class="codelink"><a href="ch10_images.xhtml#c232pro01" id="c232pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/JavaScript
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">.</span>
+<span class="pd_green">Existen algunas herramientas de ayuda a la depuración, también escritas en
+JavaScript y construidas para ejecutarse en la Web. Un ejemplo es el programa
+JSLint, desarrollado por Douglas Crockford, quien ha escrito extensamente
+sobre el lenguaje. JSLint analiza el código JavaScript para que este quede
+conforme con un conjunto de normas y directrices y que aseguran su correcto
+funcionamiento y mantenibilidad.</span></pre>
+<p class="noindent">Success! By scrolling up in our terminal, we can now select all the text and drop it into Google Translate or a text editor of our choice. On macOS, we can do even better by <a href="https://www.learnenough.com/r/learn_enough_command_line/inspecting_files/making_heads_and_tails#sec-wordcount_and_pipes">piping</a> (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-wordcount_and_pipes">https://www.learnenough.com/command-line-tutorial/inspecting_files#sec-wordcount_and_pipes</a>) the results to <span class="pd_green"><code><strong>pbcopy</strong></code></span>, which automatically copies the results to the macOS <strong>p</strong>aste<strong>b</strong>oard (also called the “clipboard”):</p>
+<p class="codelink"><a href="ch10_images.xhtml#c232pro02" id="c232pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> ./wikp https://es.wikipedia.org/wiki/JavaScript | pbcopy</pre>
+<p class="noindent">At this point, pasting into Google Translate (or anywhere else) will paste the full text.<sup><a id="ch10fn-4" href="ch10.xhtml#ch10fn_4">4</a></sup></p>
+<p class="footnote"><a id="ch10fn_4" href="ch10.xhtml#ch10fn-4">4</a>. Google Translate has a limit for how much text it will translate at once, but for text-to-speech purposes you can always paste into a word processor and then use the operating system’s native TTS functionality.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_233"></span>Consider how remarkable this accomplishment is. The script in <a href="ch10.xhtml#ch10list9">Listing 10.9</a> is a little tricky—and to get such a thing working completely on your own might involve more than a few <span class="pd_green"><code><strong>console.log</strong></code></span> statements as you go along—but it’s not <a href="https://www.youtube.com/watch?v=THNPmhBl-8I">exactly rocket science</a>. And yet, it’s genuinely useful, something that (if you’re active in foreign-language learning) you might well use all the time. Moreover, the basic skills involved—including not just the programming, but also the technical sophistication (&lt;cough&gt;Googling&lt;/cough&gt;)—unlock a huge number of potential applications.</p>
+<section>
+<h4 class="h4" id="ch10lev3sec1">10.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By moving the file or changing your system’s configuration, add the <span class="pd_green"><code><strong>wikp</strong></code></span> script to your environment’s PATH. (You may find the <a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/writing_an_executable_script#sec-writing_an_executable_script">steps</a> (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-writing_an_executable_script</a>) in <em><a href="https://www.learnenough.com/text-editor">Learn Enough Text Editor to Be Dangerous</a></em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>) helpful.) Confirm that you can run <span class="pd_green"><code><strong>wikp</strong></code></span> without prepending <span class="pd_green"><code><strong>./</strong></code></span> to the command name.</p></li>
+<li><p class="number">What happens if you run <span class="pd_green"><code><strong>wikp</strong></code></span> with no argument? Add code to your script to detect the absence of a command-line argument and output an appropriate usage statement. <em>Hint</em>: After printing out the usage statement, you will have to <em>exit</em>, which you can learn how to do with the search “<a href="https://www.google.com/search?q=node+how+to+exit+script">node how to exit script</a>”.</p></li>
+<li><p class="number">The “pipe to <span class="pd_green"><code><strong>pbcopy</strong></code></span>” trick mentioned in the text works only on macOS, but any Unix-compatible system can <a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/redirecting_and_appending#sec-redirecting_and_appending">redirect</a> (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending">https://www.learnenough.com/command-line-tutorial/manipulating_files#sec-redirecting_and_appending</a>) the output to a file. What’s the command to redirect the output of <span class="pd_green"><code><strong>wikp</strong></code></span> to a file called <span class="pd_green"><code><strong>article.txt</strong></code></span>? (You could then open this file, select all, and copy the contents, which has the same basic result as piping to <span class="pd_green"><code><strong>pbcopy</strong></code></span>.)<span epub:type="pagebreak" id="page_234"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

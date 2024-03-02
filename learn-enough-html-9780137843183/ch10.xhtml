@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch10"><span epub:type="pagebreak" id="page_327"></span>Chapter 10</h2>
+<h2 class="chap-title">Page Templates and Frontmatter</h2>
+<p class="noindent">You might have noticed that we finished <a href="ch09.xhtml#ch09">Chapter 9</a> with a big loose end: The default “layout” <span class="green-d"><code><strong>default.html</strong></code></span> contains all the content from our main index page—this makes it effectively useless as a layout because it can’t show content for other pages. In this chapter, we’ll tie up this loose end by learning how to insert content dynamically, thereby making our layout a truly reusable template.</p>
+<p class="indent">Site-wide elements like the header and footer will be the same on every page, while the content in between (the part shown in blue in <a href="ch09.xhtml#ch9fig41">Figure 9.41</a>) will vary. We will use Jekyll page templates to do this and simplify our site’s structure, with a focus on developing unique content for each page. Along the way, we’ll learn a new Liquid command for inserting content (<a href="ch10.xhtml#sec10_1">Section 10.1</a>), style the hero section (<a href="ch10.xhtml#sec10_2">Section 10.2</a>), learn some more advanced selectors (<a href="ch10.xhtml#sec10_3">Section 10.3</a>), and add pages other than the default index (<a href="ch10.xhtml#sec10_4">Section 10.4</a>).</p>
+<section>
+<h3 class="h3" id="sec10_1">10.1 Template Content</h3>
+<p class="noindent">As mentioned in <a href="ch09.xhtml#sec9_4">Section 9.4</a>, the current state of <span class="green-d"><code><strong>default.html</strong></code></span> doesn’t represent the standard way of using a Jekyll layout. The reason is that layouts should be <em>templates</em>, providing instructions for assembling the full page, rather than containing the full page content itself. Currently, the content in <span class="green-d"><code><strong>default.html</strong></code></span> is in fact only the content for <span class="green-d"><code><strong>index.html</strong></code></span>. If we want to use <span class="green-d"><code><strong>default.html</strong></code></span> as a template for additional pages, we need some way to insert the content specific to those pages.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_328"></span>The way to do this in Jekyll is to replace the content in the template with a special Liquid tag that inserts the content dynamically, so that it can be different for each page. The tag itself looks like this:</p>
+<pre class="pre1">{{ content }}</pre>
+<p class="noindent">This tag tells Jekyll to insert into the layout file whatever content is on the page that a user is loading (such as the homepage <span class="green-d"><code><strong>index.html</strong></code></span>). With this new tag in place, we can make as many additional pages as we want, and each will have its own content that will get built into a final page. All those new pages will have the same header, footer, and any other structure (thereby adhering to the DRY principle (<a href="ch05.xhtml#box5_2">Box 5.2</a>)) that we want all pages to have.</p>
+<p class="indent">To get this to work, we’ll start by refactoring the index page, moving the index-specific content from <span class="green-d"><code><strong>default.html</strong></code></span> to <span class="green-d"><code><strong>index.html</strong></code></span>, and then dynamically inserting that content in the default template. The first step is to use your text editor to cut the content in <span class="green-d"><code><strong>default.html</strong></code></span> between the header and footer includes and replace it with the Liquid tag from above. The result should appear as in shown in <a href="ch10.xhtml#ch10list1">Listing 10.1</a>.</p>
+<p class="listing" id="ch10list1"><strong>Listing 10.1:</strong> Replacing the content with a Liquid tag.<br/><code><em>_layouts/default.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list01a" id="p10list01">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  {% include head.html %}
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    {% include header.html %}
+
+<span class="bg1">    {{ content }}</span>
+
+    {% include footer.html %}
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">The second step is to paste the content you just cut out of <span class="green-d"><code><strong>default.html</strong></code></span> into <span class="green-d"><code><strong>index.html</strong></code></span> (while preserving the Jekyll frontmatter from <a href="ch09.xhtml#ch9list2">Listing 9.2</a>). Because this was a refactoring, when you refresh the page the content should appear unchanged. If you think that you might have done it incorrectly, don’t worry, there’s a code listing of the full file coming up in <a href="ch10.xhtml#ch10list2">Listing 10.2</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_329"></span>The way this works is that Jekyll automatically collects the content in <span class="green-d"><code><strong>index.html</strong></code></span> (i.e., everything other than the frontmatter) into a special variable (<a href="ch10.xhtml#box10_1">Box 10.1</a>) called <span class="green-d"><code><strong>content</strong></code></span>, which then gets inserted by the Liquid command in <a href="ch10.xhtml#ch10list1">Listing 10.1</a> into the template specified by <span class="green-d"><code><strong>layout: default</strong></code></span>.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box10_1">
+<p class="sb-title1"><strong>Box 10.1: What Is a Variable?</strong></p>
+<p class="sb-noindent">If you’ve never programmed a computer before, you may be unfamiliar with the term <em>variable</em>, which is an essential idea in computer science. You can think of a variable as a named box that can hold different (or “variable”) content.</p>
+<p class="sb-indent">As a concrete analogy, consider the labeled boxes that many elementary schools provide for students to store clothing, books, backpacks, etc. (<a href="ch10.xhtml#ch10fig1">Figure 10.1</a><sup><a id="fn10_1a" href="ch10.xhtml#fn10_1">1</a></sup>).</p>
+<figure class="figure" id="ch10fig1">
+<img src="graphics/10fig01.jpg" alt="images" width="507" height="502"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.1:</strong> A concrete manifestation of computer variables.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn10_1" href="ch10.xhtml#fn10_1a">1</a>. Image courtesy of Africa Studio/Shutterstock.</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_330"></span>In the context of a Jekyll template, the content on the page (such as <span class="green-d"><code><strong>index.html</strong></code></span>) is automatically collected into a variable called <span class="green-d"><code><strong>content</strong></code></span>, which can be inserted into the template using the special command <span class="green-d"><code><strong>{{ content }}</strong></code></span> as described above (<a href="ch10.xhtml#ch10list1">Listing 10.1</a>).</p>
+</aside>
+<p class="indent">Note that <span class="green-d"><code><strong>{{ content }}</strong></code></span> is a generic instruction to Jekyll to insert the value of the <span class="green-d"><code><strong>content</strong></code></span> variable, which in this context is the content from whatever page the user has visited (e.g., <span class="green-d"><code><strong>index.html</strong></code></span>). It’s kind of a wildcard, as opposed to Liquid tags like <span class="green-d"><code><strong>{% include footer.html %}</strong></code></span> (<a href="ch09.xhtml#sec9_6">Section 9.6</a>), which include only a specific file’s contents. We’ll be talking about variables more in <a href="ch12.xhtml#sec12_1">Section 12.1</a>.</p>
+<p class="indent">We’ll put our new fully flexible layout template to good use in <a href="ch10.xhtml#sec10_4">Section 10.4</a>, and again in <a href="ch12.xhtml#sec12_1">Section 12.1</a>. First, though, we should probably make our homepage look a little less boring.</p>
+<section>
+<h4 class="h4" id="sec10_1_1">10.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Make a new file called <span class="green-d"><code><strong>test.html</strong></code></span> in your root directory, specify the default layout in the frontmatter, and for content add something like “For the fourth, and I hope final time, hello world.” Visit <a href="http://localhost:4000/test.html">http://localhost:4000/test.html</a> in your browser to verify that it worked.</p></li>
+<li><p class="number">Create a new file in your <span class="green-d"><code><strong>_layouts</strong></code></span> directory, and add in only a <span class="green-d"><code><strong>{{ content }}</strong></code></span> tag. Then change the <span class="green-d"><code><strong>index.html</strong></code></span> frontmatter to use that new layout to build the page. Visit <a href="http://localhost:4000/">http://localhost:4000/</a> in your browser to see the result.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec10_2">10.2 There’s No Place Like Home</h3>
+<p class="noindent">We’ll start our homepage styling right at the top with the hero section that we created all the way back in <a href="ch07.xhtml#sec7_7">Section 7.7</a>. As we mentioned there, you’ve likely seen a lot of sites with nice big images at the top of the page, and these sections are called a variety of different names—hero sections, billboards, splashes, etc.—but, whatever the name, the goal is the same: to add a big attractive graphical element to the page to set the tone and grab the reader’s attention. But our current plain blue hero is a bit of a zero… so we should change that.</p>
+<p class="indent">As preparation for the hero improvements, we’re going to update the markup on our index page a bit. The new <span class="green-d"><code><strong>index.html</strong></code></span> appears in <a href="ch10.xhtml#ch10list2">Listing 10.2</a>. Notice that we’ve taken the text that was at the bottom of the page and wrapped it inside new divs with <span epub:type="pagebreak" id="page_331"></span>new classes (everything inside the <span class="green-d"><code><strong>div</strong></code></span> with the class of <span class="green-d"><code><strong>.home-callout</strong></code></span>), and we’ve moved it to the top of the page. We’ve also eliminated the final <span class="green-d"><code><strong>.bio-box</strong></code></span> with the question marks.</p>
+<p class="indent">You may find it easier to copy and paste from <a href="ch10.xhtml#ch10list2">Listing 10.2</a> rather than rewrite it all yourself,<sup><a id="fn10_2a" href="ch10.xhtml#fn10_2">2</a></sup> but if you feel like getting your hands dirty feel free to adapt the content on your page so that it matches. The result should look something like <a href="ch10.xhtml#ch10fig2">Figure 10.2</a>.</p>
+<figure class="figure" id="ch10fig2">
+<img src="graphics/10fig02.jpg" alt="images" width="676" height="523"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.2:</strong> An updated index page.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn10_2" href="ch10.xhtml#fn10_2a">2</a>. Recall that the code listings are available at <a href="https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings">https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings</a>.</p>
+<p class="listing" id="ch10list2"><strong>Listing 10.2:</strong> Updating the HTML on the homepage.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list02a" id="p10list02">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"full-hero hero-home"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;I’m an h1&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-list"</span>&gt;
+    &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Fb&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Gh&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-callout"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-title"</span>&gt;The Learn Enough Story&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-copy"</span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      Learn Enough to Be Dangerous is a leader in the movement to teach the world
+      &lt;<span class="pd_green1"><strong>em</strong></span>&gt;technical sophistication&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;, which includes both "hard skills" like
+      coding, command lines, and version control, and "soft skills" like guessing
+      keyboard shortcuts, Googling error messages, and knowing when to just
+      reboot the darn thing.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      We believe there are &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;at least a billion people&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt; who can
+      benefit from learning technical sophistication, probably more. To join our
+      <span epub:type="pagebreak" id="page_332"></span>movement, &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/#email_list"</span>&gt;sign up for our
+      official email list&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; now.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Background&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      Learn Enough to Be Dangerous is an outgrowth of the
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and the
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/"</span>&gt;Softcover publishing platform&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;. This
+      page is part of the sample site for &lt;<span class="pd_green1"><strong>a</strong></span>
+      <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/css-tutorial"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;Learn Enough CSS and Layout
+      to Be Dangerous&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, which teaches the basicics of
+      &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;C&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;ascading &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;tyle
+      &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;heets, the language that
+      allows web pages to be styled. Other related tutorials can be found at
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;learnenough.com&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-section"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;THE FOUNDERS&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+    Learn Enough to Be Dangerous was founded in 2015 by Michael Hartl, Lee
+    Donahoe, and Nick Merwin. We believe that the kind of technical
+    sophistication taught by the Learn Enough tutorials can benefit at least a
+    billion people, and probably more.
+  &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-wrapper"</span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+        Tw
+      &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+       &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+         Known for his dazzling charm, rapier wit, and unrivaled humility,
+         Michael is the creator of the
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails
+         Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and principal author of the
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt; Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+         introductory sequence.
+       &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+         Michael is also notorious as the founder of
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/"</span>&gt;Tau Day&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and author of
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/tau-manifesto"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;The Tau
+         Manifesto&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, but rumors that he's secretly a supervillain are
+         slightly exaggerated.
+       <span epub:type="pagebreak" id="page_333"></span>&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+     &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+     &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+       Tw
+     &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+       &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+         When he’s not literally swimming with sharks or hunting powder stashes
+         on his snowboard, you can find Lee in front of his computer designing
+         interfaces, doing front-end development, or writing some of the
+         interface-related Learn Enough tutorials.
+       &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+     &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+     &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+       Tw
+     &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        You may have seen him shredding guitar live with Capital Cities on
+        Jimmy Kimmel, Conan, or The Ellen Show, but rest assured Nick is a true
+        nerd at heart. He’s just as happy shredding well-spec’d lines of code
+        from a tour bus as he is from his kitchen table.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_334"></span>To get started on the hero update, let’s first increase the size of the <span class="green-d"><code><strong>.full-hero</strong></code></span> class that we styled in <a href="ch07.xhtml#sec7_7">Section 7.7</a> to make it the size of the entire browser window. To do this, we’ll set the <span class="green-d"><code><strong>height</strong></code></span> to 100% of the viewport height using <span class="green-d"><code><strong>height: 100vh</strong></code></span> (<a href="ch07.xhtml#sec7_7">Section 7.7</a>):</p>
+<pre class="pre1">.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vh</strong></span>;
+}</pre>
+<p class="noindent">We’ll also add in a background image (an extremely <em>dangerous</em> shark) using the <span class="green-d"><code><strong>background-image</strong></code></span> attribute, which takes an absolute path (with a leading slash <span class="green-d"><code><strong>/</strong></code></span> in <span class="green-d"><code><strong>/images/shark.jpg</strong></code></span>) as follows:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p334pro02a" id="p334pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>hero-home</strong></span> {
+  <span class="pd_green1"><strong>background-image</strong></span>: <span class="pd_green1">url</span>(<span class="pd_green1">/images/shark.jpg</span>);
+}</pre>
+<p class="noindent">(We’ll download <span class="green-d"><code><strong>shark.jpg</strong></code></span> in a moment.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_335"></span>Putting these elements together, and adding a few extra rules for the <span class="green-d"><code><strong>.full-hero</strong></code></span> class, gives us <a href="ch10.xhtml#ch10list3">Listing 10.3</a>.</p>
+<p class="listing" id="ch10list3"><strong>Listing 10.3:</strong> New styles for the hero section.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list03a" id="p10list03">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+}
+.<span class="blue-v"><strong>hero-home</strong></span> {
+  <span class="pd_green1"><strong>background-image</strong></span>: <span class="pd_green1">url</span>(<span class="pd_green1">/images/shark.jpg</span>);
+}</pre>
+<p class="noindent">Note in <a href="ch10.xhtml#ch10list3">Listing 10.3</a> the placement of the hero styles below site-wide styles like those for the header and footer. The reasoning is that the header and footer sections of CSS tend to stay relatively unchanged through updates, whereas you often find yourself making additions to the CSS that deal with the site content, so it makes sense to us to have things that change less often at the top of a file and add new stuff to the bottom.</p>
+<p class="indent">Note also that we’ve added in a <span class="green-d"><code><strong>border-box</strong></code></span> style to make sure that the padding we’ll add doesn’t affect the overall element height (<a href="ch08.xhtml#sec8_2">Section 8.2</a>), and we’ve added padding to the top so that content isn’t covered up by the fixed-position header.</p>
+<p class="indent">To get the hero image, use <span class="green-d"><code><strong>curl</strong></code></span> to download <span class="green-d"><code><strong>shark.jpg</strong></code></span> to your local disk:<sup><a id="fn10_3a" href="ch10.xhtml#fn10_3">3</a></sup></p>
+<p class="footnote"><a id="fn10_3" href="ch10.xhtml#fn10_3a">3</a>. Great White Shark photograph copyright © 2015 by Lee Donahoe. (What did you think Lee’s bio meant by “literally swimming with sharks”?)</p>
+<p class="codelink"><a href="ch10_images.xhtml#p335pro01a" id="p335pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> curl -o images/shark.jpg -L https://cdn.learnenough.com/le-css/shark.jpg</pre>
+<p class="indent">Save and refresh and… hmm… <a href="ch10.xhtml#ch10fig3">Figure 10.3</a> doesn’t look quite right.</p>
+<figure class="figure" id="ch10fig3">
+<img src="graphics/10fig03.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.3:</strong> Our hero image is looking a little less than heroic.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_336"></span>What happened? Well, when the browser loads an image as a background, it isn’t any different from when you put an image on a page using an HTML <span class="green-d"><code><strong>img</strong></code></span> tag—the image is displayed at its full dimensions. We’ve changed the size of images in this tutorial by giving a width or height to the <span class="green-d"><code><strong>img</strong></code></span> element in CSS (e.g., <a href="ch09.xhtml#ch9list32">Listing 9.32</a>), but the <span class="green-d"><code><strong>height</strong></code></span> and <span class="green-d"><code><strong>width</strong></code></span> properties don’t work for background styles. To resize a background image to fit a container, we need to use the <span class="green-d"><code><strong>background-size</strong></code></span> style, as shown in <a href="ch10.xhtml#ch10list4">Listing 10.4</a>.</p>
+<p class="listing" id="ch10list4"><strong>Listing 10.4:</strong> Adding the style to resize the background image.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list04a" id="p10list04">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+<span class="bg1">  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;</span>
+  <span class="pd_green1"><strong>box-sizing</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>border-box</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>height</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>100vh</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>padding-top</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>10vh</strong></span><span class="grey">;</span>
+}
+<span epub:type="pagebreak" id="page_337"></span>.<span class="blue-v"><strong>hero-home</strong></span> {
+  <span class="pd_green1"><strong>background-image</strong></span>: <span class="pd_green1">url</span>(<span class="pd_green1">/images/shark.jpg</span>);
+}</pre>
+<p class="indent">Setting the <span class="green-d"><code><strong>background-size</strong></code></span> property to <span class="green-d"><code><strong>cover</strong></code></span> means that the image will be resized so that the entire <span class="green-d"><code><strong>.full-hero</strong></code></span> container is covered by the image, even if that means cutting off parts of the image (<a href="ch10.xhtml#ch10fig4">Figure 10.4</a>).</p>
+<figure class="figure" id="ch10fig4">
+<img src="graphics/10fig04.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.4:</strong> Resizing the image just enough to fully cover the background.</p>
+</figcaption>
+</figure>
+<p class="indent">You can also use the value <span class="green-d"><code><strong>contain</strong></code></span> and the background image will be resized so that the entire picture will always fit inside the object, but that can lead to a situation where the image doesn’t fully cover the background and the image gets repeated to fill the element.</p>
+<p class="indent">Now reset back to using <span class="green-d"><code><strong>background: cover</strong></code></span>. If you resize your browser window to make it really narrow, you’ll see that the image is dynamically resized, but you’ll also likely notice that the resizing is done with the anchor point in the top left. Unfortunately, our shark is in the center of the image. When the window gets narrow, it starts getting cut off again (<a href="ch10.xhtml#ch10fig5">Figure 10.5</a>).</p>
+<figure class="figure" id="ch10fig5">
+<img src="graphics/10fig05.jpg" alt="images" width="676" height="507"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.5:</strong> By default, the resizing is anchored at the top left of the image.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_338"></span>That’s not always ideal, but luckily we can change the anchor point for the background image by using the <span class="green-d"><code><strong>background-position</strong></code></span> property (<a href="ch10.xhtml#ch10list5">Listing 10.5</a>).</p>
+<p class="listing" id="ch10list5"><strong>Listing 10.5:</strong> Changing the anchor point for where the browser resizes the image.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list05a" id="p10list05">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+}
+.<span class="blue-v"><strong>hero-home</strong></span> {
+  <span class="pd_green1"><strong>background-image</strong></span>: <span class="pd_green1">url</span>(<span class="pd_green1">/images/shark.jpg</span>);
+<span class="bg1">  <span class="pd_green1"><strong>background-position</strong></span>: <span class="pd_green1"><strong>center top</strong></span>;</span>
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_339"></span>Now the shark is better-positioned inside the element (<a href="ch10.xhtml#ch10fig6">Figure 10.6</a>).</p>
+<figure class="figure" id="ch10fig6">
+<img src="graphics/10fig06.jpg" alt="images" width="676" height="462"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.6:</strong> Resizing the picture from an anchor point at the <span class="green-d"><code><strong>center top</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">The <span class="green-d"><code><strong>background-position</strong></code></span> style allows us to position a background with specific values like pixels or percentages, or we can use generic terms like <span class="green-d"><code><strong>center</strong></code></span>, <span class="green-d"><code><strong>top</strong></code></span>, <span class="green-d"><code><strong>left</strong></code></span>, etc. The first value controls the x-axis and the second the y-axis. So if we gave the background the style <span class="green-d"><code><strong>background-position: center center</strong></code></span>, then any resizing would always keep the middle of the image in the middle of the container <span class="green-d"><code><strong>div</strong></code></span>.</p>
+<p class="indent">Next, let’s make it so that the text, and the social links, are always vertically aligned in the hero using the positioning tricks we learned in <a href="ch09.xhtml#sec9_8">Section 9.8</a>. We could absolutely position that content, or we could just set the wrapper’s position property to <span class="green-d"><code><strong>relative</strong></code></span> and then nudge things around.</p>
+<p class="indent">First, let’s move the <span class="green-d"><code><strong>h1</strong></code></span> and the <span class="green-d"><code><strong>.social-links</strong></code></span> list into a new wrapper element, with a class of <span class="green-d"><code><strong>.hero-content</strong></code></span>, so that we are only adding positional styling to a single HTML element that will then contain all the rest of the content in the hero (<a href="ch10.xhtml#ch10list6">Listing 10.6</a>). Note that we’ve also updated the <span class="green-d"><code><strong>h1</strong></code></span> to read CODE DANGEROUSLY.</p>
+<p class="listing" id="ch10list6"><span epub:type="pagebreak" id="page_340"></span><strong>Listing 10.6:</strong> Wrapping the hero’s content inside a new <span class="green-d"><code><strong>div</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list06a" id="p10list06">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"full-hero hero-home"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"hero-content"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;CODE DANGEROUSLY&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-list"</span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Fb&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Gh&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="bg1">&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</span></pre>
+<p class="indent">If you wanted to absolutely position the <span class="green-d"><code><strong>.hero-content</strong></code></span>, then you would need to remember to add a <span class="green-d"><code><strong>position: relative</strong></code></span> to the <span class="green-d"><code><strong>.full-hero</strong></code></span> class so that it could act as the container for absolutely positioned elements inside it. Since there isn’t anything else in the hero, we don’t need to worry about taking the <span class="green-d"><code><strong>.hero-content</strong></code></span> entirely out of the document flow. Instead, we can just set the <span class="green-d"><code><strong>.hero-content</strong></code></span> to <span class="green-d"><code><strong>position: relative</strong></code></span> and then nudge it around. At the same time, we’ll do some styling for the <span class="green-d"><code><strong>.social-link</strong></code></span>s and the <span class="green-d"><code><strong>h1</strong></code></span>.</p>
+<p class="indent">Since the <span class="green-d"><code><strong>.hero-content</strong></code></span> wrapper is already going to be 100% of the width (it’s just a normal block element), we don’t need to worry about messing with horizontal centering—just aligning the content using <span class="green-d"><code><strong>text-align: center</strong></code></span> will be good enough. We only need to worry about vertical positioning, which we can do with the <span class="green-d"><code><strong>top: 50%</strong></code></span> and <span class="green-d"><code><strong>translate(0, -50%)</strong></code></span> (both of which you’ve seen in <a href="ch09.xhtml#sec9_8">Section 9.8</a>):</p>
+<p class="codelink"><a href="ch10_images.xhtml#p340pro01a" id="p340pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>top</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>50</strong></span><span class="grey">%;</span>
+<span class="pd_green1"><strong>transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>translate</strong></span><span class="grey">(</span><span class="pd_green1"><strong>0</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>-50</strong></span><span class="grey">%);</span></pre>
+<p class="indent">We’ll then style the hero’s <span class="green-d"><code><strong>h1</strong></code></span> with a partially transparent color, a big font size, and a bottom margin:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p341pro01a" id="p341pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>color</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>rgba</strong></span><span class="grey">(</span><span class="pd_green1"><strong>255</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>255</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>255</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>0</strong></span>.<span class="blue-v"><strong>8</strong></span><span class="grey">);</span>
+<span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>7vw</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>margin-bottom</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span>.<span class="blue-v"><strong>25em</strong></span><span class="grey">;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_341"></span>All together, our existing and new hero styling are shown in <a href="ch10.xhtml#ch10list7">Listing 10.7</a>.</p>
+<p class="listing" id="ch10list7"><strong>Listing 10.7:</strong> Positioning the hero content to be vertically centered.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list07a" id="p10list07">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>hero-content</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+  <span class="pd_green1"><strong>top</strong></span>: <span class="grey">50</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>transform</strong></span>: <span class="pd_green1">translate</span>(<span class="grey">0</span>, <span class="blue-dd">-50</span>%);
+}
+.<span class="blue-v"><strong>hero-content</strong></span> <span class="pd_green1"><strong>h1</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">255</span>, <span class="grey">255</span>, <span class="grey">255</span>, <span class="grey">0.8</span>);
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vw</strong></span>;
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">0.25</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>hero-content</strong></span> .<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">255</span>, <span class="grey">255</span>, <span class="grey">255</span>, <span class="grey">0.8</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#557c83</span>;
+}
+.<span class="blue-v"><strong>hero-content</strong></span> .<span class="blue-v"><strong>social-link</strong></span>:<span class="v1">hover</span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#000</span>;
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+}</pre>
+<p class="indent">The hero now looks nicely styled (<a href="ch10.xhtml#ch10fig7">Figure 10.7</a>).</p>
+<figure class="figure" id="ch10fig7">
+<img src="graphics/10fig07.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.7:</strong> This hero section is starting to look… DANGEROUS(LY GOOD)!</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec10_2_1"><span epub:type="pagebreak" id="page_342"></span>10.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">The <span class="green-d"><code><strong>background-size</strong></code></span> property isn’t just limited to things like <span class="green-d"><code><strong>cover</strong></code></span> and <span class="green-d"><code><strong>contain</strong></code></span>; try setting the width value to a hard number like <span class="green-d"><code><strong>300px</strong></code></span> and the height to <span class="green-d"><code><strong>auto</strong></code></span>. What would that shorthand value be?</p></li>
+<li><p class="number">Now that you have a smaller background image, you’ll have noticed that the browser repeats it to fill the element’s background. We can stop that, though. Try adding a style of <span class="green-d"><code><strong>background-repeat: no-repeat</strong></code></span> to the <span class="green-d"><code><strong>.full-hero</strong></code></span> element.</p></li>
+<li><p class="number">Similar to <span class="green-d"><code><strong>background-size</strong></code></span>, the <span class="green-d"><code><strong>background-position</strong></code></span> property can take number values. Change the positioning to <span class="green-d"><code><strong>30% center</strong></code></span>.</p>
+</li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec10_3">10.3 More Advanced Selectors</h3>
+<p class="noindent">The hero from <a href="ch10.xhtml#sec10_2">Section 10.2</a> is looking great, but there’s a missing detail we’d like to add. When people visit our site, there’s a risk that they won’t realize there is content <span epub:type="pagebreak" id="page_343"></span>lower down on the page. What if we added a little downward-pointing arrow at the bottom of the hero to give them a hint they should scroll?</p>
+<p class="indent">One way we could do it would be to add a new <span class="green-d"><code><strong>div</strong></code></span> in the hero, give it a class name, and give that some styles, maybe use an image for the arrow, etc.—but that would be adding extra stuff to the code that would just clutter things up.</p>
+<p class="indent">There is, however, another advanced CSS technique we can use to add stuff onto the page without adding anything to the HTML…</p>
+<p class="indent">In this section, we’ll see how to use the advanced <em>pseudo-element</em> to add a downward-pointing arrow to our hero section (<a href="ch10.xhtml#sec10_2">Section 10.2</a>) without using any images and with a minimum of fuss.</p>
+<section>
+<h4 class="h4" id="sec10_3_1">10.3.1 The <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span> Pseudo-Elements</h4>
+<p class="noindent">We introduced the <em>pseudo-class</em> when we were styling links in <a href="ch09.xhtml#sec9_7_1">Section 9.7.1</a>, and if you remember, it is kind of like a pretend CSS class that applies only when a user interacts with an element in a certain way (such as hovering over it with the mouse or visiting a link).</p>
+<p class="indent">All HTML elements also have two pretend pseudo-elements, called <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span>.<sup><a id="fn10_4a" href="ch10.xhtml#fn10_4">4</a></sup> Even though this might sound super-technical and weird, surprisingly you’ve already used pseudo-elements, once when we played around with clearing floats (<a href="ch08.xhtml#sec8_3_1">Section 8.3.1</a>), and also the very first time that you ever made a bullet list (as in <a href="ch03.xhtml#sec3_4">Section 3.4</a>). You didn’t know it, but when you created that bullet list, the individual bullet points were actually placed on the page by the browser using <span class="green-d"><code><strong>:before</strong></code></span> pseudo-elements.</p>
+<p class="footnote"><a id="fn10_4" href="ch10.xhtml#fn10_4a">4</a>. The latest CSS standard technically uses <em>two</em> colons for pseudo-elements—e.g., <span class="green-d"><code><strong>::before</strong></code></span> and <span class="green-d"><code><strong>::after</strong></code></span>— but all modern browsers support it both ways, so many designers use a single colon for backward compatibility.</p>
+<p class="indent">The “before” and “after” in the pseudo-element names just refer to where the corresponding element will show up. So, if you have a line of text, <span class="green-d"><code><strong>:before</strong></code></span> will show up at the beginning and <span class="green-d"><code><strong>:after</strong></code></span> will show up at the end (<a href="ch10.xhtml#ch10fig8">Figure 10.8</a>)… shocking, right?</p>
+<figure class="figure" id="ch10fig8">
+<img src="graphics/10fig08.jpg" alt="images" width="599" height="325"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.8:</strong> The position of the <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span> pseudo-elements.</p>
+</figcaption>
+</figure>
+<p class="indent">Because these pseudo-elements were originally created to modify text, they are by default <span class="green-d"><code><strong>inline</strong></code></span> elements, and since the default is that they are empty, the result is that in their default rendering they take up no space. Here’s the cool thing, though: They work just as if you added a <span class="green-d"><code><strong>span</strong></code></span> into a line of text, gave it a class, and then styled it. You can do all the same sorts of things that you’d do to any element on the <span epub:type="pagebreak" id="page_344"></span>page—change the display type, move it around, change how it looks—whatever your heart desires! They are perfect for adding little details to elements on a site without needing to complicate your code with extra HTML tags and classes.</p>
+<p class="indent">We’ll do a quick example just to illustrate the concept, and then actually implement the down arrow mentioned above. Start by adding the styles from <a href="ch10.xhtml#ch10list8">Listing 10.8</a> to your CSS.</p>
+<p class="listing" id="ch10list8"><strong>Listing 10.8:</strong> A pseudo-element example.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list08a" id="p10list08">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>hero-content</strong></span> <span class="pd_green1"><strong>h1</strong></span>:<span class="v1">before</span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">"B"</span>;
+}
+.<span class="blue-v"><strong>hero-content</strong></span> <span class="pd_green1"><strong>h1</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>red</strong></span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">"A"</span>;
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_345"></span>When you save and refresh your browser, you’ll see that a <span class="blue-v">B</span> has appeared at the beginning of the title where the <span class="green-d"><code><strong>:before</strong></code></span> element lives, and there is an <span class="red">A</span> where the <span class="green-d"><code><strong>:after</strong></code></span> element can be found (<a href="ch10.xhtml#ch10fig09">Figure 10.9</a>).</p>
+<figure class="figure" id="ch10fig09">
+<img src="graphics/10fig09.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.9:</strong> Demonstrating how pseudo-elements fit into ordinary elements.</p>
+</figcaption>
+</figure>
+<p class="indent">The CSS property <span class="green-d"><code><strong>content</strong></code></span> allows you to set what the browser should put into either the <span class="green-d"><code><strong>:before</strong></code></span> or <span class="green-d"><code><strong>:after</strong></code></span> location, but the value can only be text (don’t try and cram HTML in there!). So even though you didn’t add any HTML, you now have new text content on the page.</p>
+<p class="indent">OK, let’s delete those two test styles from the CSS, and add in something useful that applies the <span class="green-d"><code><strong>:after</strong></code></span> pseudo-element. It’s a good practice to place any pseudo-element CSS immediately below the parent style in the CSS file, so we’ll locate the <span class="green-d"><code><strong>.full-hero:after</strong></code></span> rules immediately after the <span class="green-d"><code><strong>.full-hero</strong></code></span> section. The result, shown in <a href="ch10.xhtml#ch10list9">Listing 10.9</a>, includes a Unicode vertical right angle bracket, which we suggest you copy and paste, as your keyboard might not be able to produce it. (We aren’t going to get into Unicode any further in this tutorial, but if you flip through a site like Unicode character table (<a href="https://unicode-table.com/en/">https://unicode-table.com/en/</a>), you’ll be surprised at how many elements that would be useful in web design are already part of the Unicode character set.)</p>
+<p class="listing" id="ch10list9"><span epub:type="pagebreak" id="page_346"></span><strong>Listing 10.9:</strong> Applying a style to the <span class="green-d"><code><strong>:after</strong></code></span> pseudo-element.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list09a" id="p10list09">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+}
+.<span class="blue-v"><strong>full-hero</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>bottom</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff;</span>
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">"∨";</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>left</strong></span>: <span class="grey">50</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>absolute</strong></span>;
+  <span class="pd_green1"><strong>transform</strong></span>: <span class="pd_green1">translat</span>e<span class="blue-dd">(-50%,</span> <span class="grey">0</span>)
+}</pre>
+<p class="indent">With the CSS in <a href="ch10.xhtml#ch10list9">Listing 10.9</a>, you should have a white down arrow at the bottom of the hero (<a href="ch10.xhtml#ch10fig10">Figure 10.10</a>).</p>
+<figure class="figure" id="ch10fig10">
+<img src="graphics/10fig10.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.10:</strong> A wild down-pointing arrow has appeared!</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec10_3_2">10.3.2 The <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span> CSS Triangle</h4>
+<p class="noindent"><span epub:type="pagebreak" id="page_347"></span>Want to see another neat trick? If you ever want to make a triangle with just CSS, you can do so easily thanks to a quirk with the way that borders are drawn in browsers. Let’s change that <span class="green-d"><code><strong>:after</strong></code></span> that we just created in <a href="ch10.xhtml#ch10list9">Listing 10.9</a> to illustrate the concept (<a href="ch10.xhtml#ch10list10">Listing 10.10</a>).</p>
+<p class="listing" id="ch10list10"><strong>Listing 10.10:</strong> Adding a thick multicolored border.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list10a" id="p10list10">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>full-hero</strong></span>:<span class="v1">after</span> {
+<span class="bg1">  <span class="pd_green1"><strong>border</strong></span>: <span class="grey"><strong>10</strong></span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey"><strong>#000</strong></span> <span class="pd_green1"><strong>red purple blue</strong></span>;</span>
+  <span class="pd_green1"><strong>bottom</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>2vh</strong></span><span class="grey">;</span>
+<span class="bg1">  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red"><strong>""</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>height</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+  <span class="pd_green1"><strong>left</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>50</strong></span><span class="grey">%;</span>
+  <span class="pd_green1"><strong>position</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>absolute</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>translate</strong></span><span class="grey">(</span><span class="pd_green1"><strong>-50</strong></span><span class="grey">%,</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">);</span>
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+}</pre>
+<p class="indent">When you save and refresh the browser, you’ll see that the downward-pointing caret has been replaced by a colored square that is divided into four triangular sections (<a href="ch10.xhtml#ch10fig11">Figure 10.11</a>).</p>
+<figure class="figure" id="ch10fig11">
+<img src="graphics/10fig11.jpg" alt="images" width="676" height="326"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.11:</strong> A zero-height and zero-width element with a thick border.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_348"></span>It turns out that browsers draw the line between, say, the top and right borders at a 45° angle.<sup><a id="fn10_5a" href="ch10.xhtml#fn10_5">5</a></sup> Normally, you don’t notice this because your borders are probably only 1px, and the same color all the way around. But if you make an element with zero height and zero width, and then give it a big border that has different colors on all sides, you’ll find the rendering oddity shown in <a href="ch10.xhtml#ch10fig11">Figure 10.11</a>. (We have no idea who the first person was to figure this out or why they were even trying it.)</p>
+<p class="footnote"><a id="fn10_5" href="ch10.xhtml#fn10_5a">5</a>. As founder of Tau Day (<a href="https://tauday.com/">https://tauday.com/</a>) and author of <em>The Tau Manifesto</em> (<a href="https://tauday.com/taumanifesto">https://tauday.com/taumanifesto</a>), Michael Hartl is contractually obligated to note that 45°, which represents 1.8 of a circle, can also be written as <em>τ/</em>8 (where <em>τ</em> = ... = 6.283185 <em>. . .</em>).</p>
+<p class="indent">So how do we use this to our advantage?</p>
+<p class="indent">One of the acceptable “colors” for a border is <span class="green-d"><code><strong>transparent</strong></code></span> (alternatively, you could use <span class="green-d"><code><strong>rgba(0, 0, 0, 0)</strong></code></span>). So, recalling from <a href="ch08.xhtml#sec8_8">Section 8.8</a> that <span class="green-d"><code><strong>border-color</strong></code></span> uses a margin-style shorthand, if we style the element as in <a href="ch10.xhtml#ch10list11">Listing 10.11</a>…</p>
+<p class="listing" id="ch10list11"><strong>Listing 10.11:</strong> Finishing the styling for the downward-pointing triangle.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list11a" id="p10list11">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>full-hero</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>bottom</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>border-color</strong></span>: <span class="grey"><strong>#fff</strong></span> <span class="pd_green1"><strong>transparent transparent</strong></span>;</span>
+  <span class="pd_green1"><strong>content</strong></span><span class="grey">:</span> <span class="pd_red">"</span><span class="grey">";</span>
+  <span class="pd_green1"><strong>height</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>left</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>50</strong></span><span class="grey">%;</span>
+  <span class="pd_green1"><strong>position</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>absolute</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>translate</strong></span><span class="grey">(</span><span class="pd_green1"><strong>-50</strong></span><span class="grey">%,</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">);</span>
+  <span class="pd_green1"><strong>width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">;</span>
+}</pre>
+<p class="noindent">…we’ll end up with a downward-pointing triangle (<a href="ch10.xhtml#ch10fig12">Figure 10.12</a>)!</p>
+<figure class="figure" id="ch10fig12">
+<img src="graphics/10fig12.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.12:</strong> People seriously used to have to make images to do this kind of thing… How barbaric.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_349"></span>Pretty cool, and actually very useful in menus and navigation for showing users what they are currently looking at. You can use the <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span> pseudo-elements to do a lot of really cool things without adding unnecessary HTML to your pages—it’s perfect for little design elements like this. You just have to deal with the limitation that you can’t put extra HTML into the pseudo-elements.</p>
+<p class="indent">Before we leave the homepage, let’s give the remaining sections a little bit of structure and style tweaking. One of the things that we’ve mentioned a number of times is how important it is for things to be modular, and right now on the homepage we have some elements that are inside wrappers, and some that are just loose on the page.</p>
+<p class="indent">In this sort of situation, it’s a good idea to add <span class="green-d"><code><strong>div</strong></code></span> wrappers (<a href="ch10.xhtml#box10_2">Box 10.2</a>) to wrap content that belongs in a single unit. That way, if you want the different sections on the homepage to be exactly <span class="green-d"><code><strong>10vh</strong></code></span> apart from each other, the styling is easy. That’s why <a href="ch10.xhtml#ch10list2">Listing 10.2</a> wrapped the founders <span class="green-d"><code><strong>h2</strong></code></span>, the paragraph that follows, and the <span class="green-d"><code><strong>.bio-box</strong></code></span>es in a <span class="green-d"><code><strong>div</strong></code></span> with the class <span class="green-d"><code><strong>.home-section</strong></code></span>, as reviewed in <a href="ch10.xhtml#ch10list12">Listing 10.12</a>.</p>
+<p class="listing" id="ch10list12"><strong>Listing 10.12:</strong> The repackaged content on the homepage.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list12a" id="p10list12">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-callout"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-title"</span>&gt;The Learn Enough Story&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-copy"</span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      Learn Enough to Be Dangerous is a leader in the movement to teach the world
+      &lt;<span class="pd_green1"><strong>em</strong></span>&gt;technical sophistication&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;, which includes both "hard skills" like
+      coding, command lines, and version control, and "soft skills" like guessing
+      keyboard shortcuts, Googling error messages, and knowing when to just
+      <span epub:type="pagebreak" id="page_350"></span>reboot the darn thing.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      We believe there are &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;at least a billion people&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt; who can
+      benefit from learning technical sophistication, probably more. To join our
+      movement, &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/#email_list"</span>&gt;sign up for our
+      official email list&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; now.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Background&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      Learn Enough to Be Dangerous is an outgrowth of the
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and the
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/"</span>&gt;Softcover publishing platform&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;. This
+      page is part of the sample site for &lt;<span class="pd_green1"><strong>a</strong></span>
+      <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/css-tutorial"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;Learn Enough CSS and Layout
+      to Be Dangerous&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, which teaches the basicics of
+      &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;C&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;ascading &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;tyle
+      &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;heets, the language that
+      allows web pages to be styled. Other related tutorials can be found at
+      &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;learnenough.com&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-section"</span>&gt;
+    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;THE FOUNDERS&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      Learn Enough to Be Dangerous was founded in 2015 by Michael Hartl, Lee
+      Donahoe, and Nick Merwin. We believe that the kind of technical
+      sophistication taught by the Learn Enough tutorials can benefit at least a
+      billion people, and probably more.
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-wrapper"</span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+        &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+        &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+          Tw
+        &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+          &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+            Known for his dazzling charm, rapier wit, and unrivaled humility,
+            Michael is the creator of the
+            &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails
+            Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and principal author of the
+            &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;
+            Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; introductory sequence.
+          &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+            <span epub:type="pagebreak" id="page_351"></span>Michael is also notorious as the founder of
+            &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/"</span>&gt;Tau Day&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and
+            author of &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/tau-manifesto"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;The Tau
+            Manifesto&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, but rumors that he's secretly a supervillain are
+            slightly exaggerated.
+          &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+     &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+       &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+       &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+         Tw
+       &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+         &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+           When he’s not literally swimming with sharks or hunting powder stashes
+           on his snowboard, you can find Lee in front of his computer designing
+           interfaces, doing front-end development, or writing some of the
+           interface-related Learn Enough tutorials.
+         &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+        &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+        &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;
+          Tw
+        &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+          &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+            You may have seen him shredding guitar live with Capital Cities on
+            Jimmy Kimmel, Conan, or The Ellen Show, but rest assured Nick is a true
+            nerd at heart. He’s just as happy shredding well-spec’d lines of code
+            from a tour bus as he is from his kitchen table.
+          &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+     &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<aside epub:type="sidebar" class="sidebar1" id="box10_2">
+<p class="sb-title1"><span epub:type="pagebreak" id="page_352"></span><strong>Box 10.2: Style Note: What’s the Deal with All These Wrappers?</strong></p>
+<p class="sb-noindent">So, what’s the deal with all these wrappers?</p>
+<figure class="image-c">
+<img src="graphics/350fig01.jpg" alt="Images" width="174" height="260"/>
+<figcaption>
+<p class="caption">Allstar Picture Library Ltd/Alamy Stock Photo</p>
+</figcaption>
+</figure>
+<p class="sb-indent">Well, we could just add a <code>.home-section</code> class to an element like the <code>.bio-wrapper</code> and style it up, but then we’d lose the ability to pull that entire <code>.bio-wrapper</code> out of the homepage and seamlessly drop it onto another part of the site (like on an About page), since it would potentially have an extra class on it that pertains only to the homepage.</p>
+<p class="sb-indent">We could make sure that the styling attached to that homepage class wouldn’t affect the layout of the content if you put it on another page, but then we could end up having really complicated selectors and styling that is just undoing a bunch of properties, and then redoing new styles. To see what we mean, let’s look at the Apple homepage for the Mac (<a href="https://www.apple.com/mac/">https://www.apple.com/mac/</a>). Scrolling down the page, you’ll see different sections that have similar styling for height, background, and margins/padding. Setting things up so that you have common containers for content makes your job easier, and these generic wrappers that have styling like height, margins, or padding make it easy to flexibly add new content in the future.</p>
+</aside>
+<p class="indent">Let’s also add some styles to these new sections and to some of the content. There are a lot of changes, so feel free to save and refresh as we’re going along. We’ll have a screenshot showing the cumulative changes at the end.</p>
+<p class="indent">For the <span class="green-d"><code><strong>.home-section</strong></code></span>s themselves, we are going to size them to be <span class="green-d"><code><strong>90vw</strong></code></span> and also give them an upper limit, and then use the <span class="green-d"><code><strong>margin: auto</strong></code></span> trick from <a href="ch08.xhtml#sec8_6_1">Section 8.6.1</a> <span epub:type="pagebreak" id="page_353"></span>(plus some top and bottom margins to keep them away from other content) to keep the sections in the center of the page:</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>6rem auto</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>max-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>980px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>90vw</strong></span><span class="grey">;</span></pre>
+<p class="indent">We are going to style the <span class="green-d"><code><strong>h2</strong></code></span> so that it is centered, and has some distance from content below it:</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin-bottom</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1</strong></span>.<span class="blue-v"><strong>5rem</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>text-align</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>center</strong></span><span class="grey">;</span></pre>
+<p class="noindent">We’ll also style the callouts to give them background and text color, and nice padding:</p>
+<pre class="pre1"><span class="pd_green1"><strong>background-color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>000</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>fff</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>padding</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>7vh 0</strong></span><span class="grey">;</span></pre>
+<p class="noindent">And lastly we’ll do some text styling in that section, first for the title to make it nice and big:</p>
+<pre class="pre1"><span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>5</strong></span>.<span class="blue-v"><strong>75vw</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>text-align</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>right</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>text-transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>uppercase</strong></span><span class="grey">;</span></pre>
+<p class="noindent">Then for the regular text we’ll set the font size to be a little smaller than normal to prevent it from being too overwhelming on the page:</p>
+<pre class="pre1"><span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span>.<span class="blue-v"><strong>8rem</strong></span><span class="grey">;</span></pre>
+<p class="indent">All together, that looks like <a href="ch10.xhtml#ch10list13">Listing 10.13</a>.</p>
+<p class="listing" id="ch10list13"><strong>Listing 10.13:</strong> Styling the home section and callout.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list13a" id="p10list13">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* HOMEPAGE STYLES */</em></span>
+<span epub:type="pagebreak" id="page_354"></span>.<span class="blue-v"><strong>home-section</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">6</span><span class="pd_red"><strong>rem</strong></span> <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey">980</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">90</span><span class="pd_red"><strong>vw</strong></span>;
+}
+.<span class="blue-v"><strong>home-section</strong></span> <span class="pd_green1"><strong>h2</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+.<span class="blue-v"><strong>home-callout</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#000</span>;
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vh</strong></span> <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>callout-title</strong></span> {
+ <span epub:type="pagebreak" id="page_355"></span> <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">5.75</span><span class="pd_red"><strong>vw</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}
+.<span class="blue-v"><strong>callout-copy</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+}</pre>
+<p class="indent">Now we are going to attack the <span class="green-d"><code><strong>.bio-box</strong></code></span>es. Let’s get rid of the borders, resize the width of the boxes to fully fill the page now that there are only three, change the margins and padding to give us nicer spacing between the elements, tweak the header styles so that the names look a little nicer, and then finally center the social links after giving them a little space on top to separate them from the images. We can also get rid of the link color styling for the bios, the line-height style on the copy in the bio text (we’ll change it so that all paragraphs on the site have reasonable line height), and then also style the text a little with some new sizes. The result appears in <a href="ch10.xhtml#ch10list14">Listing 10.14</a>.</p>
+<p class="listing" id="ch10list14"><strong>Listing 10.14:</strong> Restyling the <span class="green-d"><code><strong>.bio-box</strong></code></span>es.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list14a" id="p10list14">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>6</strong></span><span class="pd_red"><strong>rem</strong></span> <span class="grey"><strong>0 0</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey"><strong>0</strong></span> <span class="pd_red"><strong>3%</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>33</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>h3</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">-40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0 1</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;</span>
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>bio-box</strong></span> .<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>2</strong></span><span class="pd_red"><strong>em</strong></span> <span class="pd_green1"><strong>auto</strong></span> <span class="grey"><strong>1</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+}
+.<span class="blue-v"><strong>bio-copy</strong></span> {
+<span class="bg1">  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.75</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+}</pre>
+<p class="indent">Up at the top of the CSS file, we’ll address the line-height issue with a global line-height style for paragraphs. This gives text a little more breathing room, and while we are there, we’ll also change the default link color to something a little more pleasant than bright red (<a href="ch10.xhtml#ch10list15">Listing 10.15</a>).</p>
+<p class="listing" id="ch10list15"><strong>Listing 10.15:</strong> Adding in some new global styles.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p10list15a" id="p10list15">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* GLOBAL STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="pd_green1"><strong>h1</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vw</strong></span>;
+  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">0</span>;
+}
+<span class="pd_green1"><strong>h2</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+}
+<span class="pd_green1"><strong>a</strong></span> {
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#6397b</span>5;
+}
+<span class="bg1"><span class="pd_green1"><strong>p</strong></span> {</span>
+<span class="bg1">  <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey"><strong>1.5</strong></span>;</span>
+}</pre>
+<p class="indent">Overall, a more pleasing design (<a href="ch10.xhtml#ch10fig13">Figure 10.13</a>)!</p>
+<figure class="figure" id="ch10fig13">
+<img src="graphics/10fig13.jpg" alt="images" width="668" height="466"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.13:</strong> The improved bio section.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec10_3_3"><span epub:type="pagebreak" id="page_356"></span>10.3.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">One common mistake when dealing with <span class="green-d"><code><strong>:before</strong></code></span> and <span class="green-d"><code><strong>:after</strong></code></span> is forgetting to define the <span class="green-d"><code><strong>content</strong></code></span> property. Try deleting that from the <span class="green-d"><code><strong>.full-hero:after</strong></code></span> styling. What happens?</p>
+</li>
+<li><p class="number">Another common mistake is forgetting that these pseudo-elements are by default inline elements. What happens when you delete <span class="green-d"><code><strong>position: absolute</strong></code></span> from <span class="green-d"><code><strong>.full-hero:after</strong></code></span>? Before adding it back in, trying setting the element to <span class="green-d"><code><strong>display: block</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec10_4">10.4 Other Pages, Other Folders</h3>
+<p class="noindent">Now that we’ve polished up the homepage a bit, let’s add a second page to see how to reuse the layout defined in <a href="ch10.xhtml#ch10list1">Listing 10.1</a>. To do that, we’ll need to add a new file into our project.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_357"></span>The easiest way to add new pages to a Jekyll site is to simply put other HTML files in the root directory, and then link to them the way that we did in <a href="part01.xhtml#part01">Part I</a>—for example, like this (<a href="ch10.xhtml#ch10fig14">Figure 10.14</a>):</p>
+<figure class="figure" id="ch10fig14">
+<img src="graphics/10fig14.jpg" alt="images" width="601" height="44"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.14:</strong> This is kind of an ugly URL for a page.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch10_images.xhtml#p357pro01a" id="p357pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="green-d">http://localhost:4000/pagename.html</span></pre>
+<p class="indent">That URL is kind of ugly, though, and these days most modern sites have pages with nice-looking addresses like <a href="http://sitename.com/pagename">http://sitename.com/pagename</a>, without the <span class="green-d"><code><strong>.html</strong></code></span> at the end (<a href="ch10.xhtml#ch10fig15">Figure 10.15</a>). It seems like a little thing, but URLs are UI, and people really do notice details like that on sites. If something doesn’t look right, they might think that your site isn’t trustworthy or professional.</p>
+<figure class="figure" id="ch10fig15">
+<img src="graphics/10fig15.jpg" alt="images" width="601" height="43"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.15:</strong> This kind of URL looks much cleaner.</p>
+</figcaption>
+</figure>
+<p class="indent">Lucky for us, Jekyll gives developers a method to approximate that kind of “pretty URL”, so let’s try it out.<sup><a id="fn10_6a" href="ch10.xhtml#fn10_6">6</a></sup></p>
+<p class="footnote"><a id="fn10_6" href="ch10.xhtml#fn10_6a">6</a>. Web frameworks like Rails give developers even more flexibility and power in constructing URLs.</p>
+<p class="indent">The trick is that you can add a directory into your project, and then create a file in the directory called <span class="green-d"><code><strong>index.html</strong></code></span>. As long as the directory has a name that conforms to URL standards, you can link and visit that index page by just using <span class="green-d"><code><strong>/directoryname</strong></code></span>.</p>
+<p class="indent">To see how this works, create a new directory in the project called <span class="green-d"><code><strong>gallery</strong></code></span>, and create a new <span class="green-d"><code><strong>index.html</strong></code></span> file inside that directory:</p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> mkdir gallery
+<span class="b-nilam"><strong>$</strong></span> touch gallery/index.html</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_358"></span>(Repeating the <span class="green-d"><code><strong>index.html</strong></code></span> filename may seem confusing, but this convention of using <span class="green-d"><code><strong>index.html</strong></code></span> for the main file in a directory is as old as the Web.)</p>
+<p class="indent">Once the file is created, add in the frontmatter that tells Jekyll which layout to use (and a little bit of text), and save your work (<a href="ch10.xhtml#ch10list16">Listing 10.16</a>).</p>
+<p class="listing" id="ch10list16"><strong>Listing 10.16:</strong> Adding an index page inside a new directory.<br/><code><em>gallery/index.html</em></code></p>
+<pre class="pre2">---
+layout: default
+---
+
+I’m a 3 col page!</pre>
+<p class="noindent">Your directories and files should now look something like <a href="ch10.xhtml#ch10fig16">Figure 10.16</a>.</p>
+<figure class="figure" id="ch10fig16">
+<img src="graphics/10fig16.jpg" alt="images" width="676" height="478"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.16:</strong> The new additions in the project directory.</p>
+</figcaption>
+</figure>
+<p class="indent">Now go to <a href="http://localhost:4000/gallery">http://localhost:4000/gallery</a>. As promised in <a href="ch10.xhtml#sec10_1">Section 10.1</a>, Jekyll has inserted the content of the relevant page (in this case, <a href="ch10.xhtml#ch10list16">Listing 10.16</a>) into the default <span epub:type="pagebreak" id="page_359"></span>template. As a result, the pretty URL works, but unfortunately the text doesn’t display, even though (as you can verify using a web inspector) the text is present in the page’s source.</p>
+<p class="indent">In looking at our new page, we have just run into one of the age-old problems in creating websites… a page is only as big as the content you added to it. All that white stuff at the bottom is actually not even part of your page—it’s just the default background the browser is adding to fill the window (<a href="ch10.xhtml#ch10fig17">Figure 10.17</a>).</p>
+<figure class="figure" id="ch10fig17">
+<img src="graphics/10fig17.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.17:</strong> Your text is somewhere... up there.</p>
+</figcaption>
+</figure>
+<p class="indent">In this case, the content (one line of text) is getting covered up by the fixed-position header, and then the footer is drawn right after that. Ideally, you want the footer at least at the bottom of the browser so that you don’t see this default page background, but there isn’t enough content to push it down.</p>
+<p class="indent">Over the years there have been a variety of different methods for solving this problem, some more complex than others, most requiring a bunch of wrapper divs, plus <span class="green-d"><code><strong>min-height</strong></code></span> set on some things, <span class="green-d"><code><strong>height: 100%</strong></code></span> on others, and a dash of negative margin (read: complicated). But there is a new styling method in town that allows developers to simply and efficiently solve this problem: the CSS flexbox.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_360"></span>As we’ll see in <a href="ch11.xhtml#ch11">Chapter 11</a>, not only will the CSS flexbox solve our text-clearing problem; it will also allow us to easily make multicolumn page layouts (thereby fulfilling the promise implicit in the gallery text “I’m a 3 col page!”). The result will be the beginnings of a simple photo gallery, which will come to full fruition in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>).</p>
+<section>
+<h4 class="h4" id="sec10_4_1">10.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Create another page called <span class="green-d"><code><strong>test.html</strong></code></span> in the <span class="green-d"><code><strong>gallery</strong></code></span> folder. What happens when you try to go to <a href="http://localhost:4000/gallery/test?">http://localhost:4000/gallery/test?</a> What about <a href="http://localhost:4000/gallery/test.html?">http://localhost:4000/gallery/test.html?</a></p>
+</li>
+<li><p class="number">How would you create another nicely formatted URL that points to a page inside the gallery folder?</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

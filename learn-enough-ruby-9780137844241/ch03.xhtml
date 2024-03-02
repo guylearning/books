@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch03"><span epub:type="pagebreak" id="page_67"></span>Chapter 3</h2>
+<h2 class="h2a">Arrays</h2>
+<p class="noindent">In <a href="ch02.xhtml#ch02">Chapter 2</a>, we saw that strings can be thought of as sequences of characters in a particular order. In this chapter, we’ll learn about the <em>array</em> data type, which is the general Ruby container for a list of arbitrary elements in a particular order. We’ll start by explicitly connecting strings and arrays via the <code><span class="green-y"><strong>String#-split</strong></span></code> method (<a href="ch03.xhtml#sec3_1">Section 3.1</a>), and then learn about various other array methods throughout the rest of the chapter.</p>
+<section>
+<h3 class="h3" id="sec3_1">3.1 Splitting</h3>
+<p class="noindent">So far we’ve spent a lot of time understanding strings, and there’s a natural way to get from strings to arrays via the <code><span class="green-y"><strong>split</strong></span></code> method:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0067-01" id="f0067-01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"ant bat cat"</strong></span><strong><span class="gray">.</span>split(<span class="brown1">" "</span>)</strong>     <span class="blue1"> <strong><em># Split a string into a three-element array.</em></strong></span>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat"]</strong></span></pre>
+<p class="noindent">We see from this result that <code><span class="green-y"><strong>split</strong></span></code> returns a list of the strings that are separated from each other by a space in the original string.</p>
+<p class="indent">Splitting on space is one of the most common operations, but we can split on nearly anything else as well:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_68"></span><a href="ch03_images.xhtml#f0068-01" id="f0068-01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span><span class="brown1"> <strong>"ant,bat,cat"</strong></span><strong><span class="gray">.</span>split(<span class="brown1">","</span>)</strong>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span><span class="brown1"> <strong>"ant, bat, cat"</strong></span><strong><span class="gray">.</span>split(<span class="brown1">", "</span>)</strong>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span><span class="brown1"> <strong>"antheybatheycathey"</strong></span><strong><span class="gray">.</span>split(<span class="brown1">"hey"</span>)</strong>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat"]</strong></span></pre>
+<p class="indent">We can even split a string into its component characters by splitting on the empty string:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0068-02" id="f0068-02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><strong><span class="gray">.</span>split(<span class="brown1">""</span>)</strong>
+<span class="green-y"><strong>=&gt; ['b', 'a', 'd', 'g', 'e', 'r']</strong></span></pre>
+<p class="noindent">We’ll put this basic technique to good use in <a href="ch05.xhtml#sec5_3">Section 5.3</a>.</p>
+<p class="indent">Perhaps the most common use of <code><span class="green-y"><strong>split</strong></span></code> is with <em>no</em> arguments; in this case, the default behavior is to split on <em><a href="https://en.wikipedia.org/wiki/Whitespace_character">whitespace</a></em> (such as spaces, tabs, or newlines):</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0068-03" id="f0068-03a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="brown1">"ant bat cat"</span><span class="gray">.</span>split</strong>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span><span class="brown1"> <strong>"ant</strong></span>     <span class="brown1"><strong>bat</strong></span><span class="orange1"><strong>\t\t</strong></span><span class="brown1"><strong>cat</strong></span><span class="orange1"><strong>\n</strong></span>    <span class="brown1"><strong>duck"</strong></span><strong><span class="gray">.</span>split</strong>
+<span class="green-y"><strong>=&gt; ["ant", "bat", "cat", "duck"]</strong></span></pre>
+<p class="noindent">We’ll investigate this case more closely when discussing <em>regular expressions</em> in <a href="ch04.xhtml#sec4_3">Section 4.3</a>.</p>
+<section>
+<h4 class="h4" id="sec3_1_1">3.1.1 Exercises</h4>
+<p class="num-list">1. Assign <code><span class="green-y"><strong>a</strong></span></code> to the result of splitting the string “A man, a plan, a canal, Panama” on comma-space. How many elements does the resulting array have?</p>
+<p class="num-list">2. Can you guess the method to reverse <code><span class="green-y"><strong>a</strong></span></code> in place? (<a href="https://www.google.com/search?q=ruby%2Breverse%2Barray">Google around</a> if necessary.)</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_2"><span epub:type="pagebreak" id="page_69"></span>3.2 Array Access</h3>
+<p class="noindent">Having connected strings with arrays via the <code><span class="green-y"><strong>split</strong></span></code> method, we’ll now discover a second close connection as well. Let’s start by assigning a variable to an array of characters created using <code><span class="green-y"><strong>split</strong></span></code>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0069-01" id="f0069-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a <span class="gray">=</span> <span class="brown1">"badger"</span><span class="gray">.</span>split(<span class="brown1">""</span>)</strong>
+<strong><span class="green-y">=&gt; ["b", "a", "d", "g", "e", "r"]</span></strong></pre>
+<p class="noindent">We can access particular elements of <code><span class="green-y"><strong>a</strong></span></code> using the same bracket notation we first encountered in <a href="ch02.xhtml#sec2_6">Section 2.6</a>, as seen in <a href="ch03.xhtml#ch03ex01">Listing 3.1</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch03ex01"><strong>Listing 3.1:</strong> Array access with the bracket notation.</p>
+<pre><strong><span class="blue">&gt;&gt;</span> a<span class="gray">[0]</span></strong>
+<strong><span class="green-y">=&gt; "b"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">[1]</span></strong>
+<strong><span class="green-y">=&gt; "a"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">[2]</span></strong>
+<strong><span class="green-y">=&gt; "d"</span></strong></pre>
+</div>
+<p class="indent">We see from <a href="ch03.xhtml#ch03ex01">Listing 3.1</a> that, as with strings, arrays are <em>zero-offset</em>, meaning that the “first” element has index <code><span class="green-y"><strong>0</strong></span></code>, the second has index <code><span class="green-y"><strong>1</strong></span></code>, and so on. This convention can be confusing, and in fact it’s common to refer to the initial element for zero-offset arrays as the “<a href="https://en.wikipedia.org/wiki/0th">zeroth</a>” element as a reminder that the indexing starts at <code><span class="green-y"><strong>0</strong></span></code>. This convention can also be confusing when using multiple languages (some of which start array indexing at <code><span class="green-y"><strong>1</strong></span></code>), as illustrated in the <a href="https://xkcd.com/">xkcd</a> comic strip “<a href="https://m.xkcd.com/163/">Donald Knuth</a>”.<sup><a id="fn3_1" href="ch03.xhtml#fn3_1a">1</a></sup></p>
+<p class="footnote"><sup><a id="fn3_1a" href="ch03.xhtml#fn3_1">1</a></sup>This particular xkcd strip takes its name from renowned computer scientist <a href="https://en.wikipedia.org/wiki/Donald_knuth">Donald Knuth</a> (pronounced “kuh-NOOTH”), author of <em><a href="https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming">The Art of Computer Programming</a></em> and creator of the TEX typesetting system used to prepare many technical documents, including this one.</p>
+<p class="indent">So far we’ve dealt exclusively with arrays of characters, but Ruby arrays can contain all kinds of elements:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_70"></span><a href="ch03_images.xhtml#f0070-01" id="f0070-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> soliloquy <span class="gray">=</span> <span class="brown1">"To be, or not to be, that is the question:"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a <span class="gray">=</span> <span class="gray">[</span><span class="brown1">"badger"</span>, <span class="gray">42</span>, soliloquy<span class="gray">.</span>include?(<span class="brown1">"To be"</span>)<span class="gray">]</span></strong>
+<strong><span class="green-y">=&gt; ["badger", 42, true]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">[2]</span></strong>
+<strong><span class="green-y">=&gt; true</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">[3]</span></strong>
+<strong><span class="green-y">=&gt; nil</span></strong></pre>
+<p class="noindent">We see here that the square bracket access notation works as usual for an array of mixed types, which shouldn’t come as a surprise. We also see that trying to access an array index outside of the defined range returns <code><span class="green-y"><strong>nil</strong></span></code> (a value which we saw before in the context of <code><span class="green-y"><strong>puts</strong></span></code> (<a href="ch01.xhtml#ch01ex04">Listing 1.4</a>)). This might be a surprise if you have previous programming experience, since many languages raise an error if you try to access an element that’s out of range, but Ruby is more tolerant in this regard.</p>
+<p class="indent">Another convenient feature of Ruby bracket notation is supporting <em>negative</em> indices, which count from the end of the array:</p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a<span class="gray">[-2]</span></strong>
+<span class="green-y"><strong>=&gt; 42</strong></span></pre>
+<p class="indent">Among other things, negative indices give us a compact way to select the <em>last</em> element in an array. Because arrays, like strings, respond to a <code><span class="green-y"><strong>length</strong></span></code> method, we could do it directly:</p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a<span class="gray">[</span>a<span class="gray">.</span>length <span class="gray">- 1]</span></strong>
+<span class="green-y"><strong>=&gt; true</strong></span></pre>
+<p class="noindent">But it’s even easier like this:</p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a<span class="gray">[-1]</span></strong>
+<span class="green-y"><strong>=&gt; true</strong></span></pre>
+<p class="noindent">This is such a common operation that Ruby supplies a special <code><span class="green-y"><strong>last</strong></span></code> method just for doing it:</p>
+<span epub:type="pagebreak" id="page_71"></span>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a<span class="gray">.</span>last</strong>
+<span class="green-y"><strong>=&gt; true</strong></span></pre>
+<p class="indent">A final common case is where we want to access the final element and remove it at the same time. We’ll cover the method for doing this in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>.</p>
+<section>
+<h4 class="h4" id="sec3_2_1">3.2.1 Exercises</h4>
+<p class="num-list">1. Write a <code><span class="green-y"><strong>for</strong></span></code> loop to print out the characters obtained from splitting “honey badger” on the empty string.</p>
+<p class="num-list">2. See if you can guess the value of <code><span class="green-y"><strong>a[100]</strong></span></code> in a boolean context. Use <code><span class="green-y"><strong>!!</strong></span></code> to confirm.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_3">3.3 Array Slicing</h3>
+<p class="noindent">In addition to supporting the bracket notation described in <a href="ch03.xhtml#sec3_2">Section 3.2</a>, Ruby supports a technique known as <em><a href="https://ruby-doc.org/core-2.5.0/Array.html#method-i-slice">array slicing</a></em> for accessing multiple elements at a time. In anticipation of learning to <em>sort</em> in <a href="ch03.xhtml#sec3_4">Section 3.4</a>, let’s redefine our array <code><span class="green-y"><strong>a</strong></span></code> to have purely numerical elements:</p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a <span class="gray">= [42</span>, <span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">99]</span></strong>
+<strong><span class="green-y">=&gt; [42, 8, 17, 99]</span></strong></pre>
+<p class="indent">One way to slice an array is to provide two arguments, an index and a number of elements, which returns the given number of elements starting at the given index. For example, for an array with four elements, <code><span class="green-y"><strong>slice(2, 2)</strong></span></code> returns the “second” and “third” ones (recall that the “first” or zeroth element has index <code><span class="green-y"><strong>0</strong></span></code>):</p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>slice(<span class="gray">2</span>, <span class="gray">2</span>)</strong>
+<strong><span class="green-y">=&gt; [17, 99]</span></strong></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_72"></span>Another technique (and my favored one) is to use the <code><span class="green-y"><strong>Range</strong></span></code> data type we met briefly in <a href="ch02.xhtml#ch02ex018">Listing 2.18</a>, which returns the elements with index between the beginning and end of the range:</p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>slice(<span class="gray">1..3</span>)</strong>
+<strong><span class="green-y">=&gt; [8, 17, 99]</span></strong></pre>
+<p class="indent">Unlike most languages, Ruby lets us perform array slicing directly with the bracket notation:</p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">[2</span>, <span class="gray">2]</span></strong>
+<strong><span class="green-y">=&gt; [17, 99]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">[1..3]</span></strong>
+<strong><span class="green-y">=&gt; [8, 17, 99]</span></strong></pre>
+<p class="noindent">The second example above, using a range, is probably the most common way to slice arrays in real-world Ruby code.</p>
+<p class="indent">Finally, it’s worth noting that ranges can easily be converted to arrays using the “to array” method, <code><span class="green-y"><strong>to_a</strong></span></code>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0072-01" id="f0072-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> (<span class="gray">1..10</span>)<span class="gray">.</span>to_a</strong>
+<strong><span class="green-y">=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> (<span class="brown1">'a'</span><span class="gray">..</span><span class="brown1">'z'</span><span class="gray">).</span>to_a</strong>
+<strong><span class="green-y">=&gt; ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",</span></strong>
+    <strong><span class="green-y">"p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]</span></strong></pre>
+<p class="noindent">We see in the second example above that ranges work on letters as well as numbers.</p>
+<section>
+<h4 class="h4" id="sec3_3_1">3.3.1 Exercises</h4>
+<p class="num-list">1. Define an array with the numbers 1 through 10. Use slicing and <code><span class="green-y"><strong>length</strong></span></code> to select the third element through the third-to-last. Accomplish the same task using a negative index.</p>
+<p class="num-list"><span epub:type="pagebreak" id="page_73"></span>2. Show that strings also support the <code><span class="green-y"><strong>slice</strong></span></code> method by selecting just <code><span class="green-y"><strong>bat</strong></span></code> from the string <code><span class="green-y"><strong>"ant bat cat"</strong></span></code>. (You might have to experiment a little to get the indices just right.)</p>
+<p class="num-list">3. By combining a range, <code><span class="green-y"><strong>to_a</strong></span></code>, and array slicing, create an array containing the first 13 letters in the alphabet.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_4">3.4 More Array Methods</h3>
+<p class="noindent">In addition to <code><span class="green-y"><strong>last</strong></span></code>, <code><span class="green-y"><strong>length</strong></span></code>, and <code><span class="green-y"><strong>slice</strong></span></code>, arrays respond to a wealth of other methods. As usual, the <a href="https://ruby-doc.org/core-2.5.0/Array.html">documentation</a> is a good place to go for details.</p>
+<p class="indent">As with strings, arrays respond to an <code><span class="green-y"><strong>include?</strong></span></code> method to test for element inclusion:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0073-01" id="f0073-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a <span class="gray">= [42</span>, <span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">99]</span></strong>
+<strong><span class="green-y">=&gt; [42, 8, 17, 99]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>include?(<span class="gray">42</span>)       <span class="blue1"><em># Test for element inclusion.</em></span></strong>
+<strong><span class="green-y">=&gt; true</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>include?(<span class="brown1">"foo"</span>)</strong>
+<strong><span class="green-y">=&gt; false</span></strong></pre>
+<section>
+<h4 class="h4" id="sec3_4_1">3.4.1 Sorting and Reversing</h4>
+<p class="noindent">You can also sort an array in place—an excellent trick that in <a href="https://en.wiktionary.org/wiki/ye#Etymology_2">ye</a> <a href="https://en.wiktionary.org/wiki/olden#English">olden</a> days of C often required a custom implementation.<sup><a id="fn3_2" href="ch03.xhtml#fn3_2a">2</a></sup> In Ruby, we just call <code><span class="green-y"><strong>sort</strong></span></code>:</p>
+<p class="footnote"><sup><a id="fn3_2a" href="ch03.xhtml#fn3_2">2</a></sup>This isn’t entirely fair to C: Ruby itself is written in C, so <code><span class="green-y"><strong>Array#sort</strong></span></code> actually is just such a “custom implementation”!</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0073-02" id="f0073-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>sort</strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a                   <span class="blue1"><em># `a` hasn't changed as the result of `sort`.</em></span></strong>
+<strong><span class="green-y">=&gt; [42, 8, 17, 99]</span></strong></pre>
+<p class="noindent">As you might expect for an array of integers, <code><span class="green-y"><strong>a.sort</strong></span></code> sorts the array numerically (unlike, e.g., JavaScript, which confusingly sorts them “<a href="https://www.learnenough.com/r/learn_enough_javascript/arrays/more_array_methods#sec-more_array_methods">alphabetically</a>”, <span epub:type="pagebreak" id="page_74"></span>so that 17 comes before 8). We also see that (again <a href="https://www.learnenough.com/r/learn_enough_javascript/arrays/more_array_methods#sec-more_array_methods">unlike</a> JavaScript) sorting an array doesn’t change the array itself.</p>
+<p class="indent">Ruby includes a second sort method that <em>does</em> change the array, sorting it in place:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0074-01" id="f0074-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>sort!</strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a                    <span class="blue1"><em># `a` has changed as the result of `sort!`.</em></span></strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99]</span></strong></pre>
+<p class="noindent">Here the <code><span class="green-y"><strong>sort!</strong></span></code> (read “sort-bang”) method makes use of Ruby’s ability to include punctuation in method names, as we saw in <a href="ch02.xhtml#sec2_5">Section 2.5</a> with boolean methods like <code><span class="green-y"><strong>include?</strong></span></code>. In this case, the exclamation point indicates that the method <em>mutates</em> (changes) the underlying object. Any time you see a Ruby method ending in <code><span class="green-y"><strong>!</strong></span></code>, it’s more than likely that some sort of mutation is occurring.<sup><a id="fn3_3" href="ch03.xhtml#fn3_3a">3</a></sup></p>
+<p class="footnote"><sup><a id="fn3_3a" href="ch03.xhtml#fn3_3">3</a></sup>A notable exception occurs in Ruby on Rails, which often uses exclamation points to distinguish between methods that return <code><span class="green-y"><strong>false</strong></span></code> on failure and those that raise an <em>exception</em> (<a href="ch05.xhtml#sec5_2">Section 5.2</a>). Thus, the <a href="https://guides.rubyonrails.org/active_record_basics.html">Active Record</a> method for saving to a database, called <code><span class="green-y"><strong>save</strong></span></code>, returns <code><span class="green-y"><strong>false</strong></span></code> if the save fails for any reason, while <code><span class="green-y"><strong>save!</strong></span></code> raises an exception instead.</p>
+<p class="indent">Another useful method—one we’ll put to good use in developing our palindrome theme starting in <a href="ch05.xhtml#sec5_3">Section 5.3</a>—is the <code><span class="green-y"><strong>reverse</strong></span></code> method:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0074-02" id="f0074-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>reverse</strong>
+<strong><span class="green-y">=&gt; [99, 42, 17, 8]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a                   <span class="blue1"><em># Like `sort`, `reverse` doesn't mutate the array.</em></span></strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99]</span></strong></pre>
+<p class="noindent">As with <code><span class="green-y"><strong>sort</strong></span></code>, <code><span class="green-y"><strong>reverse</strong></span></code> <em>returns</em> a reversed array, but doesn’t change the array itself. Can you guess the method for mutating an array by reversing it in place?</p>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_2">3.4.2 Pushing and Popping</h4>
+<p class="noindent">One useful pair of array methods is <code><span class="green-y"><strong>push</strong></span></code> and <code><span class="green-y"><strong>pop</strong></span></code>; <code><span class="green-y"><strong>push</strong></span></code> lets us append an element to the end of an array, while <code><span class="green-y"><strong>pop</strong></span></code> removes it:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_75"></span><a href="ch03_images.xhtml#f0075-01" id="f0075-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>push(<span class="gray">6</span>)                   <span class="blue1"><em># Pushing onto an array</em></span></strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99, 6]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>push(<span class="brown1">"foo"</span>)</strong>
+<strong><span class="green-y">=&gt; [8, 17, 42, 99, 6, "foo"]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>pop                       <span class="blue1"><em># `pop` returns the value itself</em></span></strong>
+<strong><span class="green-y">=&gt; "foo"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>pop</strong>
+<strong><span class="green-y">=&gt; 6</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>pop</strong>
+<strong><span class="green-y">=&gt; 99</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a</strong>
+<strong><span class="green-y">=&gt; [8, 17, 42]</span></strong></pre>
+<p class="noindent">As noted in the comments, <code><span class="green-y"><strong>pop</strong></span></code> returns the value of the final element (while removing it as a side effect), while <code><span class="green-y"><strong>push</strong></span></code> simply returns the resulting array.</p>
+<p class="indent">We are now in a position to appreciate the comment made in <a href="ch03.xhtml#sec3_2">Section 3.2</a> about obtaining the last element of the array, as long as we don’t mind mutating it:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0075-02" id="f0075-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> the_answer_to_life_the_universe_and_everything <span class="gray">=</span> a<span class="gray">.</span>pop</strong>
+<strong><span class="green-y">=&gt; 42</span></strong></pre>
+<p class="indent">Finally, Ruby supports a second (and very commonly used) notation for pushing onto arrays, the so-called “shovel operator” <code><span class="green-y"><strong>&lt;&lt;</strong></span></code>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0075-03" id="f0075-03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>&lt;&lt;</strong></span> <span class="brown1"><strong>"badger"</strong></span>
+<span class="green-y"><strong>=&gt; [8, 17, "badger"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>&lt;&lt;</strong></span> <span class="brown1"><strong>"ant"</strong></span> <span class="gray"><strong>&lt;&lt;</strong></span> <span class="brown1"><strong>"bat"</strong></span> <span class="gray"><strong>&lt;&lt;</strong></span> <span class="brown1"><strong>"cat"</strong></span>
+<span class="green-y"><strong>=&gt; [8, 17, "badger", "ant", "bat", "cat"]</strong></span></pre>
+<p class="noindent">As seen in the second example, the shovel operator can be <em>chained</em>, pushing a sequence of elements onto the end of the array.</p>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_3">3.4.3 Undoing a Split</h4>
+<p class="noindent">A final example of an array method, one that brings us full circle from <a href="ch03.xhtml#sec3_1">Section 3.1</a>, is <code><span class="green-y"><strong>join</strong></span></code>. Just as <code><span class="green-y"><strong>split</strong></span></code> splits a string into array elements, <code><span class="green-y"><strong>join</strong></span></code> joins array elements into a string (<a href="ch03.xhtml#ch03ex02">Listing 3.2</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch03ex02"><span epub:type="pagebreak" id="page_76"></span><strong>Listing 3.2:</strong> Different ways to join.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0076-01" id="f0076-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue">&gt;&gt;</span> a <span class="gray">= [</span><span class="brown1">"ant"</span>, <span class="brown1">"bat"</span>, <span class="brown1">"cat"</span>, <span class="gray">42]</span></strong>
+<strong><span class="green-y">=&gt; ["ant", "bat", "cat", 42]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>join                        <span class="blue1"><em># Join on default (empty space).</em></span></strong>
+<strong><span class="green-y">=&gt; "antbatcat42"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>join(<span class="brown1">", "</span>)                  <span class="blue1"><em># Join on comma-space.</em></span></strong>
+<strong><span class="green-y">=&gt; "ant, bat, cat, 42"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>join(<span class="brown1">" -- "</span>)                <span class="blue1"><em># Join on double dashes.</em></span></strong>
+<strong><span class="green-y">=&gt; "ant -- bat -- cat -- 42"</span></strong></pre>
+</div>
+<p class="noindent">Note that <code><span class="green-y"><strong>42</strong></span></code>, which is an integer, is automatically converted to a string in the join.</p>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_4">3.4.4 Exercises</h4>
+<p class="num-list">1. Confirm your guess about the version of <code><span class="green-y"><strong>reverse</strong></span></code> that mutates an array by reversing it in place.</p>
+<p class="num-list">2. The <code><span class="green-y"><strong>split</strong></span></code> and <code><span class="green-y"><strong>join</strong></span></code> methods are almost inverse operations, but not quite. In particular, confirm using <code><span class="green-y"><strong>==</strong></span></code> that <code><span class="green-y"><strong>a.join(" ").split(" ")</strong></span></code> in <a href="ch03.xhtml#ch03ex02">Listing 3.2</a> is <em>not</em> the same as <code><span class="green-y"><strong>a</strong></span></code>. Why not?</p>
+<p class="num-list">3. Using the <a href="https://ruby-doc.org/core-2.5.0/Array.html">array documentation</a>, figure out how to push onto or pop off the <em>front</em> of an array. <em>Hint</em>: The names aren’t intuitive at all, so you might have to work a bit.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_5">3.5 Array Iteration</h3>
+<p class="noindent">One of the most common tasks with arrays is iterating through their elements and performing an operation with each one. This might sound familiar, since we solved the exact same problem with strings in <a href="ch02.xhtml#sec2_6">Section 2.6</a>, and indeed the solution is virtually the same. All we need to do is adapt the <code><span class="green-y"><strong>for</strong></span></code> loop from <a href="ch02.xhtml#ch02ex020">Listing 2.20</a> to arrays, i.e., replace <code><span class="green-y"><strong>soliloquy</strong></span></code> with <code><span class="green-y"><strong>a</strong></span></code>, as shown in <a href="ch03.xhtml#ch03ex03">Listing 3.3</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch03ex03"><span epub:type="pagebreak" id="page_77"></span><strong>Listing 3.3:</strong> Combining array access and a <code><span class="green-y"><strong>for</strong></span></code> loop.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0077-02" id="f0077-02a">Click here to view code image</a></p>
+<pre><strong><span class="blue">&gt;&gt;</span> <span class="green1">for</span> i <span class="green1">in</span> <span class="gray">0..</span>(a<span class="gray">.</span>length <span class="gray">- 1</span>)</strong>
+<strong><span class="blue">?&gt;</span>   <span class="green1">puts</span> a<span class="gray">[</span>i<span class="gray">]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="green1">end</span></strong>
+<strong><span class="green_2">ant</span></strong>
+<strong><span class="green_2">bat</span></strong>
+<strong><span class="green_2">cat</span></strong>
+<strong><span class="green_2">42</span></strong></pre>
+</div>
+<p class="noindent">That’s convenient, but it’s not the best way to iterate through arrays, and Mike Vanier still wouldn’t be happy (<a href="ch03.xhtml#ch03fig01">Figure 3.1</a>).</p>
+<figure class="figure" id="ch03fig01">
+<img src="graphics/f0077-01.jpg" alt="Images" width="640" height="647"/>
+<figcaption>
+<p class="title-f">Figure 3.1: Mike Vanier is still annoyed by typing out <code><span class="green-y"><strong>for</strong></span></code> loops.</p>
+</figcaption>
+</figure>
+<p class="indent">Luckily, looping the Right Way<sup>™</sup> is easier than it is in most other languages, so we can actually cover it here (unlike in, e.g., <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>, <span epub:type="pagebreak" id="page_78"></span>when we had to wait until <a href="ch05.xhtml#ch05">Chapter 5</a>). The trick is to use a special <code><span class="green-y"><strong>each</strong></span></code> method that is particularly characteristic of Ruby, as shown in <a href="ch03.xhtml#ch03ex04">Listing 3.4</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch03ex04"><strong>Listing 3.4:</strong> Using <code><span class="green-y"><strong>each</strong></span></code> to iterate over an array the Right Way<sup>™</sup>.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f0078-01" id="f0078-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>each <span class="green1">do</span> <span class="gray">|</span>element<span class="gray">|</span></strong>
+<strong><span class="blue">?&gt;</span>   <span class="green1">puts</span> element</strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="green1">end</span></strong>
+<strong><span class="green_2">ant</span></strong>
+<strong><span class="green_2">bat</span></strong>
+<strong><span class="green_2">cat</span></strong>
+<strong><span class="green_2">42</span></strong></pre>
+</div>
+<p class="noindent">The array <code><span class="green-y"><strong>a</strong></span></code> responds to the <code><span class="green-y"><strong>each</strong></span></code> method by yielding each element in turn, which in this case we simply print to the screen. (The syntax in <a href="ch03.xhtml#ch03ex04">Listing 3.4</a> uses a Ruby <em>block</em>, but don’t worry about it for now; we’ll cover blocks in more detail in <a href="ch05.xhtml#sec5_4">Section 5.4</a>.) Using the <code><span class="green-y"><strong>each</strong></span></code> method, we can iterate directly through the elements in an array, thereby avoiding having to type out Mike Vanier’s <em><a href="https://en.wiktionary.org/wiki/b%C3%AAte_noire">bête noire</a></em>, “for (i = 0; i &lt; N; i++)”. The result is cleaner code and a happier programmer (<a href="ch03.xhtml#ch03fig02">Figure 3.2</a>).</p>
+<figure class="figure" id="ch03fig02">
+<img src="graphics/f0079-01.jpg" alt="Images" width="521" height="713"/>
+<figcaption>
+<p class="title-f">Figure 3.2: Using <code><span class="green-y"><strong>each</strong></span></code> has made Mike Vanier a little happier.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec3_5_1">3.5.1 Exercises</h4>
+<p class="num-list">1. Combine <code><span class="green-y"><strong>reverse</strong></span></code> and <code><span class="green-y"><strong>each</strong></span></code> to print out an array’s elements in reverse order. <em>Hint</em>: You can call each method in sequence, as in <code><span class="green-y"><strong>a.reverse.-each</strong></span></code>, a technique known as <em>method chaining</em> (covered in <a href="ch05.xhtml#sec5_3">Section 5.3</a>).</p>
+<span epub:type="pagebreak" id="page_79"></span><span epub:type="pagebreak" id="page_80"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

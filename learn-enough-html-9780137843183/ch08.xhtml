@@ -1,0 +1,1244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch08"><span epub:type="pagebreak" id="page_193"></span>Chapter 8</h2>
+<h2 class="chap-title">The Box Model</h2>
+<p class="noindent">In <a href="ch07.xhtml#ch07">Chapter 7</a>, we saw how to set sizing parameters; in this chapter, we’ll apply such sizing to one of the most important concepts in web design: the <em>box model</em>.</p>
+<p class="indent">You may recall from <a href="ch04.xhtml#sec4_3">Section 4.3</a> that, when rendering HTML, the browser considers a page to be a collection of different boxes that contain content. Along with height and width, boxes can be styled to have <em>borders</em> (a line around the box), <em>margins</em> (the distance away from other boxes), and <em>padding</em> (empty space inside the box separating content from the border).</p>
+<p class="indent">The CSS <em>box model</em> is the name for all the rules that determine how height, width, margin, padding, and borders are applied to elements (<a href="ch08.xhtml#ch8fig1">Figure 8.1</a>). Some aspects of the box model can be quite confusing. There are weird interactions between elements, counter-intuitive applications of styles, and ways of writing style values that can look strange at first glance. In this chapter, we’ll take a tour through these different idiosyncrasies, learn a couple of methods for getting boxes to sit next to each other, and lay the necessary foundation for applying the box model to our full website starting in <a href="ch09.xhtml#ch09">Chapter 9</a>.</p>
+<figure class="figure" id="ch8fig1">
+<img src="graphics/08fig01.jpg" alt="images" width="674" height="398"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.1:</strong> The default HTML box model.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="sec8_1">8.1 Inline vs. Block</h3>
+<p class="noindent">We’ll begin our introduction to the box model by discussing the different effects of spacing and borders on <em>inline</em> vs. <em>block</em> elements. These two types of elements, which we discussed in <a href="ch03.xhtml#box3_1">Box 3.1</a>, behave differently in the context of the box model, so it’s important to clarify the differences at the beginning.</p>
+<p class="indent">Elements that are considered <em>inline elements</em>, like <span class="green-d"><code><strong>span</strong></code></span> or <span class="green-d"><code><strong>a</strong></code></span>, are only allowed to have margins and padding applied to the left and right (not top or bottom), and they <span epub:type="pagebreak" id="page_194"></span>won’t accept a width or height set by CSS. None of these restrictions apply to block elements.</p>
+<p class="indent">Confusingly, some styles can cause an inline element to switch to be a block element. You already saw an example when we <em>floated</em> the linked cover image in <a href="ch04.xhtml#sec4_2">Section 4.2</a>. Floated elements become block elements and can suddenly have top and bottom margins or padding, plus active dimensions like height and width that were previously ignored. Changing an element’s position on the page can also switch it from inline to block (as discussed further in <a href="ch09.xhtml#sec9_8">Section 9.8</a>).</p>
+<p class="indent">You don’t have to rely on these quirks to change elements from inline to block, though—you can also directly force an element to change using CSS. There are actually a bunch of display property values that affect the way elements are drawn, with more being added all the time. In this tutorial, though, we are only going to consider five of the most important ones. Let’s take a look!</p>
+<section>
+<h4 class="h4" id="sec8_1_1">8.1.1 <span class="green-d"><code><strong>display: none</strong></code></span></h4>
+<p class="noindent">The <span class="green-d"><code><strong>display: none</strong></code></span> style prevents the element from displaying on the page. For example, try updating the <span class="green-d"><code><strong>.social-link</strong></code></span> class rules to include <span class="green-d"><code><strong>display:none</strong></code></span>, as shown in <a href="ch08.xhtml#ch8list1">Listing 8.1</a>.</p>
+<p class="listing" id="ch8list1"><span epub:type="pagebreak" id="page_195"></span><strong>Listing 8.1:</strong> Removing elements from the page.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list01a" id="p08list01">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>none</strong></span>;</span>
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_196"></span>When you save and refresh, you’ll see that all those social links are now gone. This style is commonly used for hiding elements in interactive websites, especially when combined with JavaScript (<em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>)). (Setting <span class="green-d"><code><strong>display: none</strong></code></span> here is just for demo purposes, so you should undo <a href="ch08.xhtml#ch8list1">Listing 8.1</a> before proceeding.)</p>
+<p class="indent">To restore the display of an element that has been hidden, all you need to do is set the <span class="green-d"><code><strong>display</strong></code></span> property to anything other than <span class="green-d"><code><strong>none</strong></code></span>, such as <span class="green-d"><code><strong>initial</strong></code></span> or <span class="green-d"><code><strong>block</strong></code></span>. (In <em>Learn Enough JavaScript to Be Dangerous</em>, we’ll use this technique to make hidden elements appear with the click of the mouse.)</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_1_2">8.1.2 <span class="green-d"><code><strong>display: block</strong></code></span></h4>
+<p class="noindent"><span class="green-d"><code><strong>display: block</strong></code></span> forces an element to be a block element regardless of what it was before. If you don’t set dimensions after changing an element to <span class="green-d"><code><strong>display: block</strong></code></span>, it will behave like any normal block element by taking up the entire width of its parent element.</p>
+<p class="indent">As mentioned briefly above, inline elements (such as links and spans) can’t have a width or height, but once you change the display property the dimensional styles get applied. To see how this works, let’s first add a height to <span class="green-d"><code><strong>.social-link</strong></code></span> (<a href="ch08.xhtml#ch8list2">Listing 8.2</a>).</p>
+<p class="listing" id="ch8list2"><strong>Listing 8.2:</strong> Adding dimensions to an inline element won’t have an effect.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list02a" id="p08list02">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>height</strong></span>: <span class="grey"><strong>36</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+}</pre>
+<p class="noindent">When you save and refresh, you’ll notice nothing changed—that’s because the <span class="green-d"><code><strong>.social-link</strong></code></span>s are inline elements. Now add in the magical <span class="green-d"><code><strong>display: block</strong></code></span> (<a href="ch08.xhtml#ch8list3">Listing 8.3</a>) and save.</p>
+<p class="listing" id="ch8list3"><strong>Listing 8.3:</strong> Changing the display property allows the dimensional styles to apply.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list03a" id="p08list03">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;</span>
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+}</pre>
+<p class="noindent">Refresh your browser and you’ll see that your social links are now 36px-tall block elements that stretch all the way across their parent elements (<a href="ch08.xhtml#ch8fig2">Figure 8.2</a>).</p>
+<figure class="figure" id="ch8fig2">
+<img src="graphics/08fig02.jpg" alt="images" width="676" height="393"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.2:</strong> Look at those beautiful big gray rectangles.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec8_1_3">8.1.3 <span class="green-d"><code><strong>display: inline</strong></code></span></h4>
+<p class="noindent"><span class="green-d"><code><strong>display: inline</strong></code></span> turns a block element into an inline element (essentially the opposite of the <span class="green-d"><code><strong>display: block</strong></code></span> property). Any styles that don’t apply to inline elements (such as width and height, top margins, and padding) will no longer be applied. In <span epub:type="pagebreak" id="page_197"></span>addition, the element will no longer be on its own line, but rather will flow with text like any other inline element.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_1_4">8.1.4 <span class="green-d"><code><strong>display: inline-block</strong></code></span></h4>
+<p class="noindent">The <span class="green-d"><code><strong>display: inline-block</strong></code></span> property, which is a hybrid of <span class="green-d"><code><strong>inline</strong></code></span> and <span class="green-d"><code><strong>block</strong></code></span>, is a useful display setting, as it allows styling that normally works only on block elements— such as width and height, top margins, and padding—to be applied to a particular element. At the same time, it also lets the element as a whole act like an inline element. This means that text will still flow around it, and it will only take up as much horizontal space as it needs to contain the content (as opposed to the way that block elements stretch all the way across the page unless you give them a set width).</p>
+<p class="indent">To see how this works, set the <span class="green-d"><code><strong>.social-link</strong></code></span>s to display as <span class="green-d"><code><strong>inline-block</strong></code></span> on your index page (<a href="ch08.xhtml#ch8list4">Listing 8.4</a>).</p>
+<p class="listing" id="ch8list4"><strong>Listing 8.4:</strong> Setting the display of social links to <span class="green-d"><code><strong>inline-block</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list04a" id="p08list04">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;</span>
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_198"></span>When you save and refresh, you’ll see that the links have the height style applied, but they are only as wide as the content (<a href="ch08.xhtml#ch8fig3">Figure 8.3</a>).</p>
+<figure class="figure" id="ch8fig3">
+<img src="graphics/08fig03.jpg" alt="images" width="676" height="311"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.3:</strong> The links are now a combination of inline and block, stretching only as wide as the content.</p>
+</figcaption>
+</figure>
+<p class="indent">Eventually, in <a href="ch14.xhtml#sec14_1_1">Section 14.1.1</a>, we are going to add in icons for the different social media websites, and we’ll want these links to all have the same dimensions regardless of the content that is inside. To make sure that they are all exactly the same size, let’s also add a width property to the social links (<a href="ch08.xhtml#ch8list5">Listing 8.5</a>).</p>
+<p class="listing" id="ch8list5"><strong>Listing 8.5:</strong> The <span class="green-d"><code><strong>inline-block</strong></code></span> display lets you add a width to an inline element.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list05a" id="p08list05">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>36</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+}</pre>
+<p class="indent">Your social links will now be nice little gray squares, like in <a href="ch08.xhtml#ch8fig4">Figure 8.4</a>.</p>
+<figure class="figure" id="ch8fig4">
+<img src="graphics/08fig04.jpg" alt="images" width="676" height="311"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.4:</strong> The links now have the same width and height.</p>
+</figcaption>
+</figure>
+<p class="indent">So, where do sites use this CSS style? The <span class="green-d"><code><strong>inline-block</strong></code></span> declaration is especially helpful when making site navigation, and when styling a group of elements so that they are side by side. We’ll discuss this aspect of <span class="green-d"><code><strong>inline-block</strong></code></span> further in <a href="ch08.xhtml#sec8_5">Section 8.5</a>, and then again when we make page navigation in <a href="ch09.xhtml#sec9_6_2">Section 9.6.2</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_1_5"><span epub:type="pagebreak" id="page_199"></span>8.1.5 <span class="green-d"><code><strong>display: flex</strong></code></span></h4>
+<p class="noindent"><span class="green-d"><code><strong>display: flex</strong></code></span> is a powerful display property that forces all child elements to fill the entire parent element, and is highly customizable to allow for incredibly useful layout possibilities. The <span class="green-d"><code><strong>flex</strong></code></span> property is something that solves some of the most difficult long-running problems in page layouts.</p>
+<p class="indent">We aren’t going to play around with <span class="green-d"><code><strong>display: flex</strong></code></span> here because it really needs a whole chapter of its own to properly understand—a task we’ll undertake in <a href="ch11.xhtml#ch11">Chapter 11</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_1_6">8.1.6 Exercises</h4>
+<ol class="number">
+<li><p class="number">After the <span class="green-d"><code><strong>social-link</strong></code></span> class, add to your CSS a new class called <span class="green-d"><code><strong>show</strong></code></span> and give it a display value of <span class="green-d"><code><strong>block</strong></code></span>. Set the <span class="green-d"><code><strong>.social-link</strong></code></span> display property to <span class="green-d"><code><strong>none</strong></code></span> again. When you save and refresh the page, all the links should be gone. Now pick one of them and add <span class="green-d"><code><strong>show</strong></code></span> as a second class. What happens?</p></li>
+<li><p class="number">Set the <span class="green-d"><code><strong>.social-link</strong></code></span> display property to <span class="green-d"><code><strong>inline-block</strong></code></span> again. Now let’s try changing a block element to an inline element. Use CSS to target the <span class="green-d"><code><strong>li</strong></code></span>s that are inside the <span class="green-d"><code><strong>.full-hero</strong></code></span>, and set their display property to <span class="green-d"><code><strong>inline</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_2">8.2 Margins, Padding, and Borders</h3>
+<p class="noindent">One of the most common places where developers interact with the box model is when adding <em>margins</em>, <em>padding</em>, and <em>borders</em> to elements on the page—the <span class="green-d"><code><strong>margin</strong></code></span> and <span class="green-d"><code><strong>padding</strong></code></span> properties control the space around or inside the elements, while the <span class="green-d"><code><strong>border</strong></code></span> property specifies the appearance of the boundary of the box. In this section, we’ll take a first look at how these styles affect the box model (which includes some surprises), and then in <a href="ch08.xhtml#sec8_6">Section 8.6</a> we’ll look in detail at how margin, padding, and border styles are used in practice.</p>
+<p class="indent">We’ll begin by investigating padding and borders, which are different from margins in a key respect. In particular, if you specify the width of a block element, like a <span class="green-d"><code><strong>div</strong></code></span> or a <span class="green-d"><code><strong>p</strong></code></span>, and then apply a border or padding to it, the additional border or padding will go <em>outside</em> the content. That means you can end up with an element that is bigger than the dimensions you specified. You’d think that if you said something should be 200px wide, it would always be 200px wide… but no, in the default state, CSS assumes that when you set a size for an element you are only talking about <em>the content part</em> of the <span epub:type="pagebreak" id="page_200"></span>element (<a href="ch08.xhtml#ch8fig5">Figure 8.5</a>). This tends to generate a lot of confusion for people learning CSS, as they automatically assume that elements and their content are the same thing. Let’s look at an example.</p>
+<figure class="figure" id="ch8fig5">
+<img src="graphics/08fig05.jpg" alt="images" width="674" height="398"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.5:</strong> The default HTML box model again.</p>
+</figcaption>
+</figure>
+<p class="indent">Suppose that you make a <span class="green-d"><code><strong>div</strong></code></span> and apply the following style:</p>
+<pre class="pre1"><span class="pd_green1"><strong>width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>200px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>padding</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>40px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>10px solid</strong></span> #<span class="blue-v"><strong>c00</strong></span><span class="grey">;</span></pre>
+<p class="noindent">In this case, the entire element will end up being 300px wide on the page: 200px for the content, 40px each for the left and right padding, and 10px each for the left and right borders (200 + 40 × 2 + 10 × 2 = <span class="green-d"><code><strong>300px</strong></code></span>). This is the scenario illustrated in the original diagram for the box model (<a href="ch08.xhtml#ch8fig1">Figure 8.1</a>), reproduced in <a href="ch08.xhtml#ch8fig5">Figure 8.5</a>.</p>
+<p class="indent">It is also possible to fix the total width of the content box, and force the border and padding to fit inside. The way to do this is with the <span class="green-d"><code><strong>box-sizing</strong></code></span> declaration. To see how this works, let’s add some throwaway elements and styles to the page (which you can delete after seeing how this works).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_201"></span>We’ll start with the HTML shown in <a href="ch08.xhtml#ch8list6">Listing 8.6</a>, which you can paste under the <span class="green-d"><code><strong>h2</strong></code></span> on the test page.<sup><a id="fn8_1a" href="ch08.xhtml#fn8_1">1</a></sup></p>
+<p class="footnote"><a id="fn8_1" href="ch08.xhtml#fn8_1a">1</a>. Recall that the code listings are available at <a href="https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings">https://github.com/learnenough/learn_enough_html_css_and_layout_code_listings</a>.</p>
+<p class="listing" id="ch8list6"><strong>Listing 8.6:</strong> Adding some test elements to the page to demonstrate box model properties.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list06a" id="p08list06">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>h2</strong></span>&gt;I’m an h2&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"test-box"</span>&gt;
+  200px wide
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"test-box test-box-nosizing"</span>&gt;
+  200px wide + border + padding = 300px
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"test-box test-box-nosizing test-box-sizing"</span>&gt;
+  200px wide + border + padding + box-sizing: border-box = 200px
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">Then add the styles in <a href="ch08.xhtml#ch8list7">Listing 8.7</a> to the bottom of your style block (we’ll be deleting these too).</p>
+<p class="listing" id="ch8list7"><strong>Listing 8.7:</strong> Adding classes and styles for the test elements.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list07a" id="p08list07">Click here to view code image</a></p>
+<pre class="pre2">  .<span class="blue-v"><strong>test-box</strong></span> {
+    <span class="pd_green1"><strong>background</strong></span>: <span class="grey">#9db6d</span>d;
+    <span class="pd_green1"><strong>width</strong></span>: <span class="grey">200</span><span class="pd_red"><strong>px</strong></span>;
+  }
+  .<span class="blue-v"><strong>test-box-nosizing</strong></span> {
+    <span class="pd_green1"><strong>border</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span> <span class="grey">#00</span>0;
+    <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span>;
+  }
+  .<span class="blue-v"><strong>test-box-sizing</strong></span> {
+    <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  }
+<span class="grey">&lt;/</span><span class="pd_green1"><strong>style</strong></span><span class="grey">&gt;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_202"></span>When you save your work and refresh the browser, you’ll see an assortment of boxes of different widths (<a href="ch08.xhtml#ch8fig6">Figure 8.6</a>). Note how the <span class="green-d"><code><strong>.test-box-sizing</strong></code></span> class forces the div to be 200px wide in total. The <span class="green-d"><code><strong>border-box</strong></code></span> property caused the browser to draw the borders and padding <em>inside</em> the defined width.</p>
+<figure class="figure" id="ch8fig6">
+<img src="graphics/08fig06.jpg" alt="images" width="676" height="364"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.6:</strong> Different results even though all elements are set to 200px wide.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec8_2_1">8.2.1 Margin Weirdness</h4>
+<p class="noindent">So, we’ve talked about how the box model can behave unexpectedly when it comes to borders and padding, but what about margins? Well, you would expect that when two elements that both have margins are on the page next to each other, their margins would always apply. For example, if two elements both have <span class="green-d"><code><strong>20px</strong></code></span> of margin, you might expect that the elements would always end up being <span class="green-d"><code><strong>20 + 20 = 40px</strong></code></span> apart—but that isn’t necessarily how it works.</p>
+<p class="indent">A wise man (though not wise enough to exercise caution on the Ides of March) once said “experience is the teacher of all things,” and in that spirit we will make changes to the page that let you see both examples shown in <a href="ch08.xhtml#ch8fig7">Figure 8.7</a>.</p>
+<figure class="figure" id="ch8fig7">
+<img src="graphics/08fig07.jpg" alt="images" width="675" height="367"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.7:</strong> How the box model deals with margins between block and non-block elements.</p>
+</figcaption>
+</figure>
+<p class="indent">We’ll start by creating a situation where margins <em>do</em> behave in the intuitively expected manner. We’ll do this by changing the test boxes introduced in <a href="ch08.xhtml#ch8list6">Listing 8.6</a> to take the form shown in <a href="ch08.xhtml#ch8list8">Listing 8.8</a>.</p>
+<p class="listing" id="ch8list8"><span epub:type="pagebreak" id="page_203"></span><strong>Listing 8.8:</strong> Changing our test boxes to show expected margin behavior.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list08a" id="p08list08">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>test-box</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="grey">#9db6d</span>d;
+<span class="bg1">  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>50</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">200</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>test-box-nosizing</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span> <span class="grey">#00</span>0;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>test-box-sizing</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;</span>
+}</pre>
+<p class="indent">When you save and refresh the browser, you’ll see the boxes from <a href="ch08.xhtml#ch8fig6">Figure 8.6</a> all separated from each other by 50px (<a href="ch08.xhtml#ch8fig8">Figure 8.8</a>).</p>
+<figure class="figure" id="ch8fig8">
+<img src="graphics/08fig08.jpg" alt="images" width="676" height="426"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.8:</strong> Trust us, they are all separated by the same distance.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_204"></span>Now we’ll remove the <span class="green-d"><code><strong>display</strong></code></span> properties, so that each of the <span class="green-d"><code><strong>div</strong></code></span>s introduced in <a href="ch08.xhtml#ch8list6">Listing 8.6</a> is reduced to its default (block) styling, while also removing the width styles, as shown in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>.</p>
+<p class="listing" id="ch8list9"><strong>Listing 8.9:</strong> Collapsing the margins.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list09a" id="p08list09">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>test-box</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="grey">#9db6d</span>d;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">50</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>test-box-nosizing</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span> <span class="grey">#00</span>0;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>test-box-sizing</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_205"></span>The result is to magically collapse the margins: Now all the boxes are vertically separated by only 50px of margin, as shown in <a href="ch08.xhtml#ch8fig9">Figure 8.9</a>.</p>
+<figure class="figure" id="ch8fig9">
+<img src="graphics/08fig09.jpg" alt="images" width="676" height="447"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.9:</strong> Less space now that the margins have collapsed.</p>
+</figcaption>
+</figure>
+<p class="indent">The reason the first example worked as expected is that the first two elements weren’t block elements, so the browser fully respected their set margins. Once they became block elements, though, the browser allowed for only one of the margins to apply.</p>
+<p class="indent">The reason this exists goes all the way back to the bad old early days of HTML (<a href="ch05.xhtml#sec5_2_2">Section 5.2.2</a>), when most websites used browser defaults for all elements (because there was no CSS). Some block elements (like paragraph <span class="green-d"><code><strong>p</strong></code></span>s) have default top and bottom margins to keep text away from other elements to enhance readability, and if there were no margin collapsing, then whenever you put two of these elements next to each other there would be too much space between them. So at some point early on it was decided that when two block elements with margins follow each other, one of the top or bottom margins is canceled out.</p>
+<p class="indent">In the next few sections, starting with <a href="ch08.xhtml#sec8_3">Section 8.3</a>, we’ll be looking at how to put boxes side by side. If you are going to do the exercises, save the test blocks and styles; otherwise, you can delete the HTML and CSS styles from this section.</p>
+
+</section>
+<section>
+<h4 class="h4" id="sec8_2_2"><span epub:type="pagebreak" id="page_206"></span>8.2.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Let’s see if the width of the elements matters to margin collapsing. Change the size of the first two block elements by adding a style to set the width of <span class="green-d"><code><strong>.test-box</strong></code></span> to <span class="green-d"><code><strong>200px</strong></code></span>, and set the width for <span class="green-d"><code><strong>.test-box-sizing</strong></code></span> to <span class="green-d"><code><strong>auto</strong></code></span> to unset the previously set width value.</p></li>
+<li><p class="number">How does the browser determine which margin value to use? Try adding a style that sets a top margin of <span class="green-d"><code><strong>100px</strong></code></span> on the <span class="green-d"><code><strong>.test-box-sizing</strong></code></span> class.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_3">8.3 Floats</h3>
+<p class="noindent">Now that we’ve seen some of the things to watch out for in the box model, let’s start using it to style our sample site. When you are designing a site you will often need different elements to sit next to each other on the page, and new developers often run into problems with how the box model affects their attempts to accomplish this. Perhaps unsurprisingly, there are a bunch of different ways to do this using CSS, and all have different positives and negatives. No single technique can be used across an entire site, so let’s get started by learning about floating elements.</p>
+<p class="indent">In <a href="ch04.xhtml#sec4_2">Section 4.2</a>, we used a property value called a <span class="green-d"><code><strong>float</strong></code></span> to move an image to the left side of a block of text. The idea is that when you set an element to float to the left or right (there is no <span class="green-d"><code><strong>float: center</strong></code></span>), all the inline content around it will flow around the floated element like water. Floated elements will always sit next to other floated elements on the same line, as long as there is horizontal room. If the elements are too wide, they will drop down to the next line.</p>
+<p class="indent">Let’s see this in action. We’ll add <span class="green-d"><code><strong>float: left</strong></code></span> to the <span class="green-d"><code><strong>.bio-box</strong></code></span> class, and we’ll also give the boxes some padding and a new (narrower) width. <a href="ch08.xhtml#ch8list10">Listing 8.10</a> has the new styles. (Reminder: If you haven’t done it already, remove the HTML and CSS from <a href="ch08.xhtml#sec8_2">Section 8.2</a>.)</p>
+<p class="listing" id="ch8list10"><strong>Listing 8.10:</strong> The entire <span class="green-d"><code><strong>index</strong></code></span> page up to this point.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list10a" id="p08list10">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey"><strong>2</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>25</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+<span class="bg1">}</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_207"></span>After you save your work and refresh the browser, the result should appear as in <a href="ch08.xhtml#ch8fig10">Figure 8.10</a>.</p>
+<figure class="figure" id="ch8fig10">
+<img src="graphics/08fig10.jpg" alt="images" width="666" height="417"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.10:</strong> The boxes are next to each other, but they don’t fit.</p>
+</figcaption>
+</figure>
+<p class="indent">Now all the boxes are in a row, but why is the last one spilling over to the next line?</p>
+<p class="indent">It’s because of the box model sizing issue from <a href="ch08.xhtml#sec8_2">Section 8.2</a>! The left and right borders, and the left and right padding got added onto the width of each <span class="green-d"><code><strong>div</strong></code></span>, making each one <span class="green-d"><code><strong>25% + 1px border-left + 1px border-right + 2% padding-left + 2% padding-right</strong></code></span>, for a total size of <span class="green-d"><code><strong>29% + 2px</strong></code></span> of the page for each. Multiplied by 4, this gives <span class="green-d"><code><strong>116% + 8px</strong></code></span>, which is greater than 100%.</p>
+<p class="indent">Let’s fix this by adding the <span class="green-d"><code><strong>box-sizing: border-box</strong></code></span> style to the <span class="green-d"><code><strong>div</strong></code></span> to force the borders and padding inside the set-width <span class="green-d"><code><strong>div</strong></code></span> (<a href="ch08.xhtml#ch8list11">Listing 8.11</a>).</p>
+<p class="listing" id="ch8list11"><strong>Listing 8.11:</strong> Adding <span class="green-d"><code><strong>border-box</strong></code></span> to the bio boxes.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list11a" id="p08list11">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;</span>
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">25</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_208"></span>Now when you save and refresh you’ll have four boxes in a row that fill the page (<a href="ch08.xhtml#ch8fig11">Figure 8.11</a>)!</p>
+<figure class="figure" id="ch8fig11">
+<img src="graphics/08fig11.jpg" alt="images" width="667" height="330"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.11:</strong> Box sizing saves the day, and now our floated boxes fit.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec8_3_1">8.3.1 Clearing Floats</h4>
+<p class="noindent">So, why might a developer not want to always use floating to get elements to line up side by side?</p>
+<p class="indent">For one, there are only two options, <span class="green-d"><code><strong>float: left</strong></code></span> and <span class="green-d"><code><strong>float: right</strong></code></span>, but no <span class="green-d"><code><strong>float: center</strong></code></span>. That’s annoying, but manageable. The bigger problem is that the browser doesn’t always know where to end the float. When you float elements, you are telling the browser that you’d like the element to show up on the page in the place it would naturally “float” to, but after that starting position you want the rest of the page content to flow around the floated element. This can disrupt the orderly box-like arrangement of elements and create some odd-looking layouts.</p>
+<p class="indent">To see what we mean, add the paragraphs from <a href="ch08.xhtml#ch8list12">Listing 8.12</a> onto your test page below the closing <span class="green-d"><code><strong>&lt;/div&gt;</strong></code></span> tag of the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span>.</p>
+<p class="listing" id="ch8list12"><span epub:type="pagebreak" id="page_209"></span><strong>Listing 8.12:</strong> Adding text to the page below the bios.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list12a" id="p08list12">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-wrapper"</span>&gt;
+  .
+  .
+  .
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+  Learn Enough to Be Dangerous is a leader in the movement to teach the
+  world &lt;<span class="pd_green1"><strong>em</strong></span>&gt;technical sophistication&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;, which includes both "hard
+  skills" like coding, command lines, and version control, and "soft
+   skills" like guessing keyboard shortcuts, Googling error messages, and
+  knowing when to just reboot the darn thing.
+&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+  We believe there are &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;at least a billion people&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt; who can
+  benefit from learning technical sophistication, probably more. To join
+  our movement,
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/#email_list"</span>&gt;sign up for our official
+  email list&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; now.
+&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Background&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+  Learn Enough to Be Dangerous is an outgrowth of the
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and the
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/"</span>&gt;Softcover publishing platform&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+  This page is part of the sample site for
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/css-tutorial"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;Learn Enough CSS and
+  Layout to Be Dangerous&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, which teaches the basics of
+  &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;C&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;ascading &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;tyle
+  &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;heets, the language that allows web pages to be styled.
+  Other related tutorials can be found at
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;learnenough.com&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;</pre>
+<p class="noindent">When you save your work and refresh the page, you’ll see that the floated elements have caused the text we just added to start under the rightmost float instead of starting on a new line (<a href="ch08.xhtml#ch8fig12">Figure 8.12</a>).</p>
+<figure class="figure" id="ch8fig12">
+<img src="graphics/08fig12.jpg" alt="images" width="676" height="380"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.12:</strong> This is not what the doctor ordered.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_210"></span>In an ideal world, those paragraphs should stretch across the entire page since they are block elements. One way to get things back to the expected result would be to use the CSS <span class="green-d"><code><strong>clear</strong></code></span> rule, which is used to let the browser know to end floats. In this case, we could add <span class="green-d"><code><strong>clear: left</strong></code></span> to the first paragraph.</p>
+<p class="indent">You can try it by adding an inline style (<a href="ch08.xhtml#ch8list13">Listing 8.13</a>).</p>
+<p class="listing" id="ch8list13"><strong>Listing 8.13:</strong> A simple inline style to clear the float.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list13a" id="p08list13">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">&lt;<span class="pd_green1"><strong>p</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"clear: left;"</strong></span>&gt;</span>
+  Learn Enough to Be Dangerous is a leader in the movement to teach the</pre>
+<p class="indent">This will force the paragraph onto a new line below the floated elements, and it will prevent any other element below it on the page from being altered by the float (<a href="ch08.xhtml#ch8fig13">Figure 8.13</a>).</p>
+<figure class="figure" id="ch8fig13">
+<img src="graphics/08fig13.jpg" alt="images" width="676" height="413"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.13:</strong> This works, but you don’t want to have to manage clearing things on potentially every element.</p>
+</figcaption>
+</figure>
+<p class="indent">If the floating elements had been floated to the right using <span class="green-d"><code><strong>float: right</strong></code></span>, you would need to clear their float status with <span class="green-d"><code><strong>clear: right</strong></code></span>, or (if you just want to be extra careful) you can clear both types of floats using <span class="green-d"><code><strong>clear: both</strong></code></span>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_211"></span>If you tried clearing the float with an inline style on your test page, you should remove the style from the <span class="green-d"><code><strong>p</strong></code></span> tag—just the mere sight of an inline style should make you feel queasy at this point (but they are handy at times for quickly testing styles).</p>
+<p class="indent">Having to add a <span class="green-d"><code><strong>clear</strong></code></span> style directly onto any element (either inline or in the stylesheet) after floated elements is kind of a pain—especially on a dynamic site that might pull in snippets of code to build a page. You don’t always know which elements will be following floats.</p>
+<p class="indent">A better way to clear floats is to apply a rule to clear everything inside a wrapper, such as the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> added in <a href="ch07.xhtml#ch7list6">Listing 7.6</a>. The idea is to arrange for the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> element, and everything in it, to act like a LEGO block that can safely be moved around without needing to worry about uncleared floats messing up a layout.</p>
+<p class="indent">There are two methods to clear floats inside a wrapper: the <span class="green-d"><code><strong>overflow</strong></code></span> method and the <span class="green-d"><code><strong>:after</strong></code></span> “clearfix” method. We’ll look at both of these methods here, and give more extensive coverage to the <span class="green-d"><code><strong>overflow</strong></code></span> property in <a href="ch08.xhtml#sec8_4">Section 8.4</a> and the <span class="green-d"><code><strong>:after</strong></code></span> declaration in <a href="ch10.xhtml#sec10_3_1">Section 10.3.1</a>.</p>
+<p class="indent">To see the <span class="green-d"><code><strong>overflow</strong></code></span> method in action, add the style from <a href="ch08.xhtml#ch8list14">Listing 8.14</a> to <span class="green-d"><code><strong>.bio-wrapper</strong></code></span>.</p>
+<p class="listing" id="ch8list14"><strong>Listing 8.14:</strong> When <span class="green-d"><code><strong>overflow</strong></code></span> is set to <span class="green-d"><code><strong>hidden</strong></code></span>, floats are cleared.<br/><code><em>index.html</em></code></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* BIO STYLES */</em></span>
+.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;</span>
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_212"></span>When you save and refresh, the paragraph of text will be safely below the floated elements with no inline styles and no use of the <span class="green-d"><code><strong>clear</strong></code></span> property (<a href="ch08.xhtml#ch8fig14">Figure 8.14</a>).</p>
+<figure class="figure" id="ch8fig14">
+<img src="graphics/08fig14.jpg" alt="images" width="676" height="413"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.14:</strong> Same result, but self-contained instead of needing inline styling.</p>
+</figcaption>
+</figure>
+<p class="indent">The problem with this method is that if you also need to set a height or width on the element that has <span class="green-d"><code><strong>overflow: hidden</strong></code></span> set, the content inside can get cut off. This happens most often with poorly built <em>dropdown menus</em> in a site navigation with floats that are cleared using the <span class="green-d"><code><strong>overflow</strong></code></span> method but where the header also had a set height. For example, <a href="ch08.xhtml#ch8fig15">Figure 8.15</a> shows what <a href="http://Amazon.com">Amazon.com</a>’s homepage dropdown menu would look like if they had mistakenly also set <span class="green-d"><code><strong>overflow: hidden</strong></code></span>.<sup><a id="fn8_2a" href="ch08.xhtml#fn8_2">2</a></sup></p>
+<figure class="figure" id="ch8fig15">
+<img src="graphics/08fig15.jpg" alt="images" width="675" height="288"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.15:</strong> Changing the overflow on an element can hide parts that were supposed to stick out.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_2" href="ch08.xhtml#fn8_2a">2</a>. Tricks like changing the live Amazon homepage can be accomplished by using a web inspector to edit a site’s CSS dynamically in-browser, and then taking a screenshot of the result.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_213"></span>So, if you need to clear floats but also are worried about content being cut off because you absolutely, positively <em>have</em> to set a height on the wrapper element, you can use the <span class="green-d"><code><strong>:after</strong></code></span> method.</p>
+<p class="indent">Let’s see how it works. Remove <span class="green-d"><code><strong>overflow: hidden</strong></code></span> from the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> class, and add in the entire new declaration from <a href="ch08.xhtml#ch8list15">Listing 8.15</a>.</p>
+<p class="listing" id="ch8list15"><strong>Listing 8.15:</strong> The more complicated <span class="green-d"><code><strong>:after</strong></code></span> method.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list15a" id="p08list15">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+}
+.<span class="blue-v"><strong>bio-wrapper</strong></span>:<span class="v1">after</span> {
+  <span class="pd_green1"><strong>visibility</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>block</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>content</strong></span>: <span class="pd_red">"</span> ";
+  <span class="pd_green1"><strong>clear</strong></span>: <span class="pd_green1"><strong>both</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">0</span>;
+}</pre>
+<p class="indent">There’s a lot of new stuff in there, but don’t worry about it for now. We’ll discuss <span class="green-d"><code><strong>:after</strong></code></span> in more detail in <a href="ch10.xhtml#sec10_3_1">Section 10.3.1</a>. The important thing for now is that <span class="green-d"><code><strong>:after</strong></code></span> <span epub:type="pagebreak" id="page_214"></span>creates a kind of imaginary element that comes at the end of the <span class="green-d"><code><strong>bio-wrapper</strong></code></span>—an imaginary element that we can add styles to! Setting <span class="green-d"><code><strong>clear: both</strong></code></span> on that element clears the floats and allows the content below to appear as intended. If you save the changes and refresh your browser, the text will still be cleared below the floated elements, as in <a href="ch08.xhtml#ch8fig13">Figure 8.13</a> and <a href="ch08.xhtml#ch8fig14">Figure 8.14</a>.</p>
+
+</section>
+<section>
+<h4 class="h4" id="sec8_3_2">8.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Let’s try floating something to the other side to see how floats can change the order of content. Change the float property on <span class="green-d"><code><strong>.bio-box</strong></code></span> to float to the right. Notice which box is now on the left. (After viewing the change in your browser, change the float property back to <span class="green-d"><code><strong>left</strong></code></span>.)</p></li>
+<li><p class="number">Change the clear property in the <span class="green-d"><code><strong>:after</strong></code></span> style to clear to the right. You should see that the content in the wrapper no longer is being cleared. You need to make sure to either match floats to clears or use <span class="green-d"><code><strong>clear: both</strong></code></span>!</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_4">8.4 A Little More About the <span class="green-d"><code><strong>overflow</strong></code></span> <strong>Style</strong></h3>
+<p class="noindent">In <a href="ch08.xhtml#sec8_3">Section 8.3</a>, we used the <span class="green-d"><code><strong>overflow</strong></code></span> method to clear floats, but you may be wondering exactly why this method works… and also, what does <span class="green-d"><code><strong>overflow</strong></code></span> do in the first place?</p>
+<p class="indent">The CSS <span class="green-d"><code><strong>overflow</strong></code></span> property tells the browser how to handle content inside a wrapper, if that wrapper has a set height or width. If the content in the wrapper doesn’t fill the box, then <span class="green-d"><code><strong>overflow</strong></code></span> does nothing, but when there is more content than room to display that content, <span class="green-d"><code><strong>overflow</strong></code></span> comes into play. Because this property can be used to clear floats and control how content is displayed, it is worth exploring in detail.</p>
+<p class="indent">The <span class="green-d"><code><strong>overflow</strong></code></span> style can be set to <span class="green-d"><code><strong>visible</strong></code></span>, which shows everything; <span class="green-d"><code><strong>hidden</strong></code></span>, which cuts content off at the boundaries of the wrapper; or <span class="green-d"><code><strong>scroll</strong></code></span>, which adds scrollbars to let you scroll up and down or left and right to see all the available content.<sup><a id="fn8_3a" href="ch08.xhtml#fn8_3">3</a></sup> You’ve seen this before if you’ve ever scrolled inside a box on a website without scrolling the entire page (<a href="ch08.xhtml#ch8fig16">Figure 8.16</a>).</p>
+<figure class="figure" id="ch8fig16">
+<img src="graphics/08fig16.jpg" alt="images" width="406" height="350"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.16:</strong> Scrolling within a box on a page without scrolling the page.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_3" href="ch08.xhtml#fn8_3a">3</a>. The Mozilla Developer Network page on the CSS overflow property (<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow">https://developer.mozilla.org/en-US/docs/Web/CSS/overflow</a>) includes a list of all the possible values.</p>
+<p class="indent"><span class="green-d"><span epub:type="pagebreak" id="page_215"></span><code><strong>overflow: hidden</strong></code></span> works for clearing floats because it makes the browser want to keep content contained entirely within the wrapper. If there is no set dimension on the wrapper, the browser just expands the boundaries of the wrapper to reach the end of the floated elements, and then lets the elements that follow display on the page normally.</p>
+<p class="indent"><a href="ch08.xhtml#ch8fig17">Figure 8.17</a> shows diagrams of some of the different possible overflow situations when containing floated elements, and why you have to be careful when adding a height to an element with <span class="green-d"><code><strong>overflow</strong></code></span> set to <span class="green-d"><code><strong>hidden</strong></code></span>.</p>
+<figure class="figure" id="ch8fig17">
+<img src="graphics/08fig17.jpg" alt="images" width="675" height="205"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.17:</strong> Some examples of overflow and containers.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_216"></span>To see what happens with the different settings in practice, let’s start with <span class="green-d"><code><strong>overflow: hidden</strong></code></span>, and also give the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> a background color and a height (<a href="ch08.xhtml#ch8list16">Listing 8.16</a>).</p>
+<p class="listing" id="ch8list16"><strong>Listing 8.16:</strong> <span class="green-d"><code><strong>overflow</strong></code></span> set to <span class="green-d"><code><strong>hidden</strong></code></span> with a height set on the container.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list16a" id="p08list16">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+<span class="bg1">  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey"><strong>#c0e0c3</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>height</strong></span>: <span class="grey"><strong>300</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;</span>
+}</pre>
+<p class="indent">You can see in <a href="ch08.xhtml#ch8fig18">Figure 8.18</a> that any content that is taller than the wrapper gets cut off. Now let’s try <span class="green-d"><code><strong>overflow: visible</strong></code></span> (<a href="ch08.xhtml#ch8list17">Listing 8.17</a>).</p>
+<figure class="figure" id="ch8fig18">
+<img src="graphics/08fig18.jpg" alt="images" width="676" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.18:</strong> Setting <span class="green-d"><code><strong>overflow</strong></code></span> to <span class="green-d"><code><strong>hidden</strong></code></span> and adding a height cuts off the content.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch8list17"><strong>Listing 8.17:</strong> <span class="green-d"><code><strong>overflow</strong></code></span> set to <span class="green-d"><code><strong>visible</strong></code></span> with a height set on the container.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list17a" id="p08list17">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c0e0c</span>3;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">300</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>visible</strong></span>;</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_217"></span>You can see the content extending past the boundary of the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> (<a href="ch08.xhtml#ch8fig19">Figure 8.19</a>).</p>
+<figure class="figure" id="ch8fig19">
+<img src="graphics/08fig19.jpg" alt="images" width="676" height="379"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.19:</strong> The content extends out of the green box due to <span class="green-d"><code><strong>overflow: visible</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">Finally, let’s try setting the value to <span class="green-d"><code><strong>scroll</strong></code></span> (<a href="ch08.xhtml#ch8list18">Listing 8.18</a>). An <span class="green-d"><code><strong>overflow</strong></code></span> set to <span class="green-d"><code><strong>scroll</strong></code></span> with a height set on the container will keep all the content inside the container, but you can scroll to see it.</p>
+<p class="listing" id="ch8list18"><strong>Listing 8.18:</strong> Setting the <span class="green-d"><code><strong>overflow</strong></code></span> to <span class="green-d"><code><strong>scroll</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list18a" id="p08list18">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c0e0c</span>3;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">300</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>scroll</strong></span>;</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_218"></span>Now the content is cut off, but if you put your cursor in the green box and scroll up or down with your mouse or trackpad, you’ll be able to see the hidden content (<a href="ch08.xhtml#ch8fig20">Figure 8.20</a>).</p>
+<figure class="figure" id="ch8fig20">
+<img src="graphics/08fig20.jpg" alt="images" width="676" height="385"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.20:</strong> A scrollbar appears on the right just for the green box.</p>
+</figcaption>
+</figure>
+<p class="indent">If you tried out these styles on your test page, set the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> back to the styles in <a href="ch08.xhtml#ch8list19">Listing 8.19</a>.</p>
+<p class="listing" id="ch8list19"><strong>Listing 8.19:</strong> Returning the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> to <span class="green-d"><code><strong>overflow: hidden</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;</span>
+}</pre>
+</section>
+<section>
+<h3 class="h3" id="sec8_5"><span epub:type="pagebreak" id="page_219"></span>8.5 Inline Block</h3>
+<p class="noindent">The second way to get things next to other things is to set the elements to <span class="green-d"><code><strong>display: inline-block</strong></code></span> (<a href="ch08.xhtml#sec8_1_4">Section 8.1.4</a>). This allows them to keep their block-style formatting (so they can have height and top/bottom margins and padding), while also letting us do things like control an element’s position on a line of text by setting the style <span class="green-d"><code><strong>text-align</strong></code></span> on a wrapper to make everything align left, right, or center.</p>
+<p class="indent">For this example, we are going to style the <span class="green-d"><code><strong>li</strong></code></span>s that contain the <span class="green-d"><code><strong>.social-link</strong></code></span>s inside the <span class="green-d"><code><strong>.full-hero</strong></code></span> at the top of the test page. Let’s first give the unordered list tag <span class="green-d"><code><strong>ul</strong></code></span> a class called <span class="green-d"><code><strong>.social-list</strong></code></span> (<a href="ch08.xhtml#ch8list20">Listing 8.20</a>).</p>
+<p class="listing" id="ch8list20"><strong>Listing 8.20:</strong> Adding a class name to the unordered list.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list20a" id="p08list20">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">&lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-list"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>
+       <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>
+       <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span>
+       <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Link&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;</pre>
+<p class="indent">By default, the <span class="green-d"><code><strong>li</strong></code></span> tag produces block elements that each start on their own new line; list elements that are part of an unordered list also include a bullet point before each element’s content.<sup><a id="fn8_4a" href="ch08.xhtml#fn8_4">4</a></sup> Why would we want to use such a list to display a person’s social links?</p>
+<p class="footnote"><a id="fn8_4" href="ch08.xhtml#fn8_4a">4</a>. Recall from <a href="ch03.xhtml#sec3_4">Section 3.4</a> that the result of an <span class="green-d"><code><strong>li</strong></code></span> tag depends on the parent list type. In particular, when wrapped inside the ordered list tag <span class="green-d"><code><strong>ol</strong></code></span>, the list elements get numbers instead of bullet points.</p>
+<p class="indent">The answer is that we can unstyle the list (removing the bullet points, making it inline instead of block, etc.) and use it however we want! It has become a common practice to use the <span class="green-d"><code><strong>ul</strong></code></span> tag to contain sets of links for things like navigation, menus, etc., <span epub:type="pagebreak" id="page_220"></span>because it’s the logical HTML element for grouping lists of things, which as designers gives us a nice structure to work with.</p>
+<p class="indent">So, first let’s unstyle that list, and then add a second declaration that targets the <span class="green-d"><code><strong>li</strong></code></span>s inside .<span class="green-d"><code><strong>social-list</strong></code></span> and switches them to <span class="green-d"><code><strong>display: inline-block</strong></code></span> (<a href="ch08.xhtml#ch8list21">Listing 8.21</a>). By the way, the right angle bracket <span class="green-d"><code><strong>&gt;</strong></code></span> on Line 12 in <a href="ch08.xhtml#ch8list21">Listing 8.21</a> is a more advanced selector called the <em>child selector</em>, discussed briefly in <a href="ch08.xhtml#box8_1">Box 8.1</a> (following this section) and covered in more depth in <a href="ch09.xhtml#sec9_7_3">Section 9.7.3</a>.</p>
+<p class="listing" id="ch8list21"><strong>Listing 8.21:</strong> Unstyling the list and making the <span class="green-d"><code><strong>li</strong></code></span>s <span class="green-d"><code><strong>inline-block</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list21a" id="p08list21">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* SOCIAL LINKS */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>social-list</strong></span> {
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+}
+.<span class="blue-v"><strong>social-list</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+}</pre>
+<p class="indent">Hey, look at those elements all in a row (<a href="ch08.xhtml#ch8fig21">Figure 8.21</a>)!</p>
+<figure class="figure" id="ch8fig21">
+<img src="graphics/08fig21.jpg" alt="images" width="676" height="321"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.21:</strong> Our <span class="green-d"><code><strong>li</strong></code></span>s are now in a row and have no bullet points.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_221"></span>Notice that there are little spaces between the elements in <a href="ch08.xhtml#ch8fig21">Figure 8.21</a>. This is an annoyance that comes with using this technique, and it stems from the way that browsers treat <span class="green-d"><code><strong>inline-block</strong></code></span> elements as though they are just funky-shaped words in a sentence. There are ways to get rid of that space, but we aren’t going to get into those weeds here; instead, we are just going to ignore them since in our case it is nice to have a bit of space between elements. (For the record, when you use a float to get elements next to each other, there is no space between them at all.)</p>
+<aside epub:type="sidebar" class="sidebar1" id="box8_1">
+<p class="sb-title1"><strong>Box 8.1: Intro to Advanced Selectors</strong></p>
+<p class="indent">If you thought things weren’t going to get any more complicated with selectors… you were wrong. We’ve barely scratched the surface! We are going to cover them more later in the tutorial (<a href="ch09.xhtml#sec9_7_3">Section 9.7.3</a>), but for now we want to explain the child selector.</p>
+<p class="indent">Take a look again at the style we declared in <a href="ch08.xhtml#ch8list21">Listing 8.21</a>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p221pro01a" id="p221pro01">Click here to view code image</a></p>
+<pre class="pre">.social-list &gt; li {
+  display: inline-block;
+}</pre>
+<p class="sb-noindent">What this says is “select only <code>li</code>s that are direct children of the <code>.social-list</code> parent, and make them <code>inline-block</code>.” Remember that one of the goals when you are styling pages is to style only the things that need styling, without accidentally styling elements that will later need to be unstyled (<a href="ch06.xhtml#sec6_4">Section 6.4</a>). When you use advanced selectors, you can better target your declaration.</p>
+<p class="sb-indent">For example, suppose we had a second nested unordered list in one of those <code>li</code>s, like this:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p221pro02a" id="p221pro02">Click here to view code image</a></p>
+<pre class="pre">&lt;ul class="social-list"&gt;
+  &lt;li&gt;
+    &lt;a href="https://example.com/"
+       class="social-link"&gt;Link&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="https://example.com/"
+       class="social-link"&gt;Link&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Item 1&lt;/li&gt;
+      &lt;li&gt;Item 2&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="https://example.com/"
+       class="social-link"&gt;Link&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</pre>
+<p class="sb-indent">In this case, the <code>li</code>s in the nested list would remain as block elements. This is because they are children of a plain <code>ul</code> element, and the CSS rule targets only children of a parent element with class <code>social-list</code>. If you like, you can try out that example on your test page (and then delete it when you’re done).</p>
+</aside>
+<p class="indent"><span epub:type="pagebreak" id="page_222"></span>Now let’s center the links (<a href="ch08.xhtml#ch8list22">Listing 8.22</a>).</p>
+<p class="listing" id="ch8list22"><strong>Listing 8.22:</strong> Centering the <span class="green-d"><code><strong>inline-block</strong></code></span> elements.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-list</strong></span> {
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+<span class="bg1">  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;</span>
+}</pre>
+<p class="indent">You have no idea how hard what we did in <a href="ch08.xhtml#ch8fig22">Figure 8.22</a> used to be before this <span class="green-d"><code><strong>inline-block</strong></code></span> technique was available. In the bad old early days of the Web, when we had to use tables for everything, it used to be a giant pain to get things to work right, but now it is as easy as we just saw. We can play around with aligning the links left or right, and everything will be nicely contained inside the <span class="green-d"><code><strong>ul</strong></code></span> without any need to clear floats.</p>
+<figure class="figure" id="ch8fig22">
+<img src="graphics/08fig22.jpg" alt="images" width="676" height="320"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.22:</strong> A simple <span class="green-d"><code><strong>text-align: center</strong></code></span> puts the boxes right in the middle.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec8_5_1"><span epub:type="pagebreak" id="page_223"></span>8.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Add a number to the end of the link text in the hero so that they now read as “Link1”, “Link2”, etc. Now, align the <span class="green-d"><code><strong>.social-link</strong></code></span>s to the right by changing the text alignment property for <span class="green-d"><code><strong>.social-list</strong></code></span> to <span class="green-d"><code><strong>right</strong></code></span>. Notice that, unlike when we floated elements to the right, the order doesn’t change.</p></li>
+<li><p class="number">Test out the child selector by creating a new style declaration that changes only links that are the direct children of the <span class="green-d"><code><strong>.bio-box</strong></code></span>es to <span class="green-d"><code><strong>#c68bf9</strong></code></span>. You’ll see that this declaration has a high specificity and will override the color set in the <span class="green-d"><code><strong>.social-link</strong></code></span> class.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_6">8.6 Margins for Boxes</h3>
+<p class="noindent">Now that we have a handle on arranging our boxes, let’s look in detail at margin, padding, and borders. These styles allow developers to control the spacing between boxes (with <span class="green-d"><code><strong>margin</strong></code></span> in this section), the spacing inside boxes (with <span class="green-d"><code><strong>padding</strong></code></span> in <a href="ch08.xhtml#sec8_7">Section 8.7</a>), and the size and look of the edges of boxes (with <span class="green-d"><code><strong>border</strong></code></span> in <a href="ch08.xhtml#sec8_8">Section 8.8</a>).</p>
+<p class="indent">We’ll start with the simplest kind of margin declaration, which we’ll add to the <span class="green-d"><code><strong>.bio-box</strong></code></span>es at the bottom of the page, as shown in <a href="ch08.xhtml#ch8list23">Listing 8.23</a>.</p>
+<p class="listing" id="ch8list23"><strong>Listing 8.23:</strong> Adding a margin declaration.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list23a" id="p08list23">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>20</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">25</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent">When you refresh the test page, you’ll see that each one of the containers has moved away from everything else by <span class="green-d"><code><strong>20px</strong></code></span> in all directions (<a href="ch08.xhtml#ch8fig23">Figure 8.23</a>).</p>
+<figure class="figure" id="ch8fig23">
+<img src="graphics/08fig23.jpg" alt="images" width="667" height="463"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.23:</strong> The boxes got some extra space, but broke onto two lines again.</p>
+</figcaption>
+</figure>
+<p class="indent">The next question that you might be asking is, “Why are the boxes on two lines again? I thought we took care of that with <span class="green-d"><code><strong>box-sizing: border-box</strong></code></span> (<a href="ch08.xhtml#ch8list11">Listing 8.11</a>)?”</p>
+<p class="indent">The answer is that in the box model, margins always apply <em>outside</em> an element. So even though we’ve set the <span class="green-d"><code><strong>box-sizing</strong></code></span> style to <span class="green-d"><code><strong>border-box</strong></code></span>, the four <span class="green-d"><code><strong>div</strong></code></span>s at the bottom are now taking up 100% <em>plus</em> 8 × 20px, which is wider than 100%.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_224"></span>So, how do we get everything to fit again? First, to make this easier we are going to switch to using the same units for each measurement (all percentages), and we are going to have to do a little bit of math.</p>
+<p class="indent">Let’s first set the margins to be percentages, as shown in <a href="ch08.xhtml#ch8list24">Listing 8.24</a></p>
+<p class="listing" id="ch8list24"><strong>Listing 8.24:</strong> Changing the margin from pixels to percent.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list24a" id="p08list24">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>3</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">25</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent">Based on the result (<a href="ch08.xhtml#ch8fig24">Figure 8.24</a>), this looks like a reasonable amount of spacing.</p>
+<figure class="figure" id="ch8fig24">
+<img src="graphics/08fig24.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.24:</strong> Pretty good margin size.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_225"></span>Now let’s do the math. If we have a left and right margin of 3%, that means we need to reduce the size of each of the containers by 3% + 3% = 6% to get everything to fit. Because the original width was 25%, this means the new width should be 25% − 6% = 19%, as shown in <a href="ch08.xhtml#ch8list25">Listing 8.25</a>.</p>
+<p class="listing" id="ch8list25"><strong>Listing 8.25:</strong> Changing the width to accommodate the margins.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list25a" id="p08list25">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">3</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>19</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+}</pre>
+<p class="indent">It fits again (<a href="ch08.xhtml#ch8fig25">Figure 8.25</a>)!</p>
+<figure class="figure" id="ch8fig25">
+<img src="graphics/08fig25.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.25:</strong> Everything is happy again.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_226"></span>Now let’s take a look at the actual style declaration to dig a little deeper into how it works. When we write <span class="green-d"><code><strong>margin: 3%</strong></code></span>, we are applying the margin in <em>all</em> directions around the box, which is the equivalent of applying these four styles all at once:</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin-top</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%;</span>
+<span class="pd_green1"><strong>margin-right</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%;</span>
+<span class="pd_green1"><strong>margin-bottom</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%;</span>
+<span class="pd_green1"><strong>margin-left</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%;</span></pre>
+<p class="noindent">The simple <span class="green-d"><code><strong>margin</strong></code></span> declaration that we used is a shorthand version that combines all the directions of the margin onto one line, and <span class="green-d"><code><strong>margin: 3%</strong></code></span> is the equivalent of writing this:</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%</span> <span class="pd_green1"><strong>3</strong></span><span class="grey">%;</span></pre>
+<p class="indent">As you may recall from <a href="ch04.xhtml#sec4_3">Section 4.3</a>, the order here is top, right, bottom, left, as illustrated in <a href="ch08.xhtml#ch8fig26">Figure 8.26</a>.</p>
+<figure class="figure" id="ch8fig26">
+<img src="graphics/08fig26.jpg" alt="images" width="599" height="306"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.26:</strong> Think of the four values as going clockwise from the top.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_227"></span>What if you really only want the margin on certain sides of the <span class="green-d"><code><strong>div</strong></code></span>? For example, to set the top margin to <span class="green-d"><code><strong>40px</strong></code></span> and the left margin to <span class="green-d"><code><strong>30px</strong></code></span>, we could use the more specific declarations shown in <a href="ch08.xhtml#ch8list26">Listing 8.26</a>.</p>
+<p class="listing" id="ch8list26"><strong>Listing 8.26:</strong> Changing the width to accommodate the margins.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list26a" id="p08list26">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey"><strong>40</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>margin-left</strong></span>: <span class="grey"><strong>30</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">19</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent">That will work just fine, but our code will start getting cluttered if we have to define every direction for every declaration that has a direction option. A better way to control where the margin goes is to use the single <span class="green-d"><code><strong>margin</strong></code></span> attribute and leverage the shorthand from <a href="ch08.xhtml#ch8fig26">Figure 8.26</a>. To get margins of 40, 30, 40, and 30 pixels going around the <span class="green-d"><code><strong>div</strong></code></span> (clockwise from the top), we could style the <span class="green-d"><code><strong>margin</strong></code></span> like this:</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>40px 30px 40px 30px</strong></span><span class="grey">;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_228"></span>But guess what? As <a href="ch08.xhtml#ch8fig26">Figure 8.26</a> shows, in addition to the shorthand <span class="green-d"><code><strong>margin: 40px</strong></code></span> (using a single number), it’s possible to include only two values if your top and bottom values are the same, and your left and right values are also the same (but different from the top and bottom):</p>
+<pre class="pre1"><span class="pd_green1"><strong>margin</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>40px 30px</strong></span><span class="grey">;</span></pre>
+<p class="noindent">This shorthand also works with just three values, like <span class="green-d"><code><strong>margin: 20px 10px 40px</strong></code></span>. This is missing the final value, which (as seen in <a href="ch08.xhtml#ch8fig26">Figure 8.26</a>) is the left margin, and will be filled in automatically from its opposite across the box (in this case, <span class="green-d"><code><strong>10px</strong></code></span>).</p>
+<p class="indent">For our test page, let’s set only a top margin of <span class="green-d"><code><strong>40px</strong></code></span> and a right and left margin of <span class="green-d"><code><strong>1%</strong></code></span>, and also increase the size of each container back to <span class="green-d"><code><strong>23%</strong></code></span> so that the entire row fills the available space (<a href="ch08.xhtml#ch8list27">Listing 8.27</a>).</p>
+<p class="listing" id="ch8list27"><strong>Listing 8.27:</strong> Adding the margin declaration.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list27a" id="p08list27">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>40</strong></span><span class="pd_red"><strong>px</strong></span> <span class="grey"><strong>1</strong></span><span class="pd_red"><strong>%</strong></span> <span class="grey"><strong>0</strong></span>;</span>
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>23</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+}</pre>
+<p class="indent">After saving your work and refreshing the browser, you’ll see that the <span class="green-d"><code><strong>div</strong></code></span> with the link has now moved down <span class="green-d"><code><strong>40px</strong></code></span> from the content above and 1% from the sides of the browser and from the other containers (<a href="ch08.xhtml#ch8fig27">Figure 8.27</a>).</p>
+<figure class="figure" id="ch8fig27">
+<img src="graphics/08fig27.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.27:</strong> Much nicer spacing.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_229"></span>Looks great!</p>
+<p class="indent">If you noticed that the margin between the boxes is different from the ends, that’s because it’s being doubled (due to the same margin on the left and right). We’ll tackle this sort of issue with an advanced selector solution later in <a href="ch09.xhtml#sec9_7_3">Section 9.7.3</a>.</p>
+
+<section>
+<h4 class="h4" id="sec8_6_1">8.6.1 An Exception: <span class="green-d"><code><strong>margin: auto</strong></code></span></h4>
+<p class="noindent">You might be getting used to this by now, but of course there is another oddity that you should be aware of: <span class="green-d"><code><strong>margin: auto</strong></code></span>.</p>
+<p class="indent">If you have a block element, like a <span class="green-d"><code><strong>div</strong></code></span>, <span class="green-d"><code><strong>p</strong></code></span>, or <span class="green-d"><code><strong>ul</strong></code></span>, that has a width set by a style, you can make the browser center that element horizontally within its parent container by setting the left and right margins to <span class="green-d"><code><strong>auto</strong></code></span>.<sup><a id="fn8_5a" href="ch08.xhtml#fn8_5">5</a></sup></p>
+<p class="footnote"><a id="fn8_5" href="ch08.xhtml#fn8_5a">5</a>. The <span class="green-d"><code><strong>margin: auto</strong></code></span> trick does nothing for the top and bottom margins, though. Vertical centering is a much tougher nut to crack. We’ll take a look at it starting in <a href="ch09.xhtml#sec9_8">Section 9.8</a>, and we’ll introduce an even more powerful method called <em>flexbox</em> in <a href="ch11.xhtml#sec11_2">Section 11.2</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_230"></span>To see <span class="green-d"><code><strong>margin: auto</strong></code></span> in action, let’s change the styling (<a href="ch08.xhtml#ch8list28">Listing 8.28</a>) for the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span> to give it a <span class="green-d"><code><strong>max-width</strong></code></span>, and then set the margin to <span class="green-d"><code><strong>auto</strong></code></span>. <span class="green-d"><code><strong>max-width</strong></code></span> is a CSS style that lets an element adapt its width to fit a space (up to a specified value); there’s also a <span class="green-d"><code><strong>min-width</strong></code></span> that does the opposite. Both are helpful when designing sites that are intended to look good on both mobile and desktop platforms, since on the smaller screen you want content to fill the browser, but on a big screen that could look sloppy.</p>
+<p class="listing" id="ch8list28"><strong>Listing 8.28:</strong> Applying <span class="green-d"><code><strong>margin: auto</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-wrapper</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey"><strong>960</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="pd_green1"><strong>overflow</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>hidden</strong></span><span class="grey">;</span>
+}</pre>
+<p class="indent">Save and refresh, and watch the box magically center (<a href="ch08.xhtml#ch8fig28">Figure 8.28</a>).</p>
+<figure class="figure" id="ch8fig28">
+<img src="graphics/08fig28.jpg" alt="images" width="676" height="472"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.28:</strong> It’s boxes… in the middle of the page!</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec8_6_2"><span epub:type="pagebreak" id="page_231"></span>8.6.2 Yet Another Exception: Negative Margins</h4>
+<p class="noindent">Guess what? You can also make margins <em>negative</em> for elements. This draws the element up and out of the normal place it occupies on the page and overlays it on content that normally it wouldn’t be able to affect.</p>
+<p class="indent">To see this in action, let’s first add some images (you can grab photos from the always fun placekitten (<a href="https://placekitten.com/">https://placekitten.com/</a>) website) to the <span class="green-d"><code><strong>.bio-box</strong></code></span>es. Place an image above the <span class="green-d"><code><strong>h3</strong></code></span>s in each <span class="green-d"><code><strong>.bio-box</strong></code></span>, as shown in <a href="ch08.xhtml#ch8list29">Listing 8.29</a>.</p>
+<p class="listing" id="ch8list29"><strong>Listing 8.29:</strong> Adding an image to each <span class="green-d"><code><strong>.bio-box</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08list29a" id="p08list29">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://placekitten.com/g/400/400"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://placekitten.com/g/400/400"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://placekitten.com/g/400/400"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+<span class="bg1">  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://placekitten.com/g/400/400"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;??&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  .
+  .
+  .
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">And then add a little bit of CSS to resize the images (<a href="ch08.xhtml#ch8list30">Listing 8.30</a>).</p>
+<p class="listing" id="ch8list30"><span epub:type="pagebreak" id="page_232"></span><strong>Listing 8.30:</strong> A style to control the size of the images that we added.<br/><code><em>index.html</em></code></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* BIO STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span></pre>
+<p class="indent">With that, the images nicely fill up the space (<a href="ch08.xhtml#ch8fig29">Figure 8.29</a>).</p>
+<figure class="figure" id="ch8fig29">
+<img src="graphics/08fig29.jpg" alt="images" width="668" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.29:</strong> Your <span class="green-d"><code><strong>.bio-boxes</strong></code></span> should now look a little fluffier.</p>
+</figcaption>
+</figure>
+<p class="indent">Now we’ll add a negative top margin to the <span class="green-d"><code><strong>.bio-box h3</strong></code></span>s (changing from <span class="green-d"><code><strong>margin-top</strong></code></span> to the three-value <span class="green-d"><code><strong>margin</strong></code></span> shorthand mentioned in <a href="ch08.xhtml#sec8_6">Section 8.6</a>), as well as some extra styling for the text (<a href="ch08.xhtml#ch8list31">Listing 8.31</a>).</p>
+<p class="listing" id="ch8list31"><span epub:type="pagebreak" id="page_233"></span><strong>Listing 8.31:</strong> A negative margin moves an element out of its natural position.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>h3</strong></span> {
+<span class="bg1">  <span class="pd_green1"><strong>color</strong></span>: <span class="grey"><strong>#fff</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>-40</strong></span><span class="pd_red"><strong>px</strong></span> <span class="grey"><strong>0</strong></span> <span class="pd_red"><strong>1em</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;</span>
+}</pre>
+<p class="indent">Our new styles have pulled the header text out of its normal place and instead have drawn it on top of the images (<a href="ch08.xhtml#ch8fig30">Figure 8.30</a>).</p>
+<figure class="figure" id="ch8fig30">
+<img src="graphics/08fig30.jpg" alt="images" width="668" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.30:</strong> Negative margins move elements outside their natural position on the page.</p>
+</figcaption>
+</figure>
+<p class="indent">Negative margins might seem like an odd property to allow, but they are actually useful from time to time. Negative margins also allow us to extend some content up and out of a box and overlap that content into a space where it normally wouldn’t be able to be positioned, all while maintaining its properties as a normal block-level element.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_6_3"><span epub:type="pagebreak" id="page_234"></span>8.6.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use what we’ve learned about the margin shorthand to add in some space below the bottom of the <span class="green-d"><code><strong>.bio-wrapper</strong></code></span>, while using the CSS shorthand to keep the margin set to zero on top, and auto for the left and right.</p></li>
+<li><p class="number">Try to center the <span class="green-d"><code><strong>.social-link</strong></code></span>s that are inside the <span class="green-d"><code><strong>.bio-box</strong></code></span>es using a margin set to <span class="green-d"><code><strong>auto</strong></code></span>. Why doesn’t this work, even though the elements have set widths?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_7">8.7 Padding… Not Just for Chairs</h3>
+<p class="noindent">As we saw at the beginning of <a href="ch08.xhtml#sec8_2">Section 8.2</a>, padding is similar to margins, except instead of pushing away things that are <em>outside</em> the element, it pushes the content <em>inside</em> an element away from the edges of the element. This is ideal when you want to have a box containing text have a background color or a border but you don’t want the text ending up smashed against the edge of the container.</p>
+<p class="indent">Padding values are declared using the same syntax as for margins, including the shorthand from <a href="ch08.xhtml#ch8fig26">Figure 8.26</a>. Let’s try it out and remove only the top padding from our <span class="green-d"><code><strong>.bio-box</strong></code></span>es by changing the styling to match <a href="ch08.xhtml#ch8list32">Listing 8.32</a>.</p>
+<p class="listing" id="ch8list32"><strong>Listing 8.32:</strong> The padding value shorthand works just like the margin shorthand.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit32a" id="p08lsit32">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">1</span><span class="pd_red"><strong>%</strong></span> <span class="grey">0</span>;
+<span class="bg1">  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey"><strong>0</strong></span> <span class="pd_red"><strong>2%</strong></span> <span class="grey"><strong>2</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">23</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="noindent">The result of <a href="ch08.xhtml#ch8list32">Listing 8.32</a> appears in <a href="ch08.xhtml#ch8fig31">Figure 8.31</a>. (We’ll revert this style choice in <a href="ch08.xhtml#sec8_8">Section 8.8</a>.)</p>
+<figure class="figure" id="ch8fig31">
+<img src="graphics/08fig31.jpg" alt="images" width="668" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.31:</strong> Hey, look, no top padding.</p>
+</figcaption>
+</figure>
+<p class="indent">Padding is one of the easier CSS properties to understand, as it doesn’t have a whole lot of weird exceptions.</p>
+<section>
+<h4 class="h4" id="sec8_7_1"><span epub:type="pagebreak" id="page_235"></span>8.7.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Add a padding of <span class="green-d"><code><strong>20px</strong></code></span> to the links that are inside the <span class="green-d"><code><strong>.bio-copy</strong></code></span> sections. You’ll see how top and bottom padding can’t be applied to an inline element like a default link element, but the left and right padding will still be added.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_8">8.8 Fun with Borders</h3>
+<p class="noindent">You might have wondered about the <span class="green-d"><code><strong>border: 1px solid black</strong></code></span> style that has been on the <span class="green-d"><code><strong>div</strong></code></span>s this whole time. As you might have guessed, this style declaration is also a shorthand similar to margin and padding, but slightly different in that it is three totally different style declarations condensed into one (instead of just different directions, as with margin and padding).<sup><a id="fn8_6a" href="ch08.xhtml#fn8_6">6</a></sup> The most common usage is to apply a border to all sides of an element, like this:</p>
+<p class="footnote"><a id="fn8_6" href="ch08.xhtml#fn8_6a">6</a>. I did not guess this. —Michael</p>
+<pre class="pre1"><span class="pd_green1"><strong>border</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1px solid black</strong></span><span class="grey">;</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_236"></span>This is actually a condensed version of the following rules:</p>
+<pre class="pre1"><span class="pd_green1"><strong>border-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-style</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>solid</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-color</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>black</strong></span><span class="grey">;</span></pre>
+<p class="noindent">All of those styles behave like the margin and padding in that they are directional shorthand that applies styling to the top, right, bottom, and left, like this:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p236pro02a" id="p236pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>border-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1px 1px 1px 1px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-style</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>solid solid solid solid</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-color</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>black black black black</strong></span><span class="grey">;</span></pre>
+<p class="noindent">Note that the <span class="green-d"><code><strong>border-style</strong></code></span> declaration isn’t a number, but rather can take on the following values: <span class="green-d"><code><strong>none</strong></code></span>, <span class="green-d"><code><strong>hidden</strong></code></span>, <span class="green-d"><code><strong>dotted</strong></code></span>, <span class="green-d"><code><strong>dashed</strong></code></span>, <span class="green-d"><code><strong>solid</strong></code></span>, <span class="green-d"><code><strong>double</strong></code></span>, <span class="green-d"><code><strong>groove</strong></code></span>, <span class="green-d"><code><strong>ridge</strong></code></span>, <span class="green-d"><code><strong>inset</strong></code></span>, and <span class="green-d"><code><strong>outset</strong></code></span>.</p>
+<p class="indent">You might ask, “Well, that is all well and good, but what if I don’t want all sides of a border to be the same?” The shorthand doesn’t seem to cover that. What would the most efficient way be to make a 1px border that is colored black on three sides, but is red on one side (let’s say the bottom side)? One way to achieve this look would be to separately declare all the different sub-declarations of the shorthand, like this:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p236pro03a" id="p236pro03">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>border-width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1px</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-style</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>solid</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>border-color</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>black black red</strong></span><span class="grey">;</span></pre>
+<p class="indent">Or you could do it in a more condensed way and take advantage of the fact that rules that come after a similar declaration take precedence (<a href="ch06.xhtml#sec6_3">Section 6.3</a>), as in <a href="ch08.xhtml#ch8list33">Listing 8.33</a>.</p>
+<p class="listing" id="ch8list33"><strong>Listing 8.33:</strong> Styling a border to have different colors on different sides.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit33a" id="p08lsit33">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+<span class="bg1">  <span class="pd_green1"><strong>border</strong></span>: <span class="grey"><strong>1</strong></span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;</span>
+<span class="bg1">  <span class="pd_green1"><strong>border-color</strong></span>: <span class="pd_green1"><strong>black black red</strong></span>;</span>
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">1</span><span class="pd_red"><strong>%</strong></span> <span class="grey">0</span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0 2</span><span class="pd_red"><strong>%</strong></span> <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">23</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_237"></span><a href="ch08.xhtml#ch8list33">Listing 8.33</a> sets a border around the entire element and then changes the color of one of the sides. The second declaration doesn’t overwrite the entire border declaration; instead, it has an effect only on the part that pertains to border color. So by starting with a more generic style and then adding another style that changes some specific element, you can often accomplish a lot of work in just a couple lines of CSS (<a href="ch08.xhtml#ch8fig32">Figure 8.32</a>).</p>
+<figure class="figure" id="ch8fig32">
+<img src="graphics/08fig32.jpg" alt="images" width="668" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.32:</strong> Now the bottom border is red.</p>
+</figcaption>
+</figure>
+<p class="indent">Before moving on, let’s remove the red border and revert the padding change from <a href="ch08.xhtml#ch8list32">Listing 8.32</a>. The result should look like <a href="ch08.xhtml#ch8list34">Listing 8.34</a>.</p>
+<p class="listing" id="ch8list34"><strong>Listing 8.34:</strong> Reverting a couple of <span class="green-d"><code><strong>.bio-box</strong></code></span> styles.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit34a" id="p08lsit34">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-box</strong></span> {
+  <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">1</span><span class="pd_red"><strong>%</strong></span> <span class="grey">0</span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">23</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<section>
+<h4 class="h4" id="sec8_8_1"><span epub:type="pagebreak" id="page_238"></span>8.8.1 Border Radius</h4>
+<p class="noindent">The border can also have a <em>radius</em> set, which creates a box with rounded corners. To see how this works, add the CSS in <a href="ch08.xhtml#ch8list35">Listing 8.35</a> to the styles targeting the social links on the test page.</p>
+<p class="listing" id="ch8list35"><strong>Listing 8.35:</strong> Adding a <span class="green-d"><code><strong>border-radius</strong></code></span> to an object to make rounded corners.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit35a" id="p08lsit35">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+<span class="bg1">  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey"><strong>10</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>blue</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">36</span><span class="pd_red"><strong>px</strong></span>;
+}</pre>
+<p class="indent">The box should now have nicely rounded corners (<a href="ch08.xhtml#ch8fig33">Figure 8.33</a>)!</p>
+<figure class="figure" id="ch8fig33">
+<img src="graphics/08fig33.jpg" alt="images" width="667" height="303"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.33:</strong> Rounded corners on the social links.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec8_8_2">8.8.2 Making Circles</h4>
+<p class="noindent">Want to see how to make circles using just HTML and CSS? The trick is to give the elements a set width and height, and then make the <span class="green-d"><code><strong>border-radius</strong></code></span> big enough to <span epub:type="pagebreak" id="page_239"></span>make the border larger than the width of the element, while also making sure the height and width of the element are equal (so that the “box” is a perfect square). Let’s bump up the <span class="green-d"><code><strong>border-radius</strong></code></span> from <a href="ch08.xhtml#ch8list33">Listing 8.33</a>, and also give the <span class="green-d"><code><strong>li</strong></code></span>s in the <span class="green-d"><code><strong>.social-list</strong></code></span> a little margin (<a href="ch08.xhtml#ch8list36">Listing 8.36</a>).</p>
+<p class="listing" id="ch8list36"><strong>Listing 8.36:</strong> A very large value for <span class="green-d"><code><strong>border-radius</strong></code></span> makes a circle.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit36a" id="p08lsit36">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* SOCIAL STYLES */</em></span>
+.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+<span class="bg1">  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey"><strong>99</strong></span><span class="pd_red"><strong>px</strong></span>;</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+}
+.<span class="blue-v"><strong>social-list</strong></span> {
+  <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+}
+
+.<span class="blue-v"><strong>social-list</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>li</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey"><strong>0 0.5</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+<span class="bg1">}</span></pre>
+<p class="indent">Look at those circles (<a href="ch08.xhtml#ch8fig34">Figure 8.34</a>)!</p>
+<figure class="figure" id="ch8fig34">
+<img src="graphics/08fig34.jpg" alt="images" width="526" height="201"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.34:</strong> Rounded boxes have become circles!</p>
+</figcaption>
+</figure>
+<p class="indent">The links look a little weird with all that text, though, so let’s change the text in the links in the hero and in the <span class="green-d"><code><strong>.bio-box</strong></code></span>es to the more compact values “Fb”, “Tw”, <span epub:type="pagebreak" id="page_240"></span>and “Gh” (for Facebook, Twitter, and GitHub, respectively). (We’ll replace these with nice icons in <a href="ch14.xhtml#ch14">Chapter 14</a>.) The result appears in <a href="ch08.xhtml#ch8list37">Listing 8.37</a>.</p>
+<p class="listing" id="ch8list37"><strong>Listing 8.37:</strong> Making the text a little shorter for the social links.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit37a" id="p08lsit37">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-list"</span>&gt;
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://example.com/"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Fb&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://example.com/"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://example.com/"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Gh&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+.
+.
+.
+<span class="bg1">&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://twitter.com/mhartl"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+.
+.
+.
+<span class="bg1">&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://twitter.com/leedonahoe"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span>
+.
+.
+.
+<span class="bg1">&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"https://twitter.com/nickmerwin"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"social-link"</strong></span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</span></pre>
+<p class="indent">Save and refresh, and your links should look like <a href="ch08.xhtml#ch8fig35">Figure 8.35</a>.</p>
+<figure class="figure" id="ch8fig35">
+<img src="graphics/08fig35.jpg" alt="images" width="526" height="188"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.35:</strong> A little better.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_241"></span>Hmm… it still looks a little odd with the text up at the top, and down at the bottom of the page the text isn’t even centered in the circle (in the <span class="green-d"><code><strong>.full-hero</strong></code></span> container it is inheriting a <span class="green-d"><code><strong>text-align: center</strong></code></span> style). Let’s clean up the look and make sure that it stays the same regardless of usage.</p>
+<p class="indent">We are going to add padding, and you may recall from <a href="ch08.xhtml#sec8_2">Section 8.2</a> that we’ll need to add in a <span class="green-d"><code><strong>box-sizing: border-box</strong></code></span> so that we make sure the padding doesn’t change the dimensions of the element:</p>
+<pre class="pre1"><span class="pd_green1"><strong>box-sizing</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>border-box</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>padding-top</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span>.<span class="blue-v"><strong>85em</strong></span><span class="grey">;</span></pre>
+<p class="indent">Let’s also change the color of the text, change the font, make it bold, align it to the center, and remove the underline with a new style called <span class="green-d"><code><strong>text-decoration</strong></code></span> (set to <span class="green-d"><code><strong>none</strong></code></span> to remove the default underline for links):</p>
+<p class="codelink"><a href="ch08_images.xhtml#p241pro02a" id="p241pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>fff</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>font-family</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>helvetica</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>arial</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>sans</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>font-weight</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>bold</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>text-align</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>center</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>text-decoration</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>none</strong></span><span class="grey">;</span></pre>
+<p class="indent">Finally, we’ll set the font size using an <span class="green-d"><code><strong>em</strong></code></span> value (so that its size makes sense in the local context), add equal height and width, and set the <em>line height</em>, which we’ll talk about more in a moment (<a href="ch08.xhtml#sec8_8_3">Section 8.8.3</a>):</p>
+<pre class="pre1"><span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1em</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>height</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>2</strong></span>.<span class="blue-v"><strong>5em</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>line-height</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>2</strong></span>.<span class="blue-v"><strong>5em</strong></span><span class="grey">;</span></pre>
+<p class="noindent">The equal height and width make the element a square, so that it will be a circle when <span class="green-d"><code><strong>border-radius</strong></code></span> is applied.</p>
+<p class="indent">All together, those changes (plus a few more) are shown in (<a href="ch08.xhtml#ch8list38">Listing 8.38</a>). (To figure out the effect of the additional rules for yourself, apply the comment-out trick mentioned in <a href="ch05.xhtml#box5_1">Box 5.1</a>.)</p>
+<p class="listing" id="ch8list38"><span epub:type="pagebreak" id="page_242"></span><strong>Listing 8.38:</strong> Changes to almost all the properties of the social links.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit38a" id="p08lsit38">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>social-link</strong></span> {
+  <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+  <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">99</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>font-family</strong></span>: helvetica, arial, sans;
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">0.85</span><span class="pd_red"><strong>em</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+  <span class="pd_green1"><strong>text-decoration</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+  <span class="pd_green1"><strong>vertical-align</strong></span>: <span class="pd_green1"><strong>middle</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Those fully rounded and styled links look pretty great (<a href="ch08.xhtml#ch8fig36">Figure 8.36</a>)!</p>
+<figure class="figure" id="ch8fig36">
+<img src="graphics/08fig36.jpg" alt="images" width="676" height="306"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.36:</strong> Muuuuch better.</p>
+</figcaption>
+</figure>
+<p class="indent">Of all the new styles that we used, the most potentially confusing ones are probably <span class="green-d"><code><strong>font-family</strong></code></span> and <span class="green-d"><code><strong>vertical-align</strong></code></span>.</p>
+<p class="indent">Looking back at <a href="ch08.xhtml#ch8list38">Listing 8.38</a>, you might think that <span class="green-d"><code><strong>vertical-align</strong></code></span> is something that can position elements in the middle of other elements, but in reality it has an effect <span epub:type="pagebreak" id="page_243"></span>only on objects that are inline, or inline block, and it centers them only in relation to the line of text that they appear on. We’ll be covering vertical alignment a couple of times later in the tutorial—using positioning in <a href="ch09.xhtml#sec9_8">Section 9.8</a>, and using a more modern method called <em>flexbox</em> in <a href="ch11.xhtml#ch11">Chapter 11</a>.</p>
+<p class="indent">The <span class="green-d"><code><strong>font-family</strong></code></span> change in <a href="ch08.xhtml#ch8list38">Listing 8.38</a> involves defining what is called a <em>font stack</em>, which is just a list of font options that the browser should try to use:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p243pro01a" id="p243pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>font-family</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>helvetica</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>arial</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>sans</strong></span><span class="grey">;</span></pre>
+<p class="indent">Sometimes fonts can’t be loaded from the Internet, or aren’t available on a user’s computer, so you start with the specific font you want as the first font, and then add the names of alternate fonts (separated by commas). Different computers have different fonts installed by default, and users can also add their own.</p>
+<p class="indent">For instance, Apple computers have a classic font called Helvetica (by “classic” we mean that it was designed in 1957 and there’s even a documentary about it). Windows has a knockoff of Helvetica called Arial (and designers hate it). To see what the two look like in comparison, check out <a href="ch08.xhtml#ch8fig37">Figure 8.37</a>.<sup><a id="fn8_7a" href="ch08.xhtml#fn8_7">7</a></sup></p>
+<p class="footnote"><a id="fn8_7" href="ch08.xhtml#fn8_7a">7</a>. Font comparison chart from “Arial vs. Helvetica, Can You Spot the Difference?”</p>
+<figure class="figure" id="ch8fig37">
+<img src="graphics/08fig37.jpg" alt="images" width="583" height="373"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.37:</strong> Arial is considered a cheap knockoff of Helvetica, and you probably shouldn’t use it.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_244"></span>To find out which common fonts are available on which operating systems, you should consult a resource like CSS Font Stack (<a href="https://www.cssfontstack.com/">https://www.cssfontstack.com/</a>). It is also possible to load your own custom fonts onto a user’s computer, which is a great way to add to the unique visual branding of your site. We’ll be covering such custom font loading in <a href="ch14.xhtml#sec14_1">Section 14.1</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_8_3">8.8.3 Line Height</h4>
+<p class="noindent">As seen briefly in <a href="ch08.xhtml#ch8list38">Listing 8.38</a>, another aspect of text design is the <em>line height</em>, which defines the space above and below text and other inline elements. Any text on your site that is multiline should have the line height increased to make reading easier. An ideal amount would be around 140% to 170%, depending on the font.</p>
+<p class="indent">The <span class="green-d"><code><strong>line-height</strong></code></span> property works like <span class="green-d"><code><strong>em</strong></code></span> in that <span class="green-d"><code><strong>1</strong></code></span> equals <span class="green-d"><code><strong>100%</strong></code></span>, but there’s no associated unit as with <span class="green-d"><code><strong>em</strong></code></span>, <span class="green-d"><code><strong>px</strong></code></span>, etc. For example, to arrange for the <span class="green-d"><code><strong>.bio-copy</strong></code></span> to have a line height equal to 150% of the base font size, we can set the <span class="green-d"><code><strong>line-height</strong></code></span> to <span class="green-d"><code><strong>1.5</strong></code></span>, as shown in <a href="ch08.xhtml#ch8list39">Listing 8.39</a>.</p>
+<p class="listing" id="ch8list39"><strong>Listing 8.39:</strong> Changing the line height for the <span class="green-d"><code><strong>.bio-copy</strong></code></span>.<br/><code><em>index.html</em></code></p>
+<pre class="pre2">.<span class="blue-v"><strong>bio-copy</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+<span class="bg1">  <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey"><strong>1.5</strong></span>;</span>
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_245"></span>The spacing between lines is now increased, which in some contexts can make the copy easier to read (<a href="ch08.xhtml#ch8fig38">Figure 8.38</a>).</p>
+<figure class="figure" id="ch8fig38">
+<img src="graphics/08fig38.jpg" alt="images" width="672" height="335"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.38:</strong> The result of increasing the line height.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec8_8_4">8.8.4 Syncing Up</h4>
+<p class="noindent">Before moving on to <a href="ch09.xhtml#ch09">Chapter 9</a>, you can sync up your index page using the code in <a href="ch08.xhtml#ch8list40">Listing 8.40</a>.</p>
+<p class="listing" id="ch8list40"><strong>Listing 8.40:</strong> The current index page.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lsit40a" id="p08lsit40">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Test Page: Don’t Panic&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>style</strong></span>&gt;
+       <span class="pd_blue1"><em>/* GLOBAL STYLES */</em></span>
+       <span class="pd_green1"><strong>html</strong></span><span class="grey">,</span> <span class="pd_green1"><strong>body</strong></span> {
+         <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0</span>;
+         <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+       }
+       <span class="pd_green1"><strong>h1</strong></span> {
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">7</span><span class="pd_red"><strong>vw</strong></span>;
+         <span class="pd_green1"><strong>margin-top</strong></span>: <span class="grey">0</span>;
+       }
+       <span class="pd_green1"><strong>a</strong></span> {
+         <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#f0</span>0;
+       }
+
+       <span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+       .<span class="blue-v"><strong>full-hero</strong></span> {
+         <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+         <span class="pd_green1"><strong>height</strong></span>: <span class="grey">50</span><span class="pd_red"><strong>vh</strong></span>;
+       }
+
+       <span class="pd_blue1"><em>/* SOCIAL STYLES */</em></span>
+       .<span class="blue-v"><strong>social-link</strong></span> {
+         <span class="pd_green1"><strong>background</strong></span>: <span class="pd_green1">rgba</span>(<span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">150</span>, <span class="grey">0.5</span>);
+         <span class="pd_green1"><strong>border-radius</strong></span>: <span class="grey">99</span><span class="pd_red"><strong>px</strong></span>;
+         <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+         <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+         <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+         <span class="pd_green1"><strong>font-family</strong></span>: helvetica, arial, sans;
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+         <span class="pd_green1"><strong>font-weight</strong></span>: <span class="pd_green1"><strong>bold</strong></span>;
+         <span epub:type="pagebreak" id="page_246"></span><span class="pd_green1"><strong>height</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+         <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey">1</span>;
+         <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">0.85</span><span class="pd_red"><strong>em</strong></span>;
+         <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+         <span class="pd_green1"><strong>text-decoration</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+         <span class="pd_green1"><strong>vertical-align</strong></span>: <span class="pd_green1"><strong>middle</strong></span>;
+         <span class="pd_green1"><strong>width</strong></span>: <span class="grey">2.5</span><span class="pd_red"><strong>em</strong></span>;
+       }
+       .<span class="blue-v"><strong>social-list</strong></span> {
+         <span class="pd_green1"><strong>list-style</strong></span>: <span class="pd_green1"><strong>none</strong></span>;
+         <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0</span>;
+         <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+       }
+       .<span class="blue-v"><strong>social-list</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>li</strong></span> {
+         <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+         <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 0.5</span><span class="pd_red"><strong>em</strong></span>;
+       }
+
+       <span class="pd_blue1"><em>/* BIO STYLES */</em></span>
+       .<span class="blue-v"><strong>bio-wrapper</strong></span> {
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">24</span><span class="pd_red"><strong>px</strong></span>;
+         <span class="pd_green1"><strong>margin</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+         <span class="pd_green1"><strong>max-width</strong></span>: <span class="grey">960</span><span class="pd_red"><strong>px</strong></span>;
+         <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>hidden</strong></span>;
+       }
+       .<span class="blue-v"><strong>bio-box</strong></span> {
+         <span class="pd_green1"><strong>border</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid black</strong></span>;
+         <span class="pd_green1"><strong>border-color</strong></span>: <span class="pd_green1"><strong>black black red</strong></span>;
+         <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+         <span class="pd_green1"><strong>float</strong></span>: <span class="pd_green1"><strong>left</strong></span>;
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>rem</strong></span>;
+         <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">1</span><span class="pd_red"><strong>%</strong></span> <span class="grey">0</span>;
+         <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">0 2</span><span class="pd_red"><strong>%</strong></span> <span class="grey">2</span><span class="pd_red"><strong>%</strong></span>;
+         <span class="pd_green1"><strong>width</strong></span>: <span class="grey">23</span><span class="pd_red"><strong>%</strong></span>;
+       }
+       .<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>h3</strong></span> {
+         <span class="pd_green1"><strong>color</strong></span>: <span class="grey">#fff</span>;
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1.5</span><span class="pd_red"><strong>em</strong></span>;
+         <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">-40</span><span class="pd_red"><strong>px</strong></span> <span class="grey">0 1</span><span class="pd_red"><strong>em</strong></span>;
+         <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>center</strong></span>;
+       }
+       .<span class="blue-v"><strong>bio-box</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+         <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+       }
+       .<span class="blue-v"><strong>bio-copy</strong></span> {
+         <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+         <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey">1.</span>5;
+       }
+       .<span class="blue-v"><strong>bio-copy</strong></span> <span class="pd_green1"><strong>a</strong></span> {
+         <span class="pd_green1"><strong>color</strong></span>: <span class="pd_green1"><strong>green</strong></span>;
+       }
+     <span epub:type="pagebreak" id="page_247"></span>&lt;/<span class="pd_green1"><strong>style</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"full-hero hero-home"</span>&gt;
+      &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;I’m an h1&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>ul</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-list"</span>&gt;
+        &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Fb&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>li</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://example.com/"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Gh&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+         &lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>ul</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;I’m an h2&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-wrapper"</span>&gt;
+        &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+          &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+          &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Michael Hartl&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/mhartl"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+            &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+              Known for his dazzling charm, rapier wit, and unrivaled humility,
+              Michael is the creator of the
+              &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails
+              Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and principal author of the
+              &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;
+              Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; introductory sequence.
+            &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+
+            &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+              Michael is also notorious as the founder of
+              &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/"</span>&gt;Tau Day&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and author of
+              &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"http://tauday.com/tau-manifesto"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;The Tau
+              Manifesto&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, but rumors that he's secretly a supervillain
+              are slightly exaggerated.
+            &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+       &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+         &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+         &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Lee Donahoe&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/leedonahoe"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+            &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+              When he’s not literally swimming with sharks or hunting powder
+              <span epub:type="pagebreak" id="page_248"></span>stashes on his snowboard, you can find Lee in front of his computer
+              designing interfaces, doing front-end development, or writing some of
+              the interface-related Learn Enough tutorials.
+            &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+           &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+           &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Nick Merwin&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+           &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://twitter.com/nickmerwin"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"social-link"</span>&gt;Tw&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+           &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-copy"</span>&gt;
+            &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+              You may have seen him shredding guitar live with Capital Cities on
+              Jimmy Kimmel, Conan, or The Ellen Show, but rest assured Nick is a
+              true nerd at heart. He’s just as happy shredding well-spec’d lines
+              of code from a tour bus as he is from his kitchen table.
+            &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+          &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+        &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"bio-box"</span>&gt;
+          &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"https://placekitten.com/g/400/400"</span>&gt;
+          &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;??&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+          &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+            The Future
+          &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+        &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        Learn Enough to Be Dangerous is a leader in the movement to teach the
+        world &lt;<span class="pd_green1"><strong>em</strong></span>&gt;technical sophistication&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;, which includes both "hard
+        skills" like coding, command lines, and version control, and "soft
+         skills" like guessing keyboard shortcuts, Googling error messages, and
+        knowing when to just reboot the darn thing.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+        We believe there are &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;at least a billion people&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt; who can
+        benefit from learning technical sophistication, probably more. To join
+        our movement,
+        &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/#email_list"</span>&gt;sign up for our official
+        email list&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; now.
+      &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Background&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+       &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+         Learn Enough to Be Dangerous is an outgrowth of the
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.railstutorial.org/"</span>&gt;Ruby on Rails Tutorial&lt;/<span class="pd_green1"><strong>a</strong></span>&gt; and the
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/"</span>&gt;Softcover publishing platform&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+         This page is part of the sample site for
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/css-tutorial"</span>&gt;&lt;<span class="pd_green1"><strong>em</strong></span>&gt;Learn Enough CSS and
+         Layout to Be Dangerous&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;, which teaches the basics of
+         &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;C&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;ascading &lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;tyle
+         <span epub:type="pagebreak" id="page_249"></span>&lt;<span class="pd_green1"><strong>strong</strong></span>&gt;S&lt;/<span class="pd_green1"><strong>strong</strong></span>&gt;heets, the language that allows web pages to be styled.
+         Other related tutorials can be found at
+         &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://learnenough.com/"</span>&gt;learnenough.com&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;.
+     &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+
+</section>
+<section>
+<h4 class="h4" id="sec8_8_5">8.8.5 Exercises</h4>
+<ol class="number">
+<li><p class="number">Change the border style of the <span class="green-d"><code><strong>.bio-box</strong></code></span>es from <span class="green-d"><code><strong>solid</strong></code></span> to <span class="green-d"><code><strong>dashed</strong></code></span>, then change it to <span class="green-d"><code><strong>dotted</strong></code></span>.</p></li>
+<li><p class="number">Use the <span class="green-d"><code><strong>border-color</strong></code></span> property, and shorthand values, to set the top and left of the <span class="green-d"><code><strong>.bio-box</strong></code></span>es to be invisible using either <span class="green-d"><code><strong>transparent</strong></code></span> or <span class="green-d"><code><strong>rgba(0, 0, 0, 0)</strong></code></span>, and the right and bottom sides to be black.<span epub:type="pagebreak" id="page_250"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

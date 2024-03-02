@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch04"><span epub:type="pagebreak" id="page_73"></span>Chapter 4</h2>
+<h2 class="chap-title">Inline Styling</h2>
+<p class="noindent">Now that we’ve added the content for our pages and blocked out the basic structure, we’re ready to add some styling. Our basic approach involves adding <em>inline styles</em>, which means putting styling commands directly inside the site’s HTML tags. This approach will allow us to understand exactly what our styling is doing on a per-element basis, giving us immediate results.</p>
+<p class="indent">Inline styles are generally considered a bad practice, though (<a href="ch04.xhtml#box4_1">Box 4.1</a>). En route to fixing this issue, we’ll get just a <em>tiny</em> taste of Cascading Style Sheets—the design language of the Web—by converting inline styles for one of our pages to CSS. This in turn will provide an essential foundation for front-end design and development (<a href="part02.xhtml#part02">Part II</a>) and for writing interactive websites using JavaScript (<em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>)).</p>
+<aside epub:type="sidebar" class="sidebar1" id="box4_1">
+<p class="sb-title1"><strong>Box 4.1: Separating Style and Content</strong></p>
+<p class="sb-noindent">If adding styles directly to elements gives you the results that you want, why is it considered bad practice to do it?</p>
+<p class="sb-indent">One reason is that when your styling is kept in a separate file from your content and layout, the HTML files are cleaner and easier to maintain. This doesn’t make a huge difference when one developer is working on a single page, but when you have multiple developers all making changes to multiple pages, it quickly becomes a nightmare to make changes efficiently and consistently. Imagine if you decided that you didn’t like the size of a font on your site, and had to go around to every place on every page that needed a new style. If this were the only way, no one would ever do it.</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_74"></span>Another reason for separating style from content is that it allows for much greater flexibility and efficiency when applying style rules to multiple elements. Instead of having to style each individual tag, we can apply styling to all elements on the entire site, or just to certain elements that we choose.</p>
+<p class="sb-indent">For instance, it’s possible to make a table span the full width of the page using the rule <code>width: 100%</code>. If we wanted <em>every</em> table on the site to have the same styling, we would have to copy and paste that into every <code>&lt;table&gt;</code> tag on every page:</p>
+<pre class="pre1a">&lt;table style="width: 100%;"&gt;</pre>
+<p class="sb-noindent">With CSS, we can tell the browser to style every table with a small bit of code:</p>
+<pre class="pre1a">table {
+  width: 100%;
+}</pre>
+<p class="sb-noindent">For an extensive website with lots of different pages, elements, and style rules, this can represent a massive gain in simplicity and efficiency.</p>
+<p class="sb-indent">Finally, every page on the Internet is sitting on a remote server somewhere sending data to the users visiting the site. Every word or line of code that you add to a page is something extra that needs to be downloaded over the network. Cutting out repetitive elements on a page makes them smaller, and thus helps sites load faster as well.</p>
+</aside>
+<section>
+<h3 class="h3" id="sec4_1">4.1 Text Styling</h3>
+<p class="noindent">As mentioned in <a href="ch03.xhtml#sec3_3">Section 3.3</a>, our design efforts will focus on the <em>Moby-Dick</em> book report page, which stands to gain the most from changing the default HTML styling. We’ll begin by adding a little styling to the quotation from the first paragraph of <em>Moby-Dick</em>. Recall from <a href="ch03.xhtml#ch3list7">Listing 3.7</a> that the quotation uses the <span class="green-d"><code><strong>blockquote</strong></code></span> tag, which is set apart from the surrounding text by extra space and indentation (<a href="ch04.xhtml#ch4fig1">Figure 4.1</a>).</p>
+<figure class="figure" id="ch4fig1">
+<img src="graphics/04fig01.jpg" alt="images" width="666" height="368"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.1:</strong> The default blockquote styling.</p>
+</figcaption>
+</figure>
+<p class="indent">To make the quotation stand out even more, let’s change the font style to <em>italics</em> while increasing the font size to 20 pixels (<span class="green-d"><code><strong>20px</strong></code></span>). The way to do this is with the <span class="green-d"><code><strong>style</strong></code></span> attribute, which can be added to virtually any HTML tag. In this case, we’ll change the <span class="green-d"><code><strong>font-style</strong></code></span> and the <span class="green-d"><code><strong>font-size</strong></code></span> as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p074pro02a" id="p074pro02">Click here to view code image</a></p>
+<pre class="pre1">style="font-style: italic; font-size: 20px;"</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_75"></span>Note that the styling rules after <span class="green-d"><code><strong>style=</strong></code></span> are a single string of characters, with each individual style separated from the others by a semicolon <span class="green-d"><code><strong>;</strong></code></span>. (The final semicolon isn’t technically necessary, but including it is a good practice since it lets us add additional styles later on without having to remember to add a semicolon.)</p>
+<p class="indent">Taking this idea and editing <span class="green-d"><code><strong>moby_dick.html</strong></code></span> leads to the HTML shown in <a href="ch04.xhtml#ch4list1">Listing 4.1</a>. The result appears in <a href="ch04.xhtml#ch4fig2">Figure 4.2</a>.</p>
+<figure class="figure" id="ch4fig2">
+<img src="graphics/04fig02.jpg" alt="images" width="676" height="374"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.2:</strong> A styled blockquote.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list1"><strong>Listing 4.1:</strong> Styling the blockquote.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list01a" id="p04list01">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>blockquote</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"font-style: italic; font-size: 20px;"</strong></span>&gt;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_76"></span>Next, we’ll add some styling to the famous first line “Call me Ishmael.” We’ll first revert the font style back to normal (which is how you emphasize text when the surrounding text is already in italics). Then we’ll make the font even bigger than the <span class="green-d"><code><strong>20px</strong></code></span> used for the rest of the quotation, while also making it <strong>bold</strong>. Finally, we’ll change the color to an attention-grabbing <span class="red"><strong>red</strong></span>.</p>
+<p class="indent">Ordinarily, there would be no way to style just the line “Call me Ishmael.” If we had written it as</p>
+<p class="codelink"><a href="ch04_images.xhtml#p076pro01a" id="p076pro01">Click here to view code image</a></p>
+<pre class="pre1">Call me Ishmael. Some years ago…</pre>
+<p class="noindent">at this point we’d be out of luck. Recall from <a href="ch03.xhtml#ch3list7">Listing 3.7</a>, though, that the opening line is wrapped in a <span class="green-d"><code><strong>span</strong></code></span> tag:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p076pro02a" id="p076pro02">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>span</strong></span>&gt;Call me Ishmael.&lt;/<span class="pd_green1"><strong>span</strong></span>&gt; Some years ago…</pre>
+<p class="noindent">The reason for this is that we correctly anticipated wanting to style it later on. (In practice we can’t always anticipate such things, but of course we can wrap the relevant text in a <span class="green-d"><code><strong>span</strong></code></span> tag as needed.)</p>
+<p class="indent">Although the <span class="green-d"><code><strong>span</strong></code></span> tag doesn’t really do anything by itself, we <em>can</em> add styles to it, as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p076pro03a" id="p076pro03">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>span</strong></span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"font-style: normal; font-size: 24px; font-weight: bold;</span>
+<span class="pd_red">color: #ff0000;"</span>&gt;Call me Ishmael.&lt;/<span class="pd_green1"><strong>span</strong></span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_77"></span>Here we’ve combined <span class="green-d"><code><strong>font-style</strong></code></span>, <span class="green-d"><code><strong>font-size</strong></code></span>, <span class="green-d"><code><strong>font-weight</strong></code></span>, and <span class="green-d"><code><strong>color</strong></code></span> to obtain the results outlined above. These are but a few of the many style properties available, which you can learn about at sites like w3schools (<a href="https://www.w3schools.com/cssref/">https://www.w3schools.com/cssref/</a>). Meanwhile, the color <span class="green-d"><code><strong>ff0000</strong></code></span> is a hexadecimal code for <span class="red">red</span>, as discussed in <a href="ch04.xhtml#box4_2">Box 4.2</a>.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box4_2">
+<p class="sb-title1"><strong>Box 4.2: HTML and Hexadecimal Color</strong></p>
+<p class="sb-noindent">HTML colors are typically indicated using a system known as <em>hexadecimal RGB</em> (for “red, green, blue”), which gives us a flexible way to specify colors with fine-grained precision.</p>
+<p class="sb-indent">Hexadecimal refers to the use of <em>base 16</em>, which uses 16 symbols from <code>0</code> to <code>F</code> to specify the decimal numbers 0 through 15:</p>
+<table>
+<tbody>
+<tr>
+<td class="border"><p class="tab-para">0</p>
+<p class="tab-para">0</p></td>
+<td class="border"><p class="tab-para">1</p>
+<p class="tab-para">1</p></td>
+<td class="border"><p class="tab-para">2</p>
+<p class="tab-para">2</p></td>
+<td class="border"><p class="tab-para">3</p>
+<p class="tab-para">3</p></td>
+<td class="border"><p class="tab-para">4</p>
+<p class="tab-para">4</p></td>
+<td class="border"><p class="tab-para">5</p>
+<p class="tab-para">5</p></td>
+<td class="border"><p class="tab-para">6</p>
+<p class="tab-para">6</p></td>
+<td class="border"><p class="tab-para">7</p>
+<p class="tab-para">7</p></td>
+<td class="border"><p class="tab-para">8</p>
+<p class="tab-para">8</p></td>
+<td class="border"><p class="tab-para">9</p>
+<p class="tab-para">9</p></td>
+<td class="border"><p class="tab-para">10</p>
+<p class="tab-para">A</p></td>
+<td class="border"><p class="tab-para">11</p>
+<p class="tab-para">B</p></td>
+<td class="border"><p class="tab-para">12</p>
+<p class="tab-para">C</p></td>
+<td class="border"><p class="tab-para">13</p>
+<p class="tab-para">D</p></td>
+<td class="border"><p class="tab-para">14</p>
+<p class="tab-para">E</p></td>
+<td class="border"><p class="tab-para">15</p>
+<p class="tab-para">F</p></td>
+</tr>
+</tbody>
+</table>
+<p class="sb-indent">Just as base 10 lets us count from 0 to 10<sup>2</sup> − 1 = 99 using only two digits, hexadecimal lets us count from 0 to 16<sup>2</sup> − 1 = 255 using <code>00</code> = 0 up to <code>FF</code> = 255.</p>
+<p class="sb-indent">A computer monitor displays colors by combining red, green, and blue pixels together, which represent the three additive primary colors. If all three colors are turned on, which would look like <code>#FFFFFF</code>, the screen will look white. Conversely, if all three colors are turned off, which is <code>#000000</code>, the screen will look black. Intermediate combinations of the three colors combine to produce virtually all the colors you can see:</p>
+<figure class="image-c">
+<img src="graphics/077fig01.jpg" alt="Images" width="602" height="96"/>
+</figure>
+<p class="sb-indent">For convenience, HTML also supports a shorthand that can stand in for the full hex string in some cases. For example, if the numbers are repeated, as in <code>#222222</code>, <code>#bbbbbb</code>, or <code>#aa22ff</code>, you can shorten the whole number to just three digits, like this: <code>#222</code>, <code>#bbb</code>, or <code>#a2f</code>. (Note that we’ve switched to lowercase letters, which is more common in modern HTML code, but is exactly equivalent to the uppercase versions shown above.) When the browser sees only three digits, it fills in the missing ones automatically.</p>
+<p class="sb-indent">The hexadecimal color system might seem confusing at first, but you’ll find that you quickly come to understand how the three values work together to make different colors (and different shades of those colors). To learn more, we suggest playing around with a color picker to see what kinds of colors you can make.</p>
+</aside>
+<p class="indent"><span epub:type="pagebreak" id="page_78"></span>Including the styles above in <span class="green-d"><code><strong>moby_dick.html</strong></code></span> gives us the code in <a href="ch04.xhtml#ch4list2">Listing 4.2</a>, with the result shown in <a href="ch04.xhtml#ch4fig3">Figure 4.3</a>.</p>
+<figure class="figure" id="ch4fig3">
+<img src="graphics/04fig03.jpg" alt="images" width="676" height="377"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.3:</strong> Making the opening line really pop.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list2"><strong>Listing 4.2:</strong> Adding style to the opening <span class="green-d"><code><strong>span</strong></code></span>.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list02a" id="p04list02">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>blockquote</strong></span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"font-style: italic; font-size: 20px;"</span>&gt;
+  &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>span</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"font-style: normal; font-size: 24px; font-weight: bold;</strong></span></span>
+<span class="bg1">    <span class="pd_red"><strong>color: #ff0000;"</strong></span>&gt;Call me Ishmael.&lt;/<span class="pd_green2"><strong>span</strong></span>&gt;</span>
+    Some years ago–never mind how long precisely–having little or
+    no money in my purse, and nothing particular to interest me on shore,
+    I thought I would sail about a little and see the watery part of the
+    world. It is a way I have of driving off the spleen and regulating the
+    circulation.
+  &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>blockquote</strong></span>&gt;</pre>
+<p class="indent">As a final change, we’ll align the text of the book report headers so that it’s centered in the page. The way to do this is with the <span class="green-d"><code><strong>text-align</strong></code></span> property, as shown in <a href="ch04.xhtml#ch4list3">Listing 4.3</a>. (Note that <a href="ch04.xhtml#ch4list3">Listing 4.3</a> also removes the comment from <a href="ch03.xhtml#ch3list7">Listing 3.7</a> since it’s now obsolete.)</p>
+<p class="listing" id="ch4list3"><span epub:type="pagebreak" id="page_79"></span><strong>Listing 4.3:</strong> Centering the headings.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list03a" id="p04list03">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>header</strong></span>&gt;
+<span class="bg1">  &lt;<span class="pd_green2"><strong>h1</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: center;"</strong></span>&gt;A Softcover Book Report&lt;/<span class="pd_green2"><strong>h1</strong></span>&gt;</span>
+<span class="bg1">  &lt;<span class="pd_green2"><strong>h2</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: center;"</strong></span>&gt;Moby-Dick (or, The Whale)&lt;/<span class="pd_green2"><strong>h2</strong></span>&gt;</span>
+&lt;/<span class="pd_green1"><strong>header</strong></span>&gt;</pre>
+<p class="noindent">The result appears in <a href="ch04.xhtml#ch4fig4">Figure 4.4</a>.</p>
+<figure class="figure" id="ch4fig4">
+<img src="graphics/04fig04.jpg" alt="images" width="676" height="333"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.4:</strong> Centered headings.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec4_1_1">4.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Verify that <span class="green-d"><code><strong>color: red;</strong></code></span> has the same effect as <span class="green-d"><code><strong>color: #ff0000;</strong></code></span>. What are the advantages of each approach?</p></li>
+<li><p class="number">What would you guess the color of <span class="green-d"><code><strong>#cccccc</strong></code></span> is? Temporarily modify the color of the <span class="green-d"><code><strong>span</strong></code></span> in <a href="ch04.xhtml#ch4list2">Listing 4.2</a> to check your guess. How does it differ from <span class="green-d"><code><strong>#ccc</strong></code></span>?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_2">4.2 Floats</h3>
+<p class="noindent">Now that we’ve learned how to move text around, let’s look at how to adjust the placement of other elements. We’ll start by shrinking the size of the cover image <span epub:type="pagebreak" id="page_80"></span>down a little, and then we’ll arrange for the text to flow around it as if it were part of the paragraphs and blockquote.</p>
+<p class="indent">We’ll start by adding the <span class="green-d"><code><strong>height</strong></code></span> attribute to the <span class="green-d"><code><strong>img</strong></code></span> tag to restrict the height to 200 pixels:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p080pro01a" id="p080pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>&gt;</pre>
+<p class="noindent">Several caveats are in order here. First, although inline resizing is still fairly common, using CSS is the best practice. Second, resizing the image this way (whether inline or with CSS) affects only the image <em>display</em>, and the entire image still needs to be downloaded from the web server, so this technique should be used only for fairly minor resizings.<sup><a id="ch04fn1a" href="ch04.xhtml#ch04fn1">1</a></sup> (If you’ve ever visited a web page where a seemingly tiny image takes <em>forever</em> to load, this is probably the reason why.) Finally, if you go this route you should use <em>either</em> <span class="green-d"><code><strong>height</strong></code></span> <em>or</em> <span class="green-d"><code><strong>width</strong></code></span>, but not both, as the combination forces the browser to attempt to respect both numbers, which can result in weird image-resizing effects (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>).</p>
+<figure class="figure" id="ch4fig5">
+<img src="graphics/04fig05.jpg" alt="images" width="676" height="271"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.5:</strong> Bad image resizing is bad.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="ch04fn1" href="ch04.xhtml#ch04fn1a">1</a>. If you need to resize the image itself and don’t have access to Photoshop, you can use the free Skitch (<a href="https://evernote.com/products/skitch">https://evernote.com/products/skitch</a>) utility for resizing, cropping, and simple annotation.</p>
+<p class="indent">In order to get the text to flow around the image, we need to use a style technique called <em>floating</em>. The idea is that when you set an element to “float” to the left or right (there is no center), all the inline content around it will flow around the floated <span epub:type="pagebreak" id="page_81"></span>element. To see this in action, all we need to do is add <span class="green-d"><code><strong>style=”float: left;”</strong></code></span> to the image attributes:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p081pro01a" id="p081pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>
+<span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"float: left;"</span>&gt;</pre>
+<p class="noindent">Inserting this into the book report page gives <a href="ch04.xhtml#ch4list4">Listing 4.4</a>, with the result shown in <a href="ch04.xhtml#ch4fig6">Figure 4.6</a>.</p>
+<figure class="figure" id="ch4fig6">
+<img src="graphics/04fig06.jpg" alt="images" width="666" height="402"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.6:</strong> A nicely resized &amp; floated image.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list4"><strong>Listing 4.4:</strong> Resizing and floating an image.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list04a" id="p04list04">Click here to view code image</a></p>
+<pre class="pre2">   &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Moby-Dick: A classic tale of the sea&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+
+   &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/read/6070fb03/moby-dick"</span>
+      <span class="light-green1">target</span><span class="grey">=</span><span class="pd_red">"_blank"</span> <span class="light-green1">rel</span><span class="grey">=</span><span class="pd_red">"noopener"</span>&gt;
+<span class="bg1">     &lt;<span class="pd_green2"><strong>img</strong></span> <span class="light-green"><strong>src</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"images/moby_dick.png"</strong></span> <span class="light-green"><strong>alt</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"Moby Dick"</strong></span> <span class="light-green"><strong>height</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"200px"</strong></span></span>
+<span class="bg1">     <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"float: left;"</strong></span>&gt;</span>
+   &lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_82"></span>In <a href="ch04.xhtml#ch4fig6">Figure 4.6</a>, the image is effectively treated like text, with the normal text now flowing up and to its side. We’ll see in <a href="ch04.xhtml#sec4_5">Section 4.5</a> that the <span class="green-d"><code><strong>float</strong></code></span> attribute also arranges for the text to flow past the image as well.</p>
+<section>
+<h4 class="h4" id="sec4_2_1">4.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">What happens if you change <span class="green-d"><code><strong>float: left</strong></code></span> to <span class="green-d"><code><strong>float: right</strong></code></span> in <a href="ch04.xhtml#ch4list4">Listing 4.4</a>?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_3">4.3 Applying a Margin</h3>
+<p class="noindent">Even though we’ve floated the image, the page still looks a little weird, with the text smashed up against the book cover. To make it look better, we’ll add a <em>margin</em> of empty space to the right of the image.</p>
+<p class="indent">Margins are one of three styles that can be applied to the imaginary boxes that contain HTML content, the others being <em>padding</em> (empty space inside the box) and <em>borders</em> (a line around the box). We’ll talk more about these styles in the context of the <em>box model</em> covered in <a href="ch08.xhtml#ch08">Chapter 8</a> of <a href="part02.xhtml#part02">Part II</a>, but we can accomplish our immediate goal by applying a margin using inline styling. (We’ll see an example of padding in <a href="ch04.xhtml#sec4_5">Section 4.5</a>.)</p>
+<p class="indent">We’ll start with the simplest kind of margin declaration, which looks like <span class="green-d"><code><strong>margin: 40px;</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p082pro01a" id="p082pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>
+<span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"float: left; margin: 40px;"</span>&gt;</pre>
+<p class="noindent">If we add this to the <span class="green-d"><code><strong>img</strong></code></span> tag (<a href="ch04.xhtml#ch4list5">Listing 4.5</a>), everything surrounding the image moves 40 pixels in each direction, as shown in <a href="ch04.xhtml#ch4fig7">Figure 4.7</a>.</p>
+<figure class="figure" id="ch4fig7">
+<img src="graphics/04fig07.jpg" alt="images" width="666" height="378"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.7:</strong> Close, but not quite!</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list5"><strong>Listing 4.5:</strong> Adding an image margin.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list05a" id="p04list05">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Moby-Dick: A classic tale of the sea&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+
+  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/read/6070fb03/moby-dick"</span>
+     <span class="light-green1">target</span><span class="grey">=</span><span class="pd_red">"_blank"</span> <span class="light-green1">rel</span><span class="grey">=</span><span class="pd_red">"noopener"</span>&gt;
+    &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>
+<span class="bg1">    <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"float: left; margin: 40px;"</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_83"></span><a href="ch04.xhtml#ch4fig7">Figure 4.7</a> shows that we’ve gotten closer to our goal by putting some space between the text and the image, but the styling still isn’t quite what we want. The reason is that writing <span class="green-d"><code><strong>margin: 40px;</strong></code></span> applies the margin in <em>all</em> directions, but we really only want the margin on the right side of the image, to separate it from the text.</p>
+<p class="indent">The most general way to control where the margin goes is to give the <span class="green-d"><code><strong>margin</strong></code></span> attribute <em>four</em> values, corresponding to the top, right, bottom, and left of the box (<a href="ch04.xhtml#ch4fig8">Figure 4.8</a>).</p>
+<figure class="figure" id="ch4fig8">
+<img src="graphics/04fig08.jpg" alt="images" width="601" height="309"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.8:</strong> Think of the four values as going clockwise from the top.</p>
+</figcaption>
+</figure>
+<p class="indent">For example, to get margins of 40, 30, 20, and 10 pixels going around an image (clockwise from the top), we could use this <span class="green-d"><code><strong>style</strong></code></span> attribute:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p083pro01a" id="p083pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"…"</span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"margin: 40px 30px 20px 10px;"</span>&gt;</pre>
+<p class="noindent">In the present case, we want only a right margin, so we can set the other three sides to <span class="green-d"><code><strong>0px</strong></code></span> (or just <span class="green-d"><code><strong>0</strong></code></span> for short):<sup><a id="ch04fn2a" href="ch04.xhtml#ch04fn2">2</a></sup></p>
+<p class="footnote"><a id="ch04fn2" href="ch04.xhtml#ch04fn2a">2</a>. We could use the attribute <span class="green-d"><code><strong>style="margin-right: 40px;"</strong></code></span> to achieve the same effect, but specifying all four margins is the dominant convention and so is worth learning.</p>
+<p class="codelink"><a href="ch04_images.xhtml#p083pro02a" id="p083pro02">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>
+<span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"float: left; margin: 0 40px 0 0;"</span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_84"></span>Applying this to the full source of the book report page gives <a href="ch04.xhtml#ch4list6">Listing 4.6</a>.</p>
+<p class="listing" id="ch4list6"><strong>Listing 4.6:</strong> Adding only a right margin.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list06a" id="p04list06">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Moby-Dick: A classic tale of the sea&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+
+&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://www.softcover.io/read/6070fb03/moby-dick"</span>
+   <span class="light-green1">target</span><span class="grey">=</span><span class="pd_red">"_blank"</span> <span class="light-green1">rel</span><span class="grey">=</span><span class="pd_red">"noopener"</span>&gt;
+  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/moby_dick.png"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Moby Dick"</span> <span class="light-green1">height</span><span class="grey">=</span><span class="pd_red">"200px"</span>
+<span class="bg1">  <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"float: left; margin: 0 40px 0 0;"</strong></span>&gt;</span>
+&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</pre>
+<p class="noindent">The result of <a href="ch04.xhtml#ch4list6">Listing 4.6</a> shows exactly the result we want, with a margin applied only on the right, as seen in <a href="ch04.xhtml#ch4fig9">Figure 4.9</a>.</p>
+<figure class="figure" id="ch4fig9">
+<img src="graphics/04fig09.jpg" alt="images" width="666" height="382"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.9:</strong> Much better!</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec4_3_1"><span epub:type="pagebreak" id="page_85"></span>4.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">How does the margin in <a href="ch04.xhtml#ch4list6">Listing 4.6</a> change if we replace the margin with <span class="green-d"><code><strong>margin-right: 40px</strong></code></span>?</p></li>
+<li><p class="number">Add the style rule <span class="green-d"><code><strong>padding: 10px;</strong></code></span> to the <span class="green-d"><code><strong>td</strong></code></span> elements for the first two block elements in the table in <span class="green-d"><code><strong>tags.html</strong></code></span>. How annoying would it be to add them to every <span class="green-d"><code><strong>td</strong></code></span>? How annoying is it to change from <span class="green-d"><code><strong>10px</strong></code></span> to <span class="green-d"><code><strong>20px</strong></code></span> everywhere? (This is one reason why in real life you always use CSS.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_4">4.4 More Margin Tricks</h3>
+<p class="noindent">There are a couple more margin tricks worth mentioning, both of which we can immediately put to good use. First, in addition to the shorthand <span class="green-d"><code><strong>margin: 40px</strong></code></span> (with only one value), it’s possible to include only two values:</p>
+<pre class="pre1">margin: 20px 40px;</pre>
+<p class="noindent">As illustrated in <a href="ch04.xhtml#ch4fig8">Figure 4.8</a>, this syntax sets the top and bottom margins to <span class="green-d"><code><strong>20px</strong></code></span> and the left and right margins to <span class="green-d"><code><strong>40px</strong></code></span>, so it is equivalent to</p>
+<pre class="pre1">margin: 20px 40px 20px 40px;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_86"></span>This shorthand also works with just three values, like this: <span class="green-d"><code><strong>margin: 20px 10px 40px;</strong></code></span>. This is missing the last value, which (as seen in <a href="ch04.xhtml#ch4fig8">Figure 4.8</a>) is the left margin. In this case, it will be filled in automatically from its opposite across the box (in this case, <span class="green-d"><code><strong>10px</strong></code></span>).</p>
+<p class="indent">We can apply this to the header for the book report page by adding a bottom margin via <span class="green-d"><code><strong>margin: 0 0 80px</strong></code></span>, as shown in <a href="ch04.xhtml#ch4list7">Listing 4.7</a>.</p>
+<p class="listing" id="ch4list7"><strong>Listing 4.7:</strong> Centering the book report headers.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list07a" id="p04list07">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>header</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: center; margin: 0 0 80px;"</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;A Softcover Book Report&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>h2</strong></span>&gt;Moby-Dick (or, The Whale)&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;</pre>
+<p class="noindent">Note that we’ve also taken this opportunity to hoist the style <span class="green-d"><code><strong>text-align: center</strong></code></span> into the <span class="green-d"><code><strong>header</strong></code></span> tag. The result appears in <a href="ch04.xhtml#ch4fig10">Figure 4.10</a>.</p>
+<figure class="figure" id="ch4fig10">
+<img src="graphics/04fig10.jpg" alt="images" width="668" height="332"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.10:</strong> Adding a margin under the header.</p>
+</figcaption>
+</figure>
+<p class="indent">The second margin trick is the use of <span class="green-d"><code><strong>auto</strong></code></span>, which inserts a margin with a size that is automatically the same on all relevant sides. Its most common application is probably in the rule</p>
+<pre class="pre1">margin: 0 auto;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_87"></span>which arranges for no top or bottom margin and for automatic margins on the left and right. The result of equal left and right margins is that the element is <em>centered</em>, which is especially useful for elements like images that can’t be centered using the <span class="green-d"><code><strong>text-align: center;</strong></code></span> rule we saw in <a href="ch04.xhtml#ch4list3">Listing 4.3</a>.</p>
+<p class="indent">One restriction of <span class="green-d"><code><strong>margin: 0 auto;</strong></code></span> is that it works only on block elements, but recall from <a href="ch03.xhtml#box3_1">Box 3.1</a> that the <span class="green-d"><code><strong>img</strong></code></span> tag is an inline element. We can fix this with the style <span class="green-d"><code><strong>display: block;</strong></code></span>, which overrides the default. Putting this together with the margin rule leads to <a href="ch04.xhtml#ch4list8">Listing 4.8</a>, with the result shown in <a href="ch04.xhtml#ch4fig11">Figure 4.11</a>.</p>
+<figure class="figure" id="ch4fig11">
+<img src="graphics/04fig11.jpg" alt="images" width="676" height="511"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.11:</strong> A centered image.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list8"><strong>Listing 4.8:</strong> A centered image.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list08a" id="p04list08">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"https://commons.wikimedia.org/wiki/File:Sperm_whale_pod.jpg"</span>&gt;
+    &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/sperm_whales.jpg"</span>
+<span class="bg1">    <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"display: block; margin: 0 auto;"</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>a</strong></span>&gt;</pre>
+<section>
+<h4 class="h4" id="sec4_4_1"><span epub:type="pagebreak" id="page_88"></span>4.4.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">What happens if you use <span class="green-d"><code><strong>margin: 0 auto;</strong></code></span> for the book cover image (together with <span class="green-d"><code><strong>display: block;</strong></code></span>) without changing the float rule? What does this tell you about the precedence of the two rules?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_5">4.5 Box Styling</h3>
+<p class="noindent">So far, the changes we’ve made have had a relatively minor impact on the appearance of the book report page. In this section, we’ll see how a set of only four style rules can make a surprisingly big difference.</p>
+<p class="indent">Recall from <a href="ch03.xhtml#ch3list7">Listing 3.7</a> that we wrapped the bulk of the report in a <span class="green-d"><code><strong>div</strong></code></span> tag, which defines a block element that doesn’t get any default styling from the browser, thereby making it perfect to use as a wrapper for styling other content. In this case, we’ll use the <span class="green-d"><code><strong>width</strong></code></span> style to restrict the size of the main report to 500 pixels, and it turns out this lets us use the automatic margin trick from <a href="ch04.xhtml#sec4_4">Section 4.4</a> to center it using <span class="green-d"><code><strong>margin: 20px auto;</strong></code></span> (thereby also putting a 20-pixel margin on the top and bottom). Finally, we’ll combine a <span class="green-d"><code><strong>padding</strong></code></span> rule with a change in the <span class="green-d"><code><strong>background-color</strong></code></span> using the hexadecimal color convention covered in <a href="ch04.xhtml#box4_2">Box 4.2</a>. The resulting style rules appear in <a href="ch04.xhtml#ch4list9">Listing 4.9</a>.</p>
+<p class="listing" id="ch4list9"><strong>Listing 4.9:</strong> Adding styling to the book report box.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list09a" id="p04list09">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"width: 500px; margin: 20px auto; padding: 30px;</strong></span></span>
+<span class="bg1">  <span class="pd_red"><strong>background-color: #fafafa;"</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Moby-Dick: A classic tale of the sea&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;</pre>
+<p class="noindent">Comparing the before and after (<a href="ch04.xhtml#ch4fig12">Figure 4.12</a>) shows what a difference a few style rules can make.</p>
+<figure class="figure" id="ch4fig12">
+<img src="graphics/04fig12.jpg" alt="images" width="671" height="249"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.12:</strong> The report box before and after adding styling.</p>
+</figcaption>
+</figure>
+<p class="indent">As we see in <a href="ch04.xhtml#ch4fig12">Figure 4.12</a>, the report content has now been set apart from the rest of the page in a styled box.</p>
+<p class="indent">To recap what happened, we set a width for the box, and because of this we were able to set the left and right margins to <span class="green-d"><code><strong>auto</strong></code></span>. Then we added padding to the box, which pushed the content inside away from the edges. (Investigating the difference between padding and margins is left as an exercise (<a href="ch04.xhtml#sec4_5_1">Section 4.5.1</a>).) We also added a light gray background color with the hexadecimal code <span class="green-d"><code><strong>#fafafa</strong></code></span> (<a href="ch04.xhtml#box4_2">Box 4.2</a>). (Don’t worry about trying to visualize the color corresponding to a hex code; that’s what <span epub:type="pagebreak" id="page_89"></span>color pickers are for.) Finally, because of the narrower width, the text of the <em>Moby-Dick</em> quotation now flows around the floated cover image, thereby fulfilling the promise made at the end of <a href="ch04.xhtml#sec4_2">Section 4.2</a>.</p>
+<section>
+<h4 class="h4" id="sec4_5_1">4.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Temporarily change <span class="green-d"><code><strong>padding</strong></code></span> to <span class="green-d"><code><strong>margin</strong></code></span> in <a href="ch04.xhtml#ch4list9">Listing 4.9</a>. What difference does this make in the appearance?</p></li>
+<li><p class="number">Add and style a blockquote with padding and a background color as shown in <a href="ch04.xhtml#ch4list10">Listing 4.10</a>. Fill in <span class="green-d"><code><strong>TAG</strong></code></span> with the right level tag for that location in the document, and replace <span class="green-d"><code><strong>FILL_IN</strong></code></span> with a reasonable color of your choice. The result for one color choice appears in <a href="ch04.xhtml#ch4fig13">Figure 4.13</a>.</p>
+<figure class="figure" id="ch4fig13">
+<img src="graphics/04fig13.jpg" alt="images" width="666" height="425"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.13:</strong> Styling a famous quotation from an American president.</p>
+</figcaption>
+</figure></li>
+</ol>
+<p class="listing" id="ch4list10"><strong>Listing 4.10:</strong> Styling a famous quotation.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list10a" id="p04list10">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>h1</strong></span>&gt;The Learn Enough Story&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  .
+  .
+  .
+  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"images/kitten.jpg"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"An adorable kitten"</span>&gt;
+
+<span class="bg1">  &lt;<span class="pd_green2"><strong>TAG</strong></span>&gt;Quotations&lt;/<span class="pd_green2"><strong>TAG</strong></span>&gt;</span>
+
+  &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+    In addition to hosting most of the world's supply of kitten videos, the
+    Web is also full of inspiring quotes, perhaps none more so than this one:
+  &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+
+<span class="bg1">  &lt;<span class="pd_green2"><strong>blockquote</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"padding: 2px 20px; background: #FILL_IN;"</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>p</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>em</strong></span>&gt;Don't believe every quote you read on the Internet.&lt;/<span class="pd_green1"><strong>em</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>br</strong></span>&gt;
+      —Abraham Lincoln
+    &lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>blockquote</strong></span>&gt;</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_6"><span epub:type="pagebreak" id="page_90"></span>4.6 Navigation Styling</h3>
+<p class="noindent">As a final change to our sample website, we’ll make a change across all three pages by adding styling to the navigation menu added in <a href="ch03.xhtml#sec3_5">Section 3.5</a>. In the process, we’ll yet again feel the pain of having to make the same change in several places, further preparing us to appreciate the value of the template system developed in <a href="part02.xhtml#part02">Part II</a>.</p>
+<p class="indent">To style the nav menu, we’ll first move it from the top left of the page to the more conventional top right. This will involve adding a style rule to the <span class="green-d"><code><strong>div</strong></code></span> tag that wraps the whole menu (<a href="ch03.xhtml#ch3list9">Listing 3.9</a>). At the same time, we’ll add a left margin to the second and third nav links in order to improve the spacing. The changes to the book report page appear in <a href="ch04.xhtml#ch4list11">Listing 4.11</a>, and the result appears in <a href="ch04.xhtml#ch4fig14">Figure 4.14</a>.</p>
+<figure class="figure" id="ch4fig14">
+<img src="graphics/04fig14.jpg" alt="images" width="676" height="304"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.14:</strong> The styled navigation on the book report page.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list11"><span epub:type="pagebreak" id="page_91"></span><strong>Listing 4.11:</strong> Styling the navigation menu on the book report page.<br/><code><em>moby_dick.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list11a" id="p04list11">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: right;"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"index.html"</strong></span>&gt;Home&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"tags.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;HTML Tags&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"moby_dick.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;Moby Dick&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">Of course, we’re not done yet, as we need to make the same edits to the nav menu on the Home page (<a href="ch04.xhtml#ch4list12">Listing 4.12</a>) and HTML Tags page (<a href="ch04.xhtml#ch4list13">Listing 4.13</a>).</p>
+<p class="listing" id="ch4list12"><strong>Listing 4.12:</strong> Styling the navigation menu on the Home page.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list12a" id="p04list12">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: right;"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"index.html"</strong></span>&gt;Home&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"tags.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;HTML Tags&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"moby_dick.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;Moby Dick&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="listing" id="ch4list13"><span epub:type="pagebreak" id="page_92"></span><strong>Listing 4.13:</strong> Styling the navigation menu on the HTML Tags page.<br/><code><em>tags.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list13a" id="p04list13">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"text-align: right;"</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"index.html"</strong></span>&gt;Home&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"tags.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;HTML Tags&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"moby_dick.html"</strong></span> <span class="light-green"><strong>style</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"margin: 0 0 0 10px;"</strong></span>&gt;Moby Dick&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">The results on the nav menu are exactly the same as shown in <a href="ch04.xhtml#ch4fig14">Figure 4.14</a>. This is not surprising given that the changes represented by <a href="ch04.xhtml#ch4list11">Listing 4.11</a>, <a href="ch04.xhtml#ch4list12">Listing 4.12</a>, and <a href="ch04.xhtml#ch4list13">Listing 4.13</a> are <em>all identical</em>. This sort of repetition is cumbersome and error-prone— definitely a Bad Thing. As mentioned several times before, we’ll solve this problem with a templating system in <a href="part02.xhtml#part02">Part II</a>.</p>
+<section>
+<h4 class="h4" id="sec4_6_1">4.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Change <span class="green-d"><code><strong>margin: 0 0 0 10px;</strong></code></span> to <span class="green-d"><code><strong>margin-left: 10px;</strong></code></span> in <a href="ch04.xhtml#ch4list13">Listing 4.13</a>. What, if anything, changes in the appearance?</p></li>
+<li><p class="number">It’s conventional for navigation links not to change color after being followed, and they also look better if they’re not underlined like normal links. Using your Google-fu and the w3schools reference, guess the style rules for making these changes, and apply them to each element in the menu. <em>Hint</em>: The property you’ll have to modify to remove underlining is <span class="green-d"><code><strong>text-decoration</strong></code></span>. The result should look something like <a href="ch04.xhtml#ch4fig15">Figure 4.15</a>.</p>
+<figure class="figure" id="ch4fig15">
+<img src="graphics/04fig15.jpg" alt="images" width="676" height="302"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.15:</strong> Styling the menu links.</p>
+</figcaption>
+</figure></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_93"></span>Add a new table for the “document tags” that define the properties of the document. Include <span class="green-d"><code><strong>html</strong></code></span>, <span class="green-d"><code><strong>head</strong></code></span>, <span class="green-d"><code><strong>body</strong></code></span>, <span class="green-d"><code><strong>title</strong></code></span>, and <span class="green-d"><code><strong>meta</strong></code></span>.</p></li>
+<li><p class="number">Add any missing tags to <span class="green-d"><code><strong>tags.html</strong></code></span>. (By our count there are five, after including the tags from the previous exercise.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_7">4.7 A Taste of CSS</h3>
+<p class="noindent">In this section, we’ll get a first taste of Cascading Style Sheets (CSS),<sup><a id="ch04fn3a" href="ch04.xhtml#ch04fn3">3</a></sup> using the inline styles from <span class="green-d"><code><strong>index.html</strong></code></span> as our example. We’ll break the transition from inline styles to CSS into two steps: First, we’ll move the inline styles into an <em>internal stylesheet</em> (<a href="ch04.xhtml#sec4_7_1">Section 4.7.1</a>); second, we’ll move the internal style rules into an <em>external stylesheet</em> (<a href="ch04.xhtml#sec4_7_2">Section 4.7.2</a>). The result will be a self-contained and centralized location for our page’s styling.</p>
+<p class="footnote"><a id="ch04fn3" href="ch04.xhtml#ch04fn3a">3</a>. The words “style” and “sheet” are conventionally written as two words—Style Sheet—only in the context of spelling out the meaning of “CSS”. Otherwise, they are generally combined into one word, “stylesheet”.</p>
+<section>
+<h4 class="h4" id="sec4_7_1">4.7.1 Internal Stylesheets</h4>
+<p class="noindent">We’ll start by <em>refactoring</em> the inline styles into an internal stylesheet. Refactoring involves changing the form of code or markup without changing its function. In this case, we’ll be moving the style rules on the elements in <span class="green-d"><code><strong>index.html</strong></code></span> into the <span class="green-d"><code><strong>head</strong></code></span> of our document, using a special <span class="green-d"><code><strong>style</strong></code></span> tag designed for exactly this purpose. In preparation for this, we’ll add the opening and closing <span class="green-d"><code><strong>style</strong></code></span> tags with empty space for the style rules, as shown in <a href="ch04.xhtml#ch4list14">Listing 4.14</a>.</p>
+<p class="listing" id="ch4list14"><strong>Listing 4.14:</strong> Adding an empty <span class="green-d"><code><strong>style</strong></code></span> tag (to be filled in in this section).<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list14a" id="p04list14">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"UTF-8"</span>&gt;
+
+<span class="bg1">    &lt;<span class="pd_green2"><strong>style</strong></span>&gt;</span>
+
+<span class="bg1">    &lt;/<span class="pd_green2"><strong>style</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_94"></span>Our first step is to move the navigation styling developed in <a href="ch04.xhtml#sec4_6">Section 4.6</a> (<a href="ch04.xhtml#ch4list12">Listing 4.12</a>). Two of the lines contain identical margin styles: <span class="green-d"><code><strong>margin: 0 0 0 10px</strong></code></span> (which control the spacing between links). To eliminate this repetition, we’ll start by replacing each of the inline styles with one of the most important ideas in web design, a CSS <em>class</em>, as shown in <a href="ch04.xhtml#ch4list15">Listing 4.15</a>.</p>
+<p class="listing" id="ch4list15"><strong>Listing 4.15:</strong> Replacing the inline style with a CSS class.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list15a" id="p04list15">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">style</span><span class="grey">=</span><span class="pd_red">"text-align: right;"</span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"index.html"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"tags.html"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"nav-spacing"</strong></span>&gt;HTML Tags&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+<span class="bg1">    &lt;<span class="pd_green2"><strong>a</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"moby_dick.html"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"nav-spacing"</strong></span>&gt;Moby Dick&lt;/<span class="pd_green2"><strong>a</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">A CSS class acts as a named label for the element, and allows us to simultaneously style all elements with the given class. The code for doing this involves the name of the class with a leading dot (<span class="green-d"><code><strong>.nav-spacing</strong></code></span>) and a list of style rules (in this case, only one) inside curly braces. In order to apply the styling to the page, this code should be placed inside the <span class="green-d"><code><strong>style</strong></code></span> tag, as shown in <a href="ch04.xhtml#ch4list16">Listing 4.16</a>.</p>
+<p class="listing" id="ch4list16"><strong>Listing 4.16:</strong> Moving the inline <span class="green-d"><code><strong>margin</strong></code></span> rule into an internal stylesheet.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list16a" id="p04list16">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>style</strong></span>&gt;
+<span class="bg1">    .<span class="blue-v"><strong>nav-spacing</strong></span> {</span>
+<span class="bg1">      <span class="pd_green2"><strong>margin</strong></span>: 0 0 0 10<span class="pd_red"><strong>px</strong></span>;</span>
+<span class="bg1">    }</span>
+  &lt;/<span class="pd_green1"><strong>style</strong></span>&gt;</pre>
+<p class="noindent">Note that the <span class="green-d"><code><strong>margin</strong></code></span> rule in <a href="ch04.xhtml#ch4list16">Listing 4.16</a> is identical to the one we used inline; this is a general pattern for inline styles and CSS.</p>
+<p class="indent">Next, we’ll replace the inline style for the navigation <span class="green-d"><code><strong>div</strong></code></span> with another CSS class (<a href="ch04.xhtml#ch4list17">Listing 4.17</a>) and a second CSS rule (<a href="ch04.xhtml#ch4list18">Listing 4.18</a>).</p>
+<p class="listing" id="ch4list17"><span epub:type="pagebreak" id="page_95"></span><strong>Listing 4.17:</strong> Replacing the inline style with a class.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list17a" id="p04list17">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"nav-menu"</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"index.html"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"tags.html"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"nav-spacing"</span>&gt;HTML Tags&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"moby_dick.html"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"nav-spacing"</span>&gt;Moby Dick&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="listing" id="ch4list18"><strong>Listing 4.18:</strong> Adding the nav menu rule to the internal stylesheet.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list18a" id="p04list18">Click here to view code image</a></p>
+<pre class="pre2">  &lt;<span class="pd_green1"><strong>style</strong></span>&gt;
+
+<span class="bg1">    .<span class="blue-v"><strong>nav-menu</strong></span> {</span>
+<span class="bg1">      <span class="pd_green2"><strong>text-align</strong></span>: <span class="pd_green2"><strong>right</strong></span>;</span>
+    }
+    .nav-spacing {
+      margin: 0 0 0 10px;
+    }
+  &lt;/<span class="pd_green1"><strong>style</strong></span>&gt;</pre>
+<p class="noindent">Here we’ve placed the <span class="green-d"><code><strong>.nav-menu</strong></code></span> rule above the <span class="green-d"><code><strong>.nav-spacing</strong></code></span> rule, but in this case the order doesn’t matter. (The order of CSS rules often does matter, though; the details are covered in <a href="part02.xhtml#part02">Part II</a>.)</p>
+<p class="indent">As a final step, we’ll add the counterpart to a CSS class, called a CSS “identifier”, or <em>id</em> (read as separate letters: “eye-dee”). Adding an id is certainly not necessary, nor is it considered a good practice to use ids for styling (for reasons covered in <a href="part02.xhtml#part02">Part II</a>); we include it here mainly for purposes of illustration. But ids can be quite useful for <em>deep linking</em> (discussed in <a href="ch04.xhtml#sec4_7_3">Section 4.7.3</a>), and they are essential for many JavaScript applications (as covered in <em>Learn Enough JavaScript to Be Dangerous</em>).</p>
+<p class="indent">In this case, we’ll call the id <span class="green-d"><code><strong>main-nav</strong></code></span> (to indicate the main navigational element) and add it to the main navigational <span class="green-d"><code><strong>div</strong></code></span>, as shown in <a href="ch04.xhtml#ch4list19">Listing 4.19</a>. This has no effect on the page’s appearance but serves to illustrate the syntax. Note that, unlike classes, which can be used multiple times on a page, a given CSS id can be used only once.</p>
+<p class="listing" id="ch4list19"><span epub:type="pagebreak" id="page_96"></span><strong>Listing 4.19:</strong> Adding a CSS id.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list19a" id="p04list19">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">  &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>id</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"main-nav"</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"nav-menu"</strong></span>&gt;</span>
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"index.html"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"tags.html"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"nav-spacing"</span>&gt;HTML Tags&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"moby_dick.html"</span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"nav-spacing"</span>&gt;Moby Dick&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent">At this point, if you’ve done everything right, the styles should be exactly the same as before, so upon refreshing the browser the appearance of the page should also be the same as it was before we started.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_7_2">4.7.2 External Stylesheets</h4>
+<p class="noindent">Now that we’ve refactored the inline styles into an internal stylesheet, putting them in an <em>external</em> stylesheet is easy. All we need to do is create a CSS file (which we’ll call <span class="green-d"><code><strong>main.css</strong></code></span>), move the styles there, and then link to the file in the <span class="green-d"><code><strong>head</strong></code></span> of our document.</p>
+<p class="indent">By convention, CSS files are usually located in a directory called <span class="green-d"><code><strong>css</strong></code></span> or <span class="green-d"><code><strong>stylesheets</strong></code></span>; we’ll pick the former for brevity:</p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> mkdir css
+<span class="b-nilam"><strong>$</strong></span> touch css/main.css</pre>
+<p class="noindent">All that’s needed now is to cut the CSS rules from <span class="green-d"><code><strong>index.html</strong></code></span> (don’t include the <span class="green-d"><code><strong>&lt;style&gt;</strong></code></span> tags though) and paste them into <span class="green-d"><code><strong>main.css</strong></code></span> (<a href="ch04.xhtml#ch4list20">Listing 4.20</a>).</p>
+<p class="listing" id="ch4list20"><strong>Listing 4.20:</strong> The style rules in an external stylesheet.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list20a" id="p04list20">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>nav-menu</strong></span> {
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+}
+.<span class="blue-v"><strong>nav-spacing</strong></span> {
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 0 0 10</span><span class="pd_red"><strong>px</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_97"></span>Finally, we’ll delete the <span class="green-d"><code><strong>&lt;style&gt;&lt;/style&gt;</strong></code></span> tags and replace them with a <span class="green-d"><code><strong>link</strong></code></span> tag that includes the stylesheet into the page, as shown in <a href="ch04.xhtml#ch4list21">Listing 4.21</a>. (The <span class="green-d"><code><strong>rel</strong></code></span> in <a href="ch04.xhtml#ch4list21">Listing 4.21</a> stands for “relationship”; in our experience, it has never been important to know this.)</p>
+<p class="listing" id="ch4list21"><strong>Listing 4.21:</strong> Including the external stylesheet.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list21a" id="p04list21">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough to Be Dangerous&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="light-green1">charset</span><span class="grey">=</span><span class="pd_red">"UTF-8"</span>&gt;
+<span class="bg1">    &lt;<span class="pd_green2"><strong>link</strong></span> <span class="light-green"><strong>rel</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"stylesheet"</strong></span> <span class="light-green"><strong>href</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"css/main.css"</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;</pre>
+<p class="noindent">Putting styles in an external stylesheet is the technique that is generally used in real websites.</p>
+<p class="indent">As before, moving the CSS into an external stylesheet should have changed nothing about the rules being applied, so the resulting page should look exactly the same as before!</p>
+<p class="indent">The final step is to make a Git commit (taking care to run <span class="green-d"><code><strong>git add</strong></code></span> since we’ve added a new file and directory):</p>
+<p class="codelink"><a href="ch04_images.xhtml#p097pro01a" id="p097pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> git add -A
+<span class="b-nilam"><strong>$</strong></span> git commit -m <span class="pd_red">"Refactor inline styles into a stylesheet"</span></pre>
+<p class="noindent">With that, we’re done with our brief overview of CSS. This background is (barely) sufficient to skip to a beginning programming tutorial like <em>Learn Enough JavaScript to Be Dangerous</em>, although we recommend solidifying your knowledge by following <a href="part02.xhtml#part02">Part II</a> of this book, which also covers how to use a professional-grade static site generator with a proper templating system to prevent repeated use of code.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_7_3">4.7.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">If you followed the exercises in <a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a>, there is an image link to the Learn Enough Twitter account that has an inline style to remove underlining, as shown in Listing 2.14. Add a sensible class to this element (such as <span class="green-d"><code><strong>”image-link”</strong></code></span>) <span epub:type="pagebreak" id="page_98"></span>and move the corresponding style rule into <span class="green-d"><code><strong>main.css</strong></code></span>. Does the page remain unchanged as required?</p></li>
+<li><p class="number">The updated menu shown in <a href="ch04.xhtml#ch4list17">Listing 4.17</a> appears only on the Home page; to fix this, propagate the changes to the other two pages. (Appreciate once again how cumbersome this is and how nice it would be to have a proper templating system.)</p></li>
+<li><p class="number">Move the style rules for the HTML Tags page and the Moby Dick page into <span class="green-d"><code><strong>main.css</strong></code></span> and confirm that the appearance of the pages stays the same.</p></li>
+<li><p class="number">One of the simplest and most useful applications of CSS ids is for creating links to arbitrary HTML elements using a convenient hash symbol (#) syntax. By adding the id <span class="green-d"><code><strong>founders</strong></code></span> to the “Founders” <span class="green-d"><code><strong>h2</strong></code></span> tag (<a href="ch04.xhtml#ch4list22">Listing 4.22</a>), show that you can visit that section of the page directly by pasting the URL sample_website/index.html#founders into your browser’s address bar.</p></li>
+</ol>
+<p class="listing" id="ch4list22"><strong>Listing 4.22:</strong> Adding a CSS id for deep linking.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#p04list22a" id="p04list22">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>h2</strong></span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"founders"</span>&gt;Founders&lt;/<span class="pd_green1"><strong>h2</strong></span>&gt;</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_8">4.8 Conclusion</h3>
+<p class="noindent">Congratulations! You now know enough HTML to be <em>dangerous</em>. All that’s left is to commit (in case you’ve made changes in <a href="ch04.xhtml#sec4_7_3">Section 4.7.3</a>) and deploy the final sample website:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p098pro01a" id="p098pro01">Click here to view code image</a></p>
+<pre class="pre1">$ git commit -am "Finish the sample website"
+$ git push</pre>
+<p class="noindent">The result is a full website running in a production environment (<a href="ch04.xhtml#ch4fig16">Figure 4.16</a>).</p>
+<figure class="figure" id="ch4fig16">
+<img src="graphics/04fig16.jpg" alt="images" width="666" height="499"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.16:</strong> Our website available on the live Internet.</p>
+</figcaption>
+</figure>
+<p class="indent">For reference, summary tables of all the block-level tags and inline tags appear in <a href="ch04.xhtml#ch4tab1">Table 4.1</a> and <a href="ch04.xhtml#ch4tab2">Table 4.2</a>, respectively.</p>
+<figure class="table" id="ch4tab1">
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_99"></span><strong>Table 4.1:</strong> The block-level tags covered in this tutorial.</p>
+</figcaption>
+<table class="all">
+<thead>
+<tr>
+<th class="border1"><p class="tab-para">Tag</p></th>
+<th class="border1"><p class="tab-para">Name</p></th>
+<th class="border1"><p class="tab-para">Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>h1–h6</code></p></td>
+<td><p class="tab-para">Headings</p></td>
+<td><p class="tab-para">Include a heading (levels 1–6)</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>p</code></p></td>
+<td><p class="tab-para">Paragraph</p></td>
+<td><p class="tab-para">Include a paragraph of text</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>table</code></p></td>
+<td><p class="tab-para">Table</p></td>
+<td><p class="tab-para">Include a table</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>tr</code></p></td>
+<td><p class="tab-para">Table row</p></td>
+<td><p class="tab-para">Include a row of data</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>th</code></p></td>
+<td><p class="tab-para">Table header</p></td>
+<td><p class="tab-para">Make a table header</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>td</code></p></td>
+<td><p class="tab-para">Table data</p></td>
+<td><p class="tab-para">Include a table data cell</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>div</code></p></td>
+<td><p class="tab-para">Division</p></td>
+<td><p class="tab-para">Define block-level section in document</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>header</code></p></td>
+<td><p class="tab-para">Header</p></td>
+<td><p class="tab-para">Label the page header</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ol</code></p></td>
+<td><p class="tab-para">Ordered list</p></td>
+<td><p class="tab-para">List elements in numerical order</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ul</code></p></td>
+<td><p class="tab-para">Unordered list</p></td>
+<td><p class="tab-para">List elements whose order doesn’t matter</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>li</code></p></td>
+<td><p class="tab-para">List item</p></td>
+<td><p class="tab-para">Include a list item (ordered or unordered)</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>blockquote</code></p></td>
+<td><p class="tab-para">Block quotation</p></td>
+<td><p class="tab-para">Show formatted quotation</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>br</code></p></td>
+<td><p class="tab-para">Break</p></td>
+<td><p class="tab-para">Enter line break</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<figure class="table" id="ch4tab2">
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_100"></span><strong>Table 4.2:</strong> The inline tags covered in this tutorial.</p>
+</figcaption>
+<table class="all">
+<thead>
+<tr>
+<th class="border1"><p class="tab-para">Tag</p></th>
+<th class="border1"><p class="tab-para">Name</p></th>
+<th class="border1"><p class="tab-para">Purpose</p></th>
+<th class="border1"><p class="tab-para">Example</p></th>
+<th class="border1"><p class="tab-para">Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>em</code></p></td>
+<td><p class="tab-para">Emphasized</p></td>
+<td><p class="tab-para">Make emphasized text</p></td>
+<td><p class="tab-para"><code>&lt;em&gt;technical sophistication&lt;/em&gt;</code></p></td>
+<td><p class="tab-para"><em>technical sophistication</em></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>strong</code></p></td>
+<td><p class="tab-para">Strong</p></td>
+<td><p class="tab-para">Make strong text</p></td>
+<td><p class="tab-para"><code>&lt;strong&gt;at least a billion people &lt;/strong&gt;</code></p></td>
+<td><p class="tab-para"><strong>at least a billion people</strong></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>a</code></p></td>
+<td><p class="tab-para">Anchor</p></td>
+<td><p class="tab-para">Make hyperlink</p></td>
+<td><p class="tab-para"><code>&lt;a href="#"&gt; Learn Enough&lt;/a&gt;</code></p></td>
+<td><p class="tab-para">Learn Enough</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>img</code></p></td>
+<td><p class="tab-para">Image</p></td>
+<td><p class="tab-para">Include an image</p></td>
+<td><p class="tab-para"><code>&lt;img src="mhartl .jpg" alt= "Michael Hartl"&gt;</code></p></td>
+<td><p class="tab-para"><img src="graphics/100fig01.jpg" alt="images" width="76" height="76"/></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>code</code></p></td>
+<td><p class="tab-para">Code</p></td>
+<td><p class="tab-para">Format as source code</p></td>
+<td><p class="tab-para"><code>&lt;code&gt;table&lt;/code&gt;</code></p></td>
+<td><p class="tab-para">table</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>span</code></p></td>
+<td><p class="tab-para">Span</p></td>
+<td><p class="tab-para">Define inline section in document</p></td>
+<td><p class="tab-para"><code>&lt;span&gt;Call me Ishmael.&lt;/span&gt;</code></p></td>
+<td><p class="tab-para">Call me Ishmael.</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">At this point, you’ve got a solid foundation in the basics of HTML. This means you have the perfect preparation for learning how to make a professional-grade website with attractive styling and fancy page layouts. In other words, you’re now ready for <a href="part02.xhtml#part02">Part II</a>!</p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

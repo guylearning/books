@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch11"><span epub:type="pagebreak" id="page_235"></span>Chapter 11</h2>
+<h2 class="chap-title">Full Sample App: Image Gallery</h2>
+<p class="noindent">As a final application of our newfound JavaScript powers, in this last chapter we’ll build on the sample application developed in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>). (We’ll be <em><a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-clone">cloning</a></em> the initial sample repository, so you’ll be able to complete this chapter even if you didn’t follow the CSS tutorial.) In particular, we’ll follow a time-honored tradition in JavaScript tutorials and create an <em>image gallery</em>, which will allow us to display and swap custom images—in our case, a fancy <a href="https://www.learnenough.com/r/css_and_layout/flex-intro/pages-3col#sec-pages-3col">three-column layout</a> (<a href="https://www.learnenough.com/css-and-layout-tutorial/flex-intro#sec-pages-3col">https://www.learnenough.com/css-and-layout-tutorial/flex-intro#sec-pages-3col</a>).</p>
+<p class="indent">After prepping the gallery (<a href="ch11.xhtml#ch11lev1">Section 11.1</a>), we’ll learn how to change the gallery image (<a href="ch11.xhtml#ch11lev2">Section 11.2</a>), set an image as “current” (<a href="ch11.xhtml#ch11lev3">Section 11.3</a>), and change the image title and description (<a href="ch11.xhtml#ch11lev4">Section 11.4</a>). Because our starting point is the professional-grade website developed in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em>, the result is unusually polished for a JavaScript tutorial sample gallery (<a href="ch11.xhtml#ch11fig1">Figure 11.1</a>).</p>
+<figure class="figure" id="ch11fig1">
+<img src="graphics/11fig01.jpg" alt="images" width="728" height="458"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.1:</strong> This is the gallery <a href="https://youtu.be/GO_xfR64qSk">we’re looking for</a>.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="ch11lev1">11.1 Prepping the Gallery</h3>
+<p class="noindent">To get started with our image gallery, you’ll need to get a copy of the <a href="https://github.com/learnenough/le_js_full">full starting application</a> (<a href="https://github.com/learnenough/le_js_full">https://github.com/learnenough/le_js_full</a>) for the site. The first step is to make a personal copy of the app, which you can do using the <em>fork</em> capability at GitHub (<a href="ch11.xhtml#ch11fig2">Figure 11.2</a>).</p>
+<figure class="figure" id="ch11fig2">
+<img src="graphics/11fig02.jpg" alt="images" width="727" height="564"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.2:</strong> Forking the <a href="https://github.com/learnenough/le_js_full">starting application</a> at GitHub.</p>
+</figcaption>
+</figure>
+<p class="indent">The next step depends on whether or not you currently have a GitHub Pages <a href="http://siteat.github.io">site at &lt;username&gt;.github.io</a>. If you don’t have such a repository, you can rename <span epub:type="pagebreak" id="page_236"></span>your app accordingly (<a href="ch11.xhtml#ch11fig3">Figure 11.3</a>), and it will automatically be available at the URL &lt;username&gt;.github.io.</p>
+<figure class="figure" id="ch11fig3">
+<img src="graphics/11fig03.jpg" alt="images" width="728" height="559"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.3:</strong> Renaming to the default GitHub Pages name.</p>
+</figcaption>
+</figure>
+<p class="indent">Once you’ve renamed the repo, you can <a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-clone">clone</a> the gallery app to your local system using the clone URL from GitHub (<a href="ch11.xhtml#ch11fig4">Figure 11.4</a>):</p>
+<figure class="figure" id="ch11fig4">
+<img src="graphics/11fig04.jpg" alt="images" width="723" height="555"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.4:</strong> Getting the clone URL at GitHub.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#c236pro01" id="c236pro01a">Click here to view code image</a></p>
+<pre class="pre1">$ git clone &lt;clone URL&gt; &lt;username&gt;.github.io</pre>
+<p class="indent">If you already have a repository at &lt;username&gt;.github.io from following <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em>, you should clone the gallery app (without renaming it) to the default directory by omitting the second argument to <span class="pd_green"><code><strong>git clone</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c236pro02" id="c236pro02a">Click here to view code image</a></p>
+<pre class="pre1">$ git clone &lt;clone URL&gt;     # Command if you already have &lt;username&gt;.github.io</pre>
+<p class="noindent">This will create a local repository called <span class="pd_green"><code><strong>le_js_full</strong></code></span>, which you can use as a reference for copying over the required files. In particular, you’ll need the gallery <span class="pd_green"><code><strong>index.html</strong></code></span> and the large and small images:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c237pro01" id="c237pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_237"></span># Run these commands only if you already have &lt;username&gt;.github.io
+# from following Learn Enough CSS &amp; Layout to Be Dangerous.
+$ cd le_js_full/
+$ cp gallery/index.html /path/to/repo/&lt;username&gt;.github.io/gallery/
+$ cp -r images/* /path/to/repo/&lt;username&gt;.github.io/images/</pre>
+<p class="noindent">(If you already have a repo at &lt;username&gt;.github.io that <em>isn’t</em> the result of following <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em>, I’ll assume you have the requisite technical sophistication to figure something out on your own.)</p>
+<p class="indent">In either case, once the app is put together you can run it using the Jekyll static site builder. The <a href="https://www.learnenough.com/r/css_and_layout/struct-layout/jekyll#sec-jekyll">Jekyll setup instructions</a> (<a href="https://www.learnenough.com/css-and-layout-tutorial/struct-layout#sec-jekyll">https://www.learnenough.com/css-and-layout-tutorial/struct-layout#sec-jekyll</a>) in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> explain how to install Jekyll on your system in case it isn’t installed already. The short version is that you first need to install <em>Bundler</em>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c238pro01" id="c238pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_238"></span>$ gem install bundler -v 2.2.17</pre>
+<p class="noindent">Then use the <span class="pd_green"><code><strong>bundle</strong></code></span> command to install the <span class="pd_green"><code><strong>jekyll</strong></code></span> gem listed in the <span class="pd_green"><code><strong>Gemfile</strong></code></span> included with the repository:</p>
+<pre class="pre1">$ bundle _2.2.17_ install</pre>
+<p class="noindent">Once Jekyll is installed, you can serve the sample website by using Bundler to execute the correct version of the <span class="pd_green"><code><strong>jekyll</strong></code></span> program:</p>
+<pre class="pre1">$ bundle exec jekyll serve</pre>
+<p class="noindent">At this point, the app will be running on <a href="http://localhost:4000">localhost:4000</a>, and should look something like <a href="ch11.xhtml#ch11fig5">Figure 11.5</a>.</p>
+<figure class="figure" id="ch11fig5">
+<img src="graphics/11fig05.jpg" alt="images" width="723" height="559"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.5:</strong> Our initial sample app.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch11lev1sec1"><span epub:type="pagebreak" id="page_239"></span>11.1.1 Prepping the JavaScript</h4>
+<p class="noindent">As a final bit of prep, we’ll add a stub for the main gallery function, <span class="pd_green"><code><strong>activateGallery</strong></code></span>, which we’ll be filling in throughout the rest of this chapter. Because we’ll be doing everything in plain JavaScript, there will be no need to include any Node modules, run <span class="pd_green"><code><strong>browserify</strong></code></span>, etc. In fact, all we’ll need to do is write a single function.</p>
+<p class="indent">Our first step is to make a directory and JavaScript file (remember, this is in the app directory, not <span class="pd_green"><code><strong>js_tutorial</strong></code></span>):</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> mkdir js
+<span class="pd_blue"><strong>$</strong></span> touch js/gallery.js</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_240"></span>Just to get started, we’ll add an initial alert to <span class="pd_green"><code><strong>gallery.js</strong></code></span> (<a href="ch11.xhtml#ch11list1">Listing 11.1</a>).</p>
+<p class="listing" id="ch11list1"><strong>Listing 11.1:</strong> A stub gallery file.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis01" id="c11lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>function</strong></span> activateGallery() {
+  alert(<span class="pd_red">"Hello from the gallery file!"</span>);
+}</pre>
+<p class="noindent">In the head of the file, we’ll include the gallery JavaScript using the <span class="pd_green"><code><strong>src</strong></code></span> attribute (<a href="ch05.xhtml#ch5lev2">Section 5.2</a>), and add an event listener (<a href="ch09.xhtml#ch9lev2">Section 9.2</a>) to run the gallery activation function automatically after the DOM is loaded (<a href="ch09.xhtml#ch9list9">Listing 9.9</a>). The result appears in <a href="ch11.xhtml#ch11list2">Listing 11.2</a>.</p>
+<p class="listing" id="ch11list2"><span epub:type="pagebreak" id="page_241"></span><strong>Listing 11.2:</strong> Including the gallery JavaScript.<br/><a href="http://_includes/head.html"><code><em>_includes/head.html</em></code></a></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis02" id="c11lis02a">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+  .
+  .
+  .
+  &lt;<span class="pd_green1"><strong>link</strong></span> <span class="g1">rel</span><span class="gray">=</span><span class="pd_red">"stylesheet"</span> <span class="g1">href</span><span class="gray">=</span><span class="pd_red">"/css/main.css"</span>&gt;
+
+
+<span class="bg1">  &lt;<span class="pd_green1"><strong>script</strong></span> <span class="g1"><strong>src</strong></span><strong><span class="gray">=</span><span class="pd_red">"/js/gallery.js"</span></strong>&gt;&lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+<span class="bg1">  &lt;<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+<span class="bg1">    <span class="pd_green1"><strong>document</strong></span>.addEventListener(<span class="pd_red"><strong>"DOMContentLoaded"</strong></span>, <span class="pd_green1"><strong>function</strong></span>() {</span>
+<span class="bg1">      activateGallery();</span>
+<span class="bg1">    });</span>
+<span class="bg1">  &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;</span>
+<span class="bg1">&lt;/<span class="pd_green1"><strong>head</strong></span>&gt;</span></pre>
+<p class="indent">Now visiting the <a href="http://localhost:4000/gallery/">local gallery page</a> confirms that the JavaScript was loaded correctly (<a href="ch11.xhtml#ch11fig6">Figure 11.6</a>).</p>
+<figure class="figure" id="ch11fig6">
+<img src="graphics/11fig06.jpg" alt="images" width="525" height="334"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.6:</strong> Hello from the gallery!</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch11lev1sec2">11.1.2 Exercise</h4>
+<ol class="number">
+<li><p class="number">Deploy your stub gallery to GitHub Pages and confirm that it works in production.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev2"><span epub:type="pagebreak" id="page_242"></span>11.2 Changing the Gallery Image</h3>
+<p class="noindent">Let’s take a look at the current state of the application. The gallery page has three columns: one with smaller “<a href="https://en.wikipedia.org/wiki/Thumbnail">thumbnail</a>” images, one with the main image, and one with the description. As seen in <a href="ch11.xhtml#ch11fig7">Figure 11.7</a>, in the default state the “current image” indicator in the thumbnails doesn’t match the main image, and the description doesn’t match either.</p>
+<figure class="figure" id="ch11fig7">
+<img src="graphics/11fig07.jpg" alt="images" width="726" height="461"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.7:</strong> The initial gallery.</p>
+</figcaption>
+</figure>
+<p class="indent">We can see the origins of this mismatch by taking a look at the current HTML structure of the gallery, which appears as in <a href="ch11.xhtml#ch11list3">Listing 11.3</a>.</p>
+<p class="listing" id="ch11list3"><strong>Listing 11.3:</strong> The gallery HTML.<br/><code><em><a href="http://gallery/index.html">gallery/index.html</a></em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis03" id="c11lis03a">Click here to view code image</a></p>
+<pre class="pre2"> <span class="gray">1</span> ---
+ <span class="gray">2</span> layout: default
+ <span class="gray">3</span> title: Gallery for Learn Enough JavaScript to Be Dangerous
+ <span class="gray">4</span> ---
+ <span class="gray">5</span>
+ <span class="gray">6</span> &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"gallery col-three"</span>&gt;
+<span epub:type="pagebreak" id="page_243"></span> <span class="gray">7</span><span class="bg1"> &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><span class="g1"><strong>=</strong></span><span class="pd_red"><strong>"col col-nav gallery-thumbs"</strong></span> <span class="g1"><strong>id</strong></span><strong><span class="gray">=</span><span class="pd_red">"gallery-thumbs"</span></strong>&gt;</span>
+ <span class="gray">8</span><span class="bg1">   &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"current"</span></strong>&gt;</span>
+ <span class="gray">9</span>     &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"/images/small/beach.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+<span class="gray">10</span>          <span class="g1">data-large-version</span><span class="gray">=</span><span class="pd_red">"/images/large/beach.jpg"</span>
+<span class="gray">11</span>          <span class="g1">data-title</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+<span class="gray">12</span>          <span class="g1">data-description</span><span class="gray">=</span><span class="pd_red">"An overhead shot of Venice Beach, California."</span>&gt;
+<span class="gray">13</span>   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="gray">14</span>   .
+<span class="gray">15</span>   .
+<span class="gray">16</span>   .
+<span class="gray">17</span>   &lt;<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="gray">18</span>     &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"/images/small/turtle.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"turtle"</span>
+<span class="gray">19</span>          <span class="g1">data-large-version</span><span class="gray">=</span><span class="pd_red">"/images/large/turtle.jpg"</span>
+<span class="gray">20</span>          <span class="g1">data-title</span><span class="gray">=</span><span class="pd_red">"Sea Turtle"</span>
+<span class="gray">21</span>          <span class="g1">data-description</span><span class="gray">=</span><span class="pd_red">"A friendly sea turtle."</span>&gt;
+<span class="gray">22</span>    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="gray">23</span>  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="gray">24</span>  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"col col-content"</span>&gt;
+<span class="gray">25</span><span class="bg1">    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"gallery-photo"</span></strong> <span class="g1"><strong>id</strong></span><strong><span class="gray">=</span><span class="pd_red">"gallery-photo"</span></strong>&gt;</span>
+<span class="gray">26</span><span class="bg1">      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1"><strong>src</strong></span><strong><span class="gray">=</span><span class="pd_red">"/images/large/boat.jpg"</span></strong> <span class="g1"><strong>alt</strong></span><strong><span class="gray">=</span><span class="pd_red">"Catamaran"</span></strong>&gt;</span>
+<span class="gray">27</span><span class="bg1">    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</span>
+<span class="gray">28</span><span class="bg1">  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</span>
+<span class="gray">29</span><span class="bg1">  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"col col-aside gallery-info"</span></strong> <span class="g1"><strong>id</strong></span><strong><span class="gray">=</span><span class="pd_red">"gallery-info"</span></strong>&gt;</span>
+<span class="gray">30</span><span class="bg1">    &lt;<span class="pd_green1"><strong>h3</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"title"</span></strong>&gt;Pacific Sunset&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;</span>
+<span class="gray">31</span><span class="bg1">    &lt;<span class="pd_green1"><strong>p</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"description"</span></strong></span>&gt;A sunset over the Pacific Ocean.&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+<span class="gray">32</span>  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+<span class="gray">33</span> &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">From <a href="ch11.xhtml#ch11list3">Listing 11.3</a>, we see that the current image is indicated with a CSS class <span class="pd_green"><code><strong>current</strong></code></span> (Line 8), the main image is in an HTML <span class="pd_green"><code><strong>div</strong></code></span> with CSS id <span class="pd_green"><code><strong>gallery-photo</strong></code></span> (Line 25), and the title and description are in a div with CSS id <span class="pd_green"><code><strong>gallery-info</strong></code></span> (Line 29). Our task is to dynamically update this HTML (<a href="ch09.xhtml#ch9lev3">Section 9.3</a>) so that all three columns match.</p>
+<p class="indent">Our first task is the biggest one in terms of the user interface, namely, swapping out the main image when the user clicks on a thumbnail. Our strategy is to put an event listener (<a href="ch09.xhtml#ch9lev2">Section 9.2</a>) on each image, and then change the source (<span class="pd_green"><code><strong>src</strong></code></span>) of the main display image on click.</p>
+<p class="indent">To do this, we’ll first create a variable with a list of all the images.<sup><a id="ch11fn-1" href="ch11.xhtml#ch11fn_1">1</a></sup> Inspecting the HTML source in <a href="ch11.xhtml#ch11list3">Listing 11.3</a>, we see that the thumbnail images are all <span class="pd_green"><code><strong>img</strong></code></span> tags inside <span epub:type="pagebreak" id="page_244"></span>a <span class="pd_green"><code><strong>div</strong></code></span> with CSS id <span class="pd_green"><code><strong>gallery-thumbs</strong></code></span>. As a result, we can select all the thumbnails using method chaining (<a href="ch05.xhtml#ch5lev3">Section 5.3</a>) by combining <span class="pd_green"><code><strong>querySelector</strong></code></span> (<a href="ch09.xhtml#ch9lev2">Section 9.2</a>) to select the thumbnail div and <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> (<a href="ch10.xhtml#ch10lev3">Section 10.3</a>) to select all the images:</p>
+<p class="footnote"><a id="ch11fn_1" href="ch11.xhtml#ch11fn-1">1</a>. As noted briefly in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>, technically the result of <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> is a “NodeList” object, not an array, but we can treat it as an array for the purposes of iteration. Specifically, we can traverse its elements using the <span class="pd_green"><code><strong>forEach</strong></code></span> method.</p>
+<p class="codelink"><a href="ch11_images.xhtml#c244pro01" id="c244pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> thumbnails <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-thumbs</span>").
+                          querySelectorAll(<span class="pd_red">"img"</span>);</pre>
+<p class="noindent">Note that JavaScript allows us to break method calls across lines in order to make the structure clearer and avoid breaking the 80-character limit (<a href="ch02.xhtml#ch2box3">Box 2.3</a>).</p>
+<p class="indent">By iterating through the collection of <span class="pd_green"><code><strong>thumbnails</strong></code></span>, we can put an event listener on each one using code like this:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c244pro02" id="c244pro02a">Click here to view code image</a></p>
+<pre class="pre1">thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+  thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    <span class="pd_blue1"><em>// code to set clicked image as main image</em></span>
+  });
+});</pre>
+<p class="noindent">This arranges to listen for the same “click” event we saw in <a href="ch09.xhtml#ch9list13">Listing 9.13</a>.</p>
+<p class="indent">As indicated in the JavaScript comment in the middle of the code sample, the body of the listener should set the clicked image as the main image. The way we’ll do this is to set the <span class="pd_green"><code><strong>src</strong></code></span> attribute of the current display image to the “large” version of the image clicked. Referring to <a href="ch11.xhtml#ch11list3">Listing 11.3</a>, we see that the main image is inside a <span class="pd_green"><code><strong>div</strong></code></span> with CSS id <span class="pd_green"><code><strong>gallery-photo</strong></code></span>, so we can select it by chaining <span class="pd_green"><code><strong>querySelector</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c244pro03" id="c244pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo</span>").
+                         querySelector(<span class="pd_red">"img"</span>);</pre>
+<p class="noindent">In fact, <span class="pd_green"><code><strong>querySelector</strong></code></span> is smart enough to let us combine this into a single command:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c244pro04" id="c244pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");</pre>
+<p class="noindent">It’s worth noting that there’s an equivalent alternate notation that uses an angle bracket <span class="pd_green"><code><strong>&gt;</strong></code></span> to emphasize the nesting relationship between the elements (in this case, an <span class="pd_green"><code><strong>img</strong></code></span> element nested inside an element with CSS id <span class="pd_green"><code><strong>gallery-photo</strong></code></span>):</p>
+<p class="codelink"><a href="ch11_images.xhtml#c244pro05" id="c244pro05a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo &gt; img</span>");</pre>
+<p class="noindent">We’ll use this alternate notation with <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> in <a href="ch11.xhtml#ch11lev2sec1">Section 11.2.1</a>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_245"></span>Once we have the main image, we can use the <span class="pd_green"><code><strong>setAttribute</strong></code></span> method (<a href="https://www.google.com/search?q=javascript+dom+set+attribute+src">javascript dom set attribute src</a>) to change its <span class="pd_green"><code><strong>src</strong></code></span> attribute:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c245pro01" id="c245pro01a">Click here to view code image</a></p>
+<pre class="pre1">mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);</pre>
+<p class="indent">If you’ve been following along closely, you’re now aware that everything we need has been created except for <span class="pd_green"><code><strong>newImageSrc</strong></code></span>, the source of the new image. Happily, the sample app has already arranged to encode the necessary path in the image tag itself. Suppose for the sake of argument that we clicked on the Pacific sunset image, whose HTML looks like this:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c245pro02" id="c245pro02a">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"/images/small/sunset.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"sunset"</span>
+       <span class="g1">data-large-version</span><span class="gray">=</span><span class="pd_red">"/images/large/sunset.jpg"</span>
+       <span class="g1">data-title</span><span class="gray">=</span><span class="pd_red">"Pacific Sunset"</span>
+       <span class="g1">data-description</span><span class="gray">=</span><span class="pd_red">"A sunset over the Pacific Ocean.</span>"&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent">Encoding data in a tag like this is an essential aspect of <em><a href="https://en.wikipedia.org/wiki/Unobtrusive_JavaScript">unobtrusive JavaScript</a></em>, which involves never putting JavaScript in the body of the HTML itself. When using these data attributes on HTML tags, the browser automatically creates a special <span class="pd_green"><code><strong>dataset</strong></code></span> attribute, whose values correspond to the HTML source as follows:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c245pro03" id="c245pro03a">Click here to view code image</a></p>
+<pre class="pre1">data<span class="gray">-</span>large<span class="gray">-</span>version <span class="gray">-&gt;</span> thumbnail.dataset.largeVersion
+data<span class="gray">-</span>title         <span class="gray">-&gt;</span> thumbnail.dataset.title
+data<span class="gray">-</span>description   <span class="gray">-&gt;</span> thumbnail.dataset.description</pre>
+<p class="noindent">In general, the data tag <span class="pd_green"><code><strong>data-foo-bar-baz</strong></code></span> on HTML element <span class="pd_green"><code><strong>object</strong></code></span> corresponds to the variable <span class="pd_green"><code><strong>object.dataset.fooBarBaz</strong></code></span>, where the final attribute is in CamelCase (<a href="ch02.xhtml#ch2fig3">Figure 2.3</a>).</p>
+<p class="indent">We now have everything we need to replace the main image with the clicked image. If you’d like to give it a go on your own, it makes for an excellent exercise. As usual, use the debugging console (<a href="ch05.xhtml#ch5box1">Box 5.1</a>) if you run into trouble. The answer appears in <a href="ch11.xhtml#ch11list4">Listing 11.4</a>.</p>
+<p class="listing" id="ch11list4"><strong>Listing 11.4:</strong> Setting the main gallery image.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis04" id="c11lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span epub:type="pagebreak" id="page_246"></span><span class="pd_green1"><strong>function</strong></span> activateGallery() {
+  <span class="pd_green1"><strong>let</strong></span> thumbnails <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-thumbs</span>").
+                            querySelectorAll(<span class="pd_red">"img"</span>);
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");
+
+  thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+    thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_blue1"><em>// Set clicked image as main image.</em></span>
+      <span class="pd_green1"><strong>let</strong></span> newImageSrc <span class="gray">=</span> thumbnail.dataset.largeVersion;
+      mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);
+    });
+  });
+}</pre>
+<p class="noindent">In addition to changing the <span class="pd_green"><code><strong>src</strong></code></span> attribute, we should also change the <span class="pd_green"><code><strong>alt</strong></code></span> attribute of the swapped-in image. Adding this detail is left as an exercise (<a href="ch11.xhtml#ch11lev2sec1">Section 11.2.1</a>).</p>
+<p class="indent">Scrolling down and clicking on the Pacific sunset image produces the expected result (<a href="ch11.xhtml#ch11fig8">Figure 11.8</a>). The agreement with the third-column description, however, is a coincidence, which can be seen by clicking on any other image (<a href="ch11.xhtml#ch11fig9">Figure 11.9</a>). In addition, the orange “current image” indicator matches the main image in the gallery only if we happen to click on the corresponding thumbnail (<a href="ch11.xhtml#ch11fig10">Figure 11.10</a>).</p>
+<figure class="figure" id="ch11fig8">
+<img src="graphics/11fig08.jpg" alt="images" width="727" height="460"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.8:</strong> A Pacific sunset.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig9">
+<img src="graphics/11fig09.jpg" alt="images" width="721" height="453"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.9:</strong> The image/description match in <a href="ch11.xhtml#ch11fig8">Figure 11.8</a> was a coincidence.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig10">
+<img src="graphics/11fig10.jpg" alt="images" width="716" height="460"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.10:</strong> The “current image” match here is also a coincidence.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch11lev2sec1">11.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">The code in <a href="ch11.xhtml#ch11list4">Listing 11.4</a> swaps in the <span class="pd_green"><code><strong>src</strong></code></span> of the new large image, but unfortunately the <span class="pd_green"><code><strong>alt</strong></code></span> attribute is still the default one from <a href="ch11.xhtml#ch11list3">Listing 11.3</a> (<a href="ch11.xhtml#ch11fig11">Figure 11.11</a>). Remedy this minor blemish in <a href="ch11.xhtml#ch11list5">Listing 11.5</a> by replacing <span class="pd_green"><code><strong>FILL_IN</strong></code></span> with the proper value. <em>Hint</em>: The value of the image <span class="pd_green"><code><strong>src</strong></code></span> for <span class="pd_green"><code><strong>thumbnail</strong></code></span> is given by <span class="pd_green"><code><strong>thumbnail.src</strong></code></span>, so how do you suppose you get the value of <span class="pd_green"><code><strong>thumbnail</strong></code></span>’s <span class="pd_green"><code><strong>alt</strong></code></span> attribute?</p>
+<figure class="figure" id="ch11fig11">
+<img src="graphics/11fig11.jpg" alt="images" width="711" height="549"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.11:</strong> The <span class="pd_green"><code><strong>alt</strong></code></span> attribute doesn’t match the image <span class="pd_green"><code><strong>src</strong></code></span>.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">As hinted in the main text, it’s possible to change the <span class="pd_green"><code><strong>thumbnails</strong></code></span> definition in <a href="ch11.xhtml#ch11list4">Listing 11.4</a> to eliminate method chaining. We begin by noting that the gallery thumbnails are <span class="pd_green"><code><strong>img</strong></code></span> tags inside <span class="pd_green"><code><strong>div</strong></code></span> tags inside an element with CSS id <span class="pd_green"><code><strong>gallery-thumbs</strong></code></span>; conveniently, we can indicate “inside” using the right angle bracket <span class="pd_green"><code><strong>&gt;</strong></code></span>. By replacing <span class="pd_green"><code><strong>???</strong></code></span> in <a href="ch11.xhtml#ch11list6">Listing 11.6</a> with the appropriate tags, show that we can condense the definition of <span class="pd_green"><code><strong>thumbnails</strong></code></span> down to a single line. <em>Note</em>: I generally recommend choosing one convention and sticking with it, but for now we’ll leave the arguments of <span class="pd_green"><code><strong>querySelectorAll</strong></code></span> and <span class="pd_green"><code><strong>querySelector</strong></code></span> inconsistent (one with angle brackets, one without) to emphasize that either notation works.</p></li>
+</ol>
+<p class="listing" id="ch11list5"><span epub:type="pagebreak" id="page_247"></span><strong>Listing 11.5:</strong> Updating the image <span class="pd_green"><code><strong>alt</strong></code></span> attribute.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis05" id="c11lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span class="pd_green1"><strong>function</strong></span> activateGallery() {
+  <span class="pd_green1"><strong>let</strong></span> thumbnails <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-thumbs</span>").
+                            querySelectorAll(<span class="pd_red">"img"</span>);
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");
+
+  thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+    thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_blue1"><em>// Set clicked image as main image.</em></span>
+      <span class="pd_green1"><strong>let</strong></span> newImageSrc <span class="gray">=</span> thumbnail.dataset.largeVersion;
+      mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);
+<span class="bg1">      mainImage.setAttribute(<span class="pd_red"><strong>"alt"</strong></span>, FILL_IN);</span>
+    });
+  });
+}</pre>
+<span epub:type="pagebreak" id="page_248"></span>
+<p class="listing" id="ch11list6"><span epub:type="pagebreak" id="page_249"></span><strong>Listing 11.6:</strong> Condensing <span class="pd_green"><code><strong>thumbnails</strong></code></span> into a single line.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis06" id="c11lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span class="pd_green1"><strong>function</strong></span> activateGallery() {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> thumbnails = <span class="pd_green1"><strong>document</strong></span>.querySelectorAll(<span class="pd_red"><strong>"#gallery-thumbs &gt; ??? &gt; ???"</strong></span>);</span>
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");
+  .
+  .
+  .
+}</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev3"><span epub:type="pagebreak" id="page_250"></span>11.3 Setting an Image as Current</h3>
+<p class="noindent"><a href="ch11.xhtml#ch11lev2">Section 11.2</a> represents a major accomplishment: The main task of a photo gallery—namely, swapping the main display image based on a user’s click—is done. All we need to do now is change the “current image” indicator in the first column (this section) and update the image info in the third column (<a href="ch11.xhtml#ch11lev4">Section 11.4</a>). Both tasks involve a mix of new and old techniques.</p>
+<p class="indent">As seen in <a href="ch11.xhtml#ch11list3">Listing 11.3</a>, the current image is indicated in the HTML source using a CSS class called <span class="pd_green"><code><strong>current</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c250pro01" id="c250pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"current"</span></strong>&gt;</span>
+
+   &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"/images/small/beach.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+        <span class="g1">data-large-version</span><span class="gray">=</span><span class="pd_red">"/images/large/beach.jpg"</span>
+        <span class="g1">data-title</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+        <span class="g1">data-description</span><span class="gray">=</span><span class="pd_red">"An overhead shot of Venice Beach, California."</span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent">This arranges for an orange box shadow due to a line in <span class="pd_green"><code><strong>main.css</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c250pro02" id="c250pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">.</span>
+<span class="gray">.</span>
+<span class="gray">.</span>
+<span class="gray">.</span><span class="blue2"><strong>gallery-thumbs</strong></span> .<span class="blue2"><strong>current</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+<span class="bg1">  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="gray"><strong>0 0 0</strong></span> <span class="pd_red"><strong>5px</strong></span> <span class="gray"><strong>#ed6e2f</strong></span>;</span>
+  <span class="pd_green1"><strong>opacity</strong></span><span class="gray">:</span> <span class="pd_green1"><strong>1</strong></span><span class="gray">;</span>
+
+}
+<span class="gray">.</span>
+<span class="gray">.</span>
+<span class="gray">.</span></pre>
+<p class="indent">Our basic strategy is to add code to the listener in <a href="ch11.xhtml#ch11list4">Listing 11.4</a> that arranges to remove the current image indicator from the thumbnail it’s on and move it to the thumbnail that’s been clicked. This is a little trickier than it looks because the class isn’t on the image—it’s on the <span class="pd_green"><code><strong>div</strong></code></span> <em>surrounding</em> the image. Luckily, JavaScript lets us navigate up and down the DOM with ease, so that we can easily access the DOM element one level up in the tree (<a href="ch09.xhtml#ch9fig6">Figure 9.6</a>)—the so-called <em>parent node</em>.</p>
+<p class="indent">In short, our algorithm for changing the current image class is as follows:</p>
+<ol class="number">
+<li><p class="number">Find the current thumbnail and remove the <span class="pd_green"><code><strong>current</strong></code></span> class.</p></li>
+<li><p class="number">Add the <span class="pd_green"><code><strong>current</strong></code></span> class to the <em>parent</em> of the clicked image.</p></li>
+</ol>
+<p class="indent"><span epub:type="pagebreak" id="page_251"></span>Because there’s only one element on the page with class <span class="pd_green"><code><strong>current</strong></code></span>, we can select it using <span class="pd_green"><code><strong>querySelector</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c251pro01" id="c251pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1">document</span>.querySelector(<span class="pd_red">".current"</span>);</pre>
+<p class="noindent">But how can we remove the class? Ah: <a href="https://www.google.com/search?q=javascript+dom+remove+class">javascript dom remove class</a>. This leads us to the <span class="pd_green"><code><strong>classList</strong></code></span> method and its attendant <span class="pd_green"><code><strong>remove</strong></code></span> method:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c251pro02" id="c251pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1">document</span>.querySelector(<span class="pd_red">".current"</span>).classList.remove(<span class="pd_red">"current"</span>);</pre>
+<p class="noindent">There’s a lot of method chaining here, but its meaning is clear enough.</p>
+<p class="indent">Happily, once we know how to find the parent node of an element (<a href="https://www.google.com/search?q=javascript+dom+parent+node">javascript dom parent node</a>), we can use the corresponding <span class="pd_green"><code><strong>classList.add</strong></code></span> method (<a href="https://www.google.com/search?q=javascript+dom+add+class">javascript dom add class</a>) to add the desired class:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c251pro03" id="c251pro03a">Click here to view code image</a></p>
+<pre class="pre1">thumbnail.parentNode.classList.add(<span class="pd_red">"current"</span>);</pre>
+<p class="indent">Putting these together means we’re already done! The result appears in <a href="ch11.xhtml#ch11list7">Listing 11.7</a> (which includes the result of solving the exercise in <a href="ch11.xhtml#ch11lev2sec1">Section 11.2.1</a>).</p>
+<p class="listing" id="ch11list7"><strong>Listing 11.7:</strong> Changing the current class.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis07" id="c11lis07a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span class="pd_green1"><strong>function</strong></span> activateGallery() {
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> thumbnails = <span class="pd_green1"><strong>document</strong></span>.querySelectorAll(<span class="pd_red"><strong>"#gallery-thumbs &gt; div &gt; img"</strong></span>);</span>
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");
+
+  thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+    thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_blue1"><em>// Set clicked image as display image.</em></span>
+      <span class="pd_green1"><strong>let</strong></span> newImageSrc  <span class="gray">=</span> thumbnail.dataset.largeVersion;
+      mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);
+
+      <span class="pd_blue1"><em>// Change which image is current.</em></span>
+<span class="bg1">      <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>".current"</strong></span>).classList.remove(<span class="pd_red"><strong>"current"</strong></span>);</span>
+<span class="bg1">      thumbnail.parentNode.classList.add(<span class="pd_red"><strong>"current"</strong></span>);</span>
+    });
+  });
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_252"></span>As a result of the code in <a href="ch11.xhtml#ch11list7">Listing 11.7</a>, clicking on a thumbnail automatically updates the current image indicator, whether the image is <a href="https://en.wikipedia.org/wiki/Mammoth_Mountain">Mammoth Mountain</a> in the <a href="https://en.wikipedia.org/wiki/Sierra_Nevada_(U.S.)">Sierras</a> (<a href="ch11.xhtml#ch11fig12">Figure 11.12</a>) or <a href="http://huntington.org/">The Huntington</a> in <a href="https://en.wikipedia.org/wiki/San_Marino,_California">San Marino, California</a> (<a href="ch11.xhtml#ch11fig13">Figure 11.13</a>).</p>
+<figure class="figure" id="ch11fig12">
+<img src="graphics/11fig12.jpg" alt="images" width="728" height="459"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.12:</strong> Mammoth Mountain.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig13">
+<img src="graphics/11fig13.jpg" alt="images" width="729" height="460"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.13:</strong> The <a href="http://www.huntington.org/chinesegarden/">Chinese Garden</a> at <a href="http://huntington.org/">The Huntington</a>.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch11lev3sec1">11.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">There’s a little duplication in <a href="ch11.xhtml#ch11list7">Listing 11.7</a>; in particular, it repeats the string literal <span class="pd_green"><code><strong>"current"</strong></code></span>. Eliminate this duplication by factoring the string into a variable called <span class="pd_green"><code><strong>currentClass</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev4">11.4 Changing the Image Info</h3>
+<p class="noindent">Our final task is to update the image information (title and description) in the third column of our gallery. Doing this doesn’t actually require anything we haven’t seen before—we just have to put things we already know together in a slightly new way, making this an excellent way to end the tutorial.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_253"></span>The sequence we’ll follow is simple:</p>
+<ol class="number">
+<li><p class="number">Find the DOM elements for the image title and description.</p></li>
+<li><p class="number">Replace the contents with the corresponding data from the clicked image.</p></li>
+</ol>
+<p class="indent">To find the necessary DOM elements, we first observe that they are both inside the <span class="pd_green"><code><strong>div</strong></code></span> with CSS id <span class="pd_green"><code><strong>gallery-info</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c253pro01" id="c253pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="bg1">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"col col-aside gallery-info"</span></strong> <span class="g1"><strong>id</strong></span><strong><span class="gray">=</span><span class="pd_red">"gallery-info"</span></strong>&gt;</span>
+
+  &lt;<span class="pd_green1"><strong>h3</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"title"</span>&gt;Pacific Sunset&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>p</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"description"</span>&gt;A sunset over the Pacific Ocean.&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="noindent">Inside that <span class="pd_green"><code><strong>div</strong></code></span>, both are the first (and only) elements with the <span class="pd_green"><code><strong>title</strong></code></span> and <span class="pd_green"><code><strong>description</strong></code></span> classes, respectively, which means we can select them as follows:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c253pro02" id="c253pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> galleryInfo <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-info</span>");
+<span class="pd_green1"><strong>let</strong></span> title       <span class="gray">=</span> galleryInfo.querySelector(<span class="pd_red">".title"</span>);
+<span class="pd_green1"><strong>let</strong></span> description <span class="gray">=</span> galleryInfo.querySelector(<span class="pd_red">".description"</span>);</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_254"></span>Note that I’ve added extra spaces to line up the equals signs, which is a nice (though not strictly necessary) code formatting practice (<a href="ch02.xhtml#ch2box3">Box 2.3</a>).</p>
+<p class="indent">We can get the corresponding values for the clicked image using the <span class="pd_green"><code><strong>dataset</strong></code></span> variable introduced in <a href="ch11.xhtml#ch11lev2">Section 11.2</a>:</p>
+<pre class="pre1">thumbnail.dataset.title</pre>
+<p class="noindent">for the title and</p>
+<pre class="pre1">thumbnail.dataset.description</pre>
+<p class="noindent">for the description.</p>
+<p class="indent">The final piece of the puzzle is the <span class="pd_green"><code><strong>innerHTML</strong></code></span> property we first saw in <a href="ch09.xhtml#ch9lev3">Section 9.3</a>, which lets us directly update the inner HTML of a DOM element:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c254pro03" id="c254pro03a">Click here to view code image</a></p>
+<pre class="pre1">title.innerHTML         <span class="gray">=</span> thumbnail.dataset.title;
+description.innerHTML   <span class="gray">=</span> thumbnail.dataset.description;</pre>
+<p class="indent">Putting everything together gives the final version of the <span class="pd_green"><code><strong>activateGallery</strong></code></span> function, shown in <a href="ch11.xhtml#ch11list8">Listing 11.8</a>.</p>
+<p class="listing" id="ch11list8"><strong>Listing 11.8:</strong> Updating the image title and description on click.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis08" id="c11lis08a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span class="pd_green1"><strong>function</strong></span> activateGallery() {
+  <span class="pd_green1"><strong>let</strong></span> thumbnails <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelectorAll<span class="pd_red">("#gallery-thumbs &gt; div &gt; img"</span>);
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img"</span>);
+<span class="bg1">  <span class="pd_blue1">//</span> <span class="pd_blue1"><em>Image info to be updated</em></span></span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> galleryInfo = <span class="pd_green1"><strong>document</strong></span>.querySelector(<span class="pd_red"><strong>"#gallery-info"</strong></span>);</span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> title       = galleryInfo.querySelector(<span class="pd_red"><strong>".title"</strong></span>);</span>
+<span class="bg1">  <span class="pd_green1"><strong>let</strong></span> description = galleryInfo.querySelector(<span class="pd_red"><strong>".description"</strong></span>); </span>
+
+  thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+    thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_blue1"><em>// Set clicked image as display image.</em></span>
+      <span class="pd_green1"><strong>let</strong></span> newImageSrc <span class="gray">=</span> thumbnail.dataset.largeVersion;
+      mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);
+
+<span epub:type="pagebreak" id="page_255"></span>
+      <span class="pd_blue1"><em>// Change which image is current.</em></span>
+      <span class="pd_green1">document</span>.querySelector(<span class="pd_red">".current"</span>).classList.remove(<span class="pd_red">"current"</span>);
+      thumbnail.parentNode.classList.add(<span class="pd_red">"current"</span>);
+
+<span class="bg1">      <span class="pd_blue1">//</span> <span class="pd_blue1"><em>Update image info</em></span><span class="pd_blue1">.</span></span>
+<span class="bg1">      title.innerHTML       = thumbnail.dataset.title;</span>
+<span class="bg1">      description.innerHTML = thumbnail.dataset.description;</span>
+    });
+  });
+}</pre>
+<p class="indent">Our final change involves syncing up the three columns for new visitors, so that the first column (current image indicator), second column (main image), and third column (image information) all match. This just involves updating the gallery index HTML as in <a href="ch11.xhtml#ch11list9">Listing 11.9</a>.</p>
+<p class="listing" id="ch11list9"><strong>Listing 11.9:</strong> All three columns synced.<br/><code><em><a href="http://gallery/index.html">gallery/index.html</a></em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis09" id="c11lis09a">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+title: Gallery for Learn Enough JavaScript to Be Dangerous
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="pd_red">="gallery col-three</span>"&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"col col-nav gallery-thumbs"</span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"gallery-thumbs"</span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"current"</span>&gt;
+      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1">src</span><span class="gray">=</span><span class="pd_red">"/images/small/beach.jpg"</span> <span class="g1">alt</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+           <span class="g1">data-large-version</span><span class="gray">=</span><span class="pd_red">"/images/large/beach.jpg"</span>
+           <span class="g1">data-title</span><span class="gray">=</span><span class="pd_red">"Venice Beach"</span>
+           <span class="g1">data-description</span><span class="gray">=</span><span class="pd_red">"An overhead shot of Venice Beach, California.</span>"&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    .
+    .
+    .
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"col col-content"</span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"gallery-photo"</span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"gallery-photo"</span>&gt;
+<span class="bg1">      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="g1"><strong>src</strong></span><strong><span class="gray">=</span><span class="pd_red">"/images/large/beach.jpg"</span></strong> <span class="g1"><strong>alt</strong></span><strong><span class="gray">=</span><span class="pd_red">"Venice Beach"</span></strong>&gt;</span>
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;<span class="pd_green1"><strong>div</strong></span> <span class="g1">class</span><span class="gray">=</span><span class="pd_red">"col col-aside gallery-info"</span> <span class="g1">id</span><span class="gray">=</span><span class="pd_red">"gallery-info"</span>&gt;
+<span class="bg1">   &lt;<span class="pd_green1"><strong>h3</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"title"</span></strong>&gt;Venice Beach&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;</span>
+<span class="bg1">   &lt;<span class="pd_green1"><strong>p</strong></span> <span class="g1"><strong>class</strong></span><strong><span class="gray">=</span><span class="pd_red">"description"</span></strong>&gt;An overhead shot of Venice Beach, California.&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;</span>
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_256"></span>Now all three of our columns agree, whether it’s the Venice Beach pic that greets new visitors (<a href="ch11.xhtml#ch11fig14">Figure 11.14</a>), a friendly sea turtle (<a href="ch11.xhtml#ch11fig15">Figure 11.15</a>), <a href="https://en.wikipedia.org/wiki/Walt_Disney_Concert_Hall">Walt Disney Concert Hall</a> in downtown Los Angeles (<a href="ch11.xhtml#ch11fig16">Figure 11.16</a>), or the <a href="https://en.wikipedia.org/wiki/Colosseum">Flavian Amphitheater (Colosseum)</a> in Rome (<a href="ch11.xhtml#ch11fig17">Figure 11.17</a>).</p>
+<figure class="figure" id="ch11fig14">
+<img src="graphics/11fig14.jpg" alt="images" width="724" height="461"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.14:</strong> An overhead shot of Venice Beach, California.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig15">
+<img src="graphics/11fig15.jpg" alt="images" width="721" height="453"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.15:</strong> A friendly sea turtle.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig16">
+<img src="graphics/11fig16.jpg" alt="images" width="718" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.16:</strong> Walt Disney Concert Hall in downtown Los Angeles.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch11fig17">
+<img src="graphics/11fig17.jpg" alt="images" width="725" height="457"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.17:</strong> The Flavian Amphitheater (Colosseum) in Rome.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch11lev4sec1">11.4.1 Deploying</h4>
+<p class="noindent">Because all the necessary files—including all the JavaScript—are completely local to our project (unlike some of the NPM modules in previous chapters), we can deploy our app to GitHub Pages with a simple <span class="pd_green"><code><strong>git push</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#c256pro01" id="c256pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> git add -A
+<span class="pd_blue"><strong>$</strong></span> git commit -m <span class="pd_red">"Finish the JavaScript gallery"</span>
+<span class="pd_blue"><strong>$</strong></span> git push</pre>
+<p class="indent">Visiting the gallery at &lt;username&gt;.github.io and clicking on an image confirms it: We’ve deployed our dynamic JavaScript application to the live Web (<a href="ch11.xhtml#ch11fig18">Figure 11.18</a>)! <span epub:type="pagebreak" id="page_257"></span>(<a href="http://TolearnhowtohostaGitHubPagessiteusingacustomdomaininsteadofagithub.io">To learn how to host a GitHub Pages site using a custom domain instead of a github.io</a> subdomain, see the free tutorial <em><a href="https://www.learnenough.com/custom-domains">Learn Enough Custom Domains to Be Dangerous</a></em> (<a href="https://www.learnenough.com/custom-domains">https://www.learnenough.com/custom-domains</a>).)</p>
+<figure class="figure" id="ch11fig18">
+<img src="graphics/11fig18.jpg" alt="images" width="728" height="493"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.18:</strong> Our JavaScript gallery app on the live Web.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch11lev4sec2">11.4.2 Exercise</h4>
+<ol class="number">
+<li><p class="number">When clicking on a new thumbnail image on the live site (<a href="ch11.xhtml#ch11fig18">Figure 11.18</a>), you might notice a slight delay before the main image appears in the center. This is because, unlike the thumbnails, the large versions haven’t been downloaded yet.</p>
+<p class="number-pit">It’s a common practice to prevent this small but annoying delay by <em>preloading</em> the images in the background to put them into the browser cache—a task we can accomplish with JavaScript. The trick is to create a new <span class="pd_green"><code><strong>Image</strong></code></span> object (<a href="https://www.google.com/search?q=javascript+image+object">javascript image object</a>) and assign it the <span class="pd_green"><code><strong>src</strong></code></span> of the large image corresponding to each thumbnail. This forces the browser to download <em>all</em> the large images before the page is even loaded.</p>
+<p class="number-pi">By filling in the code in <a href="ch11.xhtml#ch11list10">Listing 11.10</a> and deploying the result, confirm that image preloading works, and that the resulting image swapping is snappy and <span epub:type="pagebreak" id="page_258"></span>responsive. (Note that we’ve hoisted <span class="pd_green"><code><strong>newImageSrc</strong></code></span> out of the listener, which is a big hint about what to use to replace <span class="pd_green"><code><strong>FILL_IN</strong></code></span>.)</p></li>
+</ol>
+<p class="listing" id="ch11list10"><strong>Listing 11.10:</strong> Preloading large versions.<br/><code><em>js/gallery.js</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#c11lis10" id="c11lis10a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>// Activates the image gallery.</em></span>
+<span class="pd_blue1"><em>// The main task is to attach an event listener to each image in the gallery</em></span>
+<span class="pd_blue1"><em>// and respond appropriately on click.</em></span>
+<span class="pd_green1"><strong>function</strong></span> activateGallery() {
+  <span class="pd_green1"><strong>let</strong></span> thumbnails <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelectorAll<span class="pd_red">("#gallery-thumbs &gt; div &gt; img</span>");
+  <span class="pd_green1"><strong>let</strong></span> mainImage <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-photo img</span>");
+
+  thumbnails.forEach(<span class="pd_green1"><strong>function</strong></span>(thumbnail) {
+    <span class="pd_blue1"><em>// Preload large images.</em></span>
+<span class="bg1">    <span class="pd_green1"><strong>let</strong></span> newImageSrc = thumbnail.dataset.largeVersion;</span>
+<span class="bg1">    <span class="pd_green1"><strong>let</strong></span> largeVersion = <span class="v1"><strong>new</strong></span> Image();</span>
+<span class="bg1">    largeVersion.src = FILL_IN;</span>
+    thumbnail.addEventListener(<span class="pd_red">"click"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_blue1"><em>// Set clicked image as display image.</em></span>
+<span epub:type="pagebreak" id="page_259"></span>
+      mainImage.setAttribute(<span class="pd_red">"src"</span>, newImageSrc);
+
+      <span class="pd_blue1"><em>// Change which image is current.</em></span>
+      <span class="pd_green1">document</span>.querySelector(<span class="pd_red">".current"</span>).classList.remove(<span class="pd_red">"current"</span>);
+      thumbnail.parentNode.classList.add(<span class="pd_red">"current"</span>);
+
+      <span class="pd_blue1"><em>// Update image info.</em></span>
+      <span class="pd_green1"><strong>let</strong></span> galleryInfo <span class="gray">=</span> <span class="pd_green1">documen</span>t.querySelector<span class="pd_red">("#gallery-info</span>");
+      <span class="pd_green1"><strong>let</strong></span> title <span class="gray">=</span> galleryInfo.querySelector<span class="pd_red">(".title</span>");
+      <span class="pd_green1"><strong>let</strong></span> description <span class="gray">=</span> galleryInfo.querySelector<span class="pd_red">(".description</span>");
+
+      title.innerHTML       <span class="gray">=</span> thumbnail.dataset.title;
+      description.innerHTML <span class="gray">=</span> thumbnail.dataset.description;
+    });
+  });
+}</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch11lev5">11.5 Conclusion</h3>
+<p class="noindent">Congratulations! You now know enough JavaScript to be <em>dangerous</em>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_260"></span>With the skills developed in this tutorial, you now have the preparation to go in multiple different directions. There are two in particular that I recommend. These are (1) learning more JavaScript and (2) making sure JavaScript isn’t the only language you know.</p>
+<section>
+<h4 class="h4" id="ch11lev5sec1">11.5.1 Learning More JavaScript</h4>
+<p class="noindent">There are approximately ∞ resources for learning more about JavaScript. Now that you know the basics, one good thing to focus on is expanding your command of the language syntax, as well as learning more advanced techniques (such as <em><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async</a></em>/<em><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await">await</a></em> and <em><a href="https://developers.google.com/web/fundamentals/primers/promises">promises</a></em>) and continuing to develop real applications. Here are a few resources that I’ve used or that have come highly recommended:</p>
+<ul class="sq">
+<li><p class="bull"><span epub:type="pagebreak" id="page_261"></span><a href="https://www.codecademy.com/learn/introduction-to-javascript">Codecademy JavaScript</a> (<a href="https://www.codecademy.com/learn/introduction-to-javascript">https://www.codecademy.com/learn/introduction-to-javascript</a>): A guided in-browser introduction to JavaScript that’s highly complementary to the approach in <em>Learn Enough JavaScript to Be Dangerous</em>.</p></li>
+<li><p class="bull"><a href="https://teamtreehouse.com/library/topic:javascript">Treehouse JavaScript</a> (<a href="https://teamtreehouse.com/library/topic:javascript">https://teamtreehouse.com/library/topic:javascript</a>): Well-regarded interactive tutorials.</p></li>
+<li><p class="bull"><a href="https://javascript30.com/">Wes Bos JavaScript</a> (<a href="https://javascript30.com/">https://javascript30.com/</a>): A free course on vanilla JavaScript. Wes also offers a large number of <a href="https://wesbos.com/courses/">premium courses</a> (<a href="https://wesbos.com/courses">https://wesbos.com/courses</a>), many of them focused on JavaScript topics like ES6 and Node.</p></li>
+<li><p class="bull"><a href="https://medium.com/javascript-scene/learn-javascript-b631a4af11f2#.lsb25e2f5">Learn JavaScript Essentials</a> (<a href="https://medium.com/javascript-scene/learn-javascript-b631a4af11f2#.lsb25e2f5">https://medium.com/javascript-scene/learn-javascript-b631a4af11f2#.lsb25e2f5</a>): An excellent list of resources compiled by <a href="https://medium.com/@_ericelliott">Eric Elliott</a> (<a href="https://medium.com/@_ericelliott">https://medium.com/@_ericelliott</a>), including links to additional courses and books.</p></li>
+</ul>
+</section>
+<section>
+<h4 class="h4" id="ch11lev5sec2">11.5.2 Learning a New Language</h4>
+<p class="noindent">Ask experienced devs if it’s important to know more than one programming language, and the answers will typically range from “yes!” to “extremely, <a href="https://en.wiktionary.org/wiki/indubitably">indubitably</a> yes!” Indeed, there are <a href="https://www.quora.com/What-are-the-things-a-person-who-knows-many-programming-languages-can-do-that-other-programmers-cant">many reasons</a> not to become a <a href="https://en.wiktionary.org/wiki/monoglot#English">monoglot</a>.</p>
+<p class="indent">When it comes to building software for the greatest platform ever—the World Wide Web—the language I recommend (other than JavaScript) is <em>Ruby</em>, a powerful language designed for “programmer happiness”. In particular, Ruby is the language of two of the most popular frameworks for making web applications, <em>Sinatra</em> (used at companies like <a href="http://www.disney.com/">Disney</a> and <a href="https://stripe.com/">Stripe</a>) and <em>Rails</em> (used at companies like <a href="https://github.com/">GitHub</a>, <a href="https://www.hulu.com/">Hulu</a>, and <a href="https://www.airbnb.com/">Airbnb</a>).</p>
+<p class="indent">Though suitable for bigger applications, Sinatra is the simpler framework, and is included as part of <em><a href="https://www.learnenough.com/ruby">Learn Enough Ruby to Be Dangerous</a></em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>). Rails is my preferred framework for making database-backed web applications, and is thoroughly covered by the <em><a href="https://railstutorial.org/book">Ruby on Rails Tutorial</a></em> (<a href="https://railstutorial.org/book">https://railstutorial.org/book</a>). Moreover, both can be used with JavaScript, with <a href="https://medium.com/@hpux/rails-5-1-loves-javascript-a1d84d5318b">Rails/JavaScript integration</a> being especially popular.</p>
+<p class="indent">As a result, these are the recommended continuations of the <em>Learn Enough</em> sequence:</p>
+<ul class="sq">
+<li><p class="bull"><em><a href="https://www.learnenough.com/ruby">Learn Enough Ruby to Be Dangerous</a></em></p></li>
+<li><p class="bull"><em><a href="https://railstutorial.org/book">Ruby on Rails Tutorial</a></em></p></li>
+</ul>
+<p class="noindent"><span epub:type="pagebreak" id="page_262"></span>Finally, for people who want the most solid foundation possible in technical sophistication, Learn Enough All Access (<a href="https://www.learnenough.com/all-access">https://www.learnenough.com/all-access</a>) is a subscription service that has special online versions of all the Learn Enough books and over 40 hours of streaming video tutorials. We hope you’ll check it out!</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

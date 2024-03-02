@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch02"><span epub:type="pagebreak" id="page_31"></span>Chapter 2</h2>
+<h2 class="h2a">Strings</h2>
+<p class="noindent"><em>Strings</em> are probably the most important data structure for everyday computing. They’re used in practically every kind of program imaginable, and are also the raw material of the Web. As a result, strings make an excellent place to start our Ruby programming journey.</p>
+<section>
+<h3 class="h3" id="sec2_1">2.1 String Basics</h3>
+<p class="noindent">Strings are made up of sequences of characters in a particular order. We’ve already seen several examples in the context of our “hello, world” programs in <a href="ch01.xhtml#ch01">Chapter 1</a>. Let’s see what happens if we type a string by itself (without <code><span class="green"><strong>puts</strong></span></code>) into interactive Ruby:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>irb</strong>
+<span class="green"><strong>&gt;&gt; "hello, world!"</strong></span>
+<span class="green"><strong>=&gt; "hello, world!"</strong></span></pre>
+</div>
+<p class="noindent">A sequence of characters typed literally is called a <em>string literal</em>, which we’ve created here using the double quote character <code><span class="green"><strong>"</strong></span></code>. The REPL prints the result of <em>evaluating</em> the line, which in the case of a string literal is just the string itself.</p>
+<p class="indent">A particularly important string is one with no content, consisting simply of two quotes. This is known as an <em>empty string</em> (or sometimes <em>the</em> empty string):</p>
+<span epub:type="pagebreak" id="page_32"></span>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>""</strong></span>
+<span class="green"><strong>=&gt; ""</strong></span></pre>
+</div>
+<p class="noindent">We’ll have more to say about the empty string in <a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a> and <a href="ch03.xhtml#sec3_1">Section 3.1</a>.</p>
+<section>
+<h4 class="h4" id="sec2_1_1">2.1.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Ruby supports common special characters such as <a href="https://en.wikipedia.org/wiki/Tab_key#Tab_characters">tabs</a> (<code><span class="green"><strong>\t</strong></span></code>) and <a href="https://en.wikipedia.org/wiki/Newline">new-lines</a> (<code><span class="green"><strong>\n</strong></span></code>), which are two different forms of so-called <em><a href="https://en.wikipedia.org/wiki/Whitespace_character">whitespace</a></em>. Show that <code><span class="green"><strong>\t</strong></span></code> and <code><span class="green"><strong>\n</strong></span></code> are interpreted as special characters inside double-quoted strings but not inside single-quoted strings. What are their effects in each case? <em>Hint</em>: In irb, try executing commands like the ones shown in <a href="ch02.xhtml#ch02ex01">Listing 2.1</a>.</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex01"><strong>Listing 2.1:</strong> Investigating whitespace in Ruby strings.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"hell</strong></span><span class="brown1"><strong>o\</strong></span><span class="brown1"><strong>tgoodbye"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"hell</strong></span><span class="brown1"><strong>o\</strong></span><span class="brown1"><strong>ngoodbye"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>'hell</strong></span><span class="brown1"><strong>o\</strong></span><span class="brown1"><strong>tgoodbye'</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>'hell</strong></span><span class="brown1"><strong>o\</strong></span><span class="brown1"><strong>ngoodbye'</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_2">2.2 Concatenation and Interpolation</h3>
+<p class="noindent">Two of the most important string operations are <em>concatenation</em> (joining strings together) and <em>interpolation</em> (putting variable content into strings). We’ll start with concatenation, which we can accomplish using the <code><span class="green"><strong>+</strong></span></code> operator:<sup><a id="fn2_1" href="ch02.xhtml#fn2_1a">1</a></sup></p>
+<p class="footnote"><sup><a id="fn2_1a" href="ch02.xhtml#fn2_1">1</a></sup>This use of <code><span class="green"><strong>+</strong></span></code> for string concatenation is common in programming languages, but in one respect it’s an unfortunate choice, because addition is the canonical <a href="https://en.wikipedia.org/wiki/Commutative_property">commutative</a> operation in mathematics: <em>a</em> + <em>b</em> = <em>b</em> + <em>a</em> . (In contrast, multiplication is in some cases non-commutative; for example, when <a href="https://en.wikipedia.org/wiki/Matrix_multiplication#Non-commutativity">multiplying matrices</a> it’s often the case that <em>AB ≠ BA</em>.) In the case of string concatenation, though, <code><span class="green"><strong>+</strong></span></code> is most definitely <em>not</em> a commutative operation, since, e.g., <code><span class="green"><strong>"foo" + "bar"</strong></span></code> is <code><span class="green"><strong>"foobar"</strong></span></code>, whereas <code><span class="green"><strong>"bar" + "foo"</strong></span></code> is <code><span class="green"><strong>"barfoo"</strong></span></code>. Partially for this reason, some languages (such as <a href="https://en.wikipedia.org/wiki/PHP">PHP</a>) use a different symbol for concatenation, such as a dot <code><span class="green"><strong>.</strong></span></code> (yielding <code><span class="green"><strong>"foo" . "bar"</strong></span></code>).</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_33"></span><a href="ch02_images.xhtml#f0033-01" id="f0033-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>irb</strong>
+<span class="green"><strong>&gt;&gt; "foo" + "bar"            # String concatenation</strong></span>
+<span class="green"><strong>=&gt; "foobar"</strong></span>
+<span class="green"><strong>&gt;&gt; "ant" + "bat" + "cat"    # Multiple strings can be concatenated at once.</strong></span>
+<span class="green"><strong>=&gt; "antbatcat"</strong></span></pre>
+</div>
+<p class="noindent">Here the result of evaluating <code><span class="green"><strong>"foo"</strong></span></code> plus <code><span class="green"><strong>"bar"</strong></span></code> is the string <code><span class="green"><strong>"foobar"</strong></span></code>. (The meaning of the odd names “foo” and “bar” is <a href="https://www.learnenough.com/r/learn_enough_command_line/manipulating_files/listing#aside-foo_bar">discussed</a> in <em><a href="https://www.learnenough.com/command-line">Learn Enough Command Line to Be Dangerous</a></em>.)</p>
+<p class="indent">Let’s take another look at string concatenation in the context of <em>variables</em>, which you can think of as named boxes that contain some value (as <a href="https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#aside-variable">mentioned</a> in <em><a href="https://www.learnenough.com/css-and-layout">Learn Enough CSS &amp; Layout to Be Dangerous</a></em> and discussed further in <a href="ch02.xhtml#box2_1">Box 2.1</a>).<sup><a id="fn2_2" href="ch02.xhtml#fn2_2a">2</a></sup></p>
+<p class="footnote"><sup><a id="fn2_2a" href="ch02.xhtml#fn2_2">2</a></sup>Image courtesy of Africa Studio/Shutterstock.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box2_1">
+<p class="sb-title">Box 2.1. Variables and Identifiers</p>
+<p class="indent">If you’ve never programmed a computer before, you may be unfamiliar with the term <em>variable</em>, which is an essential idea in computer science. You can think of a variable as a named box that can hold different (or “variable”) content.</p>
+<p class="indent">As a concrete analogy, consider the labeled boxes that many elementary schools provide for students to store clothing, books, backpacks, etc. (<a href="ch02.xhtml#ch02fig01">Figure 2.1</a>). The variable is the location of the box, the label for the box is the variable name (also called an <em>identifier</em>), and the content of the box is the variable value.</p>
+<figure class="figure" id="ch02fig01">
+<img src="graphics/f0034-01.jpg" alt="Images" width="892" height="849"/>
+<figcaption>
+<p class="title-f">Figure 2.1: A concrete manifestation of computer variables.</p>
+</figcaption>
+</figure>
+<p class="indent">In practice, these different definitions are frequently <span class="blue"><a href="https://en.wiktionary.org/wiki/conflate#English">conflated</a></span>, and “variable” is often used for any of the three concepts (location, label, or value).</p>
+</aside>
+<p class="indent">As a concrete example, we can create variables for a first name and a last name using the <code><span class="green1"><strong>=</strong></span></code> sign, as shown in <a href="ch02.xhtml#ch02ex02">Listing 2.2</a>.<span epub:type="pagebreak" id="page_34"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex02"><span epub:type="pagebreak" id="page_35"></span><strong>Listing 2.2:</strong> Using <code><span class="green1"><strong>=</strong></span></code> to assign variables.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>first_name</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Michael"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>last_name</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Hartl"</strong></span></pre>
+</div>
+<p class="noindent">Here <code><span class="green"><strong>=</strong></span></code> associates the identifier <code><span class="green"><strong>first_name</strong></span></code> with the string <code><span class="green"><strong>"Michael"</strong></span></code> and the identifier <code><span class="green"><strong>last_name</strong></span></code> with the string <code><span class="green"><strong>"Hartl"</strong></span></code>.</p>
+<p class="indent">The identifiers <code><span class="green"><strong>first_name</strong></span></code> and <code><span class="green"><strong>last_name</strong></span></code> in <a href="ch02.xhtml#ch02ex02">Listing 2.2</a> are written in so-called <a href="https://en.wikipedia.org/wiki/Snake_case">snake case</a>, whose <a href="https://en.wikipedia.org/wiki/Snake_case#History">name origins</a> are obscure but which is probably the most common convention for Ruby variable names (<a href="ch02.xhtml#ch02fig02">Figure 2.2</a>).<sup><a id="fn2_3" href="ch02.xhtml#fn2_3a">3</a></sup> (In contrast, Ruby classes use the CamelCase convention <a href="https://www.learnenough.com/r/learn_enough_javascript/strings/concatenation_and_interpolation#fig-camel">discussed</a> in <em><a href="https://www.learnenough.com/javascript">Learn Enough Java-Script to Be Dangerous</a></em> and described in more detail in <a href="ch07.xhtml#ch07">Chapter 7</a>.)</p>
+<p class="footnote"><sup><a id="fn2_3a" href="ch02.xhtml#fn2_3">3</a></sup>Image courtesy of Kopytin Georgy/Shutterstock.</p>
+<figure class="figure" id="ch02fig02">
+<img src="graphics/f0036-01.jpg" alt="Images" width="891" height="595"/>
+<figcaption>
+<p class="title-f">Figure 2.2: Snake case is the default for Ruby variable names.</p>
+</figcaption>
+</figure>
+<p class="indent">Having defined the variable names in <a href="ch02.xhtml#ch02ex02">Listing 2.2</a>, we can use them to concatenate the first and last names, while also inserting a space in between (<a href="ch02.xhtml#ch02ex03">Listing 2.3</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex03"><strong>Listing 2.3:</strong> Concatenating string variables (and a string literal).</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0035-02" id="f0035-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>first_name</strong> <span class="gray"><strong>+</strong></span> <span class="brown1"><strong>" "</strong></span> <span class="gray"><strong>+</strong></span> <strong>last_name</strong>
+<span class="green"><strong>=&gt; "Michael Hartl"</strong></span></pre>
+</div>
+<p class="indent">Another way to build up strings is via <em>interpolation</em> using the number-sign curly-brace notation <code><span class="green"><strong>#{...}</strong></span></code>:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0035-03" id="f0035-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"</strong></span><span class="pinkr"><strong>#{</strong></span><strong>first_name</strong><span class="pinkr"><strong>}</strong></span> <span class="brown1"><strong>is my first name."</strong></span>
+<span class="green"><strong>=&gt; "Michael is my first name."</strong></span></pre>
+</div>
+<p class="noindent">Here Ruby automatically inserts, or <em>interpolates</em>, the value of the variable <code><span class="green"><strong>first_name</strong></span></code> into the string at the appropriate place.<sup><a id="fn2_4" href="ch02.xhtml#fn2_4a">4</a></sup> Indeed, any code inside the curly braces will simply be evaluated by Ruby and inserted in place.</p>
+<p class="footnote"><sup><a id="fn2_4a" href="ch02.xhtml#fn2_4">4</a></sup>Programmers familiar with Perl or PHP should compare this to the automatic interpolation of dollar sign variables in expressions like <code><span class="green"><strong>"Michael $last_name"</strong></span></code>.</p>
+<p class="indent">We can use interpolation to replicate the result of <a href="ch02.xhtml#ch02ex03">Listing 2.3</a>, as shown in <a href="ch02.xhtml#ch02ex04">Listing 2.4</a>.<span epub:type="pagebreak" id="page_36"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex04"><span epub:type="pagebreak" id="page_37"></span><strong>Listing 2.4:</strong> Concatenation review, then interpolating.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0037-01" id="f0037-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>first_name</strong> <span class="gray"><strong>+</strong></span> <span class="brown1"><strong>" "</strong></span> <span class="gray"><strong>+</strong></span> <strong>last_name</strong>      <span class="ash-m"><strong><em># Concatenation, with a space in between</em></strong></span>
+<span class="green"><strong>=&gt; "Michael Hartl"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="pinkr"><strong>"#</strong></span><strong>{first_name</strong><span class="pinkr"><strong>} #</strong></span><strong>{last_name</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>"</strong></span>      <span class="ash-m"><strong><em># The equivalent interpolation</em></strong></span>
+<span class="green"><strong>=&gt; "Michael Hartl"</strong></span></pre>
+</div>
+<p class="noindent">The two expressions shown in <a href="ch02.xhtml#ch02ex04">Listing 2.4</a> are equivalent, but I generally prefer the interpolated version because having to add the single space <code><span class="green1"><strong>" "</strong></span></code> in between strings feels a bit awkward.</p>
+<section>
+<h4 class="h4" id="sec2_2_1">2.2.1 Single-Quoted Strings</h4>
+<p class="noindent">All the examples so far have used <em>double-quoted</em> strings, but Ruby also supports <em>single-quoted</em> strings. For many uses, the two types of strings are effectively identical:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0037-02" id="f0037-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'foo'</strong></span>          <span class="ash-m"><strong><em># A single-quoted string</em></strong></span>
+<span class="green"><strong>=&gt; "foo"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'foo'</strong></span> <span class="gray"><strong>+</strong></span> <span class="brown1"><strong>'bar'</strong></span>
+<span class="green"><strong>=&gt; "foobar"</strong></span></pre>
+</div>
+<p class="indent">There’s an important difference, though; single-quoted strings are what are known as <em>raw strings</em>. For example, Ruby won’t interpolate into single-quoted strings:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0037-03" id="f0037-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="pinkr"><strong>'#{</strong></span><strong>first_name</strong><span class="pinkr"><strong>} #{</strong></span><strong>last_name</strong><span class="brown1"><strong>}'</strong></span>      <span class="ash-m"><strong><em># No interpolation!</em></strong></span>
+<span class="green"><strong>=&gt; "\#{first_name} \#{last_name}"</strong></span></pre>
+</div>
+<p class="noindent">Note how irb returns values using double-quoted strings, which requires a backslash to <em>escape</em> special character combinations such as <code><span class="green1"><strong>#{</strong></span></code>.</p>
+<p class="indent">If double-quoted strings can do everything that single-quoted strings can do, and interpolate to boot, what’s the point of single-quoted strings? They are often useful because they are truly literal, containing exactly the characters you type. For example, the “backslash” character is special on most systems, as <span epub:type="pagebreak" id="page_38"></span>in the literal newline <code><span class="green"><strong>\n</strong></span></code>. If you want a variable to contain a literal backslash, single quotes make it easier:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0038-01" id="f0038-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'\</strong></span><span class="brown1"><strong>n'</strong></span>      <span class="ash-m"><strong><em># A literal 'backslash n' combination</em></strong></span>
+<span class="green"><strong>=&gt; "\\n"</strong></span></pre>
+</div>
+<p class="noindent">As with the <code><span class="green"><strong>#{</strong></span></code> combination in our previous example, Ruby needs to escape the backslash with an additional backslash; inside double-quoted strings, a literal backslash is represented with <em>two</em> backslashes. For a small example like this, there’s not much savings, but if there are lots of things to escape it can be a real help:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0038-02" id="f0038-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'Newlines</strong></span> <span class="brown1"><strong>(\</strong></span><span class="brown1"><strong>n) and tabs</strong></span> <span class="brown1"><strong>(\</strong></span><span class="brown1"><strong>t) both use the backslash character: \.'</strong></span>
+<span class="green"><strong>=&gt; "Newlines (\\n) and tabs (\\t) both use the backslash character: \\."</strong></span></pre>
+</div>
+<p class="indent">This practice of escaping out characters is unnecessary inside single-quoted strings, <em>except</em> for single quotes themselves. For example, if you enter this in irb the REPL just hangs (<a href="ch02.xhtml#ch02fig03">Figure 2.3</a>):<sup><a id="fn2_5" href="ch02.xhtml#fn2_5a">5</a></sup></p>
+<figure class="figure" id="ch02fig03">
+<img src="graphics/f0039-01.jpg" alt="Images" width="891" height="633"/>
+<figcaption>
+<p class="title-f">Figure 2.3: Sometimes <a href="https://www.youtube.com/watch?v=hpiIWMWWVco">it’s not easy</a> when the REPL just hangs.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn2_5a" href="ch02.xhtml#fn2_5">5</a></sup>Image courtesy of LorraineHudgins/Shutterstock.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0038-03" id="f0038-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="green"><strong>$ irb</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'It</strong></span><strong>'s</strong> <span class="voiletm"><strong>not</strong></span> <strong>easy being green</strong><span class="brown1"><strong>'</strong></span></pre>
+</div>
+<p class="noindent">This is because irb interprets <code><span class="green"><strong>'It'</strong></span></code> as a string, and the final <code><span class="green"><strong>'</strong></span></code> as the <em>opening</em> of a <em>second</em> string, and it just waits because it’s looking for a closing <code><span class="green"><strong>'</strong></span></code>. (Another result, as seen above, is that the syntax highlighting looks odd—a side effect that is frequently useful as a visual hint of a syntax error.)</p>
+<p class="indent">As <a href="https://www.learnenough.com/r/learn_enough_command_line/basics/our_first_command#sec-our_first_command">noted</a> in <em><a href="https://www.learnenough.com/command-line">Learn Enough Command Line to Be Dangerous</a></em>, the way to get out of this trouble is to hit <code><span class="green"><strong>Ctrl-C</strong></span></code>; we can then put in the string correctly by escaping out the apostrophe in <code><span class="green"><strong>It's</strong></span></code> with a backslash:<span epub:type="pagebreak" id="page_39"></span></p>
+<p class="codelink"><a href="ch02_images.xhtml#f0040-01" id="f0040-01a">Click here to view code image</a></p>
+<span epub:type="pagebreak" id="page_40"></span>
+<div class="sidebar">
+<pre class="pre"><span class="green"><strong>$ irb</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'It'</strong></span><strong>s</strong> <span class="voiletm"><strong>not</strong></span> <strong>easy being green</strong><span class="brown1"><strong>'</strong></span>
+<span class="green"><strong>^C</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>'I</strong></span><span class="brown1"><strong>t\</strong></span><span class="brown1"><strong>'s not easy being green'</strong></span>
+<span class="green"><strong>=&gt; "It's not easy being green"</strong></span></pre>
+</div>
+<p class="indent">Finally, it’s worth noting that, in the common case that both single and double quotes work just fine, you’ll often find that the source code switches between the two without any apparent pattern. Don’t worry—you’ll get used to it soon enough.</p>
+</section>
+<section>
+<h4 class="h4" id="sec2_2_2">2.2.2 Exercises</h4>
+<ol class="num">
+<li><p class="num">Assign variables <code><span class="green"><strong>city</strong></span></code> and <code><span class="green"><strong>state</strong></span></code> to your current city and state of residence. (If residing outside the U.S., substitute the analogous quantities.) Using interpolation, print a string consisting of the city and state separated by a comma and a space, as in “Los Angeles, CA”.</p></li>
+<li><p class="num">Repeat the previous exercise but with the city and state separated by a tab character.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_3">2.3 Printing</h3>
+<p class="noindent">As we saw in <a href="ch01.xhtml#sec1_2">Section 1.2</a> and subsequent sections, the Ruby way to print a string to the screen is to use the <code><span class="green"><strong>puts</strong></span></code> function:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0040-02" id="f0040-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"hello, world!"</strong></span>     <span class="ash-m"><strong><em># Print output</em></strong></span>
+<span class="green"><strong>hello, world!</strong></span>
+<span class="green"><strong>=&gt; nil</strong></span></pre>
+</div>
+<p class="noindent">This function operates as a <em><a href="https://en.wikipedia.org/wiki/Side_effect_(computer_science)">side effect</a></em>, which refers to anything a function does other than returning a value. In particular, the expression</p>
+<span epub:type="pagebreak" id="page_41"></span>
+<div class="sidebar">
+<pre class="pre"><span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"hello, world!"</strong></span></pre>
+</div>
+<p class="noindent">prints the string to the screen and then returns nothing. This is why irb displays <code><span class="green"><strong>nil</strong></span></code> after the printed value: <em>Nil</em> is a contraction of the Latin <em><a href="https://en.wiktionary.org/wiki/nihil#Latin">nihil</a></em>, which literally means “nothing”.</p>
+<p class="indent">We’ll generally omit <code><span class="green"><strong>nil</strong></span></code> when showing results in the REPL, but it’s good to distinguish between functions that return values (almost all of them) and those like <code><span class="green"><strong>puts</strong></span></code> that operate using side effects.</p>
+<p class="indent">It’s also worth noting that, as a Ruby function, <code><span class="green"><strong>puts</strong></span></code> can be called with parentheses, like this:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span><strong>(</strong><span class="brown1"><strong>"hello, world!"</strong></span><strong>)</strong>
+<span class="green"><strong>"hello, world!"
+=&gt; nil</strong></span></pre>
+</div>
+<p class="noindent">This is perfectly valid Ruby, but conventionally <code><span class="green"><strong>puts</strong></span></code> is typically called without them.</p>
+<p class="indent">A closely related function is <code><span class="green"><strong>print</strong></span></code>, which will be familiar if you solved the exercise in <a href="ch01.xhtml#sec1_2_1">Section 1.2.1</a>. It works just like <code><span class="green"><strong>puts</strong></span></code>, but without adding an automatic newline:<sup><a id="fn2_6" href="ch02.xhtml#fn2_6a">6</a></sup></p>
+<p class="footnote"><sup><a id="fn2_6a" href="ch02.xhtml#fn2_6">6</a></sup>If it had been up to me, I probably would have swapped the roles of <code><span class="green"><strong>puts</strong></span></code> and <code><span class="green"><strong>print</strong></span></code>. This would have made <code><span class="green"><strong>print "hello, world!"</strong></span></code> the standard “hello, world!” program, which <a href="http://catb.org/jargon/html/I/IMHO.html">IMHO</a> is much clearer, whereas the current method requires explaining what <code><span class="green"><strong>puts</strong></span></code> means. But I’m not Matz, so that’s just how it goes.</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>print</strong></span> <span class="brown1"><strong>"hello, world!"</strong></span>
+<span class="green"><strong>hello, world!=&gt; nil</strong></span></pre>
+</div>
+<p class="noindent">We can replicate the behavior of <code><span class="green"><strong>puts</strong></span></code> by appending a newline:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>print</strong></span> <span class="brown1"><strong>"hello, world</strong></span><span class="brown1"><strong>!</strong></span> <span class="orangm"><strong>\</strong></span><span class="orangm"><strong>n</strong></span><span class="brown1"><strong>"</strong></span>
+<span class="green"><strong>hello, world!
+=&gt; nil</strong></span></pre>
+</div>
+<section>
+<h4 class="h4" id="sec2_3_1"><span epub:type="pagebreak" id="page_42"></span>2.3.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">What is the effect of giving <code><span class="green"><strong>puts</strong></span></code> multiple arguments? How about for <code><span class="green"><strong>print</strong></span></code>?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_4">2.4 Attributes, Booleans, and Control Flow</h3>
+<p class="noindent">Everything in Ruby, including strings, is an object. This means that we can get useful information about strings and do useful things with them using the same <em>dot notation</em> used in many object-oriented languages (e.g., JavaScript, as <a href="https://www.learnenough.com/r/learn_enough_javascript/strings/methods#sec-methods">seen</a> in <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>).</p>
+<p class="indent">We’ll start by accessing a string <em><a href="https://en.wikipedia.org/wiki/Attribute_(computing)">attribute</a></em>, which is a piece of data attached to an object. In particular, in the console we can use the <code><span class="green"><strong>length</strong></span></code> attribute to find the number of characters in a string:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0042-01" id="f0042-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>irb</strong>
+<span class="green"><strong>&gt;&gt; "badger".length</strong></span>    <span class="green"><strong># Accessing the "length" property of a string</strong></span>
+<span class="green"><strong>=&gt; 6</strong></span>
+<span class="green"><strong>&gt;&gt; "".length</strong></span>          <span class="green"><strong># The empty string has zero length.</strong></span>
+<span class="green"><strong>=&gt; 0</strong></span></pre>
+</div>
+<p class="indent">The <code><span class="green"><strong>length</strong></span></code> attribute is especially useful in comparisons, such as checking the length of a string to see how it compares to a particular value (note that the REPL supports “up arrow” to retrieve previous lines, just like the command-line terminal):</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>&gt; 3</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>&gt; 6</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>&gt;= 6</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>&lt; 10</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>== 6</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_43"></span>The last line uses the equality comparison operator <code><span class="green"><strong>==</strong></span></code>, which Ruby shares with many other languages. (Note that, like JavaScript, Ruby supports <code><span class="green"><strong>===</strong></span></code>, and indeed has <a href="https://stackoverflow.com/questions/7156955/whats-the-difference-between-equal-eql-and">several comparison operators</a> in general, but <code><span class="green"><strong>==</strong></span></code> works in almost all cases of relevance.)</p>
+<p class="indent">The return values in the comparisons above, which are always either <code><span class="green"><strong>true</strong></span></code> or <code><span class="green"><strong>false</strong></span></code>, are known as <em>boolean</em> values, after mathematician and logician <a href="https://en.wikipedia.org/wiki/George_Boole">George Boole</a> (<a href="ch02.xhtml#ch02fig04">Figure 2.4</a>).<sup><a id="fn2_7" href="ch02.xhtml#fn2_7a">7</a></sup></p>
+<p class="footnote"><sup><a id="fn2_7a" href="ch02.xhtml#fn2_7">7</a></sup>Image courtesy of Yogi Black/Alamy Stock Photo.</p>
+<figure class="figure" id="ch02fig04">
+<img src="graphics/f0044-01.jpg" alt="Images" width="834" height="1116"/>
+<figcaption>
+<p class="title-f">Figure 2.4: True or false? This is a picture of George Boole.</p>
+</figcaption>
+</figure>
+<p class="indent">Boolean values are especially useful for <em>control flow</em>, which lets us take actions based on the result of a comparison (<a href="ch02.xhtml#ch02ex05">Listing 2.5</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex05"><strong>Listing 2.5:</strong> Control flow with <code><span class="green"><strong>if</strong></span></code>.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>password</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"foo"</strong></span>
+<span class="green"><strong>=&gt; "foo"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>(password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt;</strong></span> <strong>6)</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Password is too short."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "Password is too short."</strong></span></pre>
+</div>
+<p class="noindent">Note in <a href="ch02.xhtml#ch02ex05">Listing 2.5</a> that the comparison after <code><span class="green"><strong>if</strong></span></code> is in parentheses, and the <code><span class="green"><strong>if</strong></span></code> statement is terminated by the <code><span class="green"><strong>end</strong></span></code> keyword. The latter is required, but in Ruby (unlike many other languages) the parentheses are optional, and it’s common to leave them off (<a href="ch02.xhtml#ch02ex06">Listing 2.6</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex06"><strong>Listing 2.6:</strong> Control flow with <code><span class="green"><strong>if</strong></span></code> and no parentheses.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt; 6</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is too short."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "Password is too short."</strong></span></pre>
+</div>
+<p class="indent"><a href="ch02.xhtml#ch02ex05">Listing 2.5</a> and <a href="ch02.xhtml#ch02ex06">Listing 2.6</a> also follow a consistent indentation convention, which is irrelevant to Ruby but is important for human readers of the code (<a href="ch02.xhtml#box2_2">Box 2.2</a>).<span epub:type="pagebreak" id="page_44"></span></p>
+<span epub:type="pagebreak" id="page_45"></span>
+<aside epub:type="sidebar" class="sidebar1" id="box2_2">
+<p class="sb-title">Box 2.2. Code Formatting</p>
+<p class="indent">The code samples in this tutorial, including those in the REPL, are designed to show how to format Ruby in a way that maximizes readability and code comprehension. The programs executing Ruby programs, whether irb or Ruby itself, don’t care about these aspects of the code, but human developers do.</p>
+<p class="indent">While exact styles differ, here are some general guidelines for good code formatting:</p>
+<ul class="bull">
+<li><p class="bull"><em>Indent code to indicate block structure.</em> Pretty much every time you see an opening curly brace <code>{</code>, you’ll end up indenting the subsequent line. (Some text editors even do this automatically.)</p></li>
+<li><p class="bull"><em>Use two spaces (typically via</em> <a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/writing_source_code#sec-indenting_and_dedenting">emulated tabs</a><em>) for indentation.</em> Many developers use four or even eight spaces, but I find that two spaces are enough to indicate block structure visually while conserving scarce horizontal space.</p></li>
+<li><p class="bull"><em>Add newlines to indicate logical structure.</em> One thing I particularly like to do is add an extra newline after a series of variable assignments, in order to give a visual indication that the setup is done and the real coding can begin. An example appears in <a href="ch04.xhtml#ch04ex09">Listing 4.9</a>.</p></li>
+<li><p class="bull"><em>Limit lines to 80 characters (also called “columns”).</em> This is an old constraint, one that dates back to the early days of 80-character-width terminals. Many modern developers routinely violate this constraint, considering it outdated, but in my experience the 80-character limit is a good source of discipline, and will <a href="https://idioms.thefreedictionary.com/save%2Byour%2Bneck">save your neck</a> when using command-line programs like <code><strong>less</strong></code> (or when using your code in a document with more stringent width requirements, such as a book). A line that breaks 80 characters is a hint that you should introduce a new variable name, break an operation into multiple steps, etc., to make the code clearer for anyone reading it.</p></li>
+</ul>
+<p class="indent">We’ll see several examples of more advanced code-formatting conventions as we proceed throughout the rest of this tutorial.</p>
+</aside>
+<p class="indent"><span epub:type="pagebreak" id="page_46"></span>We can add a second behavior using <code><span class="green"><strong>else</strong></span></code>, which serves as the default result if the first comparison is <code><span class="green"><strong>false</strong></span></code> (<a href="ch02.xhtml#ch02ex07">Listing 2.7</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex07"><strong>Listing 2.7:</strong> Control flow with <code><span class="green"><strong>if</strong></span></code> and <code><span class="green"><strong>else</strong></span></code>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0046-01" id="f0046-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>password</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"foobar"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt; 6</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is too short."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is long enough."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "Password is long enough."</strong></span></pre>
+</div>
+<p class="noindent">The first line in <a href="ch02.xhtml#ch02ex07">Listing 2.7</a> <em>redefines</em> <code><span class="green"><strong>password</strong></span></code> by assigning it a new value. After reassignment, the <code><span class="green"><strong>password</strong></span></code> variable has length 6, so <span class="green"><code><strong>password.length &lt; 6</strong></code></span> is <code><span class="green"><strong>false</strong></span></code>. As a result, the <code><span class="green"><strong>if</strong></span></code> part of the statement (known as the <code><span class="green"><strong>if</strong></span></code> <em>branch</em>) doesn’t get evaluated; instead, Ruby evaluates the <code><span class="green"><strong>else</strong></span></code> branch, resulting in a message indicating that the password is long enough.</p>
+<p class="indent">Unusually among programming languages, Ruby has a special <code><span class="green"><strong>elsif</strong></span></code> keyword meaning “else if”, as shown in <a href="ch02.xhtml#ch02ex08">Listing 2.8</a> (<a href="ch02.xhtml#ch02fig05">Figure 2.5</a>).<sup><a id="fn2_8" href="ch02.xhtml#fn2_8a">8</a></sup></p>
+<p class="footnote"><sup><a id="fn2_8a" href="ch02.xhtml#fn2_8">8</a></sup>Image courtesy of Jessie Willcox Smith/Alamy Stock Photo.</p>
+<figure class="figure" id="ch02fig05">
+<img src="graphics/f0047-01.jpg" alt="Images" width="834" height="1211"/>
+<figcaption>
+<p class="title-f">Figure 2.5: Goldilocks chooses control flow that is just right.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex08"><strong>Listing 2.8:</strong> Control flow with <code><span class="green"><strong>elsif</strong></span></code>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0046-02" id="f0046-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>password</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"goldilocks"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt; 6</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is too short."</strong></span>
+<span class="yellowb-n"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>elsif</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt; 50</strong></span></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is just right!"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Password is too long."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "Password is just right!"</strong></span></pre>
+</div>
+<p class="indent">As a final example, it’s worth noting that Ruby allows us to place the <code><span class="green"><strong>if</strong></span></code> part <em>after</em> the statement when there’s only one line:<span epub:type="pagebreak" id="page_47"></span></p>
+<p class="codelink"><span epub:type="pagebreak" id="page_48"></span><a href="ch02_images.xhtml#f0048-01" id="f0048-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>password</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"foo"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Password is too short."</strong></span> <span class="green1"><strong>if</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&lt; 6</strong></span>
+<span class="green"><strong>=&gt; "Password is too short."</strong></span></pre>
+</div>
+<p class="noindent">The <code><span class="green"><strong>if</strong></span></code> here can be negated using <code><span class="green"><strong>unless</strong></span></code> instead, with the opposite comparison as well:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0048-02" id="f0048-02a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Password is too short."</strong></span> <span class="green1"><strong>unless</strong></span> <strong>password<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>&gt;= 6</strong></span>
+<span class="green"><strong>=&gt; "Password is too short."</strong></span></pre>
+</div>
+<p class="noindent">It’s essentially never wrong to use <code><span class="green"><strong>if</strong></span></code>, but in some cases the conditional sounds better using <code><span class="green"><strong>unless</strong></span></code>. I suggest pronouncing the conditional as if it were English and choosing whichever variant sounds more natural.</p>
+<section>
+<h4 class="h4" id="sec2_4_1">2.4.1 Combining and Inverting Booleans</h4>
+<p class="noindent">Booleans can be combined or inverted using the <code><span class="green"><strong>&amp;&amp;</strong></span></code> (“and”), <code><span class="green"><strong>||</strong></span></code> (“or”), and <code><span class="green"><strong>!</strong></span></code> (“bang” or “not”) operators.</p>
+<p class="indent">Let’s start with <code><span class="green"><strong>&amp;&amp;</strong></span></code>. When comparing two booleans with <code><span class="green"><strong>&amp;&amp;</strong></span></code>, <em>both</em> have to be <code><span class="green"><strong>true</strong></span></code> for the combination to be <code><span class="green"><strong>true</strong></span></code>. For example, if I said I wanted both french fries <em>and</em> a baked potato, the only way the combination could be true is if I could answer “yes” (true) to both of the questions “Do you want french fries?” and “Do you want a baked potato?” If my answer to either of those is false, then the combination must be false as well. The resulting combinations of possibilities are collectively known as a <em><a href="https://en.wikipedia.org/wiki/Truth_table">truth table</a></em>; the truth table for <code><span class="green"><strong>&amp;&amp;</strong></span></code> appears in <a href="ch02.xhtml#ch02ex09">Listing 2.9</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex09"><strong>Listing 2.9:</strong> The truth table for <code><span class="green"><strong>&amp;&amp;</strong></span></code> (“and”).</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>true</strong></span> <span class="gray"><strong>&amp;&amp;</strong></span> <span class="green1"><strong>false</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>false</strong></span> <span class="gray"><strong>&amp;&amp;</strong></span> <span class="green1"><strong>true</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>false</strong></span> <span class="gray"><strong>&amp;&amp;</strong></span> <span class="green1"><strong>false</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>true</strong></span> <span class="gray"><strong>&amp;&amp;</strong></span> <span class="green1"><strong>true</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_49"></span>We can apply this to a conditional as shown in <a href="ch02.xhtml#ch02ex010">Listing 2.10</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex010"><strong>Listing 2.10:</strong> Using the <code><span class="green"><strong>&amp;&amp;</strong></span></code> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0049-01" id="f0049-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>x</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"foo"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>y</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>""</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>x<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>== 0 &amp;&amp;</strong></span> <strong>y</strong><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>== 0</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Both strings are empty!"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"At least one of the strings is nonempty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "At least one of the strings is nonempty."</strong></span></pre>
+</div>
+<p class="noindent">In <a href="ch02.xhtml#ch02ex010">Listing 2.10</a>, <code><span class="green"><strong>y.length</strong></span></code> is in fact <code><span class="green"><strong>0</strong></span></code>, but <code><span class="green"><strong>x.length</strong></span></code> isn’t, so the combination is <code><span class="green"><strong>false</strong></span></code> (in agreement with <a href="ch02.xhtml#ch02ex09">Listing 2.9</a>), and Ruby evaluates the <code><span class="green"><strong>else</strong></span></code> branch.</p>
+<p class="indent">In contrast to <code><span class="green"><strong>&amp;&amp;</strong></span></code>, <code><span class="green"><strong>||</strong></span></code> lets us take action if <em>either</em> comparison (or both) is true (<a href="ch02.xhtml#ch02ex011">Listing 2.11</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex011"><strong>Listing 2.11:</strong> The truth table for <code><span class="green"><strong>||</strong></span></code> (“or”).</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>true</strong></span> <span class="gray"><strong>||</strong></span> <span class="green1"><strong>false</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>false</strong></span> <span class="gray"><strong>||</strong></span> <span class="green1"><strong>true</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>true</strong></span> <span class="gray"><strong>||</strong></span> <span class="green1"><strong>true</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>false</strong></span> <span class="gray"><strong>||</strong></span> <span class="green1"><strong>false</strong></span>
+<span class="green"><strong>=&gt; false</strong></span></pre>
+</div>
+<p class="indent">We can use <code><span class="green"><strong>||</strong></span></code> in a conditional as shown in <a href="ch02.xhtml#ch02ex012">Listing 2.12</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex012"><strong>Listing 2.12:</strong> Using the <code><span class="green"><strong>||</strong></span></code> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0049-02" id="f0049-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>x<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>== 0 ||</strong></span> <strong>y<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>== 0</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"At least one of the strings is empty!"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Neither of the strings is empty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "At least one of the strings is empty!"</strong></span><span epub:type="pagebreak" id="page_50"></span></pre>
+</div>
+<p class="indent">Note from <a href="ch02.xhtml#ch02ex011">Listing 2.11</a> that <code><span class="green"><strong>||</strong></span></code> isn’t <em>exclusive</em>, meaning that the result is true even when <em>both</em> statements are true. This stands in contrast to colloquial usage, where a statement like “I want fries or a baked potato” implies that you want either fries <em>or</em> a baked potato, but you don’t want both (<a href="ch02.xhtml#ch02fig06">Figure 2.6</a>).<sup><a id="fn2_9" href="ch02.xhtml#fn2_9a">9</a></sup></p>
+<figure class="figure" id="ch02fig06">
+<img src="graphics/f0050-01.jpg" alt="Images" width="891" height="594"/>
+<figcaption>
+<p class="title-f">Figure 2.6: Turns out I only wanted fries.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn2_9a" href="ch02.xhtml#fn2_9">9</a></sup>Image courtesy of Rikaphoto/Shutterstock.</p>
+<p class="indent">In addition to <code><span class="green"><strong>&amp;&amp;</strong></span></code> and <code><span class="green"><strong>||</strong></span></code>, Ruby supports <em>negation</em> via the <a href="https://www.youtube.com/watch?v=fhIdbRp6xeg">“not</a>” operator <code><span class="green"><strong>!</strong></span></code> (often pronounced “bang”), which just converts <code><span class="green"><strong>true</strong></span></code> to <code><span class="green"><strong>false</strong></span></code> and <code><span class="green"><strong>false</strong></span></code> to <code><span class="green"><strong>true</strong></span></code> (<a href="ch02.xhtml#ch02ex013">Listing 2.13</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex013"><strong>Listing 2.13:</strong> The truth table for <code><span class="green"><strong>!</strong></span></code>.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>!true</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>!false</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_51"></span>We can use <code><span class="green"><strong>!</strong></span></code> in a conditional as shown in <a href="ch02.xhtml#ch02ex014">Listing 2.14</a>. Note that parentheses <em>are</em> required in this case, because otherwise we’re asking if <code><span class="green"><strong>!x.length</strong></span></code> is equal to <code><span class="green"><strong>0</strong></span></code>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex014"><strong>Listing 2.14:</strong> Using the <code><span class="green"><strong>!</strong></span></code> operator in a conditional.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong><span class="gray"><strong>!</strong></span>(x<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>==</strong></span> <strong>0)</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"x is not empty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"x is empty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "x is not empty."</strong></span></pre>
+</div>
+<p class="indent">The code in <a href="ch02.xhtml#ch02ex014">Listing 2.14</a> is valid Ruby, as it simply negates the test <code><span class="green"><strong>x.length == 0</strong></span></code>, yielding <code><span class="green"><strong>true</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong><span class="gray"><strong>!</strong></span>(x<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>==</strong></span> <strong>0)</strong>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">In this case, though, it’s more common to use <code><span class="green"><strong>!=</strong></span></code> (“not equals”):</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>x<span class="gray"><strong>.</strong></span>length</strong> <span class="gray"><strong>!= 0</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"x is not empty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"x is empty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "x is not empty"</strong></span></pre>
+</div>
+<p class="noindent">Because we’re no longer negating the entire expression, we can omit the parentheses as before.</p>
+</section>
+<section>
+<h4 class="h4" id="sec2_4_2">2.4.2 Bang Bang</h4>
+<p class="noindent">Not all booleans are the result of comparisons, and in fact every Ruby object has a value of either <code><span class="green"><strong>true</strong></span></code> or <code><span class="green"><strong>false</strong></span></code> in a boolean context. We can force Ruby to use such a boolean context with <code><span class="green"><strong>!!</strong></span></code> (pronounced “bang bang”); because <code><span class="green"><strong>!</strong></span></code> converts between <code><span class="green"><strong>true</strong></span></code> and <code><span class="green"><strong>false</strong></span></code>, using <em>two</em> exclamation points returns us back to the original boolean:</p>
+<span epub:type="pagebreak" id="page_52"></span>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!</strong></span><span class="green1"><strong>true</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!</strong></span><span class="green1"><strong>false</strong></span>
+<span class="green"><strong>=&gt; false</strong></span></pre>
+</div>
+<p class="noindent">Using this trick allows us to see that a string like <code><span class="green"><strong>"foo"</strong></span></code> is <code><span class="green"><strong>true</strong></span></code> in a boolean context:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!</strong></span><span class="brown1"><strong>"foo"</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">As it happens, the empty string is also <code><span class="green"><strong>true</strong></span></code> in a boolean context:<sup><a id="fn2_10" href="ch02.xhtml#fn2_10a">10</a></sup></p>
+<p class="footnote"><sup><a id="fn2_10a" href="ch02.xhtml#fn2_10">10</a></sup>This is the sort of detail that varies from language to language.</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!</strong></span><span class="brown1"><strong>""</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">In fact, even <code><span class="green"><strong>0</strong></span></code> is <code><span class="green"><strong>true</strong></span></code> in Ruby:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!0</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">The only Ruby object that’s false in a boolean context (other than <code><span class="green"><strong>false</strong></span></code> itself) is <code><span class="green"><strong>nil</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>!!</strong></span><span class="green1"><strong>nil</strong></span>
+<span class="green"><strong>=&gt; false</strong></span></pre>
+</div>
+</section>
+<section>
+<h4 class="h4" id="sec2_4_3">2.4.3 Exercises</h4>
+<ol class="num">
+<li><p class="num">If <code><span class="green"><strong>x</strong></span></code> is <code><span class="green"><strong>"foo"</strong></span></code> and <code><span class="green"><strong>y</strong></span></code> is <code><span class="green"><strong>""</strong></span></code> (the empty string), what is the value of <code><span class="green"><strong>x &amp;&amp; y</strong></span></code>? Verify using the “bang bang” notation that <code><span class="green"><strong>x &amp;&amp; y</strong></span></code> is true in a boolean context. <em>Hint</em>: When applying <code><span class="green"><strong>!!</strong></span></code> to a compound expression, wrap the whole thing in parentheses.</p></li>
+<li><p class="num"><span epub:type="pagebreak" id="page_53"></span>What is <code><span class="green"><strong>x || y</strong></span></code>? What is it in a boolean context? Rewrite <a href="ch02.xhtml#ch02ex015">Listing 2.15</a> to use <code><span class="green"><strong>x || y</strong></span></code>, ensuring that the result is the same. (<em>Hint</em>: Switch the order of the strings.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_5">2.5 Methods</h3>
+<p class="noindent">As noted in <a href="ch02.xhtml#sec2_4">Section 2.4</a>, Ruby string objects have an attribute called <code><span class="green"><strong>length</strong></span></code>, but in fact Ruby makes no fundamental distinction between attributes and <em>methods</em>, which can be thought of as “messages” that get passed to objects, prompting the object to respond with some value.</p>
+<p class="indent">In the language of object-oriented programming, a particular string, or <em>string instance</em>, is said to “respond to” a particular method. For example, a string instance responds to the <code><span class="green"><strong>length</strong></span></code> instance method by returning its length.</p>
+<p class="indent">One important class of methods is <em>boolean methods</em>, which return <code><span class="green"><strong>true</strong></span></code> or <code><span class="green"><strong>false</strong></span></code>. Unusually among programming languages, Ruby allows punctuation in method names, and Ruby boolean methods conventionally end in a question mark <code><span class="green"><strong>?</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"badger"</strong></span><span class="gray"><strong>.</strong></span><strong>empty?</strong>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>""</strong></span><span class="gray"><strong>.</strong></span><strong>empty?</strong>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">Here we see that <code><span class="green"><strong>empty?</strong></span></code> returns <code><span class="green"><strong>true</strong></span></code> for the empty string and <code><span class="green"><strong>false</strong></span></code> otherwise.</p>
+<p class="indent">We can use the <code><span class="green"><strong>empty?</strong></span></code> method to rewrite code like <a href="ch02.xhtml#ch02ex010">Listing 2.10</a> more naturally using boolean methods, as shown in <a href="ch02.xhtml#ch02ex015">Listing 2.15</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex015"><strong>Listing 2.15:</strong> Using boolean methods.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0053-01" id="f0053-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>if</strong></span> <strong>x<span class="gray"><strong>.</strong></span>empty?</strong> <span class="gray"><strong>&amp;&amp;</strong></span> <strong>y<span class="gray"><strong>.</strong></span>empty?</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"Both strings are empty!"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>else</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span>   <span class="brown1"><strong>"At least one of the strings is nonempty."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>=&gt; "At least one of the strings is nonempty."</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_54"></span>Strings also respond to a wealth of methods that return transformed versions of the string’s content. For example, strings respond to the instance method <code><span class="green"><strong>downcase</strong></span></code>, which (surprise!) converts the string to all lowercase letters (<a href="ch02.xhtml#ch02fig07">Figure 2.7</a>):<sup><a id="fn2_11" href="ch02.xhtml#fn2_11a">11</a></sup></p>
+<p class="footnote"><sup><a id="fn2_11a" href="ch02.xhtml#fn2_11">11</a></sup>Image courtesy of Pavel Kovaricek/Shutterstock.</p>
+<figure class="figure" id="ch02fig07">
+<img src="graphics/f0055-01.jpg" alt="Images" width="891" height="592"/>
+<figcaption>
+<p class="title-f">Figure 2.7: This honey badger used to be a HONEY BADGER, but <a href="https://knowyourmeme.com/memes/honey-badger">he don’t care</a>.</p>
+</figcaption>
+</figure>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"HONEY BADGER"</strong></span><span class="gray"><strong>.</strong></span><strong>downcase</strong>
+<span class="green"><strong>=&gt; "honey badger"</strong></span></pre>
+</div>
+<p class="noindent">Note that the <code><span class="green"><strong>downcase</strong></span></code> method returns a <em>new</em> string, without changing (or <em>mutating</em>) the original:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>animal</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"HONEY BADGER"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>animal</strong><span class="gray"><strong>.</strong></span><strong>downcase</strong>
+<span class="green"><strong>=&gt; "honey badger"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>animal</strong>
+<span class="green"><strong>=&gt; "HONEY BADGER"</strong></span></pre>
+</div>
+<p class="indent">This is the sort of method that could be useful, for example, when standardizing on lowercase letters in an email address:<sup><a id="fn2_12" href="ch02.xhtml#fn2_12a">12</a></sup></p>
+<p class="footnote"><sup><a id="fn2_12a" href="ch02.xhtml#fn2_12">12</a></sup>If you’ve exited and re-entered irb, <code><span class="green"><strong>first_name</strong></span></code> might no longer be defined, as such definitions don’t persist from session to session. If this is the case, apply your technical sophistication (<a href="ch01.xhtml#box1_1">Box 1.1</a>) to figure out what to do.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0054-03" id="f0054-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>first_name</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Michael"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>username</strong> <span class="gray"><strong>=</strong></span> <strong>first_name</strong><span class="gray"><strong>.</strong></span><strong>downcase</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"</strong></span><span class="pinkr"><strong>#{</strong></span><strong>username</strong><span class="pinkr"><strong>}</strong></span><span class="brown1"><strong>@example.com"</strong></span>    <span class="ash-m"><strong><em># Sample email address</em></strong></span>
+<span class="green"><strong>=&gt; "michael@example.com"</strong></span></pre>
+</div>
+<p class="indent">As you might be able to guess, Ruby supports the opposite operation as well; before looking at the example below, see if you can guess the method for converting a string to uppercase (<a href="ch02.xhtml#ch02fig08">Figure 2.8</a>).<sup><a id="fn2_13" href="ch02.xhtml#fn2_13a">13</a></sup></p>
+<figure class="figure" id="ch02fig08">
+<img src="graphics/f0056-01.jpg" alt="Images" width="891" height="594"/>
+<figcaption>
+<p class="title-f">Figure 2.8: Early typesetters kept large letters in the “upper case” and small letters in the “lower case”.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn2_13a" href="ch02.xhtml#fn2_13">13</a></sup>Image courtesy of arco1/123RF.</p>
+<p class="indent">I’m betting you got the right answer (or at least came close):<span epub:type="pagebreak" id="page_55"></span><span epub:type="pagebreak" id="page_56"></span></p>
+<span epub:type="pagebreak" id="page_57"></span>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>last_name</strong><span class="gray"><strong>.</strong></span><strong>upcase</strong>
+<span class="green"><strong>=&gt; "HARTL"</strong></span></pre>
+</div>
+<p class="noindent">Being able to guess answers like this is a hallmark of technical sophistication, but as noted in <a href="ch01.xhtml#box1_1">Box 1.1</a> another key skill is being able to use the documentation. In particular, the Ruby <a href="https://ruby-doc.org/core-2.5.0/String.html">documentation page</a> on <code><span class="green"><strong>String</strong></span></code> has a long list of useful string instance methods.<sup><a id="fn2_14" href="ch02.xhtml#fn2_14a">14</a></sup> Let’s take a look at some of them (<a href="ch02.xhtml#ch02fig09">Figure 2.9</a>).</p>
+<p class="footnote"><sup><a id="fn2_14a" href="ch02.xhtml#fn2_14">14</a></sup>You can find such pages by going directly to the <a href="https://ruby-doc.org/">official Ruby documentation</a>, but the truth is that I nearly always find such pages by <a href="https://www.google.com/search?q=ruby%2Bstring">Googling things like “ruby string</a>”. Be mindful of the version number—although Ruby is quite stable at this point, if you notice any discrepancies make sure you’re using documentation compatible with your own version of Ruby. (The links in this tutorial use version 2.5.0, but it shouldn’t ever matter.)</p>
+<figure class="figure" id="ch02fig09">
+<img src="graphics/f0058-01.jpg" alt="Images" width="906" height="929"/>
+<figcaption>
+<p class="title-f">Figure 2.9: Some Ruby string methods.</p>
+</figcaption>
+</figure>
+<p class="indent">Inspecting the methods in <a href="ch02.xhtml#ch02fig09">Figure 2.9</a>, we see one that looks like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch02_images.xhtml#f0057-01" id="f0057-01a">Click here to view code image</a></p>
+<pre class="pre"><strong>include? other_str</strong> <em>→</em> <strong>true or false</strong></pre>
+</div>
+<p class="noindent">This indicates that the <code><span class="green"><strong>include?</strong></span></code> method takes an <em>argument</em>, <code><span class="green"><strong>other_str</strong></span></code>, and returns <code><span class="green"><strong>true</strong></span></code> or <code><span class="green"><strong>false</strong></span></code>. As with <code><span class="green"><strong>empty?</strong></span></code>, the ending question mark is an indication that <code><span class="green"><strong>include?</strong></span></code> is a boolean method.</p>
+<p class="indent">As seen in <a href="ch02.xhtml#ch02fig09">Figure 2.9</a>, parentheses are optional when calling methods in Ruby:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"hello"</strong></span><span class="gray"><strong>.</strong></span><strong>include?</strong> <span class="brown1"><strong>"lo"</strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"hello"</strong></span><span class="gray"><strong>.</strong></span><strong>include?</strong> <span class="brown1"><strong>"ol"</strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"hello"</strong></span><span class="gray"><strong>.</strong></span><strong>include?</strong> <span class="brown1"><strong>?h</strong></span>
+<span class="green"><strong>=&gt; true</strong></span></pre>
+</div>
+<p class="noindent">We see that, true to the description in <a href="ch02.xhtml#ch02fig09">Figure 2.9</a>, <code><span class="green"><strong>include?</strong></span></code> returns <code><span class="green"><strong>true</strong></span></code> if the string instance contains the given string or character.</p>
+<p class="indent">By the way, if you find the <code><span class="green"><strong>?h</strong></span></code> in the third line above confusing, so do I! I might have seen that syntax before, but I didn’t remember it offhand, and I had to confirm in irb that <code><span class="green"><strong>?h</strong></span></code> is the same as <code><span class="green"><strong>"h"</strong></span></code>. You learn something every day!</p>
+<p class="indent">Although the examples above omit parentheses, in general I prefer to use them apart from certain rare exceptions (such as the <code><span class="green"><strong>puts</strong></span></code> command first encountered in <a href="ch01.xhtml#ch01ex04">Listing 1.4</a>). Let’s take a look at a more extended example using parentheses, a longer quote (<a href="ch02.xhtml#ch02fig10">Figure 2.10</a>),<sup><a id="fn2_15" href="ch02.xhtml#fn2_15a">15</a></sup> and a greater variety of substrings shown in <a href="ch02.xhtml#ch02ex016">Listing 2.16</a>.</p>
+<figure class="figure" id="ch02fig10">
+<img src="graphics/f0060-01.jpg" alt="Images" width="891" height="1146"/>
+<figcaption>
+<p class="title-f">Figure 2.10: <a href="http://shakespeare.mit.edu/hamlet/">Hamlet</a>, Prince of Denmark, asks: “To be, or <a href="https://en.wikipedia.org/wiki/Suicide">not to be</a>, that is the question.”</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn2_15a" href="ch02.xhtml#fn2_15">15</a></sup>Image courtesy of Everett Collection/Shutterstock.<span epub:type="pagebreak" id="page_58"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex016"><span epub:type="pagebreak" id="page_59"></span><strong>Listing 2.16:</strong> Include or does not include? That is the question.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0059-01" id="f0059-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"To be, or not to be, that is the question:"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>.</strong></span><strong>include?</strong><span class="brown1"><strong>("To be"</strong></span><strong>)</strong>        <span class="ash-m"><strong><em># Does it include the substring "To be"?</em></strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>.</strong></span><strong>include?</strong><span class="brown1"><strong>("question"</strong></span><strong>)</strong>     <span class="ash-m"><strong><em># What about "question"?</em></strong></span>
+<span class="green"><strong>=&gt; true</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>.</strong></span><strong>include?</strong><span class="brown1"><strong>("nonexistent"</strong></span><strong>)</strong>  <span class="ash-m"><strong><em># This string doesn't appear.</em></strong></span>
+<span class="green"><strong>=&gt; false</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>.</strong></span><strong>include?</strong><span class="brown1"><strong>("TO BE"</strong></span><strong>)</strong>        <span class="ash-m"><strong><em># String inclusion is case-sensitive.</em></strong></span>
+<span class="green"><strong>=&gt; false</strong></span></pre>
+</div>
+<p class="noindent">We see from <a href="ch02.xhtml#ch02ex016">Listing 2.16</a> that <code><span class="green"><strong>String#include?</strong></span></code> (so-written to indicate that <code><span class="green"><strong>include?</strong></span></code> is a <code><span class="green"><strong>String</strong></span></code> instance method) can be called with arbitrary substrings, handles spaces just fine, and is case-sensitive.</p>
+<section>
+<h4 class="h4" id="sec2_5_1">2.5.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Write the Ruby code to test whether the string “hoNeY BaDGer” includes the string “badger” without regard to case.</p></li>
+<li><p class="num">Using the documentation, figure out how to capitalize a string. What happens if you capitalize a string that is already all-caps?</p></li>
+<li><p class="num">See if you can guess the Ruby boolean method to test if an object is <code><span class="green"><strong>nil</strong></span></code> (equivalent to <code><span class="green"><strong>object == nil</strong></span></code>). Use it to show that the empty string isn’t <code><span class="green"><strong>nil</strong></span></code>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_6">2.6 String Iteration</h3>
+<p class="indent">Our final topic on strings is <em>iteration</em>, which is the practice of repeatedly stepping through an object one element at a time. Iteration is a common theme in computer programming, and we’ll get plenty of practice in this tutorial. We’ll also see how one sign of your growing power as a developer is learning how to <em>avoid</em> iteration entirely (as discussed in <a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<span epub:type="pagebreak" id="page_60"></span>
+<p class="indent"><span epub:type="pagebreak" id="page_61"></span>In the case of strings, we’ll be learning how to iterate one <em>character</em> at a time. There are two main prerequisites to this: First, we need to learn how to access a particular character in a string, and second, we need to learn how to make a <em>loop</em>.</p>
+<p class="indent">We can figure out how to access a particular string character by consulting the <a href="https://ruby-doc.org/core-2.5.0/String.html">list of String methods</a>, which includes the following entry:</p>
+<p class="blockquote1"><code><strong>str[index]</strong></code> <strong>→</strong> <code><strong>new_str or nil</strong></code></p>
+<p class="blockquote1a">Element Reference—If passed a single <code>index</code>, returns a substring of one character at that index.</p>
+<p class="noindent">Looking at the first example in the documentation and applying it to the <code><span class="green"><strong>soliloquy</strong></span></code> string from <a href="ch02.xhtml#sec2_5">Section 2.5</a> lets us see how it works, as shown in <a href="ch02.xhtml#ch02ex017">Listing 2.17</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex017"><strong>Listing 2.17:</strong> Investigating the behavior of <code><span class="green"><strong>str[fixnum]</strong></span></code>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0061-01" id="f0061-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <strong>soliloquy</strong>   <span class="ash-m"><strong><em># Just a reminder of what the string is</em></strong></span>
+<span class="green"><strong>To be, or not to be, that is the question:</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>[0]</strong></span>
+<span class="green"><strong>=&gt; "T"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>[1]</strong></span>
+<span class="green"><strong>=&gt; "o"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>[2]</strong></span>
+<span class="green"><strong>=&gt; " "</strong></span></pre>
+</div>
+<p class="noindent">We see in <a href="ch02.xhtml#ch02ex017">Listing 2.17</a> that Ruby supports a bracket notation for accessing string elements, so that <code><span class="green"><strong>[0]</strong></span></code> returns the first character, <code><span class="green"><strong>[1]</strong></span></code> returns the second, and so on. (We’ll discuss this possibly counter-intuitive numbering convention, called “zero-offset”, further in <a href="ch03.xhtml#sec3_1">Section 3.1</a>.) Each number <code><span class="green"><strong>0</strong></span></code>, <code><span class="green"><strong>1</strong></span></code>, <code><span class="green"><strong>2</strong></span></code>, etc., is called an <em>index</em> (plural <em><a href="https://en.wiktionary.org/wiki/indexes#English">indexes</a></em> or <em><a href="https://en.wiktionary.org/wiki/indices#English">indices</a></em>).</p>
+<p class="indent">Now let’s look at our first example of a loop. In particular, we’ll use a <code><span class="green"><strong>for</strong></span></code> loop that defines an index value <code><span class="green"><strong>i</strong></span></code> and does an operation for each value in the <em>range</em> <code><span class="green"><strong>0..4</strong></span></code> (<a href="ch02.xhtml#ch02ex018">Listing 2.18</a>).<sup><a id="fn2_16" href="ch02.xhtml#fn2_16a">16</a></sup></p>
+<p class="footnote"><sup><a id="fn2_16a" href="ch02.xhtml#fn2_16">16</a></sup>According to the official Ruby documentation, a <code><span class="green"><strong>for</strong></span></code> loop can include an optional <code><span class="green"><strong>do</strong></span></code> at the end, and this was included in earlier versions of this tutorial. Some readers reported problems with the <code><span class="green"><strong>do</strong></span></code>, though, so it has now been removed.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex018"><span epub:type="pagebreak" id="page_62"></span><strong>Listing 2.18:</strong> A simple <code><span class="green"><strong>for</strong></span></code> loop.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray"><strong>0..4</strong></span>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green1"><strong>puts</strong></span> <strong>i</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>0
+1
+2
+3
+4</strong></span></pre>
+</div>
+<p class="noindent">This is Ruby’s version of the classic “for loop” that is exceptionally common across an astonishing variety of programming languages, from C and C++ to JavaScript, Perl, and PHP. Unlike those languages, though, which explicitly increment a counter variable, Ruby defines a range of values directly via a special <code><span class="green"><strong>Range</strong></span></code> data type.</p>
+<p class="indent"><a href="ch02.xhtml#ch02ex018">Listing 2.18</a> is arguably a little more elegant than the equivalent “classic” <code><span class="green"><strong>for</strong></span></code> loop seen in <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em> (<a href="ch02.xhtml#ch02ex019">Listing 2.19</a>), but it’s still not very good Ruby.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex019"><strong>Listing 2.19:</strong> A <code><span class="green"><strong>for</strong></span></code> loop in JavaScript.</p>
+<pre class="pre1"><span class="gray"><strong>&gt;</strong></span> <span class="green1"><strong>for</strong></span> <strong>(i</strong> <span class="gray"><strong>= 0</strong></span><strong>; i</strong> <span class="gray"><strong>&lt; 5</strong></span>; <strong>i</strong><span class="gray"><strong>++</strong></span>) <strong>{</strong>
+  <strong>console.log(i);</strong>
+<strong>}</strong>
+<span class="gray"><strong>0
+1
+2
+3
+4</strong></span></pre>
+</div>
+<p class="indent">As a language and as a community, Ruby is especially vigilant about avoiding plain <code><span class="green"><strong>for</strong></span></code> loops. As computer scientist (and personal friend) <a href="http://users.cms.caltech.edu/%7Emvanier/">Mike Vanier</a> (<a href="ch02.xhtml#ch02fig11">Figure 2.11</a>) once <a href="http://paulgraham.com/vanlfsp.html">put it</a> in an email to <a href="http://paulgraham.com/">Paul Graham</a>:</p>
+<figure class="figure" id="ch02fig11">
+<img src="graphics/f0063-01.jpg" alt="Images" width="641" height="647"/>
+<figcaption>
+<p class="title-f">Figure 2.11: Just a few more <code><span class="green"><strong>for</strong></span></code> loops and Mike Vanier will be a millionaire.</p>
+</figcaption>
+</figure>
+<p class="blockquote">This [tedious repetition] grinds you down after a while; if I had a nickel for every time I’ve written “for (i = 0; i &lt; N; i++)” in C I’d be a millionaire.</p>
+<p class="noindent"><span epub:type="pagebreak" id="page_63"></span>In order to avoid getting ground down, we’ll learn how to use a special <code><span class="green"><strong>each</strong></span></code> method (<a href="ch03.xhtml#sec3_5">Section 3.5</a>) that is especially characteristic of Ruby as compared to other languages. We’ll also see how Ruby lets us avoid loops entirely using functional programming (<a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<p class="indent">For now, though, let’s build on <a href="ch02.xhtml#ch02ex018">Listing 2.18</a> to iterate through all the characters in the first line of Hamlet’s famous soliloquy. The only new thing we need is the index for when the loop should stop. In <a href="ch02.xhtml#ch02ex018">Listing 2.18</a>, we hard-coded the upper limit (<code><span class="green"><strong>4</strong></span></code>), and we could do the same here if we wanted. The <code><span class="green"><strong>soliloquy</strong></span></code> variable is a bit long to count the characters by hand, though, so let’s ask Ruby to tell us using the <code><span class="green"><strong>length</strong></span></code> property (<a href="ch02.xhtml#sec2_4">Section 2.4</a>):</p>
+<span epub:type="pagebreak" id="page_64"></span>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>soliloquy</strong><span class="gray"><strong>.</strong></span><strong>length</strong>
+<span class="green"><strong>=&gt; 42</strong></span></pre>
+</div>
+<p class="noindent">This <a href="http://www.independent.co.uk/life-style/history/42-the-answer-to-life-the-universe-and-everything-2205734.html">exceptionally auspicious</a> result suggests writing code like this:</p>
+<div class="sidebar">
+<pre class="pre"><span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray"><strong>0..41</strong></span>
+  <span class="green1"><strong>puts</strong></span> <strong>soliloquy<span class="gray"><strong>[</strong></span>i</strong><span class="gray"><strong>]</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">This code will work, and it is in perfect analogy with <a href="ch02.xhtml#ch02ex018">Listing 2.18</a>, but it also raises a question: Why hard-code the length when we can just use the <code><span class="green"><strong>length</strong></span></code> property in the loop itself?</p>
+<p class="indent">The answer is that we shouldn’t, and when looping it’s common practice to use the <code><span class="green"><strong>length</strong></span></code> property whenever possible. The resulting improved <code><span class="green"><strong>for</strong></span></code> loop (with result) appears in <a href="ch02.xhtml#ch02ex020">Listing 2.20</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch02ex020"><strong>Listing 2.20:</strong> Combining <code><span class="green"><strong>length</strong></span></code> and a <code><span class="green"><strong>for</strong></span></code> loop.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f0064-01" id="f0064-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>for</strong></span> <strong>i</strong> <span class="green1"><strong>in</strong></span> <span class="gray"><strong>0..</strong></span><strong>(soliloquy</strong><span class="gray"><strong>.</strong></span><strong>length</strong> <span class="gray"><strong>- 1</strong></span>)
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green1"><strong>puts</strong></span> <strong>soliloquy</strong><span class="gray"><strong>[</strong></span><strong>i</strong><span class="gray"><strong>]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>T
+o</strong></span>
+
+<span class="green"><strong>b
+e
+.
+.
+.
+t
+i
+o
+n
+:</strong></span></pre>
+</div>
+<p class="indent">As noted above, <code><span class="green"><strong>for</strong></span></code> loops are best avoided if at all possible, but this less elegant style of looping is still an excellent place to start. As we’ll see in <a href="ch08.xhtml#ch08">Chapter 8</a>, one powerful technique is to write a <em>test</em> for the functionality we want, then get it passing any way we can, and then <em>refactor</em> the code to use a more elegant method. The second step in this process (called <em>test-driven development</em>, <span epub:type="pagebreak" id="page_65"></span>or TDD) often involves writing inelegant but easy-to-understand code—a task at which the humble <code><span class="green"><strong>for</strong></span></code> loop excels.</p>
+<section>
+<h4 class="h4" id="sec2_6_1">2.6.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Write a <code><span class="green"><strong>for</strong></span></code> loop that prints out the characters of <code><span class="green"><strong>soliloquy</strong></span></code> in reverse order. <em>Hint</em>: Inside the loop, what is <code><span class="green"><strong>soliloquy.length - i</strong></span></code>?</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_66"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

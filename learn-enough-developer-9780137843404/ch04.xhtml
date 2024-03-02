@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch04"><span epub:type="pagebreak" id="page_61"></span>Chapter 4</h2>
+<h2 class="chap-title">Directories</h2>
+<p class="noindent">Having examined many of the Unix utilities for dealing with files, the time has come to learn about <em>directories</em>, sometimes known by the synonym <em>folders</em> (<a href="ch04.xhtml#fig4-1">Figure 4.1</a>). As we’ll see, many of the ideas developed in the context of files also apply to directories, but there are many differences as well.</p>
+<figure class="figure" id="fig4-1">
+<img src="graphics/04fig01.jpg" alt="Image" width="744" height="350"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.1:</strong> The correspondence between folders &amp; directories.</p>
+</figcaption>
+</figure>
+<section>
+<h3 class="h3" id="ch04lev1">4.1 Directory Structure</h3>
+<p class="noindent">The structure of Unix-style directories is typically indicated using a list of directory names separated by forward slashes, which we can combine with the <span class="green"><code><strong>ls</strong></code></span> command (<a href="ch02.xhtml#ch02lev2">Section 2.2</a>) like this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls /Users/mhartl/ruby</pre>
+<p class="noindent">or like this:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <code>ls /usr/local/bin</code></pre>
+<p class="noindent">As seen in <a href="ch04.xhtml#fig4-1">Figure 4.1</a>, these representations correspond to directories in a hierarchical filesystem, with (say) <span class="green"><code><strong>mhartl</strong></code></span> a subdirectory of <span class="green"><code><strong>Users</strong></code></span> and <span class="green"><code><strong>ruby</strong></code></span> a subdirectory of <span class="green"><code><strong>mhartl</strong></code></span>.</p>
+<p class="indent">Conventions vary when speaking about directories: a <em>user directory</em> like <span class="green"><code><strong>/Users/mhartl</strong></code></span> would probably be read as “slash users slash mhartl” or “slash users mhartl”, whereas omitting the initial slash in spoken language is common for <em>system directories</em> such as <span class="green"><code><strong>/usr/local/bin</strong></code></span>, <span epub:type="pagebreak" id="page_62"></span>which would probably be pronounced “user local bin”.<sup><a id="rfn4_1" href="ch04.xhtml#fn4_1">1</a></sup> Because <em>all</em> Unix directories are ultimately subdirectories of the <em>root directory</em> <span class="green"><code><strong>/</strong></code></span> (pronounced “slash”), the leading and separator slashes are implied. <em>Note</em>: Referring to forward slashes incorrectly as “backslashes” is a source of intense suffering, and should be strictly avoided.</p>
+<p class="footnote"><a id="fn4_1" href="ch04.xhtml#rfn4_1">1.</a> For more on Unix system directories, see “What is /usr/local/bin?” (<a href="https://unix.stackexchange.com/questions/4186/what-is-usr-local-bin">https://unix.stackexchange.com/questions/4186/what-is-usr-local-bin</a>) at the Unix StackExchange. Thanks to reader Joost van der Linden for the suggestion.</p>
+<p class="indent">The most important directory for a particular user is the <em>home directory</em>, which on my macOS system is <span class="green"><code><strong>/Users/mhartl</strong></code></span>, corresponding to my username (<span class="green"><code><strong>mhartl</strong></code></span>). The home directory can be specified as an <em>absolute path</em>, as in <span class="green"><code><strong>/Users/mhartl</strong></code></span>, or using the shorthand for the home directory, the tilde character <span class="green"><code><strong>~</strong></code></span> (which is typed using Shift-backtick, located just to the left of the number 1 on most keyboards). As a result, the two paths shown in <a href="ch04.xhtml#fig4-1">Figure 4.1</a> are identical: <span class="green"><code><strong>/Users/mhartl/ruby/projects</strong></code></span> is the same as <span class="green"><code><strong>~/ruby/projects</strong></code></span>. (Amusingly, the reason the tilde character is used for the home directory is simply because the “Home” key was the same as the key for producing “~” on some early keyboards.)</p>
+<p class="indent">In addition to user directories, every Unix system has <em>system directories</em> for the programs essential for the computer’s normal operation. Modifying system files or directories requires special powers granted only to the <em>superuser</em>, known as <span class="green"><code><strong>root</strong></code></span>. <span epub:type="pagebreak" id="page_63"></span>(This use of “root” is unrelated to the “root directory” mentioned above.) The superuser is so powerful that it’s considered bad form to log in as <span class="green"><code><strong>root</strong></code></span>; instead, tasks executed as <span class="green"><code><strong>root</strong></code></span> should typically use the <span class="green"><code><strong>sudo</strong></code></span> command (<a href="ch04.xhtml#box4-1">Box 4.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box4-1">Box 4.1: “<code>sudo</code> make me a sandwich.”</p>
+<p class="box-no"><code>sudo</code> gives ordinary users the power to execute commands as the superuser. For example, let’s try <code>touch</code>ing a file in the system directory <code>/opt</code> as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p063pro01" id="p063pro01a">Click here to view code image</a></p>
+<pre class="pre">$ touch /opt/foo
+touch: /opt/foo: Permission denied</pre>
+<p class="box-no">Because normal users don’t have permission to modify <code>/opt</code>, the command fails, but it succeeds with <code>sudo</code>:</p>
+<pre class="pre">$ sudo touch /opt/foo
+Password:</pre>
+<p class="box-no">As shown, after entering <code>sudo</code> we are prompted to enter our user password; if entered correctly, and if the user has been configured to have <code>sudo</code> privileges (which is the default on most desktop Unix systems), then the command will succeed. As shown in the xkcd comic strip “Sandwich” (<a href="https://m.xkcd.com/149/">https://m.xkcd.com/149/</a>), this pattern of being denied at first, only to succeed using <code>sudo</code>, is a common pattern when using the command line.</p>
+<p class="box-ind">To check that the file really was created, we can <code>ls</code> it:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p063pro02" id="p063pro02a">Click here to view code image</a></p>
+<pre class="pre">$ ls -l /opt/foo
+-rw-r--r-- 1 root wheel 0 Jul 23 19:13 /opt/foo</pre>
+<p class="box-no">Note that (1) a normal user can <code>ls</code> a file in a system directory (without <code>sudo</code>) and (2) the name <code>root</code> appears in the listing, indicating that the superuser owns the file. (The meaning of the second term, <code>wheel</code>, is a little obscure, but you can learn about it on a site called, appropriately enough, superuser (<a href="https://superuser.com/questions/191955/what-is-the-wheel-user-in-os-x">https://superuser.com/questions/191955/what-is-the-wheel-user-in-os-x</a>).)</p>
+<p class="box-ind">To remove the file we just created, we again need superuser status:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p063pro03" id="p063pro03a">Click here to view code image</a></p>
+<pre class="pre">$ rm -f /opt/foo
+rm: /opt/foo: Permission denied
+$ sudo !!
+$ !ls
+ls: /opt/foo: No such file or directory</pre>
+<p class="box-no"><span epub:type="pagebreak" id="page_64"></span>Here the first <code>rm</code> fails, so we’ve run <code>sudo !!</code>, which runs <code>sudo</code> and then the previous command, and we’ve followed that up with <code>!ls</code>, which runs the previous <code>ls</code> command (<a href="ch03.xhtml#box3-1">Box 3.1</a>).</p>
+<p class="box-ind">It’s also worth noting the English pronunciation of something like <code>sudo !!</code>, which is important when communicating via spoken language. As noted in <a href="ch03.xhtml#box3-1">Box 3.1</a>, <code>!!</code> is pronounced “bang bang”. <code>sudo</code>, meanwhile, is pronounced either “SOO-doo” or “SOO-doh”. Both pronunciations are common, though I prefer the former because the <code>do</code> in <code>sudo</code> is in fact just the English word “do”. Thus, my preferred pronunciation for <code>sudo !!</code> is “SOO-doo bang bang”.</p>
+<p class="box-ind">By the way, the <code>su</code> in <code>sudo</code> originally stood for “super-user” (<a href="https://pthree.org/2009/12/31/the-meaning-of-su/">https://pthree.org/2009/12/31/the-meaning-of-su/</a>), but over time its use expanded, and now is usually thought of as “substitute user”. <code>sudo</code> is therefore a contraction of “substitute user do”, with the substitute user being the superuser by default. Because the superuser can do anything, the command “sudo make me a sandwich” in “Sandwich” succeeds when a mere “make me a sandwich” does not.</p>
+</aside>
+<section>
+<h4 class="h4" id="ch04lev1sec1">4.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write in words how you might speak the directory <span class="green"><code><strong>~/foo/bar</strong></code></span>.</p></li>
+<li><p class="number">In <span class="green"><code><strong>/Users/bill/sonnets</strong></code></span>, what is the home directory? What is the username? Which directory is deepest in the hierarchy?</p></li>
+<li><p class="number">For a user with username <span class="green"><code><strong>bill</strong></code></span>, how do <span class="green"><code><strong>/Users/bill/sonnets</strong></code></span> and <span class="green"><code><strong>~/sonnets</strong></code></span> differ (if at all)?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev2">4.2 Making Directories</h3>
+<p class="noindent">So far in this tutorial, we’ve created (and removed) a large number of text files. The time has finally come to make a directory to contain them. Although most modern operating systems include a graphical interface for this task, the Unix way to do it is with <span class="green"><code><strong>mkdir</strong></code></span> (short for “make directory”, per <a href="ch02.xhtml#fig2-4">Figure 2.4</a>):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> mkdir text_files</pre>
+<p class="noindent">Having made the directory, we can move the text files there using a wildcard:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> mv *.txt text_files/</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_65"></span>We can confirm the move worked by listing the directory:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p065pro01" id="p065pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls text_files/
+<span class="green">sonnet_1.txt    sonnet_1_reversed.txt sonnets.txt</span></pre>
+<p class="noindent">(Depending on how closely you’ve followed this tutorial, your results may vary.)</p>
+<p class="indent">By default, running <span class="green"><code><strong>ls</strong></code></span> on a directory shows its <em>contents</em>, but we can show just the directory using the <span class="green"><code><strong>-d</strong></code></span> option:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -d text_files/
+<span class="green">text_files/</span></pre>
+<p class="noindent">This usage is especially common with the <span class="green"><code><strong>-l</strong></code></span> option (<a href="ch02.xhtml#ch02lev2">Section 2.2</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#p065pro02" id="p065pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> ls -ld text_files/
+<span class="green">drwxr-xr-x 7 mhartl staff 238 Jul 24 18:07 text_files</span></pre>
+<p class="indent">Finally, we can change directories using <span class="green"><code><strong>cd</strong></code></span>:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> text_files/</pre>
+<p class="noindent">Note that <span class="green"><code><strong>cd</strong></code></span> typically supports tab completion, so (as described in <a href="ch02.xhtml#box2-4">Box 2.4</a>) we can actually type <span class="green"><code><strong>cd tex</strong></code></span> <img src="graphics/pg20-6.jpg" alt="images" width="19" height="15"/>.</p>
+<p class="indent">After running <span class="green"><code><strong>cd</strong></code></span>, we can confirm that we’re in the correct directory using the “print working directory” command, <span class="green"><code><strong>pwd</strong></code></span>, together with another call to <span class="green"><code><strong>ls</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p065pro03" id="p065pro03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span>
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">sonnet_1.txt     sonnet_1_reversed.txt sonnets.txt</span></pre>
+<p class="noindent">These last steps of typing <span class="green"><code><strong>pwd</strong></code></span> to double-check the directory, and especially running <span class="green"><code><strong>ls</strong></code></span> to inspect the directory contents, are a matter of habit for many a grizzled command-line veteran. (Your result for <span class="green"><code><strong>pwd</strong></code></span> will, of course, be different, unless you happen to be using the username “mhartl” on macOS.)</p>
+<section>
+<h4 class="h4" id="ch04lev2sec1"><span epub:type="pagebreak" id="page_66"></span>4.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">What is the option for making intermediate directories as required, so that you can create, e.g., <span class="green"><code><strong>~/foo</strong></code></span> and <span class="green"><code><strong>~/foo/bar</strong></code></span> with a single command? <em>Hint</em>: Refer to the man page for <span class="green"><code><strong>mkdir</strong></code></span>.</p></li>
+<li><p class="number">Use the option from the previous exercise to make the directory <span class="green"><code><strong>foo</strong></code></span> and, within it, the directory <span class="green"><code><strong>bar</strong></code></span> (i.e., <span class="green"><code><strong>~/foo/bar</strong></code></span>) with a single command.</p></li>
+<li><p class="number">By piping the output of <span class="green"><code><strong>ls</strong></code></span> to <span class="green"><code><strong>grep</strong></code></span>, list everything in the home directory that contains the letter “o”.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev3">4.3 Navigating Directories</h3>
+<p class="noindent">We saw in <a href="ch04.xhtml#ch04lev2">Section 4.2</a> how to use <span class="green"><code><strong>cd</strong></code></span> to change to a directory with a given name. This is one of the most common ways of navigating, but there are a couple of special forms worth knowing. The first is changing to the directory one level up in the hierarchy using <span class="green"><code><strong>cd ..</strong></code></span> (read “see-dee dot-dot”):</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span>
+<span class="dblue"><strong>$</strong> <span class="lgreen">cd</span> ..</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl</span></pre>
+<p class="noindent">In this case, because <span class="green"><code><strong>/Users/mhartl</strong></code></span> is my <em>home directory</em>, we could have accomplished the same thing using <span class="green"><code><strong>cd</strong></code></span> by itself:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> text_files/
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl</span></pre>
+<p class="noindent">The reason this works is that <span class="green"><code><strong>cd</strong></code></span> by itself changes to the user’s home directory, wherever that is. This means that</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_67"></span>and</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~</pre>
+<p class="noindent">are equivalent.</p>
+<p class="indent">When changing directories, it’s frequently useful to be able to specify the home directory somehow. For example, suppose we make a second directory and <span class="green"><code><strong>cd</strong></code></span> into it:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl</span>
+<span class="dblue"><strong>$</strong></span> mkdir second_directory
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> second_directory/</pre>
+<p class="noindent">Now if we want to change to the <span class="green"><code><strong>text_files</strong></code></span> directory, we can <span class="green"><code><strong>cd</strong></code></span> to <span class="green"><code><strong>text_files</strong></code></span> via the home directory <span class="green"><code><strong>~</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p067pro02" id="p067pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/second_directory</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~/text_files
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span></pre>
+<p class="noindent">Incidentally, we’re now in a position to understand the prompts shown in <a href="ch01.xhtml#fig1-6">Figure 1.6</a>: I have my prompt configured to show the current directory, which might be something like <span class="green"><code><strong>[~]</strong></code></span>, <span class="green"><code><strong>[ruby]</strong></code></span>, or <span class="green"><code><strong>[projects]</strong></code></span>. (We’ll discuss how to customize the prompt in <a href="part02.xhtml#part02">Part II</a> (<a href="ch06.xhtml#ch06lev7sec1">Section 6.7.1</a>). Especially eager readers can exercise their technical sophistication (<a href="ch01.xhtml#box1-4">Box 1.4</a>) by Googling for how to do it.)</p>
+<p class="indent">Closely related to <span class="green"><code><strong>..</strong></code></span> for “one directory up” is <span class="green"><code><strong>.</strong></code></span> (read “dot”) which means “the current directory”. The most common use of <span class="green"><code><strong>.</strong></code></span> is when moving or copying files to the current directory:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p067pro03" id="p067pro03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~/second_directory
+<span class="dblue"><strong>$</strong></span> ls
+<span class="dblue"><strong>$</strong></span> cp ~/text_files/sonnets.txt .
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">sonnets.txt</span></pre>
+<p class="noindent">Note that the first call to <span class="green"><code><strong>ls</strong></code></span> returns nothing, because <span class="green"><code><strong>second_directory</strong></code></span> is initially empty.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_68"></span>Another common use of <span class="green"><code><strong>.</strong></code></span> is in conjunction with the <span class="green"><code><strong>find</strong></code></span> command, which like <span class="green"><code><strong>grep</strong></code></span> is incredibly powerful, but in my own use it looks like this 99% of the time:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p068pro01" id="p068pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> find . -name <span class="brown">'*.txt'</span>
+<span class="green">./text_files/sonnet_1.txt</span>
+<span class="green">./text_files/sonnet_1_reversed.txt</span>
+<span class="green">./text_files/sonnets.txt</span></pre>
+<p class="noindent">In words, what this does is find files whose names match the pattern <span class="green"><code><strong>*.txt</strong></code></span>, starting in the current directory <span class="green"><code><strong>.</strong></code></span> and then in its subdirectories.<sup><a id="rfn4_2" href="ch04.xhtml#fn4_2">2</a></sup> The <span class="green"><code><strong>find</strong></code></span> utility is incredibly useful for finding a misplaced file at the command line.</p>
+<p class="footnote"><a id="fn4_2" href="ch04.xhtml#rfn4_2">2.</a> My directory has a huge number of text files, ’cause that’s just how I roll, so the command I ran was actually <span class="green"><code><strong>find . -name '*.txt' | grep text_files</strong></code></span>, which filters out anything that doesn’t match the directory being used in this tutorial.</p>
+<p class="indent">Perhaps my favorite use of <span class="green"><code><strong>.</strong></code></span> is in “open dot”, which will work only on macOS:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~/ruby/projects
+<span class="dblue"><strong>$</strong></span> open .</pre>
+<p class="noindent">The remarkable <span class="green"><code><strong>open</strong></code></span> command opens its argument using whatever the default program is for the given file or directory. (A similar command, <span class="green"><code><strong>xdg-open</strong></code></span>, works on some Linux systems.) For example, <span class="green"><code><strong>open foo.pdf</strong></code></span> would open the PDF file with the default viewer (which is Preview on most Macs). In the case of a directory such as <span class="green"><code><strong>.</strong></code></span>, that default program is the Finder, so <span class="green"><code><strong>open .</strong></code></span> produces a result like that shown in <a href="ch04.xhtml#fig4-1">Figure 4.1</a>.</p>
+<p class="indent">A final navigational command, and one of my personal favorites, is <span class="green"><code><strong>cd -</strong></code></span>, which <span class="green"><code><strong>cd</strong></code></span>s to the <em>previous</em> directory, wherever it was:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p068pro02" id="p068pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/second_directory</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> ~/text_files
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">pwd</span>
+<span class="green">/Users/mhartl/text_files</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> -
+<span class="green">/Users/mhartl/second_directory</span></pre>
+<p class="noindent">I find that <span class="green"><code><strong>cd -</strong></code></span> is especially useful when combining commands, as described in <a href="ch04.xhtml#box4-2">Box 4.2</a>.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box4-2"><span epub:type="pagebreak" id="page_69"></span>Box 4.2: Combining Commands</p>
+<p class="box-no">It’s often convenient to combine commands at the command line, such as when installing software using the Unix programs <code>configure</code> and <code>make</code>, which often appear in the following sequence:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p069pro01" id="p069pro01a">Click here to view code image</a></p>
+<pre class="pre">$ ./configure ; make ; make install</pre>
+<p class="noindent">This line runs the <code>configure</code> program from the current directory <code>.</code>, and then runs both <code>make</code> and <code>make install</code>. (You are not expected to understand what these programs do, and indeed they won’t work on your system unless you happen to be in the directory of a program designed to be installed this way.) Because they are separated by the semicolon character <code>;</code>, three commands are run in sequence.</p>
+<p class="box-ind">An even better way to combine commands is with the double-ampersand <code>&amp;&amp;</code>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p069pro02" id="p069pro02a">Click here to view code image</a></p>
+<pre class="pre">$ ./configure &amp;&amp; make &amp;&amp; make install</pre>
+<p class="box-no">The difference is that commands separated by <code>&amp;&amp;</code> run only if the previous command <em>succeeded</em>. In contrast, with <code>;</code> all the commands will be run no matter what, which will cause an error in the likely case that subsequent commands depend on the results of the ones that precede them.</p>
+<p class="box-ind">I especially like to use <code>&amp;&amp;</code> in combination with <code>cd -</code>, which lets me do things like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p069pro03" id="p069pro03a">Click here to view code image</a></p>
+<pre class="pre">$ build_article &amp;&amp; cd ~/tau &amp;&amp; deploy &amp;&amp; cd -</pre>
+<p class="noindent">Again, you are not expected to understand these commands, but the general idea is that we can (say) build an article in one directory, <code>cd</code> to a different directory, deploy (perhaps a website (<a href="https://tauday.com/">https://tauday.com/</a>)) to production, and then <code>cd</code> back (<code>cd -</code>) to the original directory, where we can continue our work. Then, if need be, we can just use up arrow (or one of the techniques from <a href="ch03.xhtml#box3-1">Box 3.1</a>) to retrieve the whole thing and do it all again.</p>
+</aside>
+<section>
+<h4 class="h4" id="ch04lev3sec1">4.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">How do the effects of <span class="green"><code><strong>cd</strong></code></span> and <span class="green"><code><strong>cd ~</strong></code></span> differ (or do they)?</p></li>
+<li><p class="number">Change to <span class="green"><code><strong>text_files</strong></code></span>, then change to <span class="green"><code><strong>second_directory</strong></code></span> using the “one directory up” double-dot operator <span class="green"><code><strong>..</strong></code></span>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_70"></span>From wherever you are, create an empty file called <span class="green"><code><strong>nil</strong></code></span> in <span class="green"><code><strong>text_files</strong></code></span> using whatever method you wish.</p></li>
+<li><p class="number">Remove <span class="green"><code><strong>nil</strong></code></span> from the previous exercise using a different path from the one you used before. (In other words, if you used the path <span class="green"><code><strong>~/text_files</strong></code></span> before, use something like <span class="green"><code><strong>../text_files</strong></code></span> or <span class="green"><code><strong>/Users/&lt;username&gt;/text_files</strong></code></span>.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev4">4.4 Renaming, Copying, and Deleting Directories</h3>
+<p class="noindent">The commands for renaming, copying, and deleting directories are similar to those for files (<a href="ch02.xhtml#ch02lev3">Section 2.3</a>), but there are some subtle differences worth noting. The command with the least difference is <span class="green"><code><strong>mv</strong></code></span>, which works just as it does for files:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p070pro01" id="p070pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> mkdir foo
+<span class="dblue"><strong>$</strong></span> mv foo/ bar/
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> foo/
+<span class="green">-bash: cd: foo: No such file or directory</span>
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> bar/</pre>
+<p class="noindent">Here the error message indicates that the <span class="green"><code><strong>mv</strong></code></span> worked—there is no file or directory called <span class="green"><code><strong>foo</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p070pro02" id="p070pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> foo/
+<span class="green">-bash: cd: foo: No such file or directory</span></pre>
+<p class="noindent">(The word <span class="green"><code><strong>bash</strong></code></span> refers to the name of the particular shell program being run, which in this case is the “Bourne Again SHell”.) The only minor subtlety is that the trailing slashes (which are typically added automatically by tab completion (<a href="ch02.xhtml#box2-4">Box 2.4</a>)) are optional:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> mv bar foo
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> foo/</pre>
+<p class="indent">This issue with trailing slashes never makes a difference with <span class="green"><code><strong>mv</strong></code></span>, but with <span class="green"><code><strong>cp</strong></code></span> it can be a source of much confusion. In particular, when copying directories, the behavior you usually want is to copy the directory contents <em>including</em> the directory, which on many systems requires leaving off the trailing slash. When copying files, you also need to include the <span class="green"><code><strong>-r</strong></code></span> option (for “recursive”). For example, to copy the contents of the <span epub:type="pagebreak" id="page_71"></span><span class="green"><code><strong>text_files</strong></code></span> directory to a new directory called <span class="green"><code><strong>foobar</strong></code></span>, we use the command shown in <a href="ch04.xhtml#list4-1">Listing 4.1</a>.</p>
+<p class="list-head" id="list4-1"><strong>Listing 4.1:</strong> Copying a directory.</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> mkdir foobar
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> foobar/
+<span class="back-yellow"><span class="dblue"><strong>$</strong></span> cp -r ../text_files .</span>
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">text_files</span></pre>
+</div>
+<p class="noindent">Note that we’ve used <span class="green"><code><strong>..</strong></code></span> to make a <em>relative path</em>, going up one directory and then into <span class="green"><code><strong>text_files</strong></code></span>. Also note the <em>lack</em> of a trailing slash in <span class="green"><code><strong>cp -r ../text_files .</strong></code></span>; if we included it, we’d get <a href="ch04.xhtml#list4-2">Listing 4.2</a> instead.</p>
+<p class="list-head" id="list4-2"><strong>Listing 4.2:</strong> Copying with a trailing slash.</p>
+<p class="codelink"><a href="ch04_images.xhtml#p04lis02" id="p04lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="back-yellow"><span class="dblue"><strong>$</strong></span> cp -r ../text_files/ .</span>
+<span class="dblue"><strong>$</strong></span> ls
+<span class="green">sonnet_1.txt     sonnet_1_reversed.txt sonnets.txt   text_files</span></pre>
+</div>
+<p class="noindent">In other words, <a href="ch04.xhtml#list4-2">Listing 4.2</a> copies the individual files, but not the directory itself. As a result, I recommend always omitting the trailing slash, as in <a href="ch04.xhtml#list4-1">Listing 4.1</a>; if you want to copy only the files, be explicit using the star operator, as in:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> cp ../text_files/* .</pre>
+<p class="indent">Unlike renaming (moving) and copying directories, which use the same <span class="green"><code><strong>mv</strong></code></span> and <span class="green"><code><strong>cp</strong></code></span> commands used for files, in the case of removing directories there’s a dedicated command called <span class="green"><code><strong>rmdir</strong></code></span>. In my experience, though, it rarely works, as seen here:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p071pro01" id="p071pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span>
+<span class="dblue"><strong>$</strong></span> rmdir second_directory
+<span class="green">rmdir: second_directory/: Directory not empty</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_72"></span>The error message here is what happens 99% of the time when I try to remove directories, because <span class="green"><code><strong>rmdir</strong></code></span> requires the directory to be empty. You can of course empty it by hand (using <span class="green"><code><strong>rm</strong></code></span> repeatedly), but this is frequently inconvenient, and I almost always use the more powerful (but <em>much</em> more dangerous) “remove recursive force” command <span class="green"><code><strong>rm -rf</strong></code></span>, which removes a directory, its files, and any subdirectories without confirmation (<a href="ch04.xhtml#list4-3">Listing 4.3</a>).</p>
+<p class="list-head" id="list4-3"><strong>Listing 4.3:</strong> Using <span class="green"><code><strong>rm -rf</strong></code></span> to remove a directory.</p>
+<p class="codelink"><a href="ch04_images.xhtml#p04lis03" id="p04lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> rm -rf second_directory/
+<span class="dblue"><strong>$</strong></span> ls second_directory
+<span class="green">ls: second_directory: No such file or directory</span></pre>
+</div>
+<p class="indent">As the error message from <span class="green"><code><strong>ls</strong></code></span> in <a href="ch04.xhtml#list4-3">Listing 4.3</a> indicates (“No such file or directory”), our use of <span class="green"><code><strong>rm -rf</strong></code></span> succeeded in removing the directory.</p>
+<p class="indent">The powerful command <span class="green"><code><strong>rm -rf</strong></code></span> is too convenient to ignore, but remember: “With great power comes great responsibility” (<a href="ch04.xhtml#fig4-2">Figure 4.2</a>).<sup><a id="rfn4_3" href="ch04.xhtml#fn4_3">3</a></sup></p>
+<p class="footnote"><a id="fn4_3" href="ch04.xhtml#rfn4_3">3.</a> Image courtesy of MeskPhotography/Shutterstock.</p>
+<figure class="figure" id="fig4-2">
+<img src="graphics/04fig02.jpg" alt="Image" width="744" height="372"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.2:</strong> This superhero understands how to use the power of <span class="green"><code><strong>rm -rf</strong></code></span> responsibly.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch04lev4sec1"><span epub:type="pagebreak" id="page_73"></span>4.4.1 Grep Redux</h4>
+<p class="noindent">Now that we know a little about directories, we are in a position to add a useful <span class="green"><code><strong>grep</strong></code></span> variation to our toolkit from <a href="ch03.xhtml#ch03lev4">Section 3.4</a>. As with <span class="green"><code><strong>cp</strong></code></span> and <span class="green"><code><strong>rm</strong></code></span>, <span class="green"><code><strong>grep</strong></code></span> takes a “recursive” option, <span class="green"><code><strong>-r</strong></code></span>, which in this case greps through a directory’s files and the files in its subdirectories. This is incredibly useful when you’re looking for a string in a file somewhere in a hierarchy of directories, but you’re not sure where the file is. Here’s the setup, which puts the word “sesquipedalian” in a file called <span class="green"><code><strong>long_word.txt</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p073pro01" id="p073pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> text_files/
+<span class="dblue"><strong>$</strong></span> mkdir foo
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span> foo/
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">echo</span> sesquipedalian &gt; long_word.txt
+<span class="dblue"><strong>$</strong></span> <span class="lgreen">cd</span></pre>
+<p class="noindent">The final <span class="green"><code><strong>cd</strong></code></span> puts us back in the home directory. Suppose we now want to find the file containing “sesquipedalian”. The way <em>not</em> to do it is this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p073pro02" id="p073pro02a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> grep sesquipedalian text_files     <span class="blue"><em># This doesn't work.</em></span>
+<span class="green">grep: text_files: Is a directory</span></pre>
+<p class="noindent">Here <span class="green"><code><strong>grep</strong></code></span>’s error message indicates that the command didn’t work, but adding <span class="green"><code><strong>-r</strong></code></span> does the trick:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p073pro03" id="p073pro03a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> grep -r sesquipedalian text_files
+<span class="green">text_files/foo/long_word.txt:sesquipedalian</span></pre>
+<p class="noindent">Because we don’t usually care about case when searching files, I recommend making a habit of adding the <span class="green"><code><strong>-i</strong></code></span> option when grepping recursively, as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#p073pro04" id="p073pro04a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> grep -ri sesquipedalian text_files
+<span class="green">text_files/foo/long_word.txt:sesquipedalian</span></pre>
+<p class="noindent">Armed with <span class="green"><code><strong>grep -ri</strong></code></span>, we are now equipped to find strings of our choice in arbitrarily deep hierarchies of directories.</p>
+</section>
+<section>
+<h4 class="h4" id="ch04lev4sec2">4.4.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Make a directory <span class="green"><code><strong>foo</strong></code></span> with a subdirectory <span class="green"><code><strong>bar</strong></code></span>, then rename the subdirectory to <span class="green"><code><strong>baz</strong></code></span>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_74"></span>Copy all the files in <span class="green"><code><strong>text_files</strong></code></span>, <em>with</em> directory, into <span class="green"><code><strong>foo</strong></code></span>.</p></li>
+<li><p class="number">Copy all the files in <span class="green"><code><strong>text_files</strong></code></span>, <em>without</em> directory, into <span class="green"><code><strong>bar</strong></code></span>.</p></li>
+<li><p class="number">Remove <span class="green"><code><strong>foo</strong></code></span> and everything in it using a single command.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev5">4.5 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch04.xhtml#tab4-1">Table 4.1</a>.</p>
+<figure class="table" id="tab4-1">
+<p class="title-t"><strong>Table 4.1:</strong> Important commands from <a href="ch04.xhtml#ch04">Chapter 4</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>mkdir &lt;name&gt;</code></p></td>
+<td><p class="tab-para">Make directory with name</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ mkdir foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>pwd</code></p></td>
+<td><p class="tab-para">Print working directory</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ pwd</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cd &lt;dir&gt;</code></p></td>
+<td><p class="tab-para">Change to &lt;dir&gt;</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cd foo/</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cd ~/&lt;dir&gt;</code></p></td>
+<td><p class="tab-para">cd relative to home</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cd ~/foo/</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cd</code></p></td>
+<td><p class="tab-para">Change to home directory</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cd</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cd -</code></p></td>
+<td><p class="tab-para">Change to previous directory</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cd &amp;&amp; pwd &amp;&amp; cd -</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>.</code></p></td>
+<td><p class="tab-para">The current directory</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cp ~/foo.txt .</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>..</code></p></td>
+<td><p class="tab-para">One directory up</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cd ..</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>find</code></p></td>
+<td><p class="tab-para">Find files &amp; directories</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ find . -name foo*.*</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cp -r &lt;old&gt; &lt;new&gt;</code></p></td>
+<td><p class="tab-para">Copy recursively</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ cp -r ~/foo .</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>rmdir &lt;dir&gt;</code></p></td>
+<td><p class="tab-para">Remove (empty) dir</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ rmdir foo/</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>rm -rf &lt;dir&gt;</code></p></td>
+<td><p class="tab-para">Remove dir &amp; contents</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ rm -rf foo/</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>grep -ri &lt;string&gt; &lt;dir&gt;</code></p></td>
+<td><p class="tab-para">Grep recursively (case-insensitive)</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ grep -ri foo bar/</span></strong></code></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<section>
+<h4 class="h4" id="ch04lev5sec1">4.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Starting in your home directory, execute a single command-line command to make a directory <span class="green"><code><strong>foo</strong></code></span>, change into it, create a file <span class="green"><code><strong>bar</strong></code></span> with content “baz”, print out <span class="green"><code><strong>bar</strong></code></span>’s contents, and then <span class="green"><code><strong>cd</strong></code></span> back to the directory you came from. <em>Hint</em>: Combine the commands as described in <a href="ch04.xhtml#box4-2">Box 4.2</a>.</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_75"></span>What happens when you run the previous command again? How many of the commands executed? Why?</p></li>
+<li><p class="number">Explain why the command <span class="green"><code><strong>rm -rf /</strong></code></span> is unbelievably dangerous, and why you should never type it into a terminal window, not even as a joke.</p></li>
+<li><p class="number">How can the previous command be made even more dangerous? <em>Hint</em>: Refer to <a href="ch04.xhtml#box4-1">Box 4.1</a>. (This command is so dangerous you shouldn’t even <em>think</em> it, much less type it.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev6">4.6 Conclusion</h3>
+<p class="noindent">Congratulations! You’ve officially learned enough command line to be <em>dangerous</em>. Of course, this is only one step on a longer journey, both toward command-line excellence (<a href="ch04.xhtml#box4-3">Box 4.3</a>) and software development wizardry. As you proceed on this journey, you will probably discover that learning computer magic can be exciting and empowering, but it can also be <em>hard</em>. Indeed, you may already have discovered this fact, either on your own or while following <a href="part01.xhtml#part01">Part I</a> of <em>Learn Enough Developer Tools to Be Dangerous</em>. To those brave magicians-in-training who wish to proceed, I offer the following sequence:</p>
+<ol class="number">
+<li><p class="number"><em><strong>Learn Enough Developer Tools to Be Dangerous</strong></em></p>
+<ol class="number-alpha">
+<li><p class="noindent"><a href="part01.xhtml#part01">Part I</a>: <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) (you are here)</p></li>
+<li><p class="noindent"><a href="part02.xhtml#part02">Part II</a>: <em>Learn Enough Text Editor to Be Dangerous</em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>)</p></li>
+<li><p class="noindent"><a href="part03.xhtml#part03">Part III</a>: <em>Learn Enough Git to Be Dangerous</em> (<a href="https://www.learnenough.com/git">https://www.learnenough.com/git</a>)</p></li>
+</ol></li>
+<li><p class="number"><strong>Web Basics</strong></p>
+<ol class="number-alpha">
+<li><p class="noindent"><em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>)</p></li>
+<li><p class="noindent"><em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>)</p></li>
+<li><p class="noindent"><em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>)</p></li>
+</ol></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_76"></span><strong>Application Development</strong></p>
+<ol class="number-alpha">
+<li><p class="noindent"><em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>)</p></li>
+<li><p class="noindent"><em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/">https://www.railstutorial.org/</a>)</p></li>
+<li><p class="noindent"><em>Learn Enough Action Cable to Be Dangerous</em> (<a href="https://www.learnenough.com/action-cable">https://www.learnenough.com/action-cable</a>) (optional)</p></li>
+</ol></li>
+</ol>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box4-3">Box 4.3: Additional Resources</p>
+<p class="box-no">I recommend following the Learn Enough sequence described in the main text, as it represents the shortest path to technical proficiency and software development skills, but at some point you’ll probably want to expand your command-line skills as well. When that time comes, I suggest consulting this list, which consists mainly of resources found to be valuable by readers of the present tutorial:</p>
+<ul class="sq">
+<li><p class="bull"><em>Conquering the Command Line</em> book and screencasts by Mark Bates (<a href="https://conqueringthecommandline.com/">https://conqueringthecommandline.com/</a>)</p></li>
+<li><p class="bull">edX course on Linux (<a href="https://www.edx.org/course/introduction-to-linux">https://www.edx.org/course/introduction-to-linux</a>)</p></li>
+<li><p class="bull">Codecademy course on the command line (<a href="https://www.codecademy.com/learn/learn-the-command-line">https://www.codecademy.com/learn/learn-the-command-line</a>)</p></li>
+<li><p class="bull"><em>Learning the Shell</em> (<a href="http://linuxcommand.org/lc3_learning_the_shell.php">http://linuxcommand.org/lc3_learning_the_shell.php</a>)</p></li>
+</ul>
+</aside>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

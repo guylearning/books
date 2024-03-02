@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch06"><span epub:type="pagebreak" id="page_135"></span>Chapter 6</h2>
+<h2 class="h2a">Functional Programming</h2>
+<p class="noindent">Having learned how to define functions and apply them in a couple of different contexts, now we’re going to take our programming to the next level by learning the basics of <em>functional programming</em>, a style of programming that emphasizes—you guessed it—functions. As we’ll see, functional programming also heavily uses blocks, which gives us a good opportunity to reinforce the material from <a href="ch05.xhtml#sec5_4">Section 5.4</a>.</p>
+<p class="indent">This is a challenging chapter, and you may have to get in some reps to fully <span class="lblue"><a href="http://catb.org/jargon/html/G/grok.html">grok</a></span> it (<a href="ch06.xhtml#box6_1">Box 6.1</a>), but the rewards are rich indeed.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box6_1">
+<p class="sb-title">Box 6.1. Getting in Your Reps</p>
+<p class="indent">In contexts ranging from martial arts to chess to language learning, practitioners will reach a point where no amount of analysis or reflection will help them improve—they just need to get in some more repetitions, or “reps”.</p>
+<p class="indent">It’s amazing how much you can improve by trying something, kinda-sorta (but maybe not quite) getting it, and then just <em>doing it again</em>. In the context of a tutorial like this one, sometimes that means rereading a particularly tricky section or chapter. Some people (including <span class="lblue"><a href="https://en.wiktionary.org/wiki/yours_truly">yours truly</a></span>) will even reread an entire book.</p>
+<p class="indent">One important aspect of getting in your reps is <em>suspending self-judgment</em>— allow yourself not to be good right away. (Many people—including, again, yours <span epub:type="pagebreak" id="page_136"></span>truly—often require practice to get good at being okay with not being good right away. Meta-reps, as it were.)</p>
+<p class="indent">Give yourself a break, get in your reps, and watch your technical sophistication grow by the day.</p>
+</aside>
+<p class="indent">Functional programming de-emphasizes things like mutation and side effects, focusing instead on applying functions to manipulate and transform arguments to functions. This definition is rather abstract, and the subject itself is vast, so we’ll make things concrete and manageable by focusing on a classic <span class="lblue"><a href="https://en.wiktionary.org/wiki/triumvirate">triumvirate</a></span> of methods commonly used in functional programming: <code><span class="green"><strong>map</strong></span></code>, <code><span class="green"><strong>select</strong></span></code>, and <code><span class="green"><strong>reduce</strong></span></code> (<a href="ch06.xhtml#ch06fig01">Figure 6.1</a>).<sup><a id="fn6_1" href="ch06.xhtml#fn6_1a">1</a></sup></p>
+<figure class="figure" id="ch06fig01">
+<img src="graphics/f0136-01.jpg" alt="Images" width="878" height="386"/>
+<figcaption>
+<p class="title-f">Figure 6.1: A <span class="lblue"><a href="https://en.wikipedia.org/wiki/First_Triumvirate">triumvirate</a></span> of functional methods.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_1a" href="ch06.xhtml#fn6_1">1</a></sup>Images courtesy of Kamira/Shutterstock (left), World History Archive/Alamy Stock Photo (center), and colaimages/Alamy Stock Photo (right).</p>
+<p class="indent">In each case, our technique will be to perform a task involving an <code><span class="green"><strong>each</strong></span></code> method and a sequence of commands (called “imperative programming”,<sup><a id="fn6_2" href="ch06.xhtml#fn6_2a">2</a></sup> which is what we’ve mostly been doing so far), and then show how to do the <span epub:type="pagebreak" id="page_137"></span>same thing using functional programming.</p>
+<p class="footnote"><sup><a id="fn6_2a" href="ch06.xhtml#fn6_2">2</a></sup>Such programs are written as a series of commands; thus, “imperative,” from Latin <span class="lblue"><em><a href="https://en.wiktionary.org/wiki/imperativus#Latin">imperātīvus</a></em></span>, “proceeding from a command.”</p>
+<p class="indent">For convenience, we’ll create a file for our explorations, rather than typing everything at the REPL:</p>
+<div class="sidebar">
+<pre class="pre"><span class="blue"><strong>$</strong></span> <strong>touch functional.rb</strong></pre>
+</div>
+<section>
+<h3 class="h3" id="sec6_1">6.1 Map</h3>
+<p class="noindent">The first of our triumvirate is the <code><span class="green"><strong>map</strong></span></code> function (<a href="ch06.xhtml#ch06fig02">Figure 6.2</a>),<sup><a id="fn6_3" href="ch06.xhtml#fn6_3a">3</a></sup> which lets us map a function over an array of elements. It’s often a powerful alternative to looping.</p>
+<figure class="figure" id="ch06fig02">
+<img src="graphics/f0138-01.jpg" alt="Images" width="568" height="1017"/>
+<figcaption>
+<p class="title-f">Figure 6.2: The first <span class="lblue"><a href="https://en.wiktionary.org/wiki/triumvir#English">triumvir</a></span>, <span class="lblue"><a href="https://en.wikipedia.org/wiki/Julius_Caesar">Gāius Iūlius Caesar</a></span> (Julius Caesar).</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_3a" href="ch06.xhtml#fn6_3">3</a></sup>Image courtesy of Kamira/Shutterstock. The overbars in <em>Gāius Iūlius Caesar</em> and other Latin words are <span class="lblue"><em><a href="https://en.wikipedia.org/wiki/Macron_(diacritic)">macrons</a></em></span>, which indicate <span class="lblue"><a href="http://www.wheelockslatin.com/chapters/introduction/introduction_vowels.html">long vowels</a></span>.</p>
+<p class="indent">For example, suppose we had an array of mixed-case strings, and we wanted to create a corresponding array of lowercase strings joined on a hyphen (making the result appropriate for use in URLs), like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0137-01" id="f0137-01a">Click here to view code image</a></p>
+<pre class="pre"><span class="green"><strong>"North Dakota" -&gt; "north-dakota"</strong></span></pre>
+</div>
+<p class="indent">Using previous techniques from this tutorial, we could do this as follows:</p>
+<ol class="num">
+<li><p class="num-1">Define a variable containing an array of strings.</p></li>
+<li><p class="num-1">Define a second variable (initially empty) for the URL-friendly array of strings.</p></li>
+<li><p class="num-1">For each item in the first array, <code><span class="green"><strong>push</strong></span></code> (<a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>) a lowercase version (<a href="ch02.xhtml#sec2_5">Section 2.5</a>) that’s been split on whitespace (<a href="ch04.xhtml#sec4_3">Section 4.3</a>) and then joined (<a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a>) on hyphens. (You could split on a single space <code><span class="green"><strong>" "</strong></span></code> instead, but splitting on whitespace is so much more robust that it’s a good practice to use it by default.)</p></li>
+</ol>
+<p class="indent">The result appears in <a href="ch06.xhtml#ch06ex01">Listing 6.1</a>. Note that we’ve used the shovel operator <code><span class="green"><strong>&lt;&lt;</strong></span></code> in place of an explicit call to the <code><span class="green"><strong>push</strong></span></code> method, although either would work. Also note that we’ve used <code><span class="green"><strong>p &lt;obj&gt;</strong></span></code> to print a literal representation of the array (where <code><span class="green"><strong>p</strong></span></code> is equivalent to <code><span class="green"><strong>puts &lt;obj&gt;.inspect</strong></span></code>, as discussed in <a href="ch05.xhtml#box5_1">Box 5.1</a>).<span epub:type="pagebreak" id="page_138"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex01"><span epub:type="pagebreak" id="page_139"></span><strong>Listing 6.1:</strong> Making URL-appropriate strings from an array.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0139-01" id="f0139-01a">Click here to view code image</a></p>
+<pre class="pre"><strong>states_map <span class="gray">= [</span><span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota "</span><span class="gray">]</span></strong>
+
+<strong><span class="ash-m"><em># urls: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_urls</span>(states)</strong>
+  <strong>urls <span class="gray">= []</span></strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong>urls <span class="gray">&lt;&lt;</span> state<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">"-"</span>)</strong>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>urls</strong>
+<strong><span class="lgreen">end</span></strong>
+<strong><span class="lgreen">p</span> imperative_urls(states)</strong></pre>
+</div>
+<p class="noindent">This is fairly complicated code, so being able to read <a href="ch06.xhtml#ch06ex01">Listing 6.1</a> is a good test of your growing technical sophistication. (If it isn’t easy to read, firing up irb and running it interactively is a good idea.)</p>
+<p class="indent">The result of running <a href="ch06.xhtml#ch06ex01">Listing 6.1</a> looks like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0139-02" id="f0139-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<strong><span class="green">["kansas", "nebraska", "north-dakota", "south-dakota"]</span></strong></pre>
+</div>
+<p class="indent">Now let’s see how we can do the same thing using <code><strong><span class="green">map</span></strong></code>, which operates by applying the same function to every element in an array. For example, to square every element in an array of numbers, we can map the function <code><strong><span class="green">n*n</span></strong></code> over the array, as seen here in the REPL:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0139-03" id="f0139-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">[1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4].</span>map { <span class="gray">|</span>n<span class="gray">|</span> n<span class="gray">*</span>n }</strong>
+<strong><span class="green">=&gt; [1, 4, 9, 16]</span></strong></pre>
+</div>
+<p class="noindent">Here we’ve passed a block to <code><strong><span class="green">map</span></strong></code>, yielding the square of each element.</p>
+<p class="indent">Similarly, we can downcase every element in an array of strings like this:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_140"></span><a href="ch06_images.xhtml#f0140-01" id="f0140-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">[</span><span class="brown1">"ALICE"</span>, <span class="brown1">"BOB"</span>, <span class="brown1">"CHARLIE"</span><span class="gray">]</span>.map { <span class="gray">|</span><span class="lgreen">name</span><span class="gray">|</span> <span class="lgreen">name.</span>downcase }</strong>
+<strong><span class="green">=&gt; ["alice", "bob", "charlie"]</span></strong></pre>
+</div>
+<p class="noindent">By the way, the case where a method is called on every element in the sequence is so common that there’s a special syntax for it (called, somewhat cryptically, “<span class="lblue"><a href="https://www.brianstorti.com/understanding-ruby-idiom-map-with-symbol/">symbol to proc</a></span>”):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0140-02" id="f0140-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">[</span><span class="brown1">"ALICE"</span>, <span class="brown1">"BOB"</span>, <span class="brown1">"CHARLIE"</span><span class="gray">]</span>.map(<span class="gray">&amp;</span><span class="lblue-1">:downcase</span>)</strong>
+<strong><span class="green">=&gt; ["alice", "bob", "charlie"]</span></strong></pre>
+</div>
+<p class="noindent">This syntax was actually added dynamically by the Ruby on Rails web framework—a good example of Ruby’s unusual flexibility as a language—and people liked it so much it got put into Ruby itself.</p>
+<p class="indent">Returning to our main example, we can think of the transformation “convert to lowercase then split then join” as a single operation, and use <code><strong><span class="green">map</span></strong></code> to apply that operation in sequence to each element in the array. The result is so compact that it easily fits in the REPL:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0140-03" id="f0140-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> states <span class="gray">=</span> [<span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota"</span><span class="gray">]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> states<span class="gray">.</span>map { <span class="gray">|</span>state<span class="gray">|</span> state<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">'-'</span>) }</strong>
+<strong><span class="green">=&gt; ["kansas", "nebraska", "north-dakota", "south-dakota"]</span></strong></pre>
+</div>
+<p class="indent">Pasting into <code><strong><span class="green">functional.rb</span></strong></code>, we see just how much shorter it is, as shown in <a href="ch06.xhtml#ch06ex02">Listing 6.2</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex02"><strong>Listing 6.2:</strong> Adding a functional technique using <code><strong><span class="green">map</span></strong></code>.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0140-04" id="f0140-04a">Click here to view code image</a></p>
+<pre class="pre"><strong>states <span class="gray">= [</span><span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota"</span><span class="gray">]</span></strong>
+
+<strong><span class="ash-m"><em># urls: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_urls</span>(states)</strong>
+  <strong>urls <span class="gray">= []</span></strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong>urls <span class="gray">&lt;&lt;</span> state<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">"-"</span>)</strong>
+  <strong><span class="lgreen">end</span></strong>
+<span epub:type="pagebreak" id="page_141"></span>
+  <strong>urls</strong>
+<span class="lgreen"><strong>end</strong></span>
+<strong><span class="lgreen">p</span> imperative_urls(states)</strong>
+
+<strong><span class="ash-m"><em># urls: Functional version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_urls</span>(states)</strong>
+<span class="bg-o">  <strong>states<span class="gray">.</span>map { <span class="gray">|</span>state<span class="gray">|</span> state<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">'-'</span>) }</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>functional_urls(states)</strong><span class="gray">.</span><strong>inspect</strong></pre>
+</div>
+<p class="indent">We can confirm at the command line that the results are the same:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0141-02" id="f0141-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span></pre>
+</div>
+<p class="noindent">Our functional program has really put the <code><strong><span class="green">map</span></strong></code> on those states (<a href="ch06.xhtml#ch06fig03">Figure 6.3</a>).<sup><a id="fn6_4" href="ch06.xhtml#fn6_4a">4</a></sup></p>
+<figure class="figure" id="ch06fig03">
+<img src="graphics/f0142-01.jpg" alt="Images" width="891" height="588"/>
+<figcaption>
+<p class="title-f">Figure 6.3: Putting some states on the <code><strong><span class="green">map</span></strong></code>.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_4a" href="ch06.xhtml#fn6_4">4</a></sup>Image courtesy of Creative Jen Designs/Shutterstock.</p>
+<p class="indent">As a final refinement, let’s factor the method chain responsible for making the strings URL-compatible into a separate auxiliary function called <code><strong><span class="green">urlify</span></strong></code>:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0141-03" id="f0141-03a">Click here to view code image</a></p>
+<pre class="pre"><span class="ash-m"><strong><em># Returns a URL-friendly version of a string.</em></strong></span>
+<span class="ash-m"><strong><em>#   Example: "North Dakota" -&gt; "north-dakota"</em></strong></span>
+<strong><span class="lgreen">def</span> <span class="lblue">urlify</span>(string)
+  string<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">'-'</span>))</strong>
+<strong><span class="lgreen">end</span></strong></pre>
+</div>
+<p class="noindent">Defining this function in <code><strong><span class="green">functional.rb</span></strong></code> and using it in the imperative and functional versions gives the code in <a href="ch06.xhtml#ch06ex03">Listing 6.3</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex03"><strong>Listing 6.3:</strong> Defining an auxiliary function.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0141-04" id="f0141-04a">Click here to view code image</a></p>
+<pre class="pre"><strong>states <span class="gray">=</span> <span class="gray">[</span><span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota"</span><span class="gray">]</span></strong>
+
+<span class="bg-o"><span class="ash-m"><strong><em># Returns a URL-friendly version of a string.</em></strong></span></span>
+<span class="bg-o"><span class="ash-m"><strong><em>#   Example: "North Dakota" -&gt; "north-dakota"</em></strong></span></span>
+<span class="bg-o"><strong><span class="lgreen">def</span> <span class="lblue">urlify</span>(string)</strong></span>
+<span class="bg-o">  <strong>string<span class="gray">.</span>downcase<span class="gray">.</span>split<span class="gray">.</span>join(<span class="brown1">'-'</span>)</strong></span>
+<span epub:type="pagebreak" id="page_142"></span><span epub:type="pagebreak" id="page_143"></span><span class="bg-o"><strong><span class="lgreen">end</span></strong></span>
+
+<strong><span class="ash-m"><em># urls: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_urls</span>(states)</strong>
+  <strong>urls <span class="gray">= []</span></strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+<span class="bg-o">    <strong>urls <span class="gray">&lt;&lt;</span> urlify(state)</strong></span>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>urls</strong>
+<span class="lgreen"><strong>end</strong></span>
+<strong><span class="lgreen">puts</span> imperative_urls(states)<span class="gray">.</span>inspect</strong>
+
+<strong><span class="ash-m"><em># urls: Functional version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_urls</span>(states)</strong>
+<span class="bg-o">  <strong>states<span class="gray">.</span>map { <span class="gray">|</span>state<span class="gray">|</span> urlify(state) }</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+<strong><span class="lgreen">puts</span> functional_urls(states)<span class="gray">.</span>inspect</strong></pre>
+</div>
+<p class="noindent">As before, the results are the same:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0143-02" id="f0143-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span></pre>
+</div>
+<p class="indent">Compared to the imperative version, the functional version is a fifth as many lines (1 instead of 5), doesn’t mutate any variables (often an error-prone step in imperative programming), and indeed eliminates the intermediate array (<code><strong><span class="green">urls</span></strong></code>) entirely. This is the sort of thing that makes Mike Vanier very happy (<a href="ch06.xhtml#ch06fig04">Figure 6.4</a>).<sup><a id="fn6_5" href="ch06.xhtml#fn6_5a">5</a></sup></p>
+<figure class="figure" id="ch06fig04">
+<img src="graphics/f0144-01.jpg" alt="Images" width="626" height="834"/>
+<figcaption>
+<p class="title-f">Figure 6.4: Functional programming makes Mike Vanier happiest of all.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_5a" href="ch06.xhtml#fn6_5">5</a></sup>Last I checked, Mike’s favorite language was a “purely functional” language called <span class="lblue"><a href="https://www.haskell.org/">Haskell</a></span>.</p>
+<section>
+<h4 class="h4" id="sec6_1_1">6.1.1 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">Using <code><strong><span class="green">map</span></strong></code>, write a function that takes in the <code><strong><span class="green">states</span></strong></code> variable and returns an array of URLs of the form <span class="green"><code><strong><a href="https://example.com/urlifiedform">https://example.com/&lt;urlifiedform&gt;</a></strong></code></span>.<span epub:type="pagebreak" id="page_144"></span></p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_2"><span epub:type="pagebreak" id="page_145"></span>6.2 Select</h3>
+<p class="noindent">Our second <span class="lblue"><a href="https://en.wiktionary.org/wiki/triumvir#English">triumvir</a></span> is <code><strong><span class="green">select</span></strong></code> (<a href="ch06.xhtml#ch06fig05">Figure 6.5</a>),<sup><a id="fn6_6" href="ch06.xhtml#fn6_6a">6</a></sup> which allows us to select elements from our data based on some boolean criterion.</p>
+<figure class="figure" id="ch06fig05">
+<img src="graphics/f0146-01.jpg" alt="Images" width="892" height="1014"/>
+<figcaption>
+<p class="title-f">Figure 6.5: The second triumvir, <span class="lblue"><a href="https://en.wikipedia.org/wiki/Marcus_Licinius_Crassus">Mārcus Licinius Crassus</a></span> (at one point the richest man in Rome).</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_6a" href="ch06.xhtml#fn6_6">6</a></sup>Image courtesy of World History Archive/Alamy Stock Photo.</p>
+<p class="indent">Suppose, for example, we wanted to select the strings in our <code><strong><span class="green">states</span></strong></code> array that consist of more than one word, keeping the names that have only one. As in <a href="ch06.xhtml#sec6_1">Section 6.1</a>, we’ll write an imperative version first:</p>
+<ol class="num">
+<li><p class="num-1">Define an array to store single-word strings.</p></li>
+<li><p class="num-1">For each element in the list, <code><strong><span class="green">push</span></strong></code> it to the storage array if splitting it on whitespace yields an array with length 1.</p></li>
+</ol>
+<p class="noindent">The result looks like <a href="ch06.xhtml#ch06ex04">Listing 6.4</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex04"><strong>Listing 6.4:</strong> Solving a filtering problem imperatively.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0145-01" id="f0145-01a">Click here to view code image</a></p>
+<pre class="pre"><strong>states <span class="gray">= [</span><span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota"</span><span class="gray">]</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="ash-m"><em># singles: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_singles</span>(states)</strong>
+  <strong>singles <span class="gray">= []</span></strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong><span class="lgreen">if</span> state<span class="gray">.</span>split<span class="gray">.</span>length <span class="gray">== 1</span></strong>
+      <strong>singles <span class="gray">&lt;&lt;</span> state</strong>
+    <span class="lgreen"><strong>end</strong></span>
+  <span class="lgreen"><strong>end</strong></span>
+  <strong>singles</strong>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>imperative_singles(states)<span class="gray">.</span>inspect</strong></pre>
+</div>
+<p class="indent">Note in <a href="ch06.xhtml#ch06ex04">Listing 6.4</a> the familiar pattern from <a href="ch06.xhtml#ch06ex01">Listing 6.1</a>: We first define an auxiliary variable in order to maintain <span class="lblue"><a href="https://en.wikipedia.org/wiki/State_(computer_science)">state</a></span> (no pun intended); then loop over the original array, mutating the variable as necessary; then return the mutated result. It’s not particularly pretty, but it works:<span epub:type="pagebreak" id="page_146"></span></p>
+<p class="codelink"><span epub:type="pagebreak" id="page_147"></span><a href="ch06_images.xhtml#f0147-01" id="f0147-01a">Click here to view code image</a></p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="bg-o"><span class="green"><strong>["Kansas", "Nebraska"]</strong></span></span></pre>
+</div>
+<p class="indent">Now let’s see how to do the same task using filter. As in <a href="ch06.xhtml#sec6_1">Section 6.1</a>, we’ll start with a simple numerical example in the REPL.</p>
+<p class="indent">We’ll begin by looking at the <em>modulo operator</em> <code><strong><span class="green">%</span></strong></code>, which returns the remainder after dividing an integer by another integer. In other words, <code><strong><span class="green">17 % 5</span></strong></code> (read “seventeen mod five”) is <code><strong><span class="green">2</span></strong></code>, because 5 goes into 17 three times (giving 15), with a remainder of 17 <em>−</em> 15 = 2. In particular, considering integers modulo 2 divides them into two <em>equivalence classes</em>: even numbers (remainder 0 (mod 2)) and odd numbers (remainder 1 (mod 2)). In code:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">16 % 2</span>;  <span class="ash-m"><em># even</em></span></strong>
+<strong><span class="green">0</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="gray">17 % 2</span>;  <span class="ash-m"><em># odd</em></span></strong>
+<strong><span class="green">1</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="gray">16 % 2 == 0</span>;  <span class="ash-m"><em># even</em></span></strong>
+<strong><span class="green">=&gt; true</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="gray">17 % 2 == 0</span>;  <span class="ash-m"><em># odd</em></span></strong>
+<strong><span class="green">=&gt; false</span></strong></pre>
+</div>
+<p class="indent">We can combine <code><strong><span class="green">%</span></strong></code> and <code><strong><span class="green">select</span></strong></code> to process an array of numbers and select just the even ones:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0147-02" id="f0147-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">[1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, <span class="gray">8]</span><span class="gray">.</span>select { <span class="gray">|</span>n<span class="gray">|</span> n <span class="gray">% 2 == 0</span>}</strong>
+<strong><span class="green">=&gt; [2, 4, 6, 8]</span></strong></pre>
+</div>
+<p class="noindent">The syntax is almost exactly the same as <code><strong><span class="green">map</span></strong></code>: we give <code><strong><span class="green">select</span></strong></code> a variable (<code><strong><span class="green">n</span></strong></code>) and then perform a <em>test</em> that returns <code><strong><span class="green">true</span></strong></code> or <code><strong><span class="green">false</span></strong></code>. Incidentally, <span class="lblue"><a href="https://ruby-doc.org/core-2.5.0/Integer.html">Ruby integers</a></span> have an <code><strong><span class="green">even?</span></strong></code> method that performs the same operation:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0147-03" id="f0147-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> <span class="gray">[1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, <span class="gray">8].</span>select { <span class="gray">|</span>n<span class="gray">|</span> n<span class="gray">.</span>even? }</strong>
+<strong><span class="green">=&gt; [2, 4, 6, 8]</span></strong></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_148"></span>We can do even better by combining a range and the “symbol-to-proc” notation:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> (<span class="gray">1..8</span>)<span class="gray">.</span>select(<span class="gray">&amp;</span><span class="lblue-1">:even?</span>)</strong>
+<strong><span class="green">=&gt; [2, 4, 6, 8]</span></strong></pre>
+</div>
+<p class="noindent">This sort of compactness is characteristic of idiomatically correct (and functional) Ruby.</p>
+<p class="indent">Using this idea, we see that the functional version is much cleaner—indeed, as with <code><strong><span class="green">map</span></strong></code>, the <code><strong><span class="green">select</span></strong></code> version is a single line (a common occurrence in functional programming), as we can see in the REPL:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0148-01" id="f0148-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> states<span class="gray">.</span>select { <span class="gray">|</span>state<span class="gray">|</span> state<span class="gray">.</span>split<span class="gray">.</span>length <span class="gray">== 1</span> }</strong></pre>
+</div>
+<p class="noindent">Placing the result in our example file again underscores how much more compact the functional version is (<a href="ch06.xhtml#ch06ex05">Listing 6.5</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex05"><strong>Listing 6.5:</strong> Solving a selection problem functionally.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0148-02" id="f0148-02a">Click here to view code image</a></p>
+<pre class="pre"><strong>states <span class="gray">= [</span><span class="brown1">"Kansas"</span>, <span class="brown1">"Nebraska"</span>, <span class="brown1">"North Dakota"</span>, <span class="brown1">"South Dakota"</span><span class="gray">]</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="gray">.</span></strong>
+<strong><span class="ash-m"><em># singles: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_singles</span>(states)</strong>
+  <strong>singles <span class="gray">= []</span></strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong><span class="lgreen">if</span> (state<span class="gray">.</span>split<span class="gray">.</span>length <span class="gray">== 1</span>)</strong>
+       <strong>singles <span class="gray">&lt;&lt;</span> state</strong>
+    <span class="lgreen"><strong>end</strong></span>
+  <span class="lgreen"><strong>end</strong></span>
+  <strong>singles</strong>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>imperative_singles(states)<span class="gray">.</span>inspect</strong>
+
+<strong><span class="ash-m"><em># singles: Functional version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_singles</span>(states)</strong>
+<span class="bg-o">  <strong>states<span class="gray">.</span>select { <span class="gray">|</span>state<span class="gray">|</span> state<span class="gray">.</span>split<span class="gray">.</span>length <span class="gray">== 1</span> }</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>functional_singles(states)<span class="gray">.</span>inspect</strong></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_149"></span>As required, the result is the same:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0149-01" id="f0149-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span></pre>
+</div>
+<section>
+<h4 class="h4" id="sec6_2_1">6.2.1 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">Write two <code><strong><span class="green">select</span></strong></code> functions that return the Dakotas: one using <code><strong><span class="green">String#include?</span></strong></code> (<a href="ch02.xhtml#sec2_5">Section 2.5</a>) to test for the presence of the string “Dakota” and one that tests for the length of the split array being <code><strong><span class="green">2</span></strong></code>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec6_3">6.3 Reduce</h3>
+<p class="noindent">We reach finally the third member of our triumvirate, the mighty <code><strong><span class="green">reduce</span></strong></code> (<a href="ch06.xhtml#ch06fig06">Figure 6.6</a>)<sup><a id="fn6_7" href="ch06.xhtml#fn6_7a">7</a></sup>—by far the most complicated of the three.</p>
+<figure class="figure" id="ch06fig06">
+<img src="graphics/f0150-01.jpg" alt="Images" width="834" height="1084"/>
+<figcaption>
+<p class="title-f">Figure 6.6: The third triumvir, <span class="lblue"><a href="https://en.wikipedia.org/wiki/Pompey">Gnaeus Pompēius Magnus</a></span> (Pompey the Great).</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_7a" href="ch06.xhtml#fn6_7">7</a></sup>Image courtesy of colaimages/Alamy Stock Photo.</p>
+<p class="indent">Because <code><strong><span class="green">reduce</span></strong></code> is particularly challenging, we’ll cover two examples. First, we’ll make imperative and functional versions of a <code><strong><span class="green">sum</span></strong></code> operation on arrays of integers. Second, we’ll make a hash (<a href="ch04.xhtml#sec4_4">Section 4.4</a>) that maps state names to the length of each name, with a result that will look like this:</p>
+<div class="sidebar">
+<pre class="pre"><strong>{ <span class="brown1">"Kansas"</span> <span class="gray">=&gt; 6</span>,</strong>
+  <strong><span class="brown1">"Nebraska"</span> <span class="gray">=&gt; 8</span>,</strong>
+  <span class="gray"><strong>.</strong></span>
+  <span class="gray"><strong>.</strong></span>
+  <span class="gray"><strong>.</strong></span>
+<strong>}</strong></pre>
+</div>
+<section>
+<h4 class="h4" id="sec6_3_1">6.3.1 Reduce, Example 1</h4>
+<p class="noindent">We’ll begin with an imperative solution for the <code><strong><span class="green">sum</span></strong></code> function, which involves (as usual) an <code><strong><span class="green">each</span></strong></code> loop and an auxiliary variable (<code><strong><span class="green">total</span></strong></code>), which we use to accumulate the result. The result appears in <a href="ch06.xhtml#ch06ex06">Listing 6.6</a>.<span epub:type="pagebreak" id="page_150"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex06"><span epub:type="pagebreak" id="page_151"></span><strong>Listing 6.6:</strong> An imperative solution for summing integers.<br/><code><em>functional.rb</em></code></p>
+<pre class="pre1"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<strong>numbers</strong> <span class="gray">= 1..10</span>
+
+<strong><span class="ash-m"><em># sum: Imperative solution</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_sum</span>(numbers)
+  total <span class="gray">= 0</span></strong>
+  <strong>numbers<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>n<span class="gray">|</span></strong>
+    <strong>total <span class="gray">+=</span> n</strong>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>total</strong>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>imperative_sum(numbers)</strong></pre>
+</div>
+<p class="noindent">Again we see the familiar pattern: Initialize an auxiliary variable (<code><strong><span class="green">total</span></strong></code>) and then loop through the collection, accumulating the result by adding each number to the total.</p>
+<p class="indent">The result is 55 as required:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0151-02" id="f0151-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span>
+<span class="green"><strong><span class="yellowb-n">55</span></strong></span></pre>
+</div>
+<p class="indent">Now for the <code><strong><span class="green">reduce</span></strong></code> solution. It’s a bit tricky, so let’s work in the REPL:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0151-03" id="f0151-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> numbers <span class="gray">= 1..10</span></strong>
+<strong><span class="blue">&gt;&gt;</span> numbers<span class="gray">.</span>reduce(<span class="gray">0</span>) <span class="lgreen">do</span> <span class="gray">|</span>total, n<span class="gray">|</span></strong>
+<strong><span class="blue">?&gt;</span> total <span class="gray">+=</span> n</strong>
+<strong><span class="blue">?&gt;</span> total</strong>
+<strong><span class="blue">?&gt;</span> <span class="lgreen">end</span></strong>
+<strong><span class="green">55</span></strong></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_152"></span>You can see what I meant by “tricky”. The <code><strong><span class="green">reduce</span></strong></code> method takes a function of <em>two</em> arguments, the first of which is an <em>accumulator</em> for the result, and the second of which is the array element itself. The return value of the (anonymous) function gets passed back to <code><strong><span class="green">reduce</span></strong></code> as the starting value for the next element in the array. The argument to <code><strong><span class="green">reduce</span></strong></code> is the initial value of the accumulator (in this case, <code><strong><span class="green">0</span></strong></code>).</p>
+<p class="indent">There are three refinements we can make. First, the <code><strong><span class="green">+=</span></strong></code> operator returns its value, so we can actually increment a value while simultaneously assigning it (or returning it):</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> i <span class="gray">= 0</span></strong>
+<strong><span class="blue">&gt;&gt;</span> j <span class="gray">=</span> i <span class="gray">+= 1</span></strong>
+<strong><span class="blue">&gt;&gt;</span> i</strong>
+<strong><span class="green">1</span></strong>
+<strong><span class="blue">&gt;&gt;</span> j</strong>
+<strong><span class="green">1</span></strong></pre>
+</div>
+<p class="noindent">This means we can return <code><strong><span class="green">total += n</span></strong></code> directly:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0152-01" id="f0152-01a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> numbers<span class="gray">.</span>reduce(<span class="gray">0</span>) { <span class="gray">|</span>total, n<span class="gray">|</span> total <span class="gray">+=</span> n }</strong>
+<strong><span class="green">55</span></strong></pre>
+</div>
+<p class="indent">Second, the initial value is <code><strong><span class="green">0</span></strong></code> by default, so in this case it can be left off:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0152-03" id="f0152-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> numbers<span class="gray">.</span>reduce { <span class="gray">|</span>total, n<span class="gray">|</span> total <span class="gray">+=</span> n }</strong>
+<strong><span class="green">55</span></strong></pre>
+</div>
+<p class="noindent">Finally, the last value in the block (which in this case is the only value in the block) is automatically put into the variable being used to accumulate the result, so instead of modifying <code><strong><span class="green">total</span></strong></code> using <code><strong><span class="green">+=</span></strong></code> we can just add <code><strong><span class="green">n</span></strong></code> to it:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0152-02" id="f0152-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> numbers<span class="gray">.</span>reduce { <span class="gray">|</span>total, n<span class="gray">|</span> total <span class="gray">+</span> n }</strong>
+<strong><span class="green">55</span></strong></pre>
+</div>
+<p class="noindent">Putting the result into our example file shows, as usual, a marked improvement over the imperative version (<a href="ch06.xhtml#ch06ex07">Listing 6.7</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex07"><span epub:type="pagebreak" id="page_153"></span><strong>Listing 6.7:</strong> A functional solution for summing integers.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0153-01" id="f0153-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<strong>numbers <span class="gray">= 1..10</span></strong>
+
+<strong><span class="ash-m"><em># sum: Imperative solution</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_sum</span>(numbers)</strong>
+  <strong>total <span class="gray">= 0</span></strong>
+  <strong>numbers<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>n<span class="gray">|</span></strong>
+    <strong>total <span class="gray">+=</span> n</strong>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>total</strong>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>imperative_sum(numbers)</strong>
+
+<strong><span class="ash-m"><em># sum: Functional solution</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_sum</span>(numbers)</strong>
+<span class="bg-o">  <strong>numbers<span class="gray">.</span>reduce { <span class="gray">|</span>total, n<span class="gray">|</span> total <span class="gray">+</span> n }</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>functional_sum(numbers)</strong></pre>
+</div>
+<p class="indent">The result of the functional sum should be the same as for the imperative version:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0153-02" id="f0153-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["kansas", "nebraska", "north-dakota", "south-dakota"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span>
+<span class="green"><strong>["Kansas", "Nebraska"]</strong></span>
+<span class="green"><strong>55</strong></span>
+<span class="bg-o"><span class="green"><strong>55</strong></span></span></pre>
+</div>
+<p class="indent"><a href="ch06.xhtml#ch06ex07">Listing 6.7</a> gives us a hint about the meaning of <code><strong><span class="green">reduce</span></strong></code>: It’s a function that takes the elements of an array and processes (<em>reduces</em>) them based on some operation (in this case, addition). This is not always the case, though, and as we’ll see in a moment it’s often more helpful to think of <code><strong><span class="green">reduce</span></strong></code> as <em>accumulating</em> results and storing them in its first argument (<code><strong><span class="green">total</span></strong></code> in <a href="ch06.xhtml#ch06ex07">Listing 6.7</a>).<sup><a id="fn6_8" href="ch06.xhtml#fn6_8a">8</a></sup></p>
+<p class="footnote"><sup><a id="fn6_8a" href="ch06.xhtml#fn6_8">8</a></sup>For this reason, <code><strong><span class="green">reduce</span></strong></code> is sometimes called <code><strong><span class="green">accumulate</span></strong></code> in other languages. See, e.g., “<span class="lblue"><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">Sequence Operations</a></span>” in <span class="lblue"><a href="ch02.xhtml#ch02">Chapter 2</a></span> of <em><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html">Structure and Interpretation of Computer Programs</a></em>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec6_3_2"><span epub:type="pagebreak" id="page_154"></span>6.3.2 Reduce, Example 2</h4>
+<p class="noindent">To help reinforce <code><strong><span class="green">reduce</span></strong></code>, let’s take a look at a second example. As mentioned above, our task is to make a plain object (associative array) with keys equal to the state names and values equal to their lengths. We can solve this imperatively by initializing a <code><strong><span class="green">lengths</span></strong></code> object and then iterating through the states, setting <code><strong><span class="green">lengths[state]</span></strong></code> equal to the corresponding length:</p>
+<div class="sidebar">
+<pre class="pre"><strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong></pre>
+</div>
+<p class="noindent">The full example appears in <a href="ch06.xhtml#ch06ex08">Listing 6.8</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex08"><strong>Listing 6.8:</strong> An imperative solution for state/length correspondence.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0154-02" id="f0154-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<strong><span class="ash-m"><em># lengths: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_lengths</span>(states)</strong>
+  <strong>lengths <span class="gray">=</span> {}</strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>lengths</strong>
+<span class="lgreen"><strong>end</strong></span>
+<strong><span class="lgreen">puts</span> imperative_lengths(states)</strong></pre>
+</div>
+<p class="indent">If we run the program at the command line, the desired associative array appears as the final part of the output:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0154-03" id="f0154-03a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>{"Kansas"=&gt;6, "Nebraska"=&gt;8, "North Dakota"=&gt;12, "South Dakota"=&gt;12}</strong></span></pre>
+</div>
+<p class="indent">The functional solution using <code><strong><span class="green">reduce</span></strong></code> is trickier. As with the imperative solution, we have a plain <code><strong><span class="green">lengths</span></strong></code> object, but instead of being an auxiliary variable, it’s a block parameter:</p>
+<span epub:type="pagebreak" id="page_155"></span>
+<div class="sidebar">
+<pre class="pre"><strong><span class="lgreen">do</span> <span class="gray">|</span>lengths, state<span class="gray">|</span></strong>
+  <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong>
+  <strong>lengths</strong>
+<strong><span class="lgreen">end</span></strong></pre>
+</div>
+<p class="noindent">Meanwhile, the initial value of the <code><strong><span class="green">reduce</span></strong></code> method, instead of being the default <code><strong><span class="green">0</span></strong></code>, is the empty hash <code><strong><span class="green">{}</span></strong></code>:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0155-02" id="f0155-02a">Click here to view code image</a></p>
+<pre class="pre"><strong>reduce({}) <span class="lgreen"><strong>do</strong></span> <span class="gray">|</span>lengths, state<span class="gray">|</span></strong>
+  <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong>
+  <strong>lengths</strong>
+<strong><span class="lgreen">end</span></strong></pre>
+</div>
+<p class="noindent">Note that these are code snippets, not REPL sessions; one disadvantage of <code><strong><span class="green">reduce</span></strong></code> (and functional solutions generally) is that they are harder to build up incrementally. More on this in a moment.</p>
+<p class="indent">Taking the above ideas together, we can use <code><strong><span class="green">reduce</span></strong></code> to march through the <code><strong><span class="green">states</span></strong></code> array, accumulating the desired associative array in the <code><strong><span class="green">lengths</span></strong></code> parameter and then returning it, as shown in <a href="ch06.xhtml#ch06ex09">Listing 6.9</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex09"><strong>Listing 6.9:</strong> A functional solution for state/length correspondence.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0155-03" id="f0155-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<strong><span class="ash-m"><em># lengths: Imperative version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">imperative_lengths</span>(states)</strong>
+  <strong>lengths <span class="gray">=</span> {}</strong>
+  <strong>states<span class="gray">.</span>each <span class="lgreen">do</span> <span class="gray">|</span>state<span class="gray">|</span></strong>
+    <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong>
+  <strong><span class="lgreen">end</span></strong>
+  <strong>lengths</strong>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>imperative_lengths(states)</strong>
+
+<strong><span class="ash-m"><em># lengths: Functional version</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_lengths</span>(states)</strong>
+<span class="bg-o">  <strong>states<span class="gray">.</span>reduce({}) <span class="lgreen">do</span> <span class="gray">|</span>lengths, state<span class="gray">|</span></strong></span>
+<span class="bg-o">    <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong></span>
+<span class="bg-o">    <strong>lengths</strong></span>
+<span class="bg-o">  <span class="lgreen"><strong>end</strong></span></span>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>functional_lengths(states)</strong></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_156"></span>Although it is broken across multiple lines in the text editor, the functional solution in <a href="ch06.xhtml#ch06ex09">Listing 6.9</a> <code><strong><span class="green">return</span></strong></code>s the result of a single <code><strong><span class="green">reduce</span></strong></code>, in close analogy with the functional solutions for <code><strong><span class="green">map</span></strong></code> (<a href="ch06.xhtml#ch06ex02">Listing 6.2</a>) and <code><strong><span class="green">select</span></strong></code> (<a href="ch06.xhtml#ch06ex05">Listing 6.5</a>). (In fact, using the more advanced <code><strong><span class="green">merge</span></strong></code> method, the <code><strong><span class="green">reduce</span></strong></code> in <a href="ch06.xhtml#ch06ex09">Listing 6.9</a> can actually be compressed to a single line:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0156-01" id="f0156-01a">Click here to view code image</a></p>
+<pre class="pre"><strong>states<span class="gray">.</span>reduce({}) { <span class="gray">|</span>lengths, state<span class="gray">|</span> lengths<span class="gray">.</span>merge({state <span class="gray">=&gt;</span> state<span class="gray">.</span>length}) }</strong></pre>
+</div>
+<p class="noindent">See the <span class="lblue"><a href="https://ruby-doc.org/core-3.1.1/Hash.html#method-i-merge">documentation on</a></span> <code><strong><span class="green">merge</span></strong></code> for more information.)</p>
+<p class="indent">As required, the result is the same as the imperative solution:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch06_images.xhtml#f0156-02" id="f0156-02a">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="blue">$</span> ruby functional.rb</strong>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>.</strong></span>
+<span class="green"><strong>{"Kansas"=&gt;6, "Nebraska"=&gt;8, "North Dakota"=&gt;12, "South Dakota"=&gt;12}</strong></span>
+<span class="green"><strong>{"Kansas"=&gt;6, "Nebraska"=&gt;8, "North Dakota"=&gt;12, "South Dakota"=&gt;12}</strong></span></pre>
+</div>
+<p class="indent">Comparing the imperative and functional solutions in <a href="ch06.xhtml#ch06ex09">Listing 6.9</a>, the advantages of <code><strong><span class="green">reduce</span></strong></code> are not as clear as they were in the case of <code><strong><span class="green">map</span></strong></code> and <code><strong><span class="green">select</span></strong></code>. Indeed, a good argument can be made that the imperative solution is clearer.</p>
+<p class="indent">Which method to use is a matter of taste. I’ve found that the more you program functionally, the more you want to do it, and there’s a strange sort of pleasure in using <code><strong><span class="green">reduce</span></strong></code> to solve a problem in a single (logical) line. It’s also worth noting that <code><strong><span class="green">reduce</span></strong></code> is a common technique among more advanced programmers, and among other things plays a key role in an important technique (called <span class="lblue"><a href="https://en.wikipedia.org/wiki/MapReduce">MapReduce</a></span>) for dealing efficiently with large datasets.</p>
+</section>
+<section>
+<h4 class="h4" id="sec6_3_3">6.3.3 Functional Programming and TDD</h4>
+<p class="noindent">One of the things you may have noticed when building up <a href="ch06.xhtml#ch06ex09">Listing 6.9</a> is that the functional solution is harder to break down into steps. The advantage is that we can often condense a functional solution into a single line, but the cost is that it can be harder to understand incrementally. Indeed, I find this to be a consistent <span epub:type="pagebreak" id="page_157"></span>pattern across all three functions in our triumvirate; the final destination is often beautifully succinct, but getting there can be a challenge.</p>
+<p class="indent">My favorite technique for managing this challenge is <em>test-driven development</em> (TDD), which involves writing an <em>automated test</em> that captures the desired behavior in code. We can then get the test to pass using any method we want, including an ugly but easy-to-understand imperative solution. At that point, we can <em>refactor</em> the code—changing its form but not its function—to use a more concise functional solution. As long as the test still passes, we can be confident that the code still works.</p>
+<p class="indent">In <a href="ch08.xhtml#ch08">Chapter 8</a>, we’ll apply this exact technique to the principal object developed in <a href="ch07.xhtml#ch07">Chapter 7</a>. In particular, we’ll use TDD to implement a fancy extension to the <code><strong><span class="green">palindrome?</span></strong></code> function first seen in <a href="ch05.xhtml#sec5_3">Section 5.3</a>, one that detects such complicated palindromes as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch06fig07">Figure 6.7</a>).<sup><a id="fn6_9" href="ch06.xhtml#fn6_9a">9</a></sup></p>
+<figure class="figure" id="ch06fig07">
+<img src="graphics/f0158-01.jpg" alt="Images" width="892" height="740"/>
+<figcaption>
+<p class="title-f">Figure 6.7: <span class="lblue"><a href="https://en.wikipedia.org/wiki/Theodore_Roosevelt">Teddy Roosevelt</a></span> was a man with a <span class="lblue"><a href="https://en.wikipedia.org/wiki/Theodore_Roosevelt#Latin_America_and_Panama_Canal">plan</a></span>.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_9a" href="ch06.xhtml#fn6_9">9</a></sup>Image courtesy of Everett Collection Historical/Alamy Stock Photo.</p>
+</section>
+<section>
+<h4 class="h4" id="sec6_3_4">6.3.4 Terminology Review</h4>
+<p class="noindent">Unlike most other programming languages, Ruby supports a large number of <em>synonyms</em>, which are simply different names for methods that do the same thing. For example, <code><strong><span class="green">Array#size</span></strong></code> is a synonym for the <code><strong><span class="green">Array#length</span></strong></code> method we met in <a href="ch03.xhtml#sec3_2">Section 3.2</a>:</p>
+<div class="sidebar">
+<pre class="pre"><strong><span class="blue">&gt;&gt;</span> a <span class="gray">= [42</span>, <span class="gray">8</span>, <span class="gray">17</span>, <span class="gray">99]</span></strong>
+<strong><span class="green">=&gt; [42, 8, 17, 99]</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>length</strong>
+<strong><span class="green">=&gt; 4</span></strong>
+<strong><span class="blue">&gt;&gt;</span> a<span class="gray">.</span>size</strong>
+<strong><span class="green">=&gt; 4</span></strong></pre>
+</div>
+<p class="indent">In the case of functional programming, Ruby has a group of methods with similar-sounding names, several of which have synonyms:</p>
+<ul class="sq">
+<li><p class="bull"><code><strong><span class="green">collect</span></strong></code>: Synonym for <code><strong><span class="green">map</span></strong></code></p></li>
+<li><p class="bull"><code><strong><span class="green">select</span></strong></code>: Also called <code><strong><span class="green">find_all</span></strong></code><span epub:type="pagebreak" id="page_158"></span></p></li>
+</ul>
+<span epub:type="pagebreak" id="page_159"></span>
+<ul class="sq">
+<li><p class="bull"><code><strong><span class="green">inject</span></strong></code>: Synonym for <code><strong><span class="green">reduce</span></strong></code></p></li>
+<li><p class="bull"><code><strong><span class="green">detect</span></strong></code>: Also called <code><strong><span class="green">find</span></strong></code> (not covered in this chapter)</p></li>
+<li><p class="bull"><code><strong><span class="green">reject</span></strong></code>: Like <code><strong><span class="green">select</span></strong></code>, but with the boolean condition reversed (covered in an exercise (<a href="ch06.xhtml#sec6_3_5">Section 6.3.5</a>))</p></li>
+</ul>
+<p class="noindent">Thus, our original triumvirate of <code><strong><span class="green">map</span></strong></code>, <code><strong><span class="green">select</span></strong></code>, and <code><strong><span class="green">reduce</span></strong></code> can also be written as <code><strong><span class="green">collect</span></strong></code>, <code><strong><span class="green">select</span></strong></code>, and <code><strong><span class="green">inject</span></strong></code> (<a href="ch06.xhtml#ch06fig08">Figure 6.8</a>).<sup><a id="fn6_10" href="ch06.xhtml#fn6_10a">10</a></sup> All of these methods are part of an important Ruby <em>module</em> (<a href="ch07.xhtml#sec7_5">Section 7.5</a>) called <code><strong><span class="green">Enumerable</span></strong></code>. For more on this subject, take a look at “<span class="lblue"><a href="http://confreaks.tv/videos/rubyconf2014-enumerable-for-fun-profit">Enumerable for Fun and Profit</a></span>”, a talk I gave at <span class="lblue"><a href="https://confreaks.tv/events/rubyconf2014">RubyConf 2014</a></span>.</p>
+<figure class="figure" id="ch06fig08">
+<img src="graphics/f0159-01.jpg" alt="Images" width="882" height="385"/>
+<figcaption>
+<p class="title-f">Figure 6.8: A triumvirate by any other name…</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn6_10a" href="ch06.xhtml#fn6_10">10</a></sup>Images courtesy of Kamira/Shutterstock (left), World History Archive/Alamy Stock Photo (center), and colaimages/Alamy Stock Photo (right).</p>
+<p class="indent">Although the main names used in this chapter are generally the more common ones, context does matter. In particular, when used to accumulate an object (as in this section) rather than reducing down to a single value, <code><strong><span class="green">inject</span></strong></code> is probably more common than <code><strong><span class="green">reduce</span></strong></code>, so <a href="ch06.xhtml#ch06ex09">Listing 6.9</a> would likely be written as in <a href="ch06.xhtml#ch06ex010">Listing 6.10</a> instead.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch06ex010"><span epub:type="pagebreak" id="page_160"></span><strong>Listing 6.10:</strong> Using <code><strong><span class="green">inject</span></strong></code> in place of <code><strong><span class="green">reduce</span></strong></code>.<br/><code><em>functional.rb</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#f0160-01" id="f0160-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<span class="gray"><strong>.</strong></span>
+<strong><span class="ash-m"><em># lengths: Functional version using `inject`</em></span></strong>
+<strong><span class="lgreen">def</span> <span class="lblue">functional_lengths</span>(states)</strong>
+<span class="bg-o">  <strong>states<span class="gray">.</span>inject({}) <span class="lgreen">do</span> <span class="gray">|</span>lengths, state<span class="gray">|</span></strong></span>
+    <strong>lengths<span class="gray">[</span>state<span class="gray">] =</span> state<span class="gray">.</span>length</strong>
+    <strong>lengths</strong>
+  <span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>end</strong></span>
+<span class="lgreen"><strong>puts</strong></span> <strong>functional_lengths(states)</strong></pre>
+</div>
+<p class="noindent">In any case, because they truly are synonyms, it’s important to be able to <em>read</em> code that includes any of the versions above.</p>
+</section>
+<section>
+<h4 class="h4" id="sec6_3_5">6.3.5 Exercises</h4>
+<ol class="num">
+<li><p class="num-1">Using <code><strong><span class="green">reduce</span></strong></code>, write a function that returns the product of all the elements in an array. Start with a version analogous to using <code><strong><span class="green">total += n</span></strong></code>. (<em>Hint</em>: Where <code><strong><span class="green">+=</span></strong></code> adds, <code><strong><span class="green">*=</span></strong></code> multiplies.) Then eliminate the assignment and return the product directly (just as the assignment was eliminated in <a href="ch06.xhtml#ch06ex07">Listing 6.7</a> and replaced with <code><strong><span class="green">total + n</span></strong></code>).</p></li>
+<li><p class="num-1">Remove the newlines in the <code><strong><span class="green">reduce</span></strong></code> solution from <a href="ch06.xhtml#ch06ex09">Listing 6.9</a> to turn it into a single long line. Does it still give the right answer? How long is the resulting line of code?</p></li>
+<li><p class="num-1">Rewrite all the examples from this chapter using <code><strong><span class="green">collect</span></strong></code> and <code><strong><span class="green">inject</span></strong></code> instead of <code><strong><span class="green">map</span></strong></code> and <code><strong><span class="green">reduce</span></strong></code>. Rewrite the <code><strong><span class="green">select</span></strong></code> example using <code><strong><span class="green">reject</span></strong></code>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

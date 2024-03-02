@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch03"><span epub:type="pagebreak" id="page_43"></span>Chapter 3</h2>
+<h2 class="chap-title">Inspecting Files</h2>
+<p class="noindent">Having seen how to create and manipulate files, now it’s time to learn how to examine their contents. This is especially important for files too long to fit on a single screen. In particular, we saw starting in <a href="ch02.xhtml#ch02lev1">Section 2.1</a> how to use the <span class="green"><code><strong>cat</strong></code></span> command to dump the file contents to the screen, but this doesn’t work very well for longer files.</p>
+<section>
+<h3 class="h3" id="ch03lev1">3.1 Downloading a File</h3>
+<p class="noindent">To give us a place to start, rather than creating a long file by hand (which is cumbersome) we’ll download a file from the Internet using the powerful <span class="green"><code><strong>curl</strong></code></span> utility. Sometimes written as “cURL”, the <span class="green"><code><strong>curl</strong></code></span> program allows us to interact with a URL<sup><a id="rfn3_1" href="ch03.xhtml#fn3_1">1</a></sup>at the command line. Although it’s not part of the core Unix command set, the <span class="green"><code><strong>curl</strong></code></span> command is widely available for installation on Unix systems. To make sure it’s available on your system, we can use the <span class="green"><code><strong>which</strong></code></span> command, which looks to see if the given program is available at the command line.<sup><a id="rfn3_2" href="ch03.xhtml#fn3_2">2</a></sup> The way to use it is to type <span class="green"><code><strong>which</strong></code></span> followed by the name of the program—in this case, <span class="green"><code><strong>curl</strong></code></span>:</p>
+<p class="footnote"><a id="fn3_1" href="ch03.xhtml#rfn3_1">1.</a> URL is short for Uniform Resource Locator, and in practice usually just means “web address”.</p>
+<p class="footnote"><a id="fn3_2" href="ch03.xhtml#rfn3_2">2.</a> Technically, <span class="green"><code><strong>which</strong></code></span> locates a file on the user’s <em>path</em>, which is a list of directories where executable programs are located.</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> which curl
+<span class="green">/usr/bin/curl</span></pre>
+<p class="noindent">I’ve shown the output on my system (<span class="green"><code><strong>/usr/bin/curl</strong></code></span>, usually read as “user bin curl”), but the result on your system may differ. In particular, if the result is just a blank line, you will have to install <span class="green"><code><strong>curl</strong></code></span>, which you can do by Googling for “install curl” followed <span epub:type="pagebreak" id="page_44"></span>by the name of your operating system (e.g., “install curl macos”). (This sort of “Google for it” installation step is classic technical sophistication (<a href="ch01.xhtml#box1-4">Box 1.4</a>).)</p>
+<p class="indent">Once <span class="green"><code><strong>curl</strong></code></span> is installed, we can use the command in <a href="ch03.xhtml#list3-1">Listing 3.1</a> to download a file called <span class="green"><code><strong>sonnets.txt</strong></code></span>, which contains a large corpus of text.<sup><a id="rfn3_3" href="ch03.xhtml#fn3_3">3</a></sup></p>
+<p class="footnote"><a id="fn3_3" href="ch03.xhtml#rfn3_3">3.</a> If for any reason using <span class="green"><code><strong>curl</strong></code></span> fails, you can always visit the URL in a browser and then use the <strong>File &gt; Save As</strong> feature to save it to your local disk.</p>
+<p class="list-head" id="list3-1"><strong>Listing 3.1:</strong> Using <span class="green"><code><strong>curl</strong></code></span> to download a longer file.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis01" id="p03lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> curl -OL https://cdn.learnenough.com/sonnets.txt
+<span class="dblue"><strong>$</strong></span> ls -rtl</pre>
+</div>
+<p class="noindent">Be sure to copy the command exactly; in particular, note that the option <span class="green"><code><strong>-OL</strong></code></span> contains a capital letter “O” (<span class="green"><code><strong>O</strong></code></span>) and not a zero (<span class="green"><code><strong>0</strong></code></span>). (Figuring out what these options do is left as an exercise (<a href="ch03.xhtml#ch03lev5sec1">Section 3.5.1</a>).) Also, on some systems (for mysterious reasons) you might have to run the command twice to get it to work; by inspecting the results of <span class="green"><code><strong>ls -rtl</strong></code></span>, you should be able to tell if the initial call to <span class="green"><code><strong>curl</strong></code></span> created the file <span class="green"><code><strong>sonnets.txt</strong></code></span> as expected. (If you do have to repeat the <span class="green"><code><strong>curl</strong></code></span> command, you could press up arrow twice to retrieve it, but see <a href="ch03.xhtml#box3-1">Box 3.1</a> for alternatives.)</p>
+<p class="indent">The result of running <a href="ch03.xhtml#list3-1">Listing 3.1</a> is <span class="green"><code><strong>sonnets.txt</strong></code></span>, a file containing all 154 of Shakespeare’s sonnets. This file contains 2620 lines, far too many to fit on one screen. Learning how to inspect its contents is the goal of the rest of this chapter. (Among other things, we’ll learn how to determine that it has 2620 lines without counting them all by hand.)</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box3-1">Box 3.1: Repeating Previous Commands</p>
+<p class="box-no">Repeating previous commands is a frequent task when using the command line. So far in this tutorial, we’ve used the up-arrow key to retrieve (and possibly edit) previous commands, but this isn’t the only possibility. An even quicker way to find and immediately run a previous command involves using the exclamation point <code>!</code>, which in the context of software development is usually pronounced “bang”. To run the previous command exactly as written, we can use “bang bang”:</p>
+<pre class="pre">$ echo "foo"
+foo
+$ !!
+echo "foo"
+foo</pre>
+<p class="box-no"><span epub:type="pagebreak" id="page_45"></span>A closely related usage is “bang” followed by some number of characters, which runs the last command that started with those characters. For example, to run the last <code>curl</code> command, we could type this:</p>
+<pre class="pre">$ !curl</pre>
+<p class="box-no">This would save us the trouble of typing out the options, the URL, etc. Depending on our history of commands, the even terser <code>!cu</code> or <code>!c</code> would work as well. This technique is especially useful when the desired command last happened many commands ago, which can make hitting up arrow cumbersome.</p>
+<p class="box-ind">A second and incredibly powerful technique is <code>^R</code>, which lets you search interactively through your previous commands, and then optionally edit the result before executing. For example, we could try this to bring up the last <code>curl</code> command:</p>
+<pre class="pre">$ ^R
+(reverse-i-search)`': curl</pre>
+<p class="noindent">On most systems, hitting return would then put the last <code>curl</code> command after our prompt and allow us to edit it (if desired) before hitting return to execute it. When your workflow happens to involve repeatedly running a variety of similar commands, sometimes it can seem like “all commands start with <code>^R</code>.”</p>
+</aside>
+<section>
+<h4 class="h4" id="ch03lev1sec1">3.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use the command <span class="green"><code><strong>curl -I https://www.learnenough.com/</strong></code></span> to fetch the <em>HTTP header</em> for the Learn Enough website. What is the HTTP status code for the address? How does this differ from the status code for <code>learnenough.com</code> (without the <span class="green"><code><strong>https://</strong></code></span>)?</p></li>
+<li><p class="number">Using <span class="green"><code><strong>ls</strong></code></span>, confirm that <span class="green"><code><strong>sonnets.txt</strong></code></span> exists on your system. How big is it in bytes? <em>Hint</em>: Recall from <a href="ch02.xhtml#ch02lev2">Section 2.2</a> that the “long form” of <span class="green"><code><strong>ls</strong></code></span> displays a byte count.</p></li>
+<li><p class="number">The byte count in the previous exercise is high enough that it’s more naturally thought of in <em>kilobytes</em> (often treated as 1000 bytes, but actually equal to <span epub:type="pagebreak" id="page_46"></span>2<sup>10</sup> = 1024 bytes). By adding the <span class="green"><code><strong>-h</strong></code></span> (“human-readable”) option to <span class="green"><code><strong>ls</strong></code></span>, list the long form of the sonnets file with a human-readable byte count.</p></li>
+<li><p class="number">Suppose you wanted to list the files and directories using <strong>h</strong>uman-readable byte counts, <strong>a</strong>ll, by <strong>r</strong>everse <strong>t</strong>ime-sorted <strong>l</strong>ong-form. What command would you use? Why might this command be a personal favorite of the author of this tutorial?<sup><a id="rfn3_4" href="ch03.xhtml#fn3_4">4</a></sup></p>
+<p class="footnote"><a id="fn3_4" href="ch03.xhtml#rfn3_4">4.</a> Having known about <span class="green"><code><strong>ls -a</strong></code></span> and <span class="green"><code><strong>ls -rtl</strong></code></span> for a while—which together yield the suggestive command <span class="green"><code><strong>ls-artl</strong></code></span>—one day I decided to add an “h”’ (for obvious reasons [<a href="https://www.michaelhartl.com/">https://www.michaelhartl.com/</a>]). This is actually how I accidentally discovered the useful <span class="green"><code><strong>-h</strong></code></span> option some years ago.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch03lev2">3.2 Making Heads and Tails of It</h3>
+<p class="noindent">Two complementary commands for inspecting files are <span class="green"><code><strong>head</strong></code></span> and <span class="green"><code><strong>tail</strong></code></span>, which respectively allow us to view the beginning (head) and end (tail) of the file. The <span class="green"><code><strong>head</strong></code></span> command shows the first 10 lines of the file (<a href="ch03.xhtml#list3-2">Listing 3.2</a>).</p>
+<p class="list-head" id="list3-2"><strong>Listing 3.2:</strong> Looking at the head of the sample text file.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis02" id="p03lis02a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> head sonnets.txt
+<span class="green">Shake-speare's Sonnets</span>
+
+<span class="green">I</span>
+
+<span class="green">From fairest creatures we desire increase,
+That thereby beauty's Rose might never die,
+But as the riper should by time decease,
+His tender heir might bear his memory:
+But thou contracted to thine own bright eyes,
+Feed'st thy light's flame with self-substantial fuel</span></pre>
+</div>
+<p class="noindent">Similarly, <span class="green"><code><strong>tail</strong></code></span> shows the last 10 lines of the file (<a href="ch03.xhtml#list3-3">Listing 3.3</a>).</p>
+<p class="list-head" id="list3-3"><strong>Listing 3.3:</strong> Looking at the tail of the sample text file.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis03" id="p03lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> tail sonnets.txt
+<span class="green">The fairest votary took up that fire</span>
+<span class="green">Which many legions of true hearts had warm'd;</span>
+<span class="green">And so the general of hot desire</span>
+<span class="green">Was, sleeping, by a virgin hand disarm'd.</span>
+<span class="green">This brand she quenched in a cool well by,</span>
+<span class="green">Which from Love's fire took heat perpetual,</span>
+<span epub:type="pagebreak" id="page_47"></span><span class="green">Growing a bath and healthful remedy,</span>
+<span class="green">For men diseas'd; but I, my mistress' thrall,</span>
+ <span class="green">Came there for cure and this by that I prove,</span>
+ <span class="green">Love's fire heats water, water cools not love.</span></pre>
+</div>
+<p class="noindent">These two commands are useful when (as is often the case) you know for sure you only need to inspect the beginning or end of a file.</p>
+<section>
+<h4 class="h4" id="ch03lev2sec1">3.2.1 Wordcount and Pipes</h4>
+<p class="noindent">By the way, I didn’t recall offhand how many lines <span class="green"><code><strong>head</strong></code></span> and <span class="green"><code><strong>tail</strong></code></span> show by default. Since there are only 10 lines in the output, I could have counted them by hand, but in fact I was able to figure it out using the <span class="green"><code><strong>wc</strong></code></span> command (short for “wordcount”; recall <a href="ch02.xhtml#fig2-4">Figure 2.4</a>).</p>
+<p class="indent">The most common use of <span class="green"><code><strong>wc</strong></code></span> is on full files. For example, we can run <span class="green"><code><strong>sonnets.txt</strong></code></span> through <span class="green"><code><strong>wc</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#p047pro01" id="p047pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> wc sonnets.txt
+  <span class="green">2620  17670  95635 sonnets.txt</span></pre>
+<p class="noindent">Here the three numbers indicate how many lines, words, and bytes there are in the file, so there are 2620 lines (thereby fulfilling the promise made at the end of <a href="ch03.xhtml#ch03lev1">Section 3.1</a>), 17670 words, and 95635 bytes.</p>
+<p class="indent">You are now in a position to be able to guess one method for determining how many lines are in <span class="green"><code><strong>head sonnets.txt</strong></code></span>. In particular, we can combine <span class="green"><code><strong>head</strong></code></span> with the redirect operator (<a href="ch02.xhtml#ch02lev1">Section 2.1</a>) to make a file with the relevant contents, and then run <span class="green"><code><strong>wc</strong></code></span> on it, as shown in <a href="ch03.xhtml#list3-4">Listing 3.4</a>.</p>
+<p class="list-head" id="list3-4"><strong>Listing 3.4:</strong> Redirecting <span class="green"><code><strong>head</strong></code></span> and running <span class="green"><code><strong>wc</strong></code></span> on the result.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis04" id="p03lis04a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> head sonnets.txt &gt; sonnets_head.txt
+<span class="dblue"><strong>$</strong></span> wc sonnets_head.txt
+   <span class="green">10   46   294 sonnets_head.txt</span></pre>
+</div>
+<p class="noindent">We see from <a href="ch03.xhtml#list3-4">Listing 3.4</a> that there are 10 lines in <span class="green"><code><strong>head wc</strong></code></span> (along with 46 words and 294 bytes). The same method, of course, would work for <span class="green"><code><strong>tail</strong></code></span>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_48"></span>On the other hand, you might get the feeling that it’s a little unclean to make an intermediate file just to run <span class="green"><code><strong>wc</strong></code></span> on it, and indeed there’s a way to avoid it using a technique called <em>pipes</em>. <a href="ch03.xhtml#list3-5">Listing 3.5</a> shows how to do it.</p>
+<p class="list-head" id="list3-5"><strong>Listing 3.5:</strong> Piping the result of <span class="green"><code><strong>head</strong></code></span> through <span class="green"><code><strong>wc</strong></code></span>.</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> head sonnets.txt | wc
+   <span class="green">10   46   294</span></pre>
+</div>
+<p class="noindent">The command in <a href="ch03.xhtml#list3-5">Listing 3.5</a> runs <span class="green"><code><strong>head sonnets.txt</strong></code></span> and then <em>pipes</em> the result through <span class="green"><code><strong>wc</strong></code></span> using the pipe symbol <span class="green"><code><strong>|</strong></code></span> (Shift-backslash on most QWERTY keyboards). The reason this works is that the <span class="green"><code><strong>wc</strong></code></span> command, in addition to taking a filename as an argument, can (like many Unix programs) take input from “standard in” (compare to “standard out” mentioned in <a href="ch01.xhtml#ch01lev3">Section 1.3</a>), which in this case is the output of <span class="green"><code><strong>head sonnets.txt</strong></code></span> shown in <a href="ch03.xhtml#list3-2">Listing 3.2</a>. The <span class="green"><code><strong>wc</strong></code></span> program takes this input and counts it the same way it counts a file, yielding the same line, word, and byte counts as <a href="ch03.xhtml#list3-4">Listing 3.4</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch03lev2sec2">3.2.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">By piping the results of <span class="green"><code><strong>tail sonnets.txt</strong></code></span> through <span class="green"><code><strong>wc</strong></code></span>, confirm that (like <span class="green"><code><strong>head</strong></code></span>) the <span class="green"><code><strong>tail</strong></code></span> command outputs 10 lines by default.</p></li>
+<li><p class="number">By running <span class="green"><code><strong>man head</strong></code></span>, learn how to look at the first <span class="green"><code><strong>n</strong></code></span> lines of the file. By experimenting with different values of <span class="green"><code><strong>n</strong></code></span>, find a <span class="green"><code><strong>head</strong></code></span> command to print out just enough lines to display the first sonnet in its entirety (<a href="ch01.xhtml#fig1-11">Figure 1.11</a>).</p></li>
+<li><p class="number">Pipe the results of the previous exercise through <span class="green"><code><strong>tail</strong></code></span> (with the appropriate options) to print out <em>only</em> the 14 lines composing Sonnet 1. <em>Hint</em>: The command will look something like <span class="green"><code><strong>head -n &lt;i&gt; sonnets.txt | tail -n &lt;j&gt;</strong></code></span>, where <span class="green"><code><strong>&lt;i&gt;</strong></code></span> and <span class="green"><code><strong>&lt;j&gt;</strong></code></span> represent the numerical arguments to the <span class="green"><code><strong>-n</strong></code></span> option.</p></li>
+<li><p class="number">One of the most useful applications of <span class="green"><code><strong>tail</strong></code></span> is running <span class="green"><code><strong>tail -f</strong></code></span> to view a file that’s actively changing. This is especially common when monitoring files used to log the activity of, e.g., web servers, a practice known as “tailing the log file”. To simulate the creation of a log file, run <span class="green"><code><strong>ping learnenough.com &gt; learnenough.log</strong></code></span> in one terminal tab. (The <span class="green"><code><strong>ping</strong></code></span> command “pings” a server to see if it’s working.) In a second tab, type the command to tail the log file. (At this point, both tabs will be stuck, so once you’ve gotten the gist of <span class="green"><code><strong>tail -f</strong></code></span> you should use the technique from <a href="ch01.xhtml#box1-3">Box 1.3</a> to get out of trouble.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch03lev3"><span epub:type="pagebreak" id="page_49"></span>3.3 Less Is More</h3>
+<p class="noindent">Unix provides two utilities for the common task of wanting to look at more than just the head or tail of a file. The older of these programs is called <span class="green"><code><strong>more</strong></code></span>, but (I’d guess initially as a tongue-in-cheek joke) there’s a more powerful variant called <span class="green"><code><strong>less</strong></code></span>.<sup><a id="rfn3_5" href="ch03.xhtml#fn3_5">5</a></sup> The <span class="green"><code><strong>less</strong></code></span> program is interactive, so it’s hard to capture in print, but here’s roughly what it looks like:</p>
+<p class="footnote"><a id="fn3_5" href="ch03.xhtml#rfn3_5">5.</a> On some systems, apparently they’re exactly the same program, so <span class="green"><code><strong>less</strong></code></span> really is <span class="green"><code><strong>more</strong></code></span> (or, more accurately, <span class="green"><code><strong>more</strong></code></span> is <span class="green"><code><strong>less</strong></code></span>).</p>
+<p class="codelink"><a href="ch03_images.xhtml#p049pro01" id="p049pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> less sonnets.txt
+<span class="green">Shake-speare's Sonnets</span>
+
+<span class="green"><code>I</code></span>
+
+<span class="green">From fairest creatures we desire increase,</span>
+<span class="green">That thereby beauty's Rose might never die,</span>
+<span class="green">But as the riper should by time decease,</span>
+<span class="green">His tender heir might bear his memory:</span>
+<span class="green">But thou contracted to thine own bright eyes,</span>
+<span class="green">Feed'st thy light's flame with self-substantial fuel,</span>
+<span class="green">Making a famine where abundance lies,</span>
+<span class="green">Thy self thy foe, to thy sweet self too cruel:</span>
+<span class="green">Thou that art now the world's fresh ornament,</span>
+<span class="green">And only herald to the gaudy spring,</span>
+<span class="green">Within thine own bud buriest thy content,</span>
+<span class="green">And tender churl mak'st waste in niggarding:</span>
+ <span class="green">Pity the world, or else this glutton be,</span>
+ <span class="green">To eat the world's due, by the grave and thee.</span>
+
+<span class="green"><code>II</code></span>
+
+<span class="green">When forty winters shall besiege thy brow,</span>
+<span class="green">And dig deep trenches in thy beauty's field,</span>
+<span class="green">sonnets.txt</span></pre>
+<p class="noindent">The point of <span class="green"><code><strong>less</strong></code></span> is that it lets you navigate through the file in several useful ways, such as moving one line up or down with the arrow keys, pressing the spacebar to move a page down, and pressing <span class="green"><code><strong>^F</strong></code></span> to move forward a page (i.e., the same as spacebar) or <span class="green"><code><strong>^B</strong></code></span> to move back a page. To quit <span class="green"><code><strong>less</strong></code></span>, type <span class="green"><code><strong>q</strong></code></span> (for “quit”).</p>
+<p class="indent">Perhaps the most powerful aspect of <span class="green"><code><strong>less</strong></code></span> is the forward slash key <span class="green"><code><strong>/</strong></code></span>, which lets you search through the file from beginning to end. For example, suppose we wanted to search through <span class="green"><code><strong>sonnets.txt</strong></code></span> for “rose” (<a href="ch03.xhtml#fig3-1">Figure 3.1</a>),<sup><a id="rfn3_6" href="ch03.xhtml#fn3_6">6</a></sup> one of the most frequently <span epub:type="pagebreak" id="page_50"></span>used images in the <em>Sonnets</em>.<sup><a id="rfn3_7" href="ch03.xhtml#fn3_7">7</a></sup> The way to do this in <span class="green"><code><strong>less</strong></code></span> is to type <span class="green"><code><strong>/rose</strong></code></span> (read “slash rose”), as shown in <a href="ch03.xhtml#list3-6">Listing 3.6</a>.</p>
+<p class="footnote"><a id="fn3_6" href="ch03.xhtml#rfn3_6">6.</a> Image courtesy of Shuang Li/Shutterstock.</p>
+<p class="footnote"><a id="fn3_7" href="ch03.xhtml#rfn3_7">7.</a> Although Shakespeare’s sonnets are undated, most of them were probably composed during the reign of Queen Elizabeth, whose royal house adopted a rose (<a href="ch03.xhtml#fig3-1">Figure 3.1</a>) as its heraldic emblem. Given this context, Shakespeare’s choice of floral imagery isn’t surprising, but in fact only a few commentators on the <em>Sonnets</em> have noticed the seemingly obvious reference.</p>
+<figure class="figure" id="fig3-1">
+<img src="graphics/03fig01.jpg" alt="Image" width="138" height="131"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.1:</strong> A famous rose from the time of Shakespeare.</p>
+</figcaption>
+</figure>
+<p class="list-head" id="list3-6"><strong>Listing 3.6:</strong> Searching for the string “rose” using <span class="green"><code><strong>less</strong></code></span>.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis06" id="p03lis06a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="green">Shake-speare's Sonnets</span>
+
+<span class="green">I</span>
+
+<span class="green">From fairest creatures we desire increase,</span>
+<span class="green">That thereby beauty's Rose might never die,</span>
+<span class="green">But as the riper should by time decease,</span>
+<span class="green">His tender heir might bear his memory:</span>
+<span class="green">But thou contracted to thine own bright eyes,</span>
+<span class="green">Feed'st thy light's flame with self-substantial fuel,</span>
+<span class="green">Making a famine where abundance lies,</span>
+<span class="green">Thy self thy foe, to thy sweet self too cruel:</span>
+<span class="green">Thou that art now the world's fresh ornament,</span>
+<span class="green">And only herald to the gaudy spring,</span>
+<span class="green">Within thine own bud buriest thy content,</span>
+<span class="green">And tender churl mak'st waste in niggarding:</span>
+ <span class="green">Pity the world, or else this glutton be,</span>
+ <span class="green">To eat the world's due, by the grave and thee.</span>
+
+<span class="green">II</span>
+
+<span class="green">When forty winters shall besiege thy brow,</span>
+<span class="green">And dig deep trenches in thy beauty's field,</span>
+<span class="green">/rose</span></pre>
+</div>
+<p class="noindent">The result of pressing return after typing <span class="green"><code><strong>/rose</strong></code></span> in <a href="ch03.xhtml#list3-6">Listing 3.6</a> is to highlight the first occurrence of “rose” in the file. You can then press <span class="green"><code><strong>n</strong></code></span> to navigate to the next match, or <span class="green"><code><strong>N</strong></code></span> to navigate to the previous match.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_51"></span>The last two essential <span class="green"><code><strong>less</strong></code></span> commands are <span class="green"><code><strong>G</strong></code></span> to move to the end of the file and <span class="green"><code><strong>1G</strong></code></span> (that’s <span class="green"><code><strong>1</strong></code></span> followed by <span class="green"><code><strong>G</strong></code></span>) to move back to the beginning. <a href="ch03.xhtml#tab3-1">Table 3.1</a> summarizes what are in my view the most important key combinations (i.e., the ones I think you need to be <em>dangerous</em>), but if you’re curious you can find a longer list of commands at the Wikipedia page on <code>less</code>.</p>
+<figure class="table" id="tab3-1">
+<p class="title-t"><strong>Table 3.1:</strong> The most important <span class="green"><code><strong>less</strong></code></span> commands.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>up &amp; down arrow keys</code></p></td>
+<td><p class="tab-para">Move up or down one line</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>spacebar</code></p></td>
+<td><p class="tab-para">Move forward one page</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^F</code></p></td>
+<td><p class="tab-para">Move forward one page</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>^B</code></p></td>
+<td><p class="tab-para">Move back one page</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>G</code></p></td>
+<td><p class="tab-para">Move to end of file</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>1G</code></p></td>
+<td><p class="tab-para">Move to beginning of file</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>/&lt;string&gt;</code></p></td>
+<td><p class="tab-para">Search file for string</p></td>
+<td><p class="tab-para"><code><strong><span class="green">/rose</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>n</code></p></td>
+<td><p class="tab-para">Move to next search result</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>N</code></p></td>
+<td><p class="tab-para">Move to previous search result</p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>q</code></p></td>
+<td><p class="tab-para">Quit <code><span class="green"><strong>less</strong></span></code></p></td>
+<td><p class="tab-para"> </p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">I encourage you to get in the habit of using <span class="green"><code><strong>less</strong></code></span> as your go-to utility for looking at the contents of a file. The skills you develop have other applications as well; for example, the man pages (<a href="ch01.xhtml#ch01lev4">Section 1.4</a>) use the same interface as <span class="green"><code><strong>less</strong></code></span>, so by learning about <span class="green"><code><strong>less</strong></code></span> you’ll get better at navigating the man pages as well.</p>
+<section>
+<h4 class="h4" id="ch03lev3sec1">3.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Run <span class="green"><code><strong>less</strong></code></span> on <span class="green"><code><strong>sonnets.txt</strong></code></span>. Go down three pages and then back up three pages. Go to the end of the file, then to the beginning, then quit.</p></li>
+<li><p class="number">Search for the string “All” (case-sensitive). Go forward a few occurrences, then back a few occurrences. Then go to the beginning of the file and count the occurrences by searching forward until you hit the end. Compare your count to the result of running <span class="green"><code><strong>grep All sonnets.txt | wc</strong></code></span>. (We’ll learn about <span class="green"><code><strong>grep</strong></code></span> in <a href="ch03.xhtml#ch03lev4">Section 3.4</a>.)</p></li>
+<li><p class="number">Using <span class="green"><code><strong>less</strong></code></span> and <span class="green"><code><strong>/</strong></code></span> (“slash”), find the sonnet that begins with the line “Let me not”. Are there any other occurrences of this string in the <em>Sonnets</em>? <em>Hint</em>: <span epub:type="pagebreak" id="page_52"></span>Press <span class="green"><code><strong>n</strong></code></span> to find the next occurrence (if any). <em>Extra credit</em>: Listen to the sonnet (<a href="https://www.youtube.com/watch?v=bt7OynPUIY8">https://www.youtube.com/watch?v=bt7OynPUIY8</a>) in both modern and original pronunciation. Which version’s rhyme scheme is better?</p></li>
+<li><p class="number">Because <span class="green"><code><strong>man</strong></code></span> uses <span class="green"><code><strong>less</strong></code></span>, we are now in a position to search man pages interactively. By searching for the string “sort” in the man page for <span class="green"><code><strong>ls</strong></code></span>, discover the option to sort files by size. What is the command to display the long form of files sorted so the largest files appear at the bottom? <em>Hint</em>: Use <span class="green"><code><strong>ls -rtl</strong></code></span> as a model.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch03lev4">3.4 Grepping</h3>
+<p class="noindent">One of the most powerful tools for inspecting file contents is <span class="green"><code><strong>grep</strong></code></span>, which probably stands for something, but it’s not important what. (We’ll actually mention it in a moment.) Indeed, <em>grep</em> is frequently used as a verb, as in “You should totally grep that file.”</p>
+<p class="indent">The most common use of <span class="green"><code><strong>grep</strong></code></span> is just to search for a substring in a file. For example, we saw in <a href="ch03.xhtml#ch03lev3">Section 3.3</a> how to use <span class="green"><code><strong>less</strong></code></span> to search for the string “rose” in Shakespeare’s sonnets. Using <span class="green"><code><strong>grep</strong></code></span>, we can find the references directly, as shown in <a href="ch03.xhtml#list3-7">Listing 3.7</a>.</p>
+<p class="list-head" id="list3-7"><strong>Listing 3.7:</strong> Finding the occurrences of “rose” in Shakespeare’s sonnets.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis07" id="p03lis07a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> grep rose sonnets.txt
+<span class="green">The rose looks fair, but fairer we it deem</span>
+<span class="green">As the perfumed tincture of the roses.</span>
+<span class="green">Die to themselves. Sweet roses do not so;</span>
+<span class="green">Roses of shadow, since his rose is true?</span>
+<span class="green">Which, like a canker in the fragrant rose,</span>
+<span class="green">Nor praise the deep vermilion in the rose;</span>
+<span class="green">The roses fearfully on thorns did stand,</span>
+ <span class="green">Save thou, my rose, in it thou art my all.</span>
+<span class="green">I have seen roses damask'd, red and white,</span>
+<span class="green">But no such roses see I in her cheeks;</span></pre>
+</div>
+<p class="indent">With the command in <a href="ch03.xhtml#list3-7">Listing 3.7</a>, it appears that we are in a position to count the number of lines containing references to the word “rose” by piping to <span class="green"><code><strong>wc</strong></code></span> (as in <a href="ch03.xhtml#ch03lev3">Section 3.3</a>), as shown in <a href="ch03.xhtml#list3-8">Listing 3.8</a>.</p>
+<p class="list-head" id="list3-8"><strong>Listing 3.8:</strong> Piping the results of <span class="green"><code><strong>grep</strong></code></span> to <span class="green"><code><strong>wc</strong></code></span>.</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> grep rose sonnets.txt | wc
+   <span class="green">10   82   419</span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_53"></span><a href="ch03.xhtml#list3-8">Listing 3.8</a> tells us that 10 lines contain “rose” (or “roses”, since “rose” is a substring of “roses”). But you may recall from <a href="ch01.xhtml#fig1-11">Figure 1.11</a> that Shakespeare’s first sonnet contains “Rose” with a <em>capital</em> “R”. Referring to <a href="ch03.xhtml#list3-7">Listing 3.7</a>, we see that this line has in fact been missed. This is because <span class="green"><code><strong>grep</strong></code></span> is case-sensitive by default, and “rose” doesn’t match “Rose”.</p>
+<p class="indent">As you might suspect, <span class="green"><code><strong>grep</strong></code></span> has an option to perform case-insensitive matching as well. One way to figure it out is to search through the <span class="green"><code><strong>man</strong></code></span> page for <span class="green"><code><strong>grep</strong></code></span>:</p>
+<ul class="sq">
+<li><p class="bull">Type <span class="green"><code><strong>man grep</strong></code></span>.</p></li>
+<li><p class="bull">Type <span class="green"><code><strong>/case</strong></code></span> and then return.</p></li>
+<li><p class="bull">Read off the result (<a href="ch03.xhtml#fig3-2">Figure 3.2</a>).</p>
+<figure class="figure" id="fig3-2">
+<img src="graphics/03fig02.jpg" alt="Image" width="744" height="571"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.2:</strong> The result of searching <span class="green"><code><strong>man grep</strong></code></span> for “case”.</p>
+</figcaption>
+</figure></li>
+</ul>
+<p class="noindent">(As noted briefly in <a href="ch01.xhtml#ch01lev4">Section 1.4</a>, the man pages use the same interface as the <span class="green"><code><strong>less</strong></code></span> command we met in <a href="ch03.xhtml#ch03lev3">Section 3.3</a>, so we can search through them using <span class="green"><code><strong>/</strong></code></span>.)</p>
+<p class="indent">Applying the result of the above procedure yields <a href="ch03.xhtml#list3-9">Listing 3.9</a>. Comparing the results of <a href="ch03.xhtml#list3-9">Listing 3.9</a> with <a href="ch03.xhtml#list3-8">Listing 3.8</a>, we see that we now have 12 matching lines instead of only 10, so there must be a total of 12 – 10 = 2 lines containing “Rose” (but not “rose”) in the <em>Sonnets</em>.<sup><a id="rfn3_8" href="ch03.xhtml#fn3_8">8</a></sup></p>
+<p class="footnote"><a id="fn3_8" href="ch03.xhtml#rfn3_8">8.</a> Actually, “ROSE”, “RoSE”, “rOSE”, etc., all match as well, but “Rose” is the likeliest candidate. Confirming this hunch is left as an exercise (<a href="ch03.xhtml#ch03lev4sec1">Section 3.4.1</a>).</p>
+<p class="list-head" id="list3-9"><strong>Listing 3.9:</strong> Doing a case-insensitive grep.</p>
+<p class="codelink"><a href="ch03_images.xhtml#p03lis09" id="p03lis09a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> grep -i rose sonnets.txt | wc
+   <span class="green">12   96   508</span></pre>
+</div>
+<p class="noindent">The <span class="green"><code><strong>grep</strong></code></span> utility gets its name from a pattern-matching system called <em>regular expressions</em> (also called <em>regexes</em> for short): <em>grep</em> stands for “<strong>g</strong>lobally search a <strong>r</strong>egular <strong>e</strong>xpression and <strong>p</strong>rint.” A full treatment of regular expressions is well beyond the scope of this tutorial, but before moving on we’ll sample just a small taste.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_54"></span>As one simple example, let’s match every line in <span class="green"><code><strong>sonnets.txt</strong></code></span> that has a word beginning with the letters “ro”, followed by any number of (lowercase) letters, and ending in “s”. The way to represent “any letter” with a regular expression is <span class="green"><code><strong>[a-z]</strong></code></span>, and following a pattern with an asterisk <span class="green"><code><strong>*</strong></code></span> matches “zero or more” of that thing. Thus, <span class="green"><code><strong>ro[a-z]*s</strong></code></span> matches “ro” and “s” with zero or more letters in between. We can add spaces to the beginning and end to ensure that the match consists of entire words, like this:</p>
+<p class="codelink"><a href="ch03_images.xhtml#p054pro01" id="p054pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> grep <span class="brown">' ro[a-z]*s '</span> sonnets.txt
+  <span class="green">To that sweet thief which sourly robs from me.</span>
+<span class="green">Die to themselves. Sweet roses do not so;</span>
+<span class="green">When rocks impregnable are not so stout,</span>
+<span class="green">He robs thee of, and pays it thee again.</span>
+<span epub:type="pagebreak" id="page_55"></span><span class="green">The roses fearfully on thorns did stand,</span>
+<span class="green">I have seen roses damask'd, red and white,</span>
+<span class="green">But no such roses see I in her cheeks;</span></pre>
+<p class="noindent">We can see that the regular expression matches strings like “robs” and “rocks” in addition to “roses”.</p>
+<p class="indent">In general, one of the best tools for learning how to use regexes is an <em>online regex builder</em>, such as regex101, which lets you build up regexes interactively (<a href="ch03.xhtml#fig3-3">Figure 3.3</a>). Unfortunately, <span class="green"><code><strong>grep</strong></code></span> often doesn’t support the precise format used by regex builders (including hard-to-guess requirements for “escaping out” special characters), and precision in regular expressions is everything. As a result, despite its name origins, the truth is I rarely use the regular expression capabilities of <span class="green"><code><strong>grep</strong></code></span>. By the time the situation calls for regexes, I’m far likelier to reach for a text editor (<a href="part02.xhtml#part02">Part II</a>) or a full-strength programming language (<em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>), <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>)).</p>
+<figure class="figure" id="fig3-3">
+<img src="graphics/03fig03.jpg" alt="Image" width="744" height="569"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.3:</strong> An online regex builder (<a href="https://regex101.com/">https://regex101.com/</a>).</p>
+</figcaption>
+</figure>
+<p class="indent">Nevertheless, the aspects of <span class="green"><code><strong>grep</strong></code></span> discussed in this section are nearly enough to be <em>dangerous</em>, covering a huge number of common cases (including the important application of <em>grepping processes</em> (<a href="ch03.xhtml#box3-2">Box 3.2</a>)). We’ll see one final <span class="green"><code><strong>grep</strong></code></span> variant in <a href="ch04.xhtml#ch04">Chapter 4</a> as part of our discussion of Unix directories.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box3-2">Box 3.2: Grepping Processes</p>
+<p class="box-no">One of the many uses of <code>grep</code> is filtering the Unix <em>process list</em> for running programs that match a particular string. (On Unix-like systems such as Linux and macOS, user and system tasks each take place within a well-defined container called a <em>process</em>.) This is especially useful when there’s a rogue process on your system that needs to be killed. (A good way to find such processes is by running the <code>top</code> command, which shows the processes consuming the most resources.)</p>
+<p class="box-ind">For example, at one point in the <em>Ruby on Rails Tutorial</em> book (<a href="https://www.railstutorial.org/book">https://www.railstutorial.org/book</a>), it’s important to eliminate a program called <code>spring</code> from the process list. To do this, first the processes need to be found, and the way to see all the processes on your system is to use the <code>ps</code> command with the <code>aux</code> options:</p>
+<pre class="pre">$ ps aux</pre>
+<p class="box-no"><span epub:type="pagebreak" id="page_56"></span>Per the usual practice of Unix terseness (<a href="ch02.xhtml#fig2-4">Figure 2.4</a>), <code>ps</code> is short for “process status”. And for confusing and obscure reasons, options to <code>ps</code> aren’t written with a dash (so it’s <code>ps aux</code> instead of <code>ps -aux</code>). (How on earth are you supposed to know this? That’s what this tutorial is for.)</p>
+<p class="box-ind">To filter the processes by program name, you pipe the results of <code>ps</code> through <code>grep</code>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#p056pro01" id="p056pro01a">Click here to view code image</a></p>
+<pre class="pre">$ ps aux | grep spring
+ubuntu 12241 0.3 0.5 589960 178416 ? Ssl Sep20 1:46
+spring app | sample_app | started 7 hours ago</pre>
+<p class="box-no">The result shown gives some details about the process, but the most important thing is the first number, which is the <em>process id</em>, or pid (often pronounced to rhyme with “kid”). <span epub:type="pagebreak" id="page_57"></span>To eliminate an unwanted process, we use the <code>kill</code> command to issue the Unix terminate code (which happens to be 15) to the pid:</p>
+<pre class="pre">$ kill -15 12241</pre>
+<p class="box-no">This is the technique I recommend for killing individual processes, such as a rogue web server (with the pid found via <code>ps aux | grep server</code>), but sometimes it’s convenient to kill all the processes matching a particular process name, such as when you want to kill all the <code>spring</code> processes gunking up your system. In this case, you can kill all the processes with name <code>spring</code> using the <code>pkill</code> command as follows:</p>
+<pre class="pre">$ pkill -15 -f spring</pre>
+<p class="noindent">Any time something isn’t behaving as expected, or a process appears to be frozen, it’s a good idea to run <code>top</code> or <code>ps aux</code> to see what’s going on, pipe <code>ps aux</code> through <code>grep</code> to select the suspected processes, and then run <code>kill -15 &lt;pid&gt;</code> or <code>pkill -15 -f &lt;name&gt;</code> to clear things up.</p>
+</aside>
+<section>
+<h4 class="h4" id="ch03lev4sec1">3.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By searching <span class="green"><code><strong>man grep</strong></code></span> for “line number”, construct a command to find the line numbers in <span class="green"><code><strong>sonnets.txt</strong></code></span> where the string “rose” appears.</p></li>
+<li><p class="number">You should find that the last occurrence of “rose” is (via “roses”) on line 2203. Figure out how to go directly to this line when running <span class="green"><code><strong>less sonnets.txt</strong></code></span>. <em>Hint</em>: Recall from <a href="ch03.xhtml#tab3-1">Table 3.1</a> that <span class="green"><code><strong>1G</strong></code></span> goes to the top of the file, i.e., line 1. Similarly, <span class="green"><code><strong>17G</strong></code></span> goes to line 17. Etc.</p></li>
+<li><p class="number">By piping the output of <span class="green"><code><strong>grep</strong></code></span> to <span class="green"><code><strong>head</strong></code></span>, print out the first (and <em>only</em> the first) line in <span class="green"><code><strong>sonnets.txt</strong></code></span> containing “rose”. <em>Hint</em>: Use the result of the second exercise in <a href="ch03.xhtml#ch03lev2sec2">Section 3.2.2</a>.</p></li>
+<li><p class="number">In <a href="ch03.xhtml#list3-9">Listing 3.9</a>, we saw two additional lines that case-insensitively matched “rose”. Execute a command confirming that both of the lines contain the string “Rose” (and not, e.g., “rOSe”). <em>Hint</em>: Use a case-sensitive <span class="green"><code><strong>grep</strong></code></span> for “Rose”.</p></li>
+<li><p class="number">You should find in the previous exercise that there are <em>three</em> lines matching “Rose” instead of the two you might have expected from <a href="ch03.xhtml#list3-9">Listing 3.9</a>. This is because there is one line that contains both “Rose” <em>and</em> “rose”, and thus shows up in both <span class="green"><code><strong>grep rose</strong></code></span> and <span class="green"><code><strong>grep -i rose</strong></code></span>. Write a command confirming that the number of lines <span epub:type="pagebreak" id="page_58"></span>matching “Rose” but <em>not</em> matching “rose” is equal to the expected 2. <em>Hint</em>: Pipe the result of <span class="green"><code><strong>grep</strong></code></span> to <span class="green"><code><strong>grep -v</strong></code></span>, and then pipe that result to <span class="green"><code><strong>wc</strong></code></span>. (What does <span class="green"><code><strong>-v</strong></code></span> do? Read the man page for <span class="green"><code><strong>grep</strong></code></span> (<a href="ch01.xhtml#box1-4">Box 1.4</a>).)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch03lev5">3.5 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch03.xhtml#tab3-2">Table 3.2</a>.</p>
+<figure class="table" id="tab3-2">
+<p class="title-t"><strong>Table 3.2:</strong> Important commands from <a href="ch03.xhtml#ch03">Chapter 3</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>curl</code></p></td>
+<td><p class="tab-para">Interact with URLs</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ curl -O https://ex.co</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>which</code></p></td>
+<td><p class="tab-para">Locate a program on the path</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ which curl</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>head &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Display first part of file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ head foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>tail &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Display last part of file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ tail bar</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>wc &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Count lines, words, bytes</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ wc foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>cmd1 | cmd2</code></p></td>
+<td><p class="tab-para">Pipe cmd1 to cmd2</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ head foo | wc</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ping &lt;url&gt;</code></p></td>
+<td><p class="tab-para">Ping a server URL</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ ping google.com</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>less &lt;file&gt;</code></p></td>
+<td><p class="tab-para">View file contents interactively</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ less foo</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>grep &lt;string&gt; &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Find string in file</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ grep foo bar.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>grep -i &lt;string&gt; &lt;file&gt;</code></p></td>
+<td><p class="tab-para">Find case-insensitively</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ grep -i foo bar.txt</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>ps</code></p></td>
+<td><p class="tab-para">Show processes</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ ps aux</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>top</code></p></td>
+<td><p class="tab-para">Show processes (sorted)</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ top</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>kill -&lt;level&gt; &lt;pid&gt;</code></p></td>
+<td><p class="tab-para">Kill a process</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ kill -15 24601</span></strong></code></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>pkill -&lt;level&gt; -f &lt;name&gt;</code></p></td>
+<td><p class="tab-para">Kill matching processes</p></td>
+<td><p class="tab-para"><code><strong><span class="green">$ pkill -15 -f spring</span></strong></code></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<section>
+<h4 class="h4" id="ch03lev5sec1">3.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">The <span class="green"><code><strong>history</strong></code></span> command prints the history of commands in a particular terminal shell (subject to some limit, which is typically large). Pipe <span class="green"><code><strong>history</strong></code></span> to <span class="green"><code><strong>less</strong></code></span> to examine your command history. What was your 17th command?</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_59"></span>By piping the output of <span class="green"><code><strong>history</strong></code></span> to <span class="green"><code><strong>wc</strong></code></span>, count how many commands you’ve executed so far.</p></li>
+<li><p class="number">One use of <span class="green"><code><strong>history</strong></code></span> is to grep your commands to find useful ones you’ve used before, with each command preceded by the corresponding number in the command history. By piping the output of <span class="green"><code><strong>history</strong></code></span> to <span class="green"><code><strong>grep</strong></code></span>, determine the number for the last occurrence of <span class="green"><code><strong>curl</strong></code></span>.</p></li>
+<li><p class="number">In <a href="ch03.xhtml#box3-1">Box 3.1</a>, we learned about <span class="green"><code><strong>!!</strong></code></span> (“bang bang”) to execute the previous command. Similarly, <span class="green"><code><strong>!n</strong></code></span> executes command number <span class="green"><code><strong>n</strong></code></span>, so that, e.g., <span class="green"><code><strong>!17</strong></code></span> executes the 17th command in the command history. Use the result from the previous exercise to rerun the last occurrence of <span class="green"><code><strong>curl</strong></code></span>.</p></li>
+<li><p class="number">What do the <span class="green"><code><strong>O</strong></code></span> and <span class="green"><code><strong>L</strong></code></span> options in <a href="ch03.xhtml#list3-1">Listing 3.1</a> mean? <em>Hint</em>: Pipe the output of <span class="green"><code><strong>curl -h</strong></code></span> to <span class="green"><code><strong>less</strong></code></span> and search first for the string <span class="green"><code><strong>-O</strong></code></span> and then for the string <span class="green"><code><strong>-L</strong></code></span>.<span epub:type="pagebreak" id="page_60"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

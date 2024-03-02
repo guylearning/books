@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch10"><span epub:type="pagebreak" id="page_235"></span>Chapter 10</h2>
+<h2 class="chap-title">Intermediate Workflow</h2>
+<p class="noindent">In this chapter, we’ll practice and extend the basic workflow introduced in <a href="ch09.xhtml#ch09lev3">Section 9.3</a>. This will include adding a new directory to our project, learning how to tell Git to ignore certain files, how to <em>branch</em> and <em>merge</em>, and how to recover from errors. Rather than providing an encyclopedic coverage of Git’s many commands, our focus is on covering practical techniques used every day by software developers and other users of Git.</p>
+<p class="indent">For reference, important commands from this chapter are summarized in <a href="ch10.xhtml#ch10lev5">Section 10.5</a>.</p>
+<section>
+<h3 class="h3" id="ch10lev1">10.1 Commit, Push, Repeat</h3>
+<p class="noindent">We’ll start by adding an image to our site, which involves making a change to an existing file (<span class="green"><code><strong>index.html</strong></code></span>) while adding a new file in a new directory. The first step is to make a directory for images:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000235-01" id="f000235-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ mkdir images</pre>
+<p class="noindent">Next, download the image shown in <a href="ch10.xhtml#fig10-1">Figure 10.1</a><sup><a id="rfn10_1" href="ch10.xhtml#fn10_1">1</a></sup> to the local directory using <span class="green"><code><strong>curl</strong></code></span>:</p>
+<p class="footnote"><a id="fn10_1" href="ch10.xhtml#rfn10_1">1.</a> Image courtesy of GUDKOV ANDREY/Shutterstock.</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000235-02" id="f000235-02a">Click here to view code image</a></p>
+<pre class="box-pre1">$ curl -o images/breaching_whale.jpg \
+&gt;      -L https://cdn.learnenough.com/breaching_whale.jpg</pre>
+<figure class="figure" id="fig10-1">
+<img src="graphics/10fig01.jpg" alt="Image" width="744" height="488"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.1:</strong> An image to include in our website.</p>
+</figcaption>
+</figure>
+<p class="noindent"><span epub:type="pagebreak" id="page_236"></span>(Note here that you should type the backslash character <span class="green"><code><strong>\</strong></code></span> in the first line, but you <em>shouldn’t</em> type the literal angle bracket <span class="green"><code><strong>&gt;</strong></code></span> in the second line. The <span class="green"><code><strong>\</strong></code></span> is used for a <em>line continuation</em>, and after hitting return the <span class="green"><code><strong>&gt;</strong></code></span> will be added automatically by your shell program.)</p>
+<p class="indent">We’re now ready to include the image in our index page using the <em>image tag</em> <span class="green"><code><strong>img</strong></code></span>. This is a new kind of HTML tag; before we had opening and closing tags like</p>
+<pre class="box-pre1">&lt;<span class="lgreen"><strong>p</strong></span>&gt;content&lt;/<span class="lgreen"><strong>p</strong></span>&gt;</pre>
+<p class="noindent">but the image tag is different. Unlike tags like <span class="green"><code><strong>h1</strong></code></span> and <span class="green"><code><strong>p</strong></code></span>, the <span class="green"><code><strong>img</strong></code></span> tag is a <em>void element</em> (also called a <em>self-closing tag</em>), which means that it starts with <span class="green"><code><strong>&lt;img</strong></code></span> and ends with <span class="green"><code><strong>&gt;</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p236pro01" id="p236pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">&lt;<span class="lgreen"><strong>img</strong></span> <span class="ygreen">src</span><span class="brown">="path/to/file"</span> <span class="ygreen">alt</span><span class="brown">="Description"</span>&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_237"></span>Note that <span class="green"><code><strong>img</strong></code></span> has no content between tags because there’s no “between”; instead, it has a path to the <em>source</em> of the image, indicated by <span class="green"><code><strong>src</strong></code></span>. An alternate syntax uses <span class="green"><code><strong>/&gt;</strong></code></span> instead of <span class="green"><code><strong>&gt;</strong></code></span> in order to conform to constraints of XML, a markup language related to HTML:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000237-01" id="f000237-01a">Click here to view code image</a></p>
+<pre class="box-pre1">&lt;<span class="lgreen"><strong>img</strong></span> <span class="ygreen">src</span><span class="brown">="path/to/file"</span> <span class="ygreen">alt</span><span class="brown">="Description"</span> /&gt;</pre>
+<p class="noindent">You might sometimes see this syntax instead of the plain <span class="green"><code><strong>&gt;</strong></code></span>, but in HTML5 the two are exactly equivalent.</p>
+<p class="indent">By the way, in the example above the path <span class="green"><code><strong>path/to/file</strong></code></span> is <em>meta</em>, meaning that it talks <em>about</em> the path rather than referring to the literal path itself. In such cases, it’s important to use the actual path to the file. (Successfully navigating such meta usage is a good sign of increasing technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>).) In this case, the path is <span class="green"><code><strong>images/breaching_whale.jpg</strong></code></span>, so the <span class="green"><code><strong>img</strong></code></span> tag in <span class="green"><code><strong>index.html</strong></code></span> should appear as shown in <a href="ch10.xhtml#list10-1">Listing 10.1</a>. (This image tag is actually missing something important, which we’ll add in <a href="ch11.xhtml#ch11lev2">Section 11.2</a>.)</p>
+<p class="list-head" id="list10-1"><strong>Listing 10.1:</strong> Adding an image to the index page.<br/><code><em>~/repos/website/index.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p010lis01" id="p010lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;A whale of a greeting&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>body</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>h1</strong></span>&gt;hello, world&lt;/<span class="lgreen"><strong>h1</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>p</strong></span>&gt;Call me Ishmael.&lt;/<span class="lgreen"><strong>p</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>img</strong></span> <span class="ygreen"><strong>src</strong></span><span class="gray1"><strong>=</strong></span><span class="brown"><strong>"images/breaching_whale.jpg"</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent">Refreshing the browser then gives the result shown in <a href="ch10.xhtml#fig10-2">Figure 10.2</a>. (Note that <a href="ch10.xhtml#list10-1">Listing 10.1</a> includes the <span class="green"><code><strong>title</strong></code></span> tag content, thereby incorporating the solution to an exercise in <a href="ch08.xhtml#ch08lev6sec1">Section 8.6.1</a>.)</p>
+<figure class="figure" id="fig10-2">
+<img src="graphics/10fig02.jpg" alt="Image" width="744" height="580"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.2:</strong> Our website with an added image.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_238"></span>At this point, <span class="green"><code><strong>git diff</strong></code></span> confirms that the image addition is ready to go:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p238pro01" id="p238pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git diff index.html
+<span class="dblue"><strong>diff --git a/index.html b/index.html</strong></span>
+<span class="dblue"><strong>index 706a1be..74043f7 100644</strong></span>
+<span class="dred">--- a/index.html</span>
+<span class="bgreen1">+++ b/index.html</span>
+<span class="violet"><strong>@@ -6,5 +6,6 @@</strong></span>
+   &lt;body&gt;
+     &lt;h1&gt;hello, world&lt;/h1&gt;
+     &lt;p&gt;Call me Ishmael.&lt;/p&gt;
+<span class="bgreen1">+    &lt;img src="images/breaching_whale.jpg"&gt;</span>
+   &lt;/body&gt;
+ &lt;/html&gt;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_239"></span>(If you didn’t add the <span class="green"><code><strong>title</strong></code></span> content in <a href="ch08.xhtml#ch08lev6sec1">Section 8.6.1</a>, you’ll see an additional line in the diff for that as well.)</p>
+<p class="indent">On the other hand, running <span class="green"><code><strong>git status</strong></code></span> shows that the entire <span class="green"><code><strong>images/</strong></code></span> directory is untracked:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000239-01" id="f000239-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified: index.html
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        images/
+
+no changes added to commit (use "git add" and/or "git commit -a")</pre>
+<p class="noindent">As you might guess, <span class="green"><code><strong>git add -A</strong></code></span> adds all untracked <em>directories</em> in addition to adding all untracked files, so we can add the image and its directory with a single command:<sup><a id="rfn10_2" href="ch10.xhtml#fn10_2">2</a></sup></p>
+<p class="footnote"><a id="fn10_2" href="ch10.xhtml#rfn10_2">2.</a> Technically, Git tracks only files, not directories; in fact, it won’t track empty directories at all, so if you want to track an otherwise empty directory you need to put a file in it. One common convention is to use a hidden file called <span class="green"><code><strong>.gitkeep</strong></code></span>; to create this file in an empty directory called <span class="green"><code><strong>foo</strong></code></span>, you could use the command <span class="green"><code><strong>touch foo/.gitkeep</strong></code></span>. Then <span class="green"><code><strong>git add -A</strong></code></span> would add the <span class="green"><code><strong>foo</strong></code></span> directory as desired.</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000239-02" id="f000239-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git add -A</pre>
+<p class="noindent">We then commit and push as usual:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000239-03" id="f000239-03a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git commit -m "Add an image"
+[website (main)]$ git push</pre>
+<p class="noindent">It’s a good idea to get in the habit of pushing up to the remote repository frequently, as it serves as a guaranteed backup of the project while also allowing collaborators to pull in any changes (<a href="ch11.xhtml#ch11">Chapter 11</a>).</p>
+<p class="indent">After refreshing the GitHub repository in your browser, you should be able to confirm the presence of the new file by clicking on the <span class="green"><code><strong>images</strong></code></span> directory link, with the results as shown in <a href="ch10.xhtml#fig10-3">Figure 10.3</a>.</p>
+<figure class="figure" id="fig10-3">
+<img src="graphics/10fig03.jpg" alt="Image" width="744" height="561"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.3:</strong> The new images directory on GitHub.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch10lev1sec1"><span epub:type="pagebreak" id="page_240"></span>10.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Click on the image link at GitHub to verify that the <span class="green"><code><strong>git push</strong></code></span> succeeded.</p></li>
+<li><p class="number">At this point, the number of commits is large enough that the output of <span class="green"><code><strong>git log -p</strong></code></span> is probably too big to fit in your terminal window. Confirm that running <span class="green"><code><strong>git log -p</strong></code></span> drops you into a <span class="green"><code><strong>less</strong></code></span> interface for easier navigation.</p></li>
+<li><p class="number">Use your knowledge of <span class="green"><code><strong>less</strong></code></span> commands (<a href="ch03.xhtml#tab3-1">Table 3.1</a>) to search for the commit that added the HTML <span class="green"><code><strong>DOCTYPE</strong></code></span>. What is the SHA of the commit?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev2"><span epub:type="pagebreak" id="page_241"></span>10.2 Ignoring Files</h3>
+<p class="noindent">A frequent issue when dealing with Git repositories is coming across files you <em>don’t</em> want to commit. These include files containing secret credentials, configuration files that aren’t shared across computers, temporary files, log files, etc.</p>
+<p class="indent">For example, on macOS a common side effect of using the Finder to open directories is the creation of a hidden file called <span class="green"><code><strong>.DS_Store</strong></code></span>.<sup><a id="rfn10_3" href="ch10.xhtml#fn10_3">3</a></sup> This side effect is so common that more recent versions of Git actually ignore <span class="green"><code><strong>.DS_Store</strong></code></span> automatically, but we can simulate such a side effect by using <span class="green"><code><strong>touch</strong></code></span> to create a sample <span class="green"><code><strong>.unwanted_DS_Store</strong></code></span> file as follows:</p>
+<p class="footnote"><a id="fn10_3" href="ch10.xhtml#rfn10_3">3.</a> This happened to me when I ran <span class="green"><code><strong>open images/</strong></code></span> while writing <a href="ch10.xhtml#ch10lev1">Section 10.1</a>, which is what reminded me I should cover it here.</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000241-01" id="f000241-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ touch .unwanted_DS_Store</pre>
+<p class="noindent">This file now shows up in the status:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000241-02" id="f000241-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+<span class="back-yellow">       .unwanted_DS_Store</span>
+
+nothing added to commit but untracked files present (use "git add" to track)</pre>
+<p class="noindent">This is annoying, as we have no need to track this file, and indeed when collaborating with other users it could easily cause conflicts (<a href="ch11.xhtml#ch11lev2">Section 11.2</a>) down the line.</p>
+<p class="indent">In order to avoid this annoyance, Git lets us <em>ignore</em> such files using a special hidden configuration file called <span class="green"><code><strong>.gitignore</strong></code></span>. To ignore <span class="green"><code><strong>.DS_Store</strong></code></span>, create a file called <span class="green"><code><strong>.git-ignore</strong></code></span> using your favorite text editor and then fill it with the contents shown in <a href="ch10.xhtml#list10-2">Listing 10.2</a>.</p>
+<p class="list-head" id="list10-2"><strong>Listing 10.2:</strong> Configuring Git to ignore a file.<br/><code><em>~/repos/website/.gitignore</em></code></p>
+<div class="box2">
+<pre class="pre">.unwanted_DS_Store</pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_242"></span>After saving the contents of <a href="ch10.xhtml#list10-2">Listing 10.2</a>, the status now picks up the newly added <span class="green"><code><strong>.gitignore</strong></code></span> file, but it <em>doesn’t</em> list the <span class="green"><code><strong>.DS_Store</strong></code></span> file, thereby confirming that it’s being ignored:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p242pro01" id="p242pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+<span class="back-yellow">       .gitignore</span>
+
+nothing added to commit but untracked files present (use "git add" to track)</pre>
+<p class="indent">This is an excellent start, but it would be inconvenient if we had to add the name of every file we want to ignore. For instance, the Vim text editor (covered briefly in <a href="ch05.xhtml#ch05lev1">Section 5.1</a>) sometimes creates <em>temporary files</em> whose names involve appending a tilde <span class="green"><code><strong>~</strong></code></span> to the end of the normal filename, so you might be editing a file called <span class="green"><code><strong>foo</strong></code></span> and end up with a file called <span class="green"><code><strong>foo~</strong></code></span> in your directory. In such a case, we would want to ignore <em>all</em> files ending in a tilde. To support this case, the <span class="green"><code><strong>.gitignore</strong></code></span> file also lets us use <em>wildcards</em>, where the asterisk <span class="green"><code><strong>*</strong></code></span> represents “anything”:<sup><a id="rfn10_4" href="ch10.xhtml#fn10_4">4</a></sup></p>
+<p class="footnote"><a id="fn10_4" href="ch10.xhtml#rfn10_4">4.</a> Wildcards were discussed in <a href="ch02.xhtml#ch02lev2">Section 2.2</a> in the context of the <span class="green"><code><strong>ls</strong></code></span> command, as in <span class="green"><code><strong>ls *.txt</strong></code></span>.</p>
+<pre class="box-pre1">*~</pre>
+<p class="noindent">Adding the line above to <span class="green"><code><strong>.gitignore</strong></code></span> would cause all temporary Vim files to be ignored by Git. We can also add directories to <span class="green"><code><strong>.gitignore</strong></code></span>, so that, e.g.,</p>
+<pre class="box-pre1">tmp/</pre>
+<p class="noindent">would arrange to ignore all files in the <span class="green"><code><strong>tmp/</strong></code></span> directory.</p>
+<p class="indent">Git ignore files can get quite complicated, but in practice you can build them up over time by running <span class="green"><code><strong>git status</strong></code></span> and looking for any files or directories you don’t want to track, and then adding a corresponding pattern to the <span class="green"><code><strong>.gitignore</strong></code></span> file. In addition, many systems (such as the Ruby on Rails (<a href="https://rubyonrails.org/">https://rubyonrails.org/</a>) web framework and the Softcover (<a href="https://www.softcover.io/">https://www.softcover.io/</a>) publishing platform) <span epub:type="pagebreak" id="page_243"></span>generate a good starting <span class="green"><code><strong>.gitignore</strong></code></span> file for you.<sup><a id="rfn10_5" href="ch10.xhtml#fn10_5">5</a></sup> See <a href="ch01.xhtml#ch01">Chapter 1</a> of the <em>Ruby on Rails Tutorial</em> (<a href="https://www.railstutorial.org/book">https://www.railstutorial.org/book</a>) for more information.</p>
+<p class="footnote"><a id="fn10_5" href="ch10.xhtml#rfn10_5">5.</a> This common practice is further evidence of the ubiquity of Git—at this point, many projects simply assume you’re using it.</p>
+<section>
+<h4 class="h4" id="ch10lev2sec1">10.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Commit the <span class="green"><code><strong>.gitignore</strong></code></span> file to your repository. <em>Hint</em>: Running <span class="green"><code><strong>git commit -am</strong></code></span> isn’t enough. Why not?</p></li>
+<li><p class="number">Push your commit up to GitHub and confirm using the web interface that the push succeeded.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev3">10.3 Branching and Merging</h3>
+<p class="noindent">One of the most powerful features of Git is its ability to make <em>branches</em>, which are effectively complete self-contained copies of the project source, together with the ability to <em>merge</em> one branch into another, thereby incorporating the changes into the original branch. The best thing about a branch is that you can make your changes to the project in isolation from the main copy of the code, and then merge your changes in only when they’re done. This is especially helpful when collaborating with other users (<a href="ch11.xhtml#ch11">Chapter 11</a>); having a separate branch lets you make changes independently from other developers, reducing the risk of accidental conflicts.</p>
+<p class="indent">We’ll use the addition of a second HTML page, an “About page”, as an example of how to use Git branches. Our first step is to use <span class="green"><code><strong>git checkout</strong></code></span> with the <span class="green"><code><strong>-b</strong></code></span> option, which makes a new branch called <span class="green"><code><strong>about-page</strong></code></span> and checks it out at the same time, as shown in <a href="ch10.xhtml#list10-3">Listing 10.3</a>.</p>
+<p class="list-head" id="list10-3"><strong>Listing 10.3:</strong> Checking out and creating the <span class="green"><code><strong>about-page</strong></code></span> branch.</p>
+<p class="codelink"><a href="ch10_images.xhtml#p010lis03" id="p010lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git checkout -b about-page
+[website (about-page)]$</pre>
+</div>
+<p class="noindent">The prompt in <a href="ch10.xhtml#list10-3">Listing 10.3</a> includes the new branch name for convenience, which is a result of the optional advanced setup in <a href="ch11.xhtml#ch11lev6sec2">Section 11.6.2</a>, so your prompt may differ.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_244"></span>Now that we’ve checked out the new <span class="green"><code><strong>about-page</strong></code></span> branch, we can visualize our repository as shown in <a href="ch10.xhtml#fig10-4">Figure 10.4</a>. The main repository evolution is a series of commits, and the branch effectively represents a copy of the repo at the time the branch was made.<sup><a id="rfn10_6" href="ch10.xhtml#fn10_6">6</a></sup> Our plan is to make a series of changes on the <span class="green"><code><strong>about-page</strong></code></span> branch, and then incorporate the changes back into the <span class="green"><code><strong>main</strong></code></span> branch using <span class="green"><code><strong>git merge</strong></code></span>.</p>
+<p class="footnote"><a id="fn10_6" href="ch10.xhtml#rfn10_6">6.</a> Of course, it would be potentially inefficient to copy all the files over to the new branch, since there’s usually a lot of overlap with the old one. To avoid any unnecessary duplication, Git tracks diffs rather than actually making full copies of all files.</p>
+<figure class="figure" id="fig10-4">
+<img src="graphics/10fig04.jpg" alt="Image" width="412" height="132"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.4:</strong> Branching off the <span class="green"><code><strong>main</strong></code></span> branch.</p>
+</figcaption>
+</figure>
+<p class="indent">We can view the current branches using the <span class="green"><code><strong>git branch</strong></code></span> command:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p244pro01" id="p244pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ git branch
+* about-page
+  main</pre>
+<p class="noindent">This lists all the branches currently defined on the local machine, with an asterisk <span class="green"><code><strong>*</strong></code></span> indicating the currently checked-out branch. (We’ll learn how to list <em>remote</em> branches in <a href="ch11.xhtml#ch11lev3">Section 11.3</a>.)</p>
+<p class="indent">Having checked out the branch for the About page, we’re now ready to start making some changes to our working directory. We’ll start by making a new file called <span class="green"><code><strong>about.html</strong></code></span> to include some information about our project. Because we want the new page to have the full HTML structure (as in <a href="ch08.xhtml#list8-8">Listing 8.8</a>), we’ll copy over the <span class="green"><code><strong>index.html</strong></code></span> file and then edit it as necessary:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p244pro02" id="p244pro02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ cp index.html about.html</pre>
+<p class="noindent">If this duplication seems a little unclean, it is. For example, what if there were an error in the HTML structure of <span class="green"><code><strong>index.html</strong></code></span>? Having copied it over to <span class="green"><code><strong>about.html</strong></code></span>, we’d have to make the correction in both places. As we’ll see in <a href="ch11.xhtml#ch11lev3">Section 11.3</a>, in fact there <span epub:type="pagebreak" id="page_245"></span><em>is</em> an error, and we <em>will</em> have to make the correction twice. This sort of situation is annoying, and it’s far better to use a <em>site template</em> that avoids unnecessary duplication. We’ll start learning how to do that in <em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>).</p>
+<p class="indent">Throughout the rest of the tutorial, we’ll be editing both <span class="green"><code><strong>index.html</strong></code></span> and <span class="green"><code><strong>about.html</strong></code></span>, so this is a good opportunity to use the preferred technique mentioned in <a href="ch07.xhtml#ch07lev4">Section 7.4</a> for opening a full project in a text editor. I suggest closing all current editor windows and re-opening the project as follows:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000245-01" id="f000245-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ atom .</pre>
+<p class="noindent">By doing this, we can use the “fuzzy opening” feature introduced in <a href="ch07.xhtml#ch07lev4sec1">Section 7.4.1</a> to open the files of our choice. In particular, in Atom we can use P to open <span class="green"><code><strong>about.html</strong></code></span> and start making the necessary changes.</p>
+<p class="indent">After opening <span class="green"><code><strong>about.html</strong></code></span>, fill it with the contents shown in <a href="ch10.xhtml#list10-4">Listing 10.4</a>. As always, I recommend typing in everything by hand, which will make it easier to see the diffs relative to <a href="ch10.xhtml#list10-1">Listing 10.1</a>. (The only possible exception is the trademark character ™, added to highlight character encoding issues, which you might have to copy and paste. On a Mac, you can get ™ using Option-2.)</p>
+<p class="list-head" id="list10-4"><strong>Listing 10.4:</strong> The initial HTML for the About page.<br/><code><em>~/repos/website/about.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p010lis04" id="p010lis04a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>title</strong></span>&gt;About Us&lt;/<span class="bgreen"><strong>title</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>body</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>h1</strong></span>&gt;About&lt;/<span class="bgreen"><strong>h1</strong></span>&gt;</span>
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>p</strong></span>&gt;</span>
+<span class="back-yellow">      This site is a sample project for the &lt;<span class="bgreen"><strong>strong</strong></span>&gt;awesome&lt;/<span class="bgreen"><strong>strong</strong></span>&gt; Git</span>
+<span class="back-yellow">      tutorial &lt;<span class="bgreen"><strong>em</strong></span>&gt;Learn Enough™ Git to Be Dangerous&lt;/<span class="bgreen"><strong>em</strong></span>&gt;.</span>
+<span class="back-yellow">    &lt;/<span class="bgreen"><strong>p</strong></span>&gt;</span>
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent"><a href="ch10.xhtml#list10-4">Listing 10.4</a> introduces two new tags: <span class="green"><code><strong>strong</strong></code></span> (which most browsers render as <strong>boldface</strong> text) and <span class="green"><code><strong>em</strong></code></span> for emphasis (which most browsers render as <em>italicized</em> text).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_246"></span>We’re now ready to commit the initial version of the About page. Because <span class="green"><code><strong>about.html</strong></code></span> is a new file, we have to add it and then commit, and I sometimes like to combine these two steps using <span class="green"><code><strong>&amp;&amp;</strong></code></span> (as described in <a href="ch04.xhtml#box4-2">Box 4.2</a>):</p>
+<p class="codelink"><a href="ch10_images.xhtml#p246pro01" id="p246pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ git add -A &amp;&amp; git commit -m "Add About page"</pre>
+<p class="indent">At this point, the <span class="green"><code><strong>about-page</strong></code></span> branch has diverged from <span class="green"><code><strong>main</strong></code></span>, as shown in <a href="ch10.xhtml#fig10-5">Figure 10.5</a>.</p>
+<figure class="figure" id="fig10-5">
+<img src="graphics/10fig05.jpg" alt="Image" width="484" height="140"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.5:</strong> The <span class="green"><code><strong>about-page</strong></code></span> branch with a diff from <span class="green"><code><strong>main</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">Before merging <span class="green"><code><strong>about-page</strong></code></span> back in to the <span class="green"><code><strong>main</strong></code></span> branch, we’ll make one more change. In the editor, use <img class="inline" src="graphics/command1.jpg" alt="Image" width="16" height="16"/>P or the equivalent to open <span class="green"><code><strong>index.html</strong></code></span> and add a <em>link</em> to the About page, as shown in <a href="ch10.xhtml#list10-5">Listing 10.5</a>.</p>
+<p class="list-head" id="list10-5"><strong>Listing 10.5:</strong> Adding a link to the About page.<br/><code><em>~/repos/website/index.html</em></code></p>
+<p class="codelink"><a href="ch10_images.xhtml#p010lis05" id="p010lis05a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="lgreen"><strong>html</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>title</strong></span>&gt;A whale of a greeting&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+  &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+  &lt;<span class="lgreen"><strong>body</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>h1</strong></span>&gt;hello, world&lt;/<span class="lgreen"><strong>h1</strong></span>&gt;
+<span class="back-yellow">    &lt;<span class="bgreen"><strong>a</strong></span> <span class="ygreen"><strong>href</strong></span>=<span class="brown">"about.html"</span>&gt;About this project&lt;/<span class="bgreen"><strong>a</strong></span>&gt;</span>
+    &lt;<span class="lgreen"><strong>p</strong></span>&gt;Call me Ishmael.&lt;/<span class="lgreen"><strong>p</strong></span>&gt;
+    &lt;<span class="lgreen"><strong>img</strong></span> <span class="ygreen">src</span><span class="gray1">=</span><span class="brown">"images/breaching_whale.jpg"</span>&gt;
+  &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+&lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent"><a href="ch10.xhtml#list10-5">Listing 10.5</a> uses the important (if confusingly named) <em>anchor tag</em> <span class="green"><code><strong>a</strong></code></span>, which is the HTML tag for making links. This tag contains both content (“About this project”) and a <em>hypertext reference</em>, or <span class="green"><code><strong>href</strong></code></span>, which in this case is the <span class="green"><code><strong>about.html</strong></code></span> file we just created. <span epub:type="pagebreak" id="page_247"></span>(Because <span class="green"><code><strong>about.html</strong></code></span> is on the same site as <span class="green"><code><strong>index.html</strong></code></span>, we can link to it directly, but when linking to external sites the href should be a fully qualified URL,<sup><a id="rfn10_7" href="ch10.xhtml#fn10_7">7</a></sup> such as http://example.com/.)<sup><a id="rfn10_8" href="ch10.xhtml#fn10_8">8</a></sup></p>
+<p class="footnote"><a id="fn10_7" href="ch10.xhtml#rfn10_7">7.</a> Recall that URL is short for Uniform Resource Locator, and in practice usually just means “web address”.</p>
+<p class="footnote"><a id="fn10_8" href="ch10.xhtml#rfn10_8">8.</a> Fun fact: As you can verify by visiting it, example.com is a special domain reserved for examples just like this one.</p>
+<p class="indent">After saving the change and refreshing <span class="green"><code><strong>index.html</strong></code></span> in our browser, the result should appear as shown in <a href="ch10.xhtml#fig10-6">Figure 10.6</a>. Following the link should lead us to the About page, as seen in <a href="ch10.xhtml#fig10-7">Figure 10.7</a>. Note that the trademark character ™ doesn’t display properly in <a href="ch10.xhtml#fig10-7">Figure 10.7</a>; this behavior is browser-dependent—as of this writing, the ™ symbol displays properly in Firefox and Chrome but not in Safari. We’ll add code to ensure consistent behavior across all browsers in <a href="ch11.xhtml#ch11lev3">Section 11.3</a>.</p>
+<figure class="figure" id="fig10-6">
+<img src="graphics/10fig06.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.6:</strong> The index page with an added link.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig10-7">
+<img src="graphics/10fig07.jpg" alt="Image" width="744" height="572"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.7:</strong> A slightly broken About page.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_248"></span>Having finished with the changes to <span class="green"><code><strong>index.html</strong></code></span>, we can make a commit as usual with <span class="green"><code><strong>git commit -am</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p248pro01" id="p248pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ git commit -am "Add a link to the About page"</pre>
+<p class="noindent">With this commit, the <span class="green"><code><strong>about-page</strong></code></span> branch now appears as in <a href="ch10.xhtml#fig10-8">Figure 10.8</a>.</p>
+<figure class="figure" id="fig10-8">
+<img src="graphics/10fig08.jpg" alt="Image" width="591" height="140"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.8:</strong> The current state of the <span class="green"><code><strong>about-page</strong></code></span> branch relative to <span class="green"><code><strong>main</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">We’re done making changes for now, so we’re ready to merge the About page topic branch back into the <span class="green"><code><strong>main</strong></code></span> branch. We can get a handle on which changes we’ll be merging in by using <span class="green"><code><strong>git diff</strong></code></span>; we saw in <a href="ch08.xhtml#ch08lev4">Section 8.4</a> that this command can be used by itself to see the difference between unstaged changes and our last commit, but the same command can be used to show diffs between branches. This can take the form <span class="green"><code><strong>git diff branch-1 branch-2</strong></code></span>, but if you leave the branch unspecified Git <span epub:type="pagebreak" id="page_249"></span>automatically diffs against the current branch. This means we can diff <span class="green"><code><strong>about-page</strong></code></span> vs. <span class="green"><code><strong>main</strong></code></span> as follows:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000249-01" id="f000249-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ git diff main</pre>
+<p class="noindent">The result in my terminal program appears as shown in <a href="ch10.xhtml#fig10-9">Figure 10.9</a>. On my system, the diff is too long to fit on one screen, but (as we saw with <span class="green"><code><strong>git log</strong></code></span> in <a href="ch10.xhtml#ch10lev1sec1">Section 10.1.1</a>) the output of <span class="green"><code><strong>git diff</strong></code></span> uses the <span class="green"><code><strong>less</strong></code></span> program in this case.</p>
+<figure class="figure" id="fig10-9">
+<img src="graphics/10fig09.jpg" alt="Image" width="744" height="570"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.9:</strong> Diffing two branches.</p>
+</figcaption>
+</figure>
+<p class="indent">To incorporate the changes on <span class="green"><code><strong>about-page</strong></code></span> into <span class="green"><code><strong>main</strong></code></span>, the first step is to check out the <span class="green"><code><strong>main</strong></code></span> branch:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000249-02" id="f000249-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (about-page)]$ git checkout main
+[website (main)]$</pre>
+<p class="noindent">Note that, unlike the <span class="green"><code><strong>checkout</strong></code></span> command in <a href="ch10.xhtml#list10-3">Listing 10.3</a>, here we omit the <span class="green"><code><strong>-b</strong></code></span> option because the <span class="green"><code><strong>main</strong></code></span> branch already exists.</p>
+<p class="indent">The next step is to merge in the changes on the other branch, which we can do with <span class="green"><code><strong>git merge</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000249-03" id="f000249-03a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git merge about-page
+Updating 5a23e6a..cad4761
+Fast-forward
+ about.html | 13 +++++++++++++
+ index.html | 1 +
+ 2 files changed, 14 insertions(+)
+ create mode 100644 about.html</pre>
+<p class="noindent">At this point, our branch structure appears as in <a href="ch10.xhtml#fig10-10">Figure 10.10</a>.</p>
+<figure class="figure" id="fig10-10">
+<img src="graphics/10fig10.jpg" alt="Image" width="699" height="140"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.10:</strong> The branches after merging <span class="green"><code><strong>about-page</strong></code></span> into <span class="green"><code><strong>main</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">In the present case, the <span class="green"><code><strong>main</strong></code></span> branch didn’t change while we were working on the <span class="green"><code><strong>about-page</strong></code></span> branch, but Git excels even when the original branch has changed <span epub:type="pagebreak" id="page_250"></span>in the interim. This situation is especially common when collaborating with others (<a href="ch11.xhtml#ch11">Chapter 11</a>), but can happen even when working alone.</p>
+<p class="indent">Suppose, for example, that we discovered a typo on <span class="green"><code><strong>main</strong></code></span> and wanted to fix it and push up immediately. In that case the <span class="green"><code><strong>main</strong></code></span> branch would change (<a href="ch10.xhtml#fig10-11">Figure 10.11</a>), but we could still merge in the topic branch as usual. There is a possibility that changes <span epub:type="pagebreak" id="page_251"></span>on <span class="green"><code><strong>main</strong></code></span> would <em>conflict</em> with the merged changes, but Git is good at automatically merging content. Even when conflict is unavoidable, Git is good at marking conflicts explicitly so that we can resolve them by hand. We’ll see a concrete example of this in <a href="ch11.xhtml#ch11lev2">Section 11.2</a>.</p>
+<figure class="figure" id="fig10-11">
+<img src="graphics/10fig11.jpg" alt="Image" width="689" height="141"/>
+<figcaption>
+<p class="title-f"><strong>Figure 10.11:</strong> The tree structure if we made a change to <span class="green"><code><strong>main</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">Having merged in the changes, we can sync up the local <span class="green"><code><strong>main</strong></code></span> branch with the version at GitHub (called <span class="green"><code><strong>origin/main</strong></code></span>) as usual:</p>
+<pre class="box-pre1">[website (main)]$ git push</pre>
+<p class="noindent">Since we probably don’t need the <span class="green"><code><strong>about-page</strong></code></span> branch any longer, we can optionally delete it, which is left as an exercise (<a href="ch10.xhtml#ch10lev3sec2">Section 10.3.2</a>).</p>
+<section>
+<h4 class="h4" id="ch10lev3sec1">10.3.1 Rebasing</h4>
+<p class="noindent">The most common way to combine branches is <span class="green"><code><strong>git merge</strong></code></span>, but there’s a second method called <span class="green"><code><strong>git rebase</strong></code></span> that you’re likely to encounter at some point. My advice for now is: <em>Ignore</em> <span class="green"><code><em><strong>git rebase</strong></em></code></span>. The differences between merging and rebasing are subtle, and conventions for using <span class="green"><code><strong>rebase</strong></code></span> differ, so I recommend using <span class="green"><code><strong>git rebase</strong></code></span> only when working on a team where an advanced Git user tells you to; otherwise, use <span class="green"><code><strong>git merge</strong></code></span> to combine the contents of two branches.</p>
+</section>
+<section>
+<h4 class="h4" id="ch10lev3sec2">10.3.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use the command <span class="green"><code><strong>git branch -d about-page</strong></code></span> to delete the topic branch. Confirm by running <span class="green"><code><strong>git branch</strong></code></span> that only the <span class="green"><code><strong>main</strong></code></span> branch is left.</p></li>
+<li><p class="number">In <a href="ch10.xhtml#list10-3">Listing 10.3</a>, we used <span class="green"><code><strong>git checkout -b</strong></code></span> to create a branch and check it out at the same time, but it’s also possible to break this into two steps. As a first step, use <span class="green"><code><strong>git branch</strong></code></span> to make a branch with the name <span class="green"><code><strong>test-branch</strong></code></span>. (This involves <span epub:type="pagebreak" id="page_252"></span>passing an argument to <span class="green"><code><strong>git branch</strong></code></span>, as in <span class="green"><code><strong>git branch &lt;branch name&gt;</strong></code></span>.) Then confirm that the new branch exists but isn’t currently checked out by running <span class="green"><code><strong>git branch</strong></code></span> without an argument.</p></li>
+<li><p class="number">Check out <span class="green"><code><strong>test-branch</strong></code></span> and use <span class="green"><code><strong>touch</strong></code></span> to add a file with a name of your choice, then add and commit it to the repository.</p></li>
+<li><p class="number">Check out the <span class="green"><code><strong>main</strong></code></span> branch and try deleting the test branch using <span class="green"><code><strong>git branch -d</strong></code></span> to confirm that it doesn’t work. The reason is that, in contrast to the <span class="green"><code><strong>about-page</strong></code></span> branch, the test branch hasn’t been merged into <span class="green"><code><strong>main</strong></code></span>, and by design <span class="green"><code><strong>-d</strong></code></span> doesn’t work in this case. Because we don’t actually want its changes, delete the test by using the related <span class="green"><code><strong>-D</strong></code></span> option, which deletes the branch in question even if its changes are unmerged.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev4">10.4 Recovering from Errors</h3>
+<p class="noindent">One of the most useful features of Git is its ability to let us recover from errors that would otherwise be catastrophic. The error-recovery techniques themselves can be dangerous, though, so they should always be implemented with care.</p>
+<p class="indent">Let’s consider a common scenario where we make an unintentional change to a project and want to get back to the state of the repository as of the most recent commit (a state known as <span class="green"><code><strong>HEAD</strong></code></span>). For example, it’s a good practice to include a newline at the end of a file so that, e.g., running <span class="green"><code><strong>tail</strong></code></span> (<a href="ch03.xhtml#ch03lev2">Section 3.2</a>) gives</p>
+<p class="codelink"><a href="ch10_images.xhtml#p252pro01" id="p252pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ tail about.html
+  .
+  .
+  .
+  &lt;/body&gt;
+&lt;/html&gt;
+[website (main)]$</pre>
+<p class="noindent">instead of</p>
+<p class="codelink"><a href="ch10_images.xhtml#p252pro02" id="p252pro02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ tail about.html
+  .
+  .
+  .
+  &lt;/body&gt;
+&lt;/html&gt;[website (main)]$</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_253"></span>Of course, we could add such a newline using a text editor, but a common Unix idiom to accomplish the same thing is to use <span class="green"><code><strong>echo</strong></code></span> with the append operator <span class="green"><code><strong>&gt;&gt;</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000253-01" id="f000253-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ echo &gt;&gt; about.html   # Appends a newline to about.html</pre>
+<p class="noindent">Unfortunately, in this context it’s easy to accidentally leave off one of the angle brackets and inadvertently use the <em>redirect</em> operator <span class="green"><code><strong>&gt;</strong></code></span> instead (<a href="ch02.xhtml#ch02lev1">Section 2.1</a>):</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000253-02" id="f000253-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ echo &gt; about.html</pre>
+<p class="noindent">Go ahead and try the command above; you will discover that the result is to overwrite <span class="green"><code><strong>about.html</strong></code></span> with a newline, thereby effectively wiping out its contents, as we can verify with <span class="green"><code><strong>cat</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000253-03" id="f000253-03a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ cat about.html
+
+[website (main)]$</pre>
+<p class="indent">In a regular Unix directory (<a href="ch04.xhtml#ch04">Chapter 4</a>), there would be no hope of recovering the contents of <span class="green"><code><strong>about.html</strong></code></span>, but in a Git repository we can undo the changes by forcing the system to check out the most recently committed version. We start by confirming that <span class="green"><code><strong>about.html</strong></code></span> has changed by running <span class="green"><code><strong>git status</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000253-04" id="f000253-04a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified:   about.html
+
+no changes added to commit (use "git add" and/or "git commit -a")</pre>
+<p class="noindent">This doesn’t indicate the scope of the damage, though, which we can inspect using <span class="green"><code><strong>git diff</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000253-05" id="f000253-05a">Click here to view code image</a></p>
+<pre class="box-pre1">$ git diff
+<span class="dblue"><strong>diff --git a/about.html b/about.html</strong></span>
+<span class="dblue"><strong>index 367dd8e..8b13789 100644</strong></span>
+<span class="dred">--- a/about.html</span>
+<span class="bgreen">+++ b/about.html</span>
+<span class="violet"><strong>@@ -1,13 +1 @@</strong></span>
+<span class="dred">-&lt;!DOCTYPE html&gt;
+-&lt;html&gt;
+-  &lt;head&gt;
+-   &lt;title&gt;About Us&lt;/title&gt;
+-  &lt;/head&gt;
+-  &lt;body&gt;
+-   &lt;h1&gt;About&lt;/h1&gt;
+-   &lt;p&gt;
+-     This site is a sample project for the &lt;strong&gt;awesome&lt;/strong&gt; Git
+-     tutorial &lt;em&gt;Learn Enough™ Git to Be Dangerous&lt;/em&gt;.
+-   &lt;/p&gt;
+-  &lt;/body&gt;
+-&lt;/html&gt;</span>
+<span class="bgreen">+</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_254"></span>Those minus signs indicate that all of the lines of content are now gone, while the plus sign at the end indicates that there’s nothing left. Happily, we can undo these changes by passing the <span class="green"><code><strong>-f</strong></code></span> (force) option to <span class="green"><code><strong>checkout</strong></code></span>, which forces Git to check out <span class="green"><code><strong>HEAD</strong></code></span>:<sup><a id="rfn10_9" href="ch10.xhtml#fn10_9">9</a></sup></p>
+<p class="footnote"><a id="fn10_9" href="ch10.xhtml#rfn10_9">9.</a> The command <span class="green"><code><strong>git reset --hard HEAD</strong></code></span> is equivalent, but I find the version with <span class="green"><code><strong>checkout</strong></code></span> to be easier to remember.</p>
+<p class="codelink"><a href="ch10_images.xhtml#p254pro01" id="p254pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git checkout -f</pre>
+<p class="noindent">We can then confirm that the About page has been restored:</p>
+<p class="codelink"><a href="ch10_images.xhtml#p254pro02" id="p254pro02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean</pre>
+<p class="noindent">The status “working tree clean” indicates that there are no changes, and you can verify by running <span class="green"><code><strong>cat about.html</strong></code></span> that its contents have been restored. Phew! That was a close one. (It’s worth noting that <span class="green"><code><strong>git checkout -f</strong></code></span> itself is potentially dangerous, as it wipes out <em>all</em> the changes you’ve made, so use this trick only when you’re 100% sure you want to revert to <span class="green"><code><strong>HEAD</strong></code></span>.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_255"></span>Another source of robustness against error is using branches, as described in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>. Because changes made on one branch are isolated from other branches, you can always just delete the branch if things go horribly wrong. For example, suppose we made the same <span class="green"><code><strong>echo</strong></code></span> mistake on a <span class="green"><code><strong>test-branch</strong></code></span>:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000255-01" id="f000255-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git checkout -b test-branch
+[website (test-branch)]$ echo &gt; about.html</pre>
+<p class="noindent">We can fix this by committing the changes and then deleting the branch:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000255-02" id="f000255-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (test-branch)]$ git commit -am "Oops"
+[website (test-branch)]$ git checkout main
+[website (main)]$ git branch -D test-branch</pre>
+<p class="noindent">Note here that we need to use <span class="green"><code><strong>-D</strong></code></span> instead of <span class="green"><code><strong>-d</strong></code></span> to delete the branch because <span class="green"><code><strong>test-branch</strong></code></span> is unmerged (<a href="ch10.xhtml#ch10lev3sec2">Section 10.3.2</a>).</p>
+<p class="indent">A final example of recovering from error involves the common case of a bug or other defect that makes its way into a project, origins unknown. In such a case, it’s convenient to be able to check out an earlier version of the repository.<sup><a id="rfn10_10" href="ch10.xhtml#fn10_10">10</a></sup> The way to do this is to use the SHAs from the Git log (<a href="ch08.xhtml#ch08lev3">Section 8.3</a>). For example, to restore the website project to the state right after the second commit, we would run <span class="green"><code><strong>git log</strong></code></span> and navigate to the beginning of the log. Because <span class="green"><code><strong>git log</strong></code></span> uses the <span class="green"><code><strong>less</strong></code></span> interface (<a href="ch03.xhtml#ch03lev3">Section 3.3</a>), we can do this by typing <span class="green"><code><strong>G</strong></code></span> to go to the last line of the log. The result on my system is shown in <a href="ch10.xhtml#list10-6">Listing 10.6</a>. (Because SHAs are by design unique identifiers, your values will differ.)</p>
+<p class="footnote"><a id="fn10_10" href="ch10.xhtml#rfn10_10">10.</a> The most powerful way to track down such errors is <span class="green"><code><strong>git bisect</strong></code></span>. This advanced technique is covered in the Git documentation (<a href="https://git-scm.com/docs/git-bisect">https://git-scm.com/docs/git-bisect</a>).</p>
+<p class="list-head" id="list10-6"><strong>Listing 10.6:</strong> Viewing the SHAs in the Git log.</p>
+<p class="codelink"><a href="ch10_images.xhtml#p010lis06" id="p010lis06a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">commit cad4761db5cce3544b72688329185f97a17badb3
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 12:00:55 2021 -0700
+
+     Add a link to the About page
+
+commit 92ac96f80e9f3cbcc750d58777ca9a370aadb7f5
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 11:56:21 2021 -0700
+
+     <span epub:type="pagebreak" id="page_256"></span>Add About page
+
+commit 5a23e6ac79ec1dfc5109a11780967832b43c30e3
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 11:53:56 2021 -0700
+
+     Add .gitignore
+
+commit 10587a3a24f2eaad9659f0cc1d4bb308b169a0c2
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 11:44:22 2021 -0700
+
+     Add an image
+
+commit 4471a4e02dfe58a229735704e4ea51ea5fc09f70
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 11:19:55 2021 -0700
+
+     Add README file
+
+commit edf4cfa49c0b2a3bcb0f6c21f1cab4d412ce5f0d
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:44:44 2021 -0700
+
+     Add some HTML structure
+
+commit eafb7bf8e1999eafa63068dabbdb05410bed512a
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:42:48 2021 -0700
+
+     Add an h1 tag
+
+commit 64f6529494cb0e193f05b0da75702feef854e176
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:33:24 2021 -0700
+
+     Add content to index.html
+
+commit 44c52d432d294ef52bae5535dc6dcb0993175a04
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:30:38 2021 -0700
+
+    Initialize repository</pre>
+</div>
+<p class="indent">To check out the commit with the message “Add content to index.html”, simply copy the SHA and check it out:</p>
+<span epub:type="pagebreak" id="page_257"></span>
+<p class="codelink"><a href="ch10_images.xhtml#p257pro01" id="p257pro01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="back-yellow">[website (main)]$ git checkout 64f6529494cb0e193f05b0da75702feef854e176</span>
+Note: checking out '64f6529494cb0e193f05b0da75702feef854e176'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b new_branch_name
+
+ HEAD is now at 64f6529... Add content to index.html
+
+<span class="back-yellow">[website ((64f6529...))]$</span></pre>
+<p class="noindent">Note that the branch name in the last line has changed to reflect the value of the SHA, and Git has issued a warning that we are in a “detached HEAD” state. I recommend using this technique to inspect the state of the project and figure out any necessary changes, then check out the <span class="green"><code><strong>main</strong></code></span> branch to apply them:</p>
+<p class="codelink"><a href="ch10_images.xhtml#f000257-02" id="f000257-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website ((64f6529...))]$ git checkout main
+[website (main)]$</pre>
+<p class="noindent">At this point, you could switch to your text editor and make any necessary changes (such as fixing a bug discovered on the earlier commit).</p>
+<p class="indent">If all this seems a little abstract, don’t worry. The main takeaways are (1) it’s possible to “go back in history” to view the project at an earlier state and (2) it’s tricky to make changes, so if you find yourself doing anything complicated you should ask a more experienced Git user what to do. (In particular, the exact practices in such a case could be team-dependent.)</p>
+<section>
+<h4 class="h4" id="ch10lev4sec1">10.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">The <span class="green"><code><strong>git checkout -f</strong></code></span> trick works only with files that are staged for commit or are already part of the repository, but sometimes you want to get rid of new files as well. Using <span class="green"><code><strong>touch</strong></code></span>, create a file with a name of your choice, then <span class="green"><code><strong>git add</strong></code></span> it. Verify that running <span class="green"><code><strong>git checkout -f</strong></code></span> gets rid of it.</p></li>
+<li><p class="number">Like many other Unix programs, <span class="green"><code><strong>git</strong></code></span> accepts both “short form” and “long form” options. Repeat the previous exercise with <span class="green"><code><strong>git checkout --force</strong></code></span> to confirm <span epub:type="pagebreak" id="page_258"></span>that the effects of <span class="green"><code><strong>-f</strong></code></span> and <span class="green"><code><strong>--force</strong></code></span> are identical. <em>Extra credit</em>: Double-check this conclusion by finding the “force” option in the output of <span class="green"><code><strong>git help checkout</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch10lev5">10.5 Summary</h3>
+<p class="noindent">Important files and commands from this chapter are summarized in <a href="ch10.xhtml#tab10-1">Table 10.1</a>.</p>
+<figure class="table" id="tab10-1">
+<p class="title-t"><strong>Table 10.1:</strong> Important commands from <a href="ch10.xhtml#ch10">Chapter 10</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">File/Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>.gitignore</code></p></td>
+<td><p class="tab-para">Tell Git which things to ignore</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ echo .DS_store &gt;&gt; .gitignore</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git checkout &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Check out a branch</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git checkout main</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git checkout -b &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Check out &amp; create a branch</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git checkout -b about-page</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git branch</code></p></td>
+<td><p class="tab-para">Display local branches</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git branch</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git merge &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Merge in a branch</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git merge about-page</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git rebase</code></p></td>
+<td><p class="tab-para">Do something possibly weird &amp; confusing</p></td>
+<td><p class="tab-para">See “Git Commit” (<a href="https://m.xkcd.com/1296/">https://m.xkcd.com/1296/</a>)</p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git branch -d &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Delete branch (if merged)</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git branch -d about-page</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git branch -D &lt;br&gt;</code></p></td>
+<td><p class="tab-para">Delete branch (even if unmerged) (<strong>dangerous</strong>)</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git branch -D other-branch</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git checkout -f</code></p></td>
+<td><p class="tab-para">Force checkout, discarding changes (<strong>dangerous</strong>)</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git add -A &amp;&amp; git checkout -f</strong></code></span></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

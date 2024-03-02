@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch07"><span epub:type="pagebreak" id="page_161"></span>Chapter 7</h2>
+<h2 class="h2a">Objects and Classes</h2>
+<p class="noindent">So far in this tutorial we’ve seen many examples of Ruby objects. In this chapter, we’ll learn how to use Ruby <em>classes</em> to make objects of our own, which have both attributes (data) and methods (functions) attached to them.</p>
+<section>
+<h3 class="h3" id="sec7_1">7.1 Defining Classes</h3>
+<p class="noindent">As we saw in <a href="ch04.xhtml#sec4_2">Section 4.2</a>, Ruby objects can be created (or <em>instantiated</em>) using the class name and the <code><span class="green-y"><strong>new</strong></span></code> constructor method:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0161-01" id="f0161-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="green1">String</span><span class="gray">.</span>new(<span class="brown1">"Madam, I'm Adam."</span>)</strong>
+<strong><span class="green-y">=&gt; "Madam, I'm Adam."</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="brown">Time</span><span class="gray">.</span>new(<span class="gray">1969</span>, <span class="gray">7</span>, <span class="gray">20</span>, <span class="gray">20</span>, <span class="gray">17</span>, <span class="gray">40</span>)</strong>
+<strong><span class="green-y">=&gt; 1969-07-20 20:00:00 -0700</span></strong></pre>
+<p class="indent">We can create a class of our own using three basic elements:</p>
+<p class="num-list">1. Use the <code><span class="green-y"><strong>class</strong></span></code> keyword to define the class.</p>
+<p class="num-list">2. Use the special <code><span class="green-y"><strong>initialize</strong></span></code> method to specify the behavior of <code><span class="green-y"><strong>new</strong></span></code>.</p>
+<p class="num-list">3. Use an <em>attribute accessor</em> (<code><span class="green-y"><strong>attr_accessor</strong></span></code>) to allow the getting and setting of attributes.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_162"></span>Our concrete example will be a <code><span class="green-y"><strong>Phrase</strong></span></code> class with a <code><span class="green-y"><strong>content</strong></span></code> attribute, which we’ll put in <code><span class="green-y"><strong>palindrome.rb</strong></span></code>. Let’s build it up piece by piece (for simplicity we’ll omit the <code><span class="green-y"><strong>palindrome?</strong></span></code> function for the moment). The first element is the <code><span class="green-y"><strong>class</strong></span></code> itself (<a href="ch07.xhtml#ch07ex01">Listing 7.1</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex01"><strong>Listing 7.1:</strong> Defining a <code><span class="green-y"><strong>Phrase</strong></span></code> class.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0162-01" id="f0162-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span></strong>
+<strong><span class="green1">end</span></strong>
+
+<strong>phrase <span class="gray">=</span> <span class="brown">Phrase</span><span class="gray">.</span>new</strong>
+<strong><span class="green1">puts</span> phrase</strong></pre>
+</div>
+<p class="noindent">Here <code><span class="green-y"><strong>Phrase</strong></span></code> automatically has a <code><span class="green-y"><strong>new</strong></span></code> method because of <em>inheritance</em>, which we discuss in detail in <a href="ch07.xhtml#sec7_2">Section 7.2</a>.<sup><a id="fn7_1" href="ch07.xhtml#fn7_1a">1</a></sup> Meanwhile, the final <code><span class="green-y"><strong>puts</strong></span></code> in <a href="ch07.xhtml#ch07ex01">Listing 7.1</a> lets us see some concrete (if not especially instructive) results at the command line:</p>
+<p class="footnote"><sup><a id="fn7_1a" href="ch07.xhtml#fn7_1">1</a></sup>Specifically, <code><span class="green-y"><strong>Phrase</strong></span></code> automatically inherits from <code><span class="green-y"><strong>Object</strong></span></code>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0162-02" id="f0162-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">$</span> ruby palindrome.rb</strong>
+<strong><span class="blue">#</span>&lt;Phrase:0x00007fa3d30a3e98&gt;</strong></pre>
+<p class="noindent">This shows Ruby’s abstract internal representation of a bare <code><span class="green-y"><strong>Phrase</strong></span></code> class. (Should your results match exactly?)</p>
+<p class="indent">We’ll start filling in <a href="ch07.xhtml#ch07ex01">Listing 7.1</a> in a moment, but before moving on we should note that, unlike variables and methods, Ruby classes use <em>CamelCase</em> (with a leading capital) instead of snake_case.</p>
+<p class="indent"><a href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>, which is named for the resemblance of the capital letters to humps of a camel (<a href="ch07.xhtml#ch07fig01">Figure 7.1</a>)),<sup><a id="fn7_2" href="ch07.xhtml#fn7_2a">2</a></sup> involves separating words using capitalization rather than with underscores. It’s hard to tell with <code><span class="green-y"><strong>Phrase</strong></span></code>, since it’s only a single word, but we’ll see the principle more clearly illustrated in <a href="ch07.xhtml#sec7_2">Section 7.2</a>, which defines a class called <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>.</p>
+<p class="footnote"><sup><a id="fn7_2a" href="ch07.xhtml#fn7_2">2</a></sup>Image courtesy of Utsav Academy and Art Studio. Pearson India Education Services Pvt. Ltd.</p>
+<figure class="figure" id="ch07fig01">
+<img src="graphics/f0163-01.jpg" alt="Images" width="824" height="664"/>
+<figcaption>
+<p class="title-f">Figure 7.1: The origin of CamelCase.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_163"></span>
+<p class="indent"><span epub:type="pagebreak" id="page_164"></span>Eventually, we’ll use <code><span class="green-y"><strong>Phrase</strong></span></code> to represent a phrase like “Madam, I’m Adam.” that can qualify as a palindrome even if it’s not literally the same forward and backward. At first, though, all we’ll do is define a <code><span class="green-y"><strong>Phrase</strong></span></code> constructor function that takes in an argument (the <code><span class="green-y"><strong>content</strong></span></code>) and sets the property <code><span class="green-y"><strong>content</strong></span></code>. As with the <code><span class="green-y"><strong>length</strong></span></code> property of <code><span class="green-y"><strong>String</strong></span></code> objects (<a href="ch02.xhtml#sec2_4">Section 2.4</a>), we can access a phrase’s content using the familiar dot notation.</p>
+<p class="indent">In order to get this to work, we first need to define the <code><span class="green-y"><strong>initialize</strong></span></code> method that gets called when we initialize an object using <code><span class="green-y"><strong>Phrase.new</strong></span></code> (<a href="ch07.xhtml#ch07ex02">Listing 7.2</a>).<sup><a id="fn7_3" href="ch07.xhtml#fn7_3a">3</a></sup></p>
+<p class="footnote"><sup><a id="fn7_3a" href="ch07.xhtml#fn7_3">3</a></sup>Why <code><span class="green-y"><strong>initialize</strong></span></code> isn’t just called <code><span class="green-y"><strong>new</strong></span></code> I have no idea.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex02"><strong>Listing 7.2:</strong> Defining <code><span class="green-y"><strong>initialize</strong></span></code>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0164-01" id="f0164-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+<strong><span class="bg1">    <span class="blue_1r">@content</span> <span class="gray">=</span> content</span></strong>
+  <strong><span class="green1">end</span></strong>
+<strong><span class="green1">end</span></strong>
+
+<strong><span class="bg1">phrase <span class="gray">=</span> <span class="brown">Phrase</span><span class="gray">.</span>new(<span class="brown1">"Madam, I'm Adam."</span>)</span></strong>
+<strong><span class="bg1"><span class="green1">puts</span> phrase<span class="gray">.</span>content</span></strong></pre>
+</div>
+<p class="noindent"><a href="ch07.xhtml#ch07ex02">Listing 7.2</a> initializes the special <em>instance variable</em> <code><span class="green-y"><strong>@content</strong></span></code>, which is distinguished by a leading <code><span class="green-y"><strong>@</strong></span></code> symbol and is pronounced “at content”. As we’ll see in a moment, this automatically allows us to associate the variable with an object attribute. But first, let’s see the effect at the command line:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0164-02" id="f0164-02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>$</strong></span> <strong>ruby palindrome.rb</strong>
+<span class="green_2"><strong>Traceback (most recent call last):</strong></span>
+<span class="green_2"><strong>palindrome.rb:15:in `&lt;main&gt;': undefined method `content' for</strong></span>
+<span class="blue"><strong>#</strong></span><strong>&lt;Phrase:0x00007fe8c70a3db0 @content<span class="gray">=</span><span class="brown1">"Madam, I'm Adam."</span>&gt; <span class="gray">(</span>NoMethodError<span class="gray">)</span></strong></pre>
+<p class="noindent">Because we have only an <code><span class="green-y"><strong>@content</strong></span></code> variable, Ruby doesn’t know what to make of <code><span class="green-y"><strong>phrase.content</strong></span></code>, so it raises a <code><span class="green-y"><strong>NoMethodError</strong></span></code> exception (which we saw before in <a href="ch05.xhtml#sec5_2">Section 5.2</a>).</p>
+<p class="indent"><span epub:type="pagebreak" id="page_165"></span>The way to fix this issue is by adding special <em>accessor</em> methods (also known as <a href="https://en.wikipedia.org/wiki/Mutator_method">getter/setter methods</a>) that allow us to access (“get”) and assign (“set”) the given attribute. Ruby has a special syntax for this called an <code><span class="green-y"><strong>attr_accessor</strong></span></code> (“attribute accessor”), as seen in <a href="ch07.xhtml#ch07ex03">Listing 7.3</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex03"><strong>Listing 7.3:</strong> Adding an attribute accessor.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0165-01" id="f0165-01a">Click here to view code image</a></p>
+<pre><span class="blue1"><strong><em># Defines a Phrase class.</em></strong></span>
+<span class="green1"><strong>class</strong></span> <span class="blue_r"><strong>Phrase</strong></span>
+<span class="bg1">  <span class="green1"><strong>attr_accessor</strong></span> <span class="blue_1r"><strong>:content</strong></span></span>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+   <span class="blue_1r"><strong>@content</strong></span> <span class="gray"><strong>=</strong></span> <strong>content</strong>
+  <span class="green-y"><strong>end</strong></span>
+<span class="green-y"><strong>end</strong></span>
+
+<strong>phrase</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Phrase</strong></span><strong><span class="gray">.</span>new(<span class="brown1">"Madam, I'm Adam."</span>)</strong>
+<span class="green1"><strong>puts</strong></span> <strong>phrase</strong><span class="gray">.</span>content</pre>
+</div>
+<p class="noindent">Note that the argument to <code><span class="green-y"><strong>attr_accessor</strong></span></code> is a <em>symbol</em> (<a href="ch04.xhtml#sec4_4_1">Section 4.4.1</a>), which Ruby automatically associates with the instance variable of the same name. In the case of <a href="ch07.xhtml#ch07ex03">Listing 7.3</a>, this means <code><span class="green-y"><strong>phrase.content</strong></span></code> uses the value of the <code><span class="green-y"><strong>@content</strong></span></code> instance variable.</p>
+<p class="indent">It’s important to understand which uses of <code><span class="green-y"><strong>content</strong></span></code> in <a href="ch07.xhtml#ch07ex03">Listing 7.3</a> need to use that name, and which don’t. For the <code><span class="green-y"><strong>content</strong></span></code> attribute to work correctly, all three of <code><span class="green-y"><strong>:content</strong></span></code>, <code><span class="green-y"><strong>@content</strong></span></code>, and <code><span class="green-y"><strong>phrase.content</strong></span></code> have to use the same word (in this case, “content”), but the argument to <code><span class="green-y"><strong>initialize</strong></span></code> can be whatever name we want. (We just used <code><span class="green-y"><strong>content</strong></span></code> for convenience.) These relationships are illustrated in <a href="ch07.xhtml#ch07fig02">Figure 7.2</a>.</p>
+<figure class="figure" id="ch07fig02">
+<img src="graphics/f0166-01.jpg" alt="Images" width="892" height="456"/>
+<figcaption>
+<p class="title-f">Figure 7.2: The word relationships for creating an object attribute.</p>
+</figcaption>
+</figure>
+<p class="indent">With the definition in <a href="ch07.xhtml#ch07ex03">Listing 7.3</a>, we now have a working example:</p>
+<pre class="pre2"><span class="blue"><strong>$</strong></span> <strong>ruby palindrome.rb</strong>
+<span class="green-y"><strong>Madam, I'm Adam.</strong></span></pre>
+<p class="indent">We can also now assign directly to <code><span class="green-y"><strong>content</strong></span></code> using the dot notation, as seen in <a href="ch07.xhtml#ch07ex04">Listing 7.4</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex04"><span epub:type="pagebreak" id="page_166"></span><strong>Listing 7.4:</strong> Assigning to an object attribute.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0166-02" id="f0166-02a">Click here to view code image</a></p>
+<pre><span class="blue1"><strong><em># Defines a Phrase class.</em></strong></span>
+<span class="green1"><strong>class</strong></span> <span class="blue_r"><strong>Phrase</strong></span>
+  <span class="green1"><strong>attr_accessor</strong></span> <span class="blue_1r"><strong>:content</strong></span>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+    <span class="blue_1r"><strong>@content</strong></span> <span class="gray"><strong>=</strong></span> <strong>content</strong>
+  <span class="green_2"><strong>end</strong></span>
+<span class="green_2"><strong>end</strong></span>
+
+<strong>phrase</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Phrase</strong></span><span class="gray">.</span><strong>new(<span class="brown1">"Madam, I'm Adam."</span>)</strong>
+<span class="green1"><strong>puts</strong></span> <strong>phrase<span class="gray">.</span>content</strong>
+
+<span class="bg1"><strong>phrase<span class="gray">.</span>content <span class="gray">=</span> <span class="brown1">"Able was I, ere I saw Elba."</span></strong></span>
+<span class="bg1"><strong><span class="green1">puts</span> phrase<span class="gray">.</span>content</strong></span></pre>
+</div>
+<p class="noindent">The result is as you probably can guess:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_167"></span><a href="ch07_images.xhtml#f0167-01" id="f0167-01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>$</strong></span> <strong>ruby palindrome.rb</strong>
+<span class="green_2"><strong>Madam, I'm Adam.</strong></span>
+<span class="green_2"><strong>Able was I, ere I saw Elba.</strong></span></pre>
+<p class="indent">At this point, we’re ready to restore the <code><span class="green-y"><strong>palindrome?</strong></span></code> method in our initial definition of <code><span class="green-y"><strong>Phrase</strong></span></code>, as shown in <a href="ch07.xhtml#ch07ex05">Listing 7.5</a> (which also deletes the <code><span class="green-y"><strong>puts</strong></span></code> and related lines).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex05"><strong>Listing 7.5:</strong> Our initial <code><span class="green-y"><strong>Phrase</strong></span></code> class definition.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0167-02" id="f0167-02a">Click here to view code image</a></p>
+<pre><span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+<span class="green1"><strong>def</strong></span> <span class="blue_r"><strong>palindrome?</strong></span><strong>(string)</strong>
+  <strong>processed_content</strong> <span class="gray"><strong>=</strong></span> <strong>string<span class="gray">.</span>downcase</strong>
+  <strong>processed_content</strong> <span class="gray"><strong>==</strong></span> <strong>processed_content<span class="gray">.</span>reverse</strong>
+<span class="green1"><strong>end</strong></span>
+
+<span class="blue1"><strong><em># Defines a Phrase class.</em></strong></span>
+<span class="green1"><strong>class</strong></span> <span class="blue_r"><strong>Phrase</strong></span>
+  <span class="green1"><strong>attr_accessor</strong></span> <span class="blue_1r"><strong>:content</strong></span>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+    <span class="blue_1r"><strong>@content</strong></span> <span class="gray"><strong>=</strong></span> <strong>content</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Just as a reality check, it’s a good idea to run it in irb to catch any syntax errors, etc.:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0167-03" id="f0167-03a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase <span class="gray">=</span> <span class="brown">Phrase</span><span class="gray">.</span>new(<span class="brown1">"Racecar"</span>)</strong>
+<strong><span class="blue">&gt;&gt;</span> phrase <span class="gray">.</span>content</strong>
+<strong><span class="green-y">=&gt; "Racecar"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> palindrome?(phrase<span class="gray">.</span>content)</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+<p class="indent">As a next step, we’ll move the <code><span class="green-y"><strong>palindrome?</strong></span></code> function into the <code><span class="green-y"><strong>Phrase</strong></span></code> object itself, adding it as a method. The only things we need to do are (1) change the method to take zero arguments and (2) use the <code><span class="green-y"><strong>Phrase</strong></span></code> content instead of the variable <code><span class="green-y"><strong>string</strong></span></code>. Exactly how to do this second step is shown in <a href="ch07.xhtml#ch07ex06">Listing 7.6</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex06"><span epub:type="pagebreak" id="page_168"></span><strong>Listing 7.6:</strong> Moving <code><span class="green-y"><strong>palindrome?</strong></span></code> into the <code><span class="green-y"><strong>Phrase</strong></span></code> class.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0168-01" id="f0168-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:content</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+    <strong><span class="blue_1r">@content</span> <span class="gray">=</span> content</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+<span class="bg1">  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong></span>
+<span class="bg1">    <strong>processed_content <span class="gray">=</span> <span class="green1">self</span><span class="gray">.</span>content<span class="gray">.</span>downcase</strong></span>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+<strong><span class="green1">end</span></strong></pre>
+</div>
+<p class="noindent">We see in <a href="ch07.xhtml#ch07ex06">Listing 7.6</a> that inside the <code><span class="green-y"><strong>palindrome?</strong></span></code> method we can access the value of <code><span class="green-y"><strong>content</strong></span></code> using the special <code><span class="green-y"><strong>self</strong></span></code> object, which inside the class represents the instance itself. In other words, when we write</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0168-02" id="f0168-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong>phrase</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Phrase</strong></span><strong><span class="gray">.</span>new(<span class="brown1">"Racecar"</span>)</strong></pre>
+<p class="noindent">we can access the attributes of <code><span class="green-y"><strong>phrase</strong></span></code> inside the <code><span class="green-y"><strong>Phrase</strong></span></code> class using <code><span class="green-y"><strong>self</strong></span></code>. (<a href="https://www.learnenough.com/r/learn_enough_javascript/objects_and_prototypes/constructors#sec-constructors">Compare</a> with <code><span class="green-y"><strong>this</strong></span></code> in JavaScript.)</p>
+<p class="indent">The result of <a href="ch07.xhtml#ch07ex06">Listing 7.6</a> is that we can now call <code><span class="green-y"><strong>palindrome?</strong></span></code> directly on a phrase, as follows:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0168-03" id="f0168-03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>load</strong></span> <span class="brown1"><strong>"./palindrome.rb"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>phrase</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Phrase</strong></span><strong><span class="gray">.</span>new(<span class="brown1">"Racecar"</span>)</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>phrase<span class="gray">.</span>palindrome?</strong>
+<span class="green-y"><strong>=&gt; true</strong></span></pre>
+<p class="noindent">It worked! A <code><span class="green-y"><strong>phrase</strong></span></code> instance initialized with the string “Racecar” knows that it’s a palindrome (<a href="ch07.xhtml#ch07fig03">Figure 7.3</a>).<sup><a id="fn7_4" href="ch07.xhtml#fn7_4a">4</a></sup></p>
+<figure class="figure" id="ch07fig03">
+<img src="graphics/f0169-01.jpg" alt="Images" width="891" height="510"/>
+<figcaption>
+<p class="title-f">Figure 7.3: A <a href="https://en.wikipedia.org/wiki/Formula_One">Formula One</a> palindrome.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn7_4a" href="ch07.xhtml#fn7_4">4</a></sup>Image courtesy of msyaraafiq/Shutterstock.</p>
+<p class="indent">The palindrome detector in <a href="ch07.xhtml#ch07ex06">Listing 7.6</a> is fairly rudimentary, but we now have a good foundation for building (and testing) a more sophisticated palindrome detector in <a href="ch08.xhtml#ch08">Chapter 8</a>.</p>
+<section>
+<h4 class="h4" id="sec7_1_1"><span epub:type="pagebreak" id="page_169"></span>7.1.1 Exercises</h4>
+<p class="num-list">1. By filling in the code in <a href="ch07.xhtml#ch07ex07">Listing 7.7</a>, add a <code><span class="green-y"><strong>louder</strong></span></code> method to the <code><span class="green-y"><strong>Phrase</strong></span></code> object that returns a LOUDER (all-caps) version of the content. Confirm in the REPL that the result appears as in <a href="ch07.xhtml#ch07ex08">Listing 7.8</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex07"><strong>Listing 7.7:</strong> Making the content LOUDER.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0169-02" id="f0169-02a">Click here to view code image</a></p>
+<pre><span class="blue1"><strong><em># Defines a Phrase class.</em></strong></span>
+<span class="green1"><strong>class</strong></span> <span class="blue_r"><strong>Phrase</strong></span>
+  <span class="green1"><strong>attr_accessor</strong></span> <span class="blue_1r"><strong>:content</strong></span>
+
+  <span class="green1"><strong>def</strong></span> <span class="blue_r"><strong>initialize</strong></span><strong>(content)</strong>
+    <span class="blue_1r"><strong>@content</strong></span> <span class="gray"><strong>=</strong></span> <strong>content</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="blue_r"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray"><strong>=</strong></span> <span class="green1"><strong>self</strong></span><strong><span class="gray">.</span>content<span class="gray">.</span>downcase</strong>
+    <span epub:type="pagebreak" id="page_170"></span><strong>processed_content</strong> <span class="gray"><strong>==</strong></span> <strong>processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+
+  <span class="blue1"><strong><em># Makes the phrase LOUDER.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="blue_r"><strong>louder</strong></span>
+<span class="bg1">    <span class="blue1"><strong><em># FILL IN</em></strong></span></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex08"><strong>Listing 7.8:</strong> Using <code><span class="green-y"><strong>louder</strong></span></code> in the REPL.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0170-02" id="f0170-02a">Click here to view code image</a></p>
+<pre><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>load</strong></span> <span class="brown1"><strong>"./palindrome.rb"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>p</strong></span> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Phrase</strong></span><strong><span class="gray">.</span>new(<span class="brown1">"yo adrian!</span>")</strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="green1">p</span><span class="gray">.</span>louder</strong>
+<span class="green-y"><strong>=&gt; "YO ADRIAN!"</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_2">7.2 Inheritance</h3>
+<p class="noindent">When learning about Ruby classes, it’s useful to investigate the <em>class hierarchy</em> using the <code><span class="green-y"><strong>class</strong></span></code> and <code><span class="green-y"><strong>superclass</strong></span></code> methods. Let’s look at an example of what this means in the case of a familiar class, <code><span class="green-y"><strong>String</strong></span></code>:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0170-03" id="f0170-03a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> s <span class="gray">=</span> <span class="green1">String</span><span class="gray">.</span>new(<span class="brown1">"foobar"</span>)</strong>
+<strong><span class="green-y">=&gt; "foobar"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> s<span class="gray">.</span>class                             <span class="blue1"><em># Find the class of s.</em></span></strong>
+<strong><span class="green-y">=&gt; String</span></strong>
+<strong><span class="blue">&gt;&gt;</span> s<span class="gray">.</span>class<span class="gray">.</span>superclass                  <span class="blue1"><em># Find the superclass of String.</em></span></strong>
+<strong><span class="green-y">=&gt; Object</span></strong>
+<strong><span class="blue">&gt;&gt;</span> s<span class="gray">.</span>class<span class="gray">.</span>superclass<span class="gray">.</span>superclass       <span class="blue1"><em># Ruby has a BasicObject base class as of 1.9</em></span></strong>
+<strong><span class="green-y">=&gt; BasicObject</span></strong>
+<strong><span class="blue">&gt;&gt;</span> s<span class="gray">.</span>class<span class="gray">.</span>superclass<span class="gray">.</span>superclass<span class="gray">.</span>superclass</strong>
+<strong><span class="green-y">=&gt; nil</span></strong></pre>
+<p class="noindent">A diagram of this inheritance hierarchy appears in <a href="ch07.xhtml#ch07fig04">Figure 7.4</a>. We see here that the superclass of <code><span class="green-y"><strong>String</strong></span></code> is <code><span class="green-y"><strong>Object</strong></span></code> and the superclass of <code><span class="green-y"><strong>Object</strong></span></code> is <code><span class="green-y"><strong>Basic-Object</strong></span></code>, but <code><span class="green-y"><strong>BasicObject</strong></span></code> has no superclass. This pattern is true of every Ruby object: Trace back the class hierarchy far enough and every class in Ruby ultimately inherits from <code><span class="green-y"><strong>BasicObject</strong></span></code>, which has no superclass itself. This is the technical meaning of “everything in Ruby is an object”.</p>
+<figure class="figure" id="ch07fig04">
+<img src="graphics/f0171-01.jpg" alt="Images" width="349" height="413"/>
+<figcaption>
+<p class="title-f">Figure 7.4: The inheritance hierarchy for the <code><span class="green-y"><strong>String</strong></span></code> class.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_171"></span>The way Ruby’s class hierarchy works is that each class <em>inherits</em> the attributes and methods of classes further up in the hierarchy. For example, we’ve just seen how to find the class of a <code><span class="green-y"><strong>String</strong></span></code> object:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0171-02" id="f0171-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="brown1">"honey badger"</span><span class="gray">.</span>class</strong>
+<span class="green-y"><strong>=&gt; String</strong></span></pre>
+<p class="noindent">But where does the <code><span class="green-y"><strong>class</strong></span></code> method itself come from? The answer is that <code><span class="green-y"><strong>String</strong></span></code> inherits <code><span class="green-y"><strong>class</strong></span></code> from <code><span class="green-y"><strong>Object</strong></span></code>, as seen in the <a href="https://ruby-doc.org/core-2.5.0/Object.html">documentation on</a> <code><span class="green-y"><strong>Object</strong></span></code> (<a href="ch07.xhtml#ch07fig05">Figure 7.5</a>). Because <code><span class="green-y"><strong>String</strong></span></code> inherits from <code><span class="green-y"><strong>Object</strong></span></code>, it automatically has a <code><span class="green-y"><strong>class</strong></span></code> method (as well as all the other <code><span class="green-y"><strong>Object</strong></span></code> methods). <em>Note</em>: In older versions of Ruby, <code><span class="green-y"><strong>Object</strong></span></code> was the base of all classes, but <code><span class="green-y"><strong>Object</strong></span></code> has a lot of methods, and experience showed that using a super-stripped-down <code><span class="green-y"><strong>BasicObject</strong></span></code> <a href="https://ruby-doc.org/core-2.5.0/BasicObject.html">class</a> was convenient for some applications.</p>
+<figure class="figure" id="ch07fig05">
+<img src="graphics/f0172-01.jpg" alt="Images" width="852" height="796"/>
+<figcaption>
+<p class="title-f">Figure 7.5: The <code><span class="green-y"><strong>class</strong></span></code> method in the <code><span class="green-y"><strong>Object</strong></span></code> documentation.</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s return now to the <code><span class="green-y"><strong>Phrase</strong></span></code> class we defined in <a href="ch07.xhtml#sec7_1">Section 7.1</a>. Right now, <code><span class="green-y"><strong>Phrase</strong></span></code> has a <code><span class="green-y"><strong>content</strong></span></code> attribute, but a phrase really is a <em>string</em>, which suggests inheriting from the <code><span class="green-y"><strong>String</strong></span></code> class itself. (In the terminology of object-oriented programming, this is known as an <em><a href="https://en.wikipedia.org/wiki/Is-a">is-a relationship</a></em>, because “a phrase is a string.”) The way to inherit in Ruby is to use the left angle bracket <code><span class="green-y"><strong>&lt;</strong></span></code>, as shown in <a href="ch07.xhtml#ch07ex09">Listing 7.9</a>. Note that we’ve replaced <code><span class="green-y"><strong>self.content.downcase</strong></span></code> from <a href="ch07.xhtml#ch07ex06">Listing 7.6</a> with <code><span class="green-y"><strong>self.downcase</strong></span></code>—because a phrase <em>is a</em> string, <code><span class="green-y"><strong>self</strong></span></code> is a string, which means we can call the <code><span class="green-y"><strong>downcase</strong></span></code> method directly.<span epub:type="pagebreak" id="page_172"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex09"><span epub:type="pagebreak" id="page_173"></span><strong>Listing 7.9:</strong> Inheriting from <code><span class="green-y"><strong>String</strong></span></code>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0173-01" id="f0173-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class.</em></span></strong>
+<span class="bg1"><strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> String</strong></span>
+  <strong><span class="green1">attr_accessor</span> <span class="blue">:content</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content)</strong>
+    <strong><span class="blue_1r">@content</span> <span class="gray">=</span> content</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+<span class="bg1">    <strong>processed_content <span class="gray">=</span> <span class="green1">self</span><span class="gray">.</span>downcase</strong></span>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green-y"><strong>end</strong></span>
+<span class="green-y"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Observant readers might note at this point that we’re no longer using <code><span class="green-y"><strong>content</strong></span></code> at all, which means we should eliminate the attribute accessor and <code><span class="green-y"><strong>initialize</strong></span></code> method entirely. The result is the much more compact <code><span class="green-y"><strong>Phrase</strong></span></code> class definition shown in <a href="ch07.xhtml#ch07ex010">Listing 7.10</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex010"><strong>Listing 7.10:</strong> Eliminating <code><span class="green-y"><strong>initialize</strong></span></code> and <code><span class="green-y"><strong>content</strong></span></code>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0173-02" id="f0173-02a">Click here to view code image</a></p>
+<pre><span class="blue1"><strong><em># Defines a Phrase class (inheriting from String).</em></strong></span>
+<span class="green1"><strong>class</strong></span> <span class="blue_r"><strong>Phrase</strong></span> <span class="gray"><strong>&lt;</strong></span> <span class="green1"><strong>String</strong></span>
+
+  <span class="blue1"><strong><em># Returns true for a palindrome, false otherwise.</em></strong></span>
+  <span class="green1"><strong>def</strong></span> <span class="blue_r"><strong>palindrome?</strong></span>
+    <strong>processed_content</strong> <span class="gray"><strong>=</strong></span> <span class="green1"><strong>self</strong></span><strong><span class="gray">.</span>downcase</strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_174"></span>We can confirm using irb that this worked (you may have to exit and restart irb first):</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0174-01" id="f0174-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase <span class="gray">=</span> <span class="brown">Phrase</span><span class="gray">.</span>new(<span class="brown1">"Racecar"</span>)</strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+<p class="noindent">Here the <code><span class="green-y"><strong>new</strong></span></code> method is the one on <code><span class="green-y"><strong>String</strong></span></code>—we have eliminated our custom <code><span class="green-y"><strong>initialize</strong></span></code> method entirely. Because a <code><span class="green-y"><strong>Phrase</strong></span></code> is a <code><span class="green-y"><strong>String</strong></span></code>, we can also call any of the <a href="https://ruby-doc.org/core-2.5.0/String.html">string methods</a> on it:</p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>empty?</strong>
+<strong><span class="green-y">=&gt; false</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>length</strong>
+<strong><span class="green-y">=&gt; 7</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>scan(<span class="v1">/c\w/</span>)</strong>
+<strong><span class="green-y">=&gt; ["ce", "ca"]</span></strong></pre>
+<p class="indent">The relationship between <code><span class="green-y"><strong>Phrase</strong></span></code> and the other classes in the hierarchy can be seen as follows:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0174-02" id="f0174-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>class</strong>
+<strong><span class="green-y">=&gt; Phrase</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>class<span class="gray">.</span>superclass</strong>
+<strong><span class="green-y">=&gt; String</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>class<span class="gray">.</span>superclass<span class="gray">.</span>superclass</strong>
+<strong><span class="green-y">=&gt; Object</span></strong>
+<strong><span class="blue">&gt;&gt;</span> phrase<span class="gray">.</span>class<span class="gray">.</span>superclass<span class="gray">.</span>superclass<span class="gray">.</span>superclass</strong>
+<strong><span class="green-y">=&gt; BasicObject</span></strong></pre>
+<p class="noindent">A visual representation appears in <a href="ch07.xhtml#ch07fig06">Figure 7.6</a>.</p>
+<figure class="figure" id="ch07fig06">
+<img src="graphics/f0175-01.jpg" alt="Images" width="326" height="542"/>
+<figcaption>
+<p class="title-f">Figure 7.6: The inheritance hierarchy for the <code><span class="green-y"><strong>Phrase</strong></span></code> class.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec7_2_1">7.2.1 Exercises</h4>
+<p class="num-list">1. Inside a Ruby class, the use of <code><span class="green-y"><strong>self.</strong></span></code> is necessary when making attribute assignments, but otherwise you can leave it off. In particular, confirm that we can write <code><span class="green-y"><strong>downcase</strong></span></code> in place of <code><span class="green-y"><strong>self.downcase</strong></span></code>, as shown in <a href="ch07.xhtml#ch07ex011">Listing 7.11</a>. This may look a little odd at first, but the practice of leaving off <code><span class="green-y"><strong>self.</strong></span></code> when possible is common in idiomatic Ruby.<span epub:type="pagebreak" id="page_175"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex011"><span epub:type="pagebreak" id="page_176"></span><strong>Listing 7.11:</strong> Eliminating <code><span class="green-y"><strong>self.</strong></span></code> outside an assignment.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0176-01" id="f0176-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class (inheriting from String).</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+<span class="bg1">    <strong>processed_content <span class="gray">=</span> downcase</strong></span>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+<strong><span class="green1">end</span></strong></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_3">7.3 Derived Classes</h3>
+<p class="noindent">Let’s build on the techniques in <a href="ch07.xhtml#sec7_2">Section 7.2</a> to make a class that inherits from <code><span class="green-y"><strong>Phrase</strong></span></code>, which we’ll call <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>. The purpose of this so-called <em>derived class</em> is to re-use as much of <code><span class="green-y"><strong>Phrase</strong></span></code> as possible while giving us the flexibility to, say, test if a <em>translation</em> is a palindrome.</p>
+<p class="indent">We’ll start by factoring <code><span class="green-y"><strong>processed_content</strong></span></code> into a separate method, as shown in <a href="ch07.xhtml#ch07ex012">Listing 7.12</a>. We’ll see in a moment why this is useful in the current context, though it’s a nice refinement in any case.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex012"><strong>Listing 7.12:</strong> Factoring <code><span class="green-y"><strong>processed_content</strong></span></code> into a method.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0176-02" id="f0176-02a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class (inheriting from String).</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+
+<span class="bg1">  <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong></span>
+<span class="bg1">  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong></span>
+<span class="bg1">    <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong></span>
+<span class="bg1">  <strong><span class="green1">end</span></strong></span>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <span epub:type="pagebreak" id="page_177"></span><strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Now we’re ready to inherit from <code><span class="green-y"><strong>Phrase</strong></span></code>. We’ll start by using the inheritance operator <code><span class="green-y"><strong>&lt;</strong></span></code> as described above:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0177-02" id="f0177-02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="blue1"><strong><em># Defines a translated Phrase.</em></strong></span>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+
+<span class="green1"><strong>end</strong></span></pre>
+<p class="noindent">Our plan is to use <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> like this:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0177-03" id="f0177-03a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="brown">TranslatedPhrase</span><span class="gray">.</span>new(<span class="brown1">"recognize"</span>, <span class="brown1">"reconocer"</span>)</strong></pre>
+<p class="noindent">where the first argument is the <code><span class="green-y"><strong>Phrase</strong></span></code> content and the second argument is the translation. As a result, a <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> instance needs a <code><span class="green-y"><strong>translation</strong></span></code> attribute, which we’ll create using <code><span class="green-y"><strong>initialize</strong></span></code> and <code><span class="green-y"><strong>attr_accessor</strong></span></code> as with <code><span class="green-y"><strong>content</strong></span></code> in <a href="ch07.xhtml#ch07ex03">Listing 7.3</a>:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0177-05" id="f0177-05a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue1"><em># Defines a translated Phrase.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:translation</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content, translation)</strong>
+    <strong><span class="blue_1r">@translation</span> <span class="gray">=</span> translation</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+<p class="indent">Note that <code><span class="green-y"><strong>initialize</strong></span></code> takes <em>two</em> arguments, <code><span class="green-y"><strong>content</strong></span></code> and <code><span class="green-y"><strong>translation</strong></span></code>. We’ve handled <code><span class="green-y"><strong>translation</strong></span></code> like a normal attribute, but what to do about content? In <a href="ch07.xhtml#ch07ex012">Listing 7.12</a>, we could leave it off and simply delegate to the constructor for the <code><span class="green-y"><strong>String</strong></span></code> class, but how do we do this inside <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>? The answer is a special Ruby method called <code><span class="green-y"><strong>super</strong></span></code>:</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_178"></span><a href="ch07_images.xhtml#f0178-01" id="f0178-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue1"><em># Defines a translated Phrase.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:translation</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content, translation)</strong>
+<span class="bg1">    <strong><span class="green1">super</span>(content)</strong></span>
+    <strong><span class="blue_1r">@translation</span> <span class="gray">=</span> translation</strong>
+  <strong><span class="green1">end</span></strong>
+<strong><span class="green1">end</span></strong></pre>
+<p class="noindent">This calls the <code><span class="green-y"><strong>initialize</strong></span></code> method for the superclass—in this case, Ruby looks for one in <code><span class="green-y"><strong>Phrase</strong></span></code>, but <code><span class="green-y"><strong>Phrase</strong></span></code> has no <code><span class="green-y"><strong>initialize</strong></span></code>, so Ruby keeps going up the class hierarchy (<a href="ch07.xhtml#ch07fig06">Figure 7.6</a>) until it finds one in the <code><span class="green-y"><strong>String</strong></span></code> class. At that point, Ruby initializes <code><span class="green-y"><strong>self</strong></span></code> to have the value given by the <code><span class="green-y"><strong>content</strong></span></code> parameter.</p>
+<p class="indent">Putting everything together gives the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> class shown in <a href="ch07.xhtml#ch07ex013">Listing 7.13</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex013"><strong>Listing 7.13:</strong> Defining <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0178-02" id="f0178-02a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class (inheriting from String).</em></span>
+<span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+  <span class="gray"><strong>.</strong></span>
+  <span class="gray"><strong>.</strong></span>
+  <span class="gray"><strong>.</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong><span class="blue1"><em># Defines a translated Phrase.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:translation</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content, translation)</strong>
+    <strong><span class="green1">super</span>(content)</strong>
+    <strong><span class="blue_1r">@translation</span> <span class="gray">=</span> translation</strong>
+  <span class="green-y"><strong>end</strong></span>
+<span class="green-y"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Because <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> inherits from the <code><span class="green-y"><strong>Phrase</strong></span></code> object, an instance of <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> automatically has all the methods of a <code><span class="green-y"><strong>Phrase</strong></span></code> instance, including <code><span class="green-y"><strong>palindrome?</strong></span></code>. Let’s create a variable called <code><span class="green-y"><strong>frase</strong></span></code> (pronounced “FRAH-seh”, Spanish for “phrase”) to see how it works (<a href="ch07.xhtml#ch07ex014">Listing 7.14</a>).</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex014"><span epub:type="pagebreak" id="page_179"></span><strong>Listing 7.14:</strong> Defining a <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0179-01" id="f0179-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> frase <span class="gray">=</span> <span class="brown">TranslatedPhrase</span><span class="gray">.</span>new(<span class="brown1">"recognize"</span>, "<span class="brown1">reconocer</span>")</strong>
+<strong><span class="blue">&gt;&gt;</span> frase<span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; false</span></strong></pre>
+</div>
+<p class="noindent">We see that <code><span class="green-y"><strong>frase</strong></span></code> has a <code><span class="green-y"><strong>palindrome?</strong></span></code> method as claimed, and that it returns <code><span class="green-y"><strong>false</strong></span></code> because “recognize” isn’t a palindrome.</p>
+<p class="indent">But what if we wanted to use the <em>translation</em> instead of the content for determining whether the translated phrase is a palindrome or not? Because we factored <code><span class="green-y"><strong>processed_content</strong></span></code> into a separate method (<a href="ch07.xhtml#ch07ex012">Listing 7.12</a>), we can do this by <em>overriding</em> the <code><span class="green-y"><strong>processed_content</strong></span></code> method in <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>, as seen in <a href="ch07.xhtml#ch07ex015">Listing 7.15</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex015"><strong>Listing 7.15:</strong> Overriding a method.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0179-02" id="f0179-02a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class (inheriting from String).</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+
+  <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+    <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong><span class="blue1"><em># Defines a translated Phrase.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:translation</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content, translation)</strong>
+    <strong><span class="green1">super</span>(content)</strong>
+    <strong><span class="blue_1r">@translation</span> <span class="gray">=</span> translation</strong>
+  <strong><span class="green1">end</span></strong>
+
+<span class="bg1">  <strong><span class="blue1"><em># Processes the translation for palindrome testing.</em></span></strong></span>
+<span class="bg1">  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong></span>
+<span class="bg1">    <strong><span class="green1">self</span><span class="gray">.</span>translation<span class="gray">.</span>downcase</strong></span>
+<span epub:type="pagebreak" id="page_180"></span><span class="bg1">  <span class="green1"><strong>end</strong></span></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">The key point in <a href="ch07.xhtml#ch07ex015">Listing 7.15</a> is that we’re using <code><span class="green-y"><strong>self.translation</strong></span></code> in the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> version of <code><span class="green-y"><strong>processed_content</strong></span></code>, so Ruby knows to use that one instead of the one in <code><span class="green-y"><strong>Phrase</strong></span></code>. Because the translation “reconocer” <em>is</em> a palindrome, we get a different result from the one we got in <a href="ch07.xhtml#ch07ex014">Listing 7.14</a>, as shown in <a href="ch07.xhtml#ch07ex016">Listing 7.16</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex016"><strong>Listing 7.16:</strong> Calling <code><span class="green-y"><strong>palindrome?</strong></span></code> after overriding <code><span class="green-y"><strong>processed_content</strong></span></code>.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0180-02" id="f0180-02a">Click here to view code image</a></p>
+<pre><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> frase <span class="gray">=</span> <span class="brown">TranslatedPhrase</span><span class="gray">.</span>new(<span class="brown1">"recognize"</span>, <span class="brown1">"reconocer"</span>)</strong>
+<strong><span class="blue">&gt;&gt;</span> frase<span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+</div>
+<p class="noindent">The resulting inheritance hierarchy appears as in <a href="ch07.xhtml#ch07fig07">Figure 7.7</a>.</p>
+<figure class="figure" id="ch07fig07">
+<img src="graphics/f0181-01.jpg" alt="Images" width="326" height="696"/>
+<figcaption>
+<p class="title-f">Figure 7.7: The inheritance hierarchy for the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> class.</p>
+</figcaption>
+</figure>
+<p class="indent">This practice of overriding gives us great flexibility. We can trace the execution of <code><span class="green-y"><strong>frase.palindrome?</strong></span></code> for the two different cases:</p>
+<p class="noindent">Case 1: <a href="ch07.xhtml#ch07ex013">Listing 7.13</a> and <a href="ch07.xhtml#ch07ex014">Listing 7.14</a></p>
+<p class="num-list">1. <code><span class="green-y"><strong>frase.palindrome?</strong></span></code> calls <code><span class="green-y"><strong>palindrome?</strong></span></code> on the <code><span class="green-y"><strong>frase</strong></span></code> instance, which is a <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>. Since there is no <code><span class="green-y"><strong>palindrome?</strong></span></code> method in the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> object, Ruby uses the one from <code><span class="green-y"><strong>Phrase</strong></span></code>.</p>
+<p class="num-list">2. The <code><span class="green-y"><strong>palindrome?</strong></span></code> method in <code><span class="green-y"><strong>Phrase</strong></span></code> calls the <code><span class="green-y"><strong>processed_content</strong></span></code> method. Since there is no <code><span class="green-y"><strong>processed_content</strong></span></code> method in the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> object, Ruby uses the one from <code><span class="green-y"><strong>Phrase</strong></span></code>.</p>
+<p class="num-listb">3. The result is to compare the processed version of the <code><span class="green-y"><strong>Translated-Phrase</strong></span></code> instance with its own reverse. Since “recognize” isn’t a palindrome, the result is <code><span class="green-y"><strong>false</strong></span></code>.</p>
+<p class="noindentb">Case 2: <a href="ch07.xhtml#ch07ex015">Listing 7.15</a> and <a href="ch07.xhtml#ch07ex016">Listing 7.16</a></p>
+<p class="num-list"><span epub:type="pagebreak" id="page_181"></span><span epub:type="pagebreak" id="page_182"></span>1. <code><span class="green-y"><strong>frase.palindrome?</strong></span></code> calls <code><span class="green-y"><strong>palindrome?</strong></span></code> on the <code><span class="green-y"><strong>frase</strong></span></code> instance, which is a <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code>. As in Case 1, there is no <code><span class="green-y"><strong>palindrome?</strong></span></code> method in the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> object, so Ruby uses the one from <code><span class="green-y"><strong>Phrase</strong></span></code>.</p>
+<p class="num-list">2. The <code><span class="green-y"><strong>palindrome?</strong></span></code> method in <code><span class="green-y"><strong>Phrase</strong></span></code> calls the <span class="green-y"><code><strong>processed_content</strong></code></span> method. Since there now <em>is</em> a <code><span class="green-y"><strong>processed_content</strong></span></code> method in the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> object, Ruby uses the one from <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> instead of the one in <code><span class="green-y"><strong>Phrase</strong></span></code>.</p>
+<p class="num-listb">3. The result is to compare the processed version of <code><span class="green-y"><strong>self.translation</strong></span></code> with its own reverse. Since “reconocer” <em>is</em> a palindrome, the result is <code><span class="green-y"><strong>true</strong></span></code>.</p>
+<p class="indentb"><em>¿Puedes «reconocer» un palιndromo en español?</em> (Can you “reconocer” [recognize] a palindrome in Spanish?) (<a href="ch07.xhtml#ch07fig08">Figure 7.8</a>).<sup><a id="fn7_5" href="ch07.xhtml#fn7_5a">5</a></sup></p>
+<figure class="figure" id="ch07fig08">
+<img src="graphics/f0183-01.jpg" alt="Images" width="891" height="552"/>
+<figcaption>
+<p class="title-f">Figure 7.8: <a href="https://es.wikipedia.org/wiki/Narciso_(mitolog%C3%ADa)">Narciso</a> se reconoce. (<a href="https://en.wikipedia.org/wiki/Narcissus_(mythology)">Narcissus</a> recognizes himself.)</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn7_5a" href="ch07.xhtml#fn7_5">5</a></sup>John William Waterhouse, “Echo and Narcissus”, 1903 (detail). Image courtesy of Archivart/Alamy Stock Photo.</p>
+<section>
+<h4 class="h4" id="sec7_3_1">7.3.1 Exercises</h4>
+<p class="num-list">1. After filling in the code in <a href="ch07.xhtml#ch07ex015">Listing 7.15</a>, both <code><span class="green-y"><strong>Phrase</strong></span></code> and <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> have explicit calls to the <code><span class="green-y"><strong>downcase</strong></span></code> method. Eliminate this duplication by filling in <a href="ch07.xhtml#ch07ex017">Listing 7.17</a> to define an appropriate <code><span class="green-y"><strong>processor</strong></span></code> method that returns the lowercase version of the content.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex017"><strong>Listing 7.17:</strong> Eliminating duplication with a <code><span class="green-y"><strong>processor</strong></span></code> method.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0182-01" id="f0182-01a">Click here to view code image</a></p>
+<pre><strong><span class="blue1"><em># Defines a Phrase class (inheriting from String).</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+
+  <strong><span class="blue1"><em># Processes the string for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processor</span>(string)</strong>
+<span class="bg1">    <strong><span class="blue1"><em># FILL IN</em></span></strong></span>
+  <span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="codelink"><a href="ch07_images.xhtml#f0184-01" id="f0184-01a">Click here to view code image</a></p>
+<pre class="pre2"><span epub:type="pagebreak" id="page_183"></span><span epub:type="pagebreak" id="page_184"></span>  <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+<span class="bg1">    <strong>processor(<span class="green1">self</span>)</strong></span>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong><span class="blue1"><em># Defines a translated Phrase.</em></span></strong>
+<strong><span class="green1">class</span> <span class="blue_r">TranslatedPhrase</span> <span class="gray">&lt;</span> <span class="brown">Phrase</span></strong>
+  <strong><span class="green1">attr_accessor</span> <span class="blue_1r">:translation</span></strong>
+
+  <strong><span class="green1">def</span> <span class="blue_r">initialize</span>(content, translation)</strong>
+    <strong><span class="green1">super</span>(content)</strong>
+    <strong><span class="blue_1r">@translation</span> <span class="gray">=</span> translation</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Processes the translation for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+<span class="bg1">    <strong>processor(translation)</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_4">7.4 Modifying Native Objects</h3>
+<p class="noindent">As a final step in understanding Ruby inheritance, we’re going to learn how to modify native Ruby objects. Specifically, we’re going to add the <code><span class="green-y"><strong>palindrome?</strong></span></code> method from <a href="ch07.xhtml#ch07ex015">Listing 7.15</a> as a method on <code><span class="green-y"><strong>String</strong></span></code> objects themselves.</p>
+<p class="indent">The reader should be warned that what we’re about to do can be somewhat controversial. As prominent <a href="https://en.wiktionary.org/wiki/Rubyist">Rubyist</a> <a href="http://www.virtuouscode.com/">Avdi Grimm</a> once <a href="http://www.virtuouscode.com/2008/02/23/why-monkeypatching-is-destroying-ruby/">put it</a>, “Monkeypatching is Destroying Ruby” (links added):<sup><a id="fn7_6" href="ch07.xhtml#fn7_6a">6</a></sup></p>
+<p class="footnote"><sup><a id="fn7_6a" href="ch07.xhtml#fn7_6">6</a></sup><a href="https://avdi.codes/why-monkeypatching-is-destroying-ruby/">https://avdi.codes/why-monkeypatching-is-destroying-ruby/</a>. The article uses both “monkeypatching” (no space) and “monkey patching” (with a space) to refer to the same thing.</p>
+<p class="blockquote">“<a href="https://en.wikipedia.org/wiki/Monkey_patch">Monkey patching</a>”, for anyone who doesn’t know, refers to the practice of extending or modifying existing code by changing classes at <a href="https://en.wikipedia.org/wiki/Run_time_(program_lifecycle_phase)">run-time</a>. It is a powerful technique that has become popular in the Ruby community at least in part because the Ruby <span epub:type="pagebreak" id="page_185"></span>language makes it so easy. Any class can be re-opened at any time and amended in any way.</p>
+<p class="blockquote">I believe the term first arose in the Python community, as a derogatory term for a practice which that community tended to frown on. The Ruby community, on the other hand, has embraced the term and the practice with enthusiasm. I’m starting to think that the <a href="https://en.wiktionary.org/wiki/Pythonista">Pythonistas</a>’ attitude may have been justified.</p>
+<p class="indent">This advice reminds me of a <a href="https://www.youtube.com/watch?v=fiY2UHAgTJo">scene</a> from the movie <em><a href="https://en.wikipedia.org/wiki/Troy_(film)">Troy</a></em>, in which <a href="https://en.wikipedia.org/wiki/Achilles">Achilles</a>(’Aχιλλεύζ), the greatest warrior in Greece, is training his close confidant <a href="https://en.wikipedia.org/wiki/Patroclus">Patroclus</a> (∏άτϱoϰλoζ, depicted in the film as Achilles’ cousin). At one point in their mock swordfight, Achilles switches his wooden training sword from his right hand to his left, holding it up to Patroclus’s neck. In response, Patroclus exclaims, “You told me never to change sword hands!” “Yes,” replies Achilles. “When you know how to use it, you won’t be taking <em>my</em> orders.”</p>
+<p class="indent">Likewise, once we know when and why to extend built-in classes, we won’t be taking orders from anti-monkeypatchers<sup><a id="fn7_7" href="ch07.xhtml#fn7_7a">7</a></sup> (<a href="ch07.xhtml#ch07fig09">Figure 7.9</a>).<sup><a id="fn7_8" href="ch07.xhtml#fn7_8a">8</a></sup></p>
+<figure class="figure" id="ch07fig09">
+<img src="graphics/f0186-01.jpg" alt="Images" width="891" height="600"/>
+<figcaption>
+<p class="title-f">Figure 7.9: Patroclus and Achilles respectfully decline the advice of the anti-monkeypatchers.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn7_7a" href="ch07.xhtml#fn7_7">7</a></sup>Avdi himself acknowledges that his phrasing is designed mainly to spark discussion:</p>
+<p class="blockquotef">The title of this post is intended to be deliberately provocative… It’s provocative because I want to get people talking about this issue. I don’t actually think that monkey patching is “destroying” Ruby, but I do think the proliferation of the technique has real and troubling implications for Ruby’s future.</p>
+<p class="footnote">So Avdi advocates using monkeypatching judiciously, not avoiding it entirely.</p>
+<p class="footnote"><sup><a id="fn7_8a" href="ch07.xhtml#fn7_8">8</a></sup>Image courtesy of Historic Images/Alamy Stock Photo.</p>
+<p class="indent">The ability to modify native objects is a powerful one, to be sure—a “sharp knife”, as it were. But instead of passively accepting others’ advice, we’ll adhere to the philosophy espoused by <a href="http://david.heinemeierhansson.com/">David Heinemeier Hansson</a>, creator of the <a href="http://rubyonrails.org/">Ruby on Rails</a> web framework. As DHH <a href="https://twitter.com/dhh/status/965618592606638080">puts it</a> (<a href="ch07.xhtml#ch07fig10">Figure 7.10</a>): “Don’t let anyone tell you that a powerful technique is too scary or dangerous for you. Let it pique your curiosity instead.”</p>
+<figure class="figure" id="ch07fig10">
+<img src="graphics/f0187-01.jpg" alt="Images" width="847" height="476"/>
+<figcaption>
+<p class="title-f">Figure 7.10: <a href="https://twitter.com/dhh/status/965618592606638080">DHH agrees</a> that sharp knives are OK (when used with care).</p>
+</figcaption>
+</figure>
+<p class="indent">With those caveats in mind, let’s see how to add <code><span class="green-y"><strong>palindrome?</strong></span></code> to <code><span class="green-y"><strong>String</strong></span></code>. The trick is to remove <code><span class="green-y"><strong>Phrase</strong></span></code> and put <code><span class="green-y"><strong>palindrome?</strong></span></code> and <code><span class="green-y"><strong>processed_content</strong></span></code> into the <code><span class="green-y"><strong>String</strong></span></code> class itself.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_186"></span><span epub:type="pagebreak" id="page_187"></span><span epub:type="pagebreak" id="page_188"></span>Let’s review where we are with the <code><span class="green-y"><strong>Phrase</strong></span></code> class (<a href="ch07.xhtml#ch07ex018">Listing 7.18</a>). Note that we’ve removed the <code><span class="green-y"><strong>TranslatedPhrase</strong></span></code> class since we don’t need it anymore, and we’ve also removed the comment before <code><span class="green-y"><strong>Phrase</strong></span></code>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex018"><strong>Listing 7.18:</strong> The current state of <code><span class="green-y"><strong>Phrase</strong></span></code>.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0188-01" id="f0188-01a">Click here to view code image</a></p>
+<pre><strong><span class="green1">class</span> <span class="blue_r">Phrase</span> <span class="gray">&lt;</span> <span class="green1">String</span></strong>
+
+  <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+    <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Amazingly, Ruby lets us just open and modify the <code><span class="green-y"><strong>String</strong></span></code> class, even though it’s defined by Ruby itself. That means we can accomplish our task by simply changing the first line of <a href="ch07.xhtml#ch07ex018">Listing 7.18</a>, as seen in <a href="ch07.xhtml#ch07ex019">Listing 7.19</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex019"><strong>Listing 7.19:</strong> Defining <code><span class="green-y"><strong>palindrome?</strong></span></code> on <code><span class="green-y"><strong>String</strong></span></code> itself.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0188-02" id="f0188-02a">Click here to view code image</a></p>
+<pre><span class="bg1"><strong><span class="green1">class</span> <span class="blue_r">String</span></strong></span>
+
+  <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+    <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">As required, our code still finds palindromes correctly (<a href="ch07.xhtml#ch07fig11">Figure 7.11</a>), now with <code><span class="green-y"><strong>String</strong></span></code> in place of <code><span class="green-y"><strong>Phrase</strong></span></code>:<sup><a id="fn7_9" href="ch07.xhtml#fn7_9a">9</a></sup></p>
+<figure class="figure" id="ch07fig11">
+<img src="graphics/f0190-01.jpg" alt="Images" width="626" height="1042"/>
+<figcaption>
+<p class="title-f">Figure 7.11: <a href="https://en.wikipedia.org/wiki/Napoleon">Napoleon Bonaparte</a> was <a href="https://en.wikipedia.org/wiki/Napoleon#Ruler_of_France">able</a> before being <a href="https://en.wikipedia.org/wiki/Napoleon#Exile_to_Elba">exiled</a> to <a href="https://en.wikipedia.org/wiki/Elba">Elba</a>.</p>
+</figcaption>
+</figure>
+<p class="footnote"><sup><a id="fn7_9a" href="ch07.xhtml#fn7_9">9</a></sup>Image courtesy of Everett Collection/Shutterstock.</p>
+<p class="codelink"><span epub:type="pagebreak" id="page_189"></span><a href="ch07_images.xhtml#f0189-01" id="f0189-01a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> napoleonsLament <span class="gray">=</span> <span class="green1">String</span><span class="gray">.</span>new(<span class="brown1">"Able was I ere I saw Elba"</span>)</strong>
+<strong><span class="blue">&gt;&gt;</span> napoleonsLament<span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+<p class="noindent">Even cooler, we can call <code><span class="green-y"><strong>palindrome?</strong></span></code> directly on string literals:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0189-02" id="f0189-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="brown1">"foobar"</span><span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; false</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="brown1">"Racecar"</span><span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="brown1">"Able was I ere I saw Elba"</span><span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+<p class="indent">This is a remarkable achievement, but it’s worth asking whether adding <code><span class="green-y"><strong>palindrome?</strong></span></code> to <code><span class="green-y"><strong>String</strong></span></code> itself is really a good idea. The answer depends in part on the culture of the language. As indicated by Avdi’s post, Ruby is relatively tolerant of adding methods to native objects, as long as the privilege isn’t abused. In my view, adding <code><span class="green-y"><strong>palindrome?</strong></span></code> is marginal but defensible; I would be tempted to make the change in a shell script or small project, but might decline to monkeypatch <code><span class="green-y"><strong>String</strong></span></code> in a larger project with more opportunities for dangerous interactions with other code. In any case, if you want to add <code><span class="green-y"><strong>palindrome?</strong></span></code> to <code><span class="green-y"><strong>String</strong></span></code> yourself, neither I nor Achilles is going to stop you.</p>
+<section>
+<h4 class="h4" id="sec7_4_1">7.4.1 Exercises</h4>
+<p class="num-list">1. Add a <code><span class="green-y"><strong>blank?</strong></span></code> method to the <code><span class="green-y"><strong>String</strong></span></code> class that returns true if the string is empty <em>or</em> consists solely of whitespace. <em>Hint</em>: Use a regular expression (<a href="ch04.xhtml#sec4_3">Section 4.3</a>). You will need the regex syntax for the start and end of a line (<a href="ch07.xhtml#ch07fig12">Figure 7.12</a>). (The Ruby on Rails framework adds a <a href="https://github.com/rails/rails/blob/2a371368c91789a4d689d6a84eb20b238c37678a/activesupport/lib/active_support/core_ext/object/blank.rb#L102">more advanced version</a> of <code><span class="green-y"><strong>blank?</strong></span></code> that handles multiple different kinds of whitespace.)</p>
+<figure class="figure" id="ch07fig12">
+<img src="graphics/f0191-01.jpg" alt="Images" width="891" height="573"/>
+<figcaption>
+<p class="title-f">Figure 7.12: Start to end, a blank string is all whitespace.</p>
+</figcaption>
+</figure>
+<p class="num-list">2. As currently written, <a href="ch07.xhtml#ch07ex019">Listing 7.19</a> exposes not only <code><span class="green-y"><strong>palindrome?</strong></span></code> as a string method, but also <code><span class="green-y"><strong>processed_content</strong></span></code>. The latter method is really just for the internal use of <code><span class="green-y"><strong>palindrome?</strong></span></code>, though, so it’s a better practice to hide it from outsiders by using the <code><span class="green-y"><strong>private</strong></span></code> keyword. Show <span epub:type="pagebreak" id="page_190"></span>that the code in <a href="ch07.xhtml#ch07ex020">Listing 7.20</a> still defines <code><span class="green-y"><strong>palindrome?</strong></span></code>, while hiding the <code><span class="green-y"><strong>processed_content</strong></span></code> method. What happens if you call <code><span class="green-y"><strong>"racecar".processed_content</strong></span></code>?<sup><a id="fn7_10" href="ch07.xhtml#fn7_10a">10</a></sup></p>
+<p class="footnote"><sup><a id="fn7_10a" href="ch07.xhtml#fn7_10">10</a></sup>The extra level of indentation on the <code><span class="green-y"><strong>processed_content</strong></span></code> method is designed to make it visually apparent which methods are defined after <code><span class="green-y"><strong>private</strong></span></code>. Experience shows that this is a wise practice; in classes with a large number of methods, it is easy to define a private method accidentally, which leads to considerable confusion when it isn’t available to call on the corresponding object.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex020"><span epub:type="pagebreak" id="page_191"></span><strong>Listing 7.20:</strong> Factoring <code><span class="green-y"><strong>processed_content</strong></span></code> into a <code><span class="green-y"><strong>private</strong></span></code> method.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0191-02" id="f0191-02a">Click here to view code image</a></p>
+<pre><strong><span class="green1">class</span> <span class="blue_r">String</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong><span epub:type="pagebreak" id="page_192"></span>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+
+<span class="bg1">  <strong><span class="green1">private</span></strong></span>
+
+    <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+    <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+      <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec7_5">7.5 Modules</h3>
+<p class="noindent">The final detail in our study of Ruby classes is <em>modules</em>, also called <em>mixins</em>. Ruby modules give us a way to factor out common functionality and then mix it in to multiple classes. That’s a bit abstract, though, so let’s look at a concrete example.</p>
+<p class="indent">At this point in the tutorial, we’ve added a <code><span class="green-y"><strong>palindrome?</strong></span></code> method to the <code><span class="green-y"><strong>String</strong></span></code> class, using code that looks like <a href="ch07.xhtml#ch07ex021">Listing 7.21</a>, where we’ve incorporated the results of the second exercise in <a href="ch07.xhtml#sec7_4_1">Section 7.4.1</a> to ensure that the <code><span class="green-y"><strong>processed_content</strong></span></code> method is <code><span class="green-y"><strong>private</strong></span></code> and hence not exposed to users.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex021"><strong>Listing 7.21:</strong> Factoring <code><span class="green-y"><strong>processed_content</strong></span></code> into a <code><span class="green-y"><strong>private</strong></span></code> method.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0192-02" id="f0192-02a">Click here to view code image</a></p>
+<pre><strong><span class="green1">class</span> <span class="blue_r">String</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+
+<span class="bg1">  <strong><span class="green1">private</span></strong></span>
+
+    <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+    <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+      <strong><span class="green1">self</span><span class="gray">.</span>downcase</strong>
+    <strong><span class="green1">end</span></strong>
+<strong><span class="green1">end</span></strong></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_193"></span>As it turns out, strings aren’t the only things that can be palindromes— integers <a href="https://en.wikipedia.org/wiki/Palindromic_number">can be palindromes</a>, too. For example, the number 12321 is a palindrome because its digits are the same forward and backward. This suggests defining a <code><span class="green-y"><strong>palindrome?</strong></span></code> method on the <code><span class="green-y"><strong>Integer</strong></span></code> class, as shown in <a href="ch07.xhtml#ch07ex022">Listing 7.22</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex022"><strong>Listing 7.22:</strong> Defining a <code><span class="green-y"><strong>palindrome?</strong></span></code> method for integers.</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0193-01" id="f0193-01a">Click here to view code image</a></p>
+<pre><strong><span class="green1">class</span> <span class="blue_r">Integer</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="green1">private</span></strong>
+
+    <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+    <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+<span class="bg1">      <strong><span class="green1">self</span><span class="gray">.</span>to_s</strong></span>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">Note that we’ve used the <code><span class="green-y"><strong>to_s</strong></span></code> method to convert the integer to a string, and then applied the same <code><span class="green-y"><strong>palindrome?</strong></span></code> method as before. In fact, the palindrome code in <a href="ch07.xhtml#ch07ex021">Listing 7.21</a> and <a href="ch07.xhtml#ch07ex022">Listing 7.22</a> is identical apart from</p>
+<pre class="pre2"><strong><span class="green1">self</span><span class="gray">.</span>downcase</strong></pre>
+<p class="noindent">and</p>
+<pre class="pre2"><strong><span class="green1">self</span><span class="gray">.</span>to_s</strong></pre>
+<p class="noindent">Since calling <code><span class="green-y"><strong>to_s</strong></span></code> on a string just returns the string, and calling <code><span class="green-y"><strong>downcase</strong></span></code> on a string of digits just returns the digits, we can combine these two methods like this:</p>
+<span epub:type="pagebreak" id="page_194"></span>
+<pre class="pre2"><strong><span class="green1">self</span><span class="gray">.</span>to_s<span class="gray">.</span>downcase</strong></pre>
+<p class="noindent">This will now work on both strings and integers.</p>
+<p class="indent">We could just include the full contents of <a href="ch07.xhtml#ch07ex021">Listing 7.21</a> and <a href="ch07.xhtml#ch07ex022">Listing 7.22</a> into the <code><span class="green-y"><strong>palindrome.rb</strong></span></code> file, but that would be a violation of the DRY principle, and keeping the changes in sync could quickly get cumbersome. The solution is to factor the common palindrome code into a <em>module</em>, as shown in <a href="ch07.xhtml#ch07ex023">Listing 7.23</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex023"><strong>Listing 7.23:</strong> Factoring the palindrome code into a module.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0194-01" id="f0194-01a">Click here to view code image</a></p>
+<pre><strong><span class="green1">module</span> <span class="blue_r">Palindrome</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+
+  <strong><span class="green1">private</span></strong>
+
+    <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+    <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+      <strong><span class="green1">self</span><span class="gray">.</span>to_s<span class="gray">.</span>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="indent">We can then <code><span class="green-y"><strong>include</strong></span></code> the <code><span class="green-y"><strong>Palindrome</strong></span></code> module into both the <code><span class="green-y"><strong>String</strong></span></code> and <code><span class="green-y"><strong>Integer</strong></span></code> classes, and they’ll automatically get all the same methods (in this case, just <code><span class="green-y"><strong>palindrome?</strong></span></code> and the private <code><span class="green-y"><strong>processed_content</strong></span></code> method), as shown in <a href="ch07.xhtml#ch07ex024">Listing 7.24</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch07ex024"><strong>Listing 7.24:</strong> Including the <code><span class="green-y"><strong>Palindrome</strong></span></code> module.<br/><code><em>palindrome.rb</em></code></p>
+<p class="codelink"><a href="ch07_images.xhtml#f0194-02" id="f0194-02a">Click here to view code image</a></p>
+<pre><strong><span class="green1">module</span> <span class="blue_r">Palindrome</span></strong>
+
+  <strong><span class="blue1"><em># Returns true for a palindrome, false otherwise.</em></span></strong>
+  <strong><span class="green1">def</span> <span class="blue_r">palindrome?</span></strong>
+    <strong>processed_content <span class="gray">==</span> processed_content<span class="gray">.</span>reverse</strong>
+  <strong><span class="green1">end</span></strong>
+  <span epub:type="pagebreak" id="page_195"></span><strong><span class="green1">private</span></strong>
+
+    <strong><span class="blue1"><em># Returns content for palindrome testing.</em></span></strong>
+    <strong><span class="green1">def</span> <span class="blue_r">processed_content</span></strong>
+      <strong><span class="green1">self</span><span class="gray">.</span>to_s<span class="gray">.</span>downcase</strong>
+    <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<strong><span class="green1">class</span> <span class="blue_r">String</span></strong>
+<strong><span class="bg1">  <span class="green1">include</span> <span class="brown">Palindrome</span></span></strong>
+<strong><span class="green1">end</span></strong>
+
+<strong><span class="green1">class</span> <span class="blue_r">Integer</span></strong>
+<strong><span class="bg1">  <span class="green1">include</span> <span class="brown">Palindrome</span></span></strong>
+<strong><span class="green1">end</span></strong></pre>
+</div>
+<p class="indent">At this point, both strings and integers have a <code><span class="green-y"><strong>palindrome?</strong></span></code> method! We can verify this using irb:</p>
+<p class="codelink"><a href="ch07_images.xhtml#f0195-02" id="f0195-02a">Click here to view code image</a></p>
+<pre class="pre2"><strong><span class="blue">&gt;&gt;</span> <span class="green1">load</span> <span class="brown1">"./palindrome.rb"</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="brown1">"Racecar"</span><span class="gray">.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong>
+<strong><span class="blue">&gt;&gt;</span> <span class="gray">12321.</span>palindrome?</strong>
+<strong><span class="green-y">=&gt; true</span></strong></pre>
+<p class="indent">Ruby modules are a common technique for eliminating duplication, and many important Ruby methods are correspondingly part of modules rather than classes. For example, all the methods discussed in <a href="ch06.xhtml#sec6_3_4">Section 6.3.4</a>—including <code><span class="green-y"><strong>map</strong></span></code>/<code><span class="green-y"><strong>collect</strong></span></code>, <code><span class="green-y"><strong>find_all</strong></span></code>/<code><span class="green-y"><strong>select</strong></span></code>, and <code><span class="green-y"><strong>reduce</strong></span></code>/<code><span class="green-y"><strong>inject</strong></span></code>—are defined in the <a href="https://ruby-doc.org/core-2.5.0/Enumerable.html"><code><span class="green-y"><strong>Enumerable</strong></span></code> module</a> (see, e.g., my talk <a href="http://confreaks.tv/videos/rubyconf2014-enumerable-for-fun-profit">“Enumerable for Fun and Profit</a>”, mentioned in <a href="ch06.xhtml#sec6_3_4">Section 6.3.4</a>). As a result, any class that mixes <code><span class="green-y"><strong>Enumerable</strong></span></code> in— such as <code><span class="green-y"><strong>Array</strong></span></code>, <code><span class="green-y"><strong>Range</strong></span></code>, and <code><span class="green-y"><strong>Hash</strong></span></code>—automatically gets a huge amount of functionality for free.</p>
+<section>
+<h4 class="h4" id="sec7_5_1">7.5.1 Exercises</h4>
+<p class="num-list">1. Reusable modules are usually defined as separate files and then are included into the corresponding class files using <code><span class="green-y"><strong>require</strong></span></code>. Implement this practice by factoring <a href="ch07.xhtml#ch07ex024">Listing 7.24</a> into three separate files: <code><span class="green-y"><strong>palindrome.rb</strong></span></code> (the module), <code><span class="green-y"><strong>string_palindrome.rb</strong></span></code> (to <code><span class="green-y"><strong>include</strong></span></code> it into <span epub:type="pagebreak" id="page_196"></span><code><span class="green-y"><strong>String</strong></span></code>), and <code><span class="green-y"><strong>integer_palindrome.rb</strong></span></code> (to <code><span class="green-y"><strong>include</strong></span></code> it into <code><span class="green-y"><strong>Integer</strong></span></code>). Load all three into the REPL and confirm that it worked.</p>
+<p class="num-list">2. Using methods from the <a href="https://ruby-doc.org/core-2.5.0/Enumerable.html">documentation</a> for the <code><span class="green-y"><strong>Enumerable</strong></span></code> module, determine the maximum, minimum, and sum of the range <code><span class="green-y"><strong>1..100</strong></span></code>.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

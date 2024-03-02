@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch03"><span epub:type="pagebreak" id="page_69"></span>Chapter 3</h2>
+<h2 class="h2a">Lists</h2>
+<p class="noindent">In <a href="ch02.xhtml#ch02">Chapter 2</a>, we saw that strings can be thought of as sequences of characters in a particular order. In this chapter, we’ll learn about the <em>list</em> data type, which is the general Python container for a list of arbitrary elements in a particular order. Python lists are similar to the <em>array</em> data type in other languages (such as JavaScript and Ruby), so programmers familiar with other languages can probably guess a lot about how Python lists behave. (Although Python does have a built-in array type, in this tutorial “array” always refers to the <em>ndarray</em> data type defined by the NumPy library, which is covered in <a href="ch11.xhtml#sec11_2">Section 11.2</a>.)</p>
+<p class="indent">We’ll start by explicitly connecting strings and lists via the <span class="pd_green-d"><code><strong>split()</strong></code></span> method (<a href="ch03.xhtml#sec3_1">Section 3.1</a>), and then learn about various other list methods and techniques throughout the rest of the chapter. In <a href="ch03.xhtml#sec3_6">Section 3.6</a>, we’ll also take a quick look at two closely related data types, Python <em>tuples</em> and <em>sets</em>.</p>
+<section>
+<h3 class="h3" id="sec3_1">3.1 Splitting</h3>
+<p class="noindent">So far we’ve spent a lot of time understanding strings, and there’s a natural way to get from strings to lists via the <span class="pd_green-d"><code><strong>split()</strong></code></span> method:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f069-01" id="f069-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">$ source venv/bin/activate
+(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant bat cat"</span><span class="pd_gray">.</span>split(<span class="pd_red">" "</span>)     <span class="pd_blue1"><em># Split a string into a three-element list.</em></span>
+<span class="pd_green-d">['ant', 'bat', 'cat']</span></code></pre>
+<p class="noindent">We see from this result that <span class="pd_green-d"><code><strong>split()</strong></code></span> returns a list of the strings that are separated from each other by a space in the original string.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_70"></span>Splitting on space is one of the most common operations, but we can split on nearly anything else as well (<a href="ch03.xhtml#ch3list1">Listing 3.1</a>).</p>
+<p class="listing" id="ch3list1"><strong>Listing 3.1:</strong> Splitting on arbitrary strings.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f070-01" id="f070-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant,bat,cat"</span><span class="pd_gray">.</span>split(<span class="pd_red">","</span>)
+<span class="pd_green-d">['ant', 'bat', 'cat']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant, bat, cat"</span><span class="pd_gray">.</span>split(<span class="pd_red">", "</span>)
+<span class="pd_green-d">['ant', 'bat', 'cat']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"antheybatheycat"</span><span class="pd_gray">.</span>split(<span class="pd_red">"hey"</span>)
+<span class="pd_green-d">['ant', 'bat', 'cat']</span></code></pre>
+</div>
+<p class="noindent">Many languages support this sort of splitting, but note that Python includes an empty string in the final case illustrated above, which some languages (such as Ruby) trim automatically. We can avoid this extra string in the common case of splitting on newlines using <span class="pd_green-d"><code><strong>splitlines()</strong></code></span> instead (<a href="ch03.xhtml#ch3list2">Listing 3.2</a>).</p>
+<p class="listing" id="ch3list2"><strong>Listing 3.2:</strong> Splitting on newlines vs. <span class="pd_green-d"><code><strong>splitlines()</strong></code></span>.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f070-02" id="f070-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">=</span> <span class="pd_red">"This is a line.</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">And this is another line.</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s<span class="pd_gray">.</span>split(<span class="pd_red">"</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">"</span>)
+<span class="pd_green-d">['This is a line.', 'And this is another line.', '']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s<span class="pd_gray">.</span>splitlines()
+<span class="pd_green-d">['This is a line.', 'And this is another line.']</span></code></pre>
+</div>
+<p class="indent">Many languages allow us to split a string into its component characters by splitting on the empty string, but this doesn’t work in Python:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f070-03" id="f070-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"badger"</span><span class="pd_gray">.</span>split(<span class="pd_red">""</span>)
+<span class="pd_green-d">"badger".split("")</span>
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">ValueError</span>: empty separator</code></pre>
+<p class="noindent">In Python, the best way to do this is using the <span class="pd_green-d"><code><strong>list()</strong></code></span> function directly on the string:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f070-04" id="f070-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(<span class="pd_red">"badger"</span>)
+<span class="pd_green-d">['b', 'a', 'd', 'g', 'e', 'r']</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_71"></span>Because Python can naturally iterate over a string’s characters, this technique is rarely needed explicitly; instead, we’ll typically use <em>iterators</em>, which we’ll learn about in <a href="ch05.xhtml#sec5_3">Section 5.3</a>.</p>
+<p class="indent">Perhaps the most common use of <span class="pd_green-d"><code><strong>split()</strong></code></span> is with <em>no</em> arguments; in this case, the default behavior is to split on <em>whitespace</em> (such as spaces, tabs, or newlines):</p>
+<p class="codelink"><a href="ch03_images.xhtml#f071-01" id="f071-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant bat cat"</span><span class="pd_gray">.</span>split()
+<span class="pd_green-d">['ant', 'bat', 'cat']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"ant     bat</span><span class="pd_orange"><strong>\t\t</strong></span><span class="pd_red">cat</span><span class="pd_orange"><strong>\n</strong></span>    <span class="pd_red">duck"</span><span class="pd_gray">.</span>split()
+<span class="pd_green-d">['ant', 'bat', 'cat', 'duck']</span></code></pre>
+<p class="noindent">We’ll investigate this case more closely when discussing <em>regular expressions</em> in <a href="ch04.xhtml#sec4_3">Section 4.3</a>.</p>
+<section>
+<h4 class="h4" id="sec3_1_1">3.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Assign <span class="pd_green-d"><code><strong>a</strong></code></span> to the result of splitting the string “A man, a plan, a canal, Panama” on comma-space. How many elements does the resulting list have?</p></li>
+<li><p class="number">Can you guess the method to reverse <span class="pd_green-d"><code><strong>a</strong></code></span> in place? (Google around if necessary.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_2">3.2 List Access</h3>
+<p class="noindent">Having connected strings with lists via the <span class="pd_green-d"><code><strong>split()</strong></code></span> method, we’ll now discover a second close connection as well. Let’s start by assigning a variable to a list of characters created using <span class="pd_green-d"><code><strong>list()</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f071-02" id="f071-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> <span class="pd_green">list</span>(<span class="pd_red">"badger"</span>)
+<span class="pd_green-d">['b', 'a', 'd', 'g', 'e', 'r']</span></code></pre>
+<p class="noindent">Here we’ve followed tradition and called the variable <span class="pd_green-d"><code><strong>a</strong></code></span>, both because it’s the first letter of the alphabet and as a nod to the array type that lists so closely resemble.</p>
+<p class="indent">We can access particular elements of <span class="pd_green-d"><code><strong>a</strong></code></span> using the same bracket notation we first encountered in the context of strings in <a href="ch02.xhtml#sec2_6">Section 2.6</a>, as seen in <a href="ch03.xhtml#ch3list3">Listing 3.3</a>.</p>
+<p class="listing" id="ch3list3"><strong>Listing 3.3:</strong> List access with the bracket notation.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">0</span>]
+<span class="pd_green-d">'b'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">1</span>]
+<span epub:type="pagebreak" id="page_72"></span>
+<span class="pd_green-d">'a'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">2</span>]
+<span class="pd_green-d">'d'</span></code></pre>
+</div>
+<p class="indent">We see from <a href="ch03.xhtml#ch3list3">Listing 3.3</a> that, as with strings, lists are <em>zero-offset</em>, meaning that the “first” element has index <span class="pd_green-d"><code><strong>0</strong></code></span>, the second has index <span class="pd_green-d"><code><strong>1</strong></code></span>, and so on. This convention can be confusing, and in fact it’s common to refer to the initial element for zero-offset lists as the “zeroth” element as a reminder that the indexing starts at <span class="pd_green-d"><code><strong>0</strong></code></span>. This convention can also be confusing when using multiple languages (some of which start list indexing at <span class="pd_green-d"><code><strong>1</strong></code></span>), as illustrated in the xkcd comic strip “Donald Knuth”.<sup><a id="fn3_1a" href="ch03.xhtml#fn3_1">1</a></sup></p>
+<p class="footnote"><a id="fn3_1" href="ch03.xhtml#fn3_1a">1.</a> This particular xkcd strip takes its name from renowned computer scientist Donald Knuth (pronounced “kuh-NOOTH”), author of <em>The Art of Computer Programming</em> and creator of the T<sub>E</sub>X typesetting system used to prepare many technical documents, including this one.</p>
+<p class="indent">So far we’ve dealt exclusively with lists of characters, but Python lists can contain all types of elements (<a href="ch03.xhtml#ch3list4">Listing 3.4</a>).</p>
+<p class="listing" id="ch3list4"><strong>Listing 3.4:</strong> Creating a list with several types of elements.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f072-01" id="f072-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy <span class="pd_gray">=</span> <span class="pd_red">"To be, or not to be, that is the question:"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_red">"badger"</span>, <span class="pd_gray">42</span>, <span class="pd_red">"To be"</span> <span class="pd_pink"><strong>in</strong></span> soliloquy]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">['badger', 42, True]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">2</span>]
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">3</span>]
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">IndexError</span>: list index out of range</code></pre>
+</div>
+<p class="noindent">We see here that the square bracket access notation works as usual for a list of mixed types, which shouldn’t come as a surprise. We also see that trying to access a list index outside the defined range raises an error if we try to access an element that’s out of range.</p>
+<p class="indent">Another convenient feature of Python bracket notation is supporting <em>negative</em> indices, which count from the end of the list:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">-2</span>]
+<span class="pd_green-d">42</span></code></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_73"></span>Among other things, negative indices give us a compact way to select the <em>last</em> element in a list. Because <span class="pd_green-d"><code><strong>len()</strong></code></span> (<a href="ch02.xhtml#sec2_4">Section 2.4</a>) works on lists as well as strings, we could do it directly by subtracting <span class="pd_green-d"><code><strong>1</strong></code></span> from the length (which we have to do because lists are zero-offset):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_green">len</span>(a) <span class="pd_gray">- 1</span>]
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">But it’s even easier like this:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">-1</span>]
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">A final common case is where we want to access the final element and remove it at the same time. We’ll cover the method for doing this in <a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a>.</p>
+<p class="indent">By the way, starting in <a href="ch03.xhtml#ch3list4">Listing 3.4</a>, we used a literal square-bracket syntax to define lists by hand. This notation is so natural that you probably didn’t even notice it, and indeed it’s the same format the REPL uses when printing out lists.</p>
+<p class="indent">We can use this same notation to define the <em>empty list</em> <span class="pd_green-d"><code><strong>[]</strong></code></span>, which just evaluates to itself:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> []
+<span class="pd_green-d">[]</span></code></pre>
+<p class="noindent">You may recall from <a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a> that empty or nonexistent things like <span class="pd_green-d"><code><strong>""</strong></code></span>, <span class="pd_green-d"><code><strong>0</strong></code></span>, and <span class="pd_green-d"><code><strong>None</strong></code></span> are <span class="pd_green-d"><code><strong>False</strong></code></span> in a boolean context. This pattern holds for the empty list as well:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>([])
+<span class="pd_green-d">False</span></code></pre>
+<section>
+<h4 class="h4" id="sec3_2_1">3.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">We’ve seen that <span class="pd_green-d"><code><strong>list(str)</strong></code></span> returns a list of the characters in a string. How can we make a list consisting of the numbers in the range 0–4? <em>Hint</em>: Recall the <span class="pd_green-d"><code><strong>range()</strong></code></span> function first encountered in <a href="ch02.xhtml#ch2list24">Listing 2.24</a>.</p></li>
+<li><p class="number">Show that you can create a list of numbers in the range 17–41 using <span class="pd_green-d"><code><strong>list()</strong></code></span> with <span class="pd_green-d"><code><strong>range(17, 42)</strong></code></span>.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_74"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_3">3.3 List Slicing</h3>
+<p class="noindent">In addition to supporting the bracket notation described in <a href="ch03.xhtml#sec3_2">Section 3.2</a>, Python excels at a technique known as <em>list slicing</em> (<a href="ch03.xhtml#ch3fig1">Figure 3.1</a><sup><a id="fn3_2a" href="ch03.xhtml#fn3_2">2</a></sup>) for accessing multiple elements at a time. In anticipation of learning to <em>sort</em> in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>, let’s redefine our list <span class="pd_green-d"><code><strong>a</strong></code></span> to have purely numerical elements:</p>
+<figure class="image-c" id="ch3fig1">
+<img src="graphics/03fig01.jpg" alt="images" width="356" height="365"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.1:</strong> Python is unusually good at slicing.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn3_2" href="ch03.xhtml#fn3_2a">2.</a> Image courtesy of Artjazz/Shutterstock.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>]
+<span class="pd_green-d">[42, 8, 17, 99]</span></code></pre>
+<p class="indent">One way to slice a list is to use the <span class="pd_green-d"><code><strong>slice()</strong></code></span> function and provide two arguments corresponding to the index number where the slice should start and where it should end. For example, <span class="pd_green-d"><code><strong>slice(2, 4)</strong></code></span> lets us pull out the elements with index <span class="pd_green-d"><code><strong>2</strong></code></span> and <span class="pd_green-d"><code><strong>3</strong></code></span>, ending at <span class="pd_green-d"><code><strong>4</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f074-01" id="f074-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_green">slice</span>(<span class="pd_gray">2</span>, <span class="pd_gray">4</span>)]    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">[17, 99]</span></code></pre>
+<p class="noindent">This can be a little tricky to understand since there is no element with index <span class="pd_green-d"><code><strong>4</strong></code></span> due to lists being zero-offset. We can understand this better by imagining a pointer that <span epub:type="pagebreak" id="page_75"></span>moves one element to the right as it creates the slice; it starts at <span class="pd_green-d"><code><strong>2</strong></code></span>, selects element <span class="pd_green-d"><code><strong>2</strong></code></span> as it moves to <span class="pd_green-d"><code><strong>3</strong></code></span>, and then selects element <span class="pd_green-d"><code><strong>3</strong></code></span> as it moves to <span class="pd_green-d"><code><strong>4</strong></code></span>.</p>
+<p class="indent">The explicit <span class="pd_green-d"><code><strong>slice()</strong></code></span> notation is rarely used in real Python code; far more common is the equivalent notation using colons, like this:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">2</span>:<span class="pd_gray">4</span>]    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">[17, 99]</span></code></pre>
+<p class="noindent">Note that the index convention is the same: To select elements with indices <span class="pd_green-d"><code><strong>2</strong></code></span> and <span class="pd_green-d"><code><strong>3</strong></code></span>, we include a final range that is one <em>more</em> than the value of the final index in the slice (in this case, 3 + 1 = 4).</p>
+<p class="indent">In the case of our current list, <span class="pd_green-d"><code><strong>4</strong></code></span> is the length of the list, so in effect we are slicing from the element with index <span class="pd_green-d"><code><strong>2</strong></code></span> to the end. This is such a common task that Python has a special notation for it—we just leave the second index off entirely:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[<span class="pd_gray">2</span>:]    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">[17, 99]</span></code></pre>
+<p class="noindent">As you might guess, the same basic notation works to slice from the <em>front</em> of the list:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[:<span class="pd_gray">2</span>]    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">[42, 8]</span></code></pre>
+<p class="indent">The general pattern here is that <span class="pd_green-d"><code><strong>a[start:end]</strong></code></span> selects from index <span class="pd_green-d"><code><strong>start</strong></code></span> to index <span class="pd_green-d"><code><strong>end-1</strong></code></span>, where either can be omitted to select from the start or to the end. Python also supports an extension to this syntax taking the form <span class="pd_green-d"><code><strong>a[start:-end:step]</strong></code></span>, which is the same as regular list slicing except taken <span class="pd_green-d"><code><strong>step</strong></code></span> at a time. For example, we can select numbers from a range <span class="pd_green-d"><code><strong>3</strong></code></span> at a time as follows:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f075-01" id="f075-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers <span class="pd_gray">=</span> <span class="pd_green">list</span>(<span class="pd_green">range</span>(<span class="pd_gray">20</span>))
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers
+<span class="pd_green-d">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[<span class="pd_gray">0</span>:<span class="pd_gray">20</span>:<span class="pd_gray">3</span>]       <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">[0, 3, 6, 9, 12, 15, 18]</span></code></pre>
+<p class="noindent">Or we could start at, say, index <span class="pd_green-d"><code><strong>5</strong></code></span> and end at index <span class="pd_green-d"><code><strong>17</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[<span class="pd_gray">5</span>:<span class="pd_gray">17</span>:<span class="pd_gray">3</span>]
+<span class="pd_green-d">[5, 8, 11, 14]</span></code></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_76"></span>As with regular slicing, we can omit values if we want the start or the end:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f076-01" id="f076-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[:<span class="pd_gray">10</span>:<span class="pd_gray">3</span>]   <span class="pd_blue1"><em># Goes from the beginning to 10-1</em></span>
+<span class="pd_green-d">[0, 3, 6, 9]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[<span class="pd_gray">5</span>::<span class="pd_gray">3</span>]    <span class="pd_blue1"><em># Goes from 5 to the end</em></span>
+<span class="pd_green-d">[5, 8, 11, 14, 17]</span></code></pre>
+<p class="noindent">We can replicate the result of <span class="pd_green-d"><code><strong>numbers[0:20:3]</strong></code></span> more Pythonically by omitting both <span class="pd_green-d"><code><strong>0</strong></code></span> <em>and</em> <span class="pd_green-d"><code><strong>20</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f076-02" id="f076-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[::<span class="pd_gray">3</span>]      <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">[0, 3, 6, 9, 12, 15, 18]</span></code></pre>
+<p class="indent">We can even go backward using a negative step:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> numbers[::<span class="pd_gray">-3</span>]
+<span class="pd_green-d">[19, 16, 13, 10, 7, 4, 1]</span></code></pre>
+<p class="noindent">This suggests a (perhaps too clever) way to <em>reverse</em> a list, which is to use a step of <span class="pd_green-d"><code><strong>-1</strong></code></span>. Applying this idea to our original list looks like this:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a[::<span class="pd_gray">-1</span>]
+<span class="pd_green-d">[99, 17, 8, 42]</span></code></pre>
+<p class="noindent">You may encounter this <span class="pd_green-d"><code><strong>[::-1]</strong></code></span> construction in real-life Python code, so it’s important to know what it does, but there are more convenient and readable ways to reverse a list, as discussed in <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>.</p>
+<section>
+<h4 class="h4" id="sec3_3_1">3.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Define a list with the numbers 0 through 9. Use slicing and <span class="pd_green-d"><code><strong>len()</strong></code></span> to select the third element through the third-to-last. Accomplish the same task using a negative index.</p></li>
+<li><p class="number">Show that strings also support slicing by selecting just <span class="pd_green-d"><code><strong>"bat"</strong></code></span> from the string <span class="pd_green-d"><code><strong>"ant bat cat"</strong></code></span>. (You might have to experiment a little to get the indices just right.)</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_77"></span>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_4">3.4 More List Techniques</h3>
+<p class="noindent">There are many other things we can do with lists other than accessing and selecting elements. In this section we’ll discuss element inclusion, sorting and reversing, and appending and popping.</p>
+<section>
+<h4 class="h4" id="sec3_4_1">3.4.1 Element Inclusion</h4>
+<p class="noindent">As with strings (<a href="ch02.xhtml#sec2_5">Section 2.5</a>), lists support testing for element inclusion using the <span class="pd_green-d"><code><strong>in</strong></code></span> keyword:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>]
+<span class="pd_green-d">[42, 8, 17, 99]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">42</span> <span class="pd_pink"><strong>in</strong></span> a
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"foo"</span> <span class="pd_pink"><strong>in</strong></span> a
+<span class="pd_green-d">False</span></code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_2">3.4.2 Sorting and Reversing</h4>
+<p class="noindent">Python has powerful facilities for <em>sorting</em> and <em>reversing</em> lists. They come in two general types: <em>in-place</em> and <em>generators</em>. Let’s take a look at some examples to see what this means.</p>
+<p class="indent">We’ll start by sorting a list in place—an excellent trick that in ye olden days of C often required a custom implementation.<sup><a id="fn3_3a" href="ch03.xhtml#fn3_3">3</a></sup> In Python, we just call <span class="pd_green-d"><code><strong>sort()</strong></code></span>:</p>
+<p class="footnote"><a id="fn3_3" href="ch03.xhtml#fn3_3a">3.</a> This isn’t entirely fair to C: Python itself is written in C, so <span class="pd_green-d"><code><strong>sort()</strong></code></span> actually is just such a “custom implementation”!</p>
+<p class="codelink"><a href="ch03_images.xhtml#f077-01" id="f077-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>sort()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a                    <span class="pd_blue1"><em># mutated list</em></span>
+<span class="pd_green-d">[8, 17, 42, 99]</span></code></pre>
+<p class="noindent">As you might expect for a list of integers, <span class="pd_green-d"><code><strong>a.sort()</strong></code></span> sorts the list numerically (unlike, e.g., JavaScript, which confusingly sorts them “alphabetically”, so that 17 comes before 8). We also see that (unlike (<a href="https://www.learnenough.com/ruby-tutorial/arrays#sec-more_array_methods">https://www.learnenough.com/ruby-tutorial/arrays#sec-more_array_methods</a>) Ruby but <em>like</em> (<a href="https://www.learnenough.com/javascript-tutorial/arrays#sec-more_array_methods">https://www.learnenough.com/javascript-tutorial/arrays#sec-more_array_methods</a>) JavaScript) sorting a list changes, or <em>mutates</em>, the list itself. (We’ll see in a moment that it returns <span class="pd_green-d"><code><strong>None</strong></code></span>.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_78"></span>We can use <span class="pd_green-d"><code><strong>reverse()</strong></code></span> to reverse the elements in a list:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>reverse()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[99, 42, 17, 8]</span></code></pre>
+<p class="noindent">As with <span class="pd_green-d"><code><strong>sort()</strong></code></span>, note that <span class="pd_green-d"><code><strong>reverse()</strong></code></span> mutates the list itself.</p>
+<p class="indent">Such mutating methods can help demonstrate a common gotcha about Python lists involving list assignment. Suppose we have a list <span class="pd_green-d"><code><strong>a1</strong></code></span> and want a copy called <span class="pd_green-d"><code><strong>a2</strong></code></span> (<a href="ch03.xhtml#ch3list5">Listing 3.5</a>).</p>
+<p class="listing" id="ch3list5"><strong>Listing 3.5:</strong> A dangerous assignment.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1 <span class="pd_gray">=</span> [<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a2 <span class="pd_gray">=</span> a1    <span class="pd_blue1"><em># Dangerous!</em></span></code></pre>
+</div>
+<p class="noindent">The assignment in the second line is dangerous because <span class="pd_green-d"><code><strong>a2</strong></code></span> points to the same location in the computer’s memory as <span class="pd_green-d"><code><strong>a1</strong></code></span>, which means that if we mutate <span class="pd_green-d"><code><strong>a1</strong></code></span> it changes <span class="pd_green-d"><code><strong>a2</strong></code></span> as well:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1<span class="pd_gray">.</span>sort()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1
+<span class="pd_green-d">[8, 17, 42, 99]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a2
+<span class="pd_green-d">[8, 17, 42, 99]</span></code></pre>
+<p class="noindent">We see here that <span class="pd_green-d"><code><strong>a2</strong></code></span> has changed even though we didn’t do anything to it directly. (You can avoid this using the <span class="pd_green-d"><code><strong>list()</strong></code></span> function or the <span class="pd_green-d"><code><strong>copy()</strong></code></span> method, as in <span class="pd_green-d"><code><strong>a2 = list(a1)</strong></code></span> or <span class="pd_green-d"><code><strong>a2 = a1.copy()</strong></code></span>.)</p>
+<p class="indent">Python in-place methods are highly efficient, but usually more convenient are the related <span class="pd_green-d"><code><strong>sorted()</strong></code></span> and <span class="pd_green-d"><code><strong>reversed()</strong></code></span> functions. For example, we can obtain a sorted list as follows:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">sorted</span>(a)    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">[8, 17, 42, 99]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[42, 8, 17, 99]</span></code></pre>
+<p class="noindent">Here, unlike the case of <span class="pd_green-d"><code><strong>sort()</strong></code></span>, the original list is unchanged.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_79"></span>Similarly, we can (almost) obtain a reversed list using <span class="pd_green-d"><code><strong>reversed()</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f079-01" id="f079-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[42, 8, 17, 99]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">reversed</span>(a)
+<span class="pd_green-d">&lt;list_reverseiterator object at 0x109561910&gt;</span></code></pre>
+<p class="noindent">Unfortunately, the parallel structure with <span class="pd_green-d"><code><strong>sorted()</strong></code></span> is slightly broken, at least as of this writing. Rather than returning a list, the <span class="pd_green-d"><code><strong>reversed()</strong></code></span> function returns an <em>iterator</em>, which is a special type of Python object designed to be (you guessed it) iterated over. This isn’t usually a problem because we’ll usually be joining or looping over the reversed elements, in which case the generator will serve just fine (<a href="ch05.xhtml#sec5_3">Section 5.3</a>), but when we really need a list we can call the <span class="pd_green-d"><code><strong>list()</strong></code></span> function directly (<a href="ch03.xhtml#sec3_1">Section 3.1</a>):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">list</span>(<span class="pd_green">reversed</span>(a))
+<span class="pd_green-d">[99, 42, 17, 8]</span></code></pre>
+<p class="noindent">As noted, this minor wart rarely makes a difference since the generator’s behavior is effectively identical to the list version when being iterated over.<sup><a id="fn3_4a" href="ch03.xhtml#fn3_4">4</a></sup></p>
+<p class="footnote"><a id="fn3_4" href="ch03.xhtml#fn3_4a">4.</a> It’s actually even better in certain ways since the generator doesn’t require creating the entire list in memory. See <a href="ch05.xhtml#sec5_3">Section 5.3</a> for more information.</p>
+<section>
+<h5 class="h5" id="sec3_1_1_1">Comparison</h5>
+<p class="noindent">Lists support the same basic equality and inequality comparisons as strings (<a href="ch02.xhtml#ch02">Chapter 2</a>):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> b <span class="pd_gray">=</span> [<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">==</span> b
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">!=</span> b
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">Python also supports <span class="pd_green-d"><code><strong>is</strong></code></span>, which tests whether two variables represent the same object. Because <span class="pd_green-d"><code><strong>a</strong></code></span> and <span class="pd_green-d"><code><strong>b</strong></code></span>, although they contain the same elements, are not the same object in Python’s memory system, <span class="pd_green-d"><code><strong>==</strong></code></span> and <span class="pd_green-d"><code><strong>is</strong></code></span> return different results in this case:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">==</span> b
+<span class="pd_green-d">True</span></code></pre>
+<span epub:type="pagebreak" id="page_80"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_pink"><strong>is</strong></span> b
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">In contrast, the lists <span class="pd_green-d"><code><strong>a1</strong></code></span> and <span class="pd_green-d"><code><strong>a2</strong></code></span> from <a href="ch03.xhtml#ch3list5">Listing 3.5</a> are equal using both comparisons:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1 <span class="pd_gray">==</span> a2
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1 <span class="pd_pink"><strong>is</strong></span> a2
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">The second <span class="pd_green-d"><code><strong>True</strong></code></span> values follows because <span class="pd_green-d"><code><strong>a1</strong></code></span> and <span class="pd_green-d"><code><strong>a2</strong></code></span> truly are the exact same object. This behavior is effectively the same as the <span class="pd_green-d"><code><strong>===</strong></code></span> syntax supported by many other languages, such as Ruby and JavaScript.</p>
+<p class="indent">According to the PEP 8 style guide, <span class="pd_green-d"><code><strong>is</strong></code></span> should always be used when comparing with <span class="pd_green-d"><code><strong>None</strong></code></span>. For example, we can use <span class="pd_green-d"><code><strong>is</strong></code></span> to confirm that the list methods for reversing and sorting in place return <span class="pd_green-d"><code><strong>None</strong></code></span>:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f080-01" id="f080-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>reverse() <span class="pd_gray">==</span> <span class="pd_green"><strong>None</strong></span>    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>sort() <span class="pd_gray">==</span> <span class="pd_green"><strong>None</strong></span>       <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>reverse() <span class="pd_pink"><strong>is</strong></span> <span class="pd_green"><strong>None</strong></span>    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>sort() <span class="pd_pink"><strong>is</strong></span> <span class="pd_green"><strong>None</strong></span>       <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">True</span></code></pre>
+</section>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_3">3.4.3 Appending and Popping</h4>
+<p class="noindent">One useful pair of list methods is <span class="pd_green-d"><code><strong>append()</strong></code></span> and <span class="pd_green-d"><code><strong>pop()</strong></code></span>—<span class="pd_green-d"><code><strong>append()</strong></code></span> lets us append an element to the end of a list, while <span class="pd_green-d"><code><strong>pop()</strong></code></span> removes it and returns the value:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f080-02" id="f080-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> <span class="pd_green">sorted</span>([<span class="pd_gray">42</span>, <span class="pd_gray">8</span>, <span class="pd_gray">17</span>, <span class="pd_gray">99</span>])
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[8, 17, 42, 99]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>append(<span class="pd_gray">6</span>)                   <span class="pd_blue1"><em># Appending to a list</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[8, 17, 42, 99, 6]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>append(<span class="pd_red">"foo"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[8, 17, 42, 99, 6, 'foo']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>pop()                       <span class="pd_blue1"><em># Popping an element off</em></span>
+<span class="pd_green-d">'foo'</span>
+<span epub:type="pagebreak" id="page_81"></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[8, 17, 42, 99, 6]</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>pop()
+<span class="pd_green-d">6</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a<span class="pd_gray">.</span>pop()
+<span class="pd_green-d">99</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">[8, 17, 42]</span></code></pre>
+<p class="noindent">Note that <span class="pd_green-d"><code><strong>pop()</strong></code></span> returns the value of the final element (while removing it as a side effect), while <span class="pd_green-d"><code><strong>append()</strong></code></span> returns <span class="pd_green-d"><code><strong>None</strong></code></span> (as indicated by nothing being printed after an append).</p>
+<p class="indent">We are now in a position to appreciate the comment made in <a href="ch03.xhtml#sec3_2">Section 3.2</a> about obtaining the last element of the list, as long as we don’t mind mutating it:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f081-01" id="f081-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> the_answer_to_life_the_universe_and_everything <span class="pd_gray">=</span> a<span class="pd_gray">.</span>pop()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> the_answer_to_life_the_universe_and_everything
+<span class="pd_green-d">42</span></code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_4">3.4.4 Undoing a Split</h4>
+<p class="noindent">A final example of a list method, one that brings us full circle from <a href="ch03.xhtml#sec3_1">Section 3.1</a>, is <span class="pd_green-d"><code><strong>join()</strong></code></span>. Just as <span class="pd_green-d"><code><strong>split()</strong></code></span> splits a string into list elements, <span class="pd_green-d"><code><strong>join()</strong></code></span> joins list elements into a string (<a href="ch03.xhtml#ch3list6">Listing 3.6</a>).</p>
+<p class="listing" id="ch3list6"><strong>Listing 3.6:</strong> Different ways to join.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f081-02" id="f081-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>, <span class="pd_red">"42"</span>]
+<span class="pd_green-d">['ant', 'bat', 'cat', '42']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(a)                        <span class="pd_blue1"><em># Join on empty space.</em></span>
+<span class="pd_green-d">'antbatcat42'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">", "</span><span class="pd_gray">.</span>join(a)                      <span class="pd_blue1"><em># Join on comma-space.</em></span>
+<span class="pd_green-d">'ant, bat, cat, 42'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">" -- "</span><span class="pd_gray">.</span>join(a)                    <span class="pd_blue1"><em># Join on double dashes.</em></span>
+<span class="pd_green-d">'ant -- bat -- cat -- 42'</span></code></pre>
+</div>
+<p class="indent">Note that in all cases shown in <a href="ch03.xhtml#ch3list6">Listing 3.6</a> the lists we’re joining consist wholly of strings. What if we wanted a list containing, say, the <em>number</em> <span class="pd_green-d"><code><strong>42</strong></code></span> rather than the string <span class="pd_green-d"><code><strong>"42"</strong></code></span>? It doesn’t work by default:</p>
+<span epub:type="pagebreak" id="page_82"></span>
+<p class="codelink"><a href="ch03_images.xhtml#f082-01" id="f082-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>, <span class="pd_gray">42</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">", "</span><span class="pd_gray">.</span>join(a)
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">TypeError</span>: sequence item 3: expected str instance, int found</code></pre>
+<p class="noindent">I mention this mainly because many languages, including JavaScript and Ruby, automatically convert objects to strings when joining, so this could be considered a minor gotcha in Python for people familiar with such languages.</p>
+<p class="indent">One solution in Python is to use the <span class="pd_green-d"><code><strong>str()</strong></code></span> function, which we’ll see again in <a href="ch04.xhtml#sec4_1_2">Section 4.1.2</a>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">str</span>(<span class="pd_gray">42</span>)
+<span class="pd_green-d">'42'</span></code></pre>
+<p class="noindent">Then to complete the <span class="pd_green-d"><code><strong>join()</strong></code></span> we can use a <em>generator expression</em> that returns <span class="pd_green-d"><code><strong>str(e)</strong></code></span> for each element in the list:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f082-02" id="f082-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">", "</span><span class="pd_gray">.</span>join(<span class="pd_green">str</span>(e) <span class="pd_green"><strong>for</strong></span> e <span class="pd_pink"><strong>in</strong></span> a)
+<span class="pd_green-d">'ant, bat, cat, 42'</span></code></pre>
+<p class="noindent">This somewhat advanced construction is related to <em>comprehensions</em>, which we will cover more in <a href="ch06.xhtml#ch06">Chapter 6</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec3_4_5">3.4.5 Exercises</h4>
+<ol class="number">
+<li><p class="number">To sort a list in reverse order, it’s possible to sort and then reverse, but the combined operation is so useful that both <span class="pd_green-d"><code><strong>sort()</strong></code></span> and <span class="pd_green-d"><code><strong>sorted()</strong></code></span> support a keyword argument (<a href="ch05.xhtml#sec5_1_2">Section 5.1.2</a>) that does it automatically. Confirm that <span class="pd_green-d"><code><strong>a.sort(reverse=True)</strong></code></span> and <span class="pd_green-d"><code><strong>sorted(a, reverse=True)</strong></code></span> both have the effect of sorting and reversing at the same time.</p></li>
+<li><p class="number">Using the list documentation (<a href="https://docs.python.org/3/tutorial/datastructures.html">https://docs.python.org/3/tutorial/datastructures.html</a>), figure out how to insert an element at the beginning of a list.</p></li>
+<li><p class="number">Combine the two lists shown in <a href="ch03.xhtml#ch3list7">Listing 3.7</a> into a single list using the <span class="pd_green-d"><code><strong>extend()</strong></code></span> method. Does <span class="pd_green-d"><code><strong>extend()</strong></code></span> mutate <span class="pd_green-d"><code><strong>a1</strong></code></span>? Does it mutate <span class="pd_green-d"><code><strong>a2</strong></code></span>?</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_83"></span>
+<p class="listing" id="ch3list7"><strong>Listing 3.7:</strong> Extending lists.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1 <span class="pd_gray">=</span> [<span class="pd_red">"a"</span>, <span class="pd_red">"b"</span>, <span class="pd_red">"c"</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a2 <span class="pd_gray">=</span> [<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> FILL_IN
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a1
+<span class="pd_green-d">['a', 'b', 'c', 1, 2, 3]</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_5">3.5 List Iteration</h3>
+<p class="noindent">One of the most common tasks with lists is iterating through their elements and performing an operation with each one. This might sound familiar, since we solved the exact same problem with strings in <a href="ch02.xhtml#sec2_6">Section 2.6</a>, and indeed the solution is virtually the same. All we need to do is adapt the <span class="pd_green-d"><code><strong>for</strong></code></span> loop from <a href="ch02.xhtml#ch2list27">Listing 2.27</a> to lists, i.e., replace <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> with <span class="pd_green-d"><code><strong>a</strong></code></span>, as shown in <a href="ch03.xhtml#ch3list8">Listing 3.8</a>.</p>
+<p class="listing" id="ch3list8"><strong>Listing 3.8:</strong> Combining list access and a <span class="pd_green-d"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f083-01" id="f083-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a <span class="pd_gray">=</span> [<span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>, <span class="pd_gray">42</span>]
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_green">len</span>(a)):    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(a[i])
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">ant
+bat
+cat
+42</span></code></pre>
+</div>
+<p class="noindent">That’s convenient, but it’s not the best way to iterate through lists, and Mike Vanier still wouldn’t be happy (<a href="ch03.xhtml#ch3fig2">Figure 3.2</a><sup><a id="fn3_5a" href="ch03.xhtml#fn3_5">5</a></sup>).</p>
+<figure class="image-c" id="ch3fig2">
+<img src="graphics/03fig02.jpg" alt="images" width="192" height="193"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.2:</strong> Mike Vanier is still annoyed by typing out <span class="pd_green-d"><code><strong>for</strong></code></span> loops.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn3_5" href="ch03.xhtml#fn3_5a">5.</a> Image © Mike Vanier.</p>
+<p class="indent">Luckily, looping the Right Way<sup>TM</sup> is easier than it is in most other languages, so we can actually cover it here (unlike in, e.g., <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>), when we had to wait until <a href="ch05.xhtml#ch05">Chapter 5</a> (<a href="https://www.learnenough.com/javascript-tutorial/functions#seciteration_for_each">https://www.learnenough.com/javascript-tutorial/functions#seciteration_for_each</a>)). The trick is knowing that, as with strings, the default behavior of <span class="pd_green-d"><code><strong>for...in</strong></code></span> is to return each element in sequence, as shown in <a href="ch03.xhtml#ch3list9">Listing 3.9</a>.</p>
+<span epub:type="pagebreak" id="page_84"></span>
+<p class="listing" id="ch3list9"><strong>Listing 3.9:</strong> Using <span class="pd_green-d"><code><strong>for</strong></code></span> to iterate over a list the Right Way™.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f084-01" id="f084-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> e <span class="pd_pink"><strong>in</strong></span> a:    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(e)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">ant
+bat
+cat
+42</span></code></pre>
+</div>
+<p class="noindent">Using this style of <span class="pd_green-d"><code><strong>for</strong></code></span> loop, we can iterate directly through the elements in a list, thereby avoiding having to type out Mike Vanier’s <em>bête noire</em>, “for (i = 0; i &lt; N; i++)”. The result is cleaner code and a happier programmer (<a href="ch03.xhtml#ch3fig3">Figure 3.3</a><sup><a id="fn3_6a" href="ch03.xhtml#fn3_6">6</a></sup>).</p>
+<figure class="image-c" id="ch3fig3">
+<img src="graphics/03fig03.jpg" alt="images" width="141" height="193"/>
+<figcaption>
+<p class="title-f"><strong>Figure 3.3:</strong> Avoiding <span class="pd_green-d"><code><strong>range(len())</strong></code></span> has made Mike Vanier a little happier.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn3_6" href="ch03.xhtml#fn3_6a">6.</a> Image © Mike Vanier.</p>
+<p class="indent">By the way, we can use <span class="pd_green-d"><code><strong>enumerate()</strong></code></span> if for some reason we need the index itself, as shown in <a href="ch03.xhtml#ch3list10">Listing 3.10</a>. (If you solved the exercise corresponding to <a href="ch02.xhtml#ch2list29">Listing 2.29</a>, the code in <a href="ch03.xhtml#ch3list10">Listing 3.10</a> might look familiar.)</p>
+<span epub:type="pagebreak" id="page_85"></span>
+<p class="listing" id="ch3list10"><strong>Listing 3.10:</strong> Printing list elements with index.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f085-01" id="f085-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i, e <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">enumerate</span>(a):    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"a[</span><span class="pd_lpink"><strong>{</strong></span>i<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">] =</span> <span class="pd_lpink"><strong>{</strong></span>e<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">a[0] = ant
+a[1] = bat
+a[2] = cat
+a[3] = 42</span></code></pre>
+</div>
+<p class="noindent">Note the final results in <a href="ch03.xhtml#ch3list10">Listing 3.10</a> aren’t quite right because we really should show, say, the first element as <span class="pd_green-d"><code><strong>"ant"</strong></code></span> instead of as <span class="pd_green-d"><code><strong>ant</strong></code></span>. Fixing this minor blemish is left as an exercise.</p>
+<p class="indent">Finally, it’s possible to break out of a loop early using the <span class="pd_green-d"><code><strong>break</strong></code></span> keyword (<a href="ch03.xhtml#ch3list11">Listing 3.11</a>).</p>
+<p class="listing" id="ch3list11"><strong>Listing 3.11:</strong> Using <span class="pd_green-d"><code><strong>break</strong></code></span> to interrupt a <span class="pd_green-d"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f085-02" id="f085-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i, e <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">enumerate</span>(a):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>if</strong></span> e <span class="pd_gray">==</span> <span class="pd_red">"cat"</span>:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green">print</span>(<span class="pd_red">f"Found the cat at index</span> <span class="pd_lpink"><strong>{</strong></span>i<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">!"</span>)
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green"><strong>break</strong></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>         <span class="pd_green">print</span>(<span class="pd_red">f"a[</span><span class="pd_lpink"><strong>{</strong></span>i<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">] =</span> <span class="pd_lpink"><strong>{</strong></span>e<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">a[0] = ant
+a[1] = bat
+Found the cat at index 2!
+&gt;&gt;&gt;</span></code></pre>
+</div>
+<p class="noindent">In this case the execution of the loop stops at index 2 and doesn’t proceed to any subsequent indices. We’ll see a similar construction using the <span class="pd_green-d"><code><strong>return</strong></code></span> keyword in <a href="ch05.xhtml#sec5_1">Section 5.1</a>.</p>
+<section>
+<h4 class="h4" id="sec3_5_1">3.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use <span class="pd_green-d"><code><strong>reversed()</strong></code></span> to print out a list’s elements in reverse order.</p></li>
+<li><p class="number">We saw in <a href="ch03.xhtml#ch3list10">Listing 3.10</a> that interpolating the values of the list into the string led to printing out, say, <span class="pd_green-d"><code><strong>ant</strong></code></span> instead of <span class="pd_green-d"><code><strong>"ant"</strong></code></span>. We could put the quote marks in by hand, but then that would print <span class="pd_green-d"><code><strong>42</strong></code></span> out as <span class="pd_green-d"><code><strong>"42"</strong></code></span>, which is also wrong. <span epub:type="pagebreak" id="page_86"></span>Solve this conundrum using the <span class="pd_green-d"><code><strong>repr()</strong></code></span> function (<a href="ch02.xhtml#sec2_3">Section 2.3</a>) to interpolate a representation of each list element, as shown in <a href="ch03.xhtml#ch3list12">Listing 3.12</a>.</p></li>
+</ol>
+<p class="listing" id="ch3list12"><strong>Listing 3.12:</strong> A refinement to <a href="ch03.xhtml#ch3list10">Listing 3.10</a>.</p>
+<p class="codelink"><a href="ch03_images.xhtml#f086-01" id="f086-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i, e <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">enumerate</span>(a):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"a[</span><span class="pd_lpink"><strong>{</strong></span>i<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">] =</span> <span class="pd_lpink"><strong>{</strong></span><span class="pd_green">repr</span>(e)<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">???</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec3_6">3.6 Tuples and Sets</h3>
+<p class="noindent">In addition to lists, Python also supports <em>tuples</em>, which are basically lists that can’t be changed (i.e., tuples are <em>immutable</em>). By the way, I generally say “toople”, though you will also hear “tyoople” and “tupple”.</p>
+<p class="indent">We can create literal tuples in much the same way that we created literal lists. The only difference is that tuples use parentheses instead of square brackets:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t <span class="pd_gray">=</span> (<span class="pd_red">"fox"</span>, <span class="pd_red">"dog"</span>, <span class="pd_red">"eel"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t
+<span class="pd_green-d">('fox', 'dog', 'eel')</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> e <span class="pd_pink"><strong>in</strong></span> t:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(e)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">fox
+dog
+eel</span></code></pre>
+<p class="noindent">We see here that iterating over a tuple uses the same <span class="pd_green-d"><code><strong>for...in</strong></code></span> syntax used for lists (<a href="ch03.xhtml#ch3list9">Listing 3.9</a>).</p>
+<p class="indent">Because tuples are immutable, trying to change them raises an error:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f086-03" id="f086-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t<span class="pd_gray">.</span>append(<span class="pd_red">"goat"</span>)
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">AttributeError</span>: 'tuple' object has no attribute 'append'
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t<span class="pd_gray">.</span>sort()
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">AttributeError</span>: 'tuple' object has no attribute 'sort'</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_87"></span>Otherwise, tuples support many of the same operations as lists, such as slicing or non-mutating sorting:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t[<span class="pd_gray">1</span>:]
+<span class="pd_green-d">('dog', 'eel')</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">sorted</span>(t)
+<span class="pd_green-d">['dog', 'eel', 'fox']</span></code></pre>
+<p class="noindent">Note in the second case that <span class="pd_green-d"><code><strong>sorted()</strong></code></span> can take a tuple as an argument but that it returns a list.</p>
+<p class="indent">By the way, we can also leave off parentheses when defining tuples:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> u <span class="pd_gray">=</span> <span class="pd_red">"fox"</span>, <span class="pd_red">"dog"</span>, <span class="pd_red">"eel"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> u
+<span class="pd_green-d">('fox', 'dog', 'eel')</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> t <span class="pd_gray">==</span> u
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">I think this notation is potentially confusing and generally prefer to use parentheses when defining tuples, but you should know about it in case you see it in other people’s code. The main exceptions are when simply displaying several variables in the REPL or when doing assignment via so-called <em>tuple unpacking</em>, which lets you make multiple assignments at once:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f087-02" id="f087-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a, b, c <span class="pd_gray">=</span> t    <span class="pd_blue1"><em># Very Pythonic; works for lists, too</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a
+<span class="pd_green-d">'fox'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> a, b, c        <span class="pd_blue1"><em># Tuple to show the variable values</em></span></code></pre>
+<p class="indent">Finally, it’s worth noting that defining a tuple of one element requires a trailing comma because an object in parentheses alone is just the object itself:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> (<span class="pd_red">"foo"</span>)
+<span class="pd_green-d">'foo'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> (<span class="pd_red">"foo"</span>,)
+<span class="pd_green-d">('foo',)</span></code></pre>
+<p class="indent">Python also has native support for <em>sets</em>, which correspond closely to the mathematical definition and can be thought of as lists of elements where repeat values are ignored and the order doesn’t matter. Sets can be initialized literally using curly braces or by passing a list or a tuple (or in fact any iterable) to the <span class="pd_green-d"><code><strong>set()</strong></code></span> function:</p>
+<span epub:type="pagebreak" id="page_88"></span>
+<p class="codelink"><a href="ch03_images.xhtml#f088-01" id="f088-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">=</span> {<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>, <span class="pd_gray">4</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s2 <span class="pd_gray">=</span> {<span class="pd_gray">3</span>, <span class="pd_gray">1</span>, <span class="pd_gray">4</span>, <span class="pd_gray">2</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s3 <span class="pd_gray">=</span> <span class="pd_green">set</span>([<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>, <span class="pd_gray">4</span>, <span class="pd_gray">4</span>])
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1, s2, s3
+<span class="pd_green-d">({1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4})</span></code></pre>
+<p class="noindent">Set equality can be tested with <span class="pd_green-d"><code><strong>==</strong></code></span> as usual:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">==</span> s2
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s2 <span class="pd_gray">==</span> s3
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">==</span> s3
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> {<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>} <span class="pd_gray">==</span> {<span class="pd_gray">3</span>, <span class="pd_gray">1</span>, <span class="pd_gray">2</span>}
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">Sets can also mix types (and can be initialized with a tuple instead of a list):</p>
+<p class="codelink"><a href="ch03_images.xhtml#f088-02" id="f088-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">set</span>((<span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>, <span class="pd_gray">1</span>, <span class="pd_gray">1</span>, <span class="pd_red">"cat"</span>))
+<span class="pd_green-d">{'bat', 'ant', 'cat'}</span></code></pre>
+<p class="noindent">Note that in all cases duplicate values are ignored.</p>
+<p class="indent">Python sets support many common set operations, such as union and intersection:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f088-03" id="f088-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">=</span> {<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_red">"ant"</span>, <span class="pd_red">"bat"</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s2 <span class="pd_gray">=</span> {<span class="pd_gray">2</span>, <span class="pd_gray">3</span>, <span class="pd_red">"bat"</span>, <span class="pd_red">"cat"</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">|</span> s2    <span class="pd_blue1"><em># Set union</em></span>
+<span class="pd_green-d">{'bat', 1, 2, 'ant', 3, 'cat'}</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s1 <span class="pd_gray">&amp;</span> s2    <span class="pd_blue1"><em># Set intersection</em></span>
+<span class="pd_green-d">{'bat', 2}</span></code></pre>
+<p class="noindent">See “Sets in Python” (<a href="https://realpython.com/python-sets/">https://realpython.com/python-sets/</a>) for more information.</p>
+<p class="indent">Because they are unordered, set elements can’t be selected directly (how would Python know which set element to pick?) but can be tested for inclusion or iterated over:</p>
+<p class="codelink"><a href="ch03_images.xhtml#f088-04" id="f088-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s <span class="pd_gray">=</span> {<span class="pd_gray">1</span>, <span class="pd_gray">2</span>, <span class="pd_gray">3</span>, <span class="pd_gray">4</span>}
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> s[<span class="pd_gray">0</span>]
+<span class="pd_dnila">Traceback (most recent call last):</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>, in &lt;module&gt;
+<span class="pd_redred">TypeError</span>: 'set' object is not subscriptable
+
+<span epub:type="pagebreak" id="page_89"></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_gray">3</span> <span class="pd_pink"><strong>in</strong></span> s
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> e <span class="pd_pink"><strong>in</strong></span> s:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>e<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">is an element of the set"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">1 is an element of the set
+2 is an element of the set
+3 is an element of the set
+4 is an element of the set</span></code></pre>
+<p class="indent">Finally, it’s worth noting that, like the empty list, the empty tuple and the empty set are both <span class="pd_green-d"><code><strong>False</strong></code></span> in a boolean context:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(())
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_green">set</span>())
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">Note here that, perhaps counterintuitively, we can’t use <span class="pd_green-d"><code><strong>{}</strong></code></span> for the empty set because that combination is reserved for the empty <em>dictionary</em>, which we’ll discuss in <a href="ch04.xhtml#sec4_4">Section 4.4</a>. We also don’t have to include a trailing comma in <span class="pd_green-d"><code><strong>()</strong></code></span>, which is the empty tuple as required.</p>
+<p class="indent">We can confirm these statements using the <span class="pd_green-d"><code><strong>type()</strong></code></span> function:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">type</span>(())
+<span class="pd_green-d">&lt;class 'tuple'&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">type</span>({})
+<span class="pd_green-d">&lt;class 'dict'&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">type</span>(<span class="pd_green">set</span>())
+<span class="pd_green-d">&lt;class 'set'&gt;</span></code></pre>
+<p class="noindent">Here we see that <span class="pd_green-d"><code><strong>()</strong></code></span>, <span class="pd_green-d"><code><strong>{}</strong></code></span>, and <span class="pd_green-d"><code><strong>set()</strong></code></span> are of class tuple, dictionary, and set, respectively. (We’ll discuss more about what a class is in <a href="ch07.xhtml#ch07">Chapter 7</a>.)</p>
+<section>
+<h4 class="h4" id="sec3_6_1">3.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Confirm the existence of a <span class="pd_green-d"><code><strong>tuple()</strong></code></span> function by converting <span class="pd_green-d"><code><strong>sorted(t)</strong></code></span> from a list to a tuple.</p></li>
+<li><p class="number">Create a set with numbers in the range 0–4 by combining <span class="pd_green-d"><code><strong>set()</strong></code></span> with <span class="pd_green-d"><code><strong>range()</strong></code></span>. (Recall the use of <span class="pd_green-d"><code><strong>range()</strong></code></span> in <a href="ch02.xhtml#ch2list24">Listing 2.24</a>.) Confirm that the <span class="pd_green-d"><code><strong>pop()</strong></code></span> method mentioned in <a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a> allows you to remove one element at a time.<span epub:type="pagebreak" id="page_90"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch04"><span epub:type="pagebreak" id="page_65"></span>Chapter 4</h2>
+<h2 class="chap-title">Other Native Objects</h2>
+<p class="noindent">Now that we’ve taken a look at strings and arrays, we’ll continue with a tour of some other important JavaScript objects: math, dates, regular expressions, and generic objects.</p>
+<section>
+<h3 class="h3" id="ch4lev1">4.1 Math and Number</h3>
+<p class="noindent">Like most programming languages, JavaScript supports a large number of mathematical operations:</p>
+<pre class="pre1"><span class="gray">&gt; 1 + 1</span>;
+<span class="gray">2</span>
+<span class="gray">&gt; 2 - 3</span>;
+<span class="gray">-1</span>
+<span class="gray">&gt; 2 * 3</span>;
+<span class="gray">6</span>
+<span class="gray">&gt; 10/5</span>;
+<span class="gray">2 &gt; 2/3</span>;
+<span class="gray">0.6666666666666666</span></pre>
+<p class="noindent">Note that the final example here isn’t exact; it’s a <em><a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">floating-point</a></em> number (also called a <em>float</em>), which can’t be represented exactly by the computer. But in fact JavaScript has only one numerical type, and even something like <span class="pd_green"><code><strong>1</strong></code></span> or <span class="pd_green"><code><strong>2</strong></code></span> is treated as floating point <span epub:type="pagebreak" id="page_66"></span>under the hood. This is convenient for us as programmers, since it means we never have to make distinctions between different kinds of numbers.<sup><a id="ch4fn-1" href="ch04.xhtml#ch4fn_1">1</a></sup></p>
+<p class="footnote"><a id="ch4fn_1" href="ch04.xhtml#ch4fn-1">1</a>. In contrast to JavaScript, many languages distinguish between integers and floats, which leads to pitfalls like <span class="pd_green"><code><strong>1.0/2.0</strong></code></span> being the expected <span class="pd_green"><code><strong>0.5</strong></code></span>, but <span class="pd_green"><code><strong>1/2</strong></code></span> being <span class="pd_green"><code><strong>0</strong></code></span>.</p>
+<p class="indent">Many programmers, including me, find it convenient to fire up a REPL and use it as a simple calculator when the need arises. It’s not fancy, but it’s quick and relatively powerful, and the ability to define variables often comes in handy as well.</p>
+<section>
+<h4 class="h4" id="ch4lev1sec1">4.1.1 More Advanced Operations</h4>
+<p class="noindent">JavaScript supports more advanced mathematical operations via a <em>global object</em> called <span class="pd_green"><code><strong>Math</strong></code></span>, which has properties and methods for things like mathematical constants, exponentiation (powers),<sup><a id="ch4fn-2" href="ch04.xhtml#ch4fn_2">2</a></sup> roots, and trigonometric functions:</p>
+<p class="footnote"><a id="ch4fn_2" href="ch04.xhtml#ch4fn-2">2</a>. Adding support for exponentiation with two asterisks <span class="pd_green"><code><strong>**</strong></code></span> is <a href="http://2ality.com/2016/02/exponentiation-operator.html">in the works</a> but isn’t universally implemented as of this writing.</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Math</span>.PI
+<span class="gray">3.141592653589793</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.pow(<span class="gray">2</span>, <span class="gray">3</span>);
+<span class="gray">8</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.sqrt(<span class="gray">3</span>)
+<span class="gray">1.7320508075688772</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.cos(<span class="gray">2*</span><span class="pd_green1">Math</span>.PI)
+<span class="gray">1</span></pre>
+<p class="indent">There is one <a href="https://en.wiktionary.org/wiki/gotcha#Etymology_2">gotcha</a> for those coming from high-school (and even college) textbooks that use ln for the <a href="https://en.wikipedia.org/wiki/Natural_logarithm">natural logarithm</a>. Like mathematicians and most other programming languages, JavaScript uses log instead:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Math</span>.E;
+<span class="gray">2.718281828459045</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.log(<span class="pd_green1">Math</span>.E);
+<span class="gray">1</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.log(<span class="gray">10</span>);
+<span class="gray">2.302585092994046</span></pre>
+<p class="indent">Mathematicians typically indicate base-ten logarithms using log<sub>10</sub>, and JavaScript follows suit with <span class="pd_green"><code><strong>log10</strong></code></span>:</p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_67"></span><span class="gray">&gt;</span> <span class="pd_green1">Math</span>.log10(<span class="gray">10</span>);
+<span class="gray">1</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.log10(<span class="gray">1000000</span>);
+<span class="gray">6</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Math</span>.log10(<span class="pd_green1">Math</span>.E);
+<span class="gray">0.4342944819032518</span></pre>
+<p class="indent">The Math <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math">documentation</a> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math</a>) includes a more comprehensive list of further operations.</p>
+</section>
+<section>
+<h4 class="h4" id="ch4lev1sec2">4.1.2 Math to String</h4>
+<p class="noindent">We discussed in <a href="ch03.xhtml#ch03">Chapter 3</a> how to get from strings to arrays (and vice versa) using <span class="pd_green"><code><strong>split</strong></code></span> and <span class="pd_green"><code><strong>join</strong></code></span>. Similarly, JavaScript allows us to convert between numbers and strings.</p>
+<p class="indent">Probably the most common way to convert from a number to a string is using the <span class="pd_green"><code><strong>toString()</strong></code></span> method, as we can see with this <a href="http://tauday.com/tau-manifesto">useful definition</a> (<a href="https://tauday.com/tau-manifesto">https://tauday.com/tau-manifesto</a>) (<a href="ch04.xhtml#ch4fig1">Figure 4.1</a>):<sup><a id="ch4fn-3" href="ch04.xhtml#ch4fn_3">3</a></sup></p>
+<p class="footnote"><a id="ch4fn_3" href="ch04.xhtml#ch4fn-3">3</a>. The use of <em>τ</em> to represent the circle constant 6.283185 … was proposed in a math essay I published in 2010 called <em><a href="https://tauday.com/tau-manifesto">The Tau Manifesto</a></em>, which also established a math holiday called <a href="https://tauday.com/">Tau Day</a> (<a href="https://tauday.com/">https://tauday.com/</a>), celebrated annually on June 28.</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> tau <span class="gray">= 2 *</span> <span class="pd_green">Math</span>.PI;
+<span class="gray">&gt;</span> tau.toString();
+<span class="pd_red">'6.283185307179586'</span></pre>
+<figure class="figure" id="ch4fig1">
+<img src="graphics/04fig01.jpg" alt="images" width="448" height="453"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.1:</strong> Some special angles in terms of <em>τ</em> = 2<em>π</em>.</p>
+</figcaption>
+</figure>
+<p class="noindent">The <span class="pd_green"><code><strong>toString()</strong></code></span> method won’t work on a bare integer:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c067pro03" id="c067pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt; 100</span>.toString();
+<span class="gray">100.</span>toString();
+<span class="gray">^^^^</span>
+
+<span class="pd_red"><strong>SyntaxError</strong></span><span class="gray">:</span> Invalid or unexpected token</pre>
+<p class="noindent">But it will work if you use an extra dot, so that JavaScript treats the number as a float:</p>
+<pre class="pre1"><span class="gray">&gt; 100.</span>0.toString()
+<span class="pd_red">'100'</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_68"></span>This is unfortunate behavior, since the string corresponding to <span class="pd_green"><code><strong>100.0</strong></code></span> should more properly be <span class="pd_green"><code><strong>"100.0"</strong></code></span>, but this is a price we pay for JavaScript’s lack of a proper integer data type.</p>
+<p class="indent">Another way to convert raw numbers to strings is to use the <span class="pd_green"><code><strong>String</strong></code></span> object directly:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">String</span>(<span class="gray">100.0</span>);
+<span class="pd_red">'100.0'</span>
+<span class="gray">&gt;</span> <span class="pd_green1">String</span>(tau);
+<span class="pd_red">'6.283185307179586'</span></pre>
+<p class="noindent">We see from the second example that <span class="pd_green"><code><strong>String</strong></code></span> also works on variables.</p>
+<p class="indent">This method of converting to strings dovetails nicely with going the opposite direction, which uses the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number"><span class="pd_green"><code><strong>Number</strong></code></span> object</a> directly:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c068pro02" id="c068pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Number</span>(<span class="pd_red">"6.283185307179586"</span>);
+<span class="gray">6.283185307179586</span>
+<span class="gray">&gt;</span> <span class="pd_green1">String</span>(<span class="pd_green1">Number</span>(<span class="pd_red">"6.283185307179586"</span>));
+<span epub:type="pagebreak" id="page_69"></span><span class="pd_red">'6.283185307179586'</span>
+<span class="gray">&gt;</span> <span class="pd_green1">Number</span>(<span class="pd_red">'1.24e6'</span>)
+<span class="gray">1240000</span></pre>
+<p class="noindent">We see in the final line that JavaScript supports <a href="https://en.wikipedia.org/wiki/Scientific_notation">scientific notation</a>:</p>
+<pre class="pre1"><span class="gray">&gt; 1.24e6</span>
+<span class="gray">1240000</span></pre>
+</section>
+<section>
+<h4 class="h4" id="ch4lev1sec3">4.1.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">See if you can guess the return value of <span class="pd_green"><code><strong>String(Number('1.24e6'))</strong></code></span>. Confirm using the Node REPL.</p></li>
+<li><p class="number">Like most programming languages, JavaScript lacks support for <a href="https://en.wikipedia.org/wiki/Imaginary_number">imaginary numbers</a>, i.e., numbers that are a real multiple of the <em>imaginary unit i</em> (satisfying the equation <em>i</em><sup>2</sup> = –1, sometimes written as <math xmlns:m="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>i</mi><mo>=</mo><msqrt><mrow><mo>–</mo><mn>1</mn></mrow></msqrt></mrow></mrow></math>). What is the JavaScript value of the square root of –1? By guessing or <a href="https://www.google.com/search?q=javascript+nan">Googling</a>, figure out what this value stands for. What is its boolean value?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch4lev2">4.2 Dates</h3>
+<p class="noindent">Another frequently used built-in object is <span class="pd_green"><code><strong>Date</strong></code></span>, which represents a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">single moment in time</a>.</p>
+<p class="indent">The <span class="pd_green"><code><strong>Date</strong></code></span> object gives us our first chance to use the <span class="pd_green"><code><strong>new</strong></code></span> function, a so-called <em>constructor function</em> that is the standard JavaScript way to create a new object. So far, we’ve been able to rely on “literal constructors” like quotes and square brackets, but we can also define things like strings and arrays using <span class="pd_green"><code><strong>new</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c069pro02" id="c069pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> s <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green1">String</span>(<span class="pd_red">"A man, a plan, a canal—Panama!"</span>);
+<span class="gray">&gt;</span> s;
+[<span class="pd_green1">String:</span> <span class="pd_red">'A man, a plan, a canal—Panama!'</span>]
+<span class="gray">&gt;</span> s.split(<span class="pd_red">",  "</span>);
+[ <span class="pd_red">'A man'</span>, <span class="pd_red">'a plan'</span>, <span class="pd_red">'a canal—Panama!'</span> ]</pre>
+<p class="noindent">and</p>
+<p class="codelink"><a href="ch04_images.xhtml#c069pro03" id="c069pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> a <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green1">Array</span>();
+<span class="gray">&gt;</span> a.push(<span class="gray">3</span>);
+<span epub:type="pagebreak" id="page_70"></span><span class="gray">1</span>
+<span class="gray">&gt;</span> a.push(<span class="gray">4</span>);
+<span class="gray">2</span>
+<span class="gray">&gt;</span> a.push(<span class="pd_red">"hello, world!"</span>);
+<span class="gray">3</span>
+<span class="gray">&gt;</span> a;
+[ <span class="gray">3</span>, <span class="gray">4</span>, <span class="pd_red">'hello, world!'</span> ]
+<span class="gray">&gt;</span> a.pop();
+<span class="pd_red">'hello, world!'</span></pre>
+<p class="indent">Unlike strings and arrays, dates have no literal constructor, so we <em>have</em> to use <span class="pd_green"><code><strong>new</strong></code></span> in this case:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c070pro02" id="c070pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green1">Date</span>();
+<span class="gray">&gt;</span> now;
+<span class="gray">2022-03-16</span>T <span class="gray">19:22:13.673</span>Z
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> moonLanding <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green1">Date</span>(<span class="pd_red">"July 20, 1969 20:18"</span>);
+<span class="gray">&gt;</span> now <span class="gray">-</span> moonLanding;
+<span class="gray">1661616253673</span></pre>
+<p class="noindent">The result here is the number of milliseconds since the day and time of the <a href="https://en.wikipedia.org/wiki/Apollo_11">first Moon landing</a> (<a href="ch04.xhtml#ch4fig2">Figure 4.2</a>).<sup><a id="ch4fn-4" href="ch04.xhtml#ch4fn_4">4</a></sup> (Your results, of course, will vary, because time marches on, and your value for <span class="pd_green"><code><strong>new Date()</strong></code></span> will differ.)</p>
+<p class="footnote"><a id="ch4fn_4" href="ch04.xhtml#ch4fn-4">4</a>. Image courtesy of Castleski/Shutterstock.</p>
+<figure class="figure" id="ch4fig2">
+<img src="graphics/04fig02.jpg" alt="images" width="353" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.2:</strong> Buzz Aldrin and Neil Armstrong somehow got to the Moon (and back!) without JavaScript.</p>
+</figcaption>
+</figure>
+<p class="indent">As with other JavaScript objects, <span class="pd_green"><code><strong>Date</strong></code></span> objects respond to a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#JavaScript_Date_instances">variety of methods</a>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c070pro03" id="c070pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> now.getYear();        <span class="pd_blue1"><em>// Gives a weird answer</em></span>
+<span class="gray">122</span>
+<span class="gray">&gt;</span> now.getFullYear();    <span class="pd_blue1"><em>// This is what we want instead.</em></span>
+<span class="gray">2022</span>
+<span class="gray">&gt;</span> now.getMonth();
+<span class="gray">2</span>
+<span class="gray">&gt;</span> now.getDay();
+<span class="gray">3</span></pre>
+<p class="noindent">The first line here shows that sometimes the results of JavaScript methods are confusing, so it’s important to be wary and double-check the values by hand from time to time.</p>
+<p class="indent">Things like the month and day are returned as indices, and like everything in JavaScript they are zero-offset. For example, month <span class="pd_green"><code><strong>0</strong></code></span> is January, month <span class="pd_green"><code><strong>1</strong></code></span> is February, month <span class="pd_green"><code><strong>2</strong></code></span> is March, etc.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_71"></span>Even though the official international standard is that <a href="https://www.timeanddate.com/calendar/days/monday.html">Monday is the first day</a>, JavaScript follows the American convention of using Sunday instead. We can get the name of the day by making an array of strings for the days of the week, and then using <span class="pd_green"><code><strong>getDay()</strong></code></span> as an index in the array with the square bracket notation (<a href="ch03.xhtml#ch3lev1">Section 3.1</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#c071pro01" id="c071pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                       <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+<span class="gray">&gt;</span> daysOfTheWeek[now.getDay()];
+<span class="pd_red">'Wednesday'</span></pre>
+<p class="noindent">Your results will vary, of course, unless you happen to be reading this on a Wednesday.</p>
+<p class="indent">As a final exercise, let’s update our web page with an alert including the day of the week. The code appears in <a href="ch04.xhtml#ch4list1">Listing 4.1</a>, with the result as shown in <a href="ch04.xhtml#ch4fig3">Figure 4.3</a>.</p>
+<figure class="figure" id="ch4fig3">
+<img src="graphics/04fig03.jpg" alt="images" width="715" height="541"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.3:</strong> A greeting customized just for today.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list1"><span epub:type="pagebreak" id="page_72"></span><strong>Listing 4.1:</strong> Adding a greeting customized to the day of the week.<br/><code><em><a href="http://index.html">index.html</a></em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis01" id="c04lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>title</strong></span>&gt;Learn Enough JavaScript&lt;/<span class="pd_green1"><strong>title</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>meta</strong></span> <span class="g1">charset</span><span class="gray">=</span><span class="pd_red">"utf-8"</span>&gt;
+    &lt;<span class="pd_green1"><strong>script</strong></span>&gt;
+      <span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                             <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];
+      <span class="pd_green1"><strong>let</strong></span> now <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green">Date</span>();
+      <span class="pd_green1"><strong>let</strong></span> dayName <span class="gray">=</span> daysOfTheWeek[now.getDay()];
+      alert(<span class="pd_red">`Hello, world! Happy</span> <span class="pink"><strong>${</strong></span>dayName<span class="pink"><strong>}</strong></span><span class="pd_red">.`</span>);
+    &lt;/<span class="pd_green1"><strong>script</strong></span>&gt;
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_73"></span>Note that <a href="ch04.xhtml#ch4list1">Listing 4.1</a> uses <span class="pd_green"><code><strong>const</strong></code></span> instead of <span class="pd_green"><code><strong>let</strong></code></span> when defining <span class="pd_green"><code><strong>daysOfTheWeek</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c073pro01" id="c073pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>const</strong></span> daysOfTheWeek <span class="gray">=</span> [<span class="pd_red">"Sunday"</span>, <span class="pd_red">"Monday"</span>, <span class="pd_red">"Tuesday"</span>, <span class="pd_red">"Wednesday"</span>,
+                       <span class="pd_red">"Thursday"</span>, <span class="pd_red">"Friday"</span>, <span class="pd_red">"Saturday"</span>];</pre>
+<p class="noindent">Here <span class="pd_green"><code><strong>const</strong></code></span>, which (as you can probably guess) is short for “constant”, gives us a way to indicate that the value of the variable won’t change.<sup><a id="ch4fn-5" href="ch04.xhtml#ch4fn_5">5</a></sup> Some people even go so far as to use <span class="pd_green"><code><strong>const</strong></code></span> in preference to <span class="pd_green"><code><strong>let</strong></code></span> <a href="https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75">whenever possible</a>. My preference is to use <span class="pd_green"><code><strong>let</strong></code></span> as a default, and to use <span class="pd_green"><code><strong>const</strong></code></span> as a signal that it’s especially important for the value not to change.</p>
+<p class="footnote"><a id="ch4fn_5" href="ch04.xhtml#ch4fn-5">5</a>. Technically, <span class="pd_green"><code><strong>const</strong></code></span> creates an <em><a href="https://mathiasbynens.be/notes/es6-const">immutable binding</a></em>—i.e., the name can’t change, but the value can. Mutating the contents of a variable created using <span class="pd_green"><code><strong>const</strong></code></span> is a bad practice, though, and should be avoided to prevent confusion.</p>
+<section>
+<h4 class="h4" id="ch4lev2sec1">4.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Create a new <span class="pd_green"><code><strong>Date</strong></code></span> object by passing it a string for your birthday (including year). JavaScript supports a number of different formats, so it will probably work with whichever date format you prefer. Pretty cool, no?</p></li>
+<li><p class="number">How many seconds after the Moon landing were you born? (Or maybe you were even born <em>before</em> the Moon landing—in which case, lucky you! I hope you got to watch it on TV.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch4lev3">4.3 Regular Expressions</h3>
+<p class="noindent">JavaScript has full support for <em><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">regular expressions</a></em>, often called <em>regexes</em> or <em>regexps</em> for short, which are a powerful mini-language for matching patterns in text. A <a href="https://m.xkcd.com/208/">full mastery of regular expressions</a> is beyond the scope of this book (and perhaps beyond the scope of human ability), but the good news is that there are many resources available for learning about them incrementally. (Some such resources are mentioned in “<a href="https://www.learnenough.com/r/learn_enough_command_line/inspecting_files/grepping">Grepping</a>” (<a href="https://www.learnenough.com/command-line-tutorial/inspecting_files">https://www.learnenough.com/command-line-tutorial/inspecting_files</a>) in <em><a href="https://www.learnenough.com/command-line">Learn Enough Command Line to Be Dangerous</a></em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>) and “<a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/editing_projects#sec-global_find_and_replace">Global find and replace</a>” (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-global_find_and_replace">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-global_find_and_replace</a>) in <em><a href="https://www.learnenough.com/text-editor">Learn Enough Text Editor to Be Dangerous</a></em> (<a href="https://www.learnenough.com/text-editor">https://www.learnenough.com/text-editor</a>).) The most <span epub:type="pagebreak" id="page_74"></span>important thing to know about is the general idea of regular expressions; you can fill in the details as you go along.</p>
+<p class="indent">Regexes are notoriously terse and error-prone; as programmer <a href="https://en.wikipedia.org/wiki/Jamie_Zawinski">Jamie Zawinski famously said</a>:</p>
+<p class="blockquote">Some people, when confronted with a problem, think “<a href="https://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/">I know, I’ll use regular expressions</a>.” Now they have two problems.</p>
+<p class="noindent">Luckily, this situation is greatly ameliorated by web applications like <a href="https://regex101.com/">regex101</a> (<a href="https://regex101.com/">https://regex101.com/</a>), which let us build up regexes interactively (<a href="ch04.xhtml#ch4fig4">Figure 4.4</a>). Moreover, such resources typically include a quick reference to assist us in finding the code for matching particular patterns (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>).</p>
+<figure class="figure" id="ch4fig4">
+<img src="graphics/04fig04.jpg" alt="images" width="718" height="519"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.4:</strong> An <a href="https://regex101.com/">online regex builder</a>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch4fig5">
+<img src="graphics/04fig05.jpg" alt="images" width="729" height="330"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.5:</strong> A close-up of the <a href="https://regex101.com/">regex reference</a>.</p>
+</figcaption>
+</figure>
+<p class="indent">If you look carefully at <a href="ch04.xhtml#ch4fig4">Figure 4.4</a>, you might be able to see the checkmark in the menu on the left indicating that “javascript” has been selected for the regex input format. This arranges to use the exact regular expression conventions we need <span epub:type="pagebreak" id="page_75"></span>in this tutorial. In practice, languages differ little in their implementation of regular expressions, but it’s wise to use the correct language-specific settings, and always to double-check when moving a regex to a different language.</p>
+<p class="indent">Let’s take a look at some simple regex matches in JavaScript. Our examples will draw on both the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">regex methods</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string methods</a> specialized for regexes. (The latter are often more convenient in practice.)</p>
+<section>
+<h4 class="h4" id="ch4lev3sec1">4.3.1 Regex Methods</h4>
+<p class="noindent">A basic regex consists of a sequence of characters that matches a particular pattern. We can create a new regex using the <span class="pd_green"><code><strong>new</strong></code></span> function (<a href="ch04.xhtml#ch4lev2">Section 4.2</a>) on the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions"><span class="pd_green"><code><strong>RegExp</strong></code></span> object</a>. For example, here’s a regex that matches standard American <a href="https://en.wikipedia.org/wiki/ZIP_Code">ZIP codes</a> (<a href="ch04.xhtml#ch4fig6">Figure 4.6</a>),<sup><a id="ch4fn-6" href="ch04.xhtml#ch4fn_6">6</a></sup> consisting of five digits in a row:</p>
+<p class="footnote"><a id="ch4fn_6" href="ch04.xhtml#ch4fn-6">6</a>. <a href="https://pxhere.com/en/photo/1372032">Image</a> courtesy of 4kclips/123RF.</p>
+<p class="codelink"><a href="ch04_images.xhtml#c075pro01" id="c075pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> zipCode <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_green">RegExp</span>(<span class="pd_red">"\\d{5}"</span>);</pre>
+<figure class="figure" id="ch4fig6">
+<img src="graphics/04fig06.jpg" alt="images" width="601" height="454"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.6:</strong> 90210 is one of the most expensive ZIP codes in America.</p>
+</figcaption>
+</figure>
+<p class="noindent">Here <span class="pd_green"><code><strong>\d</strong></code></span> represents any digit (0–9), and the first backslash is needed to <em><a href="https://www.google.com/search?q=javascript+escape+backslash">escape</a></em> the second backslash to get a literal backslash in the string. (We’ll see how to avoid <span epub:type="pagebreak" id="page_76"></span>this inconvenient requirement using a literal regex constructor in <a href="ch04.xhtml#ch4lev3sec2">Section 4.3.2</a>.) Meanwhile, <span class="pd_green"><code><strong>{5}</strong></code></span> says to match exactly five digits in a row.</p>
+<p class="indent">If you use regular expressions a lot, eventually you’ll memorize many of these rules, but you can always look them up in a quick reference (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>).</p>
+<p class="indent">Now let’s see how to tell if a string matches a regex. Regular expressions come with an <span class="pd_green"><code><strong>exec</strong></code></span> method that “executes” the regex on a string:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c076pro01" id="c076pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> result <span class="gray">=</span> zipCode.exec(<span class="pd_red">"Beverly Hills 90210"</span>);
+<span class="gray">&gt;</span> result;
+[ <span class="pd_red">'90210'</span>, index<span class="gray">: 14</span>, input<span class="gray">:</span> <span class="pd_red">'Beverly Hills 90210'</span> ]</pre>
+<p class="noindent">The result here includes the matching string, the index number where the match starts, and the original input.</p>
+<p class="indent">I don’t like the format of the result above, mainly because the output is a weird and confusing pseudo-array that seemingly has three elements but in fact has length <span class="pd_green"><code><strong>1</strong></code></span>:</p>
+<pre class="pre1"><span class="gray">&gt;</span> result.length
+<span class="gray">1</span></pre>
+</section>
+<section>
+<h4 class="h4" id="ch4lev3sec2"><span epub:type="pagebreak" id="page_77"></span>4.3.2 String Methods</h4>
+<p class="noindent">A more convenient way to make regex matches is to use string methods. There’s also a literal regex constructor syntax that’s more convenient for most purposes.</p>
+<p class="indent">As we learned in <a href="ch04.xhtml#ch4lev2">Section 4.2</a>, some JavaScript objects need to be created using <span class="pd_green"><code><strong>new</strong></code></span>, while others have optional literal constructors, such as quotes for making strings and square brackets for making arrays. Regexes support just such a literal constructor syntax, namely, patterns inside forward slashes:</p>
+<pre class="pre1"><span class="gray">&gt;</span> zipCode <span class="gray">=</span> <span class="pink">/\d{5}/</span>;
+<span class="pink">/\d{5}/</span></pre>
+<p class="noindent">Note that, unlike in the case of the named <span class="pd_green"><code><strong>RegExp</strong></code></span> constructor in <a href="ch04.xhtml#ch4lev3sec1">Section 4.3.1</a>, when using the literal constructor we don’t have to escape the <span class="pd_green"><code><strong>\d</strong></code></span> with an extra backslash.</p>
+<p class="indent">Now let’s build up a longer string with multiple ZIP codes (<a href="ch04.xhtml#ch4fig7">Figure 4.7</a>):<sup><a id="ch4fn-7" href="ch04.xhtml#ch4fn_7">7</a></sup></p>
+<p class="footnote"><a id="ch4fn_7" href="ch04.xhtml#ch4fn-7">7</a>. Image courtesy of kitleong/123RF.</p>
+<figure class="figure" id="ch4fig7">
+<img src="graphics/04fig07.jpg" alt="images" width="676" height="366"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.7:</strong> 91125 is a dedicated ZIP code for the campus of the California Institute of Technology (<a href="http://www.caltech.edu/">Caltech</a>).</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch04_images.xhtml#c077pro02" id="c077pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> s <span class="gray">=</span> <span class="pd_red">"Beverly Hills 90210 was a '90s TV show set in Los Angeles."</span>;
+<span class="gray">&gt;</span> s <span class="gray">+=</span> <span class="pd_red">" 91125 is another ZIP code in the Los Angeles area."</span>
+<span class="pd_red">'Beverly Hills 90210 was a \'90s TV show set in Los Angeles. 91125 is another</span>
+<span class="pd_red">ZIP code in the Los Angeles area.'</span></pre>
+<p class="noindent">You should be able to use your technical sophistication (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) to infer what the <span class="pd_green"><code><strong>+=</strong></code></span> operator does here if you haven’t seen it before (which might involve doing a <a href="https://www.google.com/search?q=javascript+plus+equals">quick Google search</a>).</p>
+<p class="indent">To find out whether the string matches the regex, we can use the string <span class="pd_green"><code><strong>match</strong></code></span> method:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c077pro03" id="c077pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> s.match(zipCode);
+[ <span class="pd_red">'90210</span>',
+  index<span class="gray">: 14</span>,
+  input<span class="gray">:</span> <span class="pd_red">'Beverly Hills 90210 was a \'90s TV show set in Los Angeles. 91125 is</span>
+   <span class="pd_red">another ZIP code in the Los Angeles area.'</span> ]</pre>
+<p class="noindent">The result is the same weird pseudo-array we saw in <a href="ch04.xhtml#ch4lev3sec1">Section 4.3.1</a>, but at least it gives the same result when run a second time:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c078pro01" id="c078pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_78"></span><span class="gray">&gt;</span> s.match(zipCode);
+[ <span class="pd_red">'90210</span>',
+  index<span class="gray">: 14</span>,
+  input<span class="gray">:</span> <span class="pd_red">'Beverly Hills 90210 was a \'90s TV show set in Los Angeles. 91125 is</span>
+   <span class="pd_red">another ZIP code in the Los Angeles area.'</span> ]</pre>
+<p class="noindent">The <span class="pd_green"><code><strong>match</strong></code></span> method is especially useful in conditionals; recalling the “bang bang” notation from <a href="ch02.xhtml#ch2lev4sec2">Section 2.4.2</a>, we can evaluate the match in a boolean context:</p>
+<pre class="pre1"><span class="gray">&gt; !!</span>s.match(zipCode);
+<span class="pd_green1"><strong>true</strong></span></pre>
+<p class="noindent">Thus, we can do things like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c078pro03" id="c078pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>if</strong></span> (s.match(zipCode)) {
+    <span class="pd_red">"Looks like there's at least one ZIP code in the string!"</span>;
+  }
+<span class="pd_red">'Looks like there\'s at least one ZIP code in the string!'</span></pre>
+<p class="indent">Even better, there’s a common technique for matching <em>all</em> occurrences of a regular expression using the “global flag” <span class="pd_green"><code><strong>g</strong></code></span> after the second slash:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c079pro01" id="c079pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_79"></span><span class="gray">&gt;</span> zipCode <span class="gray">=</span> <span class="pink">/\d{5}/g</span>;        <span class="pd_blue1"><em>// Use 'g' to set the 'global' flag.</em></span>
+<span class="pink">/\d{5}/g</span></pre>
+<p class="noindent">The resulting output is pleasantly intuitive:</p>
+<pre class="pre1"><span class="gray">&gt;</span> s.match(zipCode);
+[ <span class="pd_red">'90210</span>', <span class="pd_red">'91125'</span> ]</pre>
+<p class="noindent">The result here is simply an array of the ZIP codes detected in the string, suitable for joining (<a href="ch03.xhtml#ch3lev4sec3">Section 3.4.3</a>) or iterating (<a href="ch03.xhtml#ch3lev5">Section 3.5</a> and <a href="ch05.xhtml#ch5lev4">Section 5.4</a>).</p>
+<p class="indent">Our final example of regexes combines the power of pattern matching with the <span class="pd_green"><code><strong>split</strong></code></span> method we saw in <a href="ch03.xhtml#ch3lev1">Section 3.1</a>. In that section, we split on spaces, like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c079pro03" id="c079pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"ant bat cat duck"</span>.split(<span class="pd_red">"  "</span>);
+[ <span class="pd_red">'ant'</span>, <span class="pd_red">'bat'</span>, <span class="pd_red">'cat'</span>, <span class="pd_red">'duck'</span> ]</pre>
+<p class="noindent">We can obtain the same result in a more robust way by splitting on <em>whitespace</em>, which consists of spaces, tabs (indicated with <span class="pd_green"><code><strong>\t</strong></code></span>), and newlines (indicated with <span class="pd_green"><code><strong>\n</strong></code></span>).</p>
+<p class="indent">Consulting the quick reference (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>), we find that the regex for whitespace is <span class="pd_green"><code><strong>\s</strong></code></span>, and the way to indicate “one or more” is the plus sign <span class="pd_green"><code><strong>+</strong></code></span>. Thus, we can split on whitespace as follows:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c079pro04" id="c079pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"ant bat cat duck"</span>.split(<span class="pink">/\s+/</span>);
+[ <span class="pd_red">'ant'</span>, <span class="pd_red">'bat'</span>, <span class="pd_red">'cat'</span>, <span class="pd_red">'duck'</span> ]</pre>
+<p class="noindent">The reason this is so nice is that now we can get the same result if the strings are separated by multiple spaces, tabs, newlines, etc.:<sup><a id="ch4fn-8" href="ch04.xhtml#ch4fn_8">8</a></sup></p>
+<p class="footnote"><a id="ch4fn_8" href="ch04.xhtml#ch4fn-8">8</a>. This pattern is so useful that it’s the default behavior for <span class="pd_green"><code><strong>split</strong></code></span> in some languages (notably Ruby), so that <span class="pd_green"><code><strong>"ant\tbat cat".split</strong></code></span> is <span class="pd_green"><code><strong>["ant", "bat", "cat"]</strong></code></span>.</p>
+<p class="codelink"><a href="ch04_images.xhtml#c079pro05" id="c079pro05a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"ant bat\tcat\nduck"</span>.split(<span class="pink">/\s+/</span>);
+[ <span class="pd_red">'ant'</span>, <span class="pd_red">'bat'</span>, <span class="pd_red">'cat'</span>, <span class="pd_red">'duck'</span> ]</pre>
+<p class="noindent">We also see here the value of the literal constructor: Especially when using short regexes, there’s no need to define an intermediate variable; instead, we can use the literal regex directly.</p>
+</section>
+<section>
+<h4 class="h4" id="ch4lev3sec3"><span epub:type="pagebreak" id="page_80"></span>4.3.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write a regex that matches the extended-format ZIP code consisting of five digits, a hyphen, and a four-digit extension (such as 10118-0110). Confirm that it works using <span class="pd_green"><code><strong>String#match</strong></code></span> and the caption in <a href="ch04.xhtml#ch4fig8">Figure 4.8</a>.<sup><a id="ch4fn-9" href="ch04.xhtml#ch4fn_9">9</a></sup></p>
+<p class="footnote"><a id="ch4fn_9" href="ch04.xhtml#ch4fn-9">9</a>. Image courtesy of jordi2r/123RF.</p>
+<figure class="figure" id="ch4fig8">
+<img src="graphics/04fig08.jpg" alt="images" width="675" height="451"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.8:</strong> ZIP code 10118-0110 (the <a href="https://en.wikipedia.org/wiki/Empire_State_Building">Empire State Building</a>).</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Write a regex that splits only on newlines. Such regexes are useful for splitting a block of text into separate lines. In particular, test your regex by pasting the poem in <a href="ch04.xhtml#ch4list2">Listing 4.2</a> into the console and using <span class="pd_green"><code><strong>sonnet.split(/your regex/)</strong></code></span>. What is the length of the resulting array?</p></li>
+</ol>
+<p class="listing" id="ch4list2"><strong>Listing 4.2:</strong> Some text with newlines.</p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis02" id="c04lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> <span class="pd_green1"><strong>const</strong></span> sonnet <span class="gray">=</span> <span class="pd_red">`Let me not to the marriage of true minds</span>
+<span class="pd_red">Admit impediments. Love is not love</span>
+<span class="pd_red">Which alters when it alteration finds,</span>
+<span epub:type="pagebreak" id="page_81"></span><span class="pd_red">Or bends with the remover to remove.</span>
+<span class="pd_red">O no, it is an ever-fixed mark</span>
+<span class="pd_red">That looks on tempests and is never shaken;</span>
+<span class="pd_red">It is the star to every wand'ring bark,</span>
+<span class="pd_red">Whose worth's unknown, although his height be taken.</span>
+<span class="pd_red">Love's not time's fool, though rosy lips and cheeks</span>
+<span class="pd_red">Within his bending sickle's compass come:</span>
+<span class="pd_red">Love alters not with his brief hours and weeks,</span>
+<span class="pd_red">But bears it out even to the edge of doom.</span>
+   <span class="pd_red">If this be error and upon me proved,</span>
+   <span class="pd_red">I never writ, nor no man ever loved.`</span>;</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch4lev4">4.4 Plain Objects</h3>
+<p class="noindent">The word <em>object</em> is used in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects">various contexts</a> in JavaScript, usually referring to the abstract idea of a collection of data (properties) and functions (methods). As noted in <a href="ch02.xhtml#ch2lev4">Section 2.4</a>, (almost) everything in JavaScript is an object, and we’ll see in <a href="ch07.xhtml#ch07">Chapter 7</a> how to define objects that parallel built-in objects like <span class="pd_green"><code><strong>String</strong></code></span>, <span class="pd_green"><code><strong>Array</strong></code></span>, and <span class="pd_green"><code><strong>RegExp</strong></code></span>. In this section, we’ll focus on <em>plain objects</em>, which are simpler to define than the more general objects we’ve encountered so far.</p>
+<p class="indent">In general, objects in JavaScript can be dizzyingly complex, but in their simplest incarnation they work much like hashes (also called <em>associative arrays</em>) in other languages. You can think of them as being like regular arrays but with strings rather than integers as indices. Each element is thus a pair of values: a string (the <em>key</em>) and an element of any type (the <em>value</em>). These elements are also known as <em>key–value pairs</em>.</p>
+<p class="indent">As a simple example, let’s create an object to store the first and last names of a user, such as we might have in a web application:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c081pro01" id="c081pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> user <span class="gray">=</span> {};                     <span class="pd_blue1"><em>// {} is an empty Object.</em></span>
+{}
+<span class="gray">&gt;</span> user[<span class="pd_red">"firstName"</span>] <span class="gray">=</span> <span class="pd_red">"Michael"</span>;     <span class="pd_blue1"><em>// Key "firstName", value "Michael"</em></span>
+<span class="pd_red">'Michael'</span>
+<span class="gray">&gt;</span> user[<span class="pd_red">"lastName"</span>] <span class="gray">=</span> <span class="pd_red">"Hartl"</span>;        <span class="pd_blue1"><em>// Key "lastName", value "Hartl"</em></span>
+<span class="pd_red">'Hartl'</span></pre>
+<p class="noindent">As you can see, an empty <span class="pd_green"><code><strong>Object</strong></code></span> is represented by curly braces, and we can assign values using the same square bracket syntax as for arrays. We can retrieve values in the same way:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c082pro01" id="c082pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_82"></span><span class="gray">&gt;</span> user[<span class="pd_red">"firstName"</span>];      <span class="pd_blue1"><em>// Element access is like arrays</em></span>
+<span class="pd_red">'Michael'</span>
+<span class="gray">&gt;</span> user[<span class="pd_red">"lastName"</span>];
+<span class="pd_red">'Hartl'</span></pre>
+<p class="indent">The keys in our object are nothing other than the <em>properties</em> we first met in <a href="ch02.xhtml#ch2lev4">Section 2.4</a>, and as such they can also be accessed using the dot notation we saw with, e.g., <span class="pd_green"><code><strong>string.length</strong></code></span>:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c082pro02" id="c082pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> user.firstName;       <span class="pd_blue1"><em>// Element access using the dot notation</em></span>
+<span class="pd_red">'Michael'</span>
+<span class="gray">&gt;</span> user.lastName;
+<span class="pd_red">'Hartl'</span></pre>
+<p class="noindent">Deciding which syntax to use is a matter of context and style. Note that in either case an undefined key/property name simply returns <span class="pd_green"><code><strong>undefined</strong></code></span>:</p>
+<pre class="pre1"><span class="gray">&gt;</span> user[<span class="pd_red">"dude"</span>];
+<span class="pd_green1"><strong>undefined</strong></span>
+<span class="gray">&gt;</span> user.dude;
+<span class="pd_green1"><strong>undefined</strong></span>
+<span class="gray">&gt; !!</span>user.dude
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent">The last line here is a reminder that <span class="pd_green"><code><strong>undefined</strong></code></span> is <span class="pd_green"><code><strong>false</strong></code></span> in a boolean context, which you may recall if you solved the corresponding exercise in <a href="ch03.xhtml#ch3lev2sec1">Section 3.2.1</a>.</p>
+<p class="indent">Finally, we can simply display or define the full object, thereby showing the key–value pairs (<a href="ch04.xhtml#ch4list3">Listing 4.3</a>).</p>
+<p class="listing" id="ch4list3"><strong>Listing 4.3:</strong> A literal representation of an object.</p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis03" id="c04lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="gray">&gt;</span> user;
+{ firstName<span class="gray">:</span> <span class="pd_red">'Michael</span>', lastName<span class="gray">:</span> <span class="pd_red">'Hartl'</span> }
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> otherUser <span class="gray">=</span> { firstName<span class="gray">:</span> <span class="pd_red">'Foo'</span>, lastName<span class="gray">:</span> <span class="pd_red">'Bar'</span> };
+<span class="gray">&gt;</span> otherUser[<span class="pd_red">"firstName"</span>];
+<span class="pd_red">'Foo'</span>
+<span class="gray">&gt;</span> otherUser[<span class="pd_red">"lastName"</span>];
+<span class="pd_red">'Bar'</span></pre>
+<section>
+<h4 class="h4" id="ch4lev4sec1"><span epub:type="pagebreak" id="page_83"></span>4.4.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Show that <span class="pd_green"><code><strong>new Object()</strong></code></span> also works to create a new empty object. What happens if you give the object constructor an argument equal to the output of <a href="ch04.xhtml#ch4list3">Listing 4.3</a>?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch4lev5">4.5 Application: Unique Words</h3>
+<p class="noindent">Let’s apply plain objects to a challenging exercise, consisting of our longest program so far. Our task is to extract all of the unique words in a fairly long piece of text, and count how many times each word appears.</p>
+<p class="indent">Because the sequence of commands is rather extensive, our main tool will be a JavaScript file (<a href="ch01.xhtml#ch1lev4">Section 1.4</a>), executed using the <span class="pd_green"><code><strong>node</strong></code></span> command. (We’re not going to make it a self-contained shell script as in <a href="ch01.xhtml#ch1lev5">Section 1.5</a> because we don’t intend this to be a general-purpose utility program.) At each stage, I suggest using a Node REPL to execute the code interactively if you have any question about the effects of a given command.</p>
+<p class="indent">Let’s start by creating our file:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch count.js</pre>
+<p class="noindent">Now fill it with a <span class="pd_green"><code><strong>const</strong></code></span> containing the text, which we’ll choose to be Shakespeare’s <a href="https://www.sparknotes.com/nofear/shakespeare/sonnets/sonnet_116/">Sonnet 116</a><sup><a id="ch4fn-10" href="ch04.xhtml#ch4fn_10">10</a></sup> (<a href="ch04.xhtml#ch4fig9">Figure 4.9</a>),<sup><a id="ch4fn-11" href="ch04.xhtml#ch4fn_11">11</a></sup> as borrowed from <a href="ch04.xhtml#ch4list2">Listing 4.2</a> and shown again in <a href="ch04.xhtml#ch4list4">Listing 4.4</a>.</p>
+<p class="footnote"><a id="ch4fn_10" href="ch04.xhtml#ch4fn-10">10</a>. Note that in the <a href="https://youtu.be/bt7OynPUIY8">original pronunciation</a> used in Shakespeare’s time, words like “love” and “remove” rhymed, as did “come” and “doom”.</p>
+<p class="footnote"><a id="ch4fn_11" href="ch04.xhtml#ch4fn-11">11</a>. <a href="https://pixabay.com/en/ship-night-star-sky-ocean-2787544/">Image</a> courtesy of psychoshadowmaker/123RF.</p>
+<figure class="figure" id="ch4fig9">
+<img src="graphics/04fig09.jpg" alt="images" width="601" height="478"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.9:</strong> <a href="https://www.sparknotes.com/nofear/shakespeare/sonnets/sonnet_116/">Sonnet 116</a> compares love’s constancy to the <a href="https://en.wikipedia.org/wiki/Celestial_navigation">guide star</a> for a wandering <a href="https://en.wiktionary.org/wiki/bark#Etymology_3">bark</a> (ship).</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch4list4"><strong>Listing 4.4:</strong> Adding some text as a <span class="pd_green"><code><strong>const</strong></code></span>.<br/><code><em>count.js</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis04" id="c04lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>const</strong></span> sonnet <span class="gray">=</span> <span class="pd_red">`Let me not to the marriage of true minds</span>
+<span class="pd_red">Admit impediments. Love is not love</span>
+<span class="pd_red">Which alters when it alteration finds,</span>
+<span class="pd_red">Or bends with the remover to remove.</span>
+<span class="pd_red">O no, it is an ever-fixed mark</span>
+<span class="pd_red">That looks on tempests and is never shaken;</span>
+<span class="pd_red">It is the star to every wand'ring bark,</span>
+<span class="pd_red">Whose worth's unknown, although his height be taken.</span>
+<span epub:type="pagebreak" id="page_84"></span><span class="pd_red">Love's not time's fool, though rosy lips and cheeks</span>
+<span class="pd_red">Within his bending sickle's compass come:</span>
+<span class="pd_red">Love alters not with his brief hours and weeks,</span>
+<span class="pd_red">But bears it out even to the edge of doom.</span>
+   <span class="pd_red">If this be error and upon me proved,</span>
+   <span class="pd_red">I never writ, nor no man ever loved.`</span>;</pre>
+<p class="noindent">Note that <a href="ch04.xhtml#ch4list4">Listing 4.4</a> uses the backtick syntax (<a href="ch02.xhtml#ch2lev2sec1">Section 2.2.1</a>), which (as it turns out) allows us to break text across lines (unlike regular quotes).<sup><a id="ch4fn-12" href="ch04.xhtml#ch4fn_12">12</a></sup> <em>Note</em>: Because this syntax is relatively new, some text editors (notably some versions of <a href="https://www.sublimetext.com/">Sublime Text</a>) might need to be <a href="https://packagecontrol.io/packages/JavaScriptNext%20-%20ES6%20Syntax">configured</a> to highlight it properly.</p>
+<p class="footnote"><a id="ch4fn_12" href="ch04.xhtml#ch4fn-12">12</a>. I had to <a href="https://www.google.com/search?q=javascript+multiline+strings">Google around</a> to learn how to do this.</p>
+<p class="indent">Next, we’ll initialize our object, which we’ll call <span class="pd_green"><code><strong>uniques</strong></code></span> because it will have an entry for each unique word in the text:</p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> uniques <span class="gray">=</span> {};</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_85"></span>For the purposes of this exercise, we’ll define a “word” as a run of one or more <em>word characters</em> (i.e., letters or numbers, though there are none of the latter in the present text). This match can be accomplished with a regular expression (<a href="ch04.xhtml#ch4lev3">Section 4.3</a>), which includes a pattern (<span class="pd_green"><code><strong>\w</strong></code></span>) for exactly this case (<a href="ch04.xhtml#ch4fig5">Figure 4.5</a>):</p>
+<p class="codelink"><a href="ch04_images.xhtml#c085pro01" id="c085pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> words <span class="gray">=</span> sonnet.match(<span class="pink">/\w+/g</span>);</pre>
+<p class="noindent">This uses the “global” <span class="pd_green"><code><strong>g</strong></code></span> flag and the <span class="pd_green"><code><strong>match</strong></code></span> method from <a href="ch04.xhtml#ch4lev3sec2">Section 4.3.2</a> to return an array of all the strings that match “one or more word characters in a row”. (Extending this pattern to include apostrophes (so that it matches, e.g., “wand’ring” as well) is left as an exercise (<a href="ch04.xhtml#ch4lev5sec2">Section 4.5.2</a>).)</p>
+<p class="indent">At this point, the file should look like <a href="ch04.xhtml#ch4list5">Listing 4.5</a>.</p>
+<p class="listing" id="ch4list5"><strong>Listing 4.5:</strong> Adding an object and the matching words.<br/><code><em>count.js</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis05" id="c04lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>const</strong></span> sonnet <span class="gray">=</span> <span class="pd_red">`Let me not to the marriage of true minds</span>
+<span class="pd_red">Admit impediments. Love is not love</span>
+<span class="pd_red">Which alters when it alteration finds,</span>
+<span class="pd_red">Or bends with the remover to remove.</span>
+<span class="pd_red">O no, it is an ever-fixed mark</span>
+<span class="pd_red">That looks on tempests and is never shaken;</span>
+<span class="pd_red">It is the star to every wand'ring bark,</span>
+<span class="pd_red">Whose worth's unknown, although his height be taken.</span>
+<span class="pd_red">Love's not time's fool, though rosy lips and cheeks</span>
+<span class="pd_red">Within his bending sickle's compass come:</span>
+<span class="pd_red">Love alters not with his brief hours and weeks,</span>
+<span class="pd_red">But bears it out even to the edge of doom.</span>
+   <span class="pd_red">If this be error and upon me proved,</span>
+   <span class="pd_red">I never writ, nor no man ever loved.`</span>;
+
+<span class="pd_green1"><strong>let</strong></span> uniques <span class="gray">=</span> {};
+<span class="pd_green1"><strong>let</strong></span> words <span class="gray">=</span> sonnet.match(<span class="pink">/\w+/g</span>);</pre>
+<p class="indent">Now for the heart of our program. We’re going to loop through the <span class="pd_green"><code><strong>words</strong></code></span> array (<a href="ch03.xhtml#ch3lev5">Section 3.5</a>) and do the following:</p>
+<ol class="number">
+<li><p class="number">If the word already has an entry in the <span class="pd_green"><code><strong>uniques</strong></code></span> object, increment its count by <span class="pd_green"><code><strong>1</strong></code></span>.</p></li>
+<li><p class="number">If the word doesn’t have an entry yet in <span class="pd_green"><code><strong>uniques</strong></code></span>, initialize it to <span class="pd_green"><code><strong>1</strong></code></span>.</p></li>
+</ol>
+<p class="noindent"><span epub:type="pagebreak" id="page_86"></span>The result, using the <span class="pd_green"><code><strong>+=</strong></code></span> operator we met briefly in <a href="ch04.xhtml#ch4lev3sec2">Section 4.3.2</a>, looks like this:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c086pro01" id="c086pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> words.length; i<span class="gray">++</span>) {
+  <span class="pd_green1"><strong>let</strong></span> word <span class="gray">=</span> words[i];
+  <span class="pd_green1"><strong>if</strong></span> (uniques[word]) {
+    uniques[word] <span class="gray">+= 1</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    uniques[word] <span class="gray">= 1</span>;
+  }
+}</pre>
+<p class="noindent">Among other things, we see here the power of the bracket access notation, as there would be no way to accomplish this same task using the dot syntax. Note also that we’re relying on <span class="pd_green"><code><strong>uniques[word]</strong></code></span> being undefined (<span class="pd_green"><code><strong>false</strong></code></span> in a boolean context) if <span class="pd_green"><code><strong>word</strong></code></span> isn’t yet a valid key.</p>
+<p class="indent">Finally, we’ll print out the result to the terminal:</p>
+<pre class="pre1">console.log(uniques)</pre>
+<p class="noindent">The full program (with added comments) appears as in <a href="ch04.xhtml#ch4list6">Listing 4.6</a>.</p>
+<p class="listing" id="ch4list6"><strong>Listing 4.6:</strong> A program to count words in text.<br/><code><em>count.js</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#c04lis06" id="c04lis06a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>const</strong></span> sonnet <span class="gray">=</span> <span class="pd_red">`Let me not to the marriage of true minds</span>
+<span class="pd_red">Admit impediments. Love is not love</span>
+<span class="pd_red">Which alters when it alteration finds,</span>
+<span class="pd_red">Or bends with the remover to remove.</span>
+<span class="pd_red">O no, it is an ever-fixed mark</span>
+<span class="pd_red">That looks on tempests and is never shaken;</span>
+<span class="pd_red">It is the star to every wand'ring bark,</span>
+<span class="pd_red">Whose worth's unknown, although his height be taken.</span>
+<span class="pd_red">Love's not time's fool, though rosy lips and cheeks</span>
+<span class="pd_red">Within his bending sickle's compass come:</span>
+<span class="pd_red">Love alters not with his brief hours and weeks,</span>
+<span class="pd_red">But bears it out even to the edge of doom.</span>
+   <span class="pd_red">If this be error and upon me proved,</span>
+   <span class="pd_red">I never writ, nor no man ever loved.`</span>;
+
+<span class="pd_blue1"><em>// Unique words</em></span>
+<span class="pd_green1"><strong>let</strong></span> uniques <span class="gray">=</span> {};
+<span class="pd_blue1"><em>// All words in the text</em></span>
+<span class="pd_green1"><strong>let</strong></span> words <span class="gray">=</span> sonnet.match(<span class="pink">/\w+/g</span>);
+<span epub:type="pagebreak" id="page_87"></span><span class="pd_blue1"><em>// Iterate through `words` and build up an associative array of unique words.</em></span>
+<span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> words.length; i<span class="gray">++</span>) {
+  <span class="pd_green1"><strong>let</strong></span> word <span class="gray">=</span> words[i];
+  <span class="pd_green1"><strong>if</strong></span> (uniques[word]) {
+    uniques[word] <span class="gray">+= 1</span>;
+  } <span class="pd_green1"><strong>else</strong></span> {
+    uniques[word] <span class="gray">= 1</span>;
+  }
+}
+
+console.log(uniques)</pre>
+<p class="indent">It’s worth noting that, even in a relatively short program like <a href="ch04.xhtml#ch4list6">Listing 4.6</a>, it can be tricky to get all the braces, parentheses, etc., to match up. A good text editor can help; for example, when the cursor is next to a closing curly brace, Atom displays subtle bars under each member of the opening/closing pair (<a href="ch04.xhtml#ch4fig10">Figure 4.10</a>).</p>
+<figure class="figure" id="ch4fig10">
+<img src="graphics/04fig10.jpg" alt="images" width="728" height="258"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.10:</strong> Text editors can help immensely in matching up curly braces, etc.</p>
+</figcaption>
+</figure>
+<p class="indent">The result of running <span class="pd_green"><code><strong>count.js</strong></code></span> in the terminal looks something like this:</p>
+<pre class="pre1"><span class="pd_blue1"><strong>$</strong></span> node count.js
+<span class="pd_green1">{ Let: 1,</span>
+  <span class="pd_green1">me: 2,</span>
+  <span class="pd_green1">not: 4,</span>
+  <span class="pd_green1">to: 4,</span>
+  <span class="pd_green1">the: 4,</span>
+  <span class="pd_green1">marriage: 1,</span>
+  <span class="pd_green1">.</span>
+  <span class="pd_green1">.</span>
+  <span class="pd_green1">.</span>
+  <span class="pd_green1">upon: 1,</span>
+  <span class="pd_green1">proved: 1,</span>
+  <span class="pd_green1">I: 1,</span>
+  <span class="pd_green1">writ: 1,</span>
+  <span class="pd_green1">nor: 1,</span>
+  <span class="pd_green1">man: 1,</span>
+  <span class="pd_green1">loved: 1 }</span></pre>
+<section>
+<h4 class="h4" id="ch4lev5sec1">4.5.1 Map</h4>
+<p class="noindent">Although native JavaScript objects can be used as hashes/associative arrays (as we’ve done above), they do have their weaknesses, such as slower performance and limited support for extracting keys and values. JavaScript comes with a dedicated <span class="pd_green"><code><strong>Map</strong></code></span> object to address these limitations, with <span class="pd_green"><code><strong>set</strong></code></span> and <span class="pd_green"><code><strong>get</strong></code></span> methods for setting and getting values using keys:</p>
+<p class="codelink"><a href="ch04_images.xhtml#c088pro01" id="c088pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_88"></span><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> uniques <span class="gray">=</span> <span class="v1"><strong>new</strong></span> <span class="pd_red">Map</span>();
+<span class="gray">&gt;</span> uniques.set(<span class="pd_red">"loved"</span>, <span class="gray">0</span>);
+<span class="pd_green1">Map</span> { <span class="pd_red">'loved'</span> =&gt; <span class="gray">0</span> }
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> currentValue <span class="gray">=</span> uniques.get(<span class="pd_red">"loved"</span>);
+<span class="gray">&gt;</span> uniques.set(<span class="pd_red">"loved"</span>, currentValue <span class="gray">+ 1</span>);
+<span class="pd_red">Map</span> { <span class="pd_red">'loved'</span> =&gt; <span class="gray">1</span> }</pre>
+<p class="indent">Combining the techniques shown above to rewrite the <span class="pd_green"><code><strong>count.js</strong></code></span> program is left as an exercise (<a href="ch04.xhtml#ch4lev5sec2">Section 4.5.2</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch4lev5sec2"><span epub:type="pagebreak" id="page_89"></span>4.5.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Extend the regex used in <a href="ch04.xhtml#ch4list6">Listing 4.6</a> to include an apostrophe, so it matches, e.g., “wand’ring”. <em>Hint</em>: Combine the first reference regex at <a href="https://regex101.com/">regex101</a> (<a href="ch04.xhtml#ch4fig11">Figure 4.11</a>) with <span class="pd_green"><code><strong>\w</strong></code></span>, an apostrophe, and the plus operator <span class="pd_green"><code><strong>+</strong></code></span>.</p>
+<figure class="figure" id="ch4fig11">
+<img src="graphics/04fig11.jpg" alt="images" width="728" height="347"/>
+<figcaption>
+<p class="title-f"><strong>Figure 4.11:</strong> An exercise hint.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Rewrite <a href="ch04.xhtml#ch4list6">Listing 4.6</a> using <span class="pd_green"><code><strong>Map</strong></code></span> (<a href="ch06.xhtml#ch6lev1">Section 6.1</a>) instead of native JavaScript objects.<span epub:type="pagebreak" id="page_90"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

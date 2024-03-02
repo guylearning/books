@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch06"><span epub:type="pagebreak" id="page_115"></span>Chapter 6</h2>
+<h2 class="chap-title">Functional Programming</h2>
+<p class="noindent">Having learned how to define functions and apply them in a couple of different contexts, now we’re going to take our programming to the next level by learning the basics of <em>functional programming</em>, a style of programming that emphasizes—you guessed it—functions. This is a challenging chapter, and you may have to get in some reps to fully <a href="http://catb.org/jargon/html/G/grok.html">grok</a> it (<a href="ch06.xhtml#ch6box1">Box 6.1</a>), but the rewards are rich indeed.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch6box1"><strong>Box 6.1: Getting in Your Reps</strong></h1>
+</header>
+<p class="box-no">In contexts ranging from martial arts to chess to language learning, practitioners will reach a point where no amount of analysis or reflection will help them improve—they just need to get in some more repetitions, or “reps”.</p>
+<p class="box-ind">It’s amazing how much you can improve by trying something, kinda-sorta (but maybe not quite) getting it, and then just <em>doing it again</em>. In the context of a tutorial like this one, sometimes that means rereading a particularly tricky section or chapter. Some people (including <a href="https://en.wiktionary.org/wiki/yours_truly">yours truly</a>) will even reread an entire book.</p>
+<p class="box-ind">One important aspect of getting in your reps is <em>suspending self-judgment</em>—allow yourself not to be good right away. (Many people—including, again, yours truly—often require practice to get good at being okay with not being good right away. Meta-reps, as it were.)</p>
+<p class="box-ind">Give yourself a break, get in your reps, and watch your technical sophistication grow by the day.</p>
+</aside>
+<p class="indent">Functional programming de-emphasizes things like mutation and side effects, focusing instead on applying functions to manipulate and transform arguments to <span epub:type="pagebreak" id="page_116"></span>functions. This definition is rather abstract, and the subject itself is vast, so we’ll make things concrete and manageable by focusing on a classic <a href="https://en.wiktionary.org/wiki/triumvirate">triumvirate</a> of methods commonly used in functional programming: <span class="pd_green"><code><strong>map</strong></code></span>, <span class="pd_green"><code><strong>filter</strong></code></span>, and <span class="pd_green"><code><strong>reduce</strong></code></span> (<a href="ch06.xhtml#ch6fig1">Figure 6.1</a>).<sup><a id="ch6fn-1" href="ch06.xhtml#ch6fn_1">1</a></sup></p>
+<p class="footnote"><a id="ch6fn_1" href="ch06.xhtml#ch6fn-1">1</a>. Images courtesy of Kamira/Shutterstock (left), World History Archive/Alamy Stock Photo (center), and colaimages/Alamy Stock Photo (right).</p>
+<figure class="figure" id="ch6fig1">
+<img src="graphics/06fig01.jpg" alt="images" width="707" height="312"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.1:</strong> A <a href="https://en.wikipedia.org/wiki/First_Triumvirate">triumvirate</a> of functional methods.</p>
+</figcaption>
+</figure>
+<p class="indent">In each case, our technique will be to perform a task involving a <span class="pd_green"><code><strong>forEach</strong></code></span> loop and a sequence of commands (called “imperative programming”,<sup><a id="ch6fn-2" href="ch06.xhtml#ch6fn_2">2</a></sup> which is what we’ve mostly been doing so far), and then show how to do the same thing using functional programming.</p>
+<p class="footnote"><a id="ch6fn_2" href="ch06.xhtml#ch6fn-2">2</a>. Such programs are written as a series of commands; thus, “imperative,” from Latin <em><a href="https://en.wiktionary.org/wiki/imperativus#Latin">imperātīvus</a></em>, “proceeding from a command.”</p>
+<p class="indent">For convenience, we’ll create a file for our explorations, rather than typing everything at the REPL:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> touch functional.js</pre>
+<section>
+<h3 class="h3" id="ch6lev1">6.1 Map</h3>
+<p class="noindent">The first of our triumvirate is the <span class="pd_green"><code><strong>map</strong></code></span> function (<a href="ch06.xhtml#ch6fig2">Figure 6.2</a>),<sup><a id="ch6fn-3" href="ch06.xhtml#ch6fn_3">3</a></sup> which lets us map a function over an array of elements. It’s often a powerful alternative to looping.</p>
+<p class="footnote"><a id="ch6fn_3" href="ch06.xhtml#ch6fn-3">3</a>. Image courtesy of Kamira/Shutterstock. The overbars in <em>Gāius Iūlius Caesar</em> and other Latin words are <em><a href="https://en.wikipedia.org/wiki/Macron_(diacritic)">macrons</a></em>, which indicate <a href="http://www.wheelockslatin.com/chapters/introduction/introduction_vowels.html">long vowels</a>.</p>
+<figure class="figure" id="ch6fig2">
+<img src="graphics/06fig02.jpg" alt="images" width="185" height="339"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.2:</strong> The first <a href="https://en.wiktionary.org/wiki/triumvir#English">triumvir</a>, <a href="https://en.wikipedia.org/wiki/Julius_Caesar">Gāius Iūlius Caesar</a> (Julius Caesar).</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_117"></span>For example, suppose we had an array of mixed-case strings, and we wanted to create a corresponding array of lowercase strings joined on a hyphen (making the result appropriate for use in URLs), like this:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c117pro01" id="c117pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green">"North Dakota" -&gt; "north-dakota"</span></pre>
+<p class="noindent">Using previous techniques from this tutorial, we could do this as follows:</p>
+<ol class="number">
+<li><p class="number">Define a variable containing an array of strings.</p></li>
+<li><p class="number">Define a second variable (initially empty) for the URL-friendly array of strings.</p></li>
+<li><p class="number">For each item in the first array, <span class="pd_green"><code><strong>push</strong></code></span> (<a href="ch03.xhtml#ch3lev4sec2">Section 3.4.2</a>) a lowercase version (<a href="ch02.xhtml#ch2lev5">Section 2.5</a>) that’s been split on whitespace (<a href="ch04.xhtml#ch4lev3sec2">Section 4.3.2</a>) and then joined (<a href="ch03.xhtml#ch3lev4sec3">Section 3.4.3</a>) on hyphens. (You could split on a single space <span class="pd_green"><code><strong>""</strong></code></span> instead, but splitting on whitespace is so much more robust that it’s a good practice to use it by default.)</p></li>
+</ol>
+<p class="indent">The result appears in <a href="ch06.xhtml#ch6list1">Listing 6.1</a>.</p>
+<p class="listing" id="ch6list1"><span epub:type="pagebreak" id="page_118"></span><strong>Listing 6.1:</strong> Making URL-appropriate strings from an <code>array</code>.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis01" id="c06lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> states = <span class="pd_red">["Kansas"</span>,  <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+
+<span class="pd_blue1"><em>// urls: Imperative version</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeUrls(elements) {
+  <span class="pd_green1"><strong>let</strong></span> urls = [];
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    urls.push(element.toLowerCase().split(<span class="pink">/\s+/</span>).join(<span class="pd_red">"-"</span>));
+  });
+  <span class="pd_green1"><strong>return</strong></span> urls;
+}
+console.log(imperativeUrls(states));</pre>
+<p class="noindent">This is fairly complicated code, so being able to read <a href="ch06.xhtml#ch6list1">Listing 6.1</a> is a good test of your growing technical sophistication. (If it isn’t easy to read, firing up a Node REPL and running it interactively is a good idea.)</p>
+<p class="indent">The result of running <a href="ch06.xhtml#ch6list1">Listing 6.1</a> looks like this:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c118pro01" id="c118pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+[ <span class="pd_green1">'kansas'</span>, <span class="pd_green1">'nebraska'</span>, <span class="pd_green1">'north-dakota'</span>, <span class="pd_green1">'south-dakota'</span> ]</pre>
+<p class="indent">Now let’s see how we can do the same thing using <span class="pd_green"><code><strong>map</strong></code></span>, which operates by applying the same function to every element in an array. For example, to square every element in an array of numbers, we can map the function <span class="pd_green"><code><strong>n * n</strong></code></span> over the array, as seen here in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c118pro02" id="c118pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>].map(<span class="pd_green1"><strong>function</strong></span>(n) { <span class="pd_green1"><strong>return</strong></span> n <span class="gray">*</span> n; });
+[ <span class="gray">1</span>, <span class="gray">4</span>, <span class="gray">9</span>, <span class="gray">16</span> ]</pre>
+<p class="noindent">Here we’ve mapped an anonymous function (<a href="ch05.xhtml#ch5lev4">Section 5.4</a>) over the array, yielding the square of each element. It looks even cleaner in terms of the fat arrow notation (<a href="ch05.xhtml#ch5lev1sec2">Section 5.1.2</a>):</p>
+<p class="codelink"><a href="ch06_images.xhtml#c118pro03" id="c118pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>].map( (n) =&gt; { <span class="pd_green1"><strong>return</strong></span> n <span class="gray">*</span> n; });
+[ <span class="gray">1</span>, <span class="gray">4</span>, <span class="gray">9</span>, <span class="gray">16</span> ]</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_119"></span>Even better, for the very common case of a function of a single argument, JavaScript allows us to omit the parentheses, curly braces, and even the <span class="pd_green"><code><strong>return</strong></code></span> keyword, leading to the following incredibly compact code:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c119pro01" id="c119pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>].map(n =&gt; n <span class="gray">*</span> n);
+[ <span class="gray">1</span>, <span class="gray">4</span>, <span class="gray">9</span>, <span class="gray">16</span> ]</pre>
+<p class="indent">Returning to our main example, we can think of the transformation “lowercase then split then join” as a single operation, and use <span class="pd_green"><code><strong>map</strong></code></span> to apply that operation in sequence to each element in the array. The result is so compact that it easily fits in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c119pro02" id="c119pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> states <span class="gray">=</span> <span class="pd_red">["Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+<span class="gray">&gt;</span> states.map(state =&gt; state.toLowerCase().split(<span class="pink">/\s+/</span>).join(<span class="pd_red">'-'</span>));
+[ <span class="pd_red">'kansas'</span>, <span class="pd_red">'nebraska'</span>, <span class="pd_red">'north-dakota'</span>, <span class="pd_red">'south-dakota'</span> ]</pre>
+<p class="indent">Pasting into <span class="pd_green"><code><strong>function.js</strong></code></span>, we see just how much shorter it is, as shown in <a href="ch06.xhtml#ch6list2">Listing 6.2</a>.</p>
+<p class="listing" id="ch6list2"><strong>Listing 6.2:</strong> Adding a functional technique <code>using</code> <span class="pd_green"><code><strong>map</strong></code></span>.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis02" id="c06lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> states <span class="gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+
+<span class="pd_blue1"><em>// urls: Imperative version</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeUrls(elements) {
+  <span class="pd_green1"><strong>let</strong></span> urls <span class="gray">=</span> [];
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    urls.push(element.toLowerCase().split(<span class="pink">/\s+/</span>).join(<span class="pd_red">"-"</span>));
+  });
+  <span class="pd_green1"><strong>return</strong></span> urls;
+}
+console.log(imperativeUrls(states));
+
+<span class="pd_blue1"><em>// urls: Functional version</em></span>
+<span class="pd_green1"><strong>function</strong></span> functionalUrls(elements) {
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> elements.map(element =&gt; element.toLowerCase().split(<span class="pd_red">/\s+/</span>).join(<span class="pd_red"><strong>'-'</strong></span>));</span>
+}
+console.log(functionalUrls(states));</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_120"></span>We can confirm at the command line that the results are the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c120pro01" id="c120pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]</span></pre>
+<p class="noindent">Our functional program has really put the <span class="pd_green"><code><strong>map</strong></code></span> on those states (<a href="ch06.xhtml#ch6fig3">Figure 6.3</a>).<sup><a id="ch6fn-4" href="ch06.xhtml#ch6fn_4">4</a></sup></p>
+<p class="footnote"><a id="ch6fn_4" href="ch06.xhtml#ch6fn-4">4</a>. Image courtesy of Creative Jen Designs/Shutterstock.</p>
+<figure class="figure" id="ch6fig3">
+<img src="graphics/06fig03.jpg" alt="images" width="723" height="482"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.3:</strong> Putting some states on the <span class="pd_green"><code><strong>map</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent">As a final refinement, let’s factor the method chain responsible for making the strings URL-compatible into a separate auxiliary function called <span class="pd_green"><code><strong>urlify</strong></code></span>:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c120pro02" id="c120pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue1"><em>// Returns a URL-friendly version of a string.
+// Example: "North Dakota" -&gt; "north-dakota"</em></span>
+<span class="pd_green1"><strong>function</strong></span> urlify(string) {
+  <span class="pd_green1"><strong>return</strong></span> string.toLowerCase().split(<span class="pink">/\s+/</span>).join(<span class="pd_red">'-'</span>);
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_121"></span>Defining this function in <span class="pd_green"><code><strong>functional.js</strong></code></span> and using it in the imperative and functional versions gives the code in <a href="ch06.xhtml#ch6list3">Listing 6.3</a>.</p>
+<p class="listing" id="ch6list3"><strong>Listing 6.3:</strong> Defining an auxiliary function.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis03" id="c06lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> states <span class="gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+
+<span class="bg1"><span class="pd_blue1">//</span> <span class="pd_blue1"><em>Returns a URL-friendly version of a string</em></span><span class="pd_blue1">.</span>
+<span class="bg1">//</span>   <span class="pd_blue1"><em>Example: "North Dakota" -&gt; "north-dakota"</em></span>
+<span class="bg1"><span class="pd_green1"><strong>function</strong></span> urlify(string) {</span>
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> string.toLowerCase().split(<span class="pd_red">/\s+/</span>).join(<span class="pd_red"><strong>"-"</strong></span>);</span>
+<span class="bg1">}</span></span>
+
+
+<span class="pd_blue1"><em>// urls: Imperative version</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeUrls(elements) {
+  <span class="pd_green1"><strong>let</strong></span> urls <span class="gray">=</span> [];
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+<span class="bg1">    urls.push(urlify(element));</span>
+  });
+  <span class="pd_green1"><strong>return</strong></span> urls;
+}
+console.log(imperativeUrls(states));
+
+<span class="pd_blue1"><em>// urls: Functional version</em></span>
+<span class="pd_green1"><strong>function</strong></span> functionalUrls(elements) {
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> elements.map(element =&gt; urlify(element));</span>
+}
+console.log(functionalUrls(states));</pre>
+<p class="noindent">As before, the results are the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c121pro01" id="c121pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]</span></pre>
+<p class="indent">Compared to the imperative version, the functional version is a fifth as many lines (1 instead of 5), doesn’t mutate any variables (often an error-prone step in imperative programming), and indeed eliminates the intermediate array (<span class="pd_green"><code><strong>urls</strong></code></span>) entirely. This is the sort of thing that makes Mike Vanier very happy (<a href="ch06.xhtml#ch6fig4">Figure 6.4</a>).<sup><a id="ch6fn-5" href="ch06.xhtml#ch6fn_5">5</a></sup></p>
+<p class="footnote"><a id="ch6fn_5" href="ch06.xhtml#ch6fn-5">5</a>. Last I checked, Mike’s favorite language was a “purely functional” language called <a href="https://www.haskell.org/">Haskell</a>.</p>
+<figure class="figure" id="ch6fig4">
+<img src="graphics/06fig04.jpg" alt="images" width="282" height="376"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.4:</strong> Functional programming makes Mike Vanier happiest of all.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="ch6lev1sec1"><span epub:type="pagebreak" id="page_122"></span>6.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using <span class="pd_green"><code><strong>map</strong></code></span>, write a function that takes in the <span class="pd_green"><code><strong>states</strong></code></span> variable and returns an array of URLs of the form <span class="pd_green"><code><strong><a href="https://example.com/urlifiedform">https://example.com/&lt;urlifiedform&gt;</a></strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch6lev2">6.2 Filter</h3>
+<p class="noindent">Our second <a href="https://en.wiktionary.org/wiki/triumvir#English">triumvir</a> is <span class="pd_green"><code><strong>filter</strong></code></span> (<a href="ch06.xhtml#ch6fig5">Figure 6.5</a>),<sup><a id="ch6fn-6" href="ch06.xhtml#ch6fn_6">6</a></sup> which allows us to filter our data based on some boolean criterion.</p>
+<p class="footnote"><a id="ch6fn_6" href="ch06.xhtml#ch6fn-6">6</a>. Image courtesy of World History Archive/Alamy Stock Photo.</p>
+<figure class="figure" id="ch6fig5">
+<img src="graphics/06fig05.jpg" alt="images" width="331" height="376"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.5:</strong> The second triumvir, <a href="https://en.wikipedia.org/wiki/Marcus_Licinius_Crassus">Marcus Licinius Crassus</a> (at one point the richest man in Rome).</p>
+</figcaption>
+</figure>
+<p class="indent">Suppose, for example, we wanted to start with the same <span class="pd_green"><code><strong>states</strong></code></span> array defined in <a href="ch06.xhtml#ch6lev1">Section 6.1</a> and return a new array consisting of the strings that have only one word. This is exactly the kind of task that <span class="pd_green"><code><strong>filter</strong></code></span> is good for, but as in <a href="ch06.xhtml#ch6lev1">Section 6.1</a> we’ll write an imperative version first. The steps are fairly straightforward:</p>
+<ol class="number">
+<li><p class="number">Define an array to store single-word strings.</p></li>
+<li><p class="number">For each element in the list, <span class="pd_green"><code><strong>push</strong></code></span> it to the storage array if splitting it on whitespace yields an array with length 1.</p></li>
+</ol>
+<p class="noindent"><span epub:type="pagebreak" id="page_123"></span>The result looks like <a href="ch06.xhtml#ch6list4">Listing 6.4</a>.</p>
+<p class="listing" id="ch6list4"><strong>Listing 6.4:</strong> Solving a filtering problem imperatively.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis04" id="c06lis04a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> states <span class="gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+.
+.
+.
+<span class="pd_blue1"><em>// singles: Imperative version</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeSingles(elements) {
+  <span class="pd_green1"><strong>let</strong></span> singles <span class="gray">=</span> [];
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    <span class="pd_green1"><strong>if</strong></span> (element.split(<span class="pink">/\s+/</span>).length <span class="gray">===</span> 1) {
+      singles.push(element);
+    }
+  });
+  <span class="pd_green1"><strong>return</strong></span> singles;
+}
+console.log(imperativeSingles(states));</pre>
+<p class="indent">Note in <a href="ch06.xhtml#ch6list4">Listing 6.4</a> the familiar pattern from <a href="ch06.xhtml#ch6list1">Listing 6.1</a>: First define an auxiliary variable in order to maintain <a href="https://en.wikipedia.org/wiki/State_(computer_science)">state</a> (no pun intended); then loop over the original array, <span epub:type="pagebreak" id="page_124"></span>mutating the variable as necessary; then return the mutated result. It’s not particularly pretty, but it works:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c124pro01" id="c124pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]</span>
+<span class="bg1"><span class="pd_green1"><strong>[ 'Kansas', 'Nebraska' ]</strong></span></span></pre>
+<p class="indent">Now let’s see how to do the same task using <span class="pd_green"><code><strong>filter</strong></code></span>. As in <a href="ch06.xhtml#ch6lev1">Section 6.1</a>, we’ll start with a simple numerical example in the REPL.</p>
+<p class="indent">We’ll begin by looking at the <em>modulo operator</em> <span class="pd_green"><code><strong>%</strong></code></span>, which returns the remainder after dividing an integer by another integer. In other words, <span class="pd_green"><code><strong>17 % 5</strong></code></span> (read “seventeen mod five”) is <span class="pd_green"><code><strong>2</strong></code></span>, because 5 goes into 17 three times (giving 15), with a remainder of 17 – 15 = 2. In particular, considering integers modulo 2 divides them into two <em>equivalence classes</em>: even numbers (remainder 0 (mod 2)) and odd numbers (remainder 1 <em>(</em>mod 2<em>)</em>). In code:</p>
+<pre class="pre1"><span class="gray">&gt; 16 %</span> 2; <span class="pd_blue1"><em>// even</em></span><span class="gray">
+0
+&gt; 17 %</span> 2; <span class="pd_blue1"><em>// odd</em></span><span class="gray">
+1
+&gt; 16 % 2 ===</span> 0; <span class="pd_blue1"><em>// even</em></span><span class="pd_green1">
+<strong>true</strong>
+</span><span class="gray">&gt; 17 % 2 ===</span> 0; <span class="pd_blue1"><em>// odd</em>
+</span><span class="pd_green1"><strong>false</strong></span></pre>
+<p class="indent">We can combine <span class="pd_green"><code><strong>%</strong></code></span> and <span class="pd_green"><code><strong>filter</strong></code></span> to process an array of numbers and select just the even ones:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c124pro03" id="c124pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, 8].filter(n =&gt; n <span class="gray">% 2 ===</span> 0);
+[ <span class="gray">2</span>, <span class="gray">4</span>, <span class="gray">6</span>, <span class="gray">8</span> ]</pre>
+<p class="noindent">The syntax is almost exactly the same as <span class="pd_green"><code><strong>map</strong></code></span>: We give <span class="pd_green"><code><strong>filter</strong></code></span> a variable (<span class="pd_green"><code><strong>n</strong></code></span>) and then perform a <em>test</em> that returns <span class="pd_green"><code><strong>true</strong></code></span> or <span class="pd_green"><code><strong>false</strong></code></span>.</p>
+<p class="indent">Using this idea, we see that the functional version of <a href="ch06.xhtml#ch6list4">Listing 6.4</a> is much cleaner—indeed, as with <span class="pd_green"><code><strong>map</strong></code></span>, the <span class="pd_green"><code><strong>filter</strong></code></span> version is a single line (a common occurrence in functional programming), as we can see in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c124pro04" id="c124pro04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> states.filter(state =&gt; state.split(<span class="pink">/\s+/</span>).length <span class="gray">===</span> 1);</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_125"></span>Placing the result in our example file again underscores how much more compact the functional version is (<a href="ch06.xhtml#ch6list5">Listing 6.5</a>).</p>
+<p class="listing" id="ch6list5"><strong>Listing 6.5:</strong> Solving a filtering problem functionally.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis05" id="c06lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> states <span class="gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>];
+.
+.
+.
+<span class="pd_blue1"><em>// singles: Imperative version</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeSingles(elements) {
+  <span class="pd_green1"><strong>let</strong></span> singles <span class="gray">=</span> [];
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    <span class="pd_green1"><strong>if</strong></span> (element.split(<span class="pink">/\s+/</span>).length <span class="gray">===</span> 1) {
+      singles.push(element);
+    }
+  });
+  <span class="pd_green1"><strong>return</strong></span> singles;
+}
+console.log(imperativeSingles(states));
+
+<span class="pd_blue1"><em>// singles: Functional version</em></span>
+<span class="pd_green1"><strong>function</strong></span> functionalSingles(elements) {
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> elements.filter(element =&gt; element.split(<span class="pd_red">/\s+/</span>).length === 1);</span>
+}
+console.log(functionalSingles(states));</pre>
+<p class="indent">As required, the result is the same:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c125pro01" id="c125pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'Kansas', 'Nebraska' ]
+[ 'Kansas', 'Nebraska' ]
+</span></pre>
+<section>
+<h4 class="h4" id="ch6lev2sec1">6.2.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Write two <span class="pd_green"><code><strong>filter</strong></code></span> functions that return the Dakotas: one using <span class="pd_green"><code><strong>String#includes</strong></code></span> (<a href="ch02.xhtml#ch2lev5">Section 2.5</a>) to test for the presence of the string “Dakota” and one using a regex that tests for the length of the split array being <span class="pd_green"><code><strong>2</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch6lev3"><span epub:type="pagebreak" id="page_126"></span>6.3 Reduce</h3>
+<p class="noindent">We reach finally the third member of our triumvirate, the mighty <span class="pd_green"><code><strong>reduce</strong></code></span> (<a href="ch06.xhtml#ch6fig6">Figure 6.6</a>)<sup><a id="ch6fn-7" href="ch06.xhtml#ch6fn_7">7</a></sup>—by far the most complicated of the three.</p>
+<p class="footnote"><a id="ch6fn_7" href="ch06.xhtml#ch6fn-7">7</a>. Image courtesy of colaimages/Alamy Stock Photo.</p>
+<figure class="figure" id="ch6fig6">
+<img src="graphics/06fig06.jpg" alt="images" width="289" height="376"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.6:</strong> The third triumvir, <a href="https://en.wikipedia.org/wiki/Pompey">Gnaeus Pompēius Magnus</a> (Pompey the Great).</p>
+</figcaption>
+</figure>
+<p class="indent">Because <span class="pd_green"><code><strong>reduce</strong></code></span> is particularly challenging, we’ll cover two examples. First, we’ll make iterative and functional versions of a <span class="pd_green"><code><strong>sum</strong></code></span> operation on arrays of integers. Second, we’ll make a plain JavaScript object (<a href="ch04.xhtml#ch4lev4">Section 4.4</a>) that maps state names to the length of each name, with a result that will look like this:</p>
+<pre class="pre1">{ <span class="pd_red">"Kansas"</span>: <span class="gray">6</span>,
+  <span class="pd_red">"Nebraska"</span>: <span class="gray">8</span>,
+  .
+  .
+  .
+}</pre>
+<section>
+<h4 class="h4" id="ch6lev3sec1">6.3.1 Reduce, Example 1</h4>
+<p class="noindent">We’ll begin with an imperative solution for the <span class="pd_green"><code><strong>sum</strong></code></span> function, which involves (as usual) a <span class="pd_green"><code><strong>forEach</strong></code></span> loop and an auxiliary variable (<span class="pd_green"><code><strong>total</strong></code></span>), which we use to accumulate the result. The result appears in <a href="ch06.xhtml#ch6list6">Listing 6.6</a>.</p>
+<p class="listing" id="ch6list6"><span epub:type="pagebreak" id="page_127"></span><strong>Listing 6.6:</strong> An imperative solution for summing integers.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis06" id="c06lis06a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_green1"><strong>let</strong></span> numbers <span class="gray">=</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, <span class="gray">8</span>, <span class="gray">9</span>, <span class="gray">10</span>];
+
+<span class="pd_blue1"><em>// sum: Imperative solution</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeSum(elements) {
+  <span class="pd_green1"><strong>let</strong></span> total <span class="gray">=</span> 0;
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(n) {
+    total <span class="gray">+=</span> n;
+  });
+  <span class="pd_green1"><strong>return</strong></span> total;
+}
+console.log(imperativeSum(numbers));</pre>
+<p class="noindent">Again we see the familiar pattern: Initialize an auxiliary variable (<span class="pd_green"><code><strong>total</strong></code></span>) and then loop through the collection, accumulating the result by adding each number to the total.</p>
+<p class="indent">The result is 55 as required:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c127pro01" id="c127pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'Kansas', 'Nebraska' ]
+[ 'Kansas', 'Nebraska' ]</span>
+<span class="bg1"><span class="pd_green1">55</span></span></pre>
+<p class="indent">Now for the <span class="pd_green"><code><strong>reduce</strong></code></span> solution. It’s a bit tricky, so let’s work in the REPL:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c127pro02" id="c127pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> numbers <span class="gray">=</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, <span class="gray">8</span>, <span class="gray">9</span>, <span class="gray">10</span>];
+<span class="gray">&gt;</span> numbers.reduce((total, n) =&gt; {
+    total <span class="gray">+=</span> n;
+    <span class="pd_green1"><strong>return</strong></span> total;
+  }, <span class="gray">0</span>);
+<span class="gray">55</span></pre>
+<p class="noindent">You can see what I meant by “tricky”. The <span class="pd_green"><code><strong>reduce</strong></code></span> method takes a function of <em>two</em> arguments, the first of which is an <em>accumulator</em> for the result, and the second of which is the array element itself. The return value of the (anonymous) function gets passed <span epub:type="pagebreak" id="page_128"></span>back to <span class="pd_green"><code><strong>reduce</strong></code></span> as the starting value for the next element in the array. The second argument to <span class="pd_green"><code><strong>reduce</strong></code></span> is the initial value of the accumulator (in this case, <span class="pd_green"><code><strong>0</strong></code></span>).</p>
+<p class="indent">There are two refinements we can make. First, the <span class="pd_green"><code><strong>+=</strong></code></span> operator returns its value, so we can actually increment a value while simultaneously assigning it (or returning it):</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> i <span class="gray">=</span> <span class="gray">0</span>;
+<span class="gray">&gt;</span> <span class="pd_green1"><strong>let</strong></span> j <span class="gray">=</span> i <span class="gray">+= 1</span>;
+<span class="gray">&gt;</span> i
+<span class="gray">1</span>
+<span class="gray">&gt;</span> j
+<span class="gray">1</span></pre>
+<p class="noindent">This means we can return <span class="pd_green"><code><strong>total += n</strong></code></span> directly:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c128pro02" id="c128pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> numbers.reduce((total, n) =&gt; { <span class="pd_green1"><strong>return</strong></span> total <span class="gray">+=</span> n }, <span class="gray">0</span>);
+<span class="gray">55</span></pre>
+<p class="indent">Second, the initial value is the first element of the array by default (with the <span class="pd_green"><code><strong>reduce</strong></code></span> procedure then starting with the second element), so in this case it can be left off:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c128pro03" id="c128pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> numbers.reduce((total, n) =&gt; { <span class="pd_green1"><strong>return</strong></span> total <span class="gray">+=</span> n });
+<span class="gray">55</span></pre>
+<p class="noindent">Putting the result into our example file shows, as usual, a marked improvement over the iterative version (<a href="ch06.xhtml#ch6list7">Listing 6.7</a>).</p>
+<p class="listing" id="ch6list7"><strong>Listing 6.7:</strong> A functional solution for summing integers.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis07" id="c06lis07a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_green1"><strong>let</strong></span> numbers <span class="gray">=</span> [<span class="gray">1</span>, <span class="gray">2</span>, <span class="gray">3</span>, <span class="gray">4</span>, <span class="gray">5</span>, <span class="gray">6</span>, <span class="gray">7</span>, <span class="gray">8</span>, <span class="gray">9</span>, <span class="gray">10</span>];
+
+<span class="pd_blue1"><em>// sum: Imperative solution</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeSum(elements) {
+  <span class="pd_green1"><strong>let</strong></span> total <span class="gray">=</span> <span class="gray">0</span>;
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(n) {
+    total <span class="gray">+=</span> n;
+  });
+  <span class="pd_green1"><strong>return</strong></span> total;
+}
+
+<span epub:type="pagebreak" id="page_129"></span>console.log(imperativeSum(numbers));
+
+<span class="pd_blue1"><em>// sum: Functional solution</em>
+</span><span class="pd_green1"><strong>function</strong></span> functionalSum(elements) {
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> elements.reduce((total, n) =&gt; <span class="pd_green1"><strong>return</strong></span> total <span class="gray">+=</span> n;);</span>
+}
+console.log(functionalSum(numbers));</pre>
+<p class="indent">The result of the functional sum should be the same as for the imperative version:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c129pro01" id="c129pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'kansas', 'nebraska', 'north-dakota', 'south-dakota' ]
+[ 'Kansas', 'Nebraska' ]
+[ 'Kansas', 'Nebraska' ]
+55</span>
+<span class="bg1"><span class="pd_green1">55</span></span></pre>
+<p class="indent"><a href="ch06.xhtml#ch6list7">Listing 6.7</a> gives us a hint about the meaning of <span class="pd_green"><code><strong>reduce</strong></code></span>: It’s a function that takes the elements of an array and processes (<em>reduces</em>) them based on some operation (in this case, addition). This is not always the case, though, and as we’ll see in a moment it’s often more helpful to think of <span class="pd_green"><code><strong>reduce</strong></code></span> as <em>accumulating</em> results and storing them in its first argument (<span class="pd_green"><code><strong>total</strong></code></span> in <a href="ch06.xhtml#ch6list7">Listing 6.7</a>).<sup><a id="ch6fn-8" href="ch06.xhtml#ch6fn_8">8</a></sup></p>
+<p class="footnote"><a id="ch6fn_8" href="ch06.xhtml#ch6fn-8">8</a>. For this reason, <span class="pd_green"><code><strong>reduce</strong></code></span> is sometimes called <span class="pd_green"><code><strong>accumulate</strong></code></span> in other languages. See, e.g., “<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">Sequence Operations</a>” (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html</a>) in <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-13.html">Chapter 2</a> (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-13.html">https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-13.html</a>) of <em><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html">Structure and Interpretation of Computer Programs</a></em> (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html">https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch6lev3sec2">6.3.2 Reduce, Example 2</h4>
+<p class="noindent">To help reinforce <span class="pd_green"><code><strong>reduce</strong></code></span>, let’s take a look at a second example. As mentioned above, our task is to make a plain object (associative array) with keys equal to the state names and values equal to their lengths (which could be useful for calculating, e.g., a <a href="https://en.wikipedia.org/wiki/Histogram">histogram</a> of word frequencies in a longer document). We can solve this imperatively by initializing a <span class="pd_green"><code><strong>lengths</strong></code></span> object and then iterating through the states, setting <span class="pd_green"><code><strong>lengths[state]</strong></code></span> equal to the corresponding length:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c129pro02" id="c129pro02a">Click here to view code image</a></p>
+<pre class="pre1">lengths[state] <span class="gray">=</span> state.length;</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_130"></span>The full example appears in <a href="ch06.xhtml#ch6list8">Listing 6.8</a>.</p>
+<p class="listing" id="ch6list8"><strong>Listing 6.8:</strong> An imperative solution for state/length correspondence.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis08" id="c06lis08a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_blue1"><em>// lengths: Imperative solution</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeLengths(elements) {
+  <span class="pd_green1"><strong>let</strong></span> lengths <span class="gray">=</span> {};
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    lengths[element] <span class="gray">=</span> element.length;
+  });
+  <span class="pd_green1"><strong>return</strong></span> lengths;
+}
+console.log(imperativeLengths(states));</pre>
+<p class="indent">If we run the program at the command line, the desired associative array appears as the final part of the output:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c130pro01" id="c130pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">.
+.
+.
+{ Kansas: 6, Nebraska: 8, 'North Dakota': 12, 'South Dakota': 12 }</span></pre>
+<p class="indent">The functional solution using <span class="pd_green"><code><strong>reduce</strong></code></span> is trickier. As with the imperative solution, we have a plain <span class="pd_green"><code><strong>lengths</strong></code></span> object, but instead of being an auxiliary variable, it’s a parameter to the function:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c130pro02" id="c130pro02a">Click here to view code image</a></p>
+<pre class="pre1">(lengths, state) =&gt; {
+  lengths[state] <span class="gray">=</span> state.length;
+  <span class="pd_green1"><strong>return</strong></span> lengths;
+}</pre>
+<p class="noindent">Meanwhile, the initial value of the <span class="pd_green"><code><strong>reduce</strong></code></span> method, instead of being <span class="pd_green"><code><strong>0</strong></code></span>, is the empty object <span class="pd_green"><code><strong>{}</strong></code></span>:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c130pro03" id="c130pro03a">Click here to view code image</a></p>
+<pre class="pre1">reduce((lengths, state) =&gt; {
+  lengths[state] <span class="gray">=</span> state.length;
+  <span class="pd_green1"><strong>return</strong></span> lengths;
+<span class="bg1">}, {});</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_131"></span>Note that these are code snippets, not REPL sessions; one disadvantage of <span class="pd_green"><code><strong>reduce</strong></code></span> (and functional solutions generally) is that they are harder to build up incrementally. More on this in a moment.</p>
+<p class="indent">Taking the above ideas together, we can use <span class="pd_green"><code><strong>reduce</strong></code></span> to march through the <span class="pd_green"><code><strong>states</strong></code></span> array, accumulating the desired associative array in the <span class="pd_green"><code><strong>lengths</strong></code></span> parameter and then returning it, as shown in <a href="ch06.xhtml#ch6list9">Listing 6.9</a>.</p>
+<p class="listing" id="ch6list9"><strong>Listing 6.9:</strong> A functional solution for state/length correspondence.<br/><code><em>functional.js</em></code></p>
+<p class="codelink"><a href="ch06_images.xhtml#c06lis09" id="c06lis09a">Click here to view code image</a></p>
+<pre class="pre2">.
+.
+.
+<span class="pd_blue1"><em>// lengths: Imperative solution</em></span>
+<span class="pd_green1"><strong>function</strong></span> imperativeLengths(elements) {
+  <span class="pd_green1"><strong>let</strong></span> lengths <span class="gray">=</span> {};
+  elements.forEach(<span class="pd_green1"><strong>function</strong></span>(element) {
+    lengths[element] <span class="gray">=</span> element.length;
+  });
+  <span class="pd_green1"><strong>return</strong></span> lengths;
+}
+console.log(imperativeLengths(states));
+
+<span class="pd_blue1"><em>// lengths: Functional solution</em></span>
+<span class="pd_green1"><strong>function</strong></span> functionalLengths(elements) {
+<span class="bg1">  <span class="pd_green1"><strong>return</strong></span> elements.reduce((lengths, element) =&gt; {</span>
+<span class="bg1">                          lengths[element] = element.length;</span>
+<span class="bg1">                          <span class="pd_green1"><strong>return</strong></span> lengths;</span>
+<span class="bg1">                      }, {});</span>
+}
+console.log(functionalLengths(states));</pre>
+<p class="noindent">Although it is broken across multiple lines in the text editor, the functional solution in <a href="ch06.xhtml#ch6list9">Listing 6.9</a> <span class="pd_green"><code><strong>return</strong></code></span>s the result of a single <span class="pd_green"><code><strong>reduce</strong></code></span>, in close analogy with the functional solutions for <span class="pd_green"><code><strong>map</strong></code></span> (<a href="ch06.xhtml#ch6list2">Listing 6.2</a>) and <span class="pd_green"><code><strong>filter</strong></code></span> (<a href="ch06.xhtml#ch6list5">Listing 6.5</a>).</p>
+<p class="indent">As required, the result is the same as the imperative solution:</p>
+<p class="codelink"><a href="ch06_images.xhtml#c131pro01" id="c131pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> node functional.js
+<span class="pd_green">.
+.
+.
+{ Kansas: 6, Nebraska: 8, 'North Dakota': 12, 'South Dakota': 12 }
+{ Kansas: 6, Nebraska: 8, 'North Dakota': 12, 'South Dakota': 12 }</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_132"></span>Comparing the imperative and functional solutions in <a href="ch06.xhtml#ch6list9">Listing 6.9</a>, the advantages of <span class="pd_green"><code><strong>reduce</strong></code></span> are not as clear as they were in the case of <span class="pd_green"><code><strong>map</strong></code></span> and <span class="pd_green"><code><strong>filter</strong></code></span>. Indeed, a good argument can be made that the imperative solution is clearer.</p>
+<p class="indent">Which method to use is a matter of taste. I’ve found that the more you program functionally, the more you want to do it, and there’s a strange sort of pleasure in using <span class="pd_green"><code><strong>reduce</strong></code></span> to solve a problem in a single (logical) line. It’s also worth noting that <span class="pd_green"><code><strong>reduce</strong></code></span> is a common technique among more advanced programmers, and among other things plays a key role in an important technique (called <a href="https://en.wikipedia.org/wiki/MapReduce">MapReduce</a>) for dealing efficiently with large datasets.</p>
+</section>
+<section>
+<h4 class="h4" id="ch6lev3sec3">6.3.3 Functional Programming and TDD</h4>
+<p class="noindent">One of the things you may have noticed when building up <a href="ch06.xhtml#ch6list9">Listing 6.9</a> is that the functional solution is harder to break down into steps. The advantage is that we can often condense a functional solution into a single line, but the cost is that it can be harder to understand incrementally. Indeed, I find this to be a consistent pattern across all three functions in our triumvirate; the final destination is often beautifully succinct, but getting there can be a challenge.</p>
+<p class="indent">My favorite technique for managing this challenge is <em>test-driven development</em> (TDD), which involves writing an <em>automated test</em> that captures the desired behavior in code. We can then get the test to pass using any method we want, including an ugly but easy-to-understand iterative solution. At that point, we can <em>refactor</em> the code—changing its form but not its function—to use a more concise functional solution. As long as the test still passes, we can be confident that the code still works.</p>
+<p class="indent">In <a href="ch08.xhtml#ch08">Chapter 8</a>, we’ll apply this exact technique to the principal object developed in <a href="ch07.xhtml#ch07">Chapter 7</a>. In particular, we’ll use TDD to implement a fancy extension to the <span class="pd_green"><code><strong>palindrome</strong></code></span> function first seen in <a href="ch05.xhtml#ch5lev3">Section 5.3</a>, one that detects such complicated palindromes as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch6fig7">Figure 6.7</a>).<sup><a id="ch6fn-9" href="ch06.xhtml#ch6fn_9">9</a></sup></p>
+<p class="footnote"><a id="ch6fn_9" href="ch06.xhtml#ch6fn-9">9</a>. Image courtesy of Everett Collection Historical/Alamy Stock Photo.</p>
+<figure class="figure" id="ch6fig7">
+<img src="graphics/06fig07.jpg" alt="images" width="720" height="599"/>
+<figcaption>
+<p class="title-f"><strong>Figure 6.7:</strong> <a href="https://en.wikipedia.org/wiki/Theodore_Roosevelt">Teddy Roosevelt</a> was a man with a <a href="https://en.wikipedia.org/wiki/Theodore_Roosevelt#Latin_America_and_Panama_Canal">plan</a>.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="ch6lev3sec4"><span epub:type="pagebreak" id="page_133"></span>6.3.4 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using <span class="pd_green"><code><strong>reduce</strong></code></span>, write a function that returns the product of all the elements in an array. <em>Hint</em>: Where <span class="pd_green"><code><strong>+=</strong></code></span> adds, <span class="pd_green"><code><strong>*=</strong></code></span> multiplies.</p></li>
+<li><p class="number">Remove the newlines in the <span class="pd_green"><code><strong>reduce</strong></code></span> solution from <a href="ch06.xhtml#ch6list9">Listing 6.9</a> to turn it into a single long line. Does it still give the right answer? How long is the resulting line of code?<span epub:type="pagebreak" id="page_134"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

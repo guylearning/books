@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough HTML, CSS and Layout to Be Dangerous: An Introduction to Modern Website Creation and Templating Systems</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843053.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch11"><span epub:type="pagebreak" id="page_361"></span>Chapter 11</h2>
+<h2 class="chap-title">Specialty Page Layouts with Flexbox</h2>
+<p class="noindent">As you might guess from the name, CSS <em>flexbox</em> is a flexible box model for laying out content on the Web. Flexbox, which is a relatively new addition to CSS, makes it possible to style sections of a website to allow child elements to fully fill a container, while also still being able to adapt to the content—a combination that was often difficult to do in the pre-flexbox era.</p>
+<p class="indent">For example, suppose we had three columns with different amounts of content inside, and we wanted the columns all to be the same height as the <em>longest</em> one. A diagram of this scenario for three columns <em>without</em> flexbox appears in <a href="ch11.xhtml#ch11fig1">Figure 11.1</a>.</p>
+<figure class="figure" id="ch11fig1">
+<img src="graphics/11fig01.jpg" alt="images" width="676" height="258"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.1:</strong> Columns with different lengths of content, and hence different heights.</p>
+</figcaption>
+</figure>
+<p class="indent">Back in the days before flexbox, it was surprisingly hard to add styles to transform the content in <a href="ch11.xhtml#ch11fig1">Figure 11.1</a> to look like the content in <a href="ch11.xhtml#ch11fig2">Figure 11.2</a>. It required <span epub:type="pagebreak" id="page_362"></span>doing things like using JavaScript to check the height of elements every time the window changed size, or using HTML tables for layout (which you should never do (<a href="ch11.xhtml#box11_1">Box 11.1</a>)).</p>
+<figure class="figure" id="ch11fig2">
+<img src="graphics/11fig02.jpg" alt="images" width="676" height="258"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.2:</strong> How we want the columns to look—a surprisingly difficult problem.</p>
+</figcaption>
+</figure>
+<p class="indent">Now that we have flexbox, this type of problem has an easy solution! In this chapter, we’ll apply simplified flexbox rules to fix the layout problem left at the end of <a href="ch10.xhtml#sec10_4">Section 10.4</a> (<a href="ch10.xhtml#ch10fig17">Figure 10.17</a>), and we’ll also take the opportunity to polish up the callout section on the homepage (<a href="ch11.xhtml#sec11_2">Section 11.2</a>). With these examples in hand, we’ll then take a look at more advanced flexbox features, including a powerful shorthand notation (<a href="ch11.xhtml#sec11_3">Section 11.3</a>). Finally, we’ll apply these more advanced features to create a <em>three-column</em> layout for the gallery introduced in <a href="ch10.xhtml#sec10_4">Section 10.4</a>.</p>
+<aside epub:type="sidebar" class="sidebar1" id="box11_1">
+<p class="sb-title1"><strong>Box 11.1: Style Note: Never Use Tables for Layout</strong></p>
+<p class="sb-noindent">Back in the bad old days of the early Internet, when there was no CSS, the only way to create page layouts was to use tables inside tables (inside tables), and then put content in the table cells. This was a terrible abuse of the <code>table</code> tag, which is designed for organizing and displaying tabular data (like spreadsheets), but unfortunately there was no other way to arrange things on a page.</p>
+<p class="sb-indent">As time went on, developers were given new tools, elements, and styles for creating layouts, but there were still gaps in the toolset, which made it difficult to create layouts like the multiple columns shown in <a href="ch11.xhtml#ch11fig2">Figure 11.2</a>. So developers continued to use tables to make their designs work (for certain values of “work”).</p>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_363"></span>The problem is that, beyond the semantic problem of using an element meant for data to create a layout, the table layout is incredibly strict in how it is displayed. Once you have things arranged in table rows and table cells, that’s how the browser has to show them. So if you resize a window with a table, all the content gets squished, and there is no way to restack it, as illustrated in <a href="ch11.xhtml#ch11fig3">Figure 11.3</a>.</p>
+<figure class="figure" id="ch11fig3">
+<img src="graphics/11fig03.jpg" alt="images" width="673" height="231"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.3:</strong> Seriously, never use tables for layouts—only for tabular data.</p>
+</figcaption>
+</figure>
+<p class="sb-indent">Luckily, with CSS and flexbox, we can now design flexible and robust styles without resorting to tables. Huzzah!</p>
+</aside>
+<section>
+<h3 class="h3" id="sec11_1">11.1 Having Content Fill a Container</h3>
+<p class="noindent">We’ll start with an overview of the anatomy of a flexbox. There are two main aspects, the <em>flex container</em> and the <em>flex items</em>, as illustrated in <a href="ch11.xhtml#ch11fig4">Figure 11.4</a>. The flex container is the HTML element with the CSS property <span class="green-d"><code><strong>display: flex</strong></code></span> set. Meanwhile, each flex <span epub:type="pagebreak" id="page_364"></span>item is a child element that has some value of the CSS <span class="green-d"><code><strong>flex:</strong></code></span> property set. Essentially, the flex container encloses the items, which can be aligned, stretched, shrunk, etc. by various flexbox style rules. (If you are looking at the fine print in <a href="ch11.xhtml#ch11fig4">Figure 11.4</a>, don’t worry right now about the style declaration <span class="green-d"><code><strong>flex: 1 1 0</strong></code></span> under the flex items; we’ll cover it in detail in <a href="ch11.xhtml#sec11_3">Section 11.3</a>.)</p>
+<figure class="figure" id="ch11fig4">
+<img src="graphics/11fig04.jpg" alt="images" width="674" height="181"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.4:</strong> Making flexible containers with child items that fill the available space.</p>
+</figcaption>
+</figure>
+<p class="indent">As our first practical application of flexbox items and containers, we’ll solve a problem we had at the end of <a href="ch10.xhtml#sec10_4">Section 10.4</a> (<a href="ch10.xhtml#ch10fig17">Figure 10.17</a>). Recall that the text on the new gallery page wasn’t visible even though it was present in the page’s source, and the footer wasn’t at the bottom of the window, but rather was crushed up against the content. We’ll fix both issues by using a flexbox layout that will let us push the footer to the bottom of the screen by vertically filling the available space (<a href="ch11.xhtml#ch11fig5">Figure 11.5</a>), and also will let us add in padding to move the page content down so that it gets out from under the header.</p>
+<figure class="figure" id="ch11fig5">
+<img src="graphics/11fig05.jpg" alt="images" width="674" height="386"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.5:</strong> Stretching the elements vertically with flexbox (note the <span class="green-d"><code><strong>flex-direction</strong></code></span>).</p>
+</figcaption>
+</figure>
+<p class="indent">In order to apply flexbox to the default template, we’ll need to designate both a flex container and some number of flex items (<a href="ch11.xhtml#ch11fig4">Figure 11.4</a>). Although we could add a new <span class="green-d"><code><strong>div</strong></code></span> wrapper to use as a flex container, we’ll take a simpler approach and use the layout’s <span class="green-d"><code><strong>body</strong></code></span> tag. Using a default element like the <span class="green-d"><code><strong>body</strong></code></span> tag as part of our layout <span epub:type="pagebreak" id="page_365"></span>works for this situation because we want the footer to be at the bottom of the window (or below the content) on all of the pages across the site.</p>
+<p class="indent">When we last saw the default site template, the body of the page had two main defined sections, the header and footer, as well as a content tag that loads page content into the layout (<a href="ch11.xhtml#ch11list1">Listing 11.1</a>).</p>
+<p class="listing" id="ch11list1"><strong>Listing 11.1:</strong> The current state of the default template.<br/><code><em>_layouts/default.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list01a" id="p11list01">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  {% include head.html %}
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+     {% include header.html %}
+
+     {{ content }}
+
+     {% include footer.html %}
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent">In order to apply the ideas in <a href="ch11.xhtml#ch11fig5">Figure 11.5</a>, we need to make some element on the page our flexbox item for the content, and we’ll do this using a <span class="green-d"><code><strong>div</strong></code></span> tag with class <span class="green-d"><code><strong>content-container</strong></code></span>. (This content “container” is for now a flexbox <em>item</em>, but see <a href="ch11.xhtml#sec11_4">Section 11.4</a> below, where it is also a flexbox container—flexboxes within flexboxes!) The updated default layout appears in <a href="ch11.xhtml#ch11list2">Listing 11.2</a>.</p>
+<p class="listing" id="ch11list2"><strong>Listing 11.2:</strong> Wrapping the site content in a new container.<br/><code><em>_layouts/default.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list02a" id="p11list02">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  {% include head.html %}
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+     {% include header.html %}
+
+<span class="bg1">     &lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"content-container"</strong></span>&gt;</span>
+        {{ content }}
+<span class="bg1">     &lt;/<span class="pd_green2"><strong>div</strong></span>&gt;</span>
+
+     {% include footer.html %}
+  &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_366"></span>Recall from <a href="ch09.xhtml#ch9list14">Listing 9.14</a> and <a href="ch09.xhtml#ch9list36">Listing 9.36</a> that the header and footer are wrapped in the semantic tags <span class="green-d"><code><strong>header</strong></code></span> and <span class="green-d"><code><strong>footer</strong></code></span> (which are effectively <span class="green-d"><code><strong>div</strong></code></span>s). Both elements could act as “flex items” for the purposes of our flexbox layout, but we aren’t going to set them to flex as we want them to stay the size that they are—we want only the content area to expand and contract to fill empty space.</p>
+<p class="indent">We set the <span class="green-d"><code><strong>header</strong></code></span> to be <span class="green-d"><code><strong>position: fixed</strong></code></span>, which means it will be taken out of the page flow and won’t be affected by our flexbox setup (<a href="ch09.xhtml#sec9_8">Section 9.8</a>). Likewise, we aren’t going to target the <span class="green-d"><code><strong>footer</strong></code></span> with a <span class="green-d"><code><strong>flex:</strong></code></span> property; instead, it will remain a regular old block element so that its content doesn’t get affected by the element changing size. The magic ingredient is going to be the <span class="green-d"><code><strong>.content-container div</strong></code></span> defined in <a href="ch11.xhtml#ch11list2">Listing 11.2</a>.</p>
+<p class="indent">With the template defined by <a href="ch11.xhtml#ch11list2">Listing 11.2</a>, any page using the default layout will have a structure that looks like this (where we’ve added HTML comments only for clarity—they won’t actually appear in the source):</p>
+<p class="codelink"><a href="ch11_images.xhtml#p366pro01a" id="p366pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_orange"><em>&lt;!DOCTYPE html&gt;</em></span>
+&lt;<span class="pd_green1"><strong>html</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>head</strong></span>&gt;
+    .
+    .
+    .
+  &lt;/<span class="pd_green1"><strong>head</strong></span>&gt;
+<span class="bg1"> &lt;!-- <span class="pd_blue1"><em>flexbox container</em></span> --&gt;</span>
+  &lt;<span class="pd_green1"><strong>body</strong></span>&gt;
+<span class="bg1">   &lt;!-- <span class="pd_blue1"><em>1st potential flexbox item, but not flexing because position: fixed</em></span> --&gt;</span>
+    &lt;<span class="pd_green1"><strong>header</strong></span>&gt;
+      .
+      .
+      .
+   &lt;/<span class="pd_green1"><strong>header</strong></span>&gt;
+
+<span class="bg1">  &lt;!-- <span class="pd_blue1"><em>2nd flexbox item, the only one that will be changing in size</em></span> --&gt;</span>
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"content-container"</span>&gt;
+    .
+    .
+    .
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+<span class="bg1">  &lt;!-- <span class="pd_blue1"><em>3rd potential flexbox item, but not given a flex: property</em></span> --&gt;</span>
+  &lt;<span class="pd_green1"><strong>footer</strong></span>&gt;
+    .
+    .
+    .
+  &lt;/<span class="pd_green1"><strong>footer</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>body</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>html</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_367"></span>To apply flexbox to our page, we’ll start by adding the declaration <span class="green-d"><code><strong>display: flex</strong></code></span> to the flex container (in this case, the <span class="green-d"><code><strong>body</strong></code></span> tag). Then, in order to build the flex items in a vertical column, we’ll set the <em>flex direction</em> rule <span class="green-d"><code><strong>flex-direction</strong></code></span> to <span class="green-d"><code><strong>column</strong></code></span>. Finally, we’ll set the <span class="green-d"><code><strong>min-height</strong></code></span> property to <span class="green-d"><code><strong>100vh</strong></code></span> (<a href="ch07.xhtml#sec7_7">Section 7.7</a>) to ensure that the <span class="green-d"><code><strong>.content-container</strong></code></span> stretches to fill 100% of the viewport height. The resulting <span class="green-d"><code><strong>body</strong></code></span> rules (including the pre-existing <span class="green-d"><code><strong>font-family</strong></code></span> declaration) appear as follows:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p367pro01a" id="p367pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>body</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+  <span class="pd_green1"><strong>flex-direction</strong></span>: <span class="pd_green1"><strong>column</strong></span>;
+  <span class="pd_green1"><strong>font-family</strong></span>: helvetica, arial, sans;
+  <span class="pd_green1"><strong>min-height</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>vh</strong></span>;
+}</pre>
+<p class="indent">Meanwhile, we need to arrange for the content container, which is currently shrunk down (<a href="ch10.xhtml#ch10fig17">Figure 10.17</a>), to grow as big as it can. To do this, we need to understand the <span class="green-d"><code><strong>flex-grow</strong></code></span> property, which controls how flexbox items expand. By default, items in a flex container have a <span class="green-d"><code><strong>flex-grow</strong></code></span> value of <span class="green-d"><code><strong>0</strong></code></span>, which means the item doesn’t grow at all.</p>
+<p class="indent">Since we haven’t yet applied a <span class="green-d"><code><strong>flex-grow</strong></code></span> property to any of our elements, the header, content, and footer currently don’t expand to fill the container, as shown schematically in <a href="ch11.xhtml#ch11fig6">Figure 11.6</a>.</p>
+<figure class="figure" id="ch11fig6">
+<img src="graphics/11fig06.jpg" alt="images" width="299" height="398"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.6:</strong> Three flexbox items with <span class="green-d"><code><strong>flex-grow</strong></code></span> of <span class="green-d"><code><strong>0</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_368"></span>To get the content to fill the area, all we need to do is activate the <span class="green-d"><code><strong>.content-container</strong></code></span> as a flex item by setting <span class="green-d"><code><strong>flex-grow</strong></code></span> to <span class="green-d"><code><strong>1</strong></code></span>:</p>
+<pre class="pre1">.<span class="blue-v"><strong>content-container</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">1</span>;
+}</pre>
+<p class="indent">The <span class="green-d"><code><strong>flex-grow</strong></code></span> property works by proportions: If all three items are set to <span class="green-d"><code><strong>1</strong></code></span>, each one takes up 1/3 of the space available. With the header and footer set to the default value of <span class="green-d"><code><strong>0</strong></code></span>, setting the content div’s <span class="green-d"><code><strong>flex-grow</strong></code></span> to <span class="green-d"><code><strong>1</strong></code></span> arranges for it to take up <em>all</em> of the available space, as shown schematically in <a href="ch11.xhtml#ch11fig7">Figure 11.7</a>.</p>
+<figure class="figure" id="ch11fig7">
+<img src="graphics/11fig07.jpg" alt="images" width="299" height="407"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.7:</strong> Arranging for only the middle item to grow using <span class="green-d"><code><strong>flex-grow: 1</strong></code></span>.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_369"></span>Putting together the rules for the flex container (<span class="green-d"><code><strong>body</strong></code></span>) and the flex items (the header and footer set to the defaults, content with <span class="green-d"><code><strong>flex-grow</strong></code></span> set to <span class="green-d"><code><strong>1</strong></code></span>) gives the CSS shown in <a href="ch11.xhtml#ch11list3">Listing 11.3</a>. Note that <a href="ch11.xhtml#ch11list3">Listing 11.3</a> also added padding of 10% of the viewport height (<span class="green-d"><code><strong>10vh</strong></code></span>) to move the content out from underneath the site header, which also requires a <span class="green-d"><code><strong>10vh</strong></code></span> adjustment to the height of the hero section to make it <span class="green-d"><code><strong>10vh</strong></code></span> smaller so that it still exactly fills the browser window. The width setting is there to make sure that the element stretches to fill the page horizontally as well as vertically.</p>
+<p class="listing" id="ch11list3"><strong>Listing 11.3:</strong> New styles for the body and a new container class.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list03a" id="p11list03">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>body</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+<span class="bg1">  <span class="pd_green2"><strong>flex-direction</strong></span>: <span class="pd_green2"><strong>column</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>font-family</strong></span>: helvetica, arial, sans;</span>
+<span class="bg1">  <span class="pd_green2"><strong>min-height</strong></span>: <span class="grey"><strong>100</strong></span><span class="pd_red"><strong>vh</strong></span>;</span>
+}
+.<span class="blue-v"><strong>content-container</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex-grow</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>padding-top</strong></span>: <span class="grey"><strong>10</strong></span><span class="pd_red"><strong>vh</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>width</strong></span>: <span class="grey"><strong>100</strong></span><span class="pd_red"><strong>%</strong></span>;</span>
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="pd_blue1"><em>/* HERO STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+
+.<span class="blue-v"><strong>full-hero</strong></span> {
+  <span class="pd_green1"><strong>background-color</strong></span>: <span class="grey">#c7dbf</span>c;
+  <span class="pd_green1"><strong>background-size</strong></span>: <span class="pd_green1"><strong>cover</strong></span>;
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+<span class="bg1">  <span class="pd_green2"><strong>height</strong></span>: <span class="grey"><strong>90</strong></span><span class="pd_red"><strong>vh</strong></span>;</span>
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_370"></span><em>Et voilà !</em> After saving your work and refreshing the browser, the content should expand to fill the available space and push the footer to the bottom of the window. Now the padding reveals the content and fixes the problem from the end of <a href="ch10.xhtml#sec10_4">Section 10.4</a>, as shown in <a href="ch11.xhtml#ch11fig8">Figure 11.8</a>.</p>
+<figure class="figure" id="ch11fig8">
+<img src="graphics/11fig08.jpg" alt="images" width="668" height="467"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.8:</strong> The content now grows to fill the available space.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec11_1_1"><span epub:type="pagebreak" id="page_371"></span>11.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Remove <span class="green-d"><code><strong>position: fixed</strong></code></span> from the header, and set both the header and the footer to <span class="green-d"><code><strong>flex-grow: 1</strong></code></span> to see how the flexbox divides space between three elements with different amounts of content.</p></li>
+<li><p class="number">Now remove <span class="green-d"><code><strong>flex-direction: column</strong></code></span> from the body to see how the browser reorders the flex items on the page.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec11_2">11.2 Vertical Flex Centering</h3>
+<p class="noindent">Our second application of flexbox is going to be styling the homepage callout section that we introduced in <a href="ch10.xhtml#sec10_3">Section 10.3</a>. In particular, we’ll make the title and the content share the space in an aesthetically pleasing way. To accomplish this, our flexbox container will be the <span class="green-d"><code><strong>div</strong></code></span> with class <span class="green-d"><code><strong>home-callout</strong></code></span>, and the flexbox items will be the <span class="green-d"><code><strong>h1</strong></code></span> (with class <span class="green-d"><code><strong>callout-title</strong></code></span>), and the child <span class="green-d"><code><strong>div</strong></code></span> (with class <span class="green-d"><code><strong>callout-copy</strong></code></span>):</p>
+<p class="codelink"><a href="ch11_images.xhtml#p371pro01a" id="p371pro01">Click here to view code image</a></p>
+<pre class="pre1">&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-callout"</span>&gt;
+  &lt;<span class="pd_green1"><strong>h1</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-title"</span>&gt;The Learn Enough Story&lt;/<span class="pd_green1"><strong>h1</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"callout-copy"</span>&gt;
+    .
+    .
+    .
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">Our first task is to set the styles for the callout container. After initializing the flexbox with <span class="green-d"><code><strong>display: flex</strong></code></span>, we’ll align the items vertically using <span class="green-d"><code><strong>align-items: center</strong></code></span>, as shown schematically in <a href="ch11.xhtml#ch11fig9">Figure 11.9</a>.</p>
+<figure class="figure" id="ch11fig9">
+<img src="graphics/11fig09.jpg" alt="images" width="674" height="173"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.9:</strong> The different ways to use the <span class="green-d"><code><strong>align-items</strong></code></span> CSS property.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_372"></span>The corresponding CSS appears as follows:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p372pro01a" id="p372pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>home-callout</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>align-items</strong></span>: <span class="pd_green2"><strong>center</strong></span>;</span>
+
+  background-color: #000;
+  color: #fff;
+<span class="bg1"> <span class="pd_green2"><strong>display</strong></span>: <span class="pd_green2"><strong>flex</strong></span>;</span>
+
+  padding: 7vh 0;
+}</pre>
+<p class="indent">Our next task is to apply the rules for the callout flex items, starting with the title. As in <a href="ch11.xhtml#sec11_1">Section 11.1</a>, we’ll set <span class="green-d"><code><strong>flex-grow</strong></code></span> to <span class="green-d"><code><strong>1</strong></code></span> to arrange for the title to fill the available space.</p>
+<p class="indent">We’ll also set the <span class="green-d"><code><strong>flex-basis</strong></code></span>, which is a property that controls the original (“basis”) width of the element. The most common values are <span class="green-d"><code><strong>0</strong></code></span>, which sets the initial width to <span class="green-d"><code><strong>0</strong></code></span> and expands only as much as is needed to contain the content, and <span class="green-d"><code><strong>auto</strong></code></span>, which automatically distributes extra space to each element. Although it’s a less common usage, you can also set the flex basis to a set size value (<a href="ch11.xhtml#ch11fig10">Figure 11.10</a>).</p>
+<figure class="figure" id="ch11fig10">
+<img src="graphics/11fig10.jpg" alt="images" width="674" height="154"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.10:</strong> <span class="green-d"><code><strong>flex-basis</strong></code></span> can size elements proportionally, with respect to content, or to a set size.</p>
+</figcaption>
+</figure>
+<p class="indent">By default, every element has a <span class="green-d"><code><strong>flex-basis: auto</strong></code></span>, but we’ll change it to <span class="green-d"><code><strong>0</strong></code></span> for the title to make it fit more compactly into the container. The resulting CSS for the callout title looks like this:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p372pro02a" id="p372pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-title</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>flex-grow</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+<span class="bg1"> <span class="pd_green2"><strong>flex-basis</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+ <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>5.75</strong></span><span class="pd_red">vw</span>;
+
+  text-align: right;
+  text-transform: uppercase;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_373"></span>Meanwhile, we’ll set the properties on the <span class="green-d"><code><strong>callout-copy</strong></code></span> class to prevent the callout copy from shrinking as the parent element gets smaller by setting the <span class="green-d"><code><strong>flex-shrink</strong></code></span> property to <span class="green-d"><code><strong>0</strong></code></span> (<a href="ch11.xhtml#ch11fig11">Figure 11.11</a>):</p>
+<figure class="figure" id="ch11fig11">
+<img src="graphics/11fig11.jpg" alt="images" width="601" height="185"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.11:</strong> The effect setting <span class="green-d"><code><strong>flex-shrink</strong></code></span> to <span class="green-d"><code><strong>0</strong></code></span> vs. all items set to <span class="green-d"><code><strong>1</strong></code></span>.</p>
+</figcaption>
+</figure>
+<pre class="pre1"><span class="pd_green1"><strong>flex-shrink</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">;</span></pre>
+<p class="indent">We’ll also distribute the space for the callout copy by setting the <span class="green-d"><code><strong>flex-basis</strong></code></span> to be <span class="green-d"><code><strong>45em</strong></code></span>:</p>
+<pre class="pre1"><span class="pd_green1"><strong>flex-basis</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>45em</strong></span><span class="grey">;</span></pre>
+<p class="noindent">This leads to the following new rules for the <span class="green-d"><code><strong>callout-copy</strong></code></span> class:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p373pro01a" id="p373pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-copy</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>flex-shrink</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+<span class="bg1"> <span class="pd_green2"><strong>flex-basis</strong></span>: <span class="grey"><strong>45</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+
+
+ <span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+  <span class="grey">.</span>
+}</pre>
+<p class="indent">Putting everything together gives the CSS in <a href="ch11.xhtml#ch11list4">Listing 11.4</a>. The styles in <a href="ch11.xhtml#ch11list4">Listing 11.4</a> highlight the changes to existing declarations, but also notice both the global style for the <span class="green-d"><code><strong>p</strong></code></span> and the entirely new style declaration for <span class="green-d"><code><strong>.home-callout h3</strong></code></span>. As usual, <span epub:type="pagebreak" id="page_374"></span>apply your technical sophistication (<a href="ch05.xhtml#box5_1">Box 5.1</a>) to comment/uncomment styles to help understand what they do.</p>
+<p class="listing" id="ch11list4"><strong>Listing 11.4:</strong> Making the home callout look a little cooler.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list04a" id="p11list04">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* GLOBAL STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="pd_green1"><strong>p</strong></span> {
+  <span class="pd_green1"><strong>line-height</strong></span>: <span class="grey">1.</span>5;
+<span class="bg1">  <span class="pd_green2"><strong>margin</strong></span>: <span class="grey"><strong>0.75</strong></span><span class="pd_red"><strong>em</strong></span> <span class="grey"><strong>0</strong></span>;</span>
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="pd_blue1"><em>/* HOMEPAGE STYLES */</em></span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span>
+.<span class="blue-v"><strong>home-callout</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>align-items</strong></span>: <span class="pd_green2"><strong>center</strong></span>;</span>
+  <span class="pd_green1"><strong>background-color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>000</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>color</strong></span><span class="grey">:</span> #<span class="blue-v"><strong>fff</strong></span><span class="grey">;</span>
+<span class="bg1">  <span class="pd_green2"><strong>display</strong></span>: <span class="pd_green2"><strong>flex</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>padding</strong></span>: <span class="grey"><strong>7</strong></span><span class="pd_red"><strong>vh</strong></span> <span class="grey"><strong>0</strong></span>;</span>
+}
+<span class="bg1">.<span class="blue-v"><strong>home-callout</strong></span> h3 {</span>
+<span class="bg1">  <span class="pd_green2"><strong>color</strong></span>: <span class="pd_green2"><strong>inherit</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>margin-top</strong></span>: <span class="grey"><strong>1</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+}
+.<span class="blue-v"><strong>callout-title</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex-basis</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>flex-grow</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">5.75</span><span class="pd_red"><strong>vw</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}
+.<span class="blue-v"><strong>callout-copy</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex-basis</strong></span>: <span class="grey"><strong>45</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+<span class="bg1">  <span class="pd_green2"><strong>flex-shrink</strong></span>: <span class="grey"><strong>0</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.8</strong></span><span class="pd_red"><strong>rem</strong></span>;
+<span class="bg1">  <span class="pd_green2"><strong>padding</strong></span>: <span class="grey"><strong>0 3</strong></span><span class="pd_red"><strong>vw</strong></span>;</span>
+}</pre>
+<p class="indent">When you save and refresh, you’ll see that the callout section now looks a lot less haphazard and a lot more stylish (<a href="ch11.xhtml#ch11fig12">Figure 11.12</a>).</p>
+<figure class="figure" id="ch11fig12">
+<img src="graphics/11fig12.jpg" alt="images" width="668" height="361"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.12:</strong> A much better-looking callout. Flexbox all the things!</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec11_2_1"><span epub:type="pagebreak" id="page_375"></span>11.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Try out the different <span class="green-d"><code><strong>align-items</strong></code></span> values by first setting the callout flex items to <span class="green-d"><code><strong>align-items: flex-start</strong></code></span> and then <span class="green-d"><code><strong>align-items: flex-end</strong></code></span>.</p></li>
+<li><p class="number">Change the flex basis of the <span class="green-d"><code><strong>.callout-copy</strong></code></span> to <span class="green-d"><code><strong>300px</strong></code></span>. Refresh your browser to see the smaller version and how the hard value causes it not to change size.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec11_3">11.3 Flexbox Style Options and Shorthand</h3>
+<p class="noindent">Now that we’ve seen some concrete examples, we’re going to take a moment to discuss some more general aspects of flexbox. As part of this, we’ll learn about a powerful shorthand notation that is the most common way to use flexbox in real-world applications. We’ll use this shorthand to refactor the flexbox CSS from the previous sections, and we’ll apply it to a three-column layout in <a href="ch11.xhtml#sec11_4">Section 11.4</a>.</p>
+<section>
+<h4 class="h4" id="sec11_3_1">11.3.1 Flex Container Properties</h4>
+<p class="noindent">We’ll start by illustrating the <span epub:type="pagebreak" id="page_376"></span>different possibilities for the flex container properties <span class="green-d"><code><strong>flex-direction</strong></code></span> and <span class="green-d"><code><strong>align-items</strong></code></span>. <a href="ch11.xhtml#ch11fig13">Figure 11.13</a> shows the <span class="green-d"><code><strong>row</strong></code></span> and <span class="green-d"><code><strong>column</strong></code></span> properties for <span class="green-d"><code><strong>flex-direction</strong></code></span>, as well as their <span class="green-d"><code><strong>-reverse</strong></code></span> variations. It also shows the different possibilities for <span class="green-d"><code><strong>align-items</strong></code></span>. See if you can figure out which diagrams apply to the examples from <a href="ch11.xhtml#sec11_1">Section 11.1</a> and <a href="ch11.xhtml#sec11_2">Section 11.2</a> (<a href="ch11.xhtml#sec11_3_3">Section 11.3.3</a>).</p>
+<figure class="figure" id="ch11fig13">
+<img src="graphics/11fig13.jpg" alt="images" width="674" height="416"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.13:</strong> Flex container properties.</p>
+</figcaption>
+</figure>
+</section>
+<section>
+<h4 class="h4" id="sec11_3_2">11.3.2 Flex Item Properties</h4>
+<p class="noindent">We’ve now seen all three of the primary flexbox item properties—<span class="green-d"><code><strong>flex-grow</strong></code></span>, <span class="green-d"><code><strong>flex-shrink</strong></code></span>, and <span class="green-d"><code><strong>flex-basis</strong></code></span>, which together allow us to control how flex items behave inside their parent container:</p>
+<ul class="bullet">
+<li><p class="bullet"><span class="green-d"><code><strong>flex-grow</strong></code></span> determines how flex items grow inside their parent. Default <span class="green-d"><code><strong>0</strong></code></span>.</p></li>
+<li><p class="bullet"><span class="green-d"><code><strong>flex-shrink</strong></code></span> determines how flex items shrink when their parent gets smaller. Default <span class="green-d"><code><strong>1</strong></code></span>.</p></li>
+<li><p class="bullet"><span class="green-d"><code><strong>flex-basis</strong></code></span> determines the size of flex items before space is distributed and how content is treated. Default <span class="green-d"><code><strong>auto</strong></code></span>.</p></li>
+</ul>
+<p class="indent">As illustrated in <a href="ch11.xhtml#ch11fig14">Figure 11.14</a>, flexbox supports a shorthand notation that follows this pattern:</p>
+<figure class="figure" id="ch11fig14">
+<img src="graphics/11fig14.jpg" alt="images" width="742" height="704"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.14:</strong> Flex item properties.</p>
+</figcaption>
+</figure>
+<p class="codelink"><a href="ch11_images.xhtml#p376pro01a" id="p376pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>flex</strong></span><span class="grey">: &lt;</span><span class="pd_green1"><strong>flex-grow</strong></span><span class="grey">&gt; &lt;</span><span class="pd_green1"><strong>flex-shrink</strong></span><span class="grey">&gt; &lt;</span><span class="pd_green1"><strong>flex-basis</strong></span><span class="grey">&gt;</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_377"></span>For example, as seen in <a href="ch11.xhtml#ch11fig14">Figure 11.14</a>, the default values for the three item properties are <span class="green-d"><code><strong>0</strong></code></span>, <span class="green-d"><code><strong>1</strong></code></span>, and <span class="green-d"><code><strong>auto</strong></code></span>:</p>
+<pre class="pre1"><span class="pd_green1"><strong>flex-grow</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>flex-shrink</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>1</strong></span><span class="grey">;</span>
+<span class="pd_green1"><strong>flex-basis</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>auto</strong></span><span class="grey">;</span></pre>
+<p class="noindent">In the shorthand notation, this can be written as follows:</p>
+<pre class="pre1"><span class="pd_green1"><strong>flex</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>0 1 auto</strong></span><span class="grey">;</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_378"></span>Let’s apply this shorthand to the style from <a href="ch11.xhtml#ch11list3">Listing 11.3</a>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p378pro01a" id="p378pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>content-container</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="noindent">Given the default values of <span class="green-d"><code><strong>flex-shrink</strong></code></span> and <span class="green-d"><code><strong>flex-basis</strong></code></span>, this is equivalent to the following:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p378pro02a" id="p378pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>content-container</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>flex-shrink</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>flex-basis</strong></span>: <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey">10</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="noindent">Thus, using the shorthand notation, we can update the CSS as shown in <a href="ch11.xhtml#ch11list5">Listing 11.5</a>.</p>
+<p class="listing" id="ch11list5"><strong>Listing 11.5:</strong> Using the flexbox shorthand for the content container item.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list05a" id="p11list05">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>content-container</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>1 1</strong></span> <span class="pd_green1"><strong>auto</strong></span>;</span>
+  <span class="pd_green1"><strong>padding-top</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>10vh</strong></span><span class="grey">;</span>
+  <span class="pd_green1"><strong>width</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>100</strong></span><span class="grey">%;</span>
+}</pre>
+<p class="indent">Now let’s refactor the callout CSS from <a href="ch11.xhtml#sec11_2">Section 11.2</a> as well. Recall from <a href="ch11.xhtml#ch11list4">Listing 11.4</a> that the callout copy class is styled as follows:</p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-copy</strong></span> {
+  <span class="pd_green1"><strong>flex-shrink</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>flex-basis</strong></span>: <span class="grey">45</span><span class="pd_red"><strong>em</strong></span>;
+  .
+  .
+  .
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_379"></span>Taking into account that the <span class="green-d"><code><strong>flex-grow</strong></code></span> is <span class="green-d"><code><strong>0</strong></code></span> by default, this is the same as:</p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-copy</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>flex-shrink</strong></span>: <span class="grey">0</span>;
+  <span class="pd_green1"><strong>flex-basis</strong></span>: <span class="grey">45</span><span class="pd_red"><strong>em</strong></span>;
+ .
+ .
+ .
+}</pre>
+<p class="noindent">In the shorthand notation, the callout copy styles then look like this:</p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-copy</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>0 0 45</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+ <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.8</strong></span><span class="pd_red"><strong>rem</strong></span>;
+ <span class="pd_green1"><strong>padding</strong></span>: <span class="grey"><strong>0 3</strong></span><span class="pd_red"><strong>vw</strong></span>;
+}</pre>
+<p class="indent">Finally, we can apply the same ideas to the styles for the callout title (<a href="ch11.xhtml#ch11list4">Listing 11.4</a>):</p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-title</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>flex-basis</strong></span>: <span class="grey">0</span>;
+ .
+ .
+ .
+}</pre>
+<p class="noindent">This is the same as:</p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-title</strong></span> {
+  <span class="pd_green1"><strong>flex-grow</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>flex-shrink</strong></span>: <span class="grey">1</span>;
+  <span class="pd_green1"><strong>flex-basis</strong></span>: <span class="grey">0</span>;
+ .
+ .
+ .
+}</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_380"></span>So the shorthand is:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p380pro01a" id="p380pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-title</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>1 1 0</strong></span>;</span>
+ <span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="grey"><strong>5.75</strong></span><span class="pd_red"><strong>vw</strong></span>;
+ <span class="pd_green1"><strong>text-align</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>right</strong></span><span class="grey">;</span>
+ <span class="pd_green1"><strong>text-transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>uppercase</strong></span><span class="grey">;</span>
+}</pre>
+<p class="noindent">It turns out, though, that there is an even “shorterhand” way to write this, the somewhat cryptic <span class="green-d"><code><strong>flex: 1</strong></code></span>:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p380pro02a" id="p380pro02">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>callout-title</strong></span> {
+<span class="bg1"> <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+ <span class="pd_green1"><strong>font-size</strong></span><span class="grey">:</span> <span class="grey"><strong>5.75</strong></span><span class="pd_red"><strong>vw</strong></span>;
+ <span class="pd_green1"><strong>text-align</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>right</strong></span><span class="grey">;</span>
+ <span class="pd_green1"><strong>text-transform</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>uppercase</strong></span><span class="grey">;</span>
+}</pre>
+<p class="noindent">In other words, writing <span class="green-d"><code><strong>flex: 1</strong></code></span> sets both <span class="green-d"><code><strong>flex-grow</strong></code></span> and <span class="green-d"><code><strong>flex-shrink</strong></code></span> to <span class="green-d"><code><strong>1</strong></code></span>, while setting <span class="green-d"><code><strong>flex-basis</strong></code></span> to <span class="green-d"><code><strong>0</strong></code></span>.</p>
+<p class="indent">Putting all this refactored CSS together, we end up with the compact flexbox CSS shown in <a href="ch11.xhtml#ch11list6">Listing 11.6</a>.</p>
+<p class="listing" id="ch11list6"><strong>Listing 11.6:</strong> Refactoring the home callout CSS to use short(er)hand.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list06a" id="p11list06">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>callout-title</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>5.75</strong></span><span class="pd_red"><strong>vw</strong></span>;
+  <span class="pd_green1"><strong>text-align</strong></span>: <span class="pd_green1"><strong>right</strong></span>;
+  <span class="pd_green1"><strong>text-transform</strong></span>: <span class="pd_green1"><strong>uppercase</strong></span>;
+}
+.<span class="blue-v"><strong>callout-copy</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>0 0 45</strong></span><span class="pd_red"><strong>em</strong></span>;</span>
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey"><strong>0.8</strong></span><span class="pd_red"><strong>rem</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey"><strong>0 3</strong></span><span class="pd_red"><strong>vw</strong></span>;
+}
+<span class="grey">.</span>
+<span class="grey">.</span>
+<span class="grey">.</span></pre>
+<p class="noindent">Because this was a refactoring, we changed the form of the code without changing its function, so after saving and refreshing, your page’s appearance should be unchanged.</p>
+</section>
+<section>
+<h4 class="h4" id="sec11_3_3"><span epub:type="pagebreak" id="page_381"></span>11.3.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Which diagrams in <a href="ch11.xhtml#ch11fig13">Figure 11.13</a> apply to the examples from <a href="ch11.xhtml#sec11_1">Section 11.1</a> and <a href="ch11.xhtml#sec11_2">Section 11.2</a>?</p></li>
+<li><p class="number">Use the <span class="green-d"><code><strong>row-reverse</strong></code></span> value for flex direction as shown in <a href="ch11.xhtml#ch11fig13">Figure 11.13</a> to change the display order of the items in the <span class="green-d"><code><strong>.home-callout</strong></code></span>.</p></li>
+<li><p class="number">Now, use flex direction to change the <span class="green-d"><code><strong>.home-callout</strong></code></span> section to use the <span class="green-d"><code><strong>column</strong></code></span> value, and then <span class="green-d"><code><strong>column-reverse</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec11_4">11.4 Three-Column Page Layout</h3>
+<p class="noindent">Our final application of flexbox involves creating one of the most common page layouts, something that was also one of the most difficult in the days before flexbox: multicolumn layout. In particular, we’ll create a three-column layout where the left and right columns are a fixed width and the center column grows and shrinks as the window size changes.</p>
+<p class="indent">You still regularly see this type of layout used for things like news stories, where you have a main content section that is flanked by navigation on the left and additional information (or subnavigation) on the right. Our three-column layout is a slight variation on this theme, which we’ll end up putting to good use as a photo gallery in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>).</p>
+<p class="indent">Let’s get started by adding a “gallery” link to our site navigation so that we can more easily get to the page that we created in <a href="ch10.xhtml#sec10_4">Section 10.4</a>, as shown in <a href="ch11.xhtml#ch11list7">Listing 11.7</a>.</p>
+<p class="listing" id="ch11list7"><strong>Listing 11.7:</strong> Adding a nav link to the gallery page.<br/><code><em>_includes/nav-links.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list07a" id="p11list07">Click here to view code image</a></p>
+<pre class="pre2">&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/"</span>&gt;Home&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">"/gallery"</span>&gt;Gallery&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;Nav 2&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;
+&lt;<span class="pd_green1"><strong>li</strong></span>&gt;&lt;<span class="pd_green1"><strong>a</strong></span> <span class="light-green1">href</span><span class="grey">=</span><span class="pd_red">""</span>&gt;Nav 3&lt;/<span class="pd_green1"><strong>a</strong></span>&gt;&lt;/<span class="pd_green1"><strong>li</strong></span>&gt;</pre>
+<p class="indent">For the gallery layout itself, we’ll use <span class="green-d"><code><strong>div</strong></code></span>s with the structure shown in <a href="ch11.xhtml#ch11list8">Listing 11.8</a>. This consists of a flexbox container with classes <span class="green-d"><code><strong>gallery col-three</strong></code></span> and three columns, each with a common <span class="green-d"><code><strong>col</strong></code></span> class and a class specialized to the purpose of each column.</p>
+<p class="listing" id="ch11list8"><span epub:type="pagebreak" id="page_382"></span><strong>Listing 11.8:</strong> HTML for the three-column flexbox layout.<br/><code><em>gallery/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list08a" id="p11list08">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"gallery col-three"</span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-nav"</span>&gt;
+    I’m the nav
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-content"</span>&gt;
+    I’m the 3col page!
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-aside"</span>&gt;
+    I’m over on the right
+  &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">Now we’ll once again use the magic of the flexbox to designate the wrapper class <span class="green-d"><code><strong>.col-three</strong></code></span> as <span class="green-d"><code><strong>display: flex</strong></code></span> to make it the flex container, and then use the shorthand notation from <a href="ch11.xhtml#sec11_3">Section 11.3</a> to set the properties of the columns. First, we’ll set the nav column to shrink but not grow, with a minimum width (<span class="green-d"><code><strong>flex-basis</strong></code></span>) of <span class="green-d"><code><strong>15em</strong></code></span>:</p>
+<pre class="pre1">.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-nav</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 1 15</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="noindent">Next, we’ll arrange for the content to both shrink and grow with changing window width, with as little space as possible:</p>
+<pre class="pre1">.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-content</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1 1</span> 0;
+}</pre>
+<p class="noindent">Finally, we’ll have the aside column (to be used for brief image descriptions) shrink but not grow, with a flex basis of <span class="green-d"><code><strong>20em</strong></code></span>:</p>
+<pre class="pre1">.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-aside</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 1 20</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Adding in these styles together with other styles from previous sections gives the column styles shown in <a href="ch11.xhtml#ch11list9">Listing 11.9</a>.</p>
+<p class="listing" id="ch11list9"><span epub:type="pagebreak" id="page_383"></span><strong>Listing 11.9:</strong> CSS for the three-column flexbox layout.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list09a" id="p11list09">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* COLUMN STYLES */</em></span>
+.<span class="blue-v"><strong>col-three</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+}
+.<span class="blue-v"><strong>col</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>padding</strong></span>: <span class="grey">2</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col</strong></span> <span class="grey">~</span> .<span class="blue-v"><strong>col</strong></span> {
+  <span class="pd_green1"><strong>border-left</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>solid</strong></span> <span class="pd_green1">rgb</span>a<span class="grey">(</span>0, <span class="grey">0</span>, <span class="grey">0</span>, <span class="grey">0.</span>1);
+}
+.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-nav</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 1 15</span><span class="pd_red"><strong>em</strong></span>;
+}
+.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-content</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>col-three</strong></span> .<span class="blue-v"><strong>col-aside</strong></span> {
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey">0 1 20</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Woohoo, columns (<a href="ch11.xhtml#ch11fig15">Figure 11.15</a>)!</p>
+<figure class="figure" id="ch11fig15">
+<img src="graphics/11fig15.jpg" alt="images" width="668" height="454"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.15:</strong> Our initial three-column gallery.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_384"></span>Due to the rules in <a href="ch11.xhtml#ch11list9">Listing 11.9</a>, if you resize the browser window you’ll see that the columns on the left and right stay the same size (<span class="green-d"><code><strong>15em</strong></code></span> and <span class="green-d"><code><strong>20em</strong></code></span>, respectively). Because <span class="green-d"><code><strong>flex-grow</strong></code></span> is <span class="green-d"><code><strong>0</strong></code></span> for <span class="green-d"><code><strong>.col-nav</strong></code></span> and <span class="green-d"><code><strong>.col-aside</strong></code></span>, those columns won’t expand to fill the space, and since they both have a width set for the <span class="green-d"><code><strong>flex-basis</strong></code></span>, each item will be drawn as the basis width. Meanwhile, <span class="green-d"><code><strong>.col-content</strong></code></span> has <span class="green-d"><code><strong>flex-grow</strong></code></span> set to <span class="green-d"><code><strong>1</strong></code></span> and no flex basis, so it will take up as much space as it can.</p>
+<p class="indent">All the items have their <span class="green-d"><code><strong>flex-shrink</strong></code></span> set to <span class="green-d"><code><strong>1</strong></code></span>, which means that they’ll shrink in proportion as the window gets smaller, but since the basis is set for <span class="green-d"><code><strong>.col-nav</strong></code></span> and <span class="green-d"><code><strong>.col-aside</strong></code></span>, they won’t shrink past their basis width (<a href="ch11.xhtml#ch11fig16">Figure 11.16</a>).</p>
+<figure class="figure" id="ch11fig16">
+<img src="graphics/11fig16.jpg" alt="images" width="665" height="501"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.16:</strong> The three-column gallery in a window with a much smaller width.</p>
+</figcaption>
+</figure>
+<p class="indent">But wait—our layout is currently only the height of the content… Wouldn’t it be better if it were the full height of the <span class="green-d"><code><strong>.content-container</strong></code></span>? Guess how we can fix that? If you guessed more flexbox, give yourself a pat on the back!</p>
+<p class="indent"><span epub:type="pagebreak" id="page_385"></span>Flexbox styles are designed to be nestable, so a flex item can also be a flex container. In this case, to get our gallery to expand in height, we can make <span class="green-d"><code><strong>.content-container</strong></code></span>—which served as a flex <em>item</em> in <a href="ch11.xhtml#sec11_1">Section 11.1</a>—into a flex <em>container</em> as well, via the rule <span class="green-d"><code><strong>display: flex</strong></code></span>.</p>
+<p class="indent">If you are wondering why this won’t necessarily mess up everything on other pages, remember that the default values for flex items (<span class="green-d"><code><strong>flex-grow: 0</strong></code></span>, <span class="green-d"><code><strong>flex-shrink: 1</strong></code></span>, and <span class="green-d"><code><strong>flex-basis: auto</strong></code></span>) cause them to act like regular block elements. So having the parent container initialized as a flex container isn’t going to do anything weird (unless you want it to be weird… heeeyoh!).</p>
+<p class="indent">The result appears in <a href="ch11.xhtml#ch11list10">Listing 11.10</a>, which also applies the <span class="green-d"><code><strong>flex: 1</strong></code></span> rule used in <a href="ch11.xhtml#ch11list6">Listing 11.6</a> to all three columns (<span class="green-d"><code><strong>.col-three</strong></code></span>). Recall from <a href="ch11.xhtml#sec11_3_2">Section 11.3.2</a> that <span class="green-d"><code><strong>flex: 1</strong></code></span> is equivalent to a flex grow and shrink of <span class="green-d"><code><strong>1</strong></code></span>, so that they grow and shrink proportionally with window size, and a flex basis of <span class="green-d"><code><strong>0</strong></code></span>, so that there is a minimum of extra space.</p>
+<p class="listing" id="ch11list10"><strong>Listing 11.10:</strong> Arranging for the columns to take up the full height of their parent.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list10a" id="p11list10">Click here to view code image</a></p>
+<pre class="pre2">.<span class="blue-v"><strong>content-container</strong></span> {
+<span class="bg1">  <span class="pd_green2"><strong>display</strong></span>: <span class="pd_green2"><strong>flex</strong></span>;</span>
+  <span class="pd_green1"><strong>flex</strong></span>: <span class="grey"><strong>1 1</strong></span> <span class="pd_green1"><strong>auto</strong></span>;
+  <span class="pd_green1"><strong>padding-top</strong></span>: <span class="grey"><strong>10</strong></span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey"><strong>100</strong></span><span class="pd_red"><strong>%</strong></span>;
+}
+.
+.
+.
+<span class="pd_blue1">/*</span> <span class="pd_blue1"><em>COLUMN STYLES</em></span> <span class="pd_blue1">*/</span>
+
+.<span class="blue-v"><strong>col-three</strong></span> {
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>flex</strong></span>;
+<span class="bg1">  <span class="pd_green2"><strong>flex</strong></span>: <span class="grey"><strong>1</strong></span>;</span>
+}</pre>
+<p class="indent">Saving your work and refreshing will give you an improved, full-screen, three-column layout (<a href="ch11.xhtml#ch11fig17">Figure 11.17</a>).</p>
+<figure class="figure" id="ch11fig17">
+<img src="graphics/11fig17.jpg" alt="images" width="668" height="340"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.17:</strong> Fixed gallery now takes up the whole vertical space.</p>
+</figcaption>
+</figure>
+<section>
+<h4 class="h4" id="sec11_4_1"><span epub:type="pagebreak" id="page_386"></span>11.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Try setting all of the columns to have <span class="green-d"><code><strong>flex: 1</strong></code></span> to make them equal in size.</p></li>
+<li><p class="number">Now try setting the left and right columns to <span class="green-d"><code><strong>flex: 0 0 auto</strong></code></span> so that they only take up as much space as the content inside requires, but are also limited from growing and shrinking.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec11_5">11.5 A Gallery Stub</h3>
+<p class="noindent">As a final step in developing our three-column layout from <a href="ch11.xhtml#sec11_4">Section 11.4</a>, we’ll give the gallery page a quick makeover. Adding this content and the necessary styles will both give us a chance to use some of the CSS we’ve been learning, and prep the page for the future tutorial. (In <em>Learn Enough JavaScript to Be Dangerous</em>, we’ll make this page into a functional photo gallery.)</p>
+<p class="indent">This practice of filling pages with temporary material that will be made functional later is often referred to as <em>stubbing out content</em> or <em>adding dummy content</em>. In the present case, we’ll need some images to stub out the gallery content, which you can get using this <span class="green-d"><code><strong>curl</strong></code></span> command:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p387pro01a" id="p387pro01">Click here to view code image</a></p>
+<pre class="pre1"><span class="b-nilam"><strong>$</strong></span> curl -OL https://cdn.learnenough.com/le-css/gallery.zip
+<span class="b-nilam"><strong>$</strong></span> unzip gallery.zip -d images/        <span class="pd_blue1"><em># unzip into the images directory</em></span>
+<span class="b-nilam"><strong>$</strong></span> rm gallery.zip</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_387"></span>This uses the <span class="green-d"><code><strong>unzip</strong></code></span> command to unzip the gallery images into the <span class="green-d"><code><strong>images</strong></code></span> directory (using the <span class="green-d"><code><strong>-d</strong></code></span> flag, a list of flags can be shown by using <span class="green-d"><code><strong>man unzip</strong></code></span>).<sup><a id="fn11_1a" href="ch11.xhtml#fn11_1">1</a></sup> The result should be two new folders, <span class="green-d"><code><strong>large</strong></code></span> and <span class="green-d"><code><strong>small</strong></code></span>, each with a single image inside (<a href="ch11.xhtml#ch11fig18">Figure 11.18</a>).</p>
+<p class="footnote"><a id="fn11_1" href="ch11.xhtml#fn11_1a">1</a>. The <span class="green-d"><code><strong>man</strong></code></span> command is covered in <a href="ch01.xhtml#sec1_4">Section 1.4</a> of <em>Learn Enough Developer Tools to Be Dangerous</em>.</p>
+<figure class="figure" id="ch11fig18">
+<img src="graphics/11fig18.jpg" alt="images" width="670" height="468"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.18:</strong> The project folders and files at this point.</p>
+</figcaption>
+</figure>
+<p class="indent">Next, we’re going to add the image elements into the gallery’s HTML, as seen in <a href="ch11.xhtml#ch11list11">Listing 11.11</a>. Also, while we’re adding content, we should add in some new classes on the columns so that we can more easily target gallery-related elements. Finally, we’ll add in some CSS ids (<a href="ch06.xhtml#sec6_2">Section 6.2</a>) in anticipation of targeting them with JavaScript in <em>Learn Enough JavaScript to Be Dangerous</em>.</p>
+<p class="listing" id="ch11list11"><span epub:type="pagebreak" id="page_388"></span><strong>Listing 11.11:</strong> Adding in dummy elements with classes and ids.<br/><code><em>gallery/index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list11a" id="p11list11">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+&lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"gallery col-three"</span>&gt;
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-nav gallery-thumbs"</span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"gallery-thumbs"</span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"current"</span>&gt;
+      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"/images/small/slide1.jpg"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Image title 1"</span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+    &lt;<span class="pd_green1"><strong>div</strong></span>&gt;
+      &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"/images/small/slide1.jpg"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Image title 2"</span>&gt;
+    &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-content"</span>&gt;
+   &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"gallery-photo"</span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"gallery-photo"</span>&gt;
+     &lt;<span class="pd_green1"><strong>img</strong></span> <span class="light-green1">src</span><span class="grey">=</span><span class="pd_red">"/images/large/slide1.jpg"</span> <span class="light-green1">alt</span><span class="grey">=</span><span class="pd_red">"Image title 1"</span>&gt;
+   &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+ &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"col col-aside gallery-info"</span> <span class="light-green1">id</span><span class="grey">=</span><span class="pd_red">"gallery-info"</span>&gt;
+   &lt;<span class="pd_green1"><strong>h3</strong></span>&gt;Image Title 1&lt;/<span class="pd_green1"><strong>h3</strong></span>&gt;
+   &lt;<span class="pd_green1"><strong>p</strong></span>&gt;Image description 1&lt;/<span class="pd_green1"><strong>p</strong></span>&gt;
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent">If you save the file and look at the page, you’ll notice that it doesn’t look great (<a href="ch11.xhtml#ch11fig19">Figure 11.19</a>).</p>
+<figure class="figure" id="ch11fig19">
+<img src="graphics/11fig19.jpg" alt="images" width="672" height="469"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.19:</strong> This gallery is displaying nothing… except incompetence!</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_389"></span>Let’s add some CSS to make this page look a little better. You’ll have seen most of what we are adding, but there will be a couple of new things, which we’ll go over below.</p>
+<p class="indent">On the left-hand side, you’ll remember that we added a <span class="green-d"><code><strong>gallery-thumbs</strong></code></span> id and class to the <span class="green-d"><code><strong>.col-nav</strong></code></span>, and in that container we added two <span class="green-d"><code><strong>div</strong></code></span>s that both have an image in them—though one of them has the class <span class="green-d"><code><strong>.current</strong></code></span> on it. We’ll set an absolute height on that column and then set the <span class="green-d"><code><strong>overflow</strong></code></span> to <span class="green-d"><code><strong>scroll</strong></code></span> so that if there are a lot of image links, a user could vertically scroll through them. Then, we’ll style the images in the thumbnails to be only the width of the column so that they don’t take up too much space.</p>
+<p class="indent">These thumbnails are eventually going to be the way that users switch between images in the gallery, but for this example we just copied one to show the two states that the thumbnails can be in (currently selected and default). When the <span class="green-d"><code><strong>.current</strong></code></span> class is present, the image inside has an orange-red border, and the opacity is set to <span class="green-d"><code><strong>1</strong></code></span> so that it can be clearly seen:</p>
+<p class="codelink"><a href="ch11_images.xhtml#p390pro01a" id="p390pro01">Click here to view code image</a></p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery-thumbs</strong></span> {
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">90</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>scroll</strong></span>;
+}
+.<span epub:type="pagebreak" id="page_390"></span><span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>div</strong></span> {
+  <span class="pd_green1"><strong>cursor</strong></span>: <span class="pd_green1"><strong>pointer</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="grey">0 0 0 5</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>transparent</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 0 10</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">0.</span>5;
+  <span class="pd_green1"><strong>transition</strong></span>: <span class="pd_green1"><strong>all</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span>:<span class="v1">hover</span> {
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> .<span class="blue-v"><strong>current</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="grey">0 0 0 5</span><span class="pd_red"><strong>px</strong></span> <span class="grey">#ed6e2</span>f;
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">1</span>;
+}</pre>
+<p class="indent">If you hover over the other thumbnail, you’ll see that it animates from partially transparent to opaque. That happens because of the <span class="green-d"><code><strong>transition: all 0.5s ease-in-out</strong></code></span> style that we added.</p>
+<p class="codelink"><a href="ch11_images.xhtml#p390pro02a" id="p390pro02">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>transition</strong></span><span class="grey">:</span> <span class="pd_green1"><strong>all 0</strong></span>.<span class="blue-v"><strong>5s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span><span class="grey">;</span></pre>
+<p class="indent">That is a CSS animation style that automatically animates the way an element looks (over a period of 0.5 seconds) if its style changes. The <span class="green-d"><code><strong>all</strong></code></span> value makes it so the animation will kick in on any style (you can make it apply only to certain properties), the time is self-explanatory, and the last value <span class="green-d"><code><strong>ease-in-out</strong></code></span> tells the browser what speed it should run the animation. <span class="green-d"><code><strong>ease-in-out</strong></code></span> makes it run a little slower at the beginning and end, which makes the animation feel a little more natural. (If you want to read more about the transition style, the Mozilla Developer documentation on CSS transitions (<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions/Using_CSS_transitions">https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions/Using_CSS_transitions</a>) has a thorough look at the property and values.)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_391"></span>In the center, we wrapped the big version of the image in a container with a <span class="green-d"><strong>gallery-photo</strong></span> class and id to make it easy to target. We’ll use that class to set the width of the image inside to 100% so that it fills the full width of the center column:</p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery-photo</strong></span> {
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-photo</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}</pre>
+<p class="indent">On the right-hand side of the page, we added a <span class="green-d"><code><strong>gallery-info</strong></code></span> id and class to the <span class="green-d"><code><strong>.col-aside</strong></code></span>, and we’ll use that class to target a couple of text-related styles to make that informational section look a little nicer:</p>
+<pre class="pre1">.<span class="blue-v"><strong>gallery-info</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-info</strong></span> <span class="pd_green1"><strong>h3</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent">Putting everything together gives us the gallery styles shown in <a href="ch11.xhtml#ch11list12">Listing 11.12</a>.</p>
+<p class="listing" id="ch11list12"><strong>Listing 11.12:</strong> Adding in a section of styles for our gallery.<br/><code><em>css/main.css</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list12a" id="p11list12">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue1"><em>/* GALLERY STYLES */</em></span>
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> {
+  <span class="pd_green1"><strong>height</strong></span>: <span class="grey">90</span><span class="pd_red"><strong>vh</strong></span>;
+  <span class="pd_green1"><strong>overflow</strong></span>: <span class="pd_green1"><strong>scroll</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="grey">&gt;</span> <span class="pd_green1"><strong>div</strong></span> {
+  <span class="pd_green1"><strong>cursor</strong></span>: <span class="pd_green1"><strong>pointer</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>box-sizing</strong></span>: <span class="pd_green1"><strong>border-box</strong></span>;
+  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="grey">0 0 0 5</span><span class="pd_red"><strong>px</strong></span> <span class="pd_green1"><strong>transparent</strong></span>;
+  <span class="pd_green1"><strong>display</strong></span>: <span class="pd_green1"><strong>inline-block</strong></span>;
+  <span class="pd_green1"><strong>margin</strong></span>: <span class="grey">0 0 10</span><span class="pd_red"><strong>px</strong></span>;
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">0.</span>5;
+  <span class="pd_green1"><strong>transition</strong></span>: <span class="pd_green1"><strong>all</strong></span> <span class="grey">0.5</span><span class="pd_red"><strong>s</strong></span> <span class="pd_green1"><strong>ease-in-out</strong></span>;
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> <span class="pd_green1"><strong>img</strong></span>:<span class="v1">hover</span> {
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>gallery-thumbs</strong></span> .<span class="blue-v"><strong>current</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>box-shadow</strong></span>: <span class="grey">0 0 0 5</span><span class="pd_red"><strong>px</strong></span> <span class="grey">#ed6e2</span>f;
+  <span class="pd_green1"><strong>opacity</strong></span>: <span class="grey">1</span>;
+}
+.<span class="blue-v"><strong>gallery-photo</strong></span> {
+  <span class="pd_green1"><strong>position</strong></span>: <span class="pd_green1"><strong>relative</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-photo</strong></span> <span class="pd_green1"><strong>img</strong></span> {
+  <span class="pd_green1"><strong>width</strong></span>: <span class="grey">100</span><span class="pd_red"><strong>%</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-info</strong></span> {
+  <span class="pd_green1"><strong>font-size</strong></span>: <span class="grey">0.8</span><span class="pd_red"><strong>rem</strong></span>;
+}
+.<span class="blue-v"><strong>gallery-info</strong></span> <span class="pd_green1"><strong>h3</strong></span> {
+  <span class="pd_green1"><strong>margin-bottom</strong></span>: <span class="grey">1</span><span class="pd_red"><strong>em</strong></span>;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_392"></span>When you save and refresh, you’ll see that things are in order now—the gallery looks nice, changes size when you change the browser window, and reacts to your mouse cursor (<a href="ch11.xhtml#ch11fig20">Figure 11.20</a>).</p>
+<figure class="figure" id="ch11fig20">
+<img src="graphics/11fig20.jpg" alt="images" width="671" height="352"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.20:</strong> Everything in its right place.</p>
+</figcaption>
+</figure>
+<p class="indent">One last little bit of cleanup before we move on: If you navigate away from the gallery and back to the homepage, you’ll find that things are… not looking good (<a href="ch11.xhtml#ch11fig21">Figure 11.21</a>).</p>
+<figure class="figure" id="ch11fig21">
+<img src="graphics/11fig21.jpg" alt="images" width="671" height="382"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.21:</strong> Our flexbox in a flexbox content container has caused a layout issue.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_393"></span>The problem is that our <span class="green-d"><code><strong>.content-container</strong></code></span> that is now a flexbox inside a flexbox is forcing everything on the homepage to try and squish inside the wrapper horizontally. We could fix this by changing the <span class="green-d"><code><strong>flex-direction</strong></code></span> property on the <span class="green-d"><code><strong>.content-container</strong></code></span> to have a value of <span class="green-d"><code><strong>column</strong></code></span>, which would work because it would then build all the child elements vertically. Since there is no flex property set for the child elements on the homepage, they would just display as regular block elements. Unfortunately, then we’d have to lose the nice full-screen gallery layout.</p>
+<p class="indent">An easier solution, which also happens to just be a good idea in general, is to use a wrapper (yes, another! (<a href="ch10.xhtml#box10_2">Box 10.2</a>)) around the whole page. In this case, we’ll use a <span class="green-d"><code><strong>div</strong></code></span> and give it a class name of <span class="green-d"><code><strong>home</strong></code></span> (<a href="ch11.xhtml#ch11list13">Listing 11.13</a>).</p>
+<p class="listing" id="ch11list13"><strong>Listing 11.13:</strong> Wrapping the homepage in a <span class="green-d"><code><strong>div</strong></code></span> to contain all children.<br/><code><em>index.html</em></code></p>
+<p class="codelink"><a href="ch11_images.xhtml#p11list13a" id="p11list13">Click here to view code image</a></p>
+<pre class="pre2">---
+layout: default
+---
+
+<span class="bg1">&lt;<span class="pd_green2"><strong>div</strong></span> <span class="light-green"><strong>class</strong></span><span class="grey"><strong>=</strong></span><span class="pd_red"><strong>"home"</strong></span>&gt;</span>
+  &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"full-hero hero-home"</span>&gt;
+  .
+  .
+  .
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+ &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-callout"</span>&gt;
+  .
+  .
+  .
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+
+ &lt;<span class="pd_green1"><strong>div</strong></span> <span class="light-green1">class</span><span class="grey">=</span><span class="pd_red">"home-section"</span>&gt;
+   .
+   .
+   .
+ &lt;/<span class="pd_green1"><strong>div</strong></span>&gt;
+&lt;/<span class="pd_green1"><strong>div</strong></span>&gt;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_394"></span>When you save your changes, the homepage should be back to normal (<a href="ch11.xhtml#ch11fig22">Figure 11.22</a>).</p>
+<figure class="figure" id="ch11fig22">
+<img src="graphics/11fig22.jpg" alt="images" width="671" height="468"/>
+<figcaption>
+<p class="title-f"><strong>Figure 11.22:</strong> Our homepage has returned to normal.</p>
+</figcaption>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_395"></span>So why did this work, and why is it a good idea? It worked because the single wrapper that we added ends up as the only flex-eligible element inside the <span class="green-d"><code><strong>.content-container</strong></code></span>, which means it just takes up all of the space. Inside that, though, no flexing is being applied, so the elements just build as normal block elements and the wrapper expands naturally to contain them.</p>
+<p class="indent">Adding a wrapper like this is a good idea because wrapping individual pages with a class that pertains to only that page can be helpful in the future when there is something that you want to style only for the content on that one page. It makes the entire homepage a portable, singular whole, instead of a collection of three child elements as it was before. We did the same thing on the gallery page when we wrapped the content in a <span class="green-d"><code><strong>div</strong></code></span> with a class of <span class="green-d"><code><strong>.gallery</strong></code></span> (<a href="ch11.xhtml#ch11list8">Listing 11.8</a>). Going forward, all of our pages will be wrapped with a single <span class="green-d"><code><strong>div</strong></code></span> with a class specific to that view.</p>
+<section>
+<h4 class="h4" id="sec11_5_1">11.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">To see how the CSS transition timing property works, try changing the <span class="green-d"><code><strong>0.5s</strong></code></span> to <span class="green-d"><code><strong>2s</strong></code></span>.</p></li>
+<li><p class="number">The transition property can also be targeted so that it pays attention only to one type of CSS change. In the <span class="green-d"><code><strong>.gallery-thumbs img:hover</strong></code></span> declaration, add in a style to set the width to 50%. When you hover over the element in the browser, the change in width will animate. Now change the transition property of the <span class="green-d"><code><strong>.gallery-thumbs img</strong></code></span> declaration to <span class="green-d"><code><strong>opacity 0.5s ease-in-out</strong></code></span>. When you save and refresh, only the opacity will animate; the width will just make a sudden change.</p></li>
+<li><p class="number">The pointer style controls what a user’s cursor looks like—a helpful bit of CSS for giving users hints about what should be clickable and what should not respond. Add a new declaration targeting <span class="green-d"><code><strong>.gallery-thumbs .current</strong></code></span>, and set a style of <span class="green-d"><code><strong>cursor: default</strong></code></span>. Now when you roll over the current image, the cursor will not change, suggesting to a user that the element is not clickable.<span epub:type="pagebreak" id="page_396"></span></p></li>
+</ol>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

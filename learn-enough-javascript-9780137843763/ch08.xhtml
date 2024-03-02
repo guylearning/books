@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough JavaScript to Be Dangerous: Write Programs, Publish Packages, and Develop Interactive Websites with JavaScript</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843879.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch08"><span epub:type="pagebreak" id="page_153"></span>Chapter 8</h2>
+<h2 class="chap-title">Testing and Test-Driven Development</h2>
+<p class="noindent">Although rarely covered in introductory programming tutorials, <em>automated testing</em> is one of the most important subjects in modern software development. Accordingly, this chapter includes an introduction to testing in JavaScript, including a first look at <em>test-driven development</em>, or TDD.</p>
+<p class="indent">Test-driven development came up briefly in <a href="ch06.xhtml#ch6lev3sec3">Section 6.3.3</a>, which promised that we would use testing techniques to add an important capability to finding palindromes, namely, being able to detect complicated palindromes such as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch6fig7">Figure 6.7</a>) or “Madam, I’m Adam.” (<a href="ch08.xhtml#ch8fig1">Figure 8.1</a>).<sup><a id="ch8fn-1" href="ch08.xhtml#ch8fn_1">1</a></sup> This chapter fulfills that promise.</p>
+<p class="footnote"><a id="ch8fn_1" href="ch08.xhtml#ch8fn-1">1</a>. Image courtesy of Album/Alamy Stock Photo.</p>
+<figure class="figure" id="ch8fig1">
+<img src="graphics/08fig01.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.1:</strong> The <a href="https://en.wikipedia.org/wiki/Garden_of_Eden">Garden of Eden</a> had it all—even palindromes.</p>
+</figcaption>
+</figure>
+<p class="indent">As it turns out, learning how to write JavaScript tests will also give us a chance to learn how to create and use self-contained software packages called <em>NPM modules</em>, another valuable modern JavaScript skill.</p>
+<p class="indent">(In addition to testing NPM modules, testing JavaScript in web applications is certainly possible, but the choices are less standardized, and are often more tightly coupled to the underlying browser and operating system. As a result, this tutorial focuses on the fundamental <em>ideas</em> behind testing, thereby serving as preparation for <a href="https://www.google.com/search?q=javascript+browser+tests">possible browser tests</a> later on.)</p>
+<p class="indent">Here’s our strategy for testing the current palindrome code and extending it to more complicated phrases:</p>
+<span epub:type="pagebreak" id="page_154"></span>
+<ol class="number">
+<li><p class="number">Set up our system for automated testing (<a href="ch08.xhtml#ch8lev1">Section 8.1</a>).</p></li>
+<li><p class="number">Write automated tests for the existing <span class="pd_green"><code><strong>palindrome</strong></code></span> functionality (<a href="ch08.xhtml#ch8lev2">Section 8.2</a>).</p></li>
+<li><p class="number">Write a <em>failing</em> test for the enhanced palindrome detector (<span class="red"><span class="smallcaps">RED</span></span>) (<a href="ch08.xhtml#ch8lev3">Section 8.3</a>).</p></li>
+<li><p class="number">Write (possibly ugly) code to get the test <em>passing</em> (<span class="pd_green"><span class="smallcaps">GREEN</span></span>) (<a href="ch08.xhtml#ch8lev4">Section 8.4</a>).</p></li>
+<li><p class="number"><em>Refactor</em> the code to make it prettier, while ensuring that the test suite stays <span class="pd_green"><span class="smallcaps">GREEN</span></span> (<a href="ch08.xhtml#ch8lev5">Section 8.5</a>).</p></li>
+</ol>
+<section>
+<h3 class="h3" id="ch8lev1">8.1 Testing Setup</h3>
+<p class="noindent">Our testing tool of choice is <a href="https://mochajs.org/">Mocha</a> (<a href="https://mochajs.org/">https://mochajs.org/</a>) (<a href="ch08.xhtml#ch8fig2">Figure 8.2</a>), a powerful testing framework for Node.js. We can install it using the Node Package Manager, or NPM, which comes installed automatically with Node. To install it globally, we use the <span class="pd_green"><code><strong>npm</strong></code></span> command (which is included automatically as part of Node.js) with the <span class="pd_green"><code><strong>--global</strong></code></span> flag:</p>
+<span epub:type="pagebreak" id="page_155"></span>
+<figure class="figure" id="ch8fig2">
+<img src="graphics/08fig02.jpg" alt="images" width="543" height="218"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.2:</strong> Mocha is a popular and powerful JavaScript testing framework.</p>
+</figcaption>
+</figure>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm install --global mocha</pre>
+<p class="noindent">(The general rule regarding NPM modules is to install them globally if you just want access to the corresponding executable—in this case, <span class="pd_green"><code><strong>mocha</strong></code></span>—and install them locally (by omitting the <span class="pd_green"><code><strong>--global</strong></code></span> flag) if you want the module to be part of your current project. We’ll see an example of the latter case starting in <a href="ch09.xhtml#ch9lev1">Section 9.1</a>.)</p>
+<p class="indent">As a second bit of setup, we also have to configure <span class="pd_green"><code><strong>palindrome.js</strong></code></span> as an NPM module itself. This is because (as mentioned briefly in <a href="ch05.xhtml#ch5lev3">Section 5.3</a>) JavaScript has no native way to include the functionality of one source file into another (an unusual state of affairs for a programming language, which in this case is due to JavaScript’s roots in the browser). In this case, we want to be able to use our palindrome detector in web pages (<a href="ch09.xhtml#ch09">Chapter 9</a>) and in shell scripts (<a href="ch10.xhtml#ch10">Chapter 10</a>). Luckily, Node includes a special function called <span class="pd_green"><code><strong>require</strong></code></span> to accomplish this task, so that the code</p>
+<pre class="pre1">require(<span class="gray">&lt;</span>module nam<span class="gray">e</span>&gt;)</pre>
+<p class="noindent">will include the functionality of the corresponding module in the current application.</p>
+<p class="indent">Our palindrome detector will exist as a standalone module; that is, it will be self-contained and suitable for inclusion into other programs (web pages, shell scripts, or even other modules). As a result, we’ll place all the code for the module in a separate directory, called <span class="pd_green"><code><strong>palindrome</strong></code></span>:</p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_156"></span><span class="pd_blue"><strong>$</strong></span> <span class="pd_green1">cd</span> ~/repos/
+<span class="pd_blue"><strong>$</strong></span> mkdir palindrome
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green1">cd</span> palindrome</pre>
+<p class="indent">Next, we’ll get a head start on our <span class="pd_green"><code><strong>palindrome</strong></code></span> module by copying the <span class="pd_green"><code><strong>palindrome.js</strong></code></span> file developed in previous sections to the file <span class="pd_green"><code><strong>index.js</strong></code></span>, which is the standard name for the main file in an NPM module:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c156pro02" id="c156pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> cp ~/repos/js_tutorial/palindrome.js index.js</pre>
+<p class="noindent">We’ll adapt this file into the full palindrome detector throughout the rest of this chapter.</p>
+<p class="indent">Since the directory is now nonempty, we can put it under version control with Git:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c156pro03" id="c156pro03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> git init
+<span class="pd_blue"><strong>$</strong></span> git add -A
+<span class="pd_blue"><strong>$</strong></span> git commit -m <span class="pd_red">"Initialize repository"</span></pre>
+<p class="noindent">At this point, I recommend creating a public repository for the module at GitHub by following the instructions in <a href="ch01.xhtml#ch1lev2sec1">Section 1.2.1</a>. This will also give you a GitHub repo URL for use in the next step.</p>
+<p class="indent">To get us started with a new module, the <span class="pd_green"><code><strong>npm</strong></code></span> program comes with a helpful command called <span class="pd_green"><code><strong>npm init</strong></code></span>, which includes a series of interactive questions. I suggest running <span class="pd_green"><code><strong>npm init</strong></code></span> and filling in the values by referring to <a href="ch08.xhtml#ch8list1">Listing 8.1</a>; especially make sure to use <span class="pd_green"><code><strong>mocha</strong></code></span> as the “test command” and 0.1.0 for the version number (<a href="ch08.xhtml#ch8box1">Box 8.1</a>). (We’ll learn more about the versioning process when we publish our module in <a href="ch08.xhtml#ch8lev5">Section 8.5</a>.) Also note that I’ve scoped the package name using my standard username (<span class="pd_green"><code><strong>mhartl</strong></code></span>), yielding</p>
+<pre class="pre1"><span class="pd_red">"name"</span><span class="gray">:</span> <span class="pd_red">"mhartl-palindrome"</span></pre>
+<p class="noindent">instead of</p>
+<pre class="pre1"><span class="pd_red">"name"</span><span class="gray">:</span> <span class="pd_red">"palindrome"</span></pre>
+<p class="noindent">This is done so that everyone reading this tutorial can create a separate module, so you should substitute a unique username in place of <span class="pd_green"><code><strong>mhartl</strong></code></span> in <a href="ch08.xhtml#ch8list1">Listing 8.1</a>.</p>
+<p class="listing" id="ch8list1"><span epub:type="pagebreak" id="page_157"></span><strong>Listing 8.1:</strong> Initializing an NPM module.</p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis01" id="c08lis01a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_blue"><strong>$</strong></span> npm init
+<span class="pd_green">package name: (mhartl-palindrome)
+version: (0.1.0)
+description: Palindrome detector
+entry point: (index.js)
+test command: mocha
+git repository: https://github.com/mhartl/mhartl-palindrome
+keywords: palindrome learn-enough javascript
+author: Michael Hartl
+license: (ISC)
+About to write to /Users/mhartl/repos/palindrome/package.json:</span>
+
+<span class="pd_green">{</span>
+  <span class="pd_green">"name": "mhartl-palindrome",
+  "version": "0.1.0",
+  "description": "Palindrome detector",
+  "main": "index.js",
+  "scripts": {</span>
+    <span class="pd_green">"test": "mocha"
+  },
+  "repository": {</span>
+    <span class="pd_green">"type": "git",
+    "url": "https://github.com/mhartl/mhartl-palindrome"
+  },
+  "author": "Michael Hartl",
+  "license": "ISC"
+}</span></pre>
+<p class="noindent">The result of <a href="ch08.xhtml#ch8list1">Listing 8.1</a> is a file called <span class="pd_green"><code><strong>package.json</strong></code></span> that records the configuration for our module using JavaScript Object Notation, or <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> (usually pronounced “JAY-sun” or “JAY-sahn”).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch8box1"><strong>Box 8.1: Semver</strong></h1>
+</header>
+<p class="box-no">You might have noticed in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> that we’ve used the version number 0.1.0 for our new module. The leading zero indicates that our package is at an early stage, often called “beta” (or even “alpha” for very early-stage projects).</p>
+<p class="box-ind">We can indicate updates by incrementing the middle number in the version, e.g., from 0.1.0 to 0.2.0, 0.3.0, etc. Bugfixes are represented by incrementing the rightmost number, as in 0.2.1, 0.2.2, and a mature version (suitable for use by others, <span epub:type="pagebreak" id="page_158"></span>and which may not be backward-compatible with prior versions) is indicated by version 1.0.0.</p>
+<p class="box-ind">After reaching version 1.0.0, further changes follow this same general pattern: 1.0.1 would represent minor changes (a “patch release”), 1.1.0 would represent new (but backward-compatible) features (a “minor release”), and 2.0.0 would represent major or backward-incompatible changes (a “major release”).</p>
+<p class="box-ind">These numbering conventions are known as <em>semantic versioning</em>, or <em>semver</em> for short. For more information, see the NPM article on <a href="https://docs.npmjs.com/getting-started/semantic-versioning">how to use semantic versioning</a> (<a href="https://docs.npmjs.com/about-semantic-versioning">https://docs.npmjs.com/about-semantic-versioning</a>).</p>
+</aside>
+<p class="indent">The final step in preparing our module for testing is to <em>export</em> the <span class="pd_green"><code><strong>Phrase</strong></code></span> object so that it can be used in other files. (We’ll see how to <em>import</em> <span class="pd_green"><code><strong>Phrase</strong></code></span> in <a href="ch08.xhtml#ch8lev2">Section 8.2</a>.) All that’s required is a single <span class="pd_green"><code><strong>export</strong></code></span> line, which we can place at the top of the file (<a href="ch08.xhtml#ch8list2">Listing 8.2</a>).</p>
+<p class="listing" id="ch8list2"><strong>Listing 8.2:</strong> Exporting a module.<br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis02" id="c08lis02a">Click here to view code image</a></p>
+<pre class="pre2"><span class="bg1">module.exports = Phrase;</span>
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<section>
+<h4 class="h4" id="ch8lev1sec1"><span epub:type="pagebreak" id="page_159"></span>8.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">As <a href="https://docs.npmjs.com/about-package-readme-files">indicated</a> (<a href="https://docs.npmjs.com/about-package-readme-files">https://docs.npmjs.com/about-package-readme-files</a>) in the NPM guide “<a href="https://docs.npmjs.com/getting-started/publishing-npm-packages">How to Publish &amp; Update a Package</a>” (<a href="https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry">https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry</a>), it’s a good practice to include a “README” file with information about the module. Create a file with the required name <span class="pd_green"><code><strong>readme.md</strong></code></span> and fill it with information about the module. You can use <a href="https://github.com/mhartl/mhartl-palindrome#phrase-object-with-palindrome-detector">my readme</a> (<a href="https://github.com/mhartl/mhartl-palindrome#phrase-object-with-palindrome-detector">https://github.com/mhartl/mhartl-palindrome#phrase-object-with-palindrome-detector</a>) as a reference if you like.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch8lev2">8.2 Initial Test Coverage</h3>
+<p class="noindent">With the preparation from <a href="ch08.xhtml#ch8lev1">Section 8.1</a> done, we’re now ready to get started with our automated tests. We’ll start by making a <span class="pd_green"><code><strong>test</strong></code></span> directory and <span class="pd_green"><code><strong>test.js</strong></code></span> file:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> mkdir test/
+<span class="pd_blue"><strong>$</strong></span> touch test/test.js</pre>
+<p class="indent">Now we need to fill <span class="pd_green"><code><strong>test.js</strong></code></span> with the test code for the <span class="pd_green"><code><strong>palindrome</strong></code></span> method. We begin by including two NPM modules in <span class="pd_green"><code><strong>test.js</strong></code></span> using the <span class="pd_green"><code><strong>require</strong></code></span> function, which is how Node imports functionality from an external file. The first is an <em>assertion library</em> that lets us assert that things are true in our tests, and the second is the <span class="pd_green"><code><strong>Phrase</strong></code></span> object itself:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c159pro02" id="c159pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> assert <span class="gray">=</span> require<span class="pd_red">("assert"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require<span class="pd_red">("../index.js"</span>);</pre>
+<p class="indent">Next, we’ll use two functions from <span class="pd_green"><code><strong>assert</strong></code></span>, called <span class="pd_green"><code><strong>describe</strong></code></span> and <span class="pd_green"><code><strong>it</strong></code></span>. The <span class="pd_green"><code><strong>describe</strong></code></span> function takes a string and another function. For example, to describe the <span class="pd_green"><code><strong>Phrase</strong></code></span> object, we can start like this:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c159pro03" id="c159pro03a">Click here to view code image</a></p>
+<pre class="pre1">describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {</pre>
+<p class="noindent">Next, since we’re going to test <span class="pd_green"><code><strong>palindrome</strong></code></span> inside the <span class="pd_green"><code><strong>Phrase</strong></code></span> object, we’ll <em>nest</em> a second call to <span class="pd_green"><code><strong>describe</strong></code></span>. In particular, as we saw briefly in <a href="ch03.xhtml#ch3lev2">Section 3.2</a>, the usual way to indicate an object method is to use a hash mark <span class="pd_green"><code><strong>#</strong></code></span> in front of the method (<span class="pd_green"><code><strong>Phrase#palindrome</strong></code></span>), which we can indicate in the test as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c160pro01" id="c160pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_160"></span>describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {</pre>
+<p class="indent">Finally, inside the <span class="pd_green"><code><strong>describe</strong></code></span> functions we’ll add a call to the <span class="pd_green"><code><strong>it</strong></code></span> function, which also takes a string and a function:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c160pro02" id="c160pro02a">Click here to view code image</a></p>
+<pre class="pre1">describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+    it(<span class="pd_red">"should return false for a non-palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> nonPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("apple"</span>);
+      assert(<span class="gray">!</span>nonPalindrome.palindrome());
+    });
+    .
+    .
+    .</pre>
+<p class="noindent">Here we’ve used <span class="pd_green"><code><strong>assert</strong></code></span> to assert that <span class="pd_green"><code><strong>"apple"</strong></code></span> should <em>not</em> be a palindrome (<a href="ch08.xhtml#ch8fig3">Figure 8.3</a>),<sup><a id="ch8fn-2" href="ch08.xhtml#ch8fn_2">2</a></sup> where “not” is indicated with an exclamation point (“bang”) <span class="pd_green"><code><strong>!</strong></code></span> as usual (<a href="ch02.xhtml#ch2lev4sec1">Section 2.4.1</a>).</p>
+<p class="footnote"><a id="ch8fn_2" href="ch08.xhtml#ch8fn-2">2</a>. Image courtesy of Glayan/Shutterstock.</p>
+<figure class="figure" id="ch8fig3">
+<img src="graphics/08fig03.jpg" alt="images" width="639" height="424"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.3:</strong> The word “apple”: not a palindrome.</p>
+</figcaption>
+</figure>
+<p class="indent">In similar fashion, we can test a plain palindrome (one that’s literally the same forward and backward) with another call to <span class="pd_green"><code><strong>it</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c160pro03" id="c160pro03a">Click here to view code image</a></p>
+<pre class="pre1">it(<span class="pd_red">"should return true for a plain palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>let</strong></span> plainPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("racecar"</span>);
+  assert(plainPalindrome.palindrome());
+});</pre>
+<p class="indent">Combining the code from the above discussion gives us our initial test file, as shown in <a href="ch08.xhtml#ch8list3">Listing 8.3</a>.</p>
+<p class="listing" id="ch8list3"><strong>Listing 8.3:</strong> Our initial test suite.<br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis03" id="c08lis03a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> assert <span class="gray">=</span> require<span class="pd_red">("assert"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require<span class="pd_red">("../index.js"</span>);
+
+describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+<span epub:type="pagebreak" id="page_161"></span>describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+    it(<span class="pd_red">"should return false for a non-palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> nonPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("apple"</span>);
+      assert(<span class="gray">!</span>nonPalindrome.palindrome());
+    });
+
+    it(<span class="pd_red">"should return true for a plain palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> plainPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("racecar"</span>);
+      assert(plainPalindrome.palindrome());
+    });
+  });
+});</pre>
+<p class="indent">Now for the real test (so to speak). To run our set of tests, or <em>test suite</em>, we simply run <span class="pd_green"><code><strong>npm test</strong></code></span> (<a href="ch08.xhtml#ch8list4">Listing 8.4</a>), which (because of the configuration in <a href="ch08.xhtml#ch8lev1">Section 8.1</a>) uses the <span class="pd_green"><code><strong>mocha</strong></code></span> command under the hood.</p>
+<p class="listing" id="ch8list4"><span epub:type="pagebreak" id="page_162"></span><strong>Listing 8.4:</strong> The test suite after the initial setup. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis04" id="c08lis04a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome()
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+
+  2 passing (6ms)</pre>
+<p class="noindent">The tests should be <span class="pd_green"><span class="smallcaps">GREEN</span></span>, indicating that they are now in a passing state.</p>
+<section>
+<h4 class="h4" id="ch8lev2sec1">8.2.1 Pending Tests</h4>
+<p class="noindent">Before moving on, we’ll add a couple of <em>pending</em> tests, which are placeholders/reminders for tests we want to write. The way to write a pending test is simply to use <span class="pd_green"><code><strong>it</strong></code></span> with only a string argument (omitting the <span class="pd_green"><code><strong>function</strong></code></span>), as shown in <a href="ch08.xhtml#ch8list5">Listing 8.5</a>.</p>
+<p class="listing" id="ch8list5"><strong>Listing 8.5:</strong> Adding two pending tests.<br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis05" id="c08lis05a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> assert <span class="gray">=</span> require<span class="pd_red">("assert"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require<span class="pd_red">("../index.js"</span>);
+
+describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+    it(<span class="pd_red">"should return false for a non-palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> nonPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("apple"</span>);
+      assert(<span class="gray">!</span>nonPalindrome.palindrome());
+    });
+
+    it(<span class="pd_red">"should return true for a plain palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> plainPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("racecar"</span>);
+      assert(plainPalindrome.palindrome());
+    });
+<span class="bg1">    it(<span class="pd_red"><strong>"should return true for a mixed-case palindrome"</strong></span>); </span>
+
+<span class="bg1">    it(<span class="pd_red"><strong>"should return true for a palindrome with punctuation"</strong></span>);</span>
+  });
+});</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_163"></span>We can see the result of <a href="ch08.xhtml#ch8list5">Listing 8.5</a> by rerunning the test suite (<a href="ch08.xhtml#ch8list6">Listing 8.6</a>).</p>
+<p class="listing" id="ch8list6"><strong>Listing 8.6:</strong> The pending tests from <a href="ch08.xhtml#ch8list5">Listing 8.5</a>. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis06" id="c08lis06a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return true for a plain palindrome
+<span class="bg1">      - should return true for a mixed-case palindrome</span>
+<span class="bg1">      - should return true for a palindrome with punctuation</span>
+  2 passing (6ms)
+<span class="bg1">  2 pending</span></pre>
+<p class="noindent">Now Mocha displays indications that there are two pending tests. (Sometimes people speak of a test suite with pending tests as being <span class="g1"><span class="smallcaps">YELLOW</span></span>, in analogy with the red-yellow-green color scheme of traffic lights.)</p>
+<p class="indent">Filling in the test for a mixed-case palindrome is left as an exercise (with a solution shown in the next section), while filling in the second pending test is the subject of <a href="ch08.xhtml#ch8lev3">Section 8.3</a> and <a href="ch08.xhtml#ch8lev4">Section 8.4</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch8lev2sec2">8.2.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">By filling in the code in <a href="ch08.xhtml#ch8list7">Listing 8.7</a>, add a test for a mixed-case palindrome like “RaceCar”. Is the test suite still <span class="pd_green"><span class="smallcaps">GREEN</span></span>?</p></li>
+<li><p class="number">In order to make 100% sure that the tests are testing what we <em>think</em> they’re testing, it’s a good practice to get to a failing state (<span class="red"><span class="smallcaps">RED</span></span>) by intentionally <em>breaking</em> the tests. Change the application code to break each of the existing tests in turn, and then confirm that they are <span class="pd_green"><span class="smallcaps">GREEN</span></span> again once the original code has been restored. An example of code that breaks the test in the previous exercise (but not the other tests) appears in <a href="ch08.xhtml#ch8list8">Listing 8.8</a>. (One advantage of writing the tests <em>first</em> is that this <span class="red"><span class="smallcaps">RED</span></span>—<span class="pd_green"><span class="smallcaps">GREEN</span></span> cycle happens automatically.)</p></li>
+</ol>
+<p class="listing" id="ch8list7"><span epub:type="pagebreak" id="page_164"></span><strong>Listing 8.7:</strong> Adding a test for a mixed-case palindrome.<br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis07" id="c08lis07a">Click here to view code image</a></p>
+<pre class="pre2">  .
+  .
+  .
+  it(<span class="pd_red">"should return true for a mixed-case palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    <span class="pd_green1"><strong>let</strong></span> mixedCase <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("RaceCar"</span>);
+<span class="bg1">    <span class="pd_green1">//</span> <span class="pd_green1"><em>Fill in this line</em></span></span>
+  });
+  .
+  .
+  .</pre>
+<p class="listing" id="ch8list8"><strong>Listing 8.8:</strong> Intentionally breaking a test. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis08" id="c08lis08a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.content;</span>
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch8lev3">8.3 Red</h3>
+<p class="noindent">In this section, we’ll take the important first step toward being able to detect more complex palindromes like “Madam, I’m Adam.” and “A man, a plan, a canal—Panama!”. Unlike the previous strings we’ve encountered, these phrases—which <span epub:type="pagebreak" id="page_165"></span>contain both spaces and punctuation—aren’t strictly palindromes in a literal sense, even if we ignore capitalization. Instead of testing the strings as they are, we have to figure out a way to select only the letters, and then see if the resulting letters are the same forward and backward.</p>
+<p class="indent">The code to do this is fairly tricky, but the tests for it are simple. This is one of the situations where test-driven development particularly shines (<a href="ch08.xhtml#ch8box2">Box 8.2</a>). We can write our simple tests, thereby getting to <span class="red"><span class="smallcaps">RED</span></span>, and then write the application code any way we want to get to <span class="pd_green"><span class="smallcaps">GREEN</span></span> (<a href="ch08.xhtml#ch8lev4">Section 8.4</a>). At that point, with the tests protecting us against undiscovered errors, we can change the application code with confidence (<a href="ch08.xhtml#ch8lev5">Section 8.5</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<header>
+<h1 epub:type="title" class="sb-title1" id="ch8box2">Box 8.2: When to Test</h1>
+</header>
+<p class="box-no">When deciding when and how to test, it’s helpful to understand <em>why</em> to test. In my view, writing automated tests has three main benefits:</p>
+<ol class="number">
+<li><p class="number">Tests protect against <em>regressions</em>, where a functioning feature stops working for some reason.</p></li>
+<li><p class="number">Tests allow code to be <em>refactored</em> (i.e., changing its form without changing its function) with greater confidence.</p></li>
+<li><p class="number">Tests act as a <em>client</em> for the application code, thereby helping determine its design and its interface with other parts of the system.</p></li>
+</ol>
+<p class="box-ind">Although none of the above benefits <em>require</em> that tests be written first, there are many circumstances where test-driven development (TDD) is a valuable tool to have in your kit. Deciding when and how to test depends in part on how comfortable you are writing tests; many developers find that, as they get better at writing tests, they are more inclined to write them first. It also depends on how difficult the test is relative to the application code, how precisely the desired features are known, and how likely the feature is to break in the future.</p>
+<p class="box-ind">In this context, it’s helpful to have a set of guidelines on when we should test first (or test at all). Here are some suggestions based on my own experience:</p>
+<ul class="sq">
+<li><p class="bull">When a test is especially short or simple compared to the application code it tests, lean toward writing the test first.</p></li>
+<li><p class="bull">When the desired behavior isn’t yet crystal clear, lean toward writing the application code first, then write a test to codify the result.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_166"></span>Whenever a bug is found, write a test to reproduce it and protect against regressions, then write the application code to fix it.</p></li>
+<li><p class="bull">Write tests before refactoring code, focusing on testing error-prone code that’s especially likely to break.</p></li>
+</ul>
+</aside>
+<p class="indent">We’ll start by writing a test for a palindrome with punctuation, which just parallels the tests from <a href="ch08.xhtml#ch8list3">Listing 8.3</a>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c166pro01" id="c166pro01a">Click here to view code image</a></p>
+<pre class="pre1">it(<span class="pd_red">"should return true for a palindrome with punctuation"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);
+  assert(punctuatedPalindrome.palindrome());
+});</pre>
+<p class="noindent">The updated test suite appears in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>, which also includes the solution to the exercise in <a href="ch08.xhtml#ch8list7">Listing 8.7</a> (<a href="ch08.xhtml#ch8fig4">Figure 8.4</a><sup><a id="ch8fn-3" href="ch08.xhtml#ch8fn_3">3</a></sup>). (For brevity, only the new <span class="pd_green"><code><strong>let</strong></code></span>s and assertions are highlighted in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>, but you should include the <span class="pd_green"><code><strong>it</strong></code></span>s as well.)</p>
+<p class="footnote"><a id="ch8fn_3" href="ch08.xhtml#ch8fn-3">3</a>. Image courtesy of msyaraafiq/Shutterstock.</p>
+<figure class="figure" id="ch8fig4">
+<img src="graphics/08fig04.jpg" alt="images" width="638" height="366"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.4:</strong> “RaceCar” is still a palindrome (ignoring case).</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch8list9"><span epub:type="pagebreak" id="page_167"></span><strong>Listing 8.9:</strong> Adding a test for a punctuated palindrome. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis09" id="c08lis09a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> assert <span class="gray">=</span> require<span class="pd_red">("assert"</span>);
+<span class="pd_green1"><strong>let</strong></span> Phrase <span class="gray">=</span> require<span class="pd_red">("../index.js"</span>);
+
+describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+
+    it(<span class="pd_red">"should return false for a non-palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> nonPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("apple"</span>);
+      assert(<span class="gray">!</span>nonPalindrome.palindrome());
+    });
+
+    it(<span class="pd_red">"should return true for a plain palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> plainPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("racecar"</span>);
+      assert(plainPalindrome.palindrome());
+    });
+
+    it(<span class="pd_red">"should return true for a mixed-case palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+<span class="bg1">      <span class="pd_green1"><strong>let</strong></span> mixedCase = <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("RaceCar"</span>);</span>
+<span class="bg1">      assert(mixedCase.palindrome());</span>
+    });
+
+    it(<span class="pd_red">"should return true for a palindrome with punctuation"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+<span class="bg1">      <span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome = <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);</span>
+<span class="bg1">      assert(punctuatedPalindrome.palindrome());</span>
+    });
+  });
+});</pre>
+<p class="indent">As required, the test suite is now <span class="red"><span class="smallcaps">RED</span></span>, as seen in <a href="ch08.xhtml#ch8list10">Listing 8.10</a>.</p>
+<p class="listing" id="ch8list10"><strong>Listing 8.10:</strong> The test suite after adding the test in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>. <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis10" id="c08lis10a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return true for a mixed-case palindrome
+      1) should return true for a palindrome with punctuation
+
+
+  3 passing (8ms)
+
+<span epub:type="pagebreak" id="page_168"></span>
+  1 failing
+
+  1) Phrase
+       #palindrome
+         should return true for a palindrome with punctuation:
+
+      AssertionError [ERR_ASSERTION]: false == true
+      + expected - actual
+
+
+      -false
+      +true</pre>
+<p class="indent">At this point, we can start thinking about how to write the application code and get to <span class="pd_green"><span class="smallcaps">GREEN</span></span>. Our strategy will be to write a <span class="pd_green"><code><strong>letters</strong></code></span> method for the <span class="pd_green"><code><strong>Phrase</strong></code></span> object that returns only the letters in the content string. In other words, the code</p>
+<p class="codelink"><a href="ch08_images.xhtml#c168pro01" id="c168pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>).letters();</pre>
+<p class="noindent">should evaluate to this:</p>
+<pre class="pre1">MadamImAdam</pre>
+<p class="noindent">(Note here that we can actually call <span class="pd_green"><code><strong>letters()</strong></code></span> on a <span class="pd_green"><code><strong>new Phrase</strong></code></span>—JavaScript knows to create the new object instance before calling the <span class="pd_green"><code><strong>letters()</strong></code></span> method on it.) Getting to this state will allow us to use our current palindrome detector to determine whether the original phrase is a palindrome or not.</p>
+<p class="indent">Having made this specification, we can now write a simple test for <span class="pd_green"><code><strong>letters</strong></code></span>. We could follow the pattern from previous tests and assert (strict) equality directly (<a href="ch08.xhtml#ch8list11">Listing 8.11</a>).</p>
+<p class="listing" id="ch8list11"><strong>Listing 8.11:</strong> Asserting strict equality directly.</p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis11" id="c08lis11a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);
+assert(punctuatedPalindrome.letters() <span class="gray">===</span> <span class="pd_red">"MadamImAdam"</span>);</pre>
+<p class="noindent">It turns out, though, that the <span class="pd_green"><code><strong>assert</strong></code></span> module has native support for this kind of comparison (as seen in the <a href="https://www.npmjs.com/package/assert">official documentation</a> (<a href="https://www.npmjs.com/package/assert">https://www.npmjs.com/package/assert</a>)), leading to assertions of the form shown in <a href="ch08.xhtml#ch8list12">Listing 8.12</a>.</p>
+<p class="listing" id="ch8list12"><span epub:type="pagebreak" id="page_169"></span><strong>Listing 8.12:</strong> Using a native assertion.</p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis12" id="c08lis12a">Click here to view code image</a></p>
+<pre class="pre2">assert.strictEqual(<span class="gray">&lt;</span>actual<span class="gray">&gt;</span>, <span class="gray">&lt;</span>expected<span class="gray">&gt;</span>);</pre>
+<p class="noindent">As we’ll see in a moment, it’s generally preferable to use native assertions when possible, since doing so leads to more helpful messages for failed tests. For the sake of such failing test messages, it’s also important to include the arguments in the “actual, expected” order shown above.</p>
+<p class="indent">In the present case, the “actual” result is <span class="pd_green"><code><strong>punctuatedPalindrome.letters()</strong></code></span>, and the “expected” value is <span class="pd_green"><code><strong>"MadamImAdam"</strong></code></span>, so we can fill in the assertion as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c169pro01" id="c169pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);
+assert.strictEqual(punctuatedPalindrome.letters(), <span class="pd_red">"MadamImAdam"</span>);</pre>
+<p class="noindent">Adding a new <span class="pd_green"><code><strong>describe</strong></code></span> function for <span class="pd_green"><code><strong>letters</strong></code></span> (and adding the hash symbol <span class="pd_green"><code><strong>#</strong></code></span> to indicate that we’re testing <span class="pd_green"><code><strong>Phrase#letters</strong></code></span>) leads to the code shown in <a href="ch08.xhtml#ch8list13">Listing 8.13</a>.</p>
+<p class="listing" id="ch8list13"><strong>Listing 8.13:</strong> Adding a test for the <span class="pd_green"><code><strong>letters</strong></code></span> method. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis13" id="c08lis13a">Click here to view code image</a></p>
+<pre class="pre2">describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  .
+  .
+  .
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    .
+    .
+    .
+  });
+
+  describe(<span class="pd_red">"#letters"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    it(<span class="pd_red">"should return only letters"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);
+      assert.strictEqual(punctuatedPalindrome.letters(), <span class="pd_red">"MadamImAdam"</span>);
+    });
+  });
+});</pre>
+<p class="indent">Because the <span class="pd_green"><code><strong>letters</strong></code></span> method doesn’t exist at all, the current failing message isn’t all that helpful, as seen in <a href="ch08.xhtml#ch8list14">Listing 8.14.</a></p>
+<p class="listing" id="ch8list14"><span epub:type="pagebreak" id="page_170"></span><strong>Listing 8.14:</strong> The initial failing message for <span class="pd_green"><code><strong>letters</strong></code></span>. <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis14" id="c08lis14a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+  .
+  .
+  .
+  2) Phrase
+       #letters
+         should return only letters:
+     TypeError: punctuatedPalindrome.letters is not a function</pre>
+<p class="indent">We can get to a more useful <span class="red"><span class="smallcaps">RED</span></span> state by adding a <em>stub</em> for <span class="pd_green"><code><strong>letters</strong></code></span>: a method that doesn’t work, but at least exists. For simplicity, we’ll simply return the content of the phrase, as shown in <a href="ch08.xhtml#ch8list15">Listing 8.15</a>.</p>
+<p class="listing" id="ch8list15"><strong>Listing 8.15:</strong> A stub for the <span class="pd_green"><code><strong>letters</strong></code></span> method. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis15" id="c08lis15a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+.
+.
+.
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  .
+  .
+  .
+  <span class="pd_blue1"><em>// Returns the letters in the content.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.content; <span class="pd_blue1">//</span> <span class="pd_blue1"><em>stub return value</em></span></span>
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="indent">As promised, the error message is now quite helpful, as seen in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>.</p>
+<p class="listing" id="ch8list16"><strong>Listing 8.16:</strong> A more helpful error message. <span class="red"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis16" id="c08lis16a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+<span epub:type="pagebreak" id="page_171"></span>
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/>should return true for a mixed-case palindrome
+      1) should return true for a palindrome with punctuation
+    #letters
+      2) should return only letters
+
+
+  3 passing (9ms)
+  2 failing
+
+  1) Phrase
+       #palindrome
+         should return true for a palindrome with punctuation:
+
+      AssertionError [ERR_ASSERTION]: false == true
+      + expected - actual
+
+      -false
+      +true
+
+      at Context.&lt;anonymous&gt; (test/test.js:25:7)
+
+  2) Phrase
+       #letters
+         should return only letters:
+
+  <span class="bg1">    AssertionError [ERR_ASSERTION]: 'Madam, Iḿ Adam.' === 'MadamImAdam'</span>
+  <span class="bg1">    + expected - actual</span>
+
+  <span class="bg1">    -Madam, I'm Adam.</span>
+  <span class="bg1">    +MadamImAdam</span></pre>
+<p class="indent">With our two <span class="red"><span class="smallcaps">RED</span></span> tests capturing the desired behavior, we’re now ready to move on to the application code and try getting it to <span class="pd_green"><span class="smallcaps">GREEN</span></span>.</p>
+<section>
+<h4 class="h4" id="ch8lev3sec1">8.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">What is the error message when using the direct <span class="pd_green"><code><strong>===</strong></code></span> assertion shown in <a href="ch08.xhtml#ch8list11">Listing 8.11</a>? Why is this less useful than the message in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>?</p></li>
+<li><p class="number">What happens if you reverse the actual and expected values (<a href="ch08.xhtml#ch8list12">Listing 8.12</a>) in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>? Why is the resulting error message confusing?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch8lev4"><span epub:type="pagebreak" id="page_172"></span><strong>8.4 Green</strong></h3>
+<p class="noindent">Now that we have <span class="red"><span class="smallcaps">RED</span></span> tests to capture the enhanced behavior of our palindrome detector, it’s time to make them <span class="pd_green"><span class="smallcaps">GREEN</span></span>. Part of the philosophy of TDD is to get them passing without worrying too much at first about the quality of the implementation. Once the test suite is <span class="pd_green"><span class="smallcaps">GREEN</span></span>, we can polish it up without introducing regressions (<a href="ch08.xhtml#ch8box2">Box 8.2</a>).</p>
+<p class="indent">The main challenge is implementing <span class="pd_green"><code><strong>letters</strong></code></span>, which returns a string of the letters (but not any other characters) making up the <span class="pd_green"><code><strong>content</strong></code></span> of a <span class="pd_green"><code><strong>Phrase</strong></code></span>. In other words, we need to select the characters that match a certain pattern. This sounds like a job for regular expressions (<a href="ch04.xhtml#ch4lev3">Section 4.3</a>).</p>
+<p class="indent">At times like these, using an <a href="https://regex101.com/">online regex matcher</a> with a regex reference like the one shown in <a href="ch04.xhtml#ch4fig5">Figure 4.5</a> is an excellent idea. Indeed, sometimes they make things a little <em>too</em> easy, such as when the reference has the exact regex you need (<a href="ch08.xhtml#ch8fig5">Figure 8.5</a>).</p>
+<figure class="figure" id="ch8fig5">
+<img src="graphics/08fig05.jpg" alt="images" width="721" height="350"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.5:</strong> The exact regex we need.</p>
+</figcaption>
+</figure>
+<p class="indent">Let’s test it in the console to make sure it satisfies our criteria:</p>
+<pre class="pre1">$ node
+<span class="gray">&gt; !!</span><span class="pd_red">"M"</span>.match<span class="pink">(/[a-zA-Z]/</span>);
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt; !!</span><span class="pd_red">"d"</span>.match<span class="pink">(/[a-zA-Z]/</span>);
+<span class="pd_green1"><strong>true</strong></span>
+<span class="gray">&gt; !!</span><span class="pd_red">","</span>.match<span class="pink">(/[a-zA-Z]/</span>);
+<span class="pd_green1"><strong>false</strong></span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_173"></span>Lookin’ good!</p>
+<p class="indent">We’re now in a position to build up an array of characters that matches upper- or lowercase letters. The most straightforward way to do this is with a <span class="pd_green"><code><strong>for</strong></code></span> loop and the <span class="pd_green"><code><strong>charAt</strong></code></span> method we first saw in <a href="ch02.xhtml#ch2lev6">Section 2.6</a>. We’ll start with an array for the letters, and then iterate through the content string, <span class="pd_green"><code><strong>push</strong></code></span>ing each character onto the array (<a href="ch03.xhtml#ch3lev4sec2">Section 3.4.2</a>) if it matches the letter regex:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c173pro01" id="c173pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>let</strong></span> theLetters <span class="gray">=</span> [];
+<span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> <span class="pd_green1"><strong>this</strong></span>.content.length; <span class="gray">i+</span>+) {
+  <span class="pd_green1"><strong>if</strong></span> (<span class="pd_green1"><strong>this</strong></span>.content.charAt(i).match(<span class="pink">/[a-zA-Z]/</span>)) {
+    theLetters.push(<span class="pd_green1"><strong>this</strong></span>.content.charAt(i));
+  }
+}</pre>
+<p class="noindent">At this point, <span class="pd_green"><code><strong>theLetters</strong></code></span> is an array of letters, which can be <span class="pd_green"><code><strong>join</strong></code></span>ed on the empty string to form a string of the letters in the original string:</p>
+<pre class="pre1"><span class="pd_green1"><strong>return</strong></span> theLetters.join<span class="pd_red">(""</span>);</pre>
+<p class="indent">Putting everything together gives the <span class="pd_green"><code><strong>Phrase#letter</strong></code></span> method in <a href="ch08.xhtml#ch8list17">Listing 8.17</a> (with a highlight added to indicate the beginning of the new method).</p>
+<p class="listing" id="ch8list17"><strong>Listing 8.17:</strong> A working <span class="pd_green"><code><strong>letters</strong></code></span> method (but full suite still <span class="red"><span class="smallcaps">RED</span></span>).<br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis17" id="c08lis17a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.content.toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns the letters in the content.</em></span>
+
+<span epub:type="pagebreak" id="page_174"></span>  <span class="pd_blue1"><em>// For example:
+  //   new Phrase("Hello, world!").letters() === "Helloworld"</em></span>
+<span class="bg1">  <span class="pd_green1"><strong>this</strong></span>.letters = <span class="pd_green1"><strong>function</strong></span> letters() {</span>
+    <span class="pd_green1"><strong>let</strong></span> theLetters <span class="gray">=</span> [];
+    <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> <span class="pd_green1"><strong>this</strong></span>.content.length; <span class="gray">i+</span>+) {
+      <span class="pd_green1"><strong>if</strong></span> (<span class="pd_green1"><strong>this</strong></span>.content.charAt(i).match(<span class="pink">/[a-zA-Z]/</span>)) {
+        theLetters.push(<span class="pd_green1"><strong>this</strong></span>.content.charAt(i));
+      }
+    }
+    <span class="pd_green1"><strong>return</strong></span> theLetters.join<span class="pd_red">(""</span>);
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="indent">Although the full test suite is still <span class="red"><span class="smallcaps">RED</span></span>, our <span class="pd_green"><code><strong>letters</strong></code></span> test should now be <span class="pd_green"><span class="smallcaps">GREEN</span></span>, as seen in the highlighted line in <a href="ch08.xhtml#ch8list18">Listing 8.18</a>.</p>
+<p class="listing" id="ch8list18"><strong>Listing 8.18:</strong> A <span class="red"><span class="smallcaps">RED</span></span> suite but a <span class="pd_green"><span class="smallcaps">GREEN</span></span> <span class="pd_green"><code><strong>letters</strong></code></span> test.</p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis18" id="c08lis18a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a mixed-case palindrome
+      1) should return true for a palindrome with punctuation
+    #letters
+<span class="bg1">    <img src="graphics/ticky.jpg" alt="Images" width="13" height="12"/> should return only letters </span>
+
+  4 passing (8ms)
+  1 failing
+
+  1) Phrase
+      #palindrome
+        should return true for a palindrome with punctuation:
+
+      AssertionError [ERR_ASSERTION]: false == true
+      + expected - actual
+
+      -false
+      +true</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_175"></span>We can get the final <span class="red"><span class="smallcaps">RED</span></span> test to pass by replacing <span class="pd_green"><code><strong>content</strong></code></span> with <span class="pd_green"><code><strong>letters()</strong></code></span> in the <span class="pd_green"><code><strong>processedContent</strong></code></span> method. The result appears in <a href="ch08.xhtml#ch8list19">Listing 8.19</a>.</p>
+<p class="listing" id="ch8list19"><strong>Listing 8.19:</strong> A working <span class="pd_green"><code><strong>palindrome</strong></code></span> method. <span class="pd_green"><span class="smallcaps">GREEN</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis19" id="c08lis19a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+
+<span class="bg1">    <span class="pd_green1"><strong>return this</strong></span>.letters().toLowerCase();</span>
+  }
+
+  <span class="pd_blue1"><em>// Returns the letters in the content.
+  // For example:
+  // new Phrase("Hello, world!").letters() === "Helloworld"</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+    <span class="pd_green1"><strong>let</strong></span> theLetters <span class="gray">=</span> [];
+    <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> <span class="pd_green1"><strong>this</strong></span>.content.length; <span class="gray">i+</span>+) {
+      <span class="pd_green1"><strong>if</strong></span> (<span class="pd_green1"><strong>this</strong></span>.content.charAt(i).match(<span class="pink">/[a-zA-Z]/</span>)) {
+        theLetters.push(<span class="pd_green1"><strong>this</strong></span>.content.charAt(i));
+      }
+    }
+    <span class="pd_green1"><strong>return</strong></span> theLetters.join<span class="pd_red">(""</span>);
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_176"></span>The result of <a href="ch08.xhtml#ch8list19">Listing 8.19</a> is a <span class="pd_green"><span class="smallcaps">GREEN</span></span> test suite (<a href="ch08.xhtml#ch8fig6">Figure 8.6</a>), as seen in <a href="ch08.xhtml#ch8list20">Listing 8.20</a>.</p>
+<figure class="figure" id="ch8fig6">
+<img src="graphics/08fig06.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.6:</strong> Our detector finally understands Adam’s palindromic nature.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch8list20"><strong>Listing 8.20:</strong> The test suite after <a href="ch08.xhtml#ch8list19">Listing 8.19</a>. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis20" id="c08lis20a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a mixed-case palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a palindrome with punctuation
+    #letters
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return only letters
+
+
+5 passing (6ms)</pre>
+<p class="noindent">It may not be the prettiest code in the world, but this <span class="pd_green"><span class="smallcaps">GREEN</span></span> test suite means our code is working!</p>
+<section>
+<h4 class="h4" id="ch8lev4sec1"><span epub:type="pagebreak" id="page_177"></span>8.4.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">By <span class="pd_green"><code><strong>require</strong></code></span>-ing the <span class="pd_green"><code><strong>palindrome</strong></code></span> module in a Node REPL, verify by hand that the <span class="pd_green"><code><strong>Phrase#palindrome</strong></code></span> code can successfully detect palindromes of the form “Madam, I’m Adam.” (You may have to quit and restart the REPL to refresh all relevant object definitions.) <em>Hint</em>: Use the same <span class="pd_green"><code><strong>require</strong></code></span> command as in the second line of <a href="ch08.xhtml#ch8list3">Listing 8.3</a> but with <span class="pd_green"><code><strong>./</strong></code></span> in place of <span class="pd_green"><code><strong>../</strong></code></span>.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch8lev5">8.5 Refactor</h3>
+<p class="noindent">Although the code in <a href="ch08.xhtml#ch8list19">Listing 8.19</a> is now working, as evidenced by our <span class="pd_green"><span class="smallcaps">GREEN</span></span> test suite, it relies on a rather cumbersome (if straightforward) <span class="pd_green"><code><strong>for</strong></code></span> loop, and there’s some duplication as well. In this section, we’ll <em>refactor</em> our code, which is the process of changing the form of code without changing its function.</p>
+<p class="indent">By running our test suite after any significant changes, we’ll catch any regressions quickly, thereby giving us confidence that the final form of the refactored code is still correct. Throughout this section, I suggest making changes incrementally and running the test suite after each change to confirm that the suite is still <span class="pd_green"><span class="smallcaps">GREEN</span></span>.</p>
+<p class="indent">We start by observing that there’s some duplication in <a href="ch08.xhtml#ch8list19">Listing 8.19</a>: The expression</p>
+<pre class="pre1"><span class="pd_green1"><strong>this</strong></span>.content.charAt(i)</pre>
+<p class="noindent">appears twice. This suggests eliminating the duplication by binding it to a variable using <span class="pd_green"><code><strong>let</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c177pro01" id="c177pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+  <span class="pd_green1"><strong>let</strong></span> theLetters <span class="gray">=</span> [];
+  <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> <span class="pd_green1"><strong>this</strong></span>.content.length; <span class="gray">i+</span>+) {
+
+<span class="bg1">    <span class="pd_green1"><strong>let</strong></span> character = <span class="pd_green1"><strong>this</strong></span>.content.charAt(i);</span>
+<span class="bg1">    <span class="pd_green1"><strong>if</strong></span> (character.match<span class="pd_red">(/[a-zA-Z]</span>/)) {</span>
+<span class="bg1">      theLetters.push(character);</span>
+    }
+  }
+  <span class="pd_green1"><strong>return</strong></span> theLetters.join<span class="pd_red">(""</span>);
+}</pre>
+<p class="indent">As another bit of polish, we can simplify the regex by using <span class="pd_green"><code><strong>i</strong></code></span> after <span class="pd_green"><code><strong>/…/</strong></code></span> to make a case-insensitive match, while also binding it to a named constant to make its purpose clearer:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c178pro01" id="c178pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_178"></span>
+<span class="bg1"><span class="pd_green1"><strong>const</strong></span> letterRegex = <span class="pd_red">/[a-z]/</span>i;</span>
+
+ <span class="pd_green1"><strong>for</strong></span> (<span class="pd_green1"><strong>let</strong></span> i <span class="gray">= 0</span>; i <span class="gray">&lt;</span> <span class="pd_green1"><strong>this</strong></span>.content.length; <span class="gray">i+</span>+) {
+   <span class="pd_green1"><strong>let</strong></span> character <span class="gray">=</span> <span class="pd_green1"><strong>this</strong></span>.content.charAt(i);
+
+<span class="bg1">  <span class="pd_green1"><strong>if</strong></span> (character.match(letterRegex)) {</span>
+
+     theLetters.push(character);
+  }
+}</pre>
+<p class="indent">Per <a href="ch05.xhtml#ch5lev4">Section 5.4</a>, it’s usually better to use a <span class="pd_green"><code><strong>forEach</strong></code></span> loop when we can. We can do this using the techniques from <a href="ch05.xhtml#ch5list15">Listing 5.15</a>, as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c178pro02" id="c178pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_green1"><strong>const</strong></span> letterRegex <span class="gray">=</span> <span class="pink">/[a-z]/i</span>;
+
+<span class="bg1"><span class="pd_green1"><strong>Array</strong></span>.from(<span class="pd_green1"><strong>this</strong></span>.content).forEach(<span class="pd_green1"><strong>function</strong></span>(character) {</span>
+
+  <span class="pd_green1"><strong>if</strong></span> (character.match(letterRegex)) {
+    theLetters.push(character);
+  }
+});</pre>
+<p class="noindent">Note that we were able to remove the <span class="pd_green"><code><strong>let</strong></code></span> for the <span class="pd_green"><code><strong>character</strong></code></span> variable since now it comes for free as part of the <span class="pd_green"><code><strong>forEach</strong></code></span> loop’s function parameter.</p>
+<p class="indent">We’ve got one final refactoring to do, but for reference the full state of the application code appears in <a href="ch08.xhtml#ch8list21">Listing 8.21</a>.</p>
+<p class="listing" id="ch8list21"><strong>Listing 8.21:</strong> A refactored <span class="pd_green"><code><strong>letters</strong></code></span> method. <span class="pd_green"><span class="smallcaps">GREEN</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis21" id="c08lis21a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.letters().toLowerCase();
+  }
+
+
+<span epub:type="pagebreak" id="page_179"></span>  <span class="pd_blue1"><em>// Returns the letters in the content.
+  // For example:
+  //   new Phrase("Hello, world!").letters() === "Helloworld"</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+    <span class="pd_green1"><strong>let</strong></span> theLetters <span class="gray">=</span> [];
+<span class="bg1">    <span class="pd_green1"><strong>const</strong></span> letterRegex = <span class="pd_red">/[a-z]/i</span>;</span>
+<span class="bg1">    <span class="pd_green1"><strong>Array</strong></span>.from(<span class="pd_green1"><strong>this</strong></span>.content).forEach(<span class="pd_green1"><strong>function</strong></span>(character) {</span>
+<span class="bg1">      <span class="pd_green1"><strong>if</strong></span> (character.match(letterRegex)) {</span>
+<span class="bg1">        theLetters.push(character);</span>
+      }
+    });
+    <span class="pd_green1"><strong>return</strong></span> theLetters.join<span class="pd_red">(""</span>);
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="indent">The result of running the test suite is gratifying, as seen in <a href="ch08.xhtml#ch8list22">Listing 8.22</a>.</p>
+<p class="listing" id="ch8list22"><strong>Listing 8.22:</strong> The test suite after refactoring with <span class="pd_green"><code><strong>forEach</strong></code></span>. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis22" id="c08lis22a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a mixed-case palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a palindrome with punctuation
+    #letters
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return only letters
+
+
+  5 passing (6ms)</pre>
+<p class="noindent">It’s still <span class="pd_green"><span class="smallcaps">GREEN</span></span>! The changes above involved lots of tricky and error-prone manipulations, so a <span class="pd_green"><span class="smallcaps">GREEN</span></span> test suite gives us confidence that we didn’t introduce any regressions.</p>
+<p class="indent">To motivate one final refactoring, we can note that the form of the code in <a href="ch08.xhtml#ch8list21">Listing 8.21</a> is similar to that in <a href="ch06.xhtml#ch6list4">Listing 6.4</a> from <a href="ch06.xhtml#ch6lev2">Section 6.2</a>: We initialize an empty array and then <span class="pd_green"><code><strong>push</strong></code></span> to it in a <span class="pd_green"><code><strong>forEach</strong></code></span> loop. In <a href="ch06.xhtml#ch6list5">Listing 6.5</a>, we used functional programming <span epub:type="pagebreak" id="page_180"></span>via the <span class="pd_green"><code><strong>filter</strong></code></span> method to convert that loop to a single line, and we can do exactly the same thing here.</p>
+<p class="indent">As a quick refresher, let’s drop into the REPL:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c180pro01" id="c180pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_red">"Madam, I'm Adam."</span>);
+[ <span class="pd_red">'M'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">','</span>, <span class="pd_red">' '</span>, <span class="pd_red">'I'</span>, <span class="pd_red">'\''</span>, <span class="pd_red">'m'</span>, <span class="pd_red">' '</span>,
+<span class="pd_red">'A'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">'.'</span> ]
+<span class="gray">&gt;</span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_red">"Madam, I'm Adam"</span>).filter(c =&gt; c.match<span class="pink">(/[a-z]/</span>i));
+[ <span class="pd_red">'M'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">'I'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">'A'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span> ]
+<span class="gray">&gt;</span> <span class="pd_green1">Arra</span>y.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_red">"Madam, I'm Adam"</span>).filter(c =&gt; c.match<span class="pink">(/[a-z]/</span>i)).join<span class="pd_red">(""</span>);
+<span class="pd_red">'MadamImAdam'</span></pre>
+<p class="noindent">We see here how combining method chaining (<a href="ch05.xhtml#ch5lev3">Section 5.3</a>) with functional programming makes it easy to filter and join the letter characters in a string.</p>
+<p class="indent">Applying <span class="pd_green"><code><strong>filter</strong></code></span> to the code in <a href="ch08.xhtml#ch8list21">Listing 8.21</a>, we can condense the <span class="pd_green"><code><strong>letters</strong></code></span> method into a single line, as shown in <a href="ch08.xhtml#ch8list23">Listing 8.23</a>. (It could arguably be improved by retaining the <span class="pd_green"><code><strong>lettersRegEx</strong></code></span> constant from <a href="ch08.xhtml#ch8list21">Listing 8.21</a>, but I find the austerity of a one-line function to be nearly impossible to resist.)</p>
+<p class="listing" id="ch8list23"><strong>Listing 8.23:</strong> Refactoring <span class="pd_green"><code><strong>letters</strong></code></span> down to a single line. <span class="pd_green"><span class="smallcaps">GREEN</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis23" id="c08lis23a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.letters().toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns the letters in the content.
+  // For example:
+  //   new Phrase("Hello, world!").letters() === "Helloworld"</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+<span class="bg1">      <span class="pd_green1"><strong>return Array</strong></span>.from(<span class="pd_green1"><strong>this</strong></span>.content).filter(c =&gt; c.match<span class="pd_red">(/[a-z]/</span>i)).join(<span class="pd_red"><strong>""</strong></span>);</span>
+  }
+
+<span epub:type="pagebreak" id="page_181"></span>  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="indent">As noted in <a href="ch06.xhtml#ch06">Chapter 6</a>, functional programs are harder to build up incrementally, which is one reason why it’s so nice to have a test suite to check that it had its intended effect (<a href="ch08.xhtml#ch8list24">Listing 8.24</a>).<sup><a id="ch8fn-4" href="ch08.xhtml#ch8fn_4">4</a></sup></p>
+<p class="footnote"><a id="ch8fn_4" href="ch08.xhtml#ch8fn-4">4</a>. <a href="https://www.urbandictionary.com/define.php?term=IRL">IRL</a>, I would probably write the <span class="pd_green"><code><strong>Phrase#letters</strong></code></span> method by first writing the tests we saw in <a href="ch08.xhtml#ch8lev3">Section 8.3</a>, and then try for a functional solution right away. If I failed at that, I would backtrack, do it an easier (loopier) way, and then make another run at a functional solution after getting the test suite <span class="pd_green"><span class="smallcaps">GREEN</span></span>. (I find this sort of backtracking to be especially necessary with the <span class="pd_green"><code><strong>reduce</strong></code></span> method we met in <a href="ch06.xhtml#ch6lev3">Section 6.3</a>.)</p>
+<p class="listing" id="ch8list24"><strong>Listing 8.24:</strong> The test suite after a functional refactoring. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis24" id="c08lis24a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a mixed-case palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a palindrome with punctuation
+    #letters
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return only letters
+
+
+  5 passing (6ms)</pre>
+<p class="noindent"><a href="https://en.wiktionary.org/wiki/huzzah">Huzzah!</a> Our test suite still passes, so our one-line <span class="pd_green"><code><strong>letters</strong></code></span> method works.</p>
+<p class="indent">This is a major improvement, but in fact there’s one more refactoring that represents a great example of the power of JavaScript. Recall from <a href="ch04.xhtml#ch4lev3">Section 4.3</a> that <span class="pd_green"><code><strong>match</strong></code></span> can use a regex to return an array from a string. By combining with the global flag <span class="pd_green"><code><strong>g</strong></code></span> from <a href="ch04.xhtml#ch4lev5">Section 4.5</a>, we can select the letters directly:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c181pro01" id="c181pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"Madam, I'm Adam."</span>.match<span class="pink">(/[a-z]/gi</span>);
+[ <span class="pd_red">'M'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">'I'</span>, <span class="pd_red">'m'</span>, <span class="pd_red">'A'</span>, <span class="pd_red">'d'</span>, <span class="pd_red">'a'</span>, <span class="pd_red">'m'</span> ]
+<span class="gray">&gt;</span> <span class="pd_red">"Madam, I'm Adam."</span>.match<span class="pink">(/[a-z]/gi</span>).join<span class="pd_red">(""</span>);
+<span class="pd_red">'MadamImAdam'</span></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_182"></span>By matching on the same regex we’ve been using throughout this section and then joining on the empty string, we’ve nearly replicated the functionality of the <span class="pd_green"><code><strong>letters</strong></code></span> method! There’s only one subtlety, which is that when there are <em>no</em> letters, the result is <span class="pd_green"><code><strong>null</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c182pro01" id="c182pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">"1234"</span>.match<span class="pink">(/[a-z]/gi</span>);
+<span class="pd_green1"><strong>null</strong></span>
+<span class="gray">&gt;</span> <span class="pd_red">"1234"</span>.match<span class="pink">(/[a-z]/gi</span>).join<span class="pd_red">(""</span>);
+<span class="pd_red"><strong>TypeError</strong></span><span class="gray">:</span> Cannot read property <span class="pd_red">'join'</span> <span class="pd_green1"><strong>of null</strong></span></pre>
+<p class="indent">We can fix this with the <span class="pd_green"><code><strong>||</strong></code></span> (“or”) operator (<a href="ch02.xhtml#ch2lev4">Section 2.4</a>), which uses a method known as “<a href="https://en.wikipedia.org/wiki/Short-circuit_evaluation">short-circuit evaluation</a>”.</p>
+<p class="indent">If the first element in a list of <span class="pd_green"><code><strong>||</strong></code></span> statements evaluates as <span class="pd_green"><code><strong>true</strong></code></span>, the evaluation “short-circuits” and JavaScript immediately returns that element. If the first element is <span class="pd_green"><code><strong>false</strong></code></span>, JavaScript evaluates the next one, and so on until it finds one that is <span class="pd_green"><code><strong>true</strong></code></span>, and then returns the final element (or the final element if all of the elements are <span class="pd_green"><code><strong>false</strong></code></span>). This means that we can handle the case above like this:</p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_green1"><strong>null</strong></span> <span class="gray">||</span> []
+[]</pre>
+<p class="noindent">Here JavaScript sees <span class="pd_green"><code><strong>null</strong></code></span>, evaluates it as <span class="pd_green"><code><strong>false</strong></code></span>, and then moves on to <span class="pd_green"><code><strong>[]</strong></code></span>, which is <span class="pd_green"><code><strong>true</strong></code></span> and so gets returned.</p>
+<p class="indent">We can combine this idea with <span class="pd_green"><code><strong>match</strong></code></span> as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c182pro02" id="c182pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="gray">&gt;</span> <span class="pd_red">("1234"</span>.match<span class="pink">(/[a-z]/gi</span>) <span class="gray">||</span> []);
+[]
+<span class="gray">&gt;</span> <span class="pd_red">("1234"</span>.match<span class="pink">(/[a-z]/gi</span>) <span class="gray">||</span> []).join<span class="pd_red">(""</span>);
+<span class="pd_red">''</span></pre>
+<p class="noindent">Using this technique, we can simplify the application code even further, as shown in <a href="ch08.xhtml#ch8list25">Listing 8.25</a>.</p>
+<p class="listing" id="ch8list25"><strong>Listing 8.25:</strong> Replacing <span class="pd_green"><code><strong>letters</strong></code></span> with a <span class="pd_green"><code><strong>match</strong></code></span>.<br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis25" id="c08lis25a">Click here to view code image</a></p>
+<pre class="pre2">module.exports <span class="gray">=</span> Phrase;
+
+<span class="pd_blue1"><em>// Adds `reverse` to all strings.</em></span>
+<span class="pd_green1">String</span>.prototype.reverse <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span>() {
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_green1">Array</span>.<span class="pd_green1"><strong>from</strong></span>(<span class="pd_green1"><strong>this</strong></span>).reverse().join(<span class="pd_red">""</span>);
+}
+
+<span epub:type="pagebreak" id="page_183"></span><span class="pd_blue1"><em>// Defines a Phrase object.</em></span>
+<span class="pd_green1"><strong>function</strong></span> Phrase(content) {
+  <span class="pd_green1"><strong>this</strong></span>.content <span class="gray">=</span> content;
+
+  <span class="pd_blue1"><em>// Returns content processed for palindrome testing.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.processedContent <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> processedContent() {
+    <span class="pd_green1"><strong>return this</strong></span>.letters().toLowerCase();
+  }
+
+  <span class="pd_blue1"><em>// Returns the letters in the content.
+  // For example:
+  //   new Phrase("Hello, world!").letters() === "Helloworld"</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+<span class="bg1">    <span class="pd_green1"><strong>return</strong></span> (<span class="pd_green1"><strong>this</strong></span>.content.match(<span class="pd_red">/[a-z]/gi</span>) || []).join(<span class="pd_red"><strong>""</strong></span>);</span>
+  }
+
+  <span class="pd_blue1"><em>// Returns true if the phrase is a palindrome, false otherwise.</em></span>
+  <span class="pd_green1"><strong>this</strong></span>.palindrome <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> palindrome() {
+    <span class="pd_green1"><strong>return this</strong></span>.processedContent() <span class="gray">===</span> <span class="pd_green1"><strong>this</strong></span>.processedContent().reverse();
+  }
+}</pre>
+<p class="noindent">Note that we don’t have a test for the important case where <span class="pd_green"><code><strong>match</strong></code></span> returns <span class="pd_green"><code><strong>null</strong></code></span>; adding this is left as an exercise (<a href="ch08.xhtml#ch8lev5sec2">Section 8.5.2</a>).</p>
+<p class="indent">One more run of the test suite confirms that everything is still <a href="https://en.wiktionary.org/wiki/copacetic#English">copacetic</a> (<a href="ch08.xhtml#ch8fig7">Figure 8.7</a>), as seen in <a href="ch08.xhtml#ch8list26">Listing 8.26</a>.</p>
+<figure class="figure" id="ch8fig7">
+<img src="graphics/08fig07.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.7:</strong> Still a palindrome after all our work.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch8list26"><strong>Listing 8.26:</strong> The test suite after a final refactoring. <span class="pd_green"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis26" id="c08lis26a">Click here to view code image</a></p>
+<pre class="pre2">$ npm test
+
+  Phrase
+    #palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return false for a non-palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a plain palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a mixed-case palindrome
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return true for a palindrome with punctuation
+    #letters
+      <img src="graphics/tick.jpg" alt="Images" width="13" height="12"/> should return only letters
+
+
+  5 passing (6ms)</pre>
+<section>
+<h4 class="h4" id="ch8lev5sec1"><span epub:type="pagebreak" id="page_184"></span>8.5.1 Publishing the NPM Module</h4>
+<p class="noindent">Having finished a refactored version of our <span class="pd_green"><code><strong>palindrome</strong></code></span> module, we’re now ready for the final step, which is to publish the module publicly so that it can be included into other projects (such as the site in <a href="ch09.xhtml#ch09">Chapter 9</a>). Luckily, NPM makes this amazingly easy.</p>
+<p class="indent">First, we should make a Git commit and push up the remote repository:</p>
+<p class="codelink"><a href="ch08_images.xhtml#c184pro01" id="c184pro01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> git add -A
+<span class="pd_blue"><strong>$</strong></span> git commit -m <span class="pd_red">"Finish working and refactored palindrome method"
+</span><span class="pd_blue"><strong>$</strong></span> git push</pre>
+<p class="indent">To publish the NPM module, you’ll need to add yourself as a user (unless you’re already a member), which is simple using <span class="pd_green"><code><strong>npm adduser</strong></code></span> (where you should use your own name, username, and email address):</p>
+<p class="codelink"><a href="ch08_images.xhtml#c184pro02" id="c184pro02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm adduser Michael Hartl
+<span class="pd_green">Username: mhartl
+Password:</span>
+<span class="pd_green">Email: (this IS public) michael@michaelhartl.com</span>
+<span class="pd_green">Logged in as mhartl on https://registry.npmjs.org/</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_185"></span>NPM requires that you verify your email address before allowing you to publish (presumably to make it more difficult to abuse their system), so you should check email and click on the verification link before proceeding (<a href="ch08.xhtml#ch8fig8">Figure 8.8</a>).</p>
+<figure class="figure" id="ch8fig8">
+<img src="graphics/08fig08.jpg" alt="images" width="714" height="268"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.8:</strong> Verifying your NPM email.</p>
+</figcaption>
+</figure>
+<p class="indent">With that, we’re ready to go! Just use <span class="pd_green"><code><strong>npm publish</strong></code></span> to publish the module to the public NPM list:</p>
+<pre class="pre1"><span class="pd_blue"><strong>$</strong></span> npm publish</pre>
+<p class="noindent">For any future revisions, you can simply increment the version number in <span class="pd_green"><code><strong>package.json</strong></code></span> according to the rules of semver (<a href="ch08.xhtml#ch8lev1">Section 8.1</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="ch8lev5sec2">8.5.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Eliminate the <span class="pd_green"><code><strong>|| []</strong></code></span> part of <a href="ch08.xhtml#ch8list25">Listing 8.25</a> and confirm that the tests are still <span class="pd_green"><span class="smallcaps">GREEN</span></span>. This is a problem, because in fact the application code is now broken. Add the test shown in <a href="ch08.xhtml#ch8list27">Listing 8.27</a> to catch the error and confirm that it’s <span class="red"><span class="smallcaps">RED</span></span>, then restore <span class="pd_green"><code><strong>|| []</strong></code></span> to get the suite back to <span class="pd_green"><span class="smallcaps">GREEN</span></span>.</p></li>
+<li><p class="number">Reintroduce the <span class="pd_green"><code><strong>lettersRegEx</strong></code></span> variable from <a href="ch08.xhtml#ch8list21">Listing 8.21</a> (now with the added <span class="pd_green"><code><strong>g</strong></code></span> flag from <a href="ch08.xhtml#ch8list25">Listing 8.25</a>) and apply it to the functional version of the <span class="pd_green"><code><strong>letters</strong></code></span> method by filling in the code shown in <a href="ch08.xhtml#ch8list28">Listing 8.28</a>. Does the test suite still pass?</p></li>
+</ol>
+<p class="listing" id="ch8list27"><span epub:type="pagebreak" id="page_186"></span><strong>Listing 8.27:</strong> Testing a string with no letters. <span class="red"><span class="smallcaps">RED</span></span><br/><code><em>~/repos/palindrome/test/test.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis27" id="c08lis27a">Click here to view code image</a></p>
+<pre class="pre2">describe(<span class="pd_red">"Phrase"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+  .
+  .
+  .
+  describe(<span class="pd_red">"#palindrome"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    .
+    .
+    .
+  });
+
+  describe(<span class="pd_red">"#letters"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+    it(<span class="pd_red">"should return only letters"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> punctuatedPalindrome <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("Madam, I'm Adam."</span>);
+      assert.strictEqual(punctuatedPalindrome.letters(), <span class="pd_red">"MadamImAdam"</span>);
+    });
+
+    it(<span class="pd_red">"should return the empty string on no match"</span>, <span class="pd_green1"><strong>function</strong></span>() {
+      <span class="pd_green1"><strong>let</strong></span> noLetters <span class="gray">=</span> <span class="v1"><strong>new</strong></span> Phrase<span class="pd_red">("1234.56"</span>);
+      assert.strictEqual(noLetters.letters(), <span class="pd_red">""</span>);
+    });
+  });
+});</pre>
+<p class="listing" id="ch8list28"><strong>Listing 8.28:</strong> Reintroducing the <span class="pd_green"><strong>lettersRegEx</strong></span> variable. <span class="pd_green"><span class="smallcaps">GREEN</span></span><br/><code><em>~/repos/palindrome/index.js</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#c08lis28" id="c08lis28a">Click here to view code image</a></p>
+<pre class="pre2"><span class="pd_green1"><strong>this</strong></span>.letters <span class="gray">=</span> <span class="pd_green1"><strong>function</strong></span> letters() {
+  <span class="pd_green1"><strong>const</strong></span> lettersRegEx <span class="gray">=</span> <span class="pink">/[a-z]/gi</span>;
+  <span class="pd_green1"><strong>return</strong></span> <span class="pd_blue1"><em>// FILL IN</em></span>
+}</pre>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

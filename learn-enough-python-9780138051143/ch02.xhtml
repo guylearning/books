@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch02"><span epub:type="pagebreak" id="page_35"></span>Chapter 2</h2>
+<h2 class="h2a">Strings</h2>
+<p class="noindent"><em>Strings</em> are probably the most important data structure for everyday computing. They’re used in practically every kind of program imaginable, and are also the raw material of the Web. As a result, strings make an excellent place to start our Python programming journey.</p>
+<section>
+<h3 class="h3" id="sec2_1">2.1 String Basics</h3>
+<p class="noindent">Strings are made up of sequences of characters in a particular order.<sup><a id="fn2_1a" href="ch02.xhtml#fn2_1">1</a></sup> We’ve already seen several examples in the context of our “hello, world” programs in <a href="ch01.xhtml#ch01">Chapter 1</a>. Let’s see what happens if we type a string by itself (without <span class="pd_green-d"><code><strong>print()</strong></code></span>) into the Python REPL:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span> python3
+<span class="pd_green-d">&gt;&gt;&gt; "hello, world!"
+'hello, world!'</span></code></pre>
+<p class="footnote"><a id="fn2_1" href="ch02.xhtml#fn2_1a">1.</a> Like many other high-level languages, such as JavaScript and Ruby, Python “characters” are just strings of length one. This stands in contrast to lower-level languages like C and Java, which have a special type just for characters.</p>
+<p class="noindent">A sequence of characters typed literally is called a <em>string literal</em>, which we’ve created here using the double-quote character <span class="pd_green-d"><code><strong>"</strong></code></span>. The REPL prints the result of <em>evaluating</em> the line, which in the case of a string literal is just the string itself.</p>
+<p class="indent">A particularly important string is one with no content, consisting simply of two quotes. This is known as an <em>empty string</em> (or sometimes <em>the</em> empty string):</p>
+<span epub:type="pagebreak" id="page_36"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span>
+<span class="pd_green-d">''</span></code></pre>
+<p class="noindent">We’ll have more to say about the empty string in <a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a> and <a href="ch03.xhtml#sec3_1">Section 3.1</a>.</p>
+<p class="indent">Note that the REPL shows the value of the double-quoted strings we entered using single quotes (<span class="pd_green-d"><code><strong>'hello, world!'</strong></code></span> instead of <span class="pd_green-d"><code><strong>"hello, world!"</strong></code></span>). This is purely a convention (and indeed may be system-dependent), because single- and double-quoted strings are exactly the same in Python.<sup><a id="fn2_2a" href="ch02.xhtml#fn2_2">2</a></sup> Well, not <em>exactly</em> exactly the same, because a string might contain a literal quote mark (<a href="ch02.xhtml#ch2fig1">Figure 2.1</a><sup><a id="fn2_3a" href="ch02.xhtml#fn2_3">3</a></sup>):</p>
+<figure class="image-c" id="ch2fig1">
+<img src="graphics/02fig01.jpg" alt="images" width="600" height="427"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.1:</strong> Sometimes it’s not easy when the REPL generates a syntax error.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_2" href="ch02.xhtml#fn2_2a">2.</a> This stands in contrast to Ruby, which uses single-quoted strings for <em>raw strings</em>; as noted in <a href="ch02.xhtml#sec2_2_2">Section 2.2.2</a>, Python’s convention is to prepend the letter <span class="pd_green-d"><code><strong>r</strong></code></span> instead.</p>
+<p class="footnote"><a id="fn2_3" href="ch02.xhtml#fn2_3a">3.</a> Image courtesy of LorraineHudgins/Shutterstock.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f036-01" id="f036-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">'It'</span>s <span class="pd_pink"><strong>not</strong></span> easy being green<span class="pd_red">'</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>
+    <span class="pd_red">'It'</span>s <span class="pd_pink"><strong>not</strong></span> easy being green<span class="pd_red">'</span>
+        ^
+<span class="pd_redred">SyntaxError</span>: invalid syntax</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_37"></span>Because the REPL interprets <span class="pd_green-d"><code><strong>'It'</strong></code></span> as a string, and the final <span class="pd_green-d"><code><strong>'</strong></code></span> as the <em>opening</em> of a <em>second</em> string, the result is a syntax error. (Another result, as seen above, is that the syntax highlighting looks odd—a side effect that is frequently useful as a visual hint of a syntax error.)</p>
+<p class="indent">According to the PEP-8 style guide, the preferred method for including a quote in this manner is simply to use the other kind of quote for defining the string (<a href="ch02.xhtml#ch2list1">Listing 2.1</a>).</p>
+<p class="listing" id="ch2list1"><strong>Listing 2.1:</strong> Including a single quote inside a double quote.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f037-01" id="f037-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"It's not easy being green"</span>
+<span class="pd_green-d">"It's not easy being green"</span></code></pre>
+</div>
+<p class="noindent">Note that the REPL here obeys the same convention we did, switching to double quotes for a string containing a single quote.</p>
+<p class="indent">Finally, Python is unusual in supporting <em>triple-quoted strings</em>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f037-02" id="f037-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red"><em>"""Return the function value."""</em></span>
+<span class="pd_green-d">'Return the function value.'</span></code></pre>
+<p class="noindent">When they fit on one line, these strings behave just like single- and double-quoted strings, but we can also add newlines inside them:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f037-03" id="f037-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red"><em>"""This is a string.</em></span>
+<span class="pd_blue"><strong>...
+...</strong></span> <span class="pd_red"><em>We can add newlines inside,</em></span>
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_red"><em>which is pretty cool.</em></span>
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_red"><em>"""</em></span>
+<span class="pd_green-d">'This is a string.\nWe can add newlines inside,\nwhich is pretty cool.\n'</span></code></pre>
+<p class="noindent">Triple-quoted strings are notable for their use in <em>docstrings</em>, which are special documentation strings used in Python functions (<a href="ch05.xhtml#ch05">Chapter 5</a>) and classes (<a href="ch07.xhtml#ch07">Chapter 7</a>). As such, they are used heavily in Python programming.</p>
+<p class="indent">In general, PEP 8 indicates that single- and double-quoted strings are both acceptable as long as you’re consistent, but triple-quoted strings should always use the double-quoted variant:<sup><a id="fn2_4a" href="ch02.xhtml#fn2_4">4</a></sup></p>
+<p class="footnote"><a id="fn2_4" href="ch02.xhtml#fn2_4a">4.</a> The terminology here is standard but a little muddled: “single-quoted” and “double-quoted” refer to the number of quotes in the characters themselves (<span class="pd_green-d"><code><strong>'</strong></code></span> vs. <span class="pd_green-d"><code><strong>"</strong></code></span>), whereas “triple-quoted” refers to the number of such characters used on each side when defining a string (<span class="pd_green-d"><code><strong>"""..."""</strong></code></span>).</p>
+<p class="quotet"><span epub:type="pagebreak" id="page_38"></span>In Python, single-quoted strings and double-quoted strings are the same. This PEP does not make a recommendation for this. Pick a rule and stick to it. When a string contains single or double quote characters, however, use the other one to avoid backslashes in the string. It improves readability.</p>
+<p class="quoteb">For triple-quoted strings, always use double quote characters to be consistent with the docstring convention in PEP 257.</p>
+<p class="noindent">This tutorial standardizes on double-quoted strings for consistency with this triple-quoted convention and to match the convention used in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="https://www.learnenough.com/javascript">https://www.learnenough.com/javascript</a>) and <em>Learn Enough Ruby to Be Dangerous</em> (<a href="https://www.learnenough.com/ruby">https://www.learnenough.com/ruby</a>), but of course you are free to choose the opposite convention if you like.</p>
+<section>
+<h4 class="h4" id="sec2_1_1">2.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Confirm that we can escape out quotes using a backslash, as in <span class="pd_green-d"><code><strong>'It\'s not easy being green'</strong></code></span>. This can be convenient if a string contains both single and double quotes (in which case the trick from <a href="ch02.xhtml#ch2list1">Listing 2.1</a> doesn’t work). How does the REPL handle <span class="pd_green-d"><code><strong>'It\'s not "easy" being green'</strong></code></span>?</p></li>
+<li><p class="number">Python supports common special characters such as tabs (<span class="pd_green-d"><code><strong>\t</strong></code></span>) and newlines (<span class="pd_green-d"><code><strong>\n</strong></code></span>), which are two different forms of so-called <em>whitespace</em>. Show that <span class="pd_green-d"><code><strong>\t</strong></code></span> and <span class="pd_green-d"><code><strong>\n</strong></code></span> are interpreted as special characters inside both single- and double-quoted strings. What happens if you put the letter <span class="pd_green-d"><code><strong>r</strong></code></span> in front of one of the strings? <em>Hint</em>: In the REPL, try executing commands like the ones shown in <a href="ch02.xhtml#ch2list2">Listing 2.2</a>. We’ll learn more about the special <span class="pd_green-d"><code><strong>r</strong></code></span> behavior in <a href="ch02.xhtml#sec2_2_2">Section 2.2.2</a>.</p></li>
+</ol>
+<p class="listing" id="ch2list2"><strong>Listing 2.2:</strong> Some strings with special characters.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">'hello</span><span class="pd_orange"><strong>\t</strong></span><span class="pd_red">goodbye'</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">'hello</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">goodbye'</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"hello</span><span class="pd_orange"><strong>\t</strong></span><span class="pd_red">goodbye"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"hello</span><span class="pd_orange"><strong>\n</strong></span><span class="pd_red">goodbye"</span>)
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">r"hello\ngoodbye"</span>)</code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_2">2.2 Concatenation and Interpolation</h3>
+<p class="noindent">Two of the most important string operations are <em>concatenation</em> (joining strings together) and <em>interpolation</em> (putting variable content into strings). We’ll start with concatenation, <span epub:type="pagebreak" id="page_39"></span>which we can accomplish using the <span class="pd_green-d"><code><strong>+</strong></code></span> operator:<sup><a id="fn2_5a" href="ch02.xhtml#fn2_5">5</a></sup></p>
+<p class="footnote"><a id="fn2_5" href="ch02.xhtml#fn2_5a">5.</a> This use of <span class="pd_green-d"><code><strong>+</strong></code></span> for string concatenation is common in programming languages, but in one respect it’s an unfortunate choice, because addition is the canonical commutative operation in mathematics: <em>a</em> +<em>b</em> = <em>b</em> +<em>a</em>. (In contrast, multiplication is in some cases non-commutative; for example, when multiplying matrices it’s often the case that <em>AB</em> ≠ <em>BA</em>.) In the case of string concatenation, though, <span class="pd_green-d"><code><strong>+</strong></code></span> is most definitely <em>not</em> a commutative operation, since, e.g., <span class="pd_green-d"><code><strong>"foo"</strong></code></span> <span class="pd_green-d"><code><strong>+</strong></code></span> <span class="pd_green-d"><code><strong>"bar"</strong></code></span> is <span class="pd_green-d"><code><strong>"foobar"</strong></code></span>, whereas <span class="pd_green-d"><code><strong>"bar"</strong></code></span> <span class="pd_green-d"><code><strong>+</strong></code></span> <span class="pd_green-d"><code><strong>"foo"</strong></code></span> is <span class="pd_green-d"><code><strong>"barfoo"</strong></code></span>. Partially for this reason, some languages (such as PHP) use a different symbol for concatenation, such as a dot <span class="pd_green-d"><code><strong>.</strong></code></span> (yielding <span class="pd_green-d"><code><strong>"foo"</strong></code></span> <span class="pd_green-d"><code><strong>.</strong></code></span> <span class="pd_green-d"><code><strong>"bar"</strong></code></span>).</p>
+<p class="codelink"><a href="ch02_images.xhtml#f039-01" id="f039-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3
+<span class="pd_green-d">&gt;&gt;&gt; "foo" + "bar"             # String concatenation
+'foobar'
+&gt;&gt;&gt; "ant" + "bat" + "cat"     # Multiple strings can be concatenated at once.
+'antbatcat'</span></code></pre>
+<p class="noindent">Here the result of evaluating <span class="pd_green-d"><code><strong>"foo"</strong></code></span> plus <span class="pd_green-d"><code><strong>"bar"</strong></code></span> is the string <span class="pd_green-d"><code><strong>"foobar"</strong></code></span>. (The meaning of the odd names “foo” and “bar” is discussed (<a href="https://www.learnenough.com/command-line-tutorial/manipulating_files#aside-foo_bar">https://www.learnenough.com/command-line-tutorial/manipulating_files#aside-foo_bar</a>) in <em>Learn Enough Command Line to Be Dangerous</em> (<a href="https://www.learnenough.com/command-line">https://www.learnenough.com/command-line</a>).) Also note the <em>comments</em>, indicated using the hash symbol <span class="pd_green-d"><code><strong>#</strong></code></span>, which you are free to ignore and will be ignored by Python in any case.</p>
+<p class="indent">Let’s take another look at string concatenation in the context of <em>variables</em>, which you can think of as named boxes that contain some value (as mentioned (<a href="https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#aside-variable">https://www.learnenough.com/css-and-layout-tutorial/templates_and_frontmatter#aside-variable</a>) in <em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>) and discussed further in <a href="ch02.xhtml#ch2box1">Box 2.1</a>).</p>
+<div class="box">
+<p class="box-title" id="ch2box1"><strong>Box 2.1: Variables and identifiers</strong></p>
+<p class="sb-noindent">If you’ve never programmed a computer before, you may be unfamiliar with the term <em>variable</em>, which is an essential idea in computer science. You can think of a variable as a named box that can hold different (or “variable”) content.</p>
+<p class="sb-indent">As a concrete analogy, consider the labeled boxes that many elementary schools provide for students to store clothing, books, backpacks, etc. (<a href="ch02.xhtml#ch2fig2">Figure 2.2</a><sup><a id="fn2_6a" href="ch02.xhtml#fn2_6">6</a></sup>). The variable is the location of the box, the label for the box is the variable name (also called an <em>identifier</em>), and the content of the box is the variable value.</p>
+<figure class="image-c" id="ch2fig2">
+<img src="graphics/02fig02.jpg" alt="images" width="471" height="449"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.2:</strong> A concrete manifestation of computer variables.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_6" href="ch02.xhtml#fn2_6a">6.</a> Image courtesy of Africa Studio/Shutterstock.</p>
+<p class="sb-indent">In practice, these different definitions are frequently conflated, and “variable” is often used for any of the three concepts (location, label, or value).</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_40"></span>As a concrete example, we can create variables for a first name and a last name using the <span class="pd_green-d"><code><strong>=</strong></code></span> sign, as shown in <a href="ch02.xhtml#ch2list3">Listing 2.3</a>.</p>
+<p class="listing" id="ch2list3"><strong>Listing 2.3:</strong> Using <span class="pd_green-d"><code><strong>=</strong></code></span> to assign variables.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> first_name <span class="pd_gray">=</span> <span class="pd_red">"Michael"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> last_name <span class="pd_gray">=</span> <span class="pd_red">"Hartl"</span></code></pre>
+</div>
+<p class="noindent">Here <span class="pd_green-d"><code><strong>=</strong></code></span> associates the identifier <span class="pd_green-d"><code><strong>first_name</strong></code></span> with the string <span class="pd_green-d"><code><strong>"Michael"</strong></code></span> and the identifier <span class="pd_green-d"><code><strong>last_name</strong></code></span> with the string <span class="pd_green-d"><code><strong>"Hartl"</strong></code></span>.</p>
+<p class="indent">The identifiers <span class="pd_green-d"><code><strong>first_name</strong></code></span> and <span class="pd_green-d"><code><strong>last_name</strong></code></span> in <a href="ch02.xhtml#ch2list3">Listing 2.3</a> are written in so-called snake case,<sup><a id="fn2_7a" href="ch02.xhtml#fn2_7">7</a></sup> whose name origins are obscure but which is probably the most common convention for Python variable names (<a href="ch02.xhtml#ch2fig3">Figure 2.3</a><sup><a id="fn2_8a" href="ch02.xhtml#fn2_8">8</a></sup>). (In contrast, Python classes use the CamelCase convention, which is described in more detail in <a href="ch07.xhtml#ch07">Chapter 7</a>.)</p>
+<p class="footnote"><a id="fn2_7" href="ch02.xhtml#fn2_7a">7.</a> In particular, “snake case” is not a reference to Python itself; snake-case variable names are common in languages whose names, unlike Python’s, have nothing to do with snakes, such C, Perl, PHP, JavaScript, and Ruby.</p>
+<span epub:type="pagebreak" id="page_41"></span>
+<figure class="image-c" id="ch2fig3">
+<img src="graphics/02fig03.jpg" alt="images" width="675" height="447"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.3:</strong> Snake case is the default for Python variable names.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_8" href="ch02.xhtml#fn2_8a">8.</a> Image courtesy of rafaelbenari/123RF.</p>
+<p class="indent">Having defined the variable names in <a href="ch02.xhtml#ch2list3">Listing 2.3</a>, we can use them to concatenate the first and last names, while also inserting a space in between (<a href="ch02.xhtml#ch2list4">Listing 2.4</a>).</p>
+<p class="listing" id="ch2list4"><strong>Listing 2.4:</strong> Concatenating string variables (and a string literal).</p>
+<p class="codelink"><a href="ch02_images.xhtml#f041-01" id="f041-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> first_name <span class="pd_gray">+</span> <span class="pd_red">" "</span> <span class="pd_gray">+</span> last_name    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">'Michael Hartl'</span></code></pre>
+</div>
+<section>
+<h4 class="h4" id="sec2_2_1">2.2.1 Formatted Strings</h4>
+<p class="noindent">The most Pythonic way (<a href="ch01.xhtml#ch1box1">Box 1.1</a>) to build up strings is via <em>interpolation</em> using so-called <em>formatted strings</em>, or <em>f-strings</em>, which combine the letter <span class="pd_green-d"><code><strong>f</strong></code></span> (for “formatted”) and curly braces to insert variable values:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f041-02" id="f041-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>first_name<span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">is my first name."</span>    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_green-d">'Michael is my first name.'</span></code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_42"></span>Here Python automatically inserts, or <em>interpolates</em>, the value of the variable <span class="pd_green-d"><code><strong>first_name</strong></code></span> into the string at the appropriate place.<sup><a id="fn2_9a" href="ch02.xhtml#fn2_9">9</a></sup> Indeed, any code inside the curly braces will simply be evaluated by Python and inserted in place.</p>
+<p class="footnote"><a id="fn2_9" href="ch02.xhtml#fn2_9a">9.</a> Programmers familiar with Perl or PHP should compare this to the automatic interpolation of dollar sign variables in expressions like <span class="pd_green-d"><code><strong>"Michael $last_name"</strong></code></span>.</p>
+<p class="indent">We can use interpolation to replicate the result of <a href="ch02.xhtml#ch2list4">Listing 2.4</a>, as shown in <a href="ch02.xhtml#ch2list5">Listing 2.5</a>.</p>
+<p class="listing" id="ch2list5"><strong>Listing 2.5:</strong> Concatenation review, then interpolating.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f042-01" id="f042-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> first_name <span class="pd_gray">+</span> <span class="pd_red">" "</span> <span class="pd_gray">+</span> last_name    <span class="pd_blue1"><em># Concatenation (not Pythonic)</em></span>
+<span class="pd_green-d">'Michael Hartl'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>first_name<span class="pd_lpink"><strong>} {</strong></span>last_name<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>     <span class="pd_blue1"><em># Interpolation (Pythonic)</em></span>
+<span class="pd_green-d">'Michael Hartl'</span></code></pre>
+</div>
+<p class="noindent">The two expressions shown in <a href="ch02.xhtml#ch2list5">Listing 2.5</a> are equivalent, but I generally prefer the interpolated version because having to add the single space <span class="pd_green-d"><code><strong>" "</strong></code></span> in between strings feels a bit awkward (and, as noted, Pythonistas generally agree).</p>
+<p class="indent">It’s worth noting that formatted strings were added in Python 3.6. If for some reason you need to use an earlier version of Python, you can use either <span class="pd_green-d"><code><strong>%</strong></code></span> formatting or <span class="pd_green-d"><code><strong>str.format()</strong></code></span> instead. Specifically, the following three lines give the same result:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f042-02" id="f042-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">f"First Name:</span> <span class="pd_lpink"><strong>{</strong></span>first_name<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">, Last Name:</span> <span class="pd_lpink"><strong>{</strong></span>last_name<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">"</span>
+<span class="pd_green-d">'First Name: Michael, Last Name: Hartl'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"First Name:</span> <span class="pd_lpink"><strong>{}</strong></span><span class="pd_red">, Last Name:</span> <span class="pd_lpink"><strong>{}</strong></span><span class="pd_red">"</span><span class="pd_gray">.</span>format(first_name, last_name)
+<span class="pd_green-d">'First Name: Michael, Last Name: Hartl'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"First Name:</span> <span class="pd_lpink"><strong>%s</strong></span><span class="pd_red">, Last Name:</span> <span class="pd_lpink"><strong>%s</strong></span><span class="pd_red">"</span> <span class="pd_gray">%</span> (first_name, last_name)
+<span class="pd_green-d">'First Name: Michael, Last Name: Hartl'</span></code></pre>
+<p class="noindent">Using <span class="pd_green-d"><code><strong>format()</strong></code></span> in particular has possible advantages that can be useful even when formatted strings are available. See the article “Python 3’s f-Strings: An Improved String Formatting Syntax” (<a href="https://realpython.com/python-f-strings/">https://realpython.com/python-f-strings/</a>) for more information.</p>
+</section>
+<section>
+<h4 class="h4" id="sec2_2_2">2.2.2 Raw Strings</h4>
+<p class="noindent">In addition to ordinary strings and formatted strings, Python also supports so-called <em>raw strings</em>. For many uses, the two types of strings are effectively identical:</p>
+<span epub:type="pagebreak" id="page_43"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r"foo"</span>
+<span class="pd_green-d">'foo'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r"foo"</span> <span class="pd_gray">+</span> <span class="pd_red">r"bar"</span>
+<span class="pd_green-d">'foobar'</span></code></pre>
+<p class="indent">There are important differences, though. For example, Python won’t interpolate into raw strings:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f043-01" id="f043-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r"</span><span class="pd_lpink"><strong>{first_name} {last_name}</strong></span><span class="pd_red">"</span>     <span class="pd_blue1"><em># No interpolation!</em></span>
+<span class="pd_green-d">'{first_name} {last_name}'</span></code></pre>
+<p class="noindent">This isn’t that surprising, though, since Python won’t interpolate into regular strings, either:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f043-02" id="f043-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"</span><span class="pd_lpink"><strong>{first_name} {last_name}</strong></span><span class="pd_red">"</span>     <span class="pd_blue1"><em># No interpolation!</em></span>
+<span class="pd_green-d">'{first_name} {last_name}'</span></code></pre>
+<p class="indent">If regular strings can do everything that raw strings can do, what’s the point of raw strings? They are often useful because they are truly literal, containing exactly the characters you type. For example, the “backslash” character is special on most systems, as in the literal newline <span class="pd_green-d"><code><strong>\n</strong></code></span>. If you want a variable to contain a literal backslash, raw strings make it easier:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f043-03" id="f043-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r"\n"</span>      <span class="pd_blue1"><em># A literal 'backslash n' combination</em></span>
+<span class="pd_green-d">'\\n'</span></code></pre>
+<p class="noindent">Note that Python REPL needs to escape the backslash with an additional backslash; inside regular strings, a literal backslash is represented with <em>two</em> backslashes. For a small example like this, there’s not much savings, but if there are lots of things to escape it can be a real help:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f043-04" id="f043-04a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r"Newlines (\n) and tabs (\t) both use the backslash character: \."</span>
+<span class="pd_green-d">'Newlines (\\n) and tabs (\\t) both use the backslash character: \\.'</span></code></pre>
+<p class="noindent">Probably the most common use of raw strings is in defining regular expressions (<a href="ch04.xhtml#sec4_3">Section 4.3</a>), but they will also make an appearance when labeling plots in <a href="ch11.xhtml#sec11_3">Section 11.3</a>.</p>
+<p class="indent">The practice of escaping out characters is unnecessary inside raw strings, <em>except</em> for quotes of the same kind used to define the string. For example, if you define a raw string using single quotes, ordinarily it works just fine:</p>
+<span epub:type="pagebreak" id="page_44"></span>
+<p class="codelink"><a href="ch02_images.xhtml#f044-01" id="f044-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r'Newlines (\n) and tabs (\t) both use the backslash character: \.'</span>
+<span class="pd_green-d">'Newlines (\\n) and tabs (\\t) both use the backslash character: \\.'</span></code></pre>
+<p class="noindent">As with regular strings, if a raw string defined using single quotes itself contains a single quote, we get a syntax error instead:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f044-02" id="f044-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">r'It'</span>s <span class="pd_pink"><strong>not</strong></span> easy being green<span class="pd_red">'</span>
+  File <span class="pd_green">"&lt;stdin&gt;"</span>, line <span class="pd_gray">1</span>
+     <span class="pd_red">'It'</span>s <span class="pd_pink"><strong>not</strong></span> easy being green<span class="pd_red">'</span>
+         ^
+<span class="pd_redred">SyntaxError</span>: invalid syntax</code></pre>
+</section>
+<section>
+<h4 class="h4" id="sec2_2_3">2.2.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">Assign variables <span class="pd_green-d"><code><strong>city</strong></code></span> and <span class="pd_green-d"><code><strong>state</strong></code></span> to your current city and state of residence. (If residing outside the U.S., substitute the analogous quantities.) Using interpolation, print a string consisting of the city and state separated by a comma and a space, as in “Los Angeles, CA”.</p></li>
+<li><p class="number">Repeat the previous exercise but with the city and state separated by a tab character.</p></li>
+<li><p class="number">Do triple-quoted strings (<a href="ch02.xhtml#sec2_1">Section 2.1</a>) support interpolation?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_3">2.3 Printing</h3>
+<p class="noindent">As we saw in <a href="ch01.xhtml#sec1_2">Section 1.2</a> and subsequent sections, the Python way to print a string to the screen is to use the <span class="pd_green-d"><code><strong>print()</strong></code></span> function:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f044-03" id="f044-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)     <span class="pd_blue1"><em># Print output</em></span>
+<span class="pd_green-d">hello, world!</span></code></pre>
+<p class="noindent">Here <span class="pd_green-d"><code><strong>print()</strong></code></span> takes in a string as an <em>argument</em> and then prints the result to the screen. The <span class="pd_green-d"><code><strong>print()</strong></code></span> function operates as a <em>side effect</em>, which refers to anything a function does other than returning a value. In particular, the expression</p>
+<pre class="pre1"><code><span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)</code></pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_45"></span>prints the string to the screen and then returns nothing—indeed, it returns a literal Python object called <span class="pd_green-d"><code><strong>None</strong></code></span>, as we can see here:<sup><a id="fn2_10a" href="ch02.xhtml#fn2_10">10</a></sup></p>
+<p class="footnote"><a id="fn2_10" href="ch02.xhtml#fn2_10a">10.</a> Python’s <span class="pd_green-d"><code><strong>None</strong></code></span> is the exact analogue of Ruby’s <span class="pd_green-d"><code><strong>nil</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f045-01" id="f045-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> result <span class="pd_gray">=</span> <span class="pd_green">print</span>(<span class="pd_red">"hello, world!"</span>)
+<span class="pd_green-d">"hello, world"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(result)
+<span class="pd_green-d">None</span></code></pre>
+<p class="noindent">Here the second instance of <span class="pd_green-d"><code><strong>print()</strong></code></span> converts <span class="pd_green-d"><code><strong>None</strong></code></span> to a string representation and prints the result. We can get the string representation directly using the <span class="pd_green-d"><code><strong>repr()</strong></code></span> (“representation”) function:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">repr</span>(<span class="pd_green"><strong>None</strong></span>)
+<span class="pd_green-d">'None'</span></code></pre>
+<p class="noindent">The <span class="pd_green-d"><code><strong>repr()</strong></code></span> command is frequently useful, especially in the REPL, and works on essentially any Python object.</p>
+<p class="indent">We saw briefly in <a href="ch01.xhtml#sec1_2_1">Section 1.2.1</a> that <span class="pd_green-d"><code><strong>print()</strong></code></span> also accepts a <em>keyword argument</em> (<a href="ch05.xhtml#sec5_1_2">Section 5.1.2</a>) called <span class="pd_green-d"><code><strong>end</strong></code></span> that represents the character used at the end of the string. The default <span class="pd_green-d"><code><strong>end</strong></code></span> is a newline <span class="pd_green-d"><code><strong>\n</strong></code></span>, which is why we get a nice break before the next interpreter prompt:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"foo"</span>)
+<span class="pd_green-d">foo</span>
+<span class="pd_green-d">&gt;&gt;&gt;</span></code></pre>
+<p class="noindent">We can override this behavior by passing a different string, such as the empty string <span class="pd_green-d"><code><strong>""</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">print</span>(<span class="pd_red">"foo"</span>, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+<span class="pd_green-d">foo&gt;&gt;&gt;</span></code></pre>
+<p class="noindent">Note that the prompt now appears immediately after the string. This is potentially useful in a script because it allows us to print out multiple statements without any separation between them.</p>
+<span epub:type="pagebreak" id="page_46"></span>
+<section>
+<h4 class="h4" id="sec2_3_1">2.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">What is the effect of giving <span class="pd_green-d"><code><strong>print()</strong></code></span> multiple arguments, as in <span class="pd_green-d"><code><strong>print("foo", "bar", "baz")</strong></code></span>?</p></li>
+<li><p class="number">What is the effect of running the print test shown in <a href="ch02.xhtml#ch2list6">Listing 2.6</a>? <em>Hint</em>: You should create and run the file using the same techniques covered in <a href="ch01.xhtml#sec1_3">Section 1.3</a>.</p></li>
+</ol>
+<p class="listing" id="ch2list6"><strong>Listing 2.6:</strong> A test of printing without newlines.<br/><code><em>print_test.py</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green">print</span>(<span class="pd_red">"foo"</span>, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+<span class="pd_green">print</span>(<span class="pd_red">"bar"</span>, end<span class="pd_gray">=</span><span class="pd_red">""</span>)
+<span class="pd_green">print</span>(<span class="pd_red">"baz"</span>)</code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_4">2.4 Length, Booleans, and Control Flow</h3>
+<p class="noindent">One of the most useful built-in Python functions is <span class="pd_green-d"><code><strong>len()</strong></code></span>, which returns the length of its argument. Among many other things, <span class="pd_green-d"><code><strong>len()</strong></code></span> works on strings:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"hello, world!"</span>)
+<span class="pd_green-d">13</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">""</span>)
+<span class="pd_green-d">0</span></code></pre>
+<p class="noindent">This can be a bit of a gotcha for programmers coming from other high-level languages, many of which use <span class="pd_green-d"><code><strong>obj.length</strong></code></span> (an attribute) or <span class="pd_green-d"><code><strong>obj.length()</strong></code></span> (a method) to calculate lengths. In Python, <span class="pd_green-d"><code><strong>len(obj)</strong></code></span> plays this important role instead. (We’ll learn more about methods starting in <a href="ch02.xhtml#sec2_5">Section 2.5</a>.)</p>
+<p class="indent">The <span class="pd_green-d"><code><strong>len()</strong></code></span> function is especially useful in comparisons, such as checking the length of a string to see how it compares to a particular value (note that the REPL supports “up arrow” to retrieve previous lines, just like the command-line terminal):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"badger"</span>) <span class="pd_gray">&gt; 3</span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"badger"</span>) <span class="pd_gray">&gt; 6</span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"badger"</span>) <span class="pd_gray">&gt;= 6</span>
+<span epub:type="pagebreak" id="page_47"></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"badger"</span>) <span class="pd_gray">&lt; 10</span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(<span class="pd_red">"badger"</span>) <span class="pd_gray">== 6</span>
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">The last line uses the equality comparison operator <span class="pd_green-d"><code><strong>==</strong></code></span>, which Python shares with many other languages. (Python also has a comparison operator called <span class="pd_green-d"><code><strong>is</strong></code></span> that represents a stronger comparison; see <a href="ch03.xhtml#sec3_4_2">Section 3.4.2</a>.)</p>
+<p class="indent">The return values in the comparisons above, which are always either <span class="pd_green-d"><code><strong>True</strong></code></span> or <span class="pd_green-d"><code><strong>False</strong></code></span>, are known as <em>boolean</em> values, after mathematician and logician George Boole (<a href="ch02.xhtml#ch2fig4">Figure 2.4</a><sup><a id="fn2_11a" href="ch02.xhtml#fn2_11">11</a></sup>).</p>
+<figure class="image-c" id="ch2fig4">
+<img src="graphics/02fig04.jpg" alt="images" width="364" height="488"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.4:</strong> True or false? This is a picture of George Boole.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_11" href="ch02.xhtml#fn2_11a">11.</a> Image courtesy of Yogi Black/Alamy Stock Photo.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_48"></span>Boolean values are especially useful for <em>control flow</em>, which lets us take actions based on the result of a comparison (<a href="ch02.xhtml#ch2list7">Listing 2.7</a>). In <a href="ch02.xhtml#ch2list7">Listing 2.7</a>, the three dots <span class="pd_green-d"><code><strong>...</strong></code></span> are inserted by the Python interpreter and shouldn’t be copied literally.</p>
+<p class="listing" id="ch2list7"><strong>Listing 2.7:</strong> Control flow with <span class="pd_green-d"><code><strong>if</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f048-01" id="f048-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password <span class="pd_gray">=</span> <span class="pd_red">"foo"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> (<span class="pd_green">len</span>(password) <span class="pd_gray">&lt; 6</span>):    <span class="pd_blue1"><em># Not fully Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Password is too short."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Password is too short.</span></code></pre>
+</div>
+<p class="noindent">Note in <a href="ch02.xhtml#ch2list7">Listing 2.7</a> that the comparison after <span class="pd_green-d"><code><strong>if</strong></code></span> is in parentheses, and the <span class="pd_green-d"><code><strong>if</strong></code></span> statement is terminated by a colon <span class="pd_green-d"><code><strong>:</strong></code></span>. The latter is required, but in Python (unlike many other languages) the parentheses are optional, and it’s common to leave them off (<a href="ch02.xhtml#ch2list8">Listing 2.8</a>).</p>
+<p class="listing" id="ch2list8"><strong>Listing 2.8:</strong> Control flow with <span class="pd_green-d"><code><strong>if</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f048-02" id="f048-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password <span class="pd_gray">=</span> <span class="pd_red">"foo"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> <span class="pd_green">len</span>(password) <span class="pd_gray">&lt; 6</span>:    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>    <span class="pd_green">print</span>(<span class="pd_red">"Password is too short."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Password is too short.</span></code></pre>
+</div>
+<p class="indent">Meanwhile, the block structure is indicated by indentation, in this case four spaces before the string <span class="pd_green-d"><code><strong>"Password is too short."</strong></code></span> (<a href="ch02.xhtml#ch2box2">Box 2.2</a>).</p>
+<div class="box">
+<p class="box-title" id="ch2box2"><strong>Box 2.2: Code formatting</strong></p>
+<p class="sb-noindent">The code samples in this tutorial, including those in the REPL, are designed to show how to format Python in a way that maximizes readability and code comprehension. Unusually among programming languages, Python actually <em>requires</em> such formatting, as its block structure is indicated by indentation rather than by curly braces <code>{...}</code> (as in C/C++, PHP, Perl, JavaScript, etc.) or by a special keyword (e.g., <code>end</code> in Ruby).</p>
+<p class="sb-indent">While exact styles differ, here are some general guidelines for good code formatting, based in part on PEP 8 – Style Guide for Python Code:</p>
+<ul class="sq">
+<li><p class="bull"><span epub:type="pagebreak" id="page_49"></span>Indent code to indicate block structure. As noted above, this is required by Python. Python technically allows either spaces or tabs, but tabs are generally considered a Bad Thing, and using spaces (typically via <em>emulated tabs</em> (<a href="https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-indenting_and_dedenting">https://www.learnenough.com/text-editor-tutorial/advanced_text_editing#sec-indenting_and_dedenting</a>)) is strongly recommended.</p></li>
+<li><p class="bull">Use four spaces for indentation. Although some Python style guides, such as Google’s Python course, indent two spaces at a time, the official PEP 8 guideline is to use four spaces.</p></li>
+<li><p class="bull">Add newlines to indicate logical structure. One thing I particularly like to do is add an extra newline after a series of variable assignments, in order to give a visual indication that the setup is done and the real coding can begin. An example appears in <a href="ch04.xhtml#ch4list12">Listing 4.12</a>.</p></li>
+<li><p class="bull">Limit code lines to 79 characters (also called “columns”), and limit comment lines or docstrings to 72 characters. These rules, which are recommended by PEP 8, are even more cautious than the 80-character constraint used in other Learn Enough tutorials and which dates back to the early days of 80-character-width terminals. Many modern developers routinely violate this constraint, considering it outdated, but in my experience using a conservative character limit is a good source of discipline, and will save your neck when using command-line programs like <code>less</code> (or when using your code in a document with more stringent width requirements, such as a book). A line that breaks the character limit is a hint that you should introduce a new variable name, break an operation into multiple steps, etc., to make the code clearer for anyone reading it.</p></li>
+</ul>
+<p class="sb-indent">We’ll see several examples of more advanced code formatting conventions as we proceed throughout the rest of this tutorial.</p>
+</div>
+<p class="indent">We can add a second behavior using <span class="pd_green-d"><code><strong>else</strong></code></span>, which serves as the default result if the first comparison is <span class="pd_green-d"><code><strong>False</strong></code></span> (<a href="ch02.xhtml#ch2list9">Listing 2.9</a>).</p>
+<p class="listing" id="ch2list9"><strong>Listing 2.9:</strong> Control flow with <span class="pd_green-d"><code><strong>if</strong></code></span> and <span class="pd_green-d"><code><strong>else</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f049-01" id="f049-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password <span class="pd_gray">=</span> <span class="pd_red">"foobar"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> <span class="pd_green">len</span>(password) <span class="pd_gray">&lt; 6</span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Password is too short."</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Password is long enough."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Password is long enough.</span></code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_50"></span>The first line in <a href="ch02.xhtml#ch2list9">Listing 2.9</a> <em>redefines</em> <span class="pd_green-d"><code><strong>password</strong></code></span> by assigning it a new value. After reassignment, the <span class="pd_green-d"><code><strong>password</strong></code></span> variable has length 6, so <span class="pd_green-d"><code><strong>len(password) &lt; 6</strong></code></span> is <span class="pd_green-d"><code><strong>False</strong></code></span>. As a result, the <span class="pd_green-d"><code><strong>if</strong></code></span> part of the statement (known as the <span class="pd_green-d"><code><strong>if</strong></code></span> <em>branch</em>) doesn’t get evaluated; instead, Python evaluates the <span class="pd_green-d"><code><strong>else</strong></code></span> branch, resulting in a message indicating that the password is long enough.</p>
+<p class="indent">Rather than the more conventional <span class="pd_green-d"><code><strong>else if</strong></code></span> control flow, Python has a special <span class="pd_green-d"><code><strong>elif</strong></code></span> keyword that means the same thing, as shown in <a href="ch02.xhtml#ch2list10">Listing 2.10</a> (<a href="ch02.xhtml#ch2fig5">Figure 2.5</a><sup><a id="fn2_12a" href="ch02.xhtml#fn2_12">12</a></sup>).</p>
+<figure class="image-c" id="ch2fig5">
+<img src="graphics/02fig05.jpg" alt="images" width="450" height="655"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.5:</strong> Goldilocks chooses control flow that is just right.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_12" href="ch02.xhtml#fn2_12a">12.</a> Image courtesy of Jessie Willcox Smith/Alamy Stock Photo.</p>
+<span epub:type="pagebreak" id="page_51"></span>
+<p class="listing" id="ch2list10"><strong>Listing 2.10:</strong> Control flow with <span class="pd_green-d"><code><strong>elif</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f051-01" id="f051-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password <span class="pd_gray">=</span> <span class="pd_red">"goldilocks"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> <span class="pd_green">len</span>(password) <span class="pd_gray">&lt; 6</span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Password is too short."</span>)
+<span class="b-y"><span class="pd_blue">...</span> <span class="pd_green-d">elif len</span>(password) <span class="pd_gray">&lt; 50</span>:</span>
+<span class="pd_green-d">...     print(<span class="pd_red">"Password is just right!"</span>)
+... else:
+...     print(<span class="pd_red">"Password is too long."</span>)
+...</span>
+<span class="pd_green-d">Password is just right!</span></code></pre>
+</div>
+<section>
+<h4 class="h4" id="sec2_4_1">2.4.1 Combining and Inverting Booleans</h4>
+<p class="noindent">Booleans can be combined or inverted using the <span class="pd_green-d"><code><strong>and</strong></code></span>, <span class="pd_green-d"><code><strong>or</strong></code></span>, and <span class="pd_green-d"><code><strong>not</strong></code></span> operators.</p>
+<p class="indent">Let’s start with <span class="pd_green-d"><code><strong>and</strong></code></span>. When comparing two booleans with <span class="pd_green-d"><code><strong>and</strong></code></span>, <em>both</em> have to be <span class="pd_green-d"><code><strong>True</strong></code></span> for the combination to be <span class="pd_green-d"><code><strong>True</strong></code></span>. For example, if I said I wanted both french fries <em>and</em> a baked potato, the only way the combination could be true is if I could answer “yes” (true) to both the questions “Do you want french fries?” and “Do you want a baked potato?” If my answer to either of those is false, then the combination must be false as well. The resulting combinations of possibilities are collectively known as a <em>truth table</em>; the truth table for <span class="pd_green-d"><code><strong>and</strong></code></span> appears in <a href="ch02.xhtml#ch2list11">Listing 2.11</a>.</p>
+<p class="listing" id="ch2list11"><strong>Listing 2.11:</strong> The truth table for <span class="pd_green-d"><code><strong>and</strong></code></span>.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>True</strong></span> <span class="pd_pink"><strong>and</strong></span> <span class="pd_green"><strong>False</strong></span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>False</strong></span> <span class="pd_pink"><strong>and</strong></span> <span class="pd_green"><strong>True</strong></span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>False</strong></span> <span class="pd_pink"><strong>and</strong></span> <span class="pd_green"><strong>False</strong></span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>True</strong></span> <span class="pd_pink"><strong>and</strong></span> <span class="pd_green"><strong>True</strong></span>
+<span class="pd_green-d">True</span></code></pre>
+</div>
+<p class="indent">We can apply this to a conditional as shown in <a href="ch02.xhtml#ch2list12">Listing 2.12</a>.</p>
+<p class="listing" id="ch2list12"><strong>Listing 2.12:</strong> Using the <span class="pd_green-d"><code><strong>and</strong></code></span> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f051-02" id="f051-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> x <span class="pd_gray">=</span> <span class="pd_red">"foo"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> y <span class="pd_gray">=</span> <span class="pd_red">""</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong> len</span>(x) <span class="pd_gray">== 0</span> <span class="pd_pink"><strong>and</strong></span> <span class="pd_green">len</span>(y) <span class="pd_gray">== 0</span>:
+<span epub:type="pagebreak" id="page_52"></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Both strings are empty!"</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"At least one of the strings is nonempty."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">At least one of the strings is nonempty.</span></code></pre>
+</div>
+<p class="noindent">In <a href="ch02.xhtml#ch2list12">Listing 2.12</a>, <span class="pd_green-d"><code><strong>len(y)</strong></code></span> is in fact <span class="pd_green-d"><code><strong>0</strong></code></span>, but <span class="pd_green-d"><code><strong>len(x)</strong></code></span> isn’t, so the combination is <span class="pd_green-d"><code><strong>False</strong></code></span> (in agreement with <a href="ch02.xhtml#ch2list11">Listing 2.11</a>), and Python evaluates the <span class="pd_green-d"><code><strong>else</strong></code></span> branch.</p>
+<p class="indent">In contrast to <span class="pd_green-d"><code><strong>and</strong></code></span>, <span class="pd_green-d"><code><strong>or</strong></code></span> lets us take action if <em>either</em> comparison (or both) is true (<a href="ch02.xhtml#ch2list13">Listing 2.13</a>).</p>
+<p class="listing" id="ch2list13"><strong>Listing 2.13:</strong> The truth table for <span class="pd_green-d"><code><strong>or</strong></code></span>.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>True</strong></span> <span class="pd_pink"><strong>or</strong></span> <span class="pd_green"><strong>False</strong></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>False</strong></span> <span class="pd_pink"><strong>or</strong></span> <span class="pd_green"><strong>True</strong></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>True</strong></span> <span class="pd_pink"><strong>or</strong></span> <span class="pd_green"><strong>True</strong></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>False</strong></span> <span class="pd_pink"><strong>or</strong></span> <span class="pd_green"><strong>False</strong></span>
+<span class="pd_green-d">False</span></code></pre>
+</div>
+<p class="indent">We can use <span class="pd_green-d"><code><strong>or</strong></code></span> in a conditional as shown in <a href="ch02.xhtml#ch2list14">Listing 2.14</a>.</p>
+<p class="listing" id="ch2list14"><strong>Listing 2.14:</strong> Using the <span class="pd_green-d"><code><strong>or</strong></code></span> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f052-01" id="f052-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong> len</span>(x) <span class="pd_gray">== 0</span> <span class="pd_pink"><strong>or</strong></span> <span class="pd_green">len</span>(y) <span class="pd_gray">== 0</span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"At least one of the strings is empty!"</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Neither of the strings is empty."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">At least one of the strings is empty!</span></code></pre>
+</div>
+<p class="indent">Note from <a href="ch02.xhtml#ch2list13">Listing 2.13</a> that <span class="pd_green-d"><code><strong>or</strong></code></span> isn’t <em>exclusive</em>, meaning that the result is true even when <em>both</em> statements are true. This stands in contrast to colloquial usage, where a statement like “I want fries or a baked potato” implies that you want either fries <em>or</em> a baked potato, but you don’t want both (<a href="ch02.xhtml#ch2fig6">Figure 2.6</a><sup><a id="fn2_13a" href="ch02.xhtml#fn2_13">13</a></sup>).</p>
+<span epub:type="pagebreak" id="page_53"></span>
+<figure class="image-c" id="ch2fig6">
+<img src="graphics/02fig06.jpg" alt="images" width="598" height="399"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.6:</strong> Turns out I only wanted fries.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_13" href="ch02.xhtml#fn2_13a">13.</a> Image courtesy of Rikaphoto/Shutterstock.</p>
+<p class="indent">In addition to <span class="pd_green-d"><code><strong>and</strong></code></span> and <span class="pd_green-d"><code><strong>or</strong></code></span>, Python supports <em>negation</em> via the “not” operator <span class="pd_green-d"><code><strong>not</strong></code></span>, which just converts <span class="pd_green-d"><code><strong>True</strong></code></span> to <span class="pd_green-d"><code><strong>False</strong></code></span> and <span class="pd_green-d"><code><strong>False</strong></code></span> to <span class="pd_green-d"><code><strong>True</strong></code></span> (<a href="ch02.xhtml#ch2list15">Listing 2.15</a>).</p>
+<p class="listing" id="ch2list15"><strong>Listing 2.15:</strong> The truth table for <span class="pd_green-d"><code><strong>not</strong></code></span>.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_pink"><strong>not</strong></span> <span class="pd_green"><strong>True</strong></span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_pink"><strong>not</strong></span> <span class="pd_green"><strong>False</strong></span>
+<span class="pd_green-d">True</span></code></pre>
+</div>
+<p class="indent">We can use <span class="pd_green-d"><code><strong>not</strong></code></span> in a conditional as shown in <a href="ch02.xhtml#ch2list16">Listing 2.16</a>. Note that parentheses <em>are</em> required in this case, because otherwise we’re asking if <span class="pd_green-d"><code><strong>not len(x)</strong></code></span> is equal to <span class="pd_green-d"><code><strong>0</strong></code></span>.</p>
+<p class="listing" id="ch2list16"><strong>Listing 2.16:</strong> Using the <span class="pd_green-d"><code><strong>not</strong></code></span> operator in a conditional.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f053-01" id="f053-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> <span class="pd_pink"><strong>not</strong></span> (<span class="pd_green">len</span>(x) <span class="pd_gray">== 0</span>):    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is not empty."</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is empty."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">x is not empty.</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_54"></span>
+<p class="indent">The code in <a href="ch02.xhtml#ch2list16">Listing 2.16</a> is valid Python, as it simply negates the test <span class="pd_green-d"><code><strong>len(x) == 0</strong></code></span>, yielding <span class="pd_green-d"><code><strong>True</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_pink"><strong>not</strong></span> (<span class="pd_green">len</span>(x) <span class="pd_gray">== 0</span>)
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">In this case, though, it’s more common to use <span class="pd_green-d"><code><strong>!=</strong></code></span> (“not equals”, also read as “bang equals” since <span class="pd_green-d"><code><strong>!</strong></code></span> is often pronounced “bang”), as seen in <a href="ch02.xhtml#ch2list17">Listing 2.17</a>.</p>
+<p class="listing" id="ch2list17"><strong>Listing 2.17:</strong> Using <span class="pd_green-d"><code><strong>!=</strong></code></span> (“not equals” or “bang equals”).</p>
+<p class="codelink"><a href="ch02_images.xhtml#f054-01" id="f054-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong> len</span>(x) <span class="pd_gray">!= 0</span>:          <span class="pd_blue1"><em># Not quite Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is not empty."</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is empty."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">x is not empty</span></code></pre>
+</div>
+<p class="noindent">Because we’re no longer negating the entire expression, we can omit the parentheses as before. As noted, though, this code would not be considered fully Pythonic; this is because the empty string <span class="pd_green-d"><code><strong>""</strong></code></span> has a special value in a boolean context (<a href="ch02.xhtml#sec2_4_2">Section 2.4.2</a>).</p>
+</section>
+<section>
+<h4 class="h4" id="sec2_4_2">2.4.2 Boolean Context</h4>
+<p class="noindent">Not all booleans are the result of comparisons, and in fact every Python object has a value of either <span class="pd_green-d"><code><strong>True</strong></code></span> or <span class="pd_green-d"><code><strong>False</strong></code></span> in a boolean context. We can force Python to use such a boolean context with the <span class="pd_green-d"><code><strong>bool()</strong></code></span> function. Naturally, both <span class="pd_green-d"><code><strong>True</strong></code></span> and <span class="pd_green-d"><code><strong>False</strong></code></span> are just equal to themselves in a boolean context:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_green"><strong>True</strong></span>)
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_green"><strong>False</strong></span>)
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">Using <span class="pd_green-d"><code><strong>bool()</strong></code></span> allows us to see that a string like <span class="pd_green-d"><code><strong>"foo"</strong></code></span> is <span class="pd_green-d"><code><strong>True</strong></code></span> in a boolean context:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_red">"foo"</span>)
+<span class="pd_green-d">True</span></code></pre>
+<span epub:type="pagebreak" id="page_55"></span>
+<p class="noindent">Almost all Python strings are <span class="pd_green-d"><code><strong>True</strong></code></span> in a boolean context; the only exception is the empty string, which is <span class="pd_green-d"><code><strong>False</strong></code></span>:<sup><a id="fn2_14a" href="ch02.xhtml#fn2_14">14</a></sup></p>
+<p class="footnote"><a id="fn2_14" href="ch02.xhtml#fn2_14a">14.</a> This is the sort of detail that varies from language to language. For example, the empty string is true in Ruby.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_red">""</span>)
+<span class="pd_green-d">False</span></code></pre>
+<p class="indent">Most other things that are “empty” in any sense are <span class="pd_green-d"><code><strong>False</strong></code></span> in Python. This includes the number <span class="pd_green-d"><code><strong>0</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_gray">0</span>)
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">and <span class="pd_green-d"><code><strong>None</strong></code></span>:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(<span class="pd_green"><strong>None</strong></span>)
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">As we’ll see later, empty lists (<a href="ch03.xhtml#ch03">Chapter 3</a>), empty tuples (<a href="ch03.xhtml#sec3_6">Section 3.6</a>), and empty dictionaries (<a href="ch04.xhtml#sec4_4">Section 4.4</a>) are also <span class="pd_green-d"><code><strong>False</strong></code></span>.</p>
+<p class="indent">It’s important to understand that using <span class="pd_green-d"><code><strong>bool()</strong></code></span> is just for purposes of illustration; in real programs, we’ll almost always rely on the presence of a keyword such as <span class="pd_green-d"><code><strong>if</strong></code></span> or <span class="pd_green-d"><code><strong>elif</strong></code></span>, which automatically converts all objects to their boolean equivalents. For example, because <span class="pd_green-d"><code><strong>""</strong></code></span> is <span class="pd_green-d"><code><strong>False</strong></code></span> in a boolean context, we can replace <span class="pd_green-d"><code><strong>len(x) != 0</strong></code></span> in <a href="ch02.xhtml#ch2list17">Listing 2.17</a> with <span class="pd_green-d"><code><strong>x</strong></code></span> itself, as seen in <a href="ch02.xhtml#ch2list18">Listing 2.18</a>.</p>
+<p class="listing" id="ch2list18"><strong>Listing 2.18:</strong> Using a string in a boolean context.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f055-01" id="f055-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> x:                    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is not empty."</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"x is empty."</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">x is not empty.</span></code></pre>
+</div>
+<p class="noindent">In <a href="ch02.xhtml#ch2list18">Listing 2.18</a>, <span class="pd_green-d"><code><strong>if x:</strong></code></span> converts <span class="pd_green-d"><code><strong>x</strong></code></span> to <span class="pd_green-d"><code><strong>False</strong></code></span> if it’s the empty string and <span class="pd_green-d"><code><strong>True</strong></code></span> otherwise.</p>
+<p class="indent">We can use the same property to rewrite code like <a href="ch02.xhtml#ch2list12">Listing 2.12</a> as shown in <a href="ch02.xhtml#ch2list19">Listing 2.19</a>.</p>
+<span epub:type="pagebreak" id="page_56"></span>
+<p class="listing" id="ch2list19"><strong>Listing 2.19:</strong> Using boolean methods.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f056-01" id="f056-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>if</strong></span> x <span class="pd_pink"><strong>or</strong></span> y:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"At least one of the strings is nonempty."</span>)
+<span class="pd_blue"><strong>...</strong></span> <span class="pd_green"><strong>else</strong></span>:
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">"Both strings are empty!"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">At least one of the strings is nonempty.</span></code></pre>
+</div>
+</section>
+<section>
+<h4 class="h4" id="sec2_4_3">2.4.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">If <span class="pd_green-d"><code><strong>x</strong></code></span> is <span class="pd_green-d"><code><strong>"foo"</strong></code></span> and <span class="pd_green-d"><code><strong>y</strong></code></span> is <span class="pd_green-d"><code><strong>""</strong></code></span> (the empty string), what is the value of <span class="pd_green-d"><code><strong>x and y</strong></code></span>? Verify using <span class="pd_green-d"><code><strong>bool()</strong></code></span> that <span class="pd_green-d"><code><strong>x and y</strong></code></span> is true in a boolean context.</p></li>
+<li><p class="number">Show that we can define a string of length <span class="pd_green-d"><code><strong>50</strong></code></span> using the convenient code in <a href="ch02.xhtml#ch2list20">Listing 2.20</a>, which uses the asterisk <span class="pd_green-d"><code><strong>*</strong></code></span> to “multiply” the string <span class="pd_green-d"><code><strong>"a"</strong></code></span> by 50. Go through the steps in <a href="ch02.xhtml#ch2list10">Listing 2.10</a> again with the new password to verify that Python prints out “Password is too long.”</p></li>
+</ol>
+<p class="listing" id="ch2list20"><strong>Listing 2.20:</strong> Defining a password that is too long.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f056-02" id="f056-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password <span class="pd_gray">=</span> <span class="pd_red">"a"</span> <span class="pd_gray">* 50</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> password
+<span class="pd_green-d">'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_5">2.5 Methods</h3>
+<p class="noindent">We saw in <a href="ch02.xhtml#sec2_4">Section 2.4</a> that we can call the <span class="pd_green-d"><code><strong>len()</strong></code></span> function to get the length of a string. This follows the same basic pattern as the <span class="pd_green-d"><code><strong>print()</strong></code></span> function discussed in <a href="ch02.xhtml#sec2_3">Section 2.3</a>: We type the name of the function with an argument in parentheses.</p>
+<p class="indent">There is a second important class of functions that are effectively attached to the object under consideration—in the case of this chapter, a string object. Such functions are known as <em>methods</em>. In Python (and in many other languages that support object-oriented programming), methods are indicated by typing the object followed by a dot and then the name of the method. For example, Python strings have a method called <span class="pd_green-d"><code><strong>capitalize()</strong></code></span> that capitalizes the given string:</p>
+<span epub:type="pagebreak" id="page_57"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"michael"</span><span class="pd_gray">.</span>capitalize()
+<span class="pd_green-d">'Michael'</span></code></pre>
+<p class="noindent">Note that we include parentheses to indicate that <span class="pd_green-d"><code><strong>capitalize()</strong></code></span> is a method (in this case, with zero arguments). Leaving off the parentheses causes Python to return the raw method:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f057-01" id="f057-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"michael"</span><span class="pd_gray">.</span>capitalize
+<span class="pd_green-d">&lt;built-in method capitalize of str object at 0x1014487b0&gt;</span></code></pre>
+<p class="noindent">This is why we generally include parentheses in method names like <span class="pd_green-d"><code><strong>capitalize()</strong></code></span>.</p>
+<p class="indent">One important class of methods is <em>boolean methods</em>, which return <span class="pd_green-d"><code><strong>True</strong></code></span> or <span class="pd_green-d"><code><strong>False</strong></code></span>. In Python, such methods are frequently indicated using the word “is” as the first part of the method:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"badger"</span><span class="pd_gray">.</span>islower()
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"BADGER"</span><span class="pd_gray">.</span>islower()
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"bAdGEr"</span><span class="pd_gray">.</span>islower()
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">Here we see that <span class="pd_green-d"><code><strong>islower()</strong></code></span> returns <span class="pd_green-d"><code><strong>True</strong></code></span> if the string is all lowercase and <span class="pd_green-d"><code><strong>False</strong></code></span> otherwise.</p>
+<p class="indent">Strings also respond to a wealth of methods that return transformed versions of the string’s content. One example is the <span class="pd_green-d"><code><strong>capitalize()</strong></code></span> method seen above. Strings also have a <span class="pd_green-d"><code><strong>lower()</strong></code></span> method, which (surprise!) converts the string to all lowercase letters (<a href="ch02.xhtml#ch2fig7">Figure 2.7</a><sup><a id="fn2_15a" href="ch02.xhtml#fn2_15">15</a></sup>):</p>
+<figure class="image-c" id="ch2fig7">
+<img src="graphics/02fig07.jpg" alt="images" width="598" height="397"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.7:</strong> This honey badger used to be a HONEY BADGER, but he don’t care.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_15" href="ch02.xhtml#fn2_15a">15.</a> Image courtesy of Pavel Kovaricek/Shutterstock.</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"HONEY BADGER"</span><span class="pd_gray">.</span>lower()
+<span class="pd_green-d">'honey badger'</span></code></pre>
+<p class="noindent">Note that the <span class="pd_green-d"><code><strong>lower()</strong></code></span> method returns a <em>new</em> string, without changing (or <em>mutating</em>) the original:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> animal <span class="pd_gray">=</span> <span class="pd_red">"HONEY BADGER"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> animal<span class="pd_gray">.</span>lower()
+<span class="pd_green-d">'honey badger'</span></code></pre>
+<span epub:type="pagebreak" id="page_58"></span>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> animal
+<span class="pd_green-d">'HONEY BADGER'</span></code></pre>
+<p class="indent">This is the sort of method that could be useful, for example, when standardizing on lowercase letters in an email address:</p>
+<p class="codelink"><a href="ch02_images.xhtml#f058-01" id="f058-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> first_name <span class="pd_gray">=</span> <span class="pd_red">"Michael"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> username <span class="pd_gray">=</span> first_name<span class="pd_gray">.</span>lower()
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">f"</span><span class="pd_lpink"><strong>{</strong></span>username<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">@example.com"</span>    <span class="pd_blue1"><em># Sample email address</em></span>
+<span class="pd_green-d">'michael@example.com'</span></code></pre>
+<p class="indent">As you might be able to guess, Python supports the opposite operation as well; before looking at the example below, see if you can guess the method for converting a string to uppercase (<a href="ch02.xhtml#ch2fig8">Figure 2.8</a><sup><a id="fn2_16a" href="ch02.xhtml#fn2_16">16</a></sup>).</p>
+<figure class="image-c" id="ch2fig8">
+<img src="graphics/02fig08.jpg" alt="images" width="675" height="450"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.8:</strong> Early typesetters kept large letters in the “upper case” and small letters in the “lower case”.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_16" href="ch02.xhtml#fn2_16a">16.</a> Image courtesy of Arco1/123RF.</p>
+<p class="indent">I’m betting you got the right answer (or at least came close):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> last_name<span class="pd_gray">.</span>upper()
+<span class="pd_green-d">'HARTL'</span></code></pre>
+<span epub:type="pagebreak" id="page_59"></span>
+<p class="noindent">Being able to guess answers like this is a hallmark of technical sophistication, but as noted in <a href="ch01.xhtml#ch1box2">Box 1.2</a> another key skill is being able to use the documentation. In particular, the Python documentation page on <span class="pd_green-d"><code><strong>str</strong></code></span> has a long list of useful string methods.<sup><a id="fn2_17a" href="ch02.xhtml#fn2_17">17</a></sup> Let’s take a look at some of them (<a href="ch02.xhtml#ch2fig9">Figure 2.9</a>).</p>
+<figure class="image-c" id="ch2fig9">
+<img src="graphics/02fig09.jpg" alt="images" width="607" height="600"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.9:</strong> Some Python string methods.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_17" href="ch02.xhtml#fn2_17a">17.</a> You can find such pages by going directly to the official Python documentation, but the truth is that I nearly always find such pages by Googling things like “python string”. Be mindful of the version number—although Python is quite stable at this point, if you notice any discrepancies make sure you’re using documentation compatible with your own version of Python.</p>
+<p class="indent">Inspecting the methods in <a href="ch02.xhtml#ch2fig9">Figure 2.9</a>, we see one that looks like this:</p>
+<p class="quotet"><span class="pd_green-d"><code><strong>str.find(sub[, start[, end]])</strong></code></span></p>
+<p class="quoteb">Return the lowest index in the string where substring <em>sub</em> is found within the slice <span class="pd_green-d"><code><strong>s[start:end]</strong></code></span>. Optional arguments <em>start</em> and <em>end</em> are interpreted as in slice notation. Return <span class="pd_green-d"><code><strong>-1</strong></code></span> if <em>sub</em> is not found.</p>
+<span epub:type="pagebreak" id="page_60"></span>
+<p class="noindent">This indicates that the <span class="pd_green-d"><code><strong>find()</strong></code></span> method takes an <em>argument</em>, <span class="pd_green-d"><code><strong>sub</strong></code></span>, and returns the location where the substring starts:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"hello"</span><span class="pd_gray">.</span>find(<span class="pd_red">"lo"</span>)
+<span class="pd_green-d">3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"hello"</span><span class="pd_gray">.</span>find(<span class="pd_red">"ol"</span>)
+<span class="pd_green-d">-1</span></code></pre>
+<p class="noindent">(Note that <span class="pd_green-d"><code><strong>3</strong></code></span> corresponds to the <em>fourth</em> letter, not the third, a convention known as “zero offset” or “zero-based indexing”; see <a href="ch02.xhtml#sec2_6">Section 2.6</a>.)</p>
+<p class="indent">The result for a nonexistent substring means that we can test whether a string contains a substring by comparing to <span class="pd_green-d"><code><strong>-1</strong></code></span>:</p>
+<span epub:type="pagebreak" id="page_61"></span>
+<p class="codelink"><a href="ch02_images.xhtml#f061-01" id="f061-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy <span class="pd_gray">=</span> <span class="pd_red">"To be, or not to be, that is the question:"</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy<span class="pd_gray">.</span>find(<span class="pd_red">"To be"</span>) <span class="pd_gray">!= -1</span>    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">The <span class="pd_green-d"><code><strong>True</strong></code></span> return value indicates that <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> does contain the substring <span class="pd_green-d"><code><strong>"To be"</strong></code></span>. But the <span class="pd_green-d"><code><strong>find()</strong></code></span> documentation also includes an important note:</p>
+<p class="blockquote">The <span class="pd_green-d"><code><strong>find()</strong></code></span> method should be used only if you need to know the position of <em>sub</em>. To check if <em>sub</em> is a substring or not, use the <span class="pd_green-d"><code><strong>in</strong></code></span> operator:</p>
+<pre class="pre1q"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">'Py'</span> <span class="pd_pink"><strong>in</strong></span> <span class="pd_red">'Python'</span>
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">Applying this to <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> yields the results shown in <a href="ch02.xhtml#ch2list21">Listing 2.21</a> (<a href="ch02.xhtml#ch2fig10">Figure 2.10</a><sup><a id="fn2_18a" href="ch02.xhtml#fn2_18">18</a></sup>).</p>
+<figure class="image-c" id="ch2fig10">
+<img src="graphics/02fig10.jpg" alt="images" width="334" height="450"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.10:</strong> Hamlet, Prince of Denmark, asks: “To be, or not to be, that is the question.”</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_18" href="ch02.xhtml#fn2_18a">18.</a> Image courtesy of Everett Collection/Shutterstock.</p>
+<p class="listing" id="ch2list21"><strong>Listing 2.21:</strong> Include or does not include? That is the question.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f061-02" id="f061-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy <span class="pd_gray">=</span> <span class="pd_red">"To be, or not to be, that is the question:"</span>  <span class="pd_blue1"><em># Just a reminder</em></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"To be"</span> <span class="pd_pink"><strong>in</strong></span> soliloquy        <span class="pd_blue1"><em># Does it include the substring "To be"?</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"question"</span> <span class="pd_pink"><strong>in</strong></span> soliloquy     <span class="pd_blue1"><em># What about "question"?</em></span>
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"nonexistent"</span> <span class="pd_pink"><strong>in</strong></span> soliloquy  <span class="pd_blue1"><em># This string doesn't appear.</em></span>
+<span class="pd_green-d">False</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"TO BE"</span> <span class="pd_pink"><strong>in</strong></span> soliloquy        <span class="pd_blue1"><em># String inclusion is case-sensitive.</em></span>
+<span class="pd_green-d">False</span></code></pre>
+</div>
+<section>
+<h4 class="h4" id="sec2_5_1">2.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write the Python code to test whether the string “hoNeY BaDGer” includes the string “badger” without regard to case.</p></li>
+<li><p class="number">What is the Python method for stripping leading and trailing whitespace from a string? The result should be as shown in <a href="ch02.xhtml#ch2list22">Listing 2.22</a> with <span class="pd_green-d"><code><strong>FILL_IN</strong></code></span> replaced by the method name.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_62"></span>
+<p class="listing" id="ch2list22"><strong>Listing 2.22:</strong> Stripping whitespace.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">"   spacious   "</span><span class="pd_gray">.</span>FILL_IN()
+<span class="pd_green-d">'spacious'</span></code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec2_6">2.6 String Iteration</h3>
+<p class="noindent">Our final topic on strings is <em>iteration</em>, which is the practice of repeatedly stepping through an object one element at a time. Iteration is a common theme in computer programming, and we’ll get plenty of practice in this tutorial. We’ll also see how one sign of your growing power as a developer is learning how to <em>avoid</em> iteration entirely (as discussed in <a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<p class="indent">In the case of strings, we’ll be learning how to iterate one <em>character</em> at a time. There are two main prerequisites to this: First, we need to learn how to access a particular character in a string, and second, we need to learn how to make a <em>loop</em>.</p>
+<p class="indent">We can figure out how to access a particular string character by consulting the Common Sequence Operations (<a href="https://docs.python.org/3/library/stdtypes.html#common-sequence-operations">https://docs.python.org/3/library/stdtypes.html#common-sequence-operations</a>), <span epub:type="pagebreak" id="page_63"></span>which indicates that <span class="pd_green-d"><code><strong>s[i]</strong></code></span> (using square brackets) gives the “<em>i</em>th item of <em>s</em>, origin 0” for sequences, including strings. (The main sequences listed are lists and tuples, which are covered in <a href="ch03.xhtml#ch03">Chapter 3</a>, and ranges, which we’ll be looking at in just a moment.) Applying this bracket notation to the <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> string from <a href="ch02.xhtml#sec2_5">Section 2.5</a> lets us see how it works, as shown in <a href="ch02.xhtml#ch2list23">Listing 2.23</a>.</p>
+<p class="listing" id="ch2list23"><strong>Listing 2.23:</strong> Investigating the behavior of <span class="pd_green-d"><code><strong>str[index]</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f063-01" id="f063-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy   <span class="pd_blue1"><em># Just a reminder of what the string is</em></span>
+<span class="pd_green-d">'To be, or not to be, that is the question:'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy[<span class="pd_gray">0</span>]
+<span class="pd_green-d">'T'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy[<span class="pd_gray">1</span>]
+<span class="pd_green-d">'o'</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> soliloquy[<span class="pd_gray">2</span>]
+<span class="pd_green-d">' '</span></code></pre>
+</div>
+<p class="noindent">We see in <a href="ch02.xhtml#ch2list23">Listing 2.23</a> that Python supports a bracket notation for accessing string elements, so that <span class="pd_green-d"><code><strong>[0]</strong></code></span> returns the first character, <span class="pd_green-d"><code><strong>[1]</strong></code></span> returns the second, and so on. (We’ll discuss this possibly counterintuitive numbering convention, called “zero offset” or “zero-based indexing”, further in <a href="ch03.xhtml#sec3_1">Section 3.1</a>.) Each number <span class="pd_green-d"><code><strong>0</strong></code></span>, <span class="pd_green-d"><code><strong>1</strong></code></span>, <span class="pd_green-d"><code><strong>2</strong></code></span>, etc., is called an <em>index</em> (plural <em>indexes</em> or <em>indices</em>).</p>
+<p class="indent">Now let’s look at our first example of a loop. In particular, we’ll use a <span class="pd_green-d"><code><strong>for</strong></code></span> loop that defines an index value <span class="pd_green-d"><code><strong>i</strong></code></span> and does an operation for each value in the <span class="pd_green-d"><code><strong>range()</strong></code></span> of length <span class="pd_green-d"><code><strong>5</strong></code></span> (<a href="ch02.xhtml#ch2list24">Listing 2.24</a>).</p>
+<p class="listing" id="ch2list24"><strong>Listing 2.24:</strong> A simple <span class="pd_green-d"><code><strong>for</strong></code></span> loop.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">5</span>):
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(i)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">0
+1
+2
+3
+4</span></code></pre>
+</div>
+<p class="noindent">Here we’ve used the <span class="pd_green-d"><code><strong>range(5)</strong></code></span> function, which as we see creates an object with numbers in the range 0–4.</p>
+<span epub:type="pagebreak" id="page_64"></span>
+<p class="indent"><a href="ch02.xhtml#ch2list24">Listing 2.24</a> is Python’s version of the classic “for loop” that is exceptionally common across an astonishing variety of programming languages, from C and C++ to JavaScript, Perl, and PHP. Unlike those languages, though, which explicitly increment a counter variable, Python defines a range of values directly via a special Range data type.</p>
+<p class="indent"><a href="ch02.xhtml#ch2list24">Listing 2.24</a> is arguably a little more elegant than the equivalent “classic” <span class="pd_green-d"><code><strong>for</strong></code></span> loop seen in <em>Learn Enough JavaScript to Be Dangerous</em> (<a href="ch02.xhtml#ch2list25">Listing 2.25</a>), but it’s still not very good Python.</p>
+<p class="listing" id="ch2list25"><strong>Listing 2.25:</strong> A <span class="pd_green-d"><code><strong>for</strong></code></span> loop in JavaScript.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_gray">&gt;</span> <span class="pd_green"><strong>for</strong></span> (i <span class="pd_gray">= 0</span>; i <span class="pd_gray">&lt; 5</span>; i<span class="pd_gray">++</span>) {
+  console.log(i);
+}
+<span class="pd_gray">0
+1
+2
+3
+4</span></code></pre>
+</div>
+<p class="indent">As a language and as a community, Python is especially vigilant about avoiding plain <span class="pd_green-d"><code><strong>for</strong></code></span> loops. As computer scientist (and personal friend) Mike Vanier (<a href="ch02.xhtml#ch2fig11">Figure 2.11</a><sup><a id="fn2_19a" href="ch02.xhtml#fn2_19">19</a></sup>) once put it in an email to Paul Graham:</p>
+<figure class="image-c" id="ch2fig11">
+<img src="graphics/02fig11.jpg" alt="images" width="192" height="193"/>
+<figcaption>
+<p class="title-f"><strong>Figure 2.11:</strong> Just a few more <span class="pd_green-d"><code><strong>for</strong></code></span> loops and Mike Vanier will be a millionaire.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn2_19" href="ch02.xhtml#fn2_19a">19.</a> Image © Mike Vanier.</p>
+<p class="blockquote">This [tedious repetition] grinds you down after a while; if I had a nickel for every time I’ve written “for (i = 0; i &lt; N; i++)” in C I’d be a millionaire.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_65"></span>In order to avoid getting ground down, we’ll learn how to use <span class="pd_green-d"><code><strong>for</strong></code></span> to loop over elements directly. We’ll also see how Python lets us avoid loops entirely using functional programming (<a href="ch06.xhtml#ch06">Chapter 6</a> and <a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<p class="indent">For now, though, let’s build on <a href="ch02.xhtml#ch2list24">Listing 2.24</a> to iterate through all the characters in the first line of Hamlet’s famous soliloquy. The only new thing we need is the index for when the loop should stop. In <a href="ch02.xhtml#ch2list24">Listing 2.24</a>, we hard-coded the upper limit (<span class="pd_green-d"><code><strong>5</strong></code></span>), and we could do the same here if we wanted. The <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> variable is a bit long to count the characters by hand, though, so let’s ask Python to tell us using the <span class="pd_green-d"><code><strong>len()</strong></code></span> property (<a href="ch02.xhtml#sec2_4">Section 2.4</a>):</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">len</span>(soliloquy)
+<span class="pd_green-d">42</span></code></pre>
+<p class="noindent">This exceptionally auspicious result suggests writing code like this:</p>
+<pre class="pre1"><code><span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_gray">42</span>):
+    <span class="pd_green">print</span>(soliloquy[i])</code></pre>
+<p class="noindent">This code will work, and it is in perfect analogy with <a href="ch02.xhtml#ch2list24">Listing 2.24</a>, but it also raises a question: Why hard-code the length when we can just use the <span class="pd_green-d"><code><strong>len()</strong></code></span> method in the loop itself?</p>
+<p class="indent">The answer is that we shouldn’t. The resulting improved <span class="pd_green-d"><code><strong>for</strong></code></span> loop appears in <a href="ch02.xhtml#ch2list26">Listing 2.26</a>.</p>
+<p class="listing" id="ch2list26"><strong>Listing 2.26:</strong> Combining <span class="pd_green-d"><code><strong>range()</strong></code></span>, <span class="pd_green-d"><code><strong>len()</strong></code></span>, and a <span class="pd_green-d"><code><strong>for</strong></code></span> loop.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f065-01" id="f065-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_green">len</span>(soliloquy)):    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(soliloquy[i])
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">T
+o
+
+b
+e
+.
+.
+.
+t
+i
+o
+n
+:</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_66"></span>
+<p class="indent">Although <a href="ch02.xhtml#ch2list26">Listing 2.26</a> works just fine, it is not Pythonic. Instead, the most Pythonic way to iterate through string characters is to use <span class="pd_green-d"><code><strong>for</strong></code></span> by itself, because it turns out that the default behavior of <span class="pd_green-d"><code><strong>for</strong></code></span> applied to a string is simply to consider each character in turn, as seen in <a href="ch02.xhtml#ch2list27">Listing 2.27</a>.</p>
+<p class="listing" id="ch2list27"><strong>Listing 2.27:</strong> Looping through a string with <span class="pd_green-d"><code><strong>for</strong></code></span>.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f066-01" id="f066-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> soliloquy:    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(c)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">T
+o
+
+b
+e
+.
+.
+.
+t
+i
+o
+n
+:</span></code></pre>
+</div>
+<p class="indent">As noted previously, there are often alternatives to looping, but the <span class="pd_green-d"><code><strong>for</strong></code></span> style of looping is still an excellent place to start. As we’ll see in <a href="ch08.xhtml#ch08">Chapter 8</a>, one powerful technique is to write a <em>test</em> for the functionality we want, then get it passing any way we can, and then <em>refactor</em> the code to use a more elegant method. The second step in this process (called <em>test-driven development</em>, or TDD) often involves writing inelegant but easy-to-understand code—a task at which the humble <span class="pd_green-d"><code><strong>for</strong></code></span> loop excels.</p>
+<section>
+<h4 class="h4" id="sec2_6_1">2.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Write a <span class="pd_green-d"><code><strong>for</strong></code></span> loop that prints out the characters of <span class="pd_green-d"><code><strong>soliloquy</strong></code></span> in reverse order. <em>Hint</em>: What is the effect of the <span class="pd_green-d"><code><strong>reversed()</strong></code></span> function on a string?</p></li>
+<li><p class="number">One disadvantage of the plain <span class="pd_green-d"><code><strong>for</strong></code></span> loop in <a href="ch02.xhtml#ch2list27">Listing 2.27</a> is that we no longer have access to the index value itself. We could solve this as in <a href="ch02.xhtml#ch2list28">Listing 2.28</a>, but the Pythonic way to do it is to use the <span class="pd_green-d"><code><strong>enumerate()</strong></code></span> function to gain access to the index and the element at the same time. Confirm that you can use <span class="pd_green-d"><code><strong>enumerate()</strong></code></span> to obtain the result shown in <a href="ch02.xhtml#ch2list29">Listing 2.29</a>.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_67"></span>
+<p class="listing" id="ch2list28"><strong>Listing 2.28:</strong> Using an index with string access.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f067-01" id="f067-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">range</span>(<span class="pd_green">len</span>(soliloquy)):    <span class="pd_blue1"><em># Not Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"Character</span> <span class="pd_lpink"><strong>{</strong></span>i<span class="pd_gray">+1</span><span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">is '</span><span class="pd_lpink"><strong>{</strong></span>soliloquy[i]<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">'"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Character 1 is 'T'
+Character 2 is 'o'
+Character 3 is ' '
+Character 4 is 'b'
+Character 5 is 'e'
+Character 6 is ','
+Character 7 is ' '
+.
+.
+.</span></code></pre>
+</div>
+<p class="listing" id="ch2list29"><strong>Listing 2.29:</strong> Iterating through a string with an index.</p>
+<p class="codelink"><a href="ch02_images.xhtml#f067-02" id="f067-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>for</strong></span> i, c <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">enumerate</span>(soliloquy):    <span class="pd_blue1"><em># Pythonic</em></span>
+<span class="pd_blue"><strong>...</strong></span>     <span class="pd_green">print</span>(<span class="pd_red">f"Character</span> <span class="pd_lpink"><strong>{</strong></span>i<span class="pd_gray">+1</span><span class="pd_lpink"><strong>}</strong></span> <span class="pd_red">is '</span><span class="pd_lpink"><strong>{</strong></span>c<span class="pd_lpink"><strong>}</strong></span><span class="pd_red">'"</span>)
+<span class="pd_blue"><strong>...</strong></span>
+<span class="pd_green-d">Character 1 is 'T'
+Character 2 is 'o'
+Character 3 is ' '
+Character 4 is 'b'
+Character 5 is 'e'
+Character 6 is ','
+Character 7 is ' '
+.
+.
+.</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_68"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

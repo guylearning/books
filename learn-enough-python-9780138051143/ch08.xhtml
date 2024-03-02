@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Python to Be Dangerous: Software Development, Flask Web Apps, and Beginning Data Science with Python</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780138051051.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch08"><span epub:type="pagebreak" id="page_191"></span>Chapter 8</h2>
+<h2 class="h2a">Testing and Test-Driven Development</h2>
+<p class="noindent">Although rarely covered in introductory programming tutorials, <em>automated testing</em> is one of the most important subjects in modern software development. Accordingly, this chapter includes an introduction to testing in Python, including a first look at <em>test-driven development</em>, or TDD.</p>
+<p class="indent">Test-driven development came up briefly in <a href="ch06.xhtml#sec6_5_1">Section 6.5.1</a>, which promised that we would use testing techniques to add an important capability to finding palindromes, namely, being able to detect complicated palindromes such as “A man, a plan, a canal—Panama!” (<a href="ch06.xhtml#ch6fig5">Figure 6.5</a>) or “Madam, I’m Adam.” (<a href="ch08.xhtml#ch8fig1">Figure 8.1</a><sup><a id="fn8_1a" href="ch08.xhtml#fn8_1">1</a></sup>). This chapter fulfills that promise.</p>
+<figure class="image-c" id="ch8fig1">
+<img src="graphics/08fig01.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.1:</strong> The Garden of Eden had it all—even palindromes.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_1" href="ch08.xhtml#fn8_1a">1.</a> “The Temptation of Adam” by Tintoretto. Image courtesy of Album/Alamy Stock Photo.</p>
+<p class="indent">As it turns out, learning how to write Python tests will also give us a chance to learn how to create (and publish!) a Python package, another exceptionally useful Python skill rarely covered in introductory tutorials.</p>
+<p class="indent">Here’s our strategy for testing the current palindrome code and extending it to more complicated phrases:</p>
+<ol class="number">
+<li><p class="number">Set up our initial package (<a href="ch08.xhtml#sec8_1">Section 8.1</a>).</p></li>
+<li><p class="number">Write automated tests for the existing <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> functionality (<a href="ch08.xhtml#sec8_2">Section 8.2</a>).</p></li>
+<li><p class="number">Write a <em>failing</em> test for the enhanced palindrome detector (<span class="smallcaps"><span class="pd_redred">RED</span></span>) (<a href="ch08.xhtml#sec8_3">Section 8.3</a>).</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_192"></span>Write (possibly ugly) code to get the test <em>passing</em> (<span class="pd_green-d"><span class="smallcaps">GREEN</span></span>) (<a href="ch08.xhtml#sec8_4">Section 8.4</a>).</p></li>
+<li><p class="number"><em>Refactor</em> the code to make it prettier, while ensuring that the test suite stays <span class="pd_green-d"><span class="smallcaps">GREEN</span></span> (<a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p></li>
+</ol>
+<section>
+<h3 class="h3" id="sec8_1">8.1 Package Setup</h3>
+<p class="noindent">We saw as early as <a href="ch01.xhtml#sec1_5">Section 1.5</a> that the Python ecosystem includes a large number of self-contained software packages. In this section, we’ll create a package based on the palindrome detector developed in <a href="ch07.xhtml#ch07">Chapter 7</a>. As part of this, we’ll set up the beginnings of a <em>test suite</em> to test our code.</p>
+<p class="indent">Python packages have a standard structure that can be visualized as shown in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> (which contains both generic elements like <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> and non-generic elements like <span class="pd_green-d"><code><strong>palindrome_YOUR_USERNAME_HERE</strong></code></span>). The structure includes some configuration files (discussed in just a moment) and two directories: a <span class="pd_green-d"><code><strong>src</strong></code></span> (source) directory and a <span class="pd_green-d"><code><strong>tests</strong></code></span> directory. The <span class="pd_green-d"><code><strong>src</strong></code></span> directory in turn contains a directory for the palindrome package, which includes a special required file called <span class="pd_green-d"><code><strong>__init__.py</strong></code></span> <span epub:type="pagebreak" id="page_193"></span>and the <span class="pd_green-d"><code><strong>palindrome_YOUR_USERNAME_HERE</strong></code></span> module itself.<sup><a id="fn8_2a" href="ch08.xhtml#fn8_2">2</a></sup> (It is possible to flatten the directory structure by eliminating the package directory, but the structure in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> is fairly standard and is designed to mirror the official Packaging Python Projects documentation.) The result of the structure in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> will be the ability to include the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class developed in <a href="ch07.xhtml#ch07">Chapter 7</a> using the code</p>
+<p class="footnote"><a id="fn8_2" href="ch08.xhtml#fn8_2a">2.</a> Technically, there are various distinctions between <em>packages</em> and <em>modules</em> in Python, but they are rarely important. See this Stack Overflow comment (<a href="https://stackoverflow.com/questions/7948494/whats-the-difference-between-a-python-module-and-a-python-package/49420164#49420164">https://stackoverflow.com/questions/7948494/whats-the-difference-between-a-python-module-and-a-python-package/49420164#49420164</a>) for some of the minutiae on the subject.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f193-01" id="f193-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase</code></pre>
+<p class="listing" id="ch8list1"><strong>Listing 8.1:</strong> File and directory structure for a sample Python package.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f193-02" id="f193-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green-d">python_package_tutorial/</span>
+<span class="pd_green-d">├── LICENSE</span>
+<span class="pd_green-d">├── pyproject.toml</span>
+<span class="pd_green-d">├── README.md</span>
+<span class="pd_green-d">├── src/</span>
+<span class="pd_green-d">│   └── palindrome_YOUR_USERNAME_HERE/</span>
+<span class="pd_green-d">│       ├── __init__.py</span>
+<span class="pd_green-d">│       └── phrase.py</span>
+<span class="pd_green-d">└── tests/</span>
+<span class="pd_green-d">    └── test_phrase.py</span></code></pre>
+</div>
+<p class="indent">We can create the structure in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> by hand using a combination of <span class="pd_green-d"><code><strong>mkdir</strong></code></span> and <span class="pd_green-d"><code><strong>touch</strong></code></span>, as shown in <a href="ch08.xhtml#ch8list2">Listing 8.2</a>.</p>
+<p class="listing" id="ch8list2"><strong>Listing 8.2:</strong> Setting up a Python package.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f193-03" id="f193-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span> ~/repos    <span class="pd_blue1"><em># Use ~/environment/repos on Cloud9</em></span>
+<span class="pd_blue"><strong>$</strong></span> mkdir python_package_tutorial
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span> python_package_tutorial
+<span class="pd_blue"><strong>$</strong></span> touch LICENSE pyproject.toml README.md
+<span class="pd_blue"><strong>$</strong></span> mkdir -p src/palindrome_YOUR_USERNAME_HERE
+<span class="pd_blue"><strong>$</strong></span> touch src/palindrome_YOUR_USERNAME_HERE/__init__.py
+<span class="pd_blue"><strong>$</strong></span> touch src/palindrome_YOUR_USERNAME_HERE/phrase.py
+<span class="pd_blue"><strong>$</strong></span> mkdir tests
+<span class="pd_blue"><strong>$</strong></span> touch tests/test_phrase.py</code></pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_194"></span>At this point, we’ll fill in a few of the files with more information, including the project configuration file <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> (<a href="ch08.xhtml#ch8list3">Listing 8.3</a>), a README file <span class="pd_green-d"><code><strong>README.md</strong></code></span> (<a href="ch08.xhtml#ch8list4">Listing 8.4</a>), and a <span class="pd_green-d"><code><strong>LICENSE</strong></code></span> file (<a href="ch08.xhtml#ch8list5">Listing 8.5</a>).<sup><a id="fn8_3a" href="ch08.xhtml#fn8_3">3</a></sup> Some of these files are only templates, so you should replace things like <span class="pd_green-d"><code><strong>&lt;username&gt;</strong></code></span> in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> with your own username, the <span class="pd_green-d"><code><strong>url</strong></code></span> field with the planned URL for your project, etc. (Being able to do things like this is an excellent application of technical sophistication.) To see a concrete example of the files in this section, see the GitHub repo (<a href="https://github.com/mhartl/python_package_tutorial">https://github.com/mhartl/python_package_tutorial</a>) for my version of this package.</p>
+<p class="footnote"><a id="fn8_3" href="ch08.xhtml#fn8_3a">3.</a> Don’t worry about the details of files like <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span>; I don’t understand them either. I just copied them from the documentation (<a href="ch01.xhtml#ch1box2">Box 1.2</a>).</p>
+<p class="listing" id="ch8list3"><strong>Listing 8.3:</strong> The project configuration for a Python package.<br/><code><em>~/python_package_tutorial/project.toml</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f194-01" id="f194-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>[build-system]</strong></span>
+requires <span class="pd_gray">=</span> [<span class="pd_red">"hatchling"</span>]
+build-backend <span class="pd_gray">=</span> <span class="pd_red">"hatchling.build"</span>
+
+<span class="pd_green"><strong>[project]</strong></span>
+name <span class="pd_gray">=</span> <span class="pd_red">"example_package_YOUR_USERNAME_HERE"</span>
+version <span class="pd_gray">=</span> <span class="pd_red">"0.0.1"</span>
+authors <span class="pd_gray">=</span> [
+  { name<span class="pd_gray">=</span><span class="pd_red">"Example Author"</span>, email<span class="pd_gray">=</span><span class="pd_red">"author@example.com"</span> },
+]
+description <span class="pd_gray">=</span> <span class="pd_red">"A small example package"</span>
+readme <span class="pd_gray">=</span> <span class="pd_red">"README.md"</span>
+requires-python <span class="pd_gray">=</span> <span class="pd_red">"&gt;=3.7"</span>
+classifiers <span class="pd_gray">=</span> [
+    <span class="pd_red">"Programming Language :: Python :: 3"</span>,
+    <span class="pd_red">"License :: OSI Approved :: MIT License"</span>,
+    <span class="pd_red">"Operating System :: OS Independent"</span>,
+]
+
+<span class="pd_green"><strong>[project.urls]</strong></span>
+<span class="pd_red">"Homepage"</span> <span class="pd_gray">=</span> <span class="pd_red">"https://github.com/pypa/sampleproject"</span>
+<span class="pd_red">"Bug Tracker"</span> <span class="pd_gray">=</span> <span class="pd_red">"https://github.com/pypa/sampleproject/issues"</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_195"></span>
+<p class="listing" id="ch8list4"><strong>Listing 8.4:</strong> A README file for the package.<br/><code><em>~/python_package_tutorial/README.md</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f195-01" id="f195-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong># Palindrome Package</strong></span>
+
+This is a sample Python package for
+[<em>*Learn Enough Python to Be Dangerous*</em>](https://www.learnenough.com/python)
+by [<span class="pd_green"><strong>Michael Hartl</strong></span>](<span class="pd_lgreen">https://www.michaelhartl.com/</span>).</code></pre>
+</div>
+<p class="listing" id="ch8list5"><strong>Listing 8.5:</strong> A license template for a Python package.<br/><code><em>~/python_package_tutorial/LICENSE</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f195-02" id="f195-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green-d">Copyright (c) YYYY Your Name</span>
+
+<span class="pd_green-d">Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</span>
+
+<span class="pd_green-d">The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</span>
+
+<span class="pd_green-d">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</span></code></pre>
+</div>
+<p class="indent">With all that configuration done, we’re now ready to configure the environment for development and testing. As in <a href="ch01.xhtml#sec1_3">Section 1.3</a>, we’ll use <span class="pd_green-d"><code><strong>venv</strong></code></span> for the virtual environment. We’ll also be using <span class="pd_green-d"><code><strong>pytest</strong></code></span> for testing, which we can install using <span class="pd_green-d"><code><strong>pip</strong></code></span>. The resulting commands are shown in <a href="ch08.xhtml#ch8list6">Listing 8.6</a>.</p>
+<span epub:type="pagebreak" id="page_196"></span>
+<p class="listing" id="ch8list6"><strong>Listing 8.6:</strong> Setting up the package environment (including testing).</p>
+<p class="codelink"><a href="ch08_images.xhtml#f196-01" id="f196-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> deactivate    <span class="pd_blue1"><em># just in case a virtual env is already active</em></span>
+<span class="pd_blue"><strong>$</strong></span> python3 -m venv venv
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span> pip install --upgrade pip
+<span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_blue">pytest</span><span class="pd_gray">==7</span>.1.3</code></pre>
+</div>
+<p class="indent">At this point, as in <a href="ch01.xhtml#sec1_5_1">Section 1.5.1</a>, it’s a good idea to create a <span class="pd_green-d"><code><strong>.gitignore</strong></code></span> file (<a href="ch08.xhtml#ch8list7">Listing 8.7</a>), put the project under version control with Git (<a href="ch08.xhtml#ch8list8">Listing 8.8</a>), and create a repository at GitHub (<a href="ch08.xhtml#ch8fig2">Figure 8.2</a>). This last step will also give you URLs for the configuration file in <a href="ch08.xhtml#ch8list3">Listing 8.3</a>.</p>
+<figure class="image-c" id="ch8fig2">
+<img src="graphics/08fig02.jpg" alt="images" width="725" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.2:</strong> The package repository and README at GitHub.</p>
+</figcaption>
+</figure>
+<p class="listing" id="ch8list7"><strong>Listing 8.7:</strong> Ignoring certain files and directories.<br/><code><em>.gitignore</em></code></p>
+<div class="box1">
+<pre class="pre"><code>venv/
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+
+.DS_Store</code></pre>
+</div>
+<p class="listing" id="ch8list8"><strong>Listing 8.8:</strong> Initializing the package repository.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f196-02" id="f196-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>$</strong></span> git init
+<span class="pd_blue"><strong>$</strong></span> git add -A
+<span class="pd_blue"><strong>$</strong></span> git commit -m <span class="pd_red">"Initialize repository"</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_197"></span>
+<section>
+<h4 class="h4" id="sec8_1_1">8.1.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">If you haven’t already, update <a href="ch08.xhtml#ch8list3">Listing 8.3</a> with the right package name and fill the <span class="pd_green-d"><code><strong>url</strong></code></span> and <span class="pd_green-d"><code><strong>Bug Tracker</strong></code></span> fields with the corresponding GitHub URLs (the tracker URL is just the base URL plus <span class="pd_green-d"><code><strong>/issues</strong></code></span>). Likewise, update the license template in <a href="ch08.xhtml#ch8list5">Listing 8.5</a> with your name and the current year. Commit and push your changes up to GitHub.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_2">8.2 Initial Test Coverage</h3>
+<p class="noindent">Now that we’ve set up our basic package structure, we’re ready to get started testing. Because the necessary <span class="pd_green-d"><code><strong>pytest</strong></code></span> package has already been installed (<a href="ch08.xhtml#ch8list6">Listing 8.6</a>), we can actually run the (nonexistent) tests immediately:</p>
+<span epub:type="pagebreak" id="page_198"></span>
+<p class="codelink"><a href="ch08_images.xhtml#f198-01" id="f198-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts =============================</span>
+<span class="pd_green-d">platform darwin -- Python 3.10.6, pytest-7.1.3, pluggy-1.0.0</span>
+<span class="pd_green-d">rootdir: /Users/mhartl/repos/python_package_tutorial</span>
+<span class="pd_green-d">collected 0 items</span>
+
+<span class="pd_green-d">============================ no tests ran in 0.00s ============================</span></code></pre>
+<p class="noindent">Exact details will differ (and will be omitted in future examples for that reason), but your results should be similar.</p>
+<p class="indent">Now let’s write a minimal failing test and then get it to pass. Because we’ve already created a <span class="pd_green-d"><code><strong>tests</strong></code></span> directory with the test file <span class="pd_green-d"><code><strong>test_phrase.py</strong></code></span> (<a href="ch08.xhtml#ch8list2">Listing 8.2</a>), we can begin by adding the code shown in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>.</p>
+<p class="listing" id="ch8list9"><strong>Listing 8.9:</strong> The initial test suite. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_initial_example</span>():
+    <span class="pd_green"><strong>assert False</strong></span></code></pre>
+</div>
+<p class="noindent"><a href="ch08.xhtml#ch8list9">Listing 8.9</a> defines a function containing one <em>assertion</em>, which asserts that something has a boolean value of <span class="pd_green-d"><code><strong>True</strong></code></span>, in which case the assertion passes, and fails otherwise. Because <a href="ch08.xhtml#ch8list9">Listing 8.9</a> literally asserts that <span class="pd_green-d"><code><strong>False</strong></code></span> is <span class="pd_green-d"><code><strong>True</strong></code></span>, it fails by design:</p>
+<p class="listing" id="ch8list10"><strong>Listing 8.10:</strong> <span class="pd_redred"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f198-02" id="f198-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 1 item</span>
+
+<span class="pd_green-d">tests/palindrome_test.py F                                        [100%]</span>
+
+<span class="pd_green-d">=================================== FAILURES ===================================</span>
+<span class="pd_green-d">_____________________________ test_non_palindrome ______________________________</span>
+
+    <span class="pd_green-d">def test_non_palindrome():</span>
+<span class="pd_green-d">&gt;       assert False</span>
+<span class="pd_green-d">E       assert False</span>
+
+<span class="pd_green-d">tests/palindrome_test.py:4: AssertionError</span>
+<span class="pd_green-d">=========================== short test summary info ============================</span>
+<span class="pd_green-d">FAILED tests/palindrome_test.py::test_non_palindrome - assert False</span>
+<span class="pd_green-d">============================== 1 failed in 0.01s ===============================</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_199"></span>
+<p class="noindent">By itself, this test isn’t useful, but it demonstrates the concept, and we’ll add a useful test in just a moment.</p>
+<p class="indent">Many systems, including mine, display failing tests in the color red, as shown in <a href="ch08.xhtml#ch8fig3">Figure 8.3</a>. Because of this, a failing test (or collection of tests, known as a <em>test suite</em>) is often referred to as being <span class="pd_redred"><span class="smallcaps">RED</span></span>. To help us keep track of our progress, the captions of code listings corresponding to a failing test suite are labeled <span class="pd_redred"><span class="smallcaps">RED</span></span>, as seen in <a href="ch08.xhtml#ch8list9">Listing 8.9</a> and <a href="ch08.xhtml#ch8list10">Listing 8.10</a>.</p>
+<figure class="image-c" id="ch8fig3">
+<img src="graphics/08fig03.jpg" alt="images" width="725" height="600"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.3:</strong> The <span class="pd_redred"><span class="smallcaps">RED</span></span> state of the initial test suite.</p>
+</figcaption>
+</figure>
+<p class="indent">To get from a failing to a passing state, we can change <span class="pd_green-d"><code><strong>False</strong></code></span> to <span class="pd_green-d"><code><strong>True</strong></code></span> in <a href="ch08.xhtml#ch8list9">Listing 8.9</a>, yielding the code in <a href="ch08.xhtml#ch8list11">Listing 8.11</a>.</p>
+<span epub:type="pagebreak" id="page_200"></span>
+<p class="listing" id="ch8list11"><strong>Listing 8.11:</strong> A passing test suite. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_initial_example</span>():
+<span class="b-y">    <span class="pd_green"><strong>assert True</strong></span></span></code></pre>
+</div>
+<p class="noindent">As expected, this test passes:</p>
+<p class="listing" id="ch8list12"><strong>Listing 8.12:</strong> <span class="pd_green-g"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f200-01" id="f200-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 1 item</span>
+
+<span class="pd_green-d">tests/test_phrase.py .                                               [100%]</span>
+
+<span class="pd_green-d">============================== 1 passed in 0.00s ===============================</span></code></pre>
+</div>
+<p class="indent">Because many systems display passing tests using the color green (<a href="ch08.xhtml#ch8fig4">Figure 8.4</a>), a passing test suite is often referred to as <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>. As with <span class="smallcaps"><span class="pd_redred">RED</span></span> test suites, the captions of code listings corresponding to passing tests will be labeled <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> (as seen in <a href="ch08.xhtml#ch8list11">Listing 8.11</a> and <a href="ch08.xhtml#ch8list12">Listing 8.12</a>).</p>
+<figure class="image-c" id="ch8fig4">
+<img src="graphics/08fig04.jpg" alt="images" width="725" height="596"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.4:</strong> A <span class="pd_green-d"><span class="smallcaps">GREEN</span></span> test suite.</p>
+</figcaption>
+</figure>
+<p class="indent">In addition to asserting that true things are <span class="pd_green-d"><code><strong>True</strong></code></span>, it is often convenient to assert that false things are <em>not</em> <span class="pd_green-d"><code><strong>False</strong></code></span>, which we can accomplish using <span class="pd_green-d"><code><strong>not</strong></code></span> (<a href="ch02.xhtml#sec2_4_1">Section 2.4.1</a>), as shown in <a href="ch08.xhtml#ch8list13">Listing 8.13</a>.</p>
+<p class="listing" id="ch8list13"><strong>Listing 8.13:</strong> A different way to pass. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_initial_example</span>():
+<span class="b-y">    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> <span class="pd_green"><strong>False</strong></span></span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_201"></span>
+<p class="noindent">As before, this test is <span class="pd_green-d"><code>GREEN</code></span>:</p>
+<p class="listing" id="ch8list14"><strong>Listing 8.14:</strong> <span class="pd_green-d"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f201-01" id="f201-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 1 item</span>
+
+<span class="pd_green-d">tests/test_phrase.py .                                               [100%]</span>
+
+<span class="pd_green-d">============================== 1 passed in 0.00s ===============================</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_202"></span>
+<section>
+<h4 class="h4" id="sec8_2_1">8.2.1 A Useful Passing Test</h4>
+<p class="noindent">Having learned the basic mechanics of <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> and <span class="smallcaps"><span class="pd_redred">RED</span></span> tests, we’re now ready to write our first useful test. Because we mainly want to test the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class, our first step is to fill in <span class="pd_green-d"><code><strong>phrase.py</strong></code></span> with the source code for defining phrases. We’ll start with just <span class="pd_green-d"><code><strong>Phrase</strong></code></span> itself (without <span class="pd_green-d"><code><strong>TranslatedPhrase</strong></code></span>), as shown in <a href="ch08.xhtml#ch8list15">Listing 8.15</a>. Note that for brevity we’ve also omitted the iterator code from <a href="ch05.xhtml#sec5_3">Section 5.3</a>.</p>
+<p class="listing" id="ch8list15"><strong>Listing 8.15:</strong> Defining <span class="pd_green-d"><code><strong>Phrase</strong></code></span> in a package.<br/><code><em>~/src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f202-01" id="f202-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init_</span>_(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Process the content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">At this point, we’re ready to try importing <span class="pd_green-d"><code><strong>Phrase</strong></code></span> into our test file. With the package structure as in <a href="ch08.xhtml#ch8list1">Listing 8.1</a>, the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class should be importable from the <span class="pd_green-d"><code><strong>palindrome</strong></code></span> package, which in turn should be available using <span class="pd_green-d"><code><strong>palindrome.-phrase</strong></code></span>.<sup><a id="fn8_4a" href="ch08.xhtml#fn8_4">4</a></sup> The result appears in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>, which also replaces the example test from <a href="ch08.xhtml#ch8list13">Listing 8.13</a>.</p>
+<p class="footnote"><a id="fn8_4" href="ch08.xhtml#fn8_4a">4.</a> You wouldn’t necessarily have been able to guess this; it’s just the way Python packages work based on the directory structure shown in <a href="ch08.xhtml#ch8list1">Listing 8.1</a> (i.e., the <span class="pd_green-d"><code><strong>phrase.py</strong></code></span> file is in a directory called <span class="pd_green-d"><code><strong>palindrome</strong></code></span>).</p>
+<span epub:type="pagebreak" id="page_203"></span>
+<p class="listing" id="ch8list16"><strong>Listing 8.16:</strong> Importing the <span class="pd_green-d"><code><strong>palindrome</strong></code></span> package. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f203-01" id="f203-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase</code></pre>
+</div>
+<p class="noindent">Unfortunately, the test suite doesn’t pass even though there’s no longer even a test that could fail:</p>
+<p class="listing" id="ch8list17"><strong>Listing 8.17:</strong> <span class="pd_redred"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f203-02" id="f203-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 0 items / 1 error</span>
+
+<span class="pd_green-d">==================================== ERRORS ====================================</span>
+<span class="pd_green-d">__________________ ERROR collecting tests/test_phrase.py ___________________</span>
+<span class="pd_green-d">ImportError while importing test module</span>
+<span class="pd_green-d">'/Users/mhartl/repos/python_package_tutorial/tests/test_phrase.py'.</span>
+<span class="pd_green-d">Hint: make sure your test modules/packages have valid Python names.</span>
+<span class="pd_green-d">Traceback:</span>
+<span class="pd_green-d">lib/python3.10/importlib/__init__.py:126: in import_module</span>
+    <span class="pd_green-d">return _bootstrap._gcd_import(name[level:], package, level)</span>
+<span class="pd_green-d">tests/test_phrase.py:1: in &lt;module&gt;</span>
+    <span class="pd_green-d">from palindrome_mhartl.phrase import Phrase</span>
+<span class="pd_green-d">E   ImportError: cannot import name 'Phrase' from 'palindrome.palindrome'</span>
+<span class="pd_blue"><strong>(/Users/mhartl/repos/python_package_tutorial/src/palindrome/phrase.py)</strong></span>
+<span class="pd_green-d">=========================== short test summary info ============================</span>
+<span class="pd_green-d">ERROR tests/test_phrase.py</span>
+<span class="pd_green-d">!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!</span>
+<span class="pd_green-d">=============================== 1 error in 0.03s ===============================</span></code></pre>
+</div>
+<p class="noindent">The issue is that our package needs to be installed in the local environment in order to perform the <span class="pd_green-d"><code><strong>import</strong></code></span> in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>. Because it hasn’t been installed yet, the test suite is in an error state. Although this is technically not the same as a failing state, an error state is still often called <span class="smallcaps"><span class="pd_redred">RED</span></span>.</p>
+<p class="indent">To fix the error, we need to install the <span class="pd_green-d"><code><strong>palindrome</strong></code></span> package locally, which we can do using the command shown in <a href="ch08.xhtml#ch8list18">Listing 8.18</a>.</p>
+<p class="listing" id="ch8list18"><strong>Listing 8.18:</strong> Installing an editable package locally.</p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install -e .</code></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_204"></span>As you can learn from running <span class="pd_green-d"><code><strong>pip install --help</strong></code></span> (or by viewing the <span class="pd_green-d"><code><strong>pytest</strong></code></span> documentation), the <span class="pd_green-d"><code><strong>-e</strong></code></span> option installs the package in <strong>e</strong>ditable mode, so it will update automatically when we edit the files. The location of the installation is in the current directory, as indicated by the <span class="pd_green-d"><code><strong>.</strong></code></span> (dot).</p>
+<p class="indent">At this point, the test suite should be, if not quite <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>, at least no longer <span class="smallcaps"><span class="pd_redred">RED</span></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f204-01" id="f204-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts =============================</span>
+<span class="pd_green-d">collected 0 items</span>
+
+<span class="pd_green-d">============================ no tests ran in 0.00s ============================</span></code></pre>
+<p class="indent">Now we’re ready to start making some tests to check that the code in <a href="ch08.xhtml#ch8list15">Listing 8.15</a> is actually working. We’ll start with a negative case, checking that a non-palindrome is correctly categorized as such:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f204-02" id="f204-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()</code></pre>
+<p class="noindent">Here we’ve used <span class="pd_green-d"><code><strong>assert</strong></code></span> to assert that <span class="pd_green-d"><code><strong>"apple"</strong></code></span> should <em>not</em> be a palindrome (<a href="ch08.xhtml#ch8fig5">Figure 8.5</a><sup><a id="fn8_5a" href="ch08.xhtml#fn8_5">5</a></sup>).</p>
+<figure class="image-c" id="ch8fig5">
+<img src="graphics/08fig05.jpg" alt="images" width="638" height="423"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.5:</strong> The word “apple”: not a palindrome.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_5" href="ch08.xhtml#fn8_5a">5.</a> Image courtesy of Glayan/Shutterstock.</p>
+<p class="indent">In similar fashion, we can test a literal palindrome (one that’s literally the same forward and backward) with another <span class="pd_green-d"><code><strong>assert</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f204-03" id="f204-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()</code></pre>
+<p class="indent">Combining the code from the above discussion gives us the code shown in <a href="ch08.xhtml#ch8list19">Listing 8.19</a>.</p>
+<p class="listing" id="ch8list19"><strong>Listing 8.19:</strong> An actually useful test suite.<br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f204-04" id="f204-04a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span epub:type="pagebreak" id="page_205"></span><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()</code></pre>
+</div>
+<p class="indent">Now for the real test (so to speak):</p>
+<p class="listing" id="ch8list20"><strong>Listing 8.20:</strong> <span class="pd_green-d"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f205-01" id="f205-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">platform darwin -- Python 3.10.6, pytest-7.1.3, pluggy-1.0.0</span>
+<span class="pd_green-d">rootdir: /Users/mhartl/repos/python_package_tutorial</span>
+<span class="pd_green-d">collected 2 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py ..                                              [100%]</span>
+
+<span class="pd_green-d">============================== 2 passed in 0.00s ===============================</span></code></pre>
+</div>
+<p class="noindent">The tests are now <span class="pd_green-d"><span class="smallcaps">GREEN</span></span>, indicating that they are in a passing state. That means our code is working!</p>
+<span epub:type="pagebreak" id="page_206"></span>
+</section>
+<section>
+<h4 class="h4" id="sec8_2_2">8.2.2 Pending Tests</h4>
+<p class="noindent">Before moving on, we’ll add a couple of <em>pending</em> tests, which are placeholders/ reminders for tests we want to write. The way to write a pending test is to use the <span class="pd_green-d"><code><strong>skip()</strong></code></span> function, which we can include directly from the <span class="pd_green-d"><code><strong>pytest</strong></code></span> package, as shown in <a href="ch08.xhtml#ch8list21">Listing 8.21</a>.</p>
+<p class="listing" id="ch8list21"><strong>Listing 8.21:</strong> Adding two pending tests. <span class="pd_y"><span class="smallcaps">YELLOW</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f206-01" id="f206-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="b-y"><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>pytest</strong></span> <span class="pd_green"><strong>import skip</strong></span></span>
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_mixed_case_palindrome</span>():
+<span class="b-y">    skip()</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():
+<span class="b-y">    skip()</span></code></pre>
+</div>
+<p class="indent">We can see the result of <a href="ch08.xhtml#ch8list21">Listing 8.21</a> by rerunning the test suite:</p>
+<p class="listing" id="ch8list22"><strong>Listing 8.22:</strong> <span class="pd_y"><span class="smallcaps">YELLOW</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f206-02" id="f206-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 4 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py ..ss                                            [100%]</span>
+
+<span class="pd_green-d">========================= 2 passed, 2 skipped in 0.00s =========================</span></code></pre>
+</div>
+<p class="noindent">Note how the test runner displays the letter <span class="pd_green-d"><code><strong>s</strong></code></span> for each of the two “skips”. Sometimes people speak of a test suite with pending tests as being <span class="smallcaps"><span class="pd_y">YELLOW</span></span>, in analogy with the <span epub:type="pagebreak" id="page_207"></span>red-yellow-green color scheme of traffic lights (<a href="ch08.xhtml#ch8fig6">Figure 8.6</a>), although it’s also common to refer to any non-<span class="smallcaps"><span class="pd_redred">RED</span></span> test suite as <span class="pd_green-d"><span class="smallcaps">GREEN</span></span>.</p>
+<figure class="image-c" id="ch8fig6">
+<img src="graphics/08fig06.jpg" alt="images" width="687" height="556"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.6:</strong> A <span class="pd_y"><span class="smallcaps">YELLOW</span></span> (pending) test suite.</p>
+</figcaption>
+</figure>
+<p class="indent">Filling in the test for a mixed-case palindrome is left as an exercise (with a solution shown in <a href="ch08.xhtml#ch8list25">Listing 8.25</a>), while filling in the second pending test and getting it to pass is the subject of <a href="ch08.xhtml#sec8_3">Section 8.3</a> and <a href="ch08.xhtml#sec8_4">Section 8.4</a>.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_2_3">8.2.3 Exercises</h4>
+<ol class="number">
+<li><p class="number">By filling in the code in <a href="ch08.xhtml#ch8list23">Listing 8.23</a>, add a test for a mixed-case palindrome like “RaceCar”. Is the test suite still <span class="pd_green-d"><span class="smallcaps">GREEN</span></span> (or <span class="pd_y"><span class="smallcaps">YELLOW</span></span>)?</p></li>
+<li><p class="number"><span epub:type="pagebreak" id="page_208"></span>In order to make 100% sure that the tests are testing what we <em>think</em> they’re testing, it’s a good practice to get to a failing state (<span class="smallcaps"><span class="pd_redred">RED</span></span>) by intentionally <em>breaking</em> the tests. Change the application code to break each of the existing tests in turn, and then confirm that they are <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> again once the original code has been restored. An example of code that breaks the test in the previous exercise (but not the other tests) appears in <a href="ch08.xhtml#ch8list24">Listing 8.24</a>. (One advantage of writing the tests <em>first</em> is that this <span class="smallcaps"><span class="pd_redred">RED</span></span>–<span class="smallcaps"><span class="pd_green-g">GREEN</span></span> cycle happens automatically.)</p></li>
+</ol>
+<p class="listing" id="ch8list23"><strong>Listing 8.23:</strong> Adding a test for a mixed-case palindrome.<br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f208-01" id="f208-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>pytest</strong></span> <span class="pd_green"><strong>import</strong></span> skip
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_mixed_case_palindrome</span>():
+<span class="b-y">    FILL_IN</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():
+    skip()</code></pre>
+</div>
+<p class="listing" id="ch8list24"><strong>Listing 8.24:</strong> Intentionally breaking a test. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f208-02" id="f208-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init_</span>_(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Process the content for palindrome testing."""</em></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self</span>.content<span class="pd_green"><em>#.lower()</em></span></span>
+
+<span epub:type="pagebreak" id="page_209"></span>    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_3">8.3 Red</h3>
+<p class="noindent">In this section, we’ll take the important first step toward being able to detect more complex palindromes like “Madam, I’m Adam.” and “A man, a plan, a canal—Panama!”. Unlike the previous strings we’ve encountered, these phrases—which contain both spaces and punctuation—aren’t strictly palindromes in a literal sense, even if we ignore capitalization. Instead of testing the strings as they are, we have to figure out a way to select only the letters, and then see if the resulting letters are the same forward and backward.</p>
+<p class="indent">The code to do this is fairly tricky, but the tests for it are simple. This is one of the situations where test-driven development particularly shines (<a href="ch08.xhtml#ch8box1">Box 8.1</a>). We can write our simple tests, thereby getting to <span class="smallcaps"><span class="pd_redred">RED</span></span>, and then write the application code any way we want to get to <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> (<a href="ch08.xhtml#sec8_4">Section 8.4</a>). At that point, with the tests protecting us against undiscovered errors, we can change the application code with confidence (<a href="ch08.xhtml#sec8_5">Section 8.5</a>).</p>
+<div class="box">
+<p class="box-title" id="ch8box1"><strong>Box 8.1: When to test</strong></p>
+<p class="sb-noindent">When deciding when and how to test, it’s helpful to understand <em>why</em> to test. In my view, writing automated tests has three main benefits:</p>
+<ol class="number">
+<li><p class="number">Tests protect against <em>regressions</em>, where a functioning feature stops working for some reason.</p></li>
+<li><p class="number">Tests allow code to be <em>refactored</em> (i.e., changing its form without changing its function) with greater confidence.</p></li>
+<li><p class="number">Tests act as a <em>client</em> for the application code, thereby helping determine its design and its interface with other parts of the system.</p></li>
+</ol>
+<p class="sb-indent"><span epub:type="pagebreak" id="page_210"></span>Although none of the above benefits <em>require</em> that tests be written first, there are many circumstances where test-driven development (TDD) is a valuable tool to have in your kit. Deciding when and how to test depends in part on how comfortable you are writing tests; many developers find that, as they get better at writing tests, they are more inclined to write them first. It also depends on how difficult the test is relative to the application code, how precisely the desired features are known, and how likely the feature is to break in the future.</p>
+<p class="sb-indent">In this context, it’s helpful to have a set of guidelines on when we should test first (or test at all). Here are some suggestions based on my own experience:</p>
+<ul class="sq">
+<li><p class="bull">When a test is especially short or simple compared to the application code it tests, lean toward writing the test first.</p></li>
+<li><p class="bull">When the desired behavior isn’t yet crystal clear, lean toward writing the application code first, then write a test to codify the result.</p></li>
+<li><p class="bull">Whenever a bug is found, write a test to reproduce it and protect against regressions, then write the application code to fix it.</p></li>
+<li><p class="bull">Write tests before refactoring code, focusing on testing error-prone code that’s especially likely to break.</p></li>
+</ul>
+</div>
+<p class="indent">We’ll start by writing a test for a palindrome with punctuation, which just parallels the tests from <a href="ch08.xhtml#ch8list19">Listing 8.19</a>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f210-01" id="f210-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():
+    <span class="pd_green"><strong>assert</strong></span> palindrome<span class="pd_gray">.</span>ispalindrome(<span class="pd_red">"Madam, I'm Adam."</span>)</code></pre>
+<p class="noindent">The updated test suite appears in <a href="ch08.xhtml#ch8list25">Listing 8.25</a>, which also includes the solution to a couple of exercises in <a href="ch08.xhtml#ch8list23">Listing 8.23</a> (<a href="ch08.xhtml#ch8fig7">Figure 8.7</a><sup><a id="fn8_6a" href="ch08.xhtml#fn8_6">6</a></sup>).</p>
+<figure class="image-c" id="ch8fig7">
+<img src="graphics/08fig07.jpg" alt="images" width="638" height="365"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.7:</strong> “RaceCar” is still a palindrome (ignoring case).</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_6" href="ch08.xhtml#fn8_6a">6.</a> Image courtesy of Msyaraafiq/Shutterstock.</p>
+<p class="listing" id="ch8list25"><strong>Listing 8.25:</strong> Adding a test for a punctuated palindrome. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f210-02" id="f210-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>pytest</strong></span> <span class="pd_green"><strong>import</strong></span> skip
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span epub:type="pagebreak" id="page_211"></span><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_mixed_case_palindrome</span>():</span>
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"RaceCar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():</span>
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>ispalindrome()</code></pre>
+</div>
+<p class="indent">As required, the test suite is now <span class="pd_red"><code>RED</code></span> (output somewhat streamlined):</p>
+<p class="listing" id="ch8list26"><strong>Listing 8.26:</strong> <span class="pd_redred"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f211-01" id="f211-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 4 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py ...F                                            [100%]</span>
+
+<span class="pd_green-d">=================================== FAILURES ===================================</span>
+<span class="pd_green-d">_______________________ test_palindrome_with_punctuation _______________________</span>
+
+    <span class="pd_green-d">def test_palindrome_with_punctuation():</span>
+<span class="pd_green-d">&gt;       assert Phrase("Madam, I'm Adam.").ispalindrome()</span>
+<span class="pd_green-d">E       assert False</span>
+
+<span epub:type="pagebreak" id="page_212"></span><span class="pd_green-d">tests/test_phrase.py:14: AssertionError</span>
+<span class="pd_green-d">=========================== short test summary info ============================</span>
+<span class="pd_green-d">FAILED tests/test_phrase.py::test_palindrome_with_punctuation - assert False</span>
+<span class="pd_green-d">========================= 1 failed, 3 passed in 0.01s ==========================</span></code></pre>
+</div>
+<p class="indent">At this point, we can start thinking about how to write the application code and get to <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>. Our strategy will be to write a <span class="pd_green-d"><code><strong>letters()</strong></code></span> method that returns only the letters in the content string. In other words, the code</p>
+<p class="codelink"><a href="ch08_images.xhtml#f212-01" id="f212-01a">Click here to view code image</a></p>
+<pre class="pre1"><code>Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>letters()</code></pre>
+<p class="noindent">should evaluate to this:</p>
+<pre class="pre1"><code><span class="pd_red">"MadamImAdam"</span></code></pre>
+<p class="noindent">Getting to that state will allow us to use our current palindrome detector to determine whether the original phrase is a palindrome or not.</p>
+<p class="indent">Having made this specification, we can now write a simple test for <span class="pd_green-d"><code><strong>letters()</strong></code></span> by asserting that the result is as indicated:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f212-02" id="f212-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>letters() <span class="pd_gray">==</span> <span class="pd_red">"MadamImAdam"</span></code></pre>
+<p class="noindent">The new test appears with the others in <a href="ch08.xhtml#ch8list27">Listing 8.27</a>.</p>
+<p class="listing" id="ch8list27"><strong>Listing 8.27:</strong> Adding a test for the <span class="pd_green-d"><code><strong>letters()</strong></code></span> method. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>test/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f212-03" id="f212-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>pytest</strong></span> <span class="pd_green"><strong>import</strong></span> skip
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_mixed_case_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"RaceCar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span epub:type="pagebreak" id="page_213"></span><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_letters</span>():
+<span class="b-y">    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>).letters() == <span class="pd_red">"MadamImAdam"</span></span></code></pre>
+</div>
+<p class="indent">Meanwhile, although we aren’t yet ready to define a working <span class="pd_green-d"><code><strong>letters()</strong></code></span> method, we can add a <em>stub</em>: a method that doesn’t work, but at least exists. For simplicity, we’ll simply return nothing (using the special <span class="pd_green-d"><code><strong>pass</strong></code></span> keyword), as shown in <a href="ch08.xhtml#ch8list28">Listing 8.28</a>.</p>
+<p class="listing" id="ch8list28"><strong>Listing 8.28:</strong> A stub for the <span class="pd_green-d"><code><strong>letters()</strong></code></span> method. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f213-01" id="f213-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span> (<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_bluea">letters</span>(<span class="pd_green">self</span>):</span>
+<span class="b-y">        <span class="pd_red"><em>"""Return the letters in the content."""</em></span></span>
+<span class="b-y">        <span class="pd_green"><strong>pass</strong></span></span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">The new test for <span class="pd_green-d"><code><strong>letters()</strong></code></span> is <span class="smallcaps"><span class="pd_redred">RED</span></span> as expected (which also shows that the <span class="pd_green-d"><code><strong>pass</strong></code></span> in <a href="ch08.xhtml#ch8list28">Listing 8.28</a> just returns <span class="pd_green-d"><code><strong>None</strong></code></span>):</p>
+<span epub:type="pagebreak" id="page_214"></span>
+<p class="listing" id="ch8list29"><strong>Listing 8.29:</strong> <span class="pd_redred"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f214-01" id="f214-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 5 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py ...FF                                           [100%]</span>
+
+<span class="pd_green-d">=================================== FAILURES ===================================</span>
+<span class="pd_green-d">_______________________ test_palindrome_with_punctuation _______________________</span>
+
+    <span class="pd_green-d">def test_palindrome_with_punctuation():</span>
+<span class="pd_green-d">&gt;       assert Phrase("Madam, I'm Adam.").ispalindrome()</span>
+<span class="pd_green-d">E       assert False</span>
+
+<span class="pd_green-d">tests/test_phrase.py:14: AssertionError</span>
+<span class="pd_green-d">_________________________________ test_letters _________________________________</span>
+
+    <span class="pd_green-d">def test_letters():</span>
+<span class="pd_green-d">&gt;       assert Phrase("Madam, I'm Adam.").letters() == "MadamImAdam"</span>
+<span class="b-y"><span class="pd_green-d">E       assert None == 'MadamImAdam'</span></span>
+<span class="b-y"><span class="pd_green-d">tests/test_phrase.py:17: AssertionError</span></span>
+<span class="pd_green-d">=========================== short test summary info ============================</span>
+<span class="pd_green-d">FAILED tests/test_phrase.py::test_palindrome_with_punctuation - assert False</span>
+<span class="pd_green-d">FAILED tests/test_phrase.py::test_letters - assert None == 'MadamImAdam'</span>
+<span class="pd_green-d">========================= 2 failed, 3 passed in 0.01s ==========================</span></code></pre>
+</div>
+<p class="indent">With our two <span class="smallcaps"><span class="pd_redred">RED</span></span> tests capturing the desired behavior, we’re now ready to move on to the application code and try getting it to <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>.</p>
+<section>
+<h4 class="h4" id="sec8_3_1">8.3.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Confirm that commenting out the <span class="pd_green-d"><code><strong>letters()</strong></code></span> stub in <a href="ch08.xhtml#ch8list28">Listing 8.28</a> yields a failing state rather than an error state. (This behavior is relatively unusual, with many other languages distinguishing between a non-working method and one that’s missing altogether. In Python, though, the result is the same failing state in either case.)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_4">8.4 Green</h3>
+<p class="noindent">Now that we have <span class="smallcaps"><span class="pd_redred">RED</span></span> tests to capture the enhanced behavior of our palindrome detector, it’s time to make them <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>. Part of the philosophy of TDD is to get them <span epub:type="pagebreak" id="page_215"></span>passing without worrying too much at first about the quality of the implementation. Once the test suite is <span class="pd_green-d"><span class="smallcaps">GREEN</span></span>, we can polish it up without introducing regressions (<a href="ch08.xhtml#ch8box1">Box 8.1</a>).</p>
+<p class="indent">The main challenge is implementing <span class="pd_green-d"><code><strong>letters()</strong></code></span>, which returns a string of the letters (but not any other characters) making up the <span class="pd_green-d"><code><strong>content</strong></code></span> of the <span class="pd_green-d"><code><strong>Phrase</strong></code></span>. In other words, we need to select the characters that match a certain pattern. This sounds like a job for regular expressions (<a href="ch04.xhtml#sec4_3">Section 4.3</a>).</p>
+<p class="indent">At times like these, using an online regex matcher with a regex reference like the one shown in <a href="ch04.xhtml#ch4fig5">Figure 4.5</a> is an excellent idea. Indeed, sometimes they make things a little <em>too</em> easy, such as when the reference has the exact regex you need (<a href="ch08.xhtml#ch8fig8">Figure 8.8</a>).</p>
+<figure class="image-c" id="ch8fig8">
+<img src="graphics/08fig08.jpg" alt="images" width="725" height="547"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.8:</strong> The exact regex we need.</p>
+</figcaption>
+</figure>
+<span epub:type="pagebreak" id="page_216"></span>
+<p class="indent">Let’s test it in the console to make sure it satisfies our criteria (using the <span class="pd_green-d"><code><strong>re.search()</strong></code></span> method introduced in <a href="ch04.xhtml#sec4_3">Section 4.3</a>):<sup><a id="fn8_7a" href="ch08.xhtml#fn8_7">7</a></sup></p>
+<p class="footnote"><a id="fn8_7" href="ch08.xhtml#fn8_7a">7.</a> Note that this won’t work for non-ASCII characters. If you need to match words containing such characters, the Google search python unicode letter regular expression might be helpful. Thanks to reader Paul Gemperle for pointing out this issue.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f216-01" id="f216-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">$ source venv/bin/activate</span>
+<span class="pd_green-d">(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_red">"M"</span>)
+<span class="pd_green-d">&lt;re.Match object; span=(0, 1), match='M'&gt;</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_red">"M"</span>))
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_red">"d"</span>))
+<span class="pd_green-d">True</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green">bool</span>(re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_red">","</span>))
+<span class="pd_green-d">False</span></code></pre>
+<p class="noindent">Lookin’ good!</p>
+<p class="indent">We’re now in a position to build up an array of characters that matches upper- or lowercase letters. The most straightforward way to do this is with the <span class="pd_green-d"><code><strong>for</strong></code></span> loop method we first saw in <a href="ch02.xhtml#sec2_6">Section 2.6</a>. We’ll start with an array for the letters, and then iterate through the <span class="pd_green-d"><code><strong>content</strong></code></span> string, pushing each character onto the array (<a href="ch03.xhtml#sec3_4_3">Section 3.4.3</a>) if it matches the letter regex:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f216-02" id="f216-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue1"><em># Works but not Pythonic</em></span>
+the_letters <span class="pd_gray">=</span> []
+<span class="pd_green"><strong>for</strong></span> character <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">self</span><span class="pd_gray">.</span>content:
+    <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, character):
+        the_letters<span class="pd_gray">.</span>append(character)</code></pre>
+<p class="indent">At this point, <span class="pd_green-d"><code><strong>the_letters</strong></code></span> is an array of letters, which can be <span class="pd_green-d"><code><strong>join</strong></code></span>ed to form a string of the letters in the original string:</p>
+<pre class="pre1"><code><span class="pd_red">""</span><span class="pd_gray">.</span>join(the_letters)</code></pre>
+<p class="noindent">Putting everything together gives the <span class="pd_green-d"><code><strong>letters()</strong></code></span> method in <a href="ch08.xhtml#ch8list30">Listing 8.30</a> (with a highlight added to indicate the beginning of the new method).</p>
+<span epub:type="pagebreak" id="page_217"></span>
+<p class="listing" id="ch8list30"><strong>Listing 8.30:</strong> A working <span class="pd_green-d"><code><strong>letters()</strong></code></span> method (but with full suite still <span class="pd_redred"><span class="smallcaps">RED</span></span>).<br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f217-01" id="f217-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="b-y"><span class="pd_green"><strong>import</strong></span> <span class="pd_bluea"><strong>re</strong></span></span>
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>content<span class="pd_gray">.</span>lower()
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_bluea">letters</span>(<span class="pd_green">self</span>):</span>
+        <span class="pd_red"><em>"""Return the letters in the content."""</em></span>
+        the_letters <span class="pd_gray">=</span> []
+        <span class="pd_green"><strong>for</strong></span> character <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">self</span><span class="pd_gray">.</span>content:
+            <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, character):
+                the_letters<span class="pd_gray">.</span>append(character)
+        <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(the_letters)
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">Although the full test suite is still <span class="smallcaps"><span class="pd_redred">RED</span></span>, our <span class="pd_green-d"><code><strong>letters()</strong></code></span> test should now be <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>, as indicated by the number of failing tests changing from 2 to 1:</p>
+<p class="listing" id="ch8list31"><strong>Listing 8.31:</strong> <span class="pd_redred"><span class="smallcaps">RED</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f217-02" id="f217-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">platform darwin -- Python 3.10.6, pytest-7.1.3, pluggy-1.0.0</span>
+<span class="pd_green-d">rootdir: /Users/mhartl/repos/python_package_tutorial</span>
+<span class="pd_green-d">collected 5 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py ...F.                                          [100%]</span>
+
+<span class="pd_green-d">=================================== FAILURES ===================================</span>
+
+<span epub:type="pagebreak" id="page_218"></span><span class="pd_green-d">_______________________ test_palindrome_with_punctuation _______________________</span>
+    <span class="pd_green-d">def test_palindrome_with_punctuation():</span>
+
+<span class="pd_green-d">&gt;       assert Phrase("Madam, I'm Adam.").ispalindrome()</span>
+<span class="pd_green-d">E       assert False</span>
+
+<span class="pd_green-d">tests/test_phrase.py:14: AssertionError</span>
+<span class="pd_green-d">=========================== short test summary info ============================</span>
+<span class="pd_green-d">FAILED tests/test_phrase.py::test_palindrome_with_punctuation - assert False</span>
+<span class="pd_green-d">========================= 1 failed, 4 passed in 0.01s ==========================</span></code></pre>
+</div>
+<p class="indent">We can get the final <span class="smallcaps"><span class="pd_redred">RED</span></span> test to pass by replacing <span class="pd_green-d"><code><strong>self.content</strong></code></span> with <span class="pd_green-d"><code><strong>self.letters()</strong></code></span> in the <span class="pd_green-d"><code><strong>processed_content()</strong></code></span> method. The result appears in <a href="ch08.xhtml#ch8list32">Listing 8.32</a>.</p>
+<p class="listing" id="ch8list32"><strong>Listing 8.32:</strong> A working <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> method. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f218-01" id="f218-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>letters().lower()</span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">letters</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return the letters in the content."""</em></span>
+        the_letters <span class="pd_gray">=</span> []
+        <span class="pd_green"><strong>for</strong></span> character <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">self</span><span class="pd_gray">.</span>content:
+            <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, character):
+                the_letters<span class="pd_gray">.</span>append(character)
+        <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(the_letters)
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_219"></span>
+<p class="indent">The result of <a href="ch08.xhtml#ch8list32">Listing 8.32</a> is a <span class="pd_green-d"><span class="smallcaps">GREEN</span></span> test suite (<a href="ch08.xhtml#ch8fig9">Figure 8.9</a><sup><a id="fn8_8a" href="ch08.xhtml#fn8_8">8</a></sup>):</p>
+<figure class="image-c" id="ch8fig9">
+<img src="graphics/08fig09.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.9:</strong> Our detector finally understands Adam’s palindromic nature.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_8" href="ch08.xhtml#fn8_8a">8.</a> Image courtesy of Album/Alamy Stock Photo.</p>
+<p class="listing" id="ch8list33"><strong>Listing 8.33:</strong> <span class="pd_green-d"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f219-01" id="f219-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 5 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py .....                                          [100%]</span>
+
+<span class="pd_green-d">============================== 5 passed in 0.00s ===============================</span></code></pre>
+</div>
+<p class="noindent">It may not be the prettiest code in the world, but this <span class="pd_green-d"><span class="smallcaps">GREEN</span></span> test suite means our code is working!</p>
+<span epub:type="pagebreak" id="page_220"></span>
+<section>
+<h4 class="h4" id="sec8_4_1">8.4.1 Exercise</h4>
+<ol class="number">
+<li><p class="number">Using the same code shown in <a href="ch08.xhtml#ch8list16">Listing 8.16</a>, import the <span class="pd_green-d"><code><strong>Phrase</strong></code></span> class into the Python REPL and confirm directly that <span class="pd_green-d"><code><strong>ispalindrome()</strong></code></span> can successfully detect palindromes of the form “Madam, I’m Adam.”</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec8_5">8.5 Refactor</h3>
+<p class="noindent">Although the code in <a href="ch08.xhtml#ch8list32">Listing 8.32</a> is now working, as evidenced by our <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> test suite, it relies on a rather cumbersome <span class="pd_green-d"><code><strong>for</strong></code></span> loop that appends to a list rather than creating it all at once. In this section, we’ll <em>refactor</em> our code, which is the process of changing the form of code without changing its function.</p>
+<p class="indent">By running our test suite after any significant changes, we’ll catch any regressions quickly, thereby giving us confidence that the final form of the refactored code is still correct. Throughout this section, I suggest making changes incrementally and running the test suite after each change to confirm that the suite is still <span class="smallcaps"><span class="pd_green-g">GREEN</span></span>.</p>
+<p class="indent">Per <a href="ch06.xhtml#ch06">Chapter 6</a>, a more Pythonic way of creating a list of the sort in <a href="ch08.xhtml#ch8list32">Listing 8.32</a> is to use a list comprehension. In particular, the loop in <a href="ch08.xhtml#ch8list32">Listing 8.32</a> bears a strong resemblance to the <span class="pd_green-d"><code><strong>imperative_singles()</strong></code></span> function from <a href="ch06.xhtml#ch6list4">Listing 6.4</a>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f220-01" id="f220-01a">Click here to view code image</a></p>
+<pre class="pre1"><code>states <span class="pd_gray">=</span> [<span class="pd_red">"Kansas"</span>, <span class="pd_red">"Nebraska"</span>, <span class="pd_red">"North Dakota"</span>, <span class="pd_red">"South Dakota"</span>]
+.
+.
+.
+<span class="pd_blue1"><em># singles: Imperative version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">imperative_singles</span>(states):
+    singles <span class="pd_gray">=</span> []
+    <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states:
+        <span class="pd_green"><strong>if</strong> len</span>(state<span class="pd_gray">.</span>split()) <span class="pd_gray">==</span> 1:
+            singles<span class="pd_gray">.</span>append(state)
+    <span class="pd_green"><strong>return</strong></span> singles</code></pre>
+<p class="noindent">As we saw in <a href="ch06.xhtml#ch6list5">Listing 6.5</a>, this can be replaced using a list comprehension with a condition:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f220-02" id="f220-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue1"><em># singles: Functional version</em></span>
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">functional_singles</span>(states):
+    <span class="pd_green"><strong>return</strong></span> [state <span class="pd_green"><strong>for</strong></span> state <span class="pd_pink"><strong>in</strong></span> states <span class="pd_green"><strong>if</strong> len</span>(state<span class="pd_gray">.</span>split()) <span class="pd_gray">== 1</span>]</code></pre>
+<span epub:type="pagebreak" id="page_221"></span>
+<p class="indent">Let’s drop into the REPL to see how to do the same thing in the present case:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f221-01" id="f221-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> content <span class="pd_gray">=</span> <span class="pd_red">"Madam, I'm Adam."</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [c <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> content]
+<span class="pd_green">['M', 'a', 'd', 'a', 'm', ',', ' ', 'I', "'", 'm', ' ', 'A', 'd', 'a', 'm', '.']</span>
+
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> [c <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> content <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, c)]
+<span class="pd_green-d">['M', 'a', 'd', 'a', 'm', 'I', 'm', 'A', 'd', 'a', 'm']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join([c <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> content <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, c)])
+<span class="pd_green-d">'MadamImAdam'</span></code></pre>
+<p class="noindent">We see here how combining a list comprehension with a condition and a <span class="pd_green-d"><code><strong>join()</strong></code></span> lets us replicate the current functionality of <span class="pd_green-d"><code><strong>letters()</strong></code></span>. In fact, inside the argument to <span class="pd_green-d"><code><strong>join()</strong></code></span> we can omit the square brackets and use a generator comprehension (<a href="ch06.xhtml#sec6_4">Section 6.4</a>) instead:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f221-02" id="f221-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(c <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> content <span class="pd_green"><strong>if</strong></span> re<span class="pd_gray">.</span>search(<span class="pd_red">r"[a-zA-Z]"</span>, c))
+<span class="pd_green-d">'MadamImAdam'</span></code></pre>
+<p class="noindent">This leads to the updated method shown in <a href="ch08.xhtml#ch8list34">Listing 8.34</a>. As is so often the case with comprehension solutions, we have been able to condense the imperative solution down to a single line.</p>
+<p class="listing" id="ch8list34"><strong>Listing 8.34:</strong> Refactoring <span class="pd_green-d"><code><strong>letters()</strong></code></span> down to a single line. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f221-03" id="f221-03a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>letters()<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">letters</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return the letters in the content."""</em></span>
+
+<span epub:type="pagebreak" id="page_222"></span><span class="b-y">        <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span>.join(c <span class="pd_green"><strong>for</strong></span> c <span class="pd_pink"><strong>in</strong></span> <span class="pd_green">self</span>.content <span class="pd_green"><strong>if</strong></span> re.search(<span class="pd_red">r"[a-zA-Z]"</span>, c))</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">As noted in <a href="ch06.xhtml#ch06">Chapter 6</a>, functional programs are harder to build up incrementally, which is one reason why it’s so nice to have a test suite to check that our changes had their intended effect (that is, no effect at all):</p>
+<p class="listing" id="ch8list35"><strong>Listing 8.35:</strong> <span class="pd_green-g"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f222-01" id="f222-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 5 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py .....                                          [100%]</span>
+
+<span class="pd_green-d">============================== 5 passed in 0.01s ===============================</span></code></pre>
+</div>
+<p class="noindent">Huzzah! Our test suite still passes, so our new one-line <span class="pd_green-d"><code><strong>letters()</strong></code></span> method works.</p>
+<p class="indent">This is a major improvement, but in fact there’s one more refactoring that represents a great example of the power of Python. Recall from <a href="ch04.xhtml#sec4_3">Section 4.3</a> that regular expressions have a <span class="pd_green-d"><code><strong>findall()</strong></code></span> method that lets us select regex-matching characters directly from a string:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f222-02" id="f222-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> re<span class="pd_gray">.</span>findall(<span class="pd_red">r"[a-zA-Z]"</span>, content)
+<span class="pd_green-d">['M', 'a', 'd', 'a', 'm', 'I', 'm', 'A', 'd', 'a', 'm']</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(re.findall(<span class="pd_red">r"[a-zA-Z]"</span>, content))
+<span class="pd_green-d">'MadamImAdam'</span></code></pre>
+<p class="noindent">By using <span class="pd_green-d"><code><strong>findall()</strong></code></span> with the same regex we’ve been using throughout this section and then joining on the empty string, we can simplify the application code even further by eliminating the list comprehension, as shown in <a href="ch08.xhtml#ch8list36">Listing 8.36</a>.</p>
+<span epub:type="pagebreak" id="page_223"></span>
+<p class="listing" id="ch8list36"><strong>Listing 8.36:</strong> Using <span class="pd_green-d"><code><strong>re.findall</strong></code></span>. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f223-01" id="f223-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+        <span class="pd_green">self</span><span class="pd_gray">.</span>content <span class="pd_gray">=</span> content
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>letters()<span class="pd_gray">.</span>lower()
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">letters</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return the letters in the content."""</em></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span>.join(re.findall(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_green">self</span>.content))</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="indent">One more run of the test suite confirms that everything is still copacetic (<a href="ch08.xhtml#ch8fig10">Figure 8.10</a><sup><a id="fn8_9a" href="ch08.xhtml#fn8_9">9</a></sup>):</p>
+<figure class="image-c" id="ch8fig10">
+<img src="graphics/08fig10.jpg" alt="images" width="638" height="433"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.10:</strong> Still a palindrome after all our work.</p>
+</figcaption>
+</figure>
+<p class="footnote"><a id="fn8_9" href="ch08.xhtml#fn8_9a">9.</a> Image courtesy of Album/Alamy Stock Photo.</p>
+<p class="listing" id="ch8list37"><strong>Listing 8.37:</strong> <span class="pd_green-g"><span class="smallcaps">GREEN</span></span></p>
+<p class="codelink"><a href="ch08_images.xhtml#f223-02" id="f223-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pytest
+<span class="pd_green-d">============================= test session starts ==============================</span>
+<span class="pd_green-d">collected 5 items</span>
+
+<span class="pd_green-d">tests/test_phrase.py .....                                          [100%]</span>
+
+<span class="pd_green-d">============================== 5 passed in 0.01s ===============================</span></code></pre>
+</div>
+<span epub:type="pagebreak" id="page_224"></span>
+<section>
+<h4 class="h4" id="sec8_5_1">8.5.1 Publishing the Python Package</h4>
+<p class="noindent">As a final step, and in line with our philosophy of shipping (<a href="ch01.xhtml#ch1box5">Box 1.5</a>), in this final section we’ll publish our <span class="pd_green-d"><code><strong>palindrome</strong></code></span> package to the Python Package Index, also known as PyPI.</p>
+<p class="indent">Unusually among programming languages, Python actually has a dedicated test package index called TestPyPI, which means we can publish (and use) our test package without uploading to a real package index. Before proceeding, you’ll need to register an account at TestPyPI and verify your email address.</p>
+<p class="indent">Once you’ve set up your account, you’ll be ready to build and publish your package. To do this, we’ll be using the <span class="pd_green-d"><code><strong>build</strong></code></span> and <span class="pd_green-d"><code><strong>twine</strong></code></span> packages, which you should install at this time:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f224-01" id="f224-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_bluea">build</span><span class="pd_gray">==0</span>.8.0
+<span class="pd_blue"><strong>(venv) $</strong></span> pip install <span class="pd_bluea">twine</span><span class="pd_gray">==4</span>.0.1</code></pre>
+<span epub:type="pagebreak" id="page_225"></span>
+<p class="indent">The first step is to build the package as follows:</p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> python3 -m build</code></pre>
+<p class="noindent">This uses the information in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> (<a href="ch08.xhtml#ch8list3">Listing 8.3</a>) to create a <span class="pd_green-d"><code><strong>dist</strong></code></span> (“distribution”) directory with files based on the name and version number of your package. For example, on my system the <span class="pd_green-d"><code><strong>dist</strong></code></span> directory looks like this:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f225-01" id="f225-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> ls dist
+<span class="pd_green-d">palindrome\_mhartl-0.0.1.tar.gz</span>
+<span class="pd_green-d">palindrome_mhartl-0.0.1-py3-none-any.whl</span></code></pre>
+<p class="noindent">These are a tarball and wheel file, respectively, but the truth is that you don’t need to know anything about these files specifically; all you need to know is that the <span class="pd_green-d"><code><strong>build</strong></code></span> step is necessary to publish a package to TestPyPI. (Being comfortable with ignoring these sorts of details is a good sign of technical sophistication.)</p>
+<p class="indent">Actually publishing the package involves using the <span class="pd_green-d"><code><strong>twine</strong></code></span> command, which looks like this (and is just copied from the TestPyPI documentation):<sup><a id="fn8_10a" href="ch08.xhtml#fn8_10">10</a></sup></p>
+<p class="footnote"><a id="fn8_10" href="ch08.xhtml#fn8_10a">10.</a> At this point, you will be prompted either for a username and password or for an API key. For the latter, see the TestPyPI page on tokens for more information.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f225-02" id="f225-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> twine upload --repository testpypi dist/*</code></pre>
+<p class="noindent">(For future uploads, you may need to remove older versions of your package using <span class="pd_green-d"><code><strong>rm</strong></code></span> because TestPyPI doesn’t let you reuse filenames.)</p>
+<p class="indent">At this point, your package is published and you can test it by installing it on your local system. Because we already have an editable and testable version of the package in our main venv (<a href="ch08.xhtml#ch8list18">Listing 8.18</a>), it’s a good idea to spin up a new venv in a temp directory:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f225-03" id="f225-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span>
+<span class="pd_blue"><strong>$</strong></span> mkdir -p tmp/test_palindrome
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green">cd</span> tmp/test_palindrome
+<span class="pd_blue"><strong>$</strong></span> python3 -m venv venv
+<span class="pd_blue"><strong>$</strong></span> <span class="pd_green">source</span> venv/bin/activate
+<span class="pd_blue"><strong>(venv) $</strong></span></code></pre>
+<span epub:type="pagebreak" id="page_226"></span>
+<p class="noindent">Now you can install your package by using the <span class="pd_green-d"><code><strong>--index-url</strong></code></span> option to tell <span class="pd_green-d"><code><strong>pip</strong></code></span> to use the test index instead of the real one:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f226-01" id="f226-01a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install &lt;package&gt; --index-url https://test.pypi.org/simple/</code></pre>
+<p class="noindent">For example, I can install my version of the test package, which is called <span class="pd_green-d"><code><strong>palindrome_mhartl</strong></code></span>, as follows:<sup><a id="fn8_11a" href="ch08.xhtml#fn8_11">11</a></sup></p>
+<p class="footnote"><a id="fn8_11" href="ch08.xhtml#fn8_11a">11.</a> The <span class="pd_green-d"><code><strong>_mhartl</strong></code></span> part comes from the <span class="pd_green-d"><code><strong>name</strong></code></span> setting in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span>, which for me is <span class="pd_green-d"><code><strong>palindrome_-mhartl</strong></code></span>. If you install my version of the package, you may notice that the version number is higher than 0.0.1, which is due to the aforementioned issue regarding package-name reuse. Because I’ve made quite a few changes in the course of developing this tutorial, I’ve incremented the version number (<span class="pd_green-d"><code><strong>version</strong></code></span> in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span>) several times.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f226-02" id="f226-02a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install palindrome_mhartl --index-url https://test.pypi.org/simple/</code></pre>
+<p class="indent">To test the installation, you can load the package in the REPL:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f226-03" id="f226-03a">Click here to view code image</a></p>
+<pre class="pre1"><code><span class="pd_green-d">(venv) $ python3</span>
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> <span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+<span class="pd_blue"><strong>&gt;&gt;&gt;</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>ispalindrome()
+<span class="pd_green-d">True</span></code></pre>
+<p class="noindent">It works! (If it doesn’t work for you—which is a real possibility since so many things can go wrong—the only recourse is to use your technical sophistication to resolve the discrepancy.)</p>
+<p class="indent">For a general Python package, you can continue adding features and making new releases. All you need to do is increment the version number in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span> to reflect the changes you’ve made. For more guidance on how to increment the versions, I suggest learning a bit about the rules of so-called <em>semantic versioning</em>, or <em>semver</em> (<a href="ch08.xhtml#ch8box2">Box 8.2</a>).</p>
+<div class="box">
+<p class="box-title" id="ch8box2"><strong>Box 8.2: Semver</strong></p>
+<p class="sb-noindent">You might have noticed in this section that we’ve used the version number 0.1.0 for our new package. The leading zero indicates that our package is at an early stage, often called “beta” (or even “alpha” for very early-stage projects).</p>
+<span epub:type="pagebreak" id="page_227"></span>
+<p class="sb-indent">We can indicate updates by incrementing the middle number in the version, e.g., from 0.1.0 to 0.2.0, 0.3.0, etc. Bugfixes are represented by incrementing the rightmost number, as in 0.2.1, 0.2.2, etc., and a mature version (suitable for use by others, and which may not be backward-compatible with prior versions) is indicated by version 1.0.0.</p>
+<p class="sb-indent">After reaching version 1.0.0, further changes follow this same general pattern: 1.0.1 would represent minor changes (a “patch release”), 1.1.0 would represent new (but backward-compatible) features (a “minor release”), and 2.0.0 would represent major or backward-incompatible changes (a “major release”).</p>
+<p class="sb-indent">These numbering conventions are known as <em>semantic versioning</em>, or <em>semver</em> for short. For more information, see semver.org.</p>
+</div>
+<p class="indent">Finally, if you ever go on to develop a package that isn’t just a test like the one in this chapter, you can publish it to the real Python Package Index (PyPI). Although there is ample PyPI documentation, there is little doubt in such a case that you will also have ample opportunity to apply your technical sophistication.</p>
+</section>
+<section>
+<h4 class="h4" id="sec8_5_2">8.5.2 Exercises</h4>
+<ol class="number">
+<li><p class="number">Let’s generalize our palindrome detector by adding the capability to detect integer palindromes like <span class="pd_green-d"><code><strong>12321</strong></code></span>. By filling in <span class="pd_green-d"><code><strong>FILL_IN</strong></code></span> in <a href="ch08.xhtml#ch8list38">Listing 8.38</a>, write tests for integer non-palindromes and palindromes. Get both tests to <span class="smallcaps"><span class="pd_green-g">GREEN</span></span> using the code in <a href="ch08.xhtml#ch8list39">Listing 8.39</a>, which adds a call to <span class="pd_green-d"><code><strong>str</strong></code></span> to ensure the content is a string and includes <span class="pd_green-d"><code><strong>\d</strong></code></span> in the regex to match digits as well as letters. (Note that we have updated the name of the <span class="pd_green-d"><code><strong>letters()</strong></code></span> method accordingly.)</p></li>
+<li><p class="number">Bump the version number in <span class="pd_green-d"><code><strong>pyproject.toml</strong></code></span>, commit and push your changes, build your package with <span class="pd_green-d"><code><strong>build</strong></code></span>, and upload it with <span class="pd_green-d"><code><strong>twine</strong></code></span>. In your temp directory, upgrade your package using the command in <a href="ch08.xhtml#ch8list40">Listing 8.40</a> and confirm in the REPL that integer-palindrome detection is working. <em>Note</em>: The backslash <span class="pd_green-d"><code><strong>\</strong></code></span> in <a href="ch08.xhtml#ch8list40">Listing 8.40</a> is a <em>continuation character</em> and should be typed literally, but the right angle bracket <span class="pd_green-d"><code><strong>&gt;</strong></code></span> should be added by your shell program automatically and should not be typed.</p></li>
+</ol>
+<span epub:type="pagebreak" id="page_228"></span>
+<p class="listing" id="ch8list38"><strong>Listing 8.38:</strong> Testing integer palindromes. <span class="pd_redred"><span class="smallcaps">RED</span></span><br/><code><em>tests/test_phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f228-01" id="f228-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>pytest</strong></span> <span class="pd_green"><strong>import</strong></span> skip
+
+<span class="pd_green"><strong>from</strong></span> <span class="pd_nila"><strong>palindrome_mhartl.phrase</strong></span> <span class="pd_green"><strong>import</strong></span> Phrase
+
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_non_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> <span class="pd_pink"><strong>not</strong></span> Phrase(<span class="pd_red">"apple"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_literal_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"racecar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_mixed_case_palindrome</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"RaceCar"</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_palindrome_with_punctuation</span>():
+    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>)<span class="pd_gray">.</span>ispalindrome()
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_letters_and_digits</span>():</span>
+<span class="b-y">    <span class="pd_green"><strong>assert</strong></span> Phrase(<span class="pd_red">"Madam, I'm Adam."</span>).letters_and_digits() == <span class="pd_red">"MadamImAdam"</span></span>
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_integer_non_palindrome</span>():</span>
+<span class="b-y">    FILL_IN Phrase(<span class="pd_gray">12345</span>).ispalindrome()</span>
+
+<span class="b-y"><span class="pd_green"><strong>def</strong></span> <span class="pd_nila">test_integer_palindrome</span>():</span>
+<span class="b-y">    FILL_IN Phrase(<span class="pd_gray">12321</span>).ispalindrome()</span></code></pre>
+</div>
+<p class="listing" id="ch8list39"><strong>Listing 8.39:</strong> Adding detection of integer palindromes. <span class="pd_green-g"><span class="smallcaps">GREEN</span></span><br/><code><em>src/palindrome/phrase.py</em></code></p>
+<p class="codelink"><a href="ch08_images.xhtml#f228-02" id="f228-02a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_green"><strong>import</strong></span> <span class="pd_nila"><strong>re</strong></span>
+
+
+<span class="pd_green"><strong>class</strong></span> <span class="pd_nila"><strong>Phrase</strong></span>:
+    <span class="pd_red"><em>"""A class to represent phrases."""</em></span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">__init__</span>(<span class="pd_green">self</span>, content):
+<span class="b-y">        <span class="pd_green">self</span>.content = <span class="pd_green">str</span>(content)</span>
+
+    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">ispalindrome</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return True for a palindrome, False otherwise."""</em></span>
+        <span class="pd_green"><strong>return</strong> self</span><span class="pd_gray">.</span>processed_content() <span class="pd_gray">==</span> reverse(<span class="pd_green">self</span><span class="pd_gray">.</span>processed_content())
+
+<span epub:type="pagebreak" id="page_229"></span>    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">processed_content</span>(<span class="pd_green">self</span>):
+        <span class="pd_red"><em>"""Return content for palindrome testing."""</em></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong> self</span>.letters_and_digits().lower()</span>
+
+<span class="b-y">    <span class="pd_green"><strong>def</strong></span> <span class="pd_nila">letters_and_digits</span>(<span class="pd_green">self</span>):</span>
+<span class="b-y">        <span class="pd_red"><em>"""Return the letters and digits in the content."""</em></span></span>
+<span class="b-y">        <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span>.join(re.findall(<span class="pd_red">r"[a-zA-Z]"</span>, <span class="pd_green">self</span>.content))</span>
+
+<span class="pd_green"><strong>def</strong></span> <span class="pd_nila">reverse</span>(string):
+    <span class="pd_red"><em>"""Reverse a string."""</em></span>
+    <span class="pd_green"><strong>return</strong></span> <span class="pd_red">""</span><span class="pd_gray">.</span>join(<span class="pd_green">reversed</span>(string))</code></pre>
+</div>
+<p class="listing" id="ch8list40"><strong>Listing 8.40:</strong> Upgrading the test package.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f229-01" id="f229-01a">Click here to view code image</a></p>
+<div class="box1">
+<pre class="pre"><code><span class="pd_blue"><strong>(venv) $</strong></span> pip install --upgrade your-package <span class="pd_orange"><strong>\</strong></span>
+<span class="pd_blue"><strong>&gt;</strong></span> --index-url https://test.pypi.org/simple/</code></pre>
+</div>
+<span epub:type="pagebreak" id="page_230"></span>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

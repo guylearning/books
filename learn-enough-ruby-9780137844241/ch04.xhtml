@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Ruby to Be Dangerous: Write Programs, Publish Gems, and Develop Sinatra Web Apps with Ruby</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137844111.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch04"><span epub:type="pagebreak" id="page_81"></span>Chapter 4</h2>
+<h2 class="h2a">Other Native Objects</h2>
+<p class="noindent">Now that we’ve taken a look at strings and arrays, we’ll continue with a tour of some other important Ruby objects: math, dates, regular expressions, and hashes.</p>
+<section>
+<h3 class="h3" id="sec4_1">4.1 Math</h3>
+<p class="noindent">Like most programming languages, Ruby supports a large number of mathematical operations:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>1 + 1</strong></span>
+<span class="green"><strong>=&gt; 2</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>2 - 3</strong></span>
+<span class="green"><strong>=&gt; -1</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>2 * 3</strong></span>
+<span class="green"><strong>=&gt; 6</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>10/5</strong></span>
+<span class="green"><strong>=&gt; 2</strong></span></pre>
+</div>
+<p class="indent">Be especially careful with division, though; it can be counter-intuitive:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>10/4</strong></span>
+<span class="green"><strong>=&gt; 2</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>2/3</strong></span>
+<span class="green"><strong>=&gt; 0</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_82"></span>Here Ruby uses <em>integer division</em>, which returns the number of times the denominator goes into the numerator. When dividing one number by another, chances are you want <em><a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">floating-point</a></em> division instead, which you can get by adding a “point zero” to at least one of the numbers:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>10/4.0</strong></span>
+<span class="green"><strong>=&gt; 2.5</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>2/3.0</strong></span>
+<span class="green"><strong>=&gt; 0.6666666666666666</strong></span></pre>
+</div>
+<p class="indent">Many programmers, including me, find it convenient to fire up irb and use it as a simple calculator when the need arises. It’s not fancy, but it’s quick and relatively powerful, and the ability to define variables often comes in handy as well.</p>
+<section>
+<h4 class="h4" id="sec4_1_1">4.1.1 More Advanced Operations</h4>
+<p class="noindent">Ruby supports more <a href="https://ruby-doc.org/core-2.5.0/Math.html">advanced mathematical operations</a> via a <em>module</em> called <code><span class="green"><strong>Math</strong></span></code>, which has utilities for things like mathematical constants, roots, and trigonometric functions:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><span class="gray">::</span><span class="brown"><strong>PI</strong></span>
+<span class="green"><strong>=&gt; 3.141592653589793</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><span class="gray">.</span><strong>sqrt(<span class="gray">2</span>)</strong>
+<span class="green1"><strong>=&gt; 1.4142135623730951</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><span class="gray">.</span><strong>cos(<span class="gray">2*</span><span class="brown">Math</span></strong><span class="gray"><strong>::</strong></span><strong><span class="brown">PI</span></strong>)
+<span class="green1"><strong>=&gt; 1</strong></span></pre>
+</div>
+<p class="noindent">The double colon notation and all-caps in <code><span class="green"><strong>Math::PI</strong></span></code> are characteristic of module <em>constants</em> (names that can’t change value).</p>
+<p class="indent">There is one <a href="https://en.wiktionary.org/wiki/gotcha#Etymology_2">gotcha</a> for those coming from high-school (and even college) textbooks that use ln for the <a href="https://en.wikipedia.org/wiki/Natural_logarithm">natural logarithm</a> (base <em>e</em>). Like mathematicians and most other programming languages, Ruby uses log instead:</p>
+<div class="sidebar">
+<pre class="pre1"><span epub:type="pagebreak" id="page_83"></span><span class="blue"><strong>&gt;&gt;</strong></span><span class="brown"> <strong>Math</strong></span><span class="gray"><strong>.</strong></span><strong>log(<span class="brown">Math</span></strong><span class="gray">::</span><strong>E)</strong>
+<span class="green"><strong>1</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><strong><span class="gray">.</span>log(<span class="gray">10</span>)</strong>
+<span class="green1"><strong>2.302585092994046</strong></span></pre>
+</div>
+<p class="indent">Mathematicians typically indicate base-ten logarithms using log<sub>10</sub>, and Ruby follows suit with <code><span class="green"><strong>log10</strong></span></code>:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><span class="gray"><strong>.</strong></span><strong>log10(</strong><span class="gray"><strong>10</strong></span><strong>)</strong>
+<span class="green"><strong>1</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><strong><span class="gray">.</span>log10(<span class="gray">1000000</span>)</strong>
+<span class="green"><strong>6</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span><span class="brown"> <strong>Math</strong></span><strong><span class="gray">.</span>log10(<span class="brown">Math</span><span class="gray">::</span>E)</strong>
+<span class="green1"><strong>0.4342944819032518</strong></span></pre>
+</div>
+<p class="indent">Finally, Ruby also supports exponentiation via the <code><span class="green"><strong>**</strong></span></code> operator:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>2**3</strong></span>
+<span class="green"><strong>=&gt; 8</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>Math</strong></span><span class="gray"><strong>::</strong></span><strong>E</strong><span class="gray"><strong>**100</strong></span>
+<span class="green1"><strong>=&gt; 2.6881171418161212e+43</strong></span></pre>
+</div>
+<p class="noindent">The final result here, using a number followed by <code><span class="green"><strong>e+43</strong></span></code>, is Ruby’s way of expressing the scientific notation for <em>e</em><sup>100</sup> ≈ 2.6881171418161212 × 10<sup>43</sup>.</p>
+<p class="indent">The <code><span class="green"><strong>Math</strong></span></code> <a href="https://ruby-doc.org/core-2.5.0/Math.html">documentation</a> includes a more comprehensive list of further operations.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_1_2">4.1.2 Math to String</h4>
+<p class="noindent">We discussed in <a href="ch03.xhtml#ch03">Chapter 3</a> how to get from strings to arrays (and vice versa) using <code><span class="green"><strong>split</strong></span></code> and <code><span class="green"><strong>join</strong></span></code>. Similarly, Ruby allows us to convert between numbers and strings.</p>
+<p class="indent">Probably the most common way to convert from a number to a string is using the <code><span class="green"><strong>to_s</strong></span></code> (“to string”) method, as we can see with the <a href="http://tauday.com/tau-manifesto">useful definition</a> shown in <a href="ch04.xhtml#ch04ex01">Listing 4.1</a> (<a href="ch04.xhtml#ch04fig01">Figure 4.1</a>).<sup><a id="fn4_1" href="ch04.xhtml#fn4_1a">1</a></sup></p>
+<p class="footnote"><sup><a id="fn4_1a" href="ch04.xhtml#fn4_1">1</a></sup>The use of <em>τ</em> to represent the circle constant 6.283185 . . . was proposed in a math essay I published in 2010 called <em><a href="https://tauday.com/tau-manifesto">The Tau Manifesto</a></em>, which also established a math holiday called <a href="https://tauday.com/">Tau Day</a>, celebrated annually on June 28.</p>
+<figure class="figure" id="ch04fig01">
+<img src="graphics/f0085-01.jpg" alt="Images" width="853" height="860"/>
+<figcaption>
+<p class="title-f">Figure 4.1: Some special angles in terms of <em>τ</em> = 2<em>π</em>.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex01"><span epub:type="pagebreak" id="page_84"></span><strong>Listing 4.1:</strong> Using <code><span class="green"><strong>tau</strong></span></code> for the circle constant.</p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>tau</strong><span class="gray"> <strong>= 2 *</strong></span><span class="brown"> <strong>Math</strong></span><span class="gray"><strong>::</strong></span><strong><span class="brown">PI</span></strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>tau<span class="gray">.</span>to_s</strong>
+<span class="green"><strong>=&gt; "6.283185307179586"</strong></span></pre>
+</div>
+<p class="noindent">The <code><span class="green"><strong>to_s</strong></span></code> method also works on bare numbers:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="gray"><strong>6.283185307179586</strong></span><span class="gray"><strong>.</strong></span><strong>to_s</strong>
+<span class="green"><strong>=&gt; "6.283185307179586"</strong></span></pre>
+</div>
+<p class="noindent">To go the other direction, we can use the <code><span class="green"><strong>to_i</strong></span></code> (“to integer”) and <code><span class="green"><strong>to_f</strong></span></code> (“to float”) methods:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"6.283185307179586"</strong></span><strong><span class="gray">.</span>to_f</strong>
+<span class="green"><strong>=&gt; 6.283185307179586</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"6"</strong></span><span class="gray"><strong>.</strong></span><strong>to_i</strong>
+<span class="green"><strong>=&gt; 6</strong></span></pre>
+</div>
+</section>
+<section>
+<h4 class="h4" id="sec4_1_3">4.1.3 Exercises</h4>
+<ol class="num">
+<li><p class="num">What happens when you call <code><span class="green"><strong>to_f</strong></span></code> on the string <code><span class="green"><strong>"1.24e6"</strong></span></code>? What about if you call <code><span class="green"><strong>to_s</strong></span></code> on the result?</p></li>
+<li><p class="num">Like most programming languages, Ruby lacks support for <a href="https://en.wikipedia.org/wiki/Imaginary_number">imaginary numbers</a>, i.e., numbers that are a real multiple of the <em>imaginary unit i</em> (satisfying the equation <em>i</em><sup>2</sup> = −1, sometimes written as <math alttext="inline" xmlns:m="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi><mo>=</mo><msqrt><mrow><mo>−</mo><mn>1</mn></mrow></msqrt></mrow></math>). What happens if you ask Ruby to calculate the square root of −1?</p></li>
+<li><p class="num">Ruby <em>constants</em>, such as <code><span class="green"><strong>PI</strong></span></code>, are written in ALL CAPS. Rewrite <a href="ch04.xhtml#ch04ex01">Listing 4.1</a> to use <code><span class="green"><strong>TAU</strong></span></code> in place of <code><span class="green"><strong>tau</strong></span></code>. What happens if you try reassigning some other value to <code><span class="green"><strong>TAU</strong></span></code>?<span epub:type="pagebreak" id="page_85"></span></p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_2"><span epub:type="pagebreak" id="page_86"></span>4.2 Time</h3>
+<p class="noindent">Another frequently used built-in object is <code><span class="green"><strong>Time</strong></span></code> (technically a <em>class</em>, which is a special kind of object we’ll learn more about starting in <a href="ch07.xhtml#ch07">Chapter 7</a>). <code><span class="green"><strong>Time</strong></span></code> gives us our first chance to use the <code><span class="green"><strong>new</strong></span></code> method, a so-called <em>constructor function</em> that is the standard Ruby way to create a new object. So far, we’ve been able to rely on “literal constructors” like quotes and square brackets, but we can also define things like strings and arrays using <code><span class="green"><strong>new</strong></span></code>:<sup><a id="fn4_2" href="ch04.xhtml#fn4_2a">2</a></sup></p>
+<p class="footnote"><sup><a id="fn4_2a" href="ch04.xhtml#fn4_2">2</a></sup>Some irb implementations may have trouble with the Unicode character in “canal—Panama!”. In particular, I had to follow the instructions in the article <a href="https://coderwall.com/p/wdm-_q/enable-unicode-support-in-irb">“Enable Unicode support in IRB</a>” to get it to display properly.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0086-01" id="f0086-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong> <span class="gray"><strong>=</strong></span> <span class="green1"><strong>String</strong></span><span class="gray"><strong>.</strong></span><strong>new(</strong><span class="brown1"><strong>"A man, a plan, a canal—Panama!"</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; "A man, a plan, a canal—Panama!"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>", "</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["A man", "a plan", "a canal—Panama!"]</strong></span></pre>
+</div>
+<p class="noindent">and</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>=</strong></span> <span class="green1"><strong>Array</strong></span><span class="gray"><strong>.</strong></span><strong>new</strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>&lt;&lt; 3 &lt;&lt; 4</strong></span>
+<span class="green"><strong>=&gt; [3, 4]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>a</strong> <span class="gray"><strong>&lt;&lt;</strong></span> <span class="brown1"><strong>"hello, world!"</strong></span>
+<span class="green"><strong>=&gt; [3, 4, 'hello, world!']</strong></span></pre>
+</div>
+<p class="indent">Unlike strings and arrays, times have no literal constructor, so we <em>have</em> to use <code><span class="green"><strong>new</strong></span></code> in this case:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>new</strong>
+<span class="green"><strong>=&gt; 2018-08-14 19:18:36 -0700</strong></span></pre>
+</div>
+<p class="noindent">When called with no arguments, <code><span class="green"><strong>Time.new</strong></span></code> returns the current time. Ruby supplies <code><span class="green"><strong>Time.now</strong></span></code> as an intuitive synonym for this important special case:</p>
+<div class="sidebar">
+<pre class="pre1"><span epub:type="pagebreak" id="page_87"></span><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong>
+<span class="green"><strong>=&gt; 2018-08-14 19:18:55 -0700</strong></span></pre>
+</div>
+<p class="indent">As with other Ruby objects, <code><span class="green"><strong>Time</strong></span></code> objects respond to a <a href="https://ruby-doc.org/core-2.5.0/Time.html">variety of methods</a>:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong><span class="gray"><strong>.</strong></span><strong>year</strong>
+<span class="green"><strong>=&gt; 2018</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong><span class="gray"><strong>.</strong></span><strong>day</strong>
+<span class="green"><strong>=&gt; 14</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong><span class="gray"><strong>.</strong></span><strong>month</strong>
+<span class="green"><strong>=&gt; 8</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong><span class="gray"><strong>.</strong></span><strong>hour</strong>
+<span class="green"><strong>=&gt; 19</strong></span></pre>
+</div>
+<p class="indent">It’s also possible to initialize <code><span class="green"><strong>Time</strong></span></code> objects with specific dates and times:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0087-03" id="f0087-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>moon_landing</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Time</strong></span><strong><span class="gray">.</span>new(<span class="gray">1969</span>, <span class="gray">7</span>, <span class="gray">20</span>, <span class="gray">20</span>, <span class="gray">17</span>, <span class="gray">40</span>)</strong>
+<span class="green"><strong>=&gt; 1969-07-20 20:17:40 -0700</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>moon_landing</strong><span class="gray"><strong>.</strong></span><strong>day</strong>
+<span class="green"><strong>=&gt; 20</strong></span></pre>
+</div>
+<p class="noindent">By default, <code><span class="green"><strong>Time</strong></span></code> uses the local time zone, but this introduces weird location dependence to the operations, so it’s a good practice to use <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> instead:<sup><a id="fn4_3" href="ch04.xhtml#fn4_3a">3</a></sup></p>
+<p class="footnote"><sup><a id="fn4_3a" href="ch04.xhtml#fn4_3">3</a></sup>For most practical purposes, <a href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">Coordinated Universal Time</a> (UTC) is the same as <a href="http://en.wikipedia.org/wiki/Greenwich_Mean_Time">Greenwich Mean Time</a>. But why call it UTC? From the <a href="https://www.nist.gov/pml/time-and-frequency-division/nist-time-frequently-asked-questions-faq#cut">NIST Time and Frequency FAQ</a>: <strong>Q:</strong> Why is UTC used as the acronym for Coordinated Universal Time instead of CUT? <strong>A:</strong> In 1970 the Coordinated Universal Time system was devised by an international advisory group of technical experts within the International Telecommunication Union (ITU). The ITU felt it was best to designate a single abbreviation for use in all languages in order to minimize confusion. Since unanimous agreement could not be achieved on using either the English word order, CUT, or the French word order, TUC, the acronym UTC was chosen as a compromise.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0087-04" id="f0087-04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>moon_landing</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>utc(<span class="gray">1969</span>, <span class="gray">7</span>, <span class="gray">20</span>, <span class="gray">20</span>, <span class="gray">17</span>, <span class="gray">40</span>)</strong>
+<span class="green"><strong>=&gt; 1969-07-20 20:17:40 UTC</strong></span></pre>
+</div>
+<p class="noindent">We can also get the current time in UTC by appending <code><span class="green"><strong>.utc</strong></span></code> to <code><span class="green"><strong>Time.now</strong></span></code>:<sup><a id="fn4_4" href="ch04.xhtml#fn4_4a">4</a></sup></p>
+<p class="footnote"><sup><a id="fn4_4a" href="ch04.xhtml#fn4_4">4</a></sup>This is an example of <em>method chaining</em>, which we’ll learn more about in <a href="ch05.xhtml#sec5_3">Section 5.3</a>.</p>
+<div class="sidebar">
+<pre class="pre1"><span epub:type="pagebreak" id="page_88"></span><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>utc</strong>
+<span class="green"><strong>=&gt; 2018-08-15 02:20:31 UTC</strong></span></pre>
+</div>
+<p class="noindent">Finally, <code><span class="green"><strong>Time</strong></span></code> instances can be subtracted from each other:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>now</strong> <span class="gray"><strong>-</strong></span> <strong>moon_landing</strong>
+<span class="green"><strong>=&gt; 1548482571.0</strong></span></pre>
+</div>
+<p class="noindent">The result here is the number of seconds since the day and time of the <a href="https://en.wikipedia.org/wiki/Apollo_11">first Moon landing</a> (<a href="ch04.xhtml#ch04fig02">Figure 4.2</a>).<sup><a id="fn4_5" href="ch04.xhtml#fn4_5a">5</a></sup> (Your results, of course, will vary, because time marches on, and your value for <code><span class="green"><strong>Time.now</strong></span></code> will differ.)</p>
+<p class="footnote"><sup><a id="fn4_5a" href="ch04.xhtml#fn4_5">5</a></sup>Image courtesy of Castleski/Shutterstock.</p>
+<figure class="figure" id="ch04fig02">
+<img src="graphics/f0089-01.jpg" alt="Images" width="826" height="831"/>
+<figcaption>
+<p class="title-f">Figure 4.2: Buzz Aldrin and Neil Armstrong somehow got to the Moon (and back!) without Ruby.</p>
+</figcaption>
+</figure>
+<p class="indent">You may have noticed that the month and day are returned as <em>unit-offset</em> values, which differs from the zero-offset indexing used for arrays (<a href="ch03.xhtml#sec3_2">Section 3.2</a>). For example, in the eighth month (August), the return value of <code><span class="green"><strong>now.month</strong></span></code> is <code><span class="green"><strong>8</strong></span></code> rather than <code><span class="green"><strong>7</strong></span></code> (as it would be if months were being treated like indices of a zero-offset array). There is one important value that is returned as a zero-offset index, though:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0088-03" id="f0088-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>moon_landing</strong><span class="gray"><strong>.</strong></span><strong>wday</strong>        <span class="blue1"><strong><em># wday = weekday</em></strong></span>
+<span class="green"><strong>=&gt; 0</strong></span></pre>
+</div>
+<p class="noindent">Here <code><span class="green"><strong>wday</strong></span></code> is the “weekday” method, and the <code><span class="green"><strong>0</strong></span></code> index indicates that the Moon landing happened on the “zeroth” (first) day of the week.</p>
+<p class="indent">Even though the official international standard is that <a href="https://www.timeanddate.com/calendar/days/monday.html">Monday is the first day</a>, Ruby follows the American convention of using Sunday instead. We can get the name of the day by making an array of strings for the days of the week (assigned to an ALL CAPS identifier, indicating a constant), and then using <code><span class="green"><strong>wday</strong></span></code> as an index in the array with the square bracket notation (<a href="ch03.xhtml#sec3_1">Section 3.1</a>):</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0088-04" id="f0088-04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>DAYNAMES</strong></span> <span class="gray"><strong>=</strong></span> <strong><span class="gray">[</span><span class="brown1"><strong>"Sunday"</strong></span>, <span class="brown1"><strong>"Monday"</strong></span>, <span class="brown1"><strong>"Tuesday"</strong></span>, <span class="brown1"><strong>"Wednesday"</strong></span>,</strong>
+<span class="blue"><strong>?&gt;</strong></span>             <span class="brown1"><strong>"Thursday"</strong></span>, <span class="brown1"><strong>"Friday"</strong></span>, <span class="brown1"><strong>"Saturday"</strong></span><span class="gray"><strong>]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><strong>moon_landing</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+<span class="green"><strong>=&gt; "Sunday"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday<span class="gray">]</span></strong>
+<span class="green"><strong>=&gt; "Tuesday"</strong></span><span epub:type="pagebreak" id="page_89"></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_90"></span>(These day names are actually available as part of the <code><span class="green"><strong>Date</strong></span></code> <a href="https://ruby-doc.org/stdlib-2.5.0/libdoc/date/rdoc/Date.html">class</a> via <code><span class="green"><strong>Date::-DAYNAMES</strong></span></code>. You just have to run <code><span class="green"><strong>require 'date'</strong></span></code> to load the class.) Your results for the last line will vary, of course, unless you happen to be reading this on a Tuesday.</p>
+<p class="indent">As a final exercise, let’s update our Sinatra hello app from <a href="ch01.xhtml#ch01ex08">Listing 1.8</a> with a greeting including the day of the week. The code appears in <a href="ch04.xhtml#ch04ex02">Listing 4.2</a>, with the result as shown in <a href="ch04.xhtml#ch04fig03">Figure 4.3</a>.</p>
+<figure class="figure" id="ch04fig03">
+<img src="graphics/f0091-01.jpg" alt="Images" width="878" height="677"/>
+<figcaption>
+<p class="title-f">Figure 4.3: A greeting customized just for today.</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex02"><strong>Listing 4.2:</strong> Adding a greeting customized to the day of the week.<br/><code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0090-01" id="f0090-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="brown"><strong>DAYNAMES</strong></span> <span class="gray"><strong>= [</strong></span><strong><span class="brown1">"Sunday"</span>, <span class="brown1">"Monday"</span>, <span class="brown1">"Tuesday"</span>, <span class="brown1">"Wednesday"</span>,</strong>
+              <span class="brown1"><strong>"Thursday"</strong></span><strong>,</strong><span class="brown1"> <strong>"Friday"</strong></span>, <span class="brown1"><strong>"Saturday"</strong></span><span class="gray"><strong>]</strong></span>
+  <strong>dayname</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span> <span class="s-pink"><strong>#{</strong></span><strong>dayname</strong><span class="s-pink"><strong>}</strong></span><span class="brown1"><strong>."</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Note that we’ve switched the greeting in <a href="ch04.xhtml#ch04ex02">Listing 4.2</a> from a single- to a double-quoted string so that we can interpolate the <code><span class="green"><strong>dayname</strong></span></code> value into the greeting.</p>
+<section>
+<h4 class="h4" id="sec4_2_1">4.2.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Use Ruby to calculate how many seconds after the Moon landing you were born. (Or maybe you were even born <em>before</em> the Moon landing—in which case, lucky you! I hope you got to watch it on TV.)</p></li>
+<li><p class="num">Show that <a href="ch04.xhtml#ch04ex02">Listing 4.2</a> works even if you pull <code><span class="green"><strong>DAYNAMES</strong></span></code> out of the <code><span class="green"><strong>get</strong></span></code>, as shown in <a href="ch04.xhtml#ch04ex03">Listing 4.3</a>. (Remember to restart the server.) Then use the <code><span class="green"><strong>Date</strong></span></code> class to eliminate the variable entirely (<a href="ch04.xhtml#ch04ex04">Listing 4.4</a>). (Note that <code><span class="green"><strong>date</strong></span></code> is automatically required by <code><span class="green"><strong>sinatra</strong></span></code>, so there’s no need to include it separately.)<span epub:type="pagebreak" id="page_91"></span></p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex03"><span epub:type="pagebreak" id="page_92"></span><strong>Listing 4.3:</strong> Pulling <code><span class="green"><strong>DAYNAMES</strong></span></code> out of <code><span class="green"><strong>get</strong></span></code>.<br/><code><em>hello_app.rb</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0092-01" id="f0092-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span> <span class="brown1"><strong>'sinatra'</strong></span>
+
+<span class="brown"><strong>DAYNAMES</strong></span> <span class="gray"><strong>=[</strong></span><strong><span class="brown1">"Sunday"</span>, <span class="brown1">"Monday"</span>, <span class="brown1">"Tuesday"</span>, <span class="brown1">"Wednesday"</span>,</strong>
+           <span class="brown1"><strong>"Thursday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Friday"</strong></span><strong>,</strong> <span class="brown1"><strong>"Saturday"</strong></span><strong><span class="gray">]</span></strong>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <strong>dayname</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span> <span class="s-pink"><strong>#{</strong></span><strong>dayname</strong><span class="s-pink"><strong>}</strong></span><span class="brown1"><strong>."</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex04"><strong>Listing 4.4:</strong> Using the built-in <span class="green"><strong><code>DAYNAMES</code></strong></span>.<br/><em><code>hello_app.rb</code></em></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0092-02" id="f0092-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="green1"><strong>require</strong></span><span class="brown1"> <strong>'sinatra'</strong></span>
+
+<strong>get</strong> <span class="brown1"><strong>'/'</strong></span> <span class="green1"><strong>do</strong></span>
+  <span class="bg-y"><strong>dayname</strong> <span class="gray"><strong>=</strong></span> <span class="brown"><strong>Date</strong></span><span class="gray"><strong>::</strong></span><span class="brown"><strong>DAYNAMES</strong></span><span class="gray"><strong>[</strong></span><span class="brown"><strong>Time</strong></span><span class="gray"><strong>.</strong></span><strong>now</strong><span class="gray"><strong>.</strong></span><strong>wday</strong><span class="gray"><strong>]</strong></span></span>
+  <span class="brown1"><strong>"Hello, world! Happy</strong></span> <span class="s-pink"><strong>#{</strong></span><strong>dayname</strong><span class="s-pink"><strong>}</strong></span><span class="brown1"><strong>."</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_3">4.3 Regular Expressions</h3>
+<p class="noindent">Ruby has full support for <em><a href="https://ruby-doc.org/docs/ruby-doc-bundle/UsersGuide/rg/regexp.html">regular expressions</a></em>, often called <em>regexes</em> or <em>regexps</em> for short, which are a powerful mini-language for matching patterns in text. A <a href="https://m.xkcd.com/208/">full mastery of regular expressions</a> is beyond the scope of this book (and perhaps beyond the scope of human ability), but the good news is that there are many resources available for learning about them incrementally. (Some such resources are mentioned in “<a href="https://www.learnenough.com/r/learn_enough_command_line/inspecting_files/grepping#sec-grepping">Grepping</a>” in <em><a href="https://www.learnenough.com/command-line">Learn Enough Command Line to Be Dangerous</a></em> and “<a href="https://www.learnenough.com/r/learn_enough_text_editor/advanced_text_editing/editing_projects#sec-global_find_and_replace">Global find and replace</a>” in <em><a href="https://www.learnenough.com/text-editor">Learn Enough Text Editor to Be Dangerous</a></em>.) The most important thing to know about is the general idea of regular expressions; you can fill in the details as you go along.</p>
+<p class="indent">Regexes are notoriously terse and error-prone; as programmer <a href="https://en.wikipedia.org/wiki/Jamie_Zawinski">Jamie Zawinski famously said</a>:</p>
+<p class="blockquote"><span epub:type="pagebreak" id="page_93"></span>Some people, when confronted with a problem, think “I know, I’ll use regular expressions.” Now they have two problems.</p>
+<p class="noindent">Luckily, this situation is greatly ameliorated by web applications like <a href="http://rubular.com/">Rubular</a>, which let us build up regexes interactively (<a href="ch04.xhtml#ch04fig04">Figure 4.4</a>). Moreover, such resources typically include a quick reference to assist us in finding the code for matching particular patterns (<a href="ch04.xhtml#ch04fig05">Figure 4.5</a>).</p>
+<figure class="figure" id="ch04fig04">
+<img src="graphics/f0093-01.jpg" alt="Images" width="879" height="567"/>
+<figcaption>
+<p class="title-f">Figure 4.4: An <a href="http://rubular.com/">online regex builder</a>.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="ch04fig05">
+<img src="graphics/f0094-01.jpg" alt="Images" width="891" height="252"/>
+<figcaption>
+<p class="title-f">Figure 4.5: A close-up of the <a href="http://rubular.com/">regex reference</a>.</p>
+</figcaption>
+</figure>
+<p class="indent">Rubular is Ruby-specific, but you can also use a site like the <a href="https://regex101.com/">regex101</a> regex tester <a href="https://www.learnenough.com/r/learn_enough_javascript/other_native_objects/regular_expressions#sec-regular_expressions">used</a> in <em><a href="https://www.learnenough.com/javascript">Learn Enough JavaScript to Be Dangerous</a></em>. Regex101 doesn’t have Ruby-specific support, but the “PHP” option should be good enough for most applications. In practice, languages differ little in their implementation of regular expressions, but it’s wise to use the correct language-specific settings when available, and always to double-check when moving a regex to a different language.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_94"></span>Let’s take a look at some simple regex matches in Ruby. A basic regex consists of a sequence of characters that matches a particular pattern. We can create a new regex using the <code><span class="green"><strong>new</strong></span></code> function (<a href="ch04.xhtml#sec4_2">Section 4.2</a>) on the <a href="https://ruby-doc.org/core-2.5.0/Regexp.html">Regexp object</a>, but it’s far more common to use the literal constructor <code><span class="green"><strong>/.../</strong></span></code>. For example, here’s a regex that matches standard American <a href="https://en.wikipedia.org/wiki/ZIP_Code">ZIP codes</a> (<a href="ch04.xhtml#ch04fig06">Figure 4.6</a>),<sup><a id="fn4_6" href="ch04.xhtml#fn4_6a">6</a></sup> consisting of five digits in a row:</p>
+<p class="footnote"><sup><a id="fn4_6a" href="ch04.xhtml#fn4_6">6</a></sup>Image courtesy of 4kclips/123RF.</p>
+<figure class="figure" id="ch04fig06">
+<img src="graphics/f0095-01.jpg" alt="Images" width="892" height="554"/>
+<figcaption>
+<p class="title-f">Figure 4.6: 90210 (Beverly Hills) is one of the most expensive ZIP codes in America.</p>
+</figcaption>
+</figure>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>zip_code</strong> <span class="gray"><strong>=</strong></span> <span class="s-pink"><strong>/\d{5}/</strong></span></pre>
+</div>
+<p class="noindent">If you use regular expressions a lot, eventually you’ll memorize many of these rules, but you can always look them up in a quick reference (<a href="ch04.xhtml#ch04fig05">Figure 4.5</a>).</p>
+<p class="indent">Now let’s see how to tell if a string matches a regex. Strings come with a <code><span class="green"><strong>match</strong></span></code> method that lets us match to a regex:<sup><a id="fn4_7" href="ch04.xhtml#fn4_7a">7</a></sup></p>
+<p class="footnote"><sup><a id="fn4_7a" href="ch04.xhtml#fn4_7">7</a></sup>The same method exists on <code><span class="green"><strong>Regex</strong></span></code>, so in fact you can reverse the order of the regex and string and it will still work. In my experience, the vast majority of Ruby developers use the <code><span class="green"><strong>String#match</strong></span></code> method most of the time.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0094-02" id="f0094-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"no match"</strong></span><span class="gray"><strong>.</strong></span><strong>match(zip_code)</strong>
+<span class="green"><strong>=&gt; nil</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"Beverly Hills 90210"</strong></span><span class="gray"><strong>.</strong></span><strong>match(zip_code)</strong>
+<span class="green"><strong>=&gt; #&lt;MatchData "90210"&gt;</strong></span></pre>
+</div>
+<p class="noindent">The second result here is a somewhat cryptic “<code><span class="green"><strong>MatchData</strong></span></code>” object. In practice, its main use is in boolean contexts, like this:<span epub:type="pagebreak" id="page_95"></span></p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0096-01" id="f0096-01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_96"></span><span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Beverly Hills 90210"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"It's got a ZIP code!"</strong></span> <span class="green1"><strong>if</strong></span> <strong>s</strong><span class="gray"><strong>.</strong></span><strong>match(zip_code)</strong>
+<span class="green"><strong>It's got a ZIP code!</strong></span></pre>
+</div>
+<p class="indent">Another common and instructive regex operation involves creating an array of <em>all</em> the matches. We’ll start by defining a longer string, one with two ZIP codes (<a href="ch04.xhtml#ch04fig07">Figure 4.7</a>):<sup><a id="fn4_8" href="ch04.xhtml#fn4_8a">8</a></sup></p>
+<p class="footnote"><sup><a id="fn4_8a" href="ch04.xhtml#fn4_8">8</a></sup>Image courtesy of kitleong/123RF.</p>
+<figure class="figure" id="ch04fig07">
+<img src="graphics/f0097-01.jpg" alt="Images" width="891" height="669"/>
+<figcaption>
+<p class="title-f">Figure 4.7: 91125 is a dedicated ZIP code for the campus of the California Institute of Technology (<a href="http://www.caltech.edu/">Caltech</a>).</p>
+</figcaption>
+</figure>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0096-02" id="f0096-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong> <span class="gray"><strong>=</strong></span>  <span class="brown1"><strong>"Beverly Hills 90210 was a '90s TV show set in Los Angeles."</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong> <span class="gray"><strong>+=</strong></span> <span class="brown1"><strong>" 91125 is another ZIP code in the Los Angeles area."</strong></span>
+<span class="green"><strong>=&gt; "Beverly Hills 90210 was a '90s TV show set in Los Angeles. 91125 is another</strong></span>
+ <span class="green"><strong>ZIP code in the Los Angeles area."</strong></span></pre>
+</div>
+<p class="noindent">You should be able to use your technical sophistication (<a href="ch01.xhtml#box1_1">Box 1.1</a>) to infer what the <code><span class="green"><strong>+=</strong></span></code> operator does here if you haven’t seen it before (which might involve doing a <a href="https://www.google.com/search?q=ruby%2Bplus%2Bequals">quick Google search</a>).</p>
+<p class="indent">To find out whether the string matches the regex, we can use the <code><span class="green"><strong>String#-scan</strong></span></code> method to find an array of matches:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong><span class="gray"><strong>.</strong></span><strong>scan(zip_code)</strong>
+<span class="green"><strong>=&gt; ["90210", "91125"]</strong></span></pre>
+</div>
+<p class="noindent">It’s also easy to use a literal regex directly, such as this <code><span class="green"><strong>scan</strong></span></code> to find all multi-letter words that are in ALL CAPS:</p>
+<div class="sidebar">
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>s</strong><span class="gray"><strong>.</strong></span><strong>scan(<span class="s-pink">/[A-Z]{2,}/</span>)</strong>
+<span class="green"><strong>=&gt; ["TV", "ZIP"]</strong></span></pre>
+</div>
+<p class="noindent">See if you can find the rules in <a href="ch04.xhtml#ch04fig05">Figure 4.5</a> used to make the regex above.<span epub:type="pagebreak" id="page_97"></span></p>
+<section>
+<h4 class="h4" id="sec4_3_1"><span epub:type="pagebreak" id="page_98"></span>4.3.1 Splitting on Regexes</h4>
+<p class="noindent">Our final example of regexes combines the power of pattern matching with the <code><span class="green"><strong>split</strong></span></code> method we saw in <a href="ch03.xhtml#sec3_1">Section 3.1</a>. In that section, we saw how to split on spaces, like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0098-01" id="f0098-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"ant bat cat duck"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>" "</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ['ant', 'bat', 'cat', 'duck']</strong></span></pre>
+</div>
+<p class="indent">We can obtain the same result in a more robust way by splitting on whitespace. Consulting the quick reference (<a href="ch04.xhtml#ch04fig05">Figure 4.5</a>), we find that the regex for whitespace is <code><span class="green"><strong>\s</strong></span></code>, and the way to indicate “one or more” is the plus sign <code><span class="green"><strong>+</strong></span></code>. Thus, we can split on whitespace as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0098-02" id="f0098-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"ant bat cat duck"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="s-pink"><strong>/\s+/</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["ant", "bat", "cat", "duck"]</strong></span></pre>
+</div>
+<p class="noindent">The reason this is so nice is that now we can get the same result if the strings are separated by multiple spaces, tabs, newlines, etc.:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0098-03" id="f0098-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="brown1"><strong>"ant</strong></span>    <span class="brown1"><strong>bat</strong></span><span class="s-pink2"><strong>\t</strong></span><span class="brown1"><strong>cat</strong></span><span class="s-pink2"><strong>\n</strong></span><span class="brown1"><strong>duck"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="s-pink"><strong>/\s+/</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["ant", "bat", "cat", "duck"]</strong></span></pre>
+</div>
+<p class="noindent">As we saw in <a href="ch03.xhtml#sec3_1">Section 3.1</a>, this pattern is so useful that it’s actually the default behavior for <code><span class="green"><strong>split</strong></span></code>. When we call <code><span class="green"><strong>split</strong></span></code> with zero arguments, Ruby splits on whitespace automatically:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0098-04" id="f0098-04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span>  <span class="brown1"><strong>"ant</strong></span>    <span class="brown1"><strong>bat</strong></span><span class="s-pink2"><strong>\t</strong></span><span class="brown1"><strong>cat</strong></span><span class="s-pink2"><strong>\n</strong></span><span class="brown1"><strong>duck"</strong></span><span class="gray"><strong>.</strong></span><strong>split</strong>
+<span class="green"><strong>=&gt; ["ant", "bat", "cat", "duck"]</strong></span></pre>
+</div>
+</section>
+<section>
+<h4 class="h4" id="sec4_3_2">4.3.2 Exercises</h4>
+<ol class="num">
+<li><p class="num">Write a regex that matches the extended-format ZIP code consisting of five digits, a hyphen, and a four-digit extension (such as 10118-0110).</p>
+<p class="number-p"><span epub:type="pagebreak" id="page_99"></span>Confirm that it works using <code><span class="green"><strong>String#match</strong></span></code> and the caption in <a href="ch04.xhtml#ch04fig08">Figure 4.8</a>.<sup><a id="fn4_9" href="ch04.xhtml#fn4_9a">9</a></sup></p>
+<p class="footnote"><sup><a id="fn4_9a" href="ch04.xhtml#fn4_9">9</a></sup>Image courtesy of jordi2r/123RF.</p>
+<figure class="figure" id="ch04fig08">
+<img src="graphics/f0099-01.jpg" alt="Images" width="891" height="595"/>
+<figcaption>
+<p class="title-f">Figure 4.8: ZIP code 10118-0110 (the <a href="https://en.wikipedia.org/wiki/Empire_State_Building">Empire State Building</a>).</p>
+</figcaption>
+</figure></li>
+<li><p class="num">Write a regex that splits only on newlines. Such regexes are useful for splitting a block of text into separate lines. In particular, test your regex by pasting the poem in <a href="ch04.xhtml#ch04ex05">Listing 4.5</a> into the console and using <code><span class="green"><strong>sonnet.-split(/your regex/)</strong></span></code>. What is the length of the resulting array?</p></li>
+</ol>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex05"><strong>Listing 4.5:</strong> Some text with newlines.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f0099-02" id="f0099-02a">Click here to view code image</a></p>
+<pre class="pre1"><strong>sonnet</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Let me not to the marriage of true minds
+Admit impediments. Love is not love</strong></span>
+<span epub:type="pagebreak" id="page_100"></span><span class="brown1"><strong>Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no, it is an ever-fixed mark
+That looks on tempests and is never shaken
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come:
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+  If this be error and upon me proved,
+  I never writ, nor no man ever loved."</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_4">4.4 Hashes</h3>
+<p class="noindent">Our final example of a simple Ruby data type is a <em>hash</em>, also called an <em>associative array</em>. You can think of hashes as being like regular arrays but with generic labels rather than integers as indices, so instead of <code><span class="green"><strong>array[0] = 0</strong></span></code> we could have <code><span class="green"><strong>hash["name"] = "Michael"</strong></span></code>. Each element is thus a pair of values: a label (the <em>key</em>) and an element of any type (the <em>value</em>). These elements are also known as <em>key–value pairs</em>.</p>
+<p class="indent">The most familiar choice for key labels is strings (<a href="ch02.xhtml#ch02">Chapter 2</a>); indeed, this is by far the most common choice in languages that support associative arrays. We’ll thus start by creating hashes using string keys, but be alert—we’ll make a change in short order. As a simple example, let’s create an object to store the first and last names of a user, such as we might have in a web application:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0100-02" id="f0100-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong> <span class="gray"><strong>=</strong></span> <strong>{}</strong>                            <span class="blue1"><strong><em># {} is an empty hash.</em></strong></span>
+<span class="green"><strong>=&gt; {}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="brown1"><strong>"first_name"</strong></span><span class="gray"><strong>] =</strong></span> <span class="brown1"><strong>"Michael"</strong></span>       <span class="blue1"><strong><em># Key "first_name", value "Michael"</em></strong></span>
+<span class="green"><strong>=&gt; "Michael"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="brown1"><strong>"last_name"</strong></span><span class="gray"><strong>] =</strong></span> <span class="brown1"><strong>"Hartl"</strong></span>          <span class="blue1"><strong><em># Key "last_name", value "Hartl"</em></strong></span>
+<span class="green"><strong>=&gt; "Hartl"</strong></span></pre>
+</div>
+<p class="noindent">As you can see, an empty hash is represented by curly braces, and we can assign values using the same square bracket syntax as for arrays. We can retrieve values in the same way:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0101-01" id="f0101-01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_101"></span><span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="brown1"><strong>"first_name"</strong></span><span class="gray"><strong>]</strong></span>         <span class="blue1"><strong><em># Element access is like arrays</em></strong></span>
+<span class="green"><strong>=&gt; "Michael"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="brown1"><strong>"last_name"</strong></span><span class="gray"><strong>]</strong></span>
+<span class="green"><strong>=&gt; "Hartl"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="brown1"><strong>"nonexistent"</strong></span><span class="gray"><strong>]</strong></span>
+<span class="green"><strong>=&gt; nil</strong></span></pre>
+</div>
+<p class="noindent">Note in the last example that hashes return <code><span class="green"><strong>nil</strong></span></code> when the key doesn’t exist. This behavior is especially convenient in a boolean context, as we’ll see in <a href="ch04.xhtml#sec4_5">Section 4.5</a>.</p>
+<p class="indent">Instead of defining hashes one item at a time using square brackets, it’s easy to use a literal representation with keys and values separated by <code><span class="green"><strong>=&gt;</strong></span></code>, called a “hashrocket”:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0101-02" id="f0101-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong>
+<span class="green"><strong>=&gt; {"first_name"=&gt;"Michael", "last_name"=&gt;"Hartl"}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>moonman</strong><span class="gray"> <strong>=</strong></span> <strong>{</strong><span class="brown1"> <strong>"first_name"</strong></span><span class="gray"> <strong>=&gt;</strong></span> <span class="brown1"><strong>"Buzz"</strong></span><strong>,</strong> <span class="brown1"><strong>"last_name"</strong></span><span class="gray"> <strong>=&gt;</strong></span><span class="brown1"> <strong>"Aldrin"</strong></span> <strong>}</strong>
+<span class="green"><strong>=&gt; {"first_name"=&gt;"Buzz", "last_name"=&gt;"Aldrin"}</strong></span></pre>
+</div>
+<p class="noindent">Here I’ve used the usual Ruby convention of putting an extra space at the two ends of the hash—a convention ignored by the console output. (I don’t know why the spaces are conventional; probably some early influential Ruby programmer liked the look of the extra spaces, and the convention stuck.)</p>
+<section>
+<h4 class="h4" id="sec4_4_1">4.4.1 Symbols</h4>
+<p class="noindent">So far we’ve used strings as hash keys, but nowadays it is more common to use <em>symbols</em> instead. Symbols look kind of like strings, but are prefixed with a colon instead of surrounded by quotes. For example, <code><span class="green"><strong>:name</strong></span></code> is a symbol. You can think of symbols as being strings without all the extra baggage:<sup><a id="fn4_10" href="ch04.xhtml#fn4_10a">10</a></sup></p>
+<p class="footnote"><sup><a id="fn4_10a" href="ch04.xhtml#fn4_10">10</a></sup>As a result of having less baggage, symbols are easier to compare to each other; strings need to be compared character by character, while symbols can be compared all in one go. This makes them ideal for use as hash keys.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0102-01" id="f0102-01a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_102"></span><span class="blue"><strong>&gt;&gt;</strong></span><span class="brown1"> <strong>"name"</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>' '</strong></span><strong>)</strong>
+<span class="green"><strong>=&gt; ["n", "a", "m", "e"]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="blue"><strong>:name</strong></span><span class="gray"><strong>.</strong></span><strong>split(</strong><span class="brown1"><strong>' '</strong></span><strong>)</strong>
+<span class="green"><strong>undefined method `split' for :name:Symbol (NoMethodError)</strong></span></pre>
+</div>
+<p class="noindent">Symbols are a special Ruby data type shared with very few other languages, so they may seem weird at first, but Ruby uses them a lot, so you’ll get used to them fast. Unlike with strings, not all characters are valid, though you can get them to work using quotes if you’re willing to have them kind of look like strings:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0102-02" id="f0102-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="blue"><strong>:foo</strong></span><span class="gray"><strong>-</strong></span><strong>bar</strong>
+<span class="green"><strong>undefined local variable or method `bar' for main:Object (NameError)</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>:</strong><span class="gray"><strong>2</strong></span><strong>foo</strong>
+<span class="green"><strong>syntax error, unexpected integer literal, expecting literal content or</strong></span>
+<span class="green"><strong>terminator or tSTRING_DBEG or tSTRING_DVAR (SyntaxError)</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="blue"><strong>:"foo-bar"</strong></span>
+<span class="green"><strong>=&gt; :"foo-bar"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="blue"><strong>:"2foo"</strong></span>
+<span class="green"><strong>=&gt; :"2foo"</strong></span></pre>
+</div>
+<p class="noindent">As long as you start your symbols with a letter and stick to normal word characters, you should be fine.</p>
+<p class="indent">In terms of symbols as hash keys, we can define a <code><span class="green"><strong>user</strong></span></code> hash as follows:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0102-03" id="f0102-03a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong> <span class="gray"><strong>=</strong></span> <strong>{</strong> <span class="blue"><strong>:name</strong></span><span class="gray"> <strong>=&gt;</strong></span><span class="brown1"> <strong>"Michael Hartl"</strong></span>, <span class="blue"><strong>:email</strong></span><span class="gray"> <strong>=&gt;</strong></span><span class="brown1"> <strong>"michael@example.com"</strong></span> <strong>}</strong>
+<span class="green"><strong>=&gt; {:name=&gt;"Michael Hartl", :email=&gt;"michael@example.com"}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="blue"><strong>:name</strong></span><span class="gray"><strong>]</strong></span>              <span class="blue1"><strong><em># Access the value corresponding to :name.</em></strong></span>
+<span class="green"><strong>=&gt; "Michael Hartl"</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong><span class="gray"><strong>[</strong></span><span class="blue"><strong>:password</strong></span><span class="gray"><strong>]</strong></span>          <span class="blue1"><strong><em># Access the value of an undefined key.</em></strong></span>
+<span class="green"><strong>=&gt; nil</strong></span></pre>
+</div>
+<p class="indent">Because it’s so common for hashes to use symbols as keys, Ruby supports a custom syntax just for this special case:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0102-04" id="f0102-04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>user</strong> <span class="gray"><strong>=</strong></span> <strong>{</strong> <span class="green1"><strong>name</strong></span><strong>:</strong> <span class="brown1"><strong>"Michael Hartl"</strong></span><strong>,</strong> <span class="blue"><strong>email</strong></span><strong>:</strong> <span class="brown1"><strong>"michael@example.com"</strong></span> <strong>}</strong>
+<span class="green"><strong>=&gt; {:name=&gt;"Michael Hartl", :email=&gt;"michael@example.com"}</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_103"></span>The second syntax replaces the symbol/hashrocket combination with the name of the key followed by a colon and a value:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0103-01" id="f0103-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>{</strong> <span class="green1"><strong>name</strong></span><strong>:</strong> <span class="brown1"><strong>"Michael Hartl"</strong></span><strong>,</strong> <span class="blue"><strong>email</strong></span><strong>:</strong> <span class="brown1"><strong>"michael@example.com"</strong></span> <strong>}</strong></pre>
+</div>
+<p class="noindent">This construction more closely follows the hash notation in other languages (such as JavaScript) and enjoys growing popularity in the Ruby community. Because both hash syntaxes are still in common use, though, it’s essential to be able to recognize both of them. Unfortunately, this can be confusing, especially since <code><span class="green"><strong>:name</strong></span></code> is valid on its own (as a standalone symbol) but <code><span class="green"><strong>name:</strong></span></code> has no meaning by itself. The bottom line is that <code><span class="green"><strong>:name =&gt;</strong></span></code> and <code><span class="green"><strong>name:</strong></span></code> are effectively the same <em>only inside literal hashes</em>, so that</p>
+<div class="sidebar">
+<pre class="pre1"><strong>{</strong> <span class="blue"><strong>:name</strong></span> <span class="gray"><strong>=&gt;</strong></span> <span class="brown1"><strong>"Michael Hartl"</strong></span> <strong>}</strong></pre>
+</div>
+<p class="noindent">and</p>
+<div class="sidebar">
+<pre class="pre1"><strong>{</strong> <span class="green1"><strong>name</strong></span><strong>:</strong> <span class="brown1"><strong>"Michael Hartl"</strong></span> <strong>}</strong></pre>
+</div>
+<p class="noindent">are equivalent, but otherwise you need to use <code><span class="green"><strong>:name</strong></span></code> (with the colon coming first) to denote a symbol.</p>
+</section>
+<section>
+<h4 class="h4" id="sec4_4_2">4.4.2 Nested Hashes</h4>
+<p class="noindent">Hash values can be virtually anything, even other hashes, as seen in <a href="ch04.xhtml#ch04ex06">Listing 4.6</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex06"><strong>Listing 4.6:</strong> Nested hashes.</p>
+<p class="codelink"><a href="ch04_images.xhtml#f0103-04" id="f0103-04a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>params</strong> <span class="gray"><strong>=</strong></span> <strong>{}</strong>        <span class="blue1"><strong><em># Define a hash called 'params' (short for 'parameters').</em></strong></span>
+<span class="green"><strong>=&gt; {}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>params</strong><span class="gray"><strong>[</strong></span><span class="blue"><strong>:user</strong></span><span class="gray"><strong>] =</strong></span> <strong>{</strong> <span class="green1"><strong>name</strong></span><strong>:</strong> <span class="brown1"><strong>"Michael Hartl"</strong></span><strong>,</strong> <span class="blue"><strong>email</strong></span><strong>:</strong> <span class="brown1"><strong>"mhartl@example.com"</strong></span> <strong>}</strong>
+<span class="green"><strong>=&gt; {:name=&gt;"Michael Hartl", :email=&gt;"mhartl@example.com"}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>params</strong>
+<span class="green"><strong>=&gt; {:user=&gt;{:name=&gt;"Michael Hartl", :email=&gt;"mhartl@example.com"}}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>params</strong><span class="gray"><strong>[</strong></span><span class="blue"><strong>:user</strong></span><span class="gray"><strong>][</strong></span><span class="blue"><strong>:email</strong></span><span class="gray"><strong>]</strong></span>
+<span class="green"><strong>=&gt; "mhartl@example.com"</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_104"></span>These sorts of hashes-of-hashes, or <em>nested hashes</em>, are heavily used in Ruby web development (as seen in the <em><a href="https://www.railstutorial.org/book">Ruby on Rails Tutorial</a></em>).</p>
+<section>
+<h5 class="h5" id="sec4_4_2_1"><strong>Hash Iteration</strong></h5>
+<p class="noindent">As with arrays (<a href="ch03.xhtml#ch03">Chapter 3</a>), hashes respond to the <code><span class="green"><strong>each</strong></span></code> method. For example, consider a hash named <code><span class="green"><strong>flash</strong></span></code> with keys for two conditions, <code><span class="green"><strong>:success</strong></span></code> and <code><span class="green"><strong>:danger</strong></span></code>:<sup><a id="fn4_11" href="ch04.xhtml#fn4_11a">11</a></sup></p>
+<p class="footnote"><sup><a id="fn4_11a" href="ch04.xhtml#fn4_11">11</a></sup>The <code><span class="green"><strong>flash</strong></span></code> hash is a <a href="https://www.railstutorial.org/book/sign_up#sec-the_flash">commonly used part</a> of the Rails framework.</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0104-01" id="f0104-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <strong>flash</strong> <span class="gray"><strong>=</strong></span> <strong>{</strong> <span class="blue"><strong>success</strong></span><strong>:</strong> <span class="brown1"><strong>"It worked!"</strong></span><strong>,</strong> <span class="blue"><strong>danger</strong></span><strong>:</strong> <span class="brown1"><strong>"It failed."</strong></span> <strong>}</strong>
+<span class="green"><strong>=&gt; {:success=&gt;"It worked!", :danger=&gt;"It failed."}</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <strong>flash</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>key, value</strong><span class="gray"><strong>|</strong></span>
+<span class="blue"><strong>?&gt;</strong></span>   <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"Key</strong></span> <span class="s-pink"><strong>#{</strong></span><strong>key</strong><span class="gray"><strong>.</strong></span><strong>inspect<span class="s-pink">}</span></strong> <span class="brown1"><strong>has value</strong></span> <span class="s-pink"><strong>#{</strong></span><strong>value</strong><span class="gray"><strong>.</strong></span><strong>inspect<span class="s-pink">}"</span></strong>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>end</strong></span>
+<span class="green"><strong>Key :success has value "It worked!"</strong></span>
+<span class="green"><strong>Key :danger has value "It failed."</strong></span></pre>
+</div>
+<p class="noindent">Note that, while the <code><span class="green"><strong>each</strong></span></code> method for arrays takes a block with only one variable, <code><span class="green"><strong>each</strong></span></code> for hashes takes two, a <em>key</em> and a <em>value</em>. Thus, the <code><span class="green"><strong>each</strong></span></code> method for a hash iterates through the hash one key-value <em>pair</em> at a time.</p>
+<p class="indent">The last example uses the useful <code><span class="green"><strong>inspect</strong></span></code> method, which returns a string with a literal representation of the object it’s called on:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0104-02" id="f0104-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <strong>(</strong><span class="gray"><strong>1..5</strong></span><strong>)</strong><span class="gray"><strong>.</strong></span><strong>to_a</strong>              <span class="blue1"><strong><em># Put an array as a string.</em></strong></span>
+<span class="green1"><strong>1</strong></span>
+<span class="green1"><strong>2</strong></span>
+<span class="green1"><strong>3</strong></span>
+<span class="green1"><strong>4</strong></span>
+<span class="green1"><strong>5</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <strong>(<span class="gray">1..5</span>)</strong><span class="gray"><strong>.</strong></span><strong>to_a</strong><span class="gray"><strong>.</strong></span><strong>inspect</strong>     <span class="blue1"><strong><em># Put a literal array.</em></strong></span>
+<span class="green1"><strong>[1, 2, 3, 4, 5]</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="blue"><strong>:name</strong></span><strong>,</strong> <span class="blue"><strong>:name</strong></span><span class="gray"><strong>.</strong></span><strong>inspect</strong>
+<span class="green1"><strong>name</strong></span>
+<span class="green1"><strong>:name</strong></span>
+<span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>puts</strong></span> <span class="brown1"><strong>"It worked!"</strong></span><strong>,</strong> <span class="brown1"><strong>"It worked!"</strong></span><span class="gray"><strong>.</strong></span><strong>inspect</strong>
+<span class="green"><strong>It worked!</strong></span>
+<span class="green"><strong>"It worked!"</strong></span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_105"></span>By the way, using <code><span class="green"><strong>inspect</strong></span></code> to print an object is common enough that there’s a shortcut for it, the <code><span class="green"><strong>p</strong></span></code> function:<sup><a id="fn4_12" href="ch04.xhtml#fn4_12a">12</a></sup></p>
+<p class="footnote"><sup><a id="fn4_12a" href="ch04.xhtml#fn4_12">12</a></sup>There’s actually a subtle difference, which is that <code><span class="green"><strong>p</strong></span></code> returns the object being printed while <code><span class="green"><strong>puts</strong></span></code> always returns <code><span class="green"><strong>nil</strong></span></code>. (Thanks to reader Katarzyna Siwek for pointing this out.)</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0105-01" id="f0105-01a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>&gt;&gt;</strong></span> <span class="green1"><strong>p</strong></span> <span class="blue"><strong>:name</strong></span>                <span class="blue1"><strong><em># Same output as 'puts :name.inspect'</em></strong></span>
+<span class="green"><strong>:name</strong></span></pre>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="sec4_4_3">4.4.3 Exercises</h4>
+<ol class="num">
+<li><p class="num">Using symbols, define a hash for a <code><span class="green"><strong>user</strong></span></code> with three attributes (keys): <code><span class="green"><strong>username</strong></span></code>, <code><span class="green"><strong>password</strong></span></code>, and <code><span class="green"><strong>password_confirmation</strong></span></code>. How would you test if the password matches the confirmation?</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="sec4_5">4.5 Application: Unique Words</h3>
+<p class="noindent">Let’s apply the hashes from <a href="ch04.xhtml#sec4_4">Section 4.4</a> to a challenging exercise, consisting of our longest program so far. Our task is to extract all the unique words in a fairly long piece of text, and count how many times each word appears.</p>
+<p class="indent">Because the sequence of commands is rather extensive, our main tool will be a Ruby file (<a href="ch01.xhtml#sec1_3">Section 1.3</a>), executed using the <code><span class="green"><strong>ruby</strong></span></code> command. (We’re not going to make it a self-contained shell script as in <a href="ch01.xhtml#sec1_4">Section 1.4</a> because we don’t intend this to be a general-purpose utility program.) At each stage, I suggest using irb to execute the code interactively if you have any question about the effects of a given command.</p>
+<p class="indent">Let’s start by creating our file:</p>
+<div class="sidebar">
+<pre class="pre1"><code><span class="blue"><strong>$</strong></span> <strong>touch count.rb</strong></code></pre>
+</div>
+<p class="noindent">Now fill it with a string containing the text, which we’ll choose to be Shake-speare’s <a href="https://www.sparknotes.com/nofear/shakespeare/sonnets/sonnet_116/">Sonnet 116</a><sup><a id="fn4_13" href="ch04.xhtml#fn4_13a">13</a></sup> (<a href="ch04.xhtml#ch04fig09">Figure 4.9</a>),<sup><a id="fn4_14" href="ch04.xhtml#fn4_14a">14</a></sup> as borrowed from <a href="ch04.xhtml#ch04ex05">Listing 4.5</a> and shown <span epub:type="pagebreak" id="page_106"></span>again in <a href="ch04.xhtml#ch04ex07">Listing 4.7</a>.</p>
+<p class="footnote"><sup><a id="fn4_13a" href="ch04.xhtml#fn4_13">13</a></sup>Note that in the <a href="https://youtu.be/bt7OynPUIY8">original pronunciation</a> used in Shakespeare’s time, words like “love” and “remove” rhymed, as did “come” and “doom”.</p>
+<p class="footnote"><sup><a id="fn4_14a" href="ch04.xhtml#fn4_14">14</a></sup>Image courtesy of psychoshadowmaker/123RF.</p>
+<figure class="figure" id="ch04fig09">
+<img src="graphics/f0107-01.jpg" alt="Images" width="892" height="892"/>
+<figcaption>
+<p class="title-f">Figure 4.9: <a href="https://www.sparknotes.com/nofear/shakespeare/sonnets/sonnet_116/">Sonnet 116</a> compares love’s constancy to the <a href="https://en.wikipedia.org/wiki/Celestial_navigation">guide star</a> for a wandering <a href="https://en.wiktionary.org/wiki/bark#Etymology_3">bark</a> (ship).</p>
+</figcaption>
+</figure>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex07"><strong>Listing 4.7:</strong> Adding some text.<br/><code><em>count.rb</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0106-01" id="f0106-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>sonnet</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Let me not to the marriage of true minds</strong></span>
+<span class="brown1"><strong>Admit impediments. Love is not love</strong></span>
+<span class="brown1"><strong>Which alters when it alteration finds,</strong></span>
+<span class="brown1"><strong>Or bends with the remover to remove.</strong></span>
+<span class="brown1"><strong>O no, it is an ever-fixed mark</strong></span>
+<span class="brown1"><strong>That looks on tempests and is never shaken</strong></span>
+<span class="brown1"><strong>It is the star to every wand'ring bark,</strong></span>
+<span class="brown1"><strong>Whose worth's unknown, although his height be taken.</strong></span>
+<span class="brown1"><strong>Love's not time's fool, though rosy lips and cheeks</strong></span>
+<span class="brown1"><strong>Within his bending sickle's compass come:</strong></span>
+<span class="brown1"><strong>Love alters not with his brief hours and weeks,</strong></span>
+<span class="brown1"><strong>But bears it out even to the edge of doom.</strong></span>
+  <span class="brown1"><strong>If this be error and upon me proved,</strong></span>
+  <span class="brown1"><strong>I never writ, nor no man ever loved."</strong></span></pre>
+</div>
+<p class="indent">Next, we’ll initialize our hash, which we’ll call <code><span class="green"><strong>uniques</strong></span></code> because it will have an entry for each unique word in the text:</p>
+<div class="sidebar">
+<pre class="pre1"><strong>uniques</strong> <span class="gray"><strong>=</strong></span> <strong>{}</strong></pre>
+</div>
+<p class="noindent">For the purposes of this exercise, we’ll define a “word” as a run of one or more <em>word characters</em> (i.e., letters or numbers, though there are none of the latter in the present text). This match can be accomplished with a regular expression (<a href="ch04.xhtml#sec4_3">Section 4.3</a>), which includes a pattern (<code><span class="green"><strong>\w</strong></span></code>) for exactly this case (<a href="ch04.xhtml#ch04fig05">Figure 4.5</a>):</p>
+<div class="sidebar">
+<pre class="pre1"><strong>words</strong> <span class="gray"><strong>=</strong></span> <strong>sonnet</strong><span class="gray"><strong>.</strong></span><strong>scan(</strong><span class="s-pink"><strong>/\w+/</strong></span><strong>)</strong></pre>
+</div>
+<p class="noindent">This uses the <code><span class="green"><strong>scan</strong></span></code> method from <a href="ch04.xhtml#sec4_3">Section 4.3</a> to return an array of all the strings that match “one or more word characters in a row”. (Extending this pattern to include apostrophes (so that it matches, e.g., “wand’ring” as well) is left as an exercise (<a href="ch04.xhtml#sec4_5_1">Section 4.5.1</a>).)</p>
+<p class="indent">At this point, the file should look like <a href="ch04.xhtml#ch04ex08">Listing 4.8</a>.<span epub:type="pagebreak" id="page_107"></span></p>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex08"><span epub:type="pagebreak" id="page_108"></span><strong>Listing 4.8:</strong> Adding an object and the matching words.<br/><code><em>count.rb</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0108-01" id="f0108-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>sonnet</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Let me not to the marriage of true minds</strong></span>
+<span class="brown1"><strong>Admit impediments. Love is not love</strong></span>
+<span class="brown1"><strong>Which alters when it alteration finds,</strong></span>
+<span class="brown1"><strong>Or bends with the remover to remove.</strong></span>
+<span class="brown1"><strong>O no, it is an ever-fixed mark</strong></span>
+<span class="brown1"><strong>That looks on tempests and is never shaken</strong></span>
+<span class="brown1"><strong>It is the star to every wand'ring bark,</strong></span>
+<span class="brown1"><strong>Whose worth's unknown, although his height be taken.</strong></span>
+<span class="brown1"><strong>Love's not time's fool, though rosy lips and cheeks</strong></span>
+<span class="brown1"><strong>Within his bending sickle's compass come:</strong></span>
+<span class="brown1"><strong>Love alters not with his brief hours and weeks,</strong></span>
+<span class="brown1"><strong>But bears it out even to the edge of doom.</strong></span>
+  <span class="brown1"><strong>If this be error and upon me proved,</strong></span>
+  <span class="brown1"><strong>I never writ, nor no man ever loved."</strong></span>
+
+<strong>uniques</strong> <span class="gray"><strong>=</strong></span> <strong>{}</strong>
+<strong>words</strong> <span class="gray"><strong>=</strong></span> <strong>sonnet</strong><span class="gray"><strong>.</strong></span><strong>scan(</strong><span class="s-pink"><strong>/\w+/</strong></span><strong>)</strong></pre>
+</div>
+<p class="indent">Now for the heart of our program. We’re going to iterate through the <code><span class="green"><strong>words</strong></span></code> array (using the <code><span class="green"><strong>each</strong></span></code> method seen in <a href="ch03.xhtml#ch03ex04">Listing 3.4</a>) and do the following:</p>
+<ol class="num">
+<li><p class="num">If the word already has an entry in the <code><span class="green"><strong>uniques</strong></span></code> object, increment its count by <code><span class="green"><strong>1</strong></span></code>.</p></li>
+<li><p class="num">If the word doesn’t have an entry yet in <code><span class="green"><strong>uniques</strong></span></code>, initialize it to <code><span class="green"><strong>1</strong></span></code>.</p></li>
+</ol>
+<p class="noindent">The result, using the <code><span class="green"><strong>+=</strong></span></code> operator we met briefly in <a href="ch04.xhtml#sec4_3">Section 4.3</a>, looks like this:</p>
+<div class="sidebar">
+<pre class="pre1"><strong>words</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>word</strong><span class="gray"><strong>|</strong></span>
+  <span class="green1"><strong>if</strong></span> <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>]</strong></span>
+    <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>] += 1</strong></span>
+  <span class="green1"><strong>else</strong></span>
+    <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>]  = 1</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span></pre>
+</div>
+<p class="noindent">Note that we’re relying on <code><span class="green"><strong>uniques[word]</strong></span></code> being <code><span class="green"><strong>nil</strong></span></code> (<code><span class="green"><strong>false</strong></span></code> in a boolean context) if <code><span class="green"><strong>word</strong></span></code> isn’t yet a valid key.</p>
+<p class="indent">Finally, we’ll print out the result to the terminal:</p>
+<div class="sidebar">
+<pre class="pre1"><span epub:type="pagebreak" id="page_109"></span><span class="green1"><strong>puts</strong></span> <strong>uniques</strong></pre>
+</div>
+<p class="noindent">The full program (with added comments) appears as in <a href="ch04.xhtml#ch04ex09">Listing 4.9</a>.</p>
+<div class="ex-box">
+<p class="ex-caption" id="ch04ex09"><strong>Listing 4.9:</strong> A program to count words in text.<br/><code><em>count.rb</em></code></p>
+<p class="codelink"><a href="ch04_images.xhtml#f0109-01" id="f0109-01a">Click here to view code image</a></p>
+<pre class="pre1"><strong>sonnet</strong> <span class="gray"><strong>=</strong></span> <span class="brown1"><strong>"Let me not to the marriage of true minds</strong></span>
+<span class="brown1"><strong>Admit impediments. Love is not love</strong></span>
+<span class="brown1"><strong>Which alters when it alteration finds,</strong></span>
+<span class="brown1"><strong>Or bends with the remover to remove.</strong></span>
+<span class="brown1"><strong>O no, it is an ever-fixed mark</strong></span>
+<span class="brown1"><strong>That looks on tempests and is never shaken</strong></span>
+<span class="brown1"><strong>It is the star to every wand'ring bark,</strong></span>
+<span class="brown1"><strong>Whose worth's unknown, although his height be taken.</strong></span>
+<span class="brown1"><strong>Love's not time's fool, though rosy lips and cheeks</strong></span>
+<span class="brown1"><strong>Within his bending sickle's compass come:</strong></span>
+<span class="brown1"><strong>Love alters not with his brief hours and weeks,</strong></span>
+<span class="brown1"><strong>But bears it out even to the edge of doom.</strong></span>
+  <span class="brown1"><strong>If this be error and upon me proved,</strong></span>
+  <span class="brown1"><strong>I never writ, nor no man ever loved."</strong></span>
+
+<span class="blue1"><strong><em># Unique words</em></strong></span>
+<strong>uniques</strong> <span class="gray"><strong>=</strong></span> <strong>{}</strong>
+<span class="blue1"><strong><em># All words in the text</em></strong></span>
+<strong>words</strong> <span class="gray"><strong>=</strong></span> <strong>sonnet</strong><span class="gray"><strong>.</strong></span><strong>scan(</strong><span class="s-pink">/\w+/</span><strong>)</strong>
+
+<span class="blue1"><strong><em># Iterate through `words` and build up a hash of unique words.</em></strong></span>
+<strong>words</strong><span class="gray"><strong>.</strong></span><strong>each</strong> <span class="green1"><strong>do</strong></span> <span class="gray"><strong>|</strong></span><strong>word</strong><span class="gray"><strong>|</strong></span>
+  <span class="green1"><strong>if</strong></span> <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>]</strong></span>
+    <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>] += 1</strong></span>
+  <span class="green1"><strong>else</strong></span>
+    <strong>uniques</strong><span class="gray"><strong>[</strong></span><strong>word</strong><span class="gray"><strong>]  = 1</strong></span>
+  <span class="green1"><strong>end</strong></span>
+<span class="green1"><strong>end</strong></span>
+
+<span class="green1"><strong>puts</strong></span> <strong>uniques</strong></pre>
+</div>
+<p class="indent">The result of running <code><span class="green"><strong>count.rb</strong></span></code> in the terminal looks something like this:</p>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0109-02" id="f0109-02a">Click here to view code image</a></p>
+<pre class="pre1"><span class="blue"><strong>$</strong></span> <strong>ruby count.rb</strong>
+<span class="green1"><strong>{"Let"=&gt;1, "me"=&gt;2, "not"=&gt;4, "to"=&gt;4, "the"=&gt;4, "marriage"=&gt;1,</strong></span>
+<span class="green1"><strong>"of"=&gt;2, "true"=&gt;1, "minds"=&gt;1, "Admit"=&gt;1, "impediments"=&gt;1,</strong></span>
+<span class="green1"><strong>"Love"=&gt;3, "is"=&gt;4, "love"=&gt;1, "Which"=&gt;1, "alters"=&gt;2, "when"=&gt;1,</strong></span></pre>
+</div>
+<div class="sidebar">
+<p class="codelink"><a href="ch04_images.xhtml#f0110-02" id="f0110-02a">Click here to view code image</a></p>
+<pre class="pre1"><span epub:type="pagebreak" id="page_110"></span><span class="green"><strong>"it"=&gt;3, "alteration"=&gt;1, "finds"=&gt;1, "Or"=&gt;1, "bends"=&gt;1, "with"=&gt;2,</strong></span>
+<span class="green"><strong>"remover"=&gt;1, "remove"=&gt;1, "O"=&gt;1, "no"=&gt;2, "an"=&gt;1, "ever"=&gt;2,</strong></span>
+<span class="green"><strong>"fixed"=&gt;1, "mark"=&gt;1, "That"=&gt;1, "looks"=&gt;1, "on"=&gt;1, "tempests"=&gt;1,</strong></span>
+<span class="green"><strong>"and"=&gt;4, "never"=&gt;2, "shaken"=&gt;1, "It"=&gt;1, "star"=&gt;1, "every"=&gt;1,</strong></span>
+<span class="green"><strong>"wand"=&gt;1, "ring"=&gt;1, "bark"=&gt;1, "Whose"=&gt;1, "worth"=&gt;1, "s"=&gt;4,</strong></span>
+<span class="green"><strong>"unknown"=&gt;1, "although"=&gt;1, "his"=&gt;3, "height"=&gt;1, "be"=&gt;2,</strong></span>
+<span class="green"><strong>"taken"=&gt;1, "time"=&gt;1, "fool"=&gt;1, "though"=&gt;1, "rosy"=&gt;1,</strong></span>
+<span class="green"><strong>"lips"=&gt;1, "cheeks"=&gt;1, "Within"=&gt;1, "bending"=&gt;1, "sickle"=&gt;1,</strong></span>
+<span class="green"><strong>"compass"=&gt;1, "come"=&gt;1, "brief"=&gt;1, "hours"=&gt;1, "weeks"=&gt;1,</strong></span>
+<span class="green"><strong>"But"=&gt;1, "bears"=&gt;1, "out"=&gt;1, "even"=&gt;1, "edge"=&gt;1, "doom"=&gt;1,</strong></span>
+<span class="green"><strong>"If"=&gt;1, "this"=&gt;1, "error"=&gt;1, "upon"=&gt;1, "proved"=&gt;1, "I"=&gt;1,</strong></span>
+<span class="green"><strong>"writ"=&gt;1, "nor"=&gt;1, "man"=&gt;1, "loved"=&gt;1}</strong></span></pre>
+</div>
+<section>
+<h4 class="h4" id="sec4_5_1">4.5.1 Exercises</h4>
+<ol class="num">
+<li><p class="num">Extend the regex used in <a href="ch04.xhtml#ch04ex09">Listing 4.9</a> to include an apostrophe, so it matches, e.g., “wand’ring”. <em>Hint</em>: Combine the first reference regex at <a href="http://rubular.com/">Rubular</a> (<a href="ch04.xhtml#ch04fig10">Figure 4.10</a>) with <code><span class="green"><strong>\w</strong></span></code>, an apostrophe, and the plus operator <code><span class="green"><strong>+</strong></span></code>.</p></li>
+</ol>
+<figure class="figure" id="ch04fig10">
+<img src="graphics/f0110-01.jpg" alt="Images" width="891" height="444"/>
+<figcaption>
+<p class="title-f">Figure 4.10: An exercise hint.</p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

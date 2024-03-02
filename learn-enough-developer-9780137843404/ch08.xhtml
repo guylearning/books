@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Learn Enough Developer Tools to Be Dangerous: Command Line, Text Editor, and Git Version Control Essentials</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137843268.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="chap-num" id="ch08"><span epub:type="pagebreak" id="page_197"></span>Chapter 8</h2>
+<h2 class="chap-title">Getting Started with Git</h2>
+<p class="noindent"><em>Learn Enough Git to Be Dangerous</em> is <a href="part03.xhtml#part03">Part III</a> of <em>Learn Enough Developer Tools to Be Dangerous</em>. So far in this tutorial, we have covered two skills essential for software developers and those who work with them: In <a href="part01.xhtml#part01">Part I</a>, <em>Learn Enough Command Line to Be Dangerous</em>, we learned how to use the Unix command line, and in <a href="part02.xhtml#part02">Part II</a>, <em>Learn Enough Text Editor to Be Dangerous</em>, we learned how to use text editors. <a href="part03.xhtml#part03">Part III</a> covers a third essential skill: <em>version control</em>.</p>
+<p class="indent">As with its two predecessors, <em>Learn Enough Git to Be Dangerous</em> doesn’t even assume you’re familiar with the <em>category</em> of application, so if you’re unsure about what “version control” is, you’re in the right place. Even if you are already familiar with the subject, it’s likely you’ll still learn a lot from this tutorial. Either way, learning the material in <a href="part03.xhtml#part03">Part III</a> of <em>Learn Enough Developer Tools to Be Dangerous</em> prepares you for the other Learn Enough tutorials (<a href="https://www.learnenough.com/">https://www.learnenough.com/</a>) while enabling an astonishing variety of applications—including a special surprise bonus at the end (<a href="ch08.xhtml#box8-1">Box 8.1</a>).</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box8-1">Box 8.1: Real Artists Ship</p>
+<p class="box-no">As legendary Apple cofounder Steve Jobs once said: <em>Real artists ship.</em> What he meant was that, as tempting as it is to privately polish in perpetuity, makers must <em>ship</em> their work—that is, actually finish it and get it out into the world. This can be scary, because shipping means exposing your work not only to fans but also to critics. “What if people don’t like what I’ve made?” <em>Real artists ship.</em></p>
+<p class="box-ind"><span epub:type="pagebreak" id="page_198"></span>It’s important to understand that shipping is a separate skill from making. Many makers get good at making things but never learn to ship. To keep this from happening to us, starting in <em>Learn Enough Git to Be Dangerous</em> we’re going to ship at least one thing in every Learn Enough tutorial. In fact, in this tutorial we’ll actually ship <em>two</em> things—a public <em>Git repository</em> and a surprise bonus that will give you bragging rights with all of your friends.</p>
+</aside>
+<p class="indent">Version control solves a problem that might look familiar if you’ve ever seen Word documents or Excel spreadsheets with names like <span class="green"><code><strong>Report_2014_1.doc</strong></code></span>, <span class="green"><code><strong>Report_2014_2.doc</strong></code></span>, <span class="green"><code><strong>Report_2014_3.doc</strong></code></span>, or <span class="green"><code><strong>budget-v7.xls</strong></code></span>. These cumbersome names indicate how annoying it can be to track different versions of documents. Nowadays, applications like Word do sometimes offer built-in version tracking, but such features are tightly coupled to the underlying application, and aren’t useful for any other document types. Many technical applications (including most websites and programming projects) require a general solution to the problem of versions.</p>
+<p class="indent">A version control system, or <em>VCS</em>, provides an automatic way to track changes in software projects, giving creators the power to view previous versions of files and directories, develop speculative features without disrupting the main development, securely back up the project and its history, and collaborate easily and conveniently with others. In addition, using version control also makes deploying production websites and web applications much easier. As a result, fluency in at least one version control system is an essential component of <em>technical sophistication</em> (<a href="ch08.xhtml#box8-2">Box 8.2</a>), a useful skill for developer, designer, and manager alike. This applies especially to the version control system covered in this tutorial, called <em>Git</em>.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box8-2">Box 8.2: Technical Sophistication</p>
+<p class="box-no">A principal theme of the Learn Enough tutorials is the development of <em>technical sophistication</em>, the combination of hard and soft skills that make it seem like you can magically solve any technical problem (as illustrated in “Tech Support Cheat Sheet” (<a href="https://m.xkcd.com/627/">https://m.xkcd.com/627/</a>) xkcd). <em>Learn Enough Git to Be Dangerous</em> is important for developing these skills because being able to use at least one modern version control system is an essential component of technical sophistication.</p>
+<p class="box-ind">In the context of Git, technical sophistication includes several things. Many Git commands print various details to the terminal screen; technical sophistication lets <span epub:type="pagebreak" id="page_199"></span>you figure out which ones to pay attention to and which to ignore. There are also many Git-related resources on the Web, which among other things means that Google searches are often useful for figuring out the exact command you need at a particular time. Technical sophistication lets you figure out the best search terms for finding the answer you’re looking for; e.g., if you need to delete a remote branch (<a href="ch11.xhtml#ch11lev3sec1">Section 11.3.1</a>), Googling for “git delete remote branch” is a good bet to turn up something useful. Finally, repository hosting sites like GitHub, GitLab, and Bitbucket typically include commands to help guide you through various setup tasks, and technical sophistication gives you the confidence to follow the steps even if you don’t understand every detail.</p>
+<p class="box-ind">One helpful command for learning Git is <span class="green"><code><strong>git help</strong></code></span>, which by itself gives general guidelines on Git usage, and when applied to a specific command gives further information on that command. For example, <span class="green"><code><strong>git help add</strong></code></span> shows details about the <span class="green"><code><strong>git add</strong></code></span> command. The output of <span class="green"><code><strong>git help</strong></code></span> is similar to the man pages covered in <a href="ch01.xhtml#ch01lev4">Section 1.4</a>: full of useful but often obscure information. As always, use your technical sophistication to help make sense of it.</p>
+</aside>
+<p class="indent">Version control has evolved considerably over the years. The family line leading to Git includes programs called RCS, CVS, and Subversion, and there are many current alternatives as well, including Perforce, Bazaar, and Mercurial. I mention these examples not because you need to know what they are, but only to show what a bewildering variety there is. What’s worse, when you choose a version control system, you really <em>commit</em> to it,<sup><a id="rfn8_1" href="ch08.xhtml#fn8_1">1</a></sup> and it is often difficult to switch from one to another. Happily, in the last few years an undisputed winner has emerged in the open-source VCS wars: Git. This victory is the main reason this tutorial is called <em>Learn Enough Git to Be Dangerous</em> rather than <em>Learn Enough Version Control to Be Dangerous</em>. Nevertheless, many of the ideas here are quite general, and if by some chance you need to use a different VCS, this tutorial will still provide a useful introduction to the subject.</p>
+<p class="footnote"><a id="fn8_1" href="ch08.xhtml#rfn8_1">1.</a> Pun intended. If you don’t get it, don’t worry—by the end of this tutorial, you will.</p>
+<p class="indent">Originally developed by Linux creator Linus Torvalds<sup><a id="rfn8_2" href="ch08.xhtml#fn8_2">2</a></sup> to host the Linux kernel, Git is a command-line program that is designed in the Unix tradition (which is why a familiarity with the Unix command line is an important prerequisite). Git has a combination of power, speed, and community adoption that leave it few rivals, but it can be tricky to learn, and other Git tutorials have a tendency to introduce lots of <span epub:type="pagebreak" id="page_200"></span>heavy theory, which can be interesting to learn but in practice is really only understood by a tiny handful of Git users (as illustrated in “Git” (<a href="https://m.xkcd.com/1597/">https://m.xkcd.com/1597/</a>) via the webcomic xkcd). The good news is that the set of Git commands needed to be productive is relatively small; there are some pointers to more advanced and theory-oriented resources listed in <a href="ch11.xhtml#ch11lev7">Section 11.7</a>, but in this tutorial we focus on the essential commands needed to be <em>dangerous</em>.</p>
+<p class="footnote"><a id="fn8_2" href="ch08.xhtml#rfn8_2">2.</a> <em>Git</em> is a mildly insulting British slang term for a stupid or annoying person, and Linus likes to joke that he named both Linux and Git after himself.</p>
+<p class="indent"><em>Note</em>: If you’re using macOS, you should follow the instructions in <a href="ch02.xhtml#box2-3">Box 2.3</a> at this time.</p>
+<section>
+<h3 class="h3" id="ch08lev1">8.1 Installation and Setup</h3>
+<p class="noindent">The most common way to use Git is via a command-line program called <span class="green"><code><strong>git</strong></code></span>, which lets us transform an ordinary Unix directory into a <em>repository</em> (or <em>repo</em> for short) that enables us to track changes to our project.<sup><a id="rfn8_3" href="ch08.xhtml#fn8_3">3</a></sup> In this section, we’ll begin by installing Git (if necessary) and doing some one-time configuration.</p>
+<p class="footnote"><a id="fn8_3" href="ch08.xhtml#rfn8_3">3.</a> As we’ll see in <a href="ch08.xhtml#ch08lev2">Section 8.2</a>, Git uses a special hidden directory called <span class="green"><code><strong>.git</strong></code></span> to track changes, but at the level of this tutorial these details aren’t important.</p>
+<p class="indent">Before doing anything else, we first need to check to see if Git is installed on the current system. As a reminder, we’re working in the Unix tradition, so it is strongly recommended that you use macOS or Linux. Microsoft Windows users are encouraged to set up a Linux-compatible development environment by following the steps in <a href="appa.xhtml#app3-3">Section A.3.3</a> or by using the Linux-based cloud IDE discussed in <a href="appa.xhtml#app2">Section A.2</a>.</p>
+<p class="indent">The easiest way to check for Git is to start a terminal window and use <span class="green"><code><strong>which</strong></code></span> (<a href="ch03.xhtml#ch03lev1">Section 3.1</a>) at the command line to see if the <span class="green"><code><strong>git</strong></code></span> executable is already present:</p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> which git
+<span class="green">/usr/local/bin/git</span></pre>
+<p class="noindent">If the result is empty or if it says the command is not found, it means you have to install Git manually. To do this, follow the instructions at “Getting Started – Installing Git” (<a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">https://git-scm.com/book/en/v2/Getting-Started-Installing-Git</a>) in the official Git documentation. (This will likely give you an opportunity to apply some technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>).)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_201"></span>The next step is to ensure that you have a sufficiently recent version of Git, which you can check as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000201-01" id="f000201-01a">Click here to view code image</a></p>
+<pre class="box-pre1"><span class="dblue"><strong>$</strong></span> git --version
+<span class="green">git version 2.31.1    # should be at least 2.28.0</span></pre>
+<p class="noindent">If the version isn’t recent enough, then you should either install Git via the instructions at “Getting Started – Installing Git” or follow one of the suggestions below:</p>
+<ul class="sq">
+<li><p class="bull">Cloud IDE: If using the cloud IDE recommended in <a href="appa.xhtml#app2">Section A.2</a>, run the command in <a href="ch08.xhtml#list8-1">Listing 8.1</a>.</p></li>
+<li><p class="bull">macOS: If using macOS, run the command in <a href="ch08.xhtml#list8-2">Listing 8.2</a>. (If you don’t have Homebrew installed, first follow the instructions to install Homebrew (<a href="https://brew.sh/">https://brew.sh/</a>).)</p></li>
+</ul>
+<p class="list-head" id="list8-1"><strong>Listing 8.1:</strong> Upgrading Git on the cloud IDE.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis01" id="p08lis01a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> <span class="lgreen">source</span> <span class="gray1">&lt;</span>(curl -sL https://cdn.learnenough.com/upgrade_git<span class="gray1">)</span></pre>
+</div>
+<p class="list-head" id="list8-2"><strong>Listing 8.2:</strong> Upgrading Git on macOS.</p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> brew upgrade git</pre>
+</div>
+<p class="indent">After installing Git but before starting a project, we need to perform a few onetime setup steps, as shown in <a href="ch08.xhtml#list8-3">Listing 8.3</a>. These are <em>global</em> setups, meaning you only have to do them once per computer. (Don’t worry about the meaning or structure of these commands at this stage.)</p>
+<p class="list-head" id="list8-3"><strong>Listing 8.3:</strong> One-time global configuration settings.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis03" id="p08lis03a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="dblue"><strong>$</strong></span> git config --global user.name <span class="brown">"Your Name"</span>
+<span class="dblue"><strong>$</strong></span> git config --global user.email your.email@example.com
+<span class="dblue"><strong>$</strong></span> git config --global init.defaultBranch main</pre>
+</div>
+<p class="noindent">The first two configuration settings allow Git to identify changes in your projects by name and email address, which is especially helpful when collaborating with <span epub:type="pagebreak" id="page_202"></span>others (<a href="ch11.xhtml#ch11">Chapter 11</a>). Note that the name and email you use in <a href="ch08.xhtml#list8-3">Listing 8.3</a> will be viewable in any projects you make public, so don’t expose any information you’d rather keep private.</p>
+<p class="indent">The third line in <a href="ch08.xhtml#list8-3">Listing 8.3</a> sets the default Git branch name to <span class="green"><code><strong>main</strong></code></span>, which is the current recommended default. You should be aware that the default branch name for the first 15+ years of Git’s existence was <span class="green"><code><strong>master</strong></code></span>, so you will invariably encounter many Git repositories that use <span class="green"><code><strong>master</strong></code></span> instead of <span class="green"><code><strong>main</strong></code></span>.<sup><a id="rfn8_4" href="ch08.xhtml#fn8_4">4</a></sup> (Being able to deal with this sort of situation is a hallmark of technical sophistication (<a href="ch08.xhtml#box8-2">Box 8.2</a>).) See the Learn Enough blog post “Default Git Branch Name with Learn Enough and the Rails Tutorial” (<a href="https://news.learnenough.com/default-git-branch-name-with-learn-enough-and-the-rails-tutorial">https://news.learnenough.com/default-git-branch-name-with-learn-enough-and-the-rails-tutorial</a>) for more information.</p>
+<p class="footnote"><a id="fn8_4" href="ch08.xhtml#rfn8_4">4.</a> The screencasts that accompany this book use <span class="green"><code><strong>master</strong></code></span> since they were made at a time when the use of that default branch name was universal, but you can safely substitute <span class="green"><code><strong>main</strong></code></span> for <span class="green"><code><strong>master</strong></code></span> in the videos as well.</p>
+<p class="indent">In addition to the configuration in <a href="ch08.xhtml#list8-3">Listing 8.3</a>, <em>Learn Enough Git to Be Dangerous</em> includes some optional advanced setup (<a href="ch11.xhtml#ch11lev6">Section 11.6</a>) that I recommend you complete at some point. If you already have some familiarity with Git, or if you’re an experienced user of the Unix command line, I recommend completing the steps in <a href="ch11.xhtml#ch11lev6">Section 11.6</a> at this time, but otherwise I recommend deferring the advanced setup until later.</p>
+<section>
+<h4 class="h4" id="ch08lev1sec1">8.1.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Run <span class="green"><code><strong>git help</strong></code></span> at the command line. What is the first command listed?</p></li>
+<li><p class="number">There’s a chance that the full output of <span class="green"><code><strong>git help</strong></code></span> was too big to fit in your terminal, with most of it just scrolling by. What’s the command to let us navigate the output of <span class="green"><code><strong>git help</strong></code></span> interactively? (On some systems, you can use the mouse to scroll back in the terminal window, but it’s unwise to rely on this fact.) <em>Hint</em>: Pipe (<a href="ch03.xhtml#ch03lev2sec1">Section 3.2.1</a>) the output to <span class="green"><code><strong>less</strong></code></span> (<a href="ch03.xhtml#ch03lev3">Section 3.3</a>).</p></li>
+<li><p class="number">Git stores global configuration settings in a hidden text file located in your home directory. By inspecting the file <span class="green"><code><strong>~/.gitconfig</strong></code></span> with a tool of your choice (<span class="green"><code><strong>cat</strong></code></span>, <span class="green"><code><strong>less</strong></code></span>, a text editor, etc.), confirm that the configuration set up by <a href="ch08.xhtml#list8-3">Listing 8.3</a> corresponds to simple text entries in this file.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev2"><span epub:type="pagebreak" id="page_203"></span>8.2 Initializing the Repo</h3>
+<p class="noindent">Now it’s time to start creating a project and put it under version control with Git. To see how Git works and what benefits it brings, it helps to have a concrete application in mind, so we’ll be tracking changes in a simple project consisting of a small website consisting of two pages, a Home page and an About page.<sup><a id="rfn8_5" href="ch08.xhtml#fn8_5">5</a></sup> We’ll begin by making a directory with the generic name <span class="green"><code><strong>website</strong></code></span> inside a repositories directory called <span class="green"><code><strong>repos</strong></code></span>:</p>
+<p class="footnote"><a id="fn8_5" href="ch08.xhtml#rfn8_5">5.</a> <em>Learn Enough HTML to Be Dangerous</em> (<a href="https://www.learnenough.com/html">https://www.learnenough.com/html</a>) and <em>Learn Enough CSS &amp; Layout to Be Dangerous</em> (<a href="https://www.learnenough.com/css-and-layout">https://www.learnenough.com/css-and-layout</a>) build on this foundation to make more complicated sites.</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000203-01" id="f000203-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[~]$ mkdir -p repos/website</pre>
+<p class="noindent">Here we’ve used the “make directory” command <span class="green"><code><strong>mkdir</strong></code></span> (<a href="ch04.xhtml#ch04lev2">Section 4.2</a>) together with the <span class="green"><code><strong>-p</strong></code></span> option, which arranges for <span class="green"><code><strong>mkdir</strong></code></span> to create intermediate directories as required (in this case, <span class="green"><code><strong>repos</strong></code></span>). Note also that I’ve included the current directory in the prompt (in this case, <span class="green"><code><strong>[~]</strong></code></span>) as arranged by the configuration in <a href="ch11.xhtml#list11-15">Listing 11.15</a>.</p>
+<p class="indent">After making the directory, we can <span class="green"><code><strong>cd</strong></code></span> into it as follows:</p>
+<pre class="box-pre1">[~]$ cd repos/website/
+[website]$</pre>
+<p class="noindent">(Recall from <a href="ch02.xhtml#box2-4">Box 2.4</a> that you can use tab completion when changing directories, so in real life I would probably type something like <span class="green"><code><strong>cd re</strong></code></span> ⇥ <span class="green"><code><strong>w</strong></code></span> ⇥.)</p>
+<p class="indent">Even though the <span class="green"><code><strong>website</strong></code></span> directory is empty, we can already convert it to a <em>repository</em>, which you can think of as a sort of enhanced Unix directory with the additional ability to track changes to every file and subdirectory. The way to create a new repository with Git is with the <span class="green"><code><strong>init</strong></code></span> command (short for “initialize”), which creates a special hidden directory called <span class="green"><code><strong>.git</strong></code></span> where Git stores the information it needs to track our project’s changes. (It’s the presence of a properly configured <span class="green"><code><strong>.git</strong></code></span> directory that distinguishes a Git repository from a regular directory.)</p>
+<p class="indent">All Git commands consist of the command-line program <span class="green"><code><strong>git</strong></code></span> followed by the name of the command, so the full command to initialize a repository is <span class="green"><code><strong>git init</strong></code></span>, as shown in <a href="ch08.xhtml#list8-4">Listing 8.4</a>.</p>
+<p class="list-head" id="list8-4"><strong>Listing 8.4:</strong> Initializing a Git repository.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis04" id="p08lis04a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website]$ git init
+Initialized empty Git repository in /Users/mhartl/repos/website/.git/
+[website (main)]$</pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_204"></span>The prompt shown in <a href="ch08.xhtml#list8-4">Listing 8.4</a> reflects both the Bash customization from <a href="part02.xhtml#part02">Part II</a> (<a href="ch06.xhtml#list6-6">Listing 6.6</a>) and the advanced setup in <a href="ch11.xhtml#ch11lev6sec2">Section 11.6.2</a>, so your prompt may differ.<sup><a id="rfn8_6" href="ch08.xhtml#fn8_6">6</a></sup>In particular, the prompt in the highlighted line in <a href="ch08.xhtml#list8-4">Listing 8.4</a> shows the name of the current Git <em>branch</em>, called <span class="green"><code><strong>main</strong></code></span>. Don’t worry about what this means now; we’ll discuss branches starting in <a href="ch10.xhtml#ch10lev3">Section 10.3</a>.</p>
+<p class="footnote"><a id="fn8_6" href="ch08.xhtml#rfn8_6">6.</a> To learn how to set up this same custom prompt using Z shell, see the Learn Enough blog post “Using Z Shell on Macs with the Learn Enough Tutorials” (<a href="https://news.learnenough.com/macos-bash-zshell">https://news.learnenough.com/macos-bash-zshell</a>).</p>
+<section>
+<h4 class="h4" id="ch08lev2sec1">8.2.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">By running <span class="green"><code><strong>ls -a</strong></code></span> (<a href="ch02.xhtml#ch02lev2sec1">Section 2.2.1</a>), list <strong>a</strong>ll the files and directories in your <span class="green"><code><strong>website</strong></code></span> directory. What is the name of the hidden directory used by the Git repository? (There is one such hidden directory per project.)</p></li>
+<li><p class="number">Using the result of the previous exercise, run <span class="green"><code><strong>ls</strong></code></span> on the hidden directory and guess the name of the main Git configuration file. Use <span class="green"><code><strong>cat</strong></code></span> to dump its contents to the screen.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev3">8.3 Our First Commit</h3>
+<p class="noindent">Git won’t let us complete the initialization of the repository while it’s empty, so we need to make a change to the current directory. We’ll make a more substantive change in a moment, but for now we’ll follow a common convention and simply use <span class="green"><code><strong>touch</strong></code></span> to create an empty file (<a href="ch02.xhtml#list2-2">Listing 2.2</a>). In this case, we’re making a simple website, and the near-universal convention is to call the main page <span class="green"><code><strong>index.html</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p204pro01" id="p204pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ touch index.html</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_205"></span>Having created this first file, we can use the <span class="green"><code><strong>git status</strong></code></span> command to see the result:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000205-01" id="f000205-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        index.html
+
+nothing added to commit but untracked files present (use "git add" to track)</pre>
+<p class="noindent">We see here that the <span class="green"><code><strong>index.html</strong></code></span> file is “untracked”, which means Git doesn’t yet know about it. We can <em>add</em> it using the <span class="green"><code><strong>git add</strong></code></span> command:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000205-02" id="f000205-02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git add -A</pre>
+<p class="noindent">Here the <span class="green"><code><strong>-A</strong></code></span> option tells Git to add <em>all</em> untracked files, even though in this case there’s only one. In my experience, 99% of the time you add files you’ll want to add them all, so this is a good habit to cultivate, and learning how to add individual files is left as an exercise (<a href="ch08.xhtml#ch08lev3sec1">Section 8.3.1</a>). (By the way, the nearly equivalent command <span class="green"><code><strong>git add .</strong></code></span>, where the dot refers to the current directory (<a href="ch04.xhtml#ch04lev3">Section 4.3</a>), is also common.)<sup><a id="rfn8_7" href="ch08.xhtml#fn8_7">7</a></sup></p>
+<p class="footnote"><a id="fn8_7" href="ch08.xhtml#rfn8_7">7.</a> In the rare cases where the two differ, what you usually want is <span class="green"><code><strong>git add -A</strong></code></span>, and this is what’s used in the official Git documentation (<a href="https://git-scm.com/docs/git-add">https://git-scm.com/docs/git-add</a>), so that’s what we go with here.</p>
+<p class="indent">We can see the result of <span class="green"><code><strong>git add -A</strong></code></span> by running <span class="green"><code><strong>git status</strong></code></span> again:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000205-03" id="f000205-03a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached &lt;file&gt;..." to unstage)
+        new file: index.html</pre>
+<p class="noindent">As implied by the word “unstage”, the status of the file has been promoted from <em>untracked</em> to <em>staged</em>, which means the file is ready to be added to the repository. <em>Untracked/unstaged</em> and <em>staged</em> are two of the four states commonly used by Git, as <span epub:type="pagebreak" id="page_206"></span>shown in <a href="ch08.xhtml#fig8-1">Figure 8.1</a>. (Technically, untracked and unstaged are different states, but the distinction is rarely important because <span class="green"><code><strong>git add</strong></code></span> tracks and stages files at the same time.)</p>
+<figure class="figure" id="fig8-1">
+<img src="graphics/08fig01.jpg" alt="Image" width="744" height="61"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.1:</strong> The main Git status sequence for changing a file.</p>
+</figcaption>
+</figure>
+<p class="indent">As shown in <a href="ch08.xhtml#fig8-1">Figure 8.1</a>, after putting changes in the staging area we can make them part of the local repository by <em>committing</em> them using <span class="green"><code><strong>git commit</strong></code></span>. (We’ll cover the final step from <a href="ch08.xhtml#fig8-1">Figure 8.1</a>, <span class="green"><code><strong>git push</strong></code></span>, in <a href="ch09.xhtml#ch09lev3">Section 9.3</a>.) Most uses of <span class="green"><code><strong>git commit</strong></code></span> use the command-line option <span class="green"><code><strong>-m</strong></code></span> to include a <em>message</em> indicating the purpose of the commit (<a href="ch08.xhtml#box8-3">Box 8.3</a>). In this case, the purpose is to initialize the new repository, which we can indicate as follows:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p206pro01" id="p206pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git commit -m "Initialize repository"
+[main (root-commit) 44c52d4] Initialize repository
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 index.html</pre>
+<p class="noindent">(I’ve shown my output here for completeness, but your details will vary.)</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box8-3">Box 8.3: Committing to Git</p>
+<p class="box-no">By design, Git requires every commit to include a <em>commit message</em> describing the purpose of the commit. Typically, this takes the form of a single line, usually limited to around 72 characters, with an optional longer message if desired (<a href="ch11.xhtml#ch11lev2sec3">Section 11.2.3</a>). Although conventions for commit messages vary (as humorously depicted in the xkcd comic strip “Git Commit” (<a href="https://m.xkcd.com/1296/">https://m.xkcd.com/1296/</a>)), the style adopted in this tutorial is to write commit messages in the <em>present tense</em> using the <em>imperative mood</em>, as in “Initialize repository” rather than “Initializes repository” or “Initialized repository”. The reason for this convention is that Git models commits as a series of text transformations, and in this context it makes sense to describe what each commit <em>does</em> instead of what it did. Moreover, this usage agrees with the convention followed by the commit messages generated by Git commands themselves (e.g., “merge” rather than “merges” or “merged”). For more information, see the GitHub article “Shiny new commit styles” (<a href="https://github.blog/2011-09-06-shiny-new-commit-styles/">https://github.blog/2011-09-06-shiny-new-commit-styles/</a>).</p>
+</aside>
+<p class="indent"><span epub:type="pagebreak" id="page_207"></span>At this point, we can use <span class="green"><code><strong>git log</strong></code></span> to see a record of our commit:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000207-01" id="f000207-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git log
+commit 44c52d432d294ef52bae5535dc6dcb0993175a04 (HEAD -&gt; main)
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:30:38 2021 -0700
+
+   Initialize repository</pre>
+<p class="noindent">The commit is identified by a <em>hash</em>, which is a unique string of letters and numbers that Git uses to label the commit and which lets Git retrieve the commit’s changes. In my case, the hash appears as</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000207-02" id="f000207-02a">Click here to view code image</a></p>
+<pre class="box-pre1">44c52d432d294ef52bae5535dc6dcb0993175a04</pre>
+<p class="noindent">but since each hash is unique your result will differ. The hash is often referred to as a “SHA” (pronounced <em>shah</em>) because of the acronym for the Secure Hash Algorithm used to generate it. We’ll put these SHAs to use in <a href="ch10.xhtml#ch10lev4">Section 10.4</a>, and several more advanced Git operations require them as well.</p>
+<section>
+<h4 class="h4" id="ch08lev3sec1">8.3.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Using the <span class="green"><code><strong>touch</strong></code></span> command, create empty files called <span class="green"><code><strong>foo</strong></code></span> and <span class="green"><code><strong>bar</strong></code></span> in your repository directory.</p></li>
+<li><p class="number">By using <span class="green"><code><strong>git add foo</strong></code></span>, add <span class="green"><code><strong>foo</strong></code></span> to the staging area. Confirm with <span class="green"><code><strong>git status</strong></code></span> that it worked.</p></li>
+<li><p class="number">Using <span class="green"><code><strong>git commit -m</strong></code></span> and an appropriate message, add <span class="green"><code><strong>foo</strong></code></span> to the repository.</p></li>
+<li><p class="number">By using <span class="green"><code><strong>git add bar</strong></code></span>, add <span class="green"><code><strong>bar</strong></code></span> to the staging area. Confirm with <span class="green"><code><strong>git status</strong></code></span> that it worked.</p></li>
+<li><p class="number">Now run <span class="green"><code><strong>git commit</strong></code></span> <em>without</em> the <span class="green"><code><strong>-m</strong></code></span> option. Use your Vim knowledge (<a href="ch05.xhtml#ch05lev1">Section 5.1</a>) to add the message “Add bar”, save, and quit.</p></li>
+<li><p class="number">Using <span class="green"><code><strong>git log</strong></code></span>, confirm that the commits made in the previous exercises worked correctly.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev4"><span epub:type="pagebreak" id="page_208"></span>8.4 Viewing the Diff</h3>
+<p class="noindent">It’s often useful to be able to view the changes represented by a potential commit before making it. To see how this works, let’s add a little bit of content to <span class="green"><code><strong>index.html</strong></code></span> by redirecting the output of <span class="green"><code><strong>echo</strong></code></span> (<a href="ch02.xhtml#ch02lev1">Section 2.1</a>) to make a “hello, world” page:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p208pro01" id="p208pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ echo "hello, world" &gt; index.html</pre>
+<p class="indent">Recall from <a href="ch02.xhtml#ch02lev1">Section 2.1</a> that the Unix <span class="green"><code><strong>diff</strong></code></span> utility lets us compare two files <span class="green"><code><strong>foo</strong></code></span> and <span class="green"><code><strong>bar</strong></code></span> by typing</p>
+<pre class="box-pre1">$ diff foo bar</pre>
+<p class="noindent">Git has a similar function, <span class="green"><code><strong>git diff</strong></code></span>, which by default just shows the difference between the last commit and unstaged changes in the current project:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p208pro02" id="p208pro02a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git diff
+<span class="dblue"><strong>diff --git a/index.html b/index.html</strong></span>
+<span class="dblue"><strong>index e69de29..4b5fa63 100644</strong></span>
+<span class="dred">--- a/index.html</span>
+<span class="bgreen">+++ b/index.html</span>
+<span class="violet"><strong>@@ -0,0 +1 @@</strong></span>
+<span class="bgreen">+hello, world</span></pre>
+<p class="noindent">Because the content added in <a href="ch08.xhtml#ch08lev3">Section 8.3</a> was empty, here the diff appears simply as an addition:</p>
+<pre class="box-pre1"><span class="bgreen">+hello, world</span></pre>
+<p class="indent">We can commit this change by passing the <span class="green"><code><strong>-a</strong></code></span> option (for “all”) to <span class="green"><code><strong>git commit</strong></code></span>, which arranges to commit all the changes in currently existing files (<a href="ch08.xhtml#list8-5">Listing 8.5</a>).</p>
+<p class="list-head" id="list8-5"><strong>Listing 8.5:</strong> Committing changes to all modified files.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis05" id="p08lis05a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git commit -a -m "Add content to index.html"
+[main 64f6529] Add content to index.html
+ 1 file changed, 1 insertion(+)</pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_209"></span>Note that the <span class="green"><code><strong>-a</strong></code></span> option includes changes only to files already added to the repository, so when there are new files it’s important to run <span class="green"><code><strong>git add -A</strong></code></span> as in <a href="ch08.xhtml#ch08lev3">Section 8.3</a> to make sure they’re added properly. It’s easy to get in the habit of running <span class="green"><code><strong>git commit -a</strong></code></span> and forget to add new files explicitly; learning how to deal with this situation is left as an exercise (<a href="ch08.xhtml#ch08lev4sec1">Section 8.4.1</a>).</p>
+<p class="indent">Having added and committed the changes, there’s now no diff:</p>
+<pre class="box-pre1">[website (main)]$ git diff
+[website (main)]$</pre>
+<p class="noindent">(In fact, simply adding the changes is sufficient; running <span class="green"><code><strong>git add -A</strong></code></span> would also lead to there being no diff. To see the difference between staged changes and the previous version of the repo, use <span class="green"><code><strong>git diff --staged</strong></code></span>.)</p>
+<p class="indent">We can confirm that the change went through by running <span class="green"><code><strong>git log</strong></code></span>:</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000209-01" id="f000209-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git log
+commit 64f6529494cb0e193f05b0da75702feef854e176
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:33:24 2021 -0700
+
+   Add content to index.html
+
+commit 44c52d432d294ef52bae5535dc6dcb0993175a04
+Author: Michael Hartl &lt;michael@michaelhartl.com&gt;
+Date:   Thu Apr 1 10:30:38 2021 -0700
+
+   Initialize repository</pre>
+<section>
+<h4 class="h4" id="ch08lev4sec1">8.4.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Use <span class="green"><code><strong>touch</strong></code></span> to create an empty file called <span class="green"><code><strong>baz</strong></code></span>. What happens if you run <span class="green"><code><strong>git commit -am "Add baz"</strong></code></span>?</p></li>
+<li><p class="number">Add <span class="green"><code><strong>baz</strong></code></span> to the staging area using <span class="green"><code><strong>git add -A</strong></code></span>, then commit with the message <span class="green"><code><strong>"Add bazz"</strong></code></span>.</p></li>
+<li><p class="number">Realizing there’s a typo in your commit message, change <span class="green"><code><strong>bazz</strong></code></span> to <span class="green"><code><strong>baz</strong></code></span> using <span class="green"><code><strong>git commit --amend</strong></code></span>.</p></li>
+<li><p class="number">Run <span class="green"><code><strong>git log</strong></code></span> to get the SHA of the last commit, then view the diff using <span class="green"><code><strong>git show &lt;SHA&gt;</strong></code></span> to verify that the message was amended properly.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev5"><span epub:type="pagebreak" id="page_210"></span>8.5 Adding an HTML Tag</h3>
+<p class="noindent">We’ve now seen all of the major elements involved in the simplest Git workflow, so in this section and the next we’ll review what we’ve done and see how everything fits together. We’ll err on the side of making more frequent commits, representing relatively modest changes, but this isn’t necessarily how you should work in real life (<a href="ch08.xhtml#box8-4">Box 8.4</a>). Still, it’s an excellent foundation, and it will give you a solid base on which to build your own workflow and development practices.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="sb-title1" id="box8-4">Box 8.4: Commitment Issues</p>
+<p class="box-no">One common issue when learning Git involves figuring out when to make a commit. Unfortunately, there’s no simple answer, and real-life usage varies considerably (as illustrated in the xkcd comic strip “Git Commit” (<a href="https://m.xkcd.com/1296/">https://m.xkcd.com/1296/</a>)). My best advice is to make a commit whenever you’ve reached a natural stopping point, or when you’ve made enough changes that you’re starting to worry about losing them. In practice, this can lead to inconsistent results, and it’s common to work for a while and make a large commit and then make a minor unrelated change with a small commit. This mismatch between commit sizes can seem a little weird, but it’s a difficult situation to avoid.</p>
+<p class="box-ind">Many teams (including most open-source projects) have their own conventions for commits, including the practice of <em>squashing</em> commits to combine them all into one commit for convenience. (Per <a href="ch08.xhtml#box8-2">Box 8.2</a>, this is exactly the kind of thing you can learn about by Googling for it.) In these circumstances, I recommend following the conventions adopted by the project in question.</p>
+<p class="box-ind">More than anything, don’t worry about it too much. “Git Commit” is only a slight exaggeration, and in any case deciding when to commit is the kind of thing that you’ll invariably get better at with time and experience.</p>
+</aside>
+<p class="indent">As in previous sections, we’ll be working on the main <span class="green"><code><strong>index.html</strong></code></span> file. Let’s start by opening this file in both a text editor and a web browser. My preferred method for doing this is at the command line using the <span class="green"><code><strong>atom</strong></code></span> and <span class="green"><code><strong>open</strong></code></span> commands (though the latter works only on macOS):</p>
+<p class="codelink"><a href="ch08_images.xhtml#p210pro01" id="p210pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ atom index.html
+[website (main)]$ open index.html    # only on macOS; otherwise, use a GUI</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_211"></span>If you’re not on a Mac (or even if you are), you can open the directory using a graphical file browser and double-clicking the file to open it in the default browser (<a href="ch08.xhtml#fig8-2">Figure 8.2</a>). However you open the file, the results should appear approximately as shown in <a href="ch08.xhtml#fig8-3">Figure 8.3</a> and <a href="ch08.xhtml#fig8-4">Figure 8.4</a>.</p>
+<figure class="figure" id="fig8-2">
+<img src="graphics/08fig02.jpg" alt="Image" width="744" height="446"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.2:</strong> Viewing <span class="green"><code><strong>index.html</strong></code></span> in a filesystem browser.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig8-3">
+<img src="graphics/08fig03.jpg" alt="Image" width="744" height="770"/>
+<figcaption>
+<p class="title-f"><span epub:type="pagebreak" id="page_212"></span><strong>Figure 8.3:</strong> The initial HTML file opened in Atom.</p>
+</figcaption>
+</figure>
+<figure class="figure" id="fig8-4">
+<img src="graphics/08fig04.jpg" alt="Image" width="744" height="578"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.4:</strong> The initial HTML file viewed in a web browser.</p>
+</figcaption>
+</figure>
+<p class="indent">At this point, we’re ready to make a change, which is to promote “hello, world” from ordinary text to a top-level (Level 1) heading. In HTML, the language of the World Wide Web, the way to do this is with a <em>tag</em>—in this case, the Level 1 header tag <span class="green"><code><strong>h1</strong></code></span>. Most browsers set <span class="green"><code><strong>h1</strong></code></span> tags in a large font, so the text <span class="green"><code><strong>hello, world</strong></code></span> should look bigger when we’re done. To make the change, replace the current contents of <span class="green"><code><strong>index.html</strong></code></span> with the contents shown in <a href="ch08.xhtml#list8-6">Listing 8.6</a>. (In this and all other examples of editing text, you’ll learn more if you type in everything by hand instead of copying and pasting.)</p>
+<p class="list-head" id="list8-6"><strong>Listing 8.6:</strong> A top-level heading.</p>
+<div class="box2">
+<pre class="pre">&lt;<span class="lgreen"><strong>h1</strong></span>&gt;hello, world&lt;/<span class="lgreen"><strong>h1</strong></span>&gt;</pre>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_213"></span><a href="ch08.xhtml#list8-6">Listing 8.6</a> shows the basic structure used by most HTML tags. First, there’s an <em>opening tag</em> that looks like <span class="green"><code><strong>&lt;h1&gt;</strong></code></span>, where the angle brackets <span class="green"><code><strong>&lt;</strong></code></span> and <span class="green"><code><strong>&gt;</strong></code></span> surround the tag name (in this case, <span class="green"><code><strong>h1</strong></code></span>). After the content, there’s a <em>closing tag</em> that’s the same as the opening tag, except with an extra slash after the opening angle bracket: <span class="green"><code><strong>&lt;/h1&gt;</strong></code></span>. (Note that, as with addresses on the World Wide Web, this is a <em>slash</em>, not a <em>backslash</em>—a common confusion humorously referenced in the xkcd comic strip “Trade expert” (<a href="https://m.xkcd.com/727/">https://m.xkcd.com/727/</a>).)</p>
+<p class="indent"><span epub:type="pagebreak" id="page_214"></span>Upon refreshing the web browser, the index page should appear something like <a href="ch08.xhtml#fig8-5">Figure 8.5</a>. As promised, the font size of the text for the top-level heading is bigger (and bolder, too).</p>
+<figure class="figure" id="fig8-5">
+<img src="graphics/08fig05.jpg" alt="Image" width="744" height="575"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.5:</strong> The result of adding an <span class="green"><code><strong>h1</strong></code></span> tag.</p>
+</figcaption>
+</figure>
+<p class="indent">As before, we’ll run <span class="green"><code><strong>git status</strong></code></span> and <span class="green"><code><strong>git diff</strong></code></span> to learn more about what we’re going to commit to Git, though with experience you’ll come to run these commands only when necessary. The status simply indicates that <span class="green"><code><strong>index.html</strong></code></span> has been modified:</p>
+<p class="codelink"><a href="ch08_images.xhtml#p214pro01" id="p214pro01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git status
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified: index.html
+
+no changes added to commit (use "git add" and/or "git commit -a")</pre>
+<p class="noindent"><span epub:type="pagebreak" id="page_215"></span>Meanwhile, the diff shows that one line has been deleted (indicated with <span class="green"><code><strong>-</strong></code></span>) and another added (indicated with <span class="green"><code><strong>+</strong></code></span>):</p>
+<p class="codelink"><a href="ch08_images.xhtml#f000215-01" id="f000215-01a">Click here to view code image</a></p>
+<pre class="box-pre1">[website (main)]$ git diff
+<span class="dblue"><strong>diff --git a/index.html b/index.html</strong></span>
+<span class="dblue"><strong>index 4b5fa63..45d754a 100644</strong></span>
+<span class="dred">--- a/index.html</span>
+<span class="bgreen">+++ b/index.html</span>
+<span class="violet"><strong>@@ -1 +1 @@</strong></span>
+<span class="dred">-hello, world</span>
+<span class="bgreen">+&lt;h1&gt;hello, world&lt;/h1&gt;</span></pre>
+<p class="noindent">As with the Unix <span class="green"><code><strong>diff</strong></code></span> utility, modified sections of code or markup are shown as close to each other as possible so that it’s clear at a glance what changed.<sup><a id="rfn8_8" href="ch08.xhtml#fn8_8">8</a></sup></p>
+<p class="footnote"><a id="fn8_8" href="ch08.xhtml#rfn8_8">8.</a> When viewing small diffs, particularly in prose, the <span class="green"><code><strong>--color-words</strong></code></span> option is especially useful, so if the regular diff is hard to read I recommend trying <span class="green"><code><strong>git diff --color-words</strong></code></span> to see the effect. (This option also works with the regular Unix <span class="green"><code><strong>diff</strong></code></span> program.)</p>
+<p class="indent">At this point, we’re ready to commit our changes. In <a href="ch08.xhtml#list8-5">Listing 8.5</a> we used both the <span class="green"><code><strong>-a</strong></code></span> and <span class="green"><code><strong>-m</strong></code></span> options to commit <strong>a</strong>ll pending changes while adding a commit <strong>m</strong>essage, but in fact the two can be combined as <span class="green"><code><strong>-am</strong></code></span> (<a href="ch08.xhtml#list8-7">Listing 8.7</a>).</p>
+<p class="list-head" id="list8-7"><strong>Listing 8.7:</strong> Committing with <span class="green"><code><strong>-am</strong></code></span>.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis07" id="p08lis07a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git commit -am "Add an h1 tag"</pre>
+</div>
+<p class="noindent">Using the <span class="green"><code><strong>-am</strong></code></span> combination as in <a href="ch08.xhtml#list8-7">Listing 8.7</a> is common in idiomatic Git usage.</p>
+<section>
+<h4 class="h4" id="ch08lev5sec1">8.5.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">The <span class="green"><code><strong>git log</strong></code></span> command shows only the commit messages, which makes for a compact display but isn’t particularly detailed. Verify by running <span class="green"><code><strong>git log -p</strong></code></span> that the <span class="green"><code><strong>-p</strong></code></span> option shows the full diffs represented by each commit.</p></li>
+<li><p class="number">Under the <span class="green"><code><strong>h1</strong></code></span> tag in <a href="ch08.xhtml#list8-6">Listing 8.6</a>, use the <span class="green"><code><strong>p</strong></code></span> tag to add a <em>paragraph</em> consisting of the line “Call me Ishmael.” The result should appear as in <a href="ch08.xhtml#fig8-6">Figure 8.6</a>. (Don’t worry if you get stuck; we’ll incorporate the answer to this exercise in <a href="ch08.xhtml#ch08lev6">Section 8.6</a> (<a href="ch08.xhtml#list8-8">Listing 8.8</a>).)</p>
+<figure class="figure" id="fig8-6">
+<img src="graphics/08fig06.jpg" alt="Image" width="744" height="576"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.6:</strong> The result of adding a short paragraph.</p>
+</figcaption>
+</figure></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev6"><span epub:type="pagebreak" id="page_216"></span>8.6 Adding HTML Structure</h3>
+<p class="noindent">Although the web browser correctly rendered the <span class="green"><code><strong>h1</strong></code></span> tag in <a href="ch08.xhtml#fig8-5">Figure 8.5</a>, properly formatted HTML pages have more structure than just bare <span class="green"><code><strong>h1</strong></code></span> or <span class="green"><code><strong>p</strong></code></span> tags. In particular, each page should have an <span class="green"><code><strong>html</strong></code></span> tag consisting of a <em>head</em> and a <em>body</em> (identified with <span class="green"><code><strong>head</strong></code></span> and <span class="green"><code><strong>body</strong></code></span> tags, respectively), as well as a “doctype” identifying the document type, which in this case is a particular version of HTML called HTML5. (Don’t worry about these details now; we’ll cover them in more depth in <em>Learn Enough HTML to Be Dangerous</em>.)</p>
+<p class="indent">Applying these general considerations to <span class="green"><code><strong>index.html</strong></code></span> leads to the full HTML structure shown in <a href="ch08.xhtml#list8-8">Listing 8.8</a>. This includes the <span class="green"><code><strong>h1</strong></code></span> tag from <a href="ch08.xhtml#list8-6">Listing 8.6</a> and the paragraph tag from <a href="ch08.xhtml#fig8-6">Figure 8.6</a>. (The <span class="green"><code><strong>title</strong></code></span> tag, included inside the <span class="green"><code><strong>head</strong></code></span> tag, is empty, but in general every page should have a title, and adding one for <span class="green"><code><strong>index.html</strong></code></span> is left as an exercise (<a href="ch08.xhtml#ch08lev6sec1">Section 8.6.1</a>).)</p>
+<p class="list-head" id="list8-8"><strong>Listing 8.8:</strong> The HTML page with added structure.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis08" id="p08lis08a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre"><span class="roman_gray">1</span> <span class="brown2"><em>&lt;!DOCTYPE html&gt;</em></span>
+<span class="roman_gray">2</span> &lt;<span class="lgreen"><strong>html</strong></span>&gt;
+<span class="roman_gray">3</span>   &lt;<span class="lgreen"><strong>head</strong></span>&gt;
+<span class="roman_gray">4</span>     &lt;<span class="lgreen"><strong>title</strong></span>&gt;&lt;/<span class="lgreen"><strong>title</strong></span>&gt;
+<span class="roman_gray">5</span>   &lt;/<span class="lgreen"><strong>head</strong></span>&gt;
+<span class="roman_gray">6</span>   &lt;<span class="lgreen"><strong>body</strong></span>&gt;
+<span class="roman_gray">7</span>     &lt;<span class="lgreen"><strong>h1</strong></span>&gt;hello, world&lt;/<span class="lgreen"><strong>h1</strong></span>&gt;
+<span class="roman_gray">8</span>     &lt;<span class="lgreen"><strong>p</strong></span>&gt;Call me Ishmael.&lt;/<span class="lgreen"><strong>p</strong></span>&gt;
+<span class="roman_gray">9</span>   &lt;/<span class="lgreen"><strong>body</strong></span>&gt;
+<span class="roman_gray">10</span> &lt;/<span class="lgreen"><strong>html</strong></span>&gt;</pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_217"></span>Because this is a lot more content than our previous iteration (<a href="ch08.xhtml#list8-6">Listing 8.6</a>), it’s a good idea to go through it line by line:</p>
+<ol class="number">
+<li><p class="number">The document type declaration</p></li>
+<li><p class="number">Opening <span class="green"><code><strong>html</strong></code></span> tag</p></li>
+<li><p class="number">Opening <span class="green"><code><strong>head</strong></code></span> tag</p></li>
+<li><p class="number">Opening and closing <span class="green"><code><strong>title</strong></code></span> tags</p></li>
+<li><p class="number">Closing <span class="green"><code><strong>head</strong></code></span> tag</p></li>
+<li><p class="number">Opening <span class="green"><code><strong>body</strong></code></span> tag</p></li>
+<li><p class="number">Top-level heading</p></li>
+<li><p class="number">Paragraph from the exercises (<a href="ch08.xhtml#ch08lev5sec1">Section 8.5.1</a>)</p></li>
+<li><p class="number">Closing <span class="green"><code><strong>body</strong></code></span> tag</p></li>
+<li><p class="number">Closing <span class="green"><code><strong>html</strong></code></span> tag</p></li>
+</ol>
+<p class="noindent">As usual, we can see the changes represented by our addition using <span class="green"><code><strong>git diff</strong></code></span> (<a href="ch08.xhtml#list8-9">Listing 8.9</a>).</p>
+<p class="list-head" id="list8-9"><strong>Listing 8.9:</strong> The diff for adding HTML structure.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis09" id="p08lis09a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git diff
+<span class="dblue"><strong>diff --git a/index.html b/index.html</strong></span>
+<span class="dblue"><strong>index 4b5fa63..afcd202 100644</strong></span>
+<span class="dred">--- a/index.html</span>
+<span class="bgreen">+++ b/index.html</span>
+<span class="violet"><strong>@@ -1 +1,10 @@</strong></span>
+<span class="dred">-&lt;h1&gt;hello, world&lt;/h1&gt;</span>
+<span class="bgreen">+&lt;!DOCTYPE html&gt;</span>
+<span class="bgreen">+&lt;html&gt;</span>
+<span class="bgreen">+  &lt;head&gt;</span>
+<span class="bgreen">+    &lt;title&gt;&lt;/title&gt;</span>
+<span class="bgreen">+  &lt;/head&gt;</span>
+<span class="bgreen">+  &lt;body&gt;</span>
+<span class="bgreen">+    &lt;h1&gt;hello, world&lt;/h1&gt;</span>
+<span class="bgreen">+    &lt;p&gt;Call me Ishmael.&lt;/p&gt;</span>
+<span class="bgreen">+  &lt;/body&gt;</span>
+<span class="bgreen">+&lt;/html&gt;</span></pre>
+</div>
+<p class="noindent"><span epub:type="pagebreak" id="page_218"></span>Despite the extensive diffs in <a href="ch08.xhtml#list8-9">Listing 8.9</a>, there are hardly any user-visible differences (<a href="ch08.xhtml#fig8-7">Figure 8.7</a>); the only change from <a href="ch08.xhtml#fig8-6">Figure 8.6</a> is a small amount of space above the top-level heading. The structure is much better, though, and brings our page nearly into compliance with the HTML5 standard. (It’s not quite valid, because a <span epub:type="pagebreak" id="page_219"></span>nonblank page title is required by the standard; fixing this issue is left as an exercise (<a href="ch08.xhtml#ch08lev6sec1">Section 8.6.1</a>).)</p>
+<figure class="figure" id="fig8-7">
+<img src="graphics/08fig07.jpg" alt="Image" width="744" height="576"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.7:</strong> Adding HTML structure makes hardly any difference in the appearance.</p>
+</figcaption>
+</figure>
+<p class="indent">Since we haven’t added any files, using <span class="green"><code><strong>git commit -am</strong></code></span> suffices to commit all the changes (<a href="ch08.xhtml#list8-10">Listing 8.10</a>).</p>
+<p class="list-head" id="list8-10"><strong>Listing 8.10:</strong> The commit to add the HTML structure.</p>
+<p class="codelink"><a href="ch08_images.xhtml#p08lis010" id="p08lis010a">Click here to view code image</a></p>
+<div class="box2">
+<pre class="pre">[website (main)]$ git commit -am "Add some HTML structure"</pre>
+</div>
+<section>
+<h4 class="h4" id="ch08lev6sec1">8.6.1 Exercises</h4>
+<ol class="number">
+<li><p class="number">Add the title “A whale of a greeting” to <span class="green"><code><strong>index.html</strong></code></span>. Browsers differ in how they display titles; the result in Safari is shown in <a href="ch08.xhtml#fig8-8">Figure 8.8</a>. (As of this writing, Safari <span epub:type="pagebreak" id="page_220"></span>doesn’t display the title unless there are at least two tabs, which is why there’s a second tab in <a href="ch08.xhtml#fig8-8">Figure 8.8</a>.)</p>
+<figure class="figure" id="fig8-8">
+<img src="graphics/08fig08.jpg" alt="Image" width="744" height="573"/>
+<figcaption>
+<p class="title-f"><strong>Figure 8.8:</strong> The page title displayed in a browser.</p>
+</figcaption>
+</figure></li>
+<li><p class="number">Commit the new title with a commit message of your choice. Verify using <span class="green"><code><strong>git log -p</strong></code></span> that the change was committed as expected.</p></li>
+<li><p class="number">By pasting the contents of <a href="ch08.xhtml#list8-8">Listing 8.8</a> into an HTML validator (<a href="https://validator.w3.org/#validate_by_input">https://validator.w3.org/#validate_by_input</a>), verify that it is <em>not</em> (quite) a valid web page.</p></li>
+<li><p class="number">Using the validator, verify that the current <span class="green"><code><strong>index.html</strong></code></span> (with nonblank page title) <em>is</em> valid.</p></li>
+</ol>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch08lev7">8.7 Summary</h3>
+<p class="noindent">Important commands from this chapter are summarized in <a href="ch08.xhtml#tab8-1">Table 8.1</a>.</p>
+<figure class="table" id="tab8-1">
+<p class="title-t"><strong>Table 8.1:</strong> Important commands from <a href="ch08.xhtml#ch08">Chapter 8</a>.</p>
+<table class="all">
+<thead>
+<tr>
+<th class="border"><p class="thead">Command</p></th>
+<th class="border"><p class="thead">Description</p></th>
+<th class="border"><p class="thead">Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p class="tab-para"><code>git help</code></p></td>
+<td><p class="tab-para">Get help on a command</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git help push</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git config</code></p></td>
+<td><p class="tab-para">Configure Git</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git config --global ...</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>mkdir -p</code></p></td>
+<td><p class="tab-para">Make intermediate directories as necessary</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ mkdir -p repos/website</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git status</code></p></td>
+<td><p class="tab-para">Show the status of the repository</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git status</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>touch &lt;name&gt;</code></p></td>
+<td><p class="tab-para">Create empty file</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ touch foo</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git add -A</code></p></td>
+<td><p class="tab-para">Add all files or directories to staging area</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git add -A</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git add &lt;name&gt;</code></p></td>
+<td><p class="tab-para">Add given file or directory to staging area</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git add foo</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git commit -m</code></p></td>
+<td><p class="tab-para">Commit staged changes with a message</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git commit -m "Add thing"</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git commit -am</code></p></td>
+<td><p class="tab-para">Stage and commit changes with a message</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git commit -am "Add thing"</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git diff</code></p></td>
+<td><p class="tab-para">Show diffs between commits, branches, etc.</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git diff</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git commit --amend</code></p></td>
+<td><p class="tab-para">Amend the last commit</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git commit --amend</strong></code></span></p></td>
+</tr>
+<tr>
+<td><p class="tab-para"><code>git show &lt;SHA&gt;</code></p></td>
+<td><p class="tab-para">Show diff vs. the SHA</p></td>
+<td><p class="tab-para"><span class="green"><code><strong>$ git show fb738e...</strong></code></span></p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>
