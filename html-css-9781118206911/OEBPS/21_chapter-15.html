@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>HTML &amp; CSS: Design and Build Websites</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9781118206911.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><h1 class="chapnum"><a id="ch15"></a>15</h1>
+<h1 class="chaptitle"><a id="page_358"></a>LAYOUT</h1>
+<ul style="list-style-image: url(images/rtrif.jpg);">
+<li>Controlling the position of elements</li>
+<li>Creating site layouts</li>
+<li>Designing for different sized screens</li>
+</ul>
+<p class="text"><a id="page_359"></a>In this chapter we are going to look at how to control where each element sits on a page and how to create attractive page layouts.</p>
+<p class="text">This involves learning about how designing for a screen can be different to designing for other mediums (such as print). In this chapter we will:</p>
+<ul style="list-style-type: disc;">
+<li>Explore different ways to position elements using normal flow, relative positioning, absolute positioning and floats.</li>
+<li>Discover how various devices have different screen sizes and resolution, and how this affects the design process.</li>
+<li>Learn the difference between fixed width and liquid layouts, and how they are created.</li>
+<li>Find out how designers use grids to make their page designs look more professional.</li>
+</ul>
+<p class="center"><a id="page_360"></a><img src="images/ch015-Uf001.jpg" alt="image" class="imgepub" width="566" height="700"/></p>
+<h2 class="subtitle"><a id="ch015-sec001"></a>KEY CONCEPTS IN POSITIONING ELEMENTS</h2>
+<h3 class="subtitle"><a id="ch015-sec002"></a>BUILDING BLOCKS</h3>
+<p class="text"><a id="page_361"></a>CSS treats each HTML element as if it is in its own box. This box will either be a <b>block-level</b> box or an <b>inline</b> box.</p>
+<p class="text">Block-level boxes start on a new line and act as the main building blocks of any layout, while inline boxes flow between surrounding text. You can control how much space each box takes up by setting the width of the boxes (and sometimes the height, too). To separate boxes, you can use borders, margins, padding, and background colors.</p>
+<p class="center"><img src="images/ch015-Uf002.jpg" alt="image" class="imgepub" width="467" height="293"/></p>
+<p class="text"><b>BLOCK-LEVEL ELEMENTS</b></p>
+<p class="text"><b>START ON A NEW LINE</b></p>
+<p class="text">Examples include:</p>
+<p class="text"><span class="inlinecode">&lt;h1&gt; &lt;p&gt; &lt;ul&gt; &lt;li&gt;</span></p>
+<p class="center"><img src="images/ch015-Uf003.jpg" alt="image" class="imgepub" width="467" height="293"/></p>
+<p class="text"><b>INLINE ELEMENTS</b></p>
+<p class="text"><b>FLOW IN BETWEEN SURROUNDING TEXT</b></p>
+<p class="text">Examples include:</p>
+<p class="text"><span class="inlinecode">&lt;img&gt; &lt;b&gt; &lt;i&gt;</span></p>
+<h3 class="subtitle"><a id="ch015-sec003"></a>CONTAINING ELEMENTS</h3>
+<p class="text"><a id="page_362"></a>If one block-level element sits inside another block-level element then the outer box is known as the <b>containing</b> or <b>parent</b> element.</p>
+<p class="text">It is common to group a number of elements together inside a <span class="inlinecode">&lt;div&gt;</span> (or other block-level) element. For example, you might group together all of the elements that form the header of a site (such as the logo and the main navigation). The <span class="inlinecode">&lt;div&gt;</span> element that contains this group of elements is then referred to as the <b>containing</b> element.</p>
+<p class="center"><img src="images/ch015-Uf004.jpg" alt="image" class="imgepub" width="467" height="320"/></p>
+<p class="text">A box may be nested inside several other block-level elements. The containing element is always the <b>direct parent</b> of that element.</p>
+<p class="text">The orange lines in this diagram represent <span class="inlinecode">&lt;div&gt;</span> elements. The header (containing the logo and navigation) are in one <span class="inlinecode">&lt;div&gt;</span> element, the main content of the page is in another, and the footer is in a third. The <span class="inlinecode">&lt;body&gt;</span> element is the containing element for these three <span class="inlinecode">&lt;div&gt;</span> elements. The second <span class="inlinecode">&lt;div&gt;</span> element is the containing element for two paragraphs of Latin text and images (represented by crossed squares).</p>
+<h2 class="subtitle"><a id="ch015-sec004"></a>CONTROLLING THE POSITION OF ELEMENTS</h2>
+<p class="text"><a id="page_363"></a>CSS has the following positioning schemes that allow you to control the layout of a page: normal flow, relative positioning, and absolute positioning. You specify the positioning scheme using the position property in CSS. You can also float elements using the float property.</p>
+<p class="text"><b>NORMAL FLOW</b></p>
+<p class="text">Every block-level element appears on a new line, causing each item to appear lower down the page than the previous one. Even if you specify the width of the boxes and there is space for two elements to sit side-by-side, they will not appear next to each other. This is the default behavior (unless you tell the browser to do something else).</p>
+<p class="center"><img src="images/ch015-Uf005.jpg" alt="image" class="imgepub" width="350" height="350"/></p>
+<p class="text">The paragraphs appear one after the other, vertically down the page.</p>
+<p class="text">See page 365</p>
+<p class="text"><b>RELATIVE POSITIONING</b></p>
+<p class="text">This moves an element from the position it would be in normal flow, shifting it to the top, right, bottom, or left of where it would have been placed. This does not affect the position of surrounding elements; they stay in the position they would be in in normal flow.</p>
+<p class="center"><img src="images/ch015-Uf006.jpg" alt="image" class="imgepub" width="350" height="350"/></p>
+<p class="text">The second paragraph has been pushed down and right from where it would otherwise have been in normal flow.</p>
+<p class="text">See page 366</p>
+<p class="text"><b>ABSOLUTE POSITIONING</b></p>
+<p class="text">This positions the element in relation to its containing element. It is taken out of normal flow, meaning that it does not affect the position of any surrounding elements (as they simply ignore the space it would have taken up). Absolutely positioned elements move as users scroll up and down the page.</p>
+<p class="center"><img src="images/ch015-Uf007.jpg" alt="image" class="imgepub" width="350" height="350"/></p>
+<p class="text">The heading is positioned to the top right, and the paragraphs start at the top of the screen (as if the heading were not there).</p>
+<p class="text">See page 367</p>
+<p class="text"><a id="page_364"></a>To indicate where a box should be positioned, you may also need to use box offset properties to tell the browser how far from the top or bottom and left or right it should be placed. (You will meet these when we introduce the positioning schemes on the following pages.)</p>
+<p class="text"><b>FIXED POSITIONING</b></p>
+<p class="text">This is a form of absolute positioning that positions the element in relation to the browser window, as opposed to the containing element. Elements with fixed positioning do not affect the position of surrounding elements and they do not move when the user scrolls up or down the page.</p>
+<p class="center"><img src="images/ch015-Uf008.jpg" alt="image" class="imgepub" width="350" height="350"/></p>
+<p class="text">The heading has been placed in the center of the page and 25% from the top of the screen. (The rest appears in normal flow.)</p>
+<p class="text">See page 368</p>
+<p class="text"><b>FLOATING ELEMENTS</b></p>
+<p class="text">Floating an element allows you to take that element out of normal flow and position it to the far left or right of a containing box. The floated element becomes a block-level element around which other content can flow.</p>
+<p class="center"><img src="images/ch015-Uf009.jpg" alt="image" class="imgepub" width="350" height="350"/></p>
+<p class="text">The heading has been floated to the left, allowing the paragraphs of text to flow around it.</p>
+<p class="text">See page 370-376</p>
+<p class="text">When you move any element from normal flow, boxes can overlap. The <span class="inlinecode">z-index</span> property allows you to control which box appears on top.</p>
+<h2 class="subtitle"><a id="ch015-sec005"></a>NORMAL FLOW</h2>
+<h3 class="subtitle"><a id="ch015-sec006"></a><span class="inlinecodeuserinput">position:static</span></h3>
+<p class="text"><a id="page_365"></a>In normal flow, each block-level element sits on top of the next one. Since this is the default way in which browsers treat HTML elements, you do not need a CSS property to indicate that elements should appear in normal flow, but the syntax would be:</p>
+<p class="text"><span class="inlinecode">position: static;</span></p>
+<p class="text">I have not specified a <span class="inlinecode">width</span> property for the heading element, so you can see how it stretches the width of the entire browser window by default.</p>
+<p class="text">The paragraphs are restricted to 450 pixels wide. This shows how the elements in normal flow start on a new line even if they do not take up the full width of the browser window.</p>
+<p class="text">All of the examples that demonstrate positioning will use a similar HTML structure.</p>
+<p class="center"><img src="images/ch015-Uf010.jpg" alt="image" class="imgepub" width="467" height="180"/></p>
+<p class="center"><img src="images/ch015-Uf011.jpg" alt="image" class="imgepub" width="467" height="240"/></p>
+<p class="center"><img src="images/ch015-Uf012.jpg" alt="image" class="imgepub" width="467" height="300"/></p>
+<h2 class="subtitle"><a id="ch015-sec007"></a>RELATIVE POSITIONING</h2>
+<h3 class="subtitle"><a id="ch015-sec008"></a><span class="inlinecodeuserinput">position:relative</span></h3>
+<p class="center"><a id="page_366"></a><img src="images/ch015-Uf013.jpg" alt="image" class="imgepub" width="467" height="180"/></p>
+<p class="center"><img src="images/ch015-Uf014.jpg" alt="image" class="imgepub" width="467" height="240"/></p>
+<p class="center"><img src="images/ch015-Uf015.jpg" alt="image" class="imgepub" width="467" height="300"/></p>
+<p class="text">Relative positioning moves an element in relation to where it would have been in normal flow.</p>
+<p class="text">For example, you can move it 10 pixels lower than it would have been in normal flow or 20% to the right.</p>
+<p class="text">You can indicate that an element should be relatively positioned using the <span class="inlinecode">position</span> property with a value of <span class="inlinecode">relative</span>.</p>
+<p class="text">You then use the offset properties (<span class="inlinecode">top</span> or <span class="inlinecode">bottom</span> and <span class="inlinecode">left</span> or <span class="inlinecode">right</span>) to indicate how far to move the element from where it would have been in normal flow.</p>
+<p class="text">To move the box up or down, you can use either the <span class="inlinecode">top</span> or <span class="inlinecode">bottom</span> properties.</p>
+<p class="text">To move the box horizontally, you can use either the <span class="inlinecode">left</span> or <span class="inlinecode">right</span> properties.</p>
+<p class="text">The values of the box offset properties are usually given in pixels, percentages or ems.</p>
+<h2 class="subtitle"><a id="ch015-sec009"></a>ABSOLUTE POSITIONING</h2>
+<h3 class="subtitle"><a id="ch015-sec010"></a><span class="inlinecodeuserinput">position:absolute</span></h3>
+<p class="text"><a id="page_367"></a>When the <span class="inlinecode">position</span> property is given a value of <span class="inlinecode">absolute</span>, the box is taken out of normal flow and no longer affects the position of other elements on the page. (They act like it is not there.)</p>
+<p class="text">The box offset properties (<span class="inlinecode">top</span> or <span class="inlinecode">bottom</span> and <span class="inlinecode">left</span> or <span class="inlinecode">right</span>) specify where the element should appear in relation to its containing element.</p>
+<p class="text">In this example, the heading has been positioned at the top of the page and 500 pixels from its left edge. The width of the heading is set to be 250 pixels wide.</p>
+<p class="text">The <span class="inlinecode">width</span> property has also been applied to the <span class="inlinecode">&lt;p&gt;</span> elements in this example to prevent the text from overlapping and becoming unreadable.</p>
+<p class="text">By default, most browsers add a margin to the top of the <span class="inlinecode">&lt;h1&gt;</span> element. This is why there is a gap between the top of the browser and the box containing the <span class="inlinecode">&lt;h1&gt;</span> element. If you wanted to remove this margin, you could add the following code to the <span class="inlinecode">&lt;h1&gt;</span> element's style rules:</p>
+<p class="text"><span class="inlinecode">margin: 0px;</span></p>
+<p class="center"><img src="images/ch015-Uf016.jpg" alt="image" class="imgepub" width="467" height="180"/></p>
+<p class="center"><img src="images/ch015-Uf017.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="center"><img src="images/ch015-Uf018.jpg" alt="image" class="imgepub" width="467" height="280"/></p>
+<h2 class="subtitle"><a id="ch015-sec011"></a>FIXED POSITIONING</h2>
+<h3 class="subtitle"><a id="ch015-sec012"></a><span class="inlinecodeuserinput">position:fixed</span></h3>
+<p class="center"><a id="page_368"></a><img src="images/ch015-Uf019.jpg" alt="image" class="imgepub" width="467" height="180"/></p>
+<p class="center"><img src="images/ch015-Uf020.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="center"><img src="images/ch015-Uf021.jpg" alt="image" class="imgepub" width="467" height="280"/></p>
+<p class="text">Fixed positioning is a type of absolute positioning that requires the <span class="inlinecode">position</span> property to have a value of <span class="inlinecode">fixed</span>.</p>
+<p class="text">It positions the element in relation to the browser window. Therefore, when a user scrolls down the page, it stays in the exact same place. It is a good idea to try this example in your browser to see the effect.</p>
+<p class="text">To control where the fixed position box appears in relation to the browser window, the box offset properties are used.</p>
+<p class="text">In this example, the heading has been positioned to the top left hand corner of the browser window. When the user scrolls down the page, the paragraphs disappear behind the heading.</p>
+<p class="text">The <span class="inlinecode">&lt;p&gt;</span> elements are in normal flow and ignore the space that the <span class="inlinecode">&lt;h1&gt;</span> element would have taken up. Therefore, the margin-top property has been used to push the first <span class="inlinecode">&lt;p&gt;</span> element below where the fixed position <span class="inlinecode">&lt;h1&gt;</span> element is sitting.</p>
+<h2 class="subtitle"><a id="ch015-sec013"></a>OVERLAPPING ELEMENTS</h2>
+<h3 class="subtitle"><a id="ch015-sec014"></a><span class="inlinecodeuserinput">z-index</span></h3>
+<p class="text"><a id="page_369"></a>When you use relative, fixed, or absolute positioning, boxes can overlap. If boxes do overlap, the elements that appear later in the HTML code sit on top of those that are earlier in the page.</p>
+<p class="text">If you want to control which element sits on top, you can use the <span class="inlinecode">z-index</span> property. Its value is a number, and the higher the number the closer that element is to the front. For example, an element with a <span class="inlinecode">z-index</span> of 10 will appear over the top of one with a <span class="inlinecode">z-index</span> of 5.</p>
+<p class="text">This example looks similar to the one on page 368, but it uses relative positioning for the <span class="inlinecode">&lt;p&gt;</span> elements. Because the paragraphs are relatively positioned, by default they would appear over the top of the heading as the user scrolls down the page. To ensure that the <span class="inlinecode">&lt;h1&gt;</span> element stays on top, we use the <span class="inlinecode">z-index</span> property on the rule for the <span class="inlinecode">&lt;h1&gt;</span> element.</p>
+<p class="text">The <span class="inlinecode">z-index</span> is sometimes referred to as the <b>stacking context</b> (as if the blocks have been stacked on top of each other on a z axis). If you are familiar with desktop publishing packages, it is the equivalent of using the ‘bring to front’ and ‘send to back’ features.</p>
+<p class="center"><img src="images/ch015-Uf022.jpg" alt="image" class="imgepub" width="467" height="320"/></p>
+<p class="center"><img src="images/ch015-Uf023.jpg" alt="image" class="imgepub" width="467" height="210"/></p>
+<p class="center"><img src="images/ch015-Uf024.jpg" alt="image" class="imgepub" width="467" height="210"/></p>
+<h2 class="subtitle"><a id="ch015-sec015"></a>FLOATING ELEMENTS</h2>
+<h3 class="subtitle"><a id="ch015-sec016"></a><span class="inlinecodeuserinput">float</span></h3>
+<p class="center"><a id="page_370"></a><img src="images/ch015-Uf025.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="center"><img src="images/ch015-Uf026.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="center"><img src="images/ch015-Uf027.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="text">The <span class="inlinecode">float</span> property allows you to take an element in normal flow and place it as far to the left or right of the containing element as possible.</p>
+<p class="text">Anything else that sits inside the containing element will flow around the element that is floated.</p>
+<p class="text">When you use the <span class="inlinecode">float</span> property, you should also use the <span class="inlinecode">width</span> property to indicate how wide the floated element should be. If you do not, results can be inconsistent but the box is likely to take up the full width of the containing element (just like it would in normal flow).</p>
+<p class="text">In this example, a <span class="inlinecode">&lt;blockquote&gt;</span> element is used to hold a quotation. It's containing element is the <span class="inlinecode">&lt;body&gt;</span> element.</p>
+<p class="text">The <span class="inlinecode">&lt;blockquote&gt;</span> element is floated to the right, and the paragraphs that follow the quote flow around the floated element.</p>
+<h2 class="subtitle"><a id="ch015-sec017"></a>USING FLOAT TO PLACE ELEMENTS SIDE-BY-SIDE</h2>
+<p class="text"><a id="page_371"></a>A lot of layouts place boxes next to each other. The <span class="inlinecode">float</span> property is commonly used to achieve this.</p>
+<p class="text">When elements are floated, the height of the boxes can affect where the following elements sit.</p>
+<p class="text">In this example, you can see six paragraphs, each of which has a <span class="inlinecode">width</span> and a <span class="inlinecode">float</span> property set.</p>
+<p class="text">The fourth paragraph does not go across to the left hand edge of the page as one might expect. Rather it sits right under the third paragraph.</p>
+<p class="text">The reason for this is that the fourth paragraph has space to start under the third paragraph, but it cannot go any further to the left because the second paragraph is in the way.</p>
+<p class="text">Setting the height of the paragraphs to be the same height as the tallest paragraph would solve this issue, but it is rarely suited to real world designs where the amount of text in a paragraph or column may vary. It is more common to use the <span class="inlinecode">clear</span> property (discussed on the next page) to solve this issue.</p>
+<p class="center"><img src="images/ch015-Uf028.jpg" alt="image" class="imgepub" width="467" height="160"/></p>
+<p class="center"><img src="images/ch015-Uf029.jpg" alt="image" class="imgepub" width="467" height="320"/></p>
+<p class="center"><img src="images/ch015-Uf030.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<h2 class="subtitle"><a id="ch015-sec018"></a>CLEARING FLOATS</h2>
+<h3 class="subtitle"><a id="ch015-sec019"></a><span class="inlinecodeuserinput">clear</span></h3>
+<p class="center"><a id="page_372"></a><img src="images/ch015-Uf031.jpg" alt="image" class="imgepub" width="467" height="160"/></p>
+<p class="center"><img src="images/ch015-Uf032.jpg" alt="image" class="imgepub" width="467" height="320"/></p>
+<p class="center"><img src="images/ch015-Uf033.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="text">The <span class="inlinecode">clear</span> property allows you to say that no element (within the same containing element) should touch the left or right-hand sides of a box. It can take the following values:</p>
+<h3 class="subtitle"><a id="ch015-sec020"></a><span class="inlinecodeuserinput">left</span></h3>
+<p class="text">The left-hand side of the box should not touch any other elements appearing in the same containing element.</p>
+<h3 class="subtitle"><a id="ch015-sec021"></a><span class="inlinecodeuserinput">right</span></h3>
+<p class="text">The right-hand side of the box will not touch elements appearing in the same containing element.</p>
+<h3 class="subtitle"><a id="ch015-sec022"></a><span class="inlinecodeuserinput">both</span></h3>
+<p class="text">Neither the left nor right-hand sides of the box will touch elements appearing in the same containing element.</p>
+<h3 class="subtitle"><a id="ch015-sec023"></a><span class="inlinecodeuserinput">none</span></h3>
+<p class="text">Elements can touch either side.</p>
+<p class="text">In this example, the fourth paragraph has a class called <span class="inlinecode">clear</span>. The CSS rule for this class uses the clear property to indicate that nothing should touch the left-hand side of it. The fourth paragraph is therefore moved further down the page so no other element touches its left-hand side.</p>
+<h2 class="subtitle"><a id="ch015-sec024"></a>PARENTS OF FLOATED ELEMENTS: PROBLEM</h2>
+<p class="text"><a id="page_373"></a>If a containing element <i>only</i> contains floated elements, some browsers will treat it as if it is zero pixels tall.</p>
+<p class="text">As you can see in this example, the one pixel border assigned to the containing element has collapsed, so the box looks like a two pixel line.</p>
+<p class="center"><img src="images/ch015-Uf034.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="center"><img src="images/ch015-Uf035.jpg" alt="image" class="imgepub" width="467" height="140"/></p>
+<p class="center"><img src="images/ch015-Uf036.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<h2 class="subtitle"><a id="ch015-sec025"></a>PARENTS OF FLOATED ELEMENTS: SOLUTION</h2>
+<p class="center"><a id="page_374"></a><img src="images/ch015-Uf037.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="center"><img src="images/ch015-Uf038.jpg" alt="image" class="imgepub" width="467" height="140"/></p>
+<p class="center"><img src="images/ch015-Uf039.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="text">Traditionally, developers got around this problem by adding an extra element after the last floated box (inside the containing element). A CSS rule would be applied to this additional element setting the <span class="inlinecode">clear</span> property to have a value of both. But this meant that an extra element was added to the HTML just to fix the height of the containing element.</p>
+<p class="text">More recently, developers have opted for a purely CSS-based solution because it means that there is no need to add an extra element to the HTML page after the floated elements. The pure CSS solution adds two CSS rules to the containing element (in this example the <span class="inlinecode">&lt;div&gt;</span> element):</p>
+<ul style="list-style-type: disc;">
+<li>The <span class="inlinecode">overflow</span> property is given a value auto.</li>
+<li>The <span class="inlinecode">width</span> property is set to 100%.</li>
+</ul>
+<h2 class="subtitle"><a id="ch015-sec026"></a>CREATING MULTI-COLUMN LAYOUTS WITH FLOATS</h2>
+<p class="text"><a id="page_375"></a>Many web pages use multiple columns in their design. This is achieved by using a <span class="inlinecode">&lt;div&gt;</span> element to represent each column. The following three CSS properties are used to position the columns next to each other:</p>
+<h3 class="subtitle"><a id="ch015-sec027"></a><span class="inlinecodeuserinput">width</span></h3>
+<p class="text">This sets the width of the columns.</p>
+<h3 class="subtitle"><a id="ch015-sec028"></a><span class="inlinecodeuserinput">float</span></h3>
+<p class="text">This positions the columns next to each other.</p>
+<h3 class="subtitle"><a id="ch015-sec029"></a><span class="inlinecodeuserinput">margin</span></h3>
+<p class="text">This creates a gap between the columns.</p>
+<p class="text">A two-column layout like the one shown on this page would need two <span class="inlinecode">&lt;div&gt;</span> elements, one for the main content of the page and one for the sidebar.</p>
+<p class="text">Inside each of the <span class="inlinecode">&lt;div&gt;</span> elements there can be headings, paragraphs, images, and even other <span class="inlinecode">&lt;div&gt;</span> elements.</p>
+<p class="center"><img src="images/ch015-Uf040.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="center"><img src="images/ch015-Uf041.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="center"><img src="images/ch015-Uf042.jpg" alt="image" class="imgepub" width="467" height="280"/></p>
+<p class="center"><a id="page_376"></a><img src="images/ch015-Uf043.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="center"><img src="images/ch015-Uf044.jpg" alt="image" class="imgepub" width="467" height="220"/></p>
+<p class="center"><img src="images/ch015-Uf045.jpg" alt="image" class="imgepub" width="467" height="280"/></p>
+<p class="text">Similarly, a three column layout could be created by floating three <span class="inlinecode">&lt;div&gt;</span> elements next to each other, as shown on this page.</p>
+<h2 class="subtitle"><a id="ch015-sec030"></a>SCREEN SIZES</h2>
+<p class="text"><a id="page_377"></a>Different visitors to your site will have different sized screens that show different amounts of information, so your design needs to be able to work on a range of different sized screens.</p>
+<p class="center"><img src="images/ch015-Uf046.jpg" alt="image" class="imgepub" width="50" height="94"/></p>
+<p class="text">iPhone 4</p>
+<p class="text">Size: 3.5 inches</p>
+<p class="text">Resolution: 960 × 640 pixels</p>
+<p class="center"><img src="images/ch015-Uf047.jpg" alt="image" class="imgepub" width="150" height="194"/></p>
+<p class="text">iPad 2</p>
+<p class="text">Size: 9.7 inches</p>
+<p class="text">Resolution: 1024 × 768 pixels</p>
+<p class="text">When designing for print, you always know the size of the piece of paper that your design will be printed on. However, when it comes to designing for the web, you are faced with the unique challenge that different users will have different sized screens.</p>
+<p class="text">Since computers have been sold to the public, the size of screens has been steadily increasing. This means that some people viewing your site might have 13 inch monitors while others may have 27+ inch monitors.</p>
+<p class="text">The size of a user's screen affects how big they can open their windows and how much of the page they will see. There are also an increasing number of handheld devices (mobile phones and tablets) that have smaller screens.</p>
+<h2 class="subtitle"><a id="ch015-sec031"></a>SCREEN RESOLUTION</h2>
+<p class="text"><a id="page_378"></a>Resolution refers to the number of dots a screen shows per inch. Some devices have a higher resolution than desktop computers and most operating systems allow users to adjust the resolution of their screens.</p>
+<p class="center"><img src="images/ch015-Uf048.jpg" alt="image" class="imgepub" width="341" height="194"/></p>
+<p class="text">13″ MacBook</p>
+<p class="text">Size: 13.3 inches</p>
+<p class="text">Resolution: 1280 × 800 pixels</p>
+<p class="center"><img src="images/ch015-Uf049.jpg" alt="image" class="imgepub" width="467" height="363"/></p>
+<p class="text">27″ iMac</p>
+<p class="text">Size: 27 inches</p>
+<p class="text">Resolution: 2560 × 1440 pixels</p>
+<p class="center"><img src="images/ch015-Uf050.jpg" alt="image" class="imgepub" width="346" height="299"/></p>
+<p class="text">Most computers will allow owners to adjust the resolution of the display or the number of pixels that are shown on the screen. For example, here you can see the options to change the screen size from 720 × 480 pixels up to 1280 × 800 pixels.</p>
+<p class="text">It is interesting to note that the higher the resolution, the smaller the text appears. Many mobile devices have screens that are higher resolution than their desktop counterparts.</p>
+<h2 class="subtitle"><a id="ch015-sec032"></a>PAGE SIZES</h2>
+<p class="text"><a id="page_379"></a>Because screen sizes and display resolutions vary so much, web designers often try to create pages of around 960-1000 pixels wide (since most users will be able to see designs this wide on their screens).</p>
+<p class="text">Judging the height that people are likely to see on the screen without scrolling down the page is much harder. For several years, designers assumed that users would see the top 570-600 pixels of a page without having to scroll and some tried to fit all of the key messages in this area (fearing that people would not scroll down the page).</p>
+<p class="text">As screen sizes have increased and handheld devices have become more popular, the area users will see is far more variable.</p>
+<p class="text">The area of the page that users would see without scrolling was often referred as being “above the fold” (a term newspapers had originally coined to describe the area of the front page you would see if the paper were folded in half).</p>
+<p class="text">It is now recognized that if someone is interested in the content of the page, they are likely to scroll down to see more. Having said which, usability studies have shown that visitors can judge a page in under a second so it is still important to let new visitors know that the site is relevant to them and their interests.</p>
+<p class="text">As a result, many designs still try to let the user know what the site is about within the top 570-600 pixels, as well as hint at more content below this point. But do not try to cram too much into that top area.</p>
+<p class="text">At the time of writing, there was a growing trend for people to create adaptive or responsive designs that could change depending on the size of the screen.</p>
+<p class="text"><a id="page_380"></a>The shaded area is hidden by the constraints of the browser window, so the user must scroll in order to view the lower region.</p>
+<p class="text">However, the user gets a taste for what is lower on the page and can tell that there will be more to see if they scroll down.</p>
+<p class="center"><img src="images/ch015-Uf051.jpg" alt="image" class="imgepub" width="584" height="579"/></p>
+<h2 class="subtitle"><a id="ch015-sec033"></a>FIXED WIDTH LAYOUTS</h2>
+<p class="text"><a id="page_381"></a>Fixed width layout designs do not change size as the user increases or decreases the size of their browser window. Measurements tend to be given in pixels.</p>
+<p class="center"><img src="images/ch015-Uf052.jpg" alt="image" class="imgepub" width="467" height="265"/></p>
+<p class="text"><b>ADVANTAGES</b></p>
+<ul style="list-style-type: disc;">
+<li>Pixel values are accurate at controlling size and positioning of elements.</li>
+<li>The designer has far greater control over the appearance and position of items on the page than with liquid layouts.</li>
+<li>You can control the lengths of lines of text regardless of the size of the user's window.</li>
+<li>The size of an image will always remain the same relative to the rest of the page.</li>
+</ul>
+<p class="text"><b>DISADVANTAGES</b></p>
+<ul style="list-style-type: disc;">
+<li>You can end up with big gaps around the edge of a page.</li>
+<li>If the user's screen is a much higher resolution than the designer's screen, the page can look smaller and text can be harder to read.</li>
+<li>If a user increases font sizes, text might not fit into the allotted spaces.</li>
+<li>The design works best on devices that have a site or resolution similar to that of desktop or laptop computers.</li>
+<li>The page will often take up more vertical space than a liquid layout with the same content.</li>
+</ul>
+<h2 class="subtitle"><a id="ch015-sec034"></a>LIQUID LAYOUTS</h2>
+<p class="center"><a id="page_382"></a><img src="images/ch015-Uf053.jpg" alt="image" class="imgepub" width="467" height="265"/></p>
+<p class="text"><b>ADVANTAGES</b></p>
+<ul style="list-style-type: disc;">
+<li>Pages expand to fill the entire browser window so there are no spaces around the page on a large screen.</li>
+<li>If the user has a small window, the page can contract to fit it without the user having to scroll to the side.</li>
+<li>The design is tolerant of users setting font sizes larger than the designer intended (because the page can stretch).</li>
+</ul>
+<p class="text"><b>DISADVANTAGES</b></p>
+<ul style="list-style-type: disc;">
+<li>If you do not control the width of sections of the page then the design can look very different than you intended, with unexpected gaps around certain elements or items squashed together.</li>
+<li>If the user has a wide window, lines of text can become very long, which makes them harder to read.</li>
+<li>If the user has a very narrow window, words may be squashed and you can end up with few words on each line.</li>
+<li>If a fixed width item (such as an image) is in a box that is too small to hold it (because the user has made the window smaller) the image can overflow over the text.</li>
+</ul>
+<p class="text">Liquid layout designs stretch and contract as the user increases or decreases the size of their browser window. They tend to use percentages.</p>
+<p class="text">Because liquid layouts can stretch the entire width of the browser, resulting in long lines of text that are hard to read, some liquid layouts only let part of the page expand and contract. Other parts of the page have minimum and maximum widths.</p>
+<h2 class="subtitle"><a id="ch015-sec035"></a>A FIXED WIDTH LAYOUT</h2>
+<p class="text"><a id="page_383"></a>To create a fixed width layout, the width of the main boxes on a page will usually be specified in pixels (and sometimes their height, too).</p>
+<p class="text">Here you can see several <span class="inlinecode">&lt;div&gt;</span> elements, each of which uses an id or <span class="inlinecode">class</span> attribute to indicate its purpose on the page.</p>
+<p class="text">In a book like this, the result of both the fixed and liquid layouts look similar. To get a real feel for them, you need to view them in your browser and see how they react when you adjust the size of the browser window.</p>
+<p class="text">The fixed width layout will stay the same width no matter what size the browser window is, whereas the liquid layout will stretch (or shrink) to fill the screen.</p>
+<p class="text">The HTML is the same for both the fixed width layout example on this page and the liquid layout example you see next.</p>
+<p class="center"><img src="images/ch015-Uf054.jpg" alt="image" class="imgepub" width="287" height="467"/></p>
+<p class="center"><a id="page_384"></a><img src="images/ch015-Uf055.jpg" alt="image" class="imgepub" width="454" height="467"/></p>
+<p class="center"><img src="images/ch015-Uf056.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="text">The rule for the <span class="inlinecode">&lt;body&gt;</span> element is used to fix the width of the page at 960 pixels, and it is centered by setting the left and right margins to auto.</p>
+<p class="text">The main boxes on the page have a margin of 10 pixels to create a gap between them.</p>
+<p class="text">The navigation, feature, and footer panels stretch to the width of the containing element (which in this instance is the <span class="inlinecode">&lt;body&gt;</span> element), so we do not need to specify a width for them.</p>
+<p class="text">The three columns are each 300 pixels wide and use the <span class="inlinecode">float</span> property, which allows them to sit next to each other.</p>
+<p class="text">Sometimes an extra HTML element is used to contain the page, rather than fixing the width of the <span class="inlinecode">&lt;body&gt;</span>. This allows the background of the browser window to have a different color than the background of the content.</p>
+<h2 class="subtitle"><a id="ch015-sec036"></a>A LIQUID LAYOUT</h2>
+<p class="text"><a id="page_385"></a>The liquid layout uses percentages to specify the width of each box so that the design will stretch to fit the size of the screen.</p>
+<p class="text">When trying this in your browser, remember to make the window smaller and larger.</p>
+<p class="center"><img src="images/ch015-Uf057.jpg" alt="image" class="imgepub" width="287" height="467"/></p>
+<p class="center"><a id="page_386"></a><img src="images/ch015-Uf058.jpg" alt="image" class="imgepub" width="454" height="467"/></p>
+<p class="center"><img src="images/ch015-Uf059.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="text">There is a rule on the <span class="inlinecode">&lt;body&gt;</span> element to set the width of the page to 90% so that there is a small gap between the left and right-hand sides of the browser window and the main content.</p>
+<p class="text">The three columns are all given a margin of 1% and a width of 31.3%. This adds up to 99.9% of the width of the <span class="inlinecode">&lt;body&gt;</span> element, so some browsers might not perfectly align the right-hand side of the third column with other elements on the page.</p>
+<p class="text">The <span class="inlinecode">&lt;div&gt;</span> elements that hold the navigation, feature, and footer will stretch to fill the width of the containing <span class="inlinecode">&lt;body&gt;</span> element. They are given a 1% margin to help them align with the columns.</p>
+<p class="text">If you imagine the browser window to be very wide or very narrow, you can see how lines of text could become very long or very short.</p>
+<p class="text">This is where the <span class="inlinecode">min-width</span> and <span class="inlinecode">max-width</span> properties help create boundaries within which the layout can stretch (although Internet Explorer 7 was the first version of IE to support these properties).</p>
+<h2 class="subtitle"><a id="ch015-sec037"></a>LAYOUT GRIDS</h2>
+<p class="text"><a id="page_387"></a>Composition in any visual art (such as design, painting, or photography) is the placement or arrangement of visual elements — how they are organized on a page. Many designers use a grid structure to help them position items on a page, and the same is true for web designers.</p>
+<p class="text">On the right, you can see a set of thick vertical lines superimposed over the top of a newspaper website to show you how the page was designed according to a grid. This grid is called the <b>960 pixel grid</b> and is widely used by web designers.</p>
+<p class="text">Grids set consistent proportions and spaces between items which helps to create a professional looking design.</p>
+<p class="text">If you flick back through the pages of this book you will see that it, too, has been constructed according to a grid (comprising three columns).</p>
+<p class="text">As you will see on pages 389-390, it is possible to create many different layouts using this one versatile grid.</p>
+<p class="text">While a grid might seem like a restriction, in actual fact it:</p>
+<ul style="list-style-type: disc;">
+<li>Creates a continuity between different pages which may use different designs</li>
+<li>Helps users predict where to find information on various pages</li>
+<li>Makes it easier to add new content to the site in a consistent way</li>
+<li>Helps people collaborate on the design of a site in a consistent way</li>
+</ul>
+<h2 class="subtitle"><a id="ch015-sec038"></a>EXAMPLE GRID</h2>
+<p class="center"><a id="page_388"></a><img src="images/ch015-Uf060.jpg" alt="image" class="imgepub" width="560" height="584"/></p>
+<h2 class="subtitle"><a id="ch015-sec039"></a>POSSIBLE LAYOUTS: 960 PIXEL WIDE 12 COLUMN GRID</h2>
+<p class="center"><a id="page_389"></a><img src="images/ch015-Uf061.jpg" alt="image" class="imgepub" width="560" height="584"/></p>
+<p class="text"><a id="page_390"></a>These two pages illustrate a 960 pixel wide, 12 column grid. They demonstrate how it is possible to create a wide range of column layouts using this one grid.</p>
+<p class="text">The page is 960 pixels wide and there are 12 equal sized columns (shown in gray), each of which is is 60 pixels wide.</p>
+<p class="text">Each column has a margin set to 10 pixels, which creates a a gap of 20 pixels between each column and 10 pixels to the left and right-hand sides of the page.</p>
+<p class="center"><img src="images/ch015-Uf062.jpg" alt="image" class="imgepub" width="559" height="584"/></p>
+<h2 class="subtitle"><a id="ch015-sec040"></a>CSS FRAMEWORKS</h2>
+<p class="text"><a id="page_391"></a>CSS frameworks aim to make your life easier by providing the code for common tasks, such as creating layout grids, styling forms, creating printer-friendly versions of pages and so on. You can include the CSS framework code in your projects rather than writing the CSS from scratch.</p>
+<p class="text">ADVANTAGES</p>
+<ul style="list-style-type: disc;">
+<li>They save you from repeatedly writing code for the same tasks.</li>
+<li>They will have been tested across different browser versions (which helps avoid browser bugs).</li>
+</ul>
+<p class="text">DISADVANTAGES</p>
+<ul style="list-style-type: disc;">
+<li>They often require that you use class names in your HTML code that only control the presentation of the page (rather than describe its content).</li>
+<li>In order to satisfy a wide variety of needs, they often contain more code than you need for your particular web page (commonly referred to as code “bloat”).</li>
+</ul>
+<p class="text">INTRODUCING THE 960.GS CSS FRAMEWORK</p>
+<p class="text">One of the most popular uses of CSS frameworks is in creating grids to layout pages. There are several grid frameworks out there, but the one we will be looking at over the next few pages is the 960 Grid System (available at <span class="inlinecode"><a href="http://www.960.gs">www.960.gs</a></span>).</p>
+<p class="text">960.gs provides a style sheet that you can include in your HTML pages. Once our page links to this style sheet, you can provide the appropriate classes to your HTML code and it will create multiple column layouts for you. The 960.gs website also provides templates you can download to help design your pages using a 12 column grid. (In addition, there is a variation on the grid that uses 16 columns.)</p>
+<p class="text">To create a 12 column grid, an element that contains the entire page is given a <span class="inlinecode">class</span> attibute whose value is <span class="inlinecode">container_12</span>. This sets the content of the page to be 960 pixels wide and indicates that we are using a 12 column grid.</p>
+<p class="text">There are different classes for blocks that take up 1, 2, 3, 4, and up to 12 columns of the grid. Each block uses class names such as <span class="inlinecode">grid_3</span> (for a block that stretches over three columns), <span class="inlinecode">grid_4</span> (for a block that stretches over 4 columns) and and so on through to <span class="inlinecode">grid_12</span> (for a box that is the full width of the page). These columns all float to the left, and there is a 10 pixel margin to the left and the right of each one.</p>
+<p class="text">There are several other grid-based CSS frameworks available online, such as those at: <span class="inlinecode"><a href="http://blueprintcss.org">blueprintcss.org</a> <a href="http://lessframework.com">lessframework.com</a> <a href="http://developer.yahoo.com/yui/grids/">developer.yahoo.com/yui/grids/</a></span></p>
+<h2 class="subtitle"><a id="ch015-sec041"></a>USING THE 960.GS GRID</h2>
+<p class="text"><a id="page_392"></a>Below you can see a sample layout of a page just like the fixed width page example. On the next page, we will recreate this using the 960.gs stylesheet. Instead of writing our own CSS to control layout, we will need to add classes to the HTML indicating how wide each section should be.</p>
+<p class="center"><img src="images/ch015-Uf063.jpg" alt="image" class="imgepub" width="584" height="508"/></p>
+<h2 class="subtitle"><a id="ch015-sec042"></a>A GRID-BASED LAYOUT USING 960.GS</h2>
+<p class="text"><a id="page_393"></a>Let's take a look at an HTML page and how it has been marked up to use the 960.gs grid system.</p>
+<p class="text">You can see that we include the CSS for the grid using the <span class="inlinecode">&lt;link&gt;</span> element inside the <span class="inlinecode">&lt;head&gt;</span> of the page.</p>
+<p class="text">The styles we are writing ourselves are shown on the right hand page.</p>
+<p class="text"><span class="inlinecode">The 960_12_col.css</span> stylesheet contains all of the rules we need to control the grid layout. The HTML uses the class names:</p>
+<p class="text"><span class="inlinecode">container_12</span> to act as a container for the whole page and indicate that we are using a 12 column grid</p>
+<p class="text"><span class="inlinecode">clearfix</span> to ensure that browsers know the height of the containing box, because it only contains floated elements (this addresses the issue you met on pages 371-372)</p>
+<p class="text"><span class="inlinecode">grid_12</span> to create a block that is twelve columns wide</p>
+<p class="text"><span class="inlinecode">grid_4</span> to create a block that is four columns wide</p>
+<p class="center"><img src="images/ch015-Uf064.jpg" alt="image" class="imgepub" width="272" height="467"/></p>
+<p class="center"><a id="page_394"></a><img src="images/ch015-Uf065.jpg" alt="image" class="imgepub" width="467" height="320"/></p>
+<p class="center"><img src="images/ch015-Uf066.jpg" alt="image" class="imgepub" width="467" height="260"/></p>
+<p class="text">The 960.gs style sheet has taken care of the layout, creating the correct width for the columns and setting the spaces between them. Therefore, the only rules we needed to add are shown on this page. These rules:</p>
+<ul style="list-style-type: disc;">
+<li>Control the font and the position of the text in the boxes</li>
+<li>Set the background colors for the boxes</li>
+<li>Set the height of the feature and article boxes</li>
+<li>Add a margin to the top and bottom of each box</li>
+</ul>
+<h2 class="subtitle"><a id="ch015-sec043"></a>MULTIPLE STYLE SHEETS</h2>
+<h3 class="subtitle"><a id="ch015-sec044"></a><span class="inlinecodeuserinput">@import</span></h3>
+<p class="text"><a id="page_395"></a>Some web page authors split up their CSS style rules into separate style sheets. For example, they might use one style sheet to control the layout and another to control fonts, colors and so on.</p>
+<p class="text">Some authors take an even more <b>modular</b> approach to stylesheets, creating separate stylesheets to control typography, layout, forms, tables, even different styles for each sub-section of a site.</p>
+<p class="text">There are two ways to add multiple style sheets to a page:</p>
+<ol style="list-style-type: decimal">
+<li>Your HTML page can link to one style sheet and that stylesheet can use the @import rule to import other style sheets.</li>
+<li>In the HTML you can use a separate <span class="inlinecode">&lt;link&gt;</span> element for each style sheet.</li>
+</ol>
+<p class="text">The example on this page uses one <span class="inlinecode">&lt;link&gt;</span> element in the HTML to link to a style sheet called <span class="inlinecode">styles.css</span>. This stylesheet then uses the <span class="inlinecode">@import</span> rule to import the <span class="inlinecode">typography.css</span> and <span class="inlinecode">tables.css</span> files.</p>
+<p class="text">If a styesheet uses the <span class="inlinecode">@import</span> rule, it should appear before the other rules.</p>
+<p class="center"><img src="images/ch015-Uf067.jpg" alt="image" class="imgepub" width="467" height="360"/></p>
+<p class="center"><img src="images/ch015-Uf068.jpg" alt="image" class="imgepub" width="467" height="360"/></p>
+<h2 class="subtitle"><a id="ch015-sec045"></a>MULTIPLE STYLE SHEETS</h2>
+<h3 class="subtitle"><a id="ch015-sec046"></a><span class="inlinecodeuserinput">link</span></h3>
+<p class="center"><a id="page_396"></a><img src="images/ch015-Uf069.jpg" alt="image" class="imgepub" width="467" height="360"/></p>
+<p class="center"><img src="images/ch015-Uf070.jpg" alt="image" class="imgepub" width="467" height="360"/></p>
+<p class="text">On this page you can see the other technique for including multiple style sheets. Inside the <span class="inlinecode">&lt;head&gt;</span> element is a separate <span class="inlinecode">&lt;link&gt;</span> element for each style sheet.</p>
+<p class="text">The contents of <span class="inlinecode">site.css</span> are identical to <span class="inlinecode">styl es.css</span> on the left hand page, except the code does not contain <span class="inlinecode">@import</span> rules.</p>
+<p class="text">As with all style sheets, if two rules apply to the same element then rules that appear later in a document will take precedence over previous rules.</p>
+<p class="text">In the example on this page, any rules in <span class="inlinecode">typography.css</span> would take precedence over rules in <span class="inlinecode">site.css</span> (because the typography rules are included after the other rules).</p>
+<p class="text">In the example on the previous page, the rules in <span class="inlinecode">styles.css</span> would take precedence over the rules in <span class="inlinecode">typography.css</span>. This is because when the <span class="inlinecode">@import</span> rule is used, that is the point at which the browser considers the rules live.</p>
+<p class="center"><a id="page_397"></a><img src="images/ch015-Uf071.jpg" alt="image" class="imgepub" width="760" height="700"/></p>
+<h2 class="subtitle"><a id="ch015-sec047"></a>EXAMPLE LAYOUT</h2>
+<p class="text"><a id="page_398"></a>This example demonstrates a modern magazine-style layout using the 960.gs grid. Using this style sheet saves us from having to create all of the CSS code ourselves.</p>
+<p class="text">Several classes from the 960.gs style sheet have been added to the code to indicate how many columns of the grid each element should stretch across. As you saw in this chapter, the 960.gs stylesheet uses the float property to position the blocks next to each other.</p>
+<p class="text">At the start of the page, the header uses fixed positioning (meaning that it does not move when the user scrolls down the page). The <span class="inlinecode">z-index</span> property is added to the header to keep it on top of the remaining content as the user scrolls down the page.</p>
+<p class="text">Both the header and footer are contained within <span class="inlinecode">&lt;div&gt;</span> elements which stretch the entire width of the page. Inside those container elements sit other elements that use classes from the 960.gs style sheet to ensure that the items in the header and footer align with the rest of the content.</p>
+<p class="text">The feature article takes up the entire width of the page. The <span class="inlinecode">push_7</span> and <span class="inlinecode">push_9</span> classes are part of the 960.gs style sheet and are used in the feature article to move the header and the content for this article over to the right.</p>
+<p class="text">Under the main article you can see four blocks, each of which is 3 columns wide. These contain images followed by links to more articles.</p>
+<p class="text">This example also uses background images to create a textured background for the page and header, and also to contain the images for the feature article. You will learn more about these in the next chapter.</p>
+<p class="text"><b>Please note:</b> If you view this example in Internet Explorer 6, the transparent PNGs used in this design may have a gray background. To learn more about this issue, visit the website accompanying this book where you can find a simple JavaScript that fixes this problem.</p>
+<div class="code">
+<pre class="codesnippet"><a id="page_399"></a>&lt;!DOCTYPE html
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Layout&lt;/title&gt;
+    &lt;link rel=“stylesheet” type=“text/css” href=“css/960_12_col.css” /&gt;
+    &lt;style type=“text/css”&gt;
+      @font-face {
+        font-family: 'QuicksandBook';
+        src: url('fonts/Quicksand_Book-webfont.eot');
+        src: url('fonts/Quicksand_Book-webfont.eot?#iefix') format('embedded-opentype'),
+          url('fonts/Quicksand_Book-webfont.woff') format('woff'),
+          url('fonts/Quicksand_Book-webfont.ttf') format('truetype'),
+          url('fonts/Quicksand_Book-webfont.svg#QuicksandBook') format('svg');
+        font-weight: normal;
+        font-style: normal;}
+      body {
+        color: #ffffff;
+        background: #413f3b url(“images/bg.jpg”);
+        font-family: Georgia, “Times New Roman”, Times, serif;
+        font-size: 90%;
+        margin: 0px;
+        text-align: center;}
+      a {
+        color: #b5c1ad;
+        text-decoration: none;}
+      a:hover {
+        color: #ffffff;}
+      .header {
+        background-image: url(“images/bg-header.jpg”);
+        padding: 0px 0px 0px 0px;
+        height: 100px;
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        z-index: 50;}
+      .nav {
+        float: right;
+        font-family: QuicksandBook, Helvetica, Arial, sans-serif;</pre>
+<pre class="codesnippet"><a id="page_400"></a>padding: 45px 0px 0px 0px;
+        text-align: right;}
+      .wrapper {
+        width: 960px;
+        margin: 0px auto;
+        background-image: url(“images/bg-triangle.png”);
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+        text-align: left;}
+      .logo {
+        margin-bottom: 20px;}
+      h1, h2 {
+        font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        text-transform: uppercase;}
+      h1 {
+        font-size: 240%;
+        margin-top: 140px;}
+      .date {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 75%;
+        color: #b5c1ad;}
+      .intro {
+        clear: left;
+        font-size: 90%;
+        line-height: 1.4em;}
+      .main-story {
+        background-image: url(“images/triangles.png”);
+        background-repeat: no-repeat;
+        background-position: 122px 142px;
+        height: 570px;}
+      .more-articles {
+        border-top: 1px solid #ffffff;
+        padding: 10px;}
+      .more-articles p {
+        border-bottom: 1px solid #807c72;
+        padding: 5px 0px 15px 0px;
+        font-size: 80%;}</pre>
+<pre class="codesnippet"><a id="page_401"></a>.more-articles p:last-child {
+        border-bottom: none;}
+      .footer {
+        clear: both;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 5px 10px;}
+      .footer p {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 75%;
+        text-align: right;}
+      .footer a {
+        color: #807c72;}
+     &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div class=“header”&gt;
+      &lt;div class=“container_12”&gt;
+        &lt;div class=“grid_5”&gt;
+          &lt;img src=“images/logo.png” alt=“Pedal Faster - The modern bicycle magazine”
+            width=“216” height=“37” class=“logo” /&gt;
+          &lt;img src=“images/header-triangle.png” alt=“” width=“116” height=“100” /&gt;
+        &lt;/div&gt;
+        &lt;div class=“nav grid_7”&gt;
+          &lt;a href=“”&gt;home&lt;/a&gt; / &lt;a href=“”&gt;news&lt;/a&gt; / &lt;a href=“”&gt;archives&lt;/a&gt; /
+            &lt;a href=“”&gt;about&lt;/a&gt; / &lt;a href=“”&gt;contact&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=“wrapper”&gt;
+      &lt;div class=“main-story container_12”&gt;
+        &lt;div class=“grid_6 push_6”&gt;
+          &lt;h1&gt;&lt;a href=“”&gt;Fixed Gear Forever&lt;/a&gt;&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=“intro grid_3 push_9”&gt;
+          &lt;p class=“date”&gt;16 APRIL 2011&lt;/p&gt;
+          &lt;p&gt;The veloheld combines minimalist design with superb quality. Devoid of
+             excessive graphics and gear shift components, the veloheld product range
+             delights us with its beauty and simplicity … &lt;/p&gt;</pre>
+<pre class="codesnippet"><a id="page_402"></a>&lt;/div&gt;
+      &lt;/div&gt;&lt;!-- .main-story --&gt;
+      &lt;div class=“more-articles container_12”&gt;
+        &lt;h2 class=“grid_12”&gt;&lt;a href=“”&gt;More Articles&lt;/a&gt;&lt;/h2&gt;
+        &lt;div class=“grid_3”&gt;
+          &lt;img src=“images/more1.jpg” alt=“The road ahead” width=“220” height=“125” /&gt;
+          &lt;p&gt;&lt;a href=“”&gt;On the Road: from the fixed gear fanatic's point of view&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Brand History: Pashley Cycles - hand-built in England&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Frame Wars: Innovations in cycle manufacture and repair&lt;/a&gt;&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=“grid_3”&gt;
+          &lt;img src=“images/more2.jpg” alt=“Sketchbook” width=“220” height=“125” /&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Touring Diary: A sketchbook in your basket&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Top Ten Newcomers for 2012: A peek at what's to come&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;InnerTube: The best cycling videos on the web&lt;/a&gt;&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=“grid_3”&gt;
+          &lt;img src=“images/more3.jpg” alt=“Repair shop sign” width=“220” height=“125” /&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Product Review: All baskets were not created equal&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Going Public: Out &amp; About with the founder of Public&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Cycle Lane Defence: Know your rights&lt;/a&gt;&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=“grid_3”&gt;
+          &lt;img src=“images/more4.jpg” alt=“Schwinn Spitfire” width=“220” height=“125” /&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Bicyle Hall of Fame: The 1958 Schwinn Spitfire&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Reader Survey: Share your thoughts with us!&lt;/a&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;a href=“”&gt;Chain Gang: The evolution of the humble bike chain&lt;/a&gt;&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;&lt;!-- .more-articles --&gt;
+    &lt;/div&gt;&lt;!-- .wrapper --&gt;
+    &lt;div class=“footer clearfix”&gt;
+      &lt;div class=“container_12”&gt;
+        &lt;p class=“grid_12”&gt;&lt;a href=“”&gt;Legal Information&lt;/a&gt; | &lt;a href=“”&gt;Privacy
+          Policy&lt;/a&gt; | &lt;a href=“”&gt;Copyright &amp;copy; Pedal Faster 2011&lt;/a&gt;&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<h2 class="subtitle"><a id="ch015-sec048"></a>SUMMARY LAYOUT</h2>
+<ul style="list-style-image: url(images/rtrif.jpg);">
+<li><a id="page_403"></a><a id="page_404"></a><span class="inlinecode">&lt;div&gt;</span> elements are often used as containing elements to group together sections of a page.</li>
+<li>Browsers display pages in normal flow unless you specify relative, absolute, or fixed positioning.</li>
+<li>The <span class="inlinecode">float</span> property moves content to the left or right of the page and can be used to create multi-column layouts. (Floated items require a defined width.)</li>
+<li>Pages can be fixed width or liquid (stretchy) layouts.</li>
+<li>Designers keep pages within 960-1000 pixels wide, and indicate what the site is about within the top 600 pixels (to demonstrate its relevance without scrolling).</li>
+<li>Grids help create professional and flexible designs.</li>
+<li>CSS Frameworks provide rules for common tasks.</li>
+<li>You can include multiple CSS files in one page.<a id="page_405"></a></li>
+</ul>
+</div>
+</div>
+</body>
+</html>
