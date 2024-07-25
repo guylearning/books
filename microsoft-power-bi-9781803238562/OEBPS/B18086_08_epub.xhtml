@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer091">
+			<h1 id="_idParaDest-157"><em class="italic"><a id="_idTextAnchor162"></a>Chapter 8</em>: Optimizing Model Performance</h1>
+			<p>The data model is <a id="_idIndexMarker425"></a>a key component of any Power BI solution. Data models require data structures to be imported and relationships set up so that business questions can be answered using the data contained in the model. Often, data sizes grow, and performance can become a challenge when this happens. Optimizing the data model for performance <a id="_idIndexMarker426"></a>becomes a necessary exercise to ensure expectations for performance can still be met. </p>
+			<p>Optimizing data model performance is a component of the PL-300 exam and is also important to consider when using Power BI in a production environment. Additionally, it's important to optimize Power BI data models for performance in order to ensure users have the best experience with the solution. Having a performant data model will ensure you are able to answer questions in an efficient manner that leads to positive outcomes for the organization.</p>
+			<p>In this chapter, we're going to cover the following topics:</p>
+			<ul>
+				<li>Optimizing data in the model</li>
+				<li>Optimizing measures, relationships, and visuals</li>
+				<li>Optimizing aggregations</li>
+				<li>Query diagnostics</li>
+			</ul>
+			<h1 id="_idParaDest-158"><a id="_idTextAnchor163"></a>Technical requirements</h1>
+			<p>For this chapter, you will need the following:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC.</li>
+				<li>A Power BI data model where we can apply the optimization techniques covered in this chapter. If you've been following along with the book, you should have one ready to go!</li>
+			</ul>
+			<h1 id="_idParaDest-159"><a id="_idTextAnchor164"></a>Optimizing data in the model</h1>
+			<p>We've covered, in <a id="_idIndexMarker427"></a>previous chapters, how Power BI supports directly connecting to a data store, such as connecting to <a id="_idIndexMarker428"></a>an <strong class="bold">Enterprise Data Warehouse</strong> (<strong class="bold">EDW</strong>) that has billions of records and years of sales history. When configured with DirectQuery performance, Power BI becomes dependent upon not only the calculations and rendering of visuals in the report but also the performance of the underlying data store. If the EDW takes a long time to query, then the Power BI report that uses the query will also take a long time.</p>
+			<p>To help, Power BI also supports importing data, which reduces the performance dependency on the underlying data store to increase the performance of report visuals. Data imported into the Power BI data model is stored both in memory and on disk <a id="_idIndexMarker429"></a>using the VertiPaq <strong class="bold">Storage Engine</strong> (<strong class="bold">SE</strong>). VertiPaq <a id="_idIndexMarker430"></a>will compress data, sometimes by as much as 10x, so even with limitations on the amount of data imported, it's often able to store large datasets.</p>
+			<p>To best optimize import datasets, we recommend taking a layered approach and reviewing each characteristic of your data, starting with removing unnecessary rows and columns. </p>
+			<h2 id="_idParaDest-160"><a id="_idTextAnchor165"></a>Removing unnecessary rows and columns</h2>
+			<p>Often, when<a id="_idIndexMarker431"></a> connecting to data sources, there will be additional data (both in rows and columns) that is not needed for the reports and dashboards<a id="_idIndexMarker432"></a> that you want to create. In these cases, you will be best served by removing these rows and columns from the dataset using the Power Query Editor. </p>
+			<p>Data is stored in the VertiPaq engine in a columnar format, which is highly compressed. However, if it's possible to remove columns of data, it will successfully reduce the size of your dataset. Due to how data is stored in VertiPaq, it is recommended to remove all unnecessary text columns since they will take up more storage space in the data model. To remove unnecessary columns from a dataset in the Power Query Editor, simply right-click the column to be removed and click <strong class="bold">Remove</strong>. It's also possible to select multiple columns, right-click, and then select <strong class="bold">remove columns</strong> to remove multiple columns at the same time.</p>
+			<p>To remove unnecessary rows of data, you'll need to add a filter to a query. To best execute a filter, you'll need to understand the basic characteristics of the data, which is easy to do using the data profiling capabilities of Power Query (see <a href="B18086_03_epub.xhtml#_idTextAnchor049"><em class="italic">Chapter 3</em></a>, <em class="italic">Profiling the Data</em>, for more details). Filtering rows of data is dependent upon the data type of the column being filtered. For example, if you want to filter using the <strong class="source-inline">ListPrice</strong> column of a <strong class="source-inline">Products</strong> table, then you'll need to supply a numeric or currency value to the filter criteria. If you want to filter by a text value (such as removing all products that have a <strong class="source-inline">Color</strong> value of <strong class="source-inline">Red</strong>), then you'll need to apply the filter to a column that is set to a data type of text. To apply a filter to a column, simply click the ▼ button for the column. </p>
+			<p>For text filters, select <strong class="bold">Text Filters</strong> and then select the type of operator you'd like to use: </p>
+			<ul>
+				<li><strong class="bold">Equals</strong></li>
+				<li><strong class="bold">Does Not Equal</strong></li>
+				<li><strong class="bold">Begins With</strong></li>
+				<li><strong class="bold">Does Not Begin With</strong></li>
+				<li><strong class="bold">Ends With</strong></li>
+				<li><strong class="bold">Does Not End With</strong></li>
+				<li><strong class="bold">Contains</strong></li>
+				<li><strong class="bold">Does Not Contain</strong></li>
+			</ul>
+			<p>For numeric<a id="_idIndexMarker433"></a> or currency filters, select <strong class="bold">Number Filters</strong> and then select the type of operator you'd like to use:</p>
+			<ul>
+				<li><strong class="bold">Equals</strong></li>
+				<li><strong class="bold">Does Not Equal</strong></li>
+				<li><strong class="bold">Greater Than</strong></li>
+				<li><strong class="bold">Greater Than Or Equal To</strong></li>
+				<li><strong class="bold">Less Than</strong></li>
+				<li><strong class="bold">Less Than Or Equal To</strong></li>
+				<li><strong class="bold">Between</strong></li>
+			</ul>
+			<p>For date<a id="_idIndexMarker434"></a> filters, select <strong class="bold">Date/Time Filters</strong> and then select the one needed. Different column data types will have different criteria for applying filters.</p>
+			<p>Removing unnecessary columns and rows is often a quick and easy way to reduce the amount of data in your Power BI data model. Next, we will look at some more complex ways of reducing the data model size.</p>
+			<h2 id="_idParaDest-161"><a id="_idTextAnchor166"></a>Splitting numeric and text column data</h2>
+			<p>In<a id="_idIndexMarker435"></a> the VertiPaq engine, data is stored in a columnar data format. This means for a given query or table, each column is given a data type and all records for each column are stored independently from each other, allowing for optimized compression for each data type.</p>
+			<p>Numeric data type data in the data model <a id="_idIndexMarker436"></a>uses <strong class="bold">value encoding</strong> to store the data in an optimized way. Value encoding is where data gets stored on disk or in memory based on a mathematical operation in order to gain compression. For example, say we have a table of numeric values, as follows:</p>
+			<div>
+				<div id="_idContainer081" class="IMG---Figure">
+					<img src="image/B18086_08_001.jpg" alt="Figure 8.1 – Example ZIP code table with data values without value encoding compression 
+" width="231" height="347"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.1 – Example ZIP code table with data values without value encoding compression </p>
+			<p>Using value encoding, the data stored might look more like this: </p>
+			<div>
+				<div id="_idContainer082" class="IMG---Figure">
+					<img src="image/B18086_08_002.jpg" alt="Figure 8.2 – Example ZIP code table with value encoding compression
+" width="213" height="321"/>
+				</div>
+			</div>
+			<p class="figure-caption"> </p>
+			<p class="figure-caption">Figure 8.2 – Example ZIP code table with value encoding compression</p>
+			<p>To arrive at the value-encoded data, we simply subtract the lowest value from the table: <strong class="source-inline">45674</strong>. This means that the underlying numeric type can often be changed from long (64-bit integers), to integer (32-bit integers), to short (16-bit integers), which can have a dramatic impact on the amount of memory or disk storage needed to store the data. Power BI can use much more advanced mathematic algorithms to do value encoding.</p>
+			<p>Text and non-numeric data type<a id="_idIndexMarker437"></a> columns use hash encoding. Hash encoding is similar in that it replaces the original value with another value that takes up fewer bytes for storage; however, the algorithm used to store the values tends to need to store an entire dictionary in order to encode and decode the values (rather than a simple mathematical formula). Hash encoding tends to be less efficient than value encoding so it is important to use tools such as Tabular Editor to provide hints to the VertiPaq engine to ensure the best encoding is used. </p>
+			<p>In some cases, you may have text data type columns that store both text and numeric data. In some cases, it can be helpful to split a column such as this into two columns, setting one as the text data type and the other as numeric. This allows the VertiPaq engine to use hash encoding on the text component and value encoding on the numeric component. Even greater efficiency can be achieved when there is high cardinality in the text component (reducing the size of the dictionary-needed hash encoding) of the column.</p>
+			<p>Splitting columns<a id="_idIndexMarker438"></a> is a feature of the Power Query Editor, and it's possible to split columns by the following:</p>
+			<ul>
+				<li>Delimiter</li>
+				<li>Number of characters</li>
+				<li>Positions</li>
+				<li>Lower- and uppercase characters</li>
+				<li>Digit and non-digit characters</li>
+			</ul>
+			<p>Next, we'll look at other ways of optimizing using measures, relationships, and visuals.</p>
+			<h1 id="_idParaDest-162"><a id="_idTextAnchor167"></a>Optimizing measures, relationships, and visuals</h1>
+			<p>Measures in <a id="_idIndexMarker439"></a>Power BI are driven by DAX queries. To optimize DAX queries (and measures), we must understand how Power BI uses both <a id="_idIndexMarker440"></a>a <strong class="bold">Formula Engine</strong> (<strong class="bold">FE</strong>) and an <strong class="bold">SE</strong>, which make<a id="_idIndexMarker441"></a> up the backend technology. Simply put, the SE is where imported data is stored in the highly compressed columnar VertiPaq format, and the FE is where data can be calculated based on the requirements in DAX queries.</p>
+			<p>The SE provides a single interface for the FE to query and retrieve data. It functions to store data or provide a conduit for underlying data stores in cases where data is connected using DirectQuery. The SE is built into Power BI Desktop and is also part of the underlying technology used in SQL Server Analysis Services and Azure Analysis Services. </p>
+			<p>The FE is the query processor that takes DAX queries as input, interacts with the SE, and then returns data to Power BI visuals in reports and dashboards. The FE does not have direct access to every kind of data source that Power BI supports; instead, the FE <em class="italic">only</em> interacts with the SE. It's the SE that has both the ability to store data in-memory in VertiPaq storage and the myriad of different data stores supported by Power BI. The FE serves the purpose of understanding DAX queries, converting<a id="_idIndexMarker442"></a> to <strong class="bold">xmSQL</strong> (the SQL dialect used by VertiPaq), and performing calculations on data received from the SE to get to the end result as directed by the DAX query.</p>
+			<p>When <a id="_idIndexMarker443"></a>optimizing measures, you will want to use an open source tool called <strong class="bold">DAX Studio</strong> (available for free from <a href="https://daxstudio.org">https://daxstudio.org</a>). DAX Studio<a id="_idIndexMarker444"></a> is an open source <a id="_idIndexMarker445"></a>DAX client tool that allows you to do an in-depth analysis of DAX queries and how they are executed in the Power BI environment:</p>
+			<ol>
+				<li>To use DAX Studio, you will need the DAX query used by the specific operation of the report in Power BI Desktop. You can acquire this query easily using the <strong class="bold">Performance analyzer</strong> pane in Power BI Desktop, accessed from under the <strong class="bold">View</strong> menu on the ribbon. Click <strong class="bold">Performance Analyzer</strong> and then click <strong class="bold">Refresh visuals</strong>, select a slicer, or apply a filter. Power BI will generate and run the DAX query (or queries) to generate the requested data for each of the visuals on the report being analyzed. </li>
+			</ol>
+			<div>
+				<div id="_idContainer083" class="IMG---Figure">
+					<img src="image/B18086_08_003.jpg" alt="Figure 8.3 – Results of Performance analyzer after refreshing visuals
+" width="824" height="598"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.3 – Results of Performance analyzer after refreshing visuals</p>
+			<ol>
+				<li value="2">After the<a id="_idIndexMarker446"></a> operation has completed, you will be able to click <strong class="bold">Copy query</strong> in the <strong class="bold">Performance analyzer</strong> pane. Copy the query and then open DAX Studio.</li>
+				<li>Open DAX Studio, and ensure you connect to the PBI/SSDT model that is currently running in Power BI Desktop (the name of your Power BI file will show under <strong class="bold">PBI / SSDT Model)</strong>.</li>
+			</ol>
+			<div>
+				<div id="_idContainer084" class="IMG---Figure">
+					<img src="image/B18086_08_004.jpg" alt="Figure 8.4 – Connection screen in DAX Studio
+" width="936" height="509"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.4 – Connection screen in DAX Studio</p>
+			<ol>
+				<li value="4">Copy your <a id="_idIndexMarker447"></a>query into the main or largest query pane shown in the DAX Studio interface, where it shows <strong class="bold">Start by typing your query in this area.</strong>.</li>
+			</ol>
+			<div>
+				<div id="_idContainer085" class="IMG---Figure">
+					<img src="image/B18086_08_005.jpg" alt="Figure 8.5 – DAX Studio window showing various panes, including the main query pane
+" width="1655" height="1050"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.5 – DAX Studio window showing various panes, including the main query pane</p>
+			<ol>
+				<li value="5">After<a id="_idIndexMarker448"></a> pasting your query, be sure to select <strong class="bold">Server Timings</strong> and then <strong class="bold">Clear Cache and then Run</strong> under the <strong class="bold">Run</strong> menu shown under <strong class="bold">Home</strong> on the ribbon. </li>
+				<li>Once these settings have been selected, click <strong class="bold">Run</strong> (which should run <strong class="bold">Clear Cache and then Run</strong>), and then click the <strong class="bold">Server Timings</strong> tab on the bottom pane. The bottom pane should now show something like this: </li>
+			</ol>
+			<div>
+				<div id="_idContainer086" class="IMG---Figure">
+					<img src="image/B18086_08_006.jpg" alt="Figure 8.6 – Server Timings tab showing details of the DAX query
+" width="1198" height="417"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.6 – Server Timings tab showing details of the DAX query</p>
+			<p>From this<a id="_idIndexMarker449"></a> screen, we can see information about our DAX query that tells us the following:</p>
+			<ul>
+				<li>How much time was spent in total to run the DAX query (<strong class="bold">4 ms</strong>)</li>
+				<li>How much time was used by the FE to run the DAX query (<strong class="bold">3 ms</strong>)</li>
+				<li>How much time was used by the SE to run the DAX query (<strong class="bold">1 ms</strong>)</li>
+				<li>How many SE queries were generated by the FE (<strong class="bold">1</strong>)</li>
+				<li>What the SE query looks like (shown in the right-hand side subpane)</li>
+			</ul>
+			<p>This information will help us determine where we can spend time optimizing the DAX query used by the measure. In the previous example, we can see that the majority of the 4 ms time is spent in the FE, so it would make the most sense to optimize that as the remaining portion (1 ms consumed by the SE) will have less time to optimize. Ideally, you want to see more time spent in the FE or equally balanced between the FE and SE.</p>
+			<p>Here is an example of a DAX query used by a visual that contains two SE queries and is relatively balanced between FE and SE time:</p>
+			<div>
+				<div id="_idContainer087" class="IMG---Figure">
+					<img src="image/B18086_08_007.jpg" alt="Figure 8.7 – DAX query with two SE queries
+" width="1203" height="601"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.7 – DAX query with two SE queries</p>
+			<p>SE queries<a id="_idIndexMarker450"></a> are composed of xmSQL and are viewable by clicking each one in the middle-bottom pane. In this case, the SE query from line 2 is as follows:</p>
+			<pre class="source-code">SET DC_KIND="AUTO";</pre>
+			<pre class="source-code">SELECT'States'[State],MAX ( 'States'[Winter Avg ° F] )</pre>
+			<pre class="source-code">FROM 'States'</pre>
+			<pre class="source-code">WHERE 'States'[R/B] = 'Blue';</pre>
+			<pre class="source-code">'Estimated size ( volume, marshalling bytes ) : 54, 864'</pre>
+			<p>The SE query from line 4 is as follows:</p>
+			<pre class="source-code">SET DC_KIND="AUTO";</pre>
+			<pre class="source-code">WITH $Expr0 := [CallbackDataID ( MAX ( 'States'[Winter Avg ° F]] )  ) ] ( PFDATAID ( 'States'[State] )  ) </pre>
+			<pre class="source-code">SELECT</pre>
+			<pre class="source-code">MAX ( @$Expr0 )</pre>
+			<pre class="source-code">FROM 'States'</pre>
+			<pre class="source-code">WHERE 'States'[R/B] = 'Blue';</pre>
+			<pre class="source-code">'Estimated size ( volume, marshalling bytes ) : 1, 16'</pre>
+			<p>The PL-300 exam will not require in-depth knowledge of tuning FE or ST queries (or SE queries that get pushed down to DirectQuery data sources) but it is important to understand the dynamics of how <a id="_idIndexMarker451"></a>DAX is executed (the relationship between the FE and the SE and how to troubleshoot these operations to increase performance).</p>
+			<p>Recommended reading for in-depth study on this topic is the book <em class="italic">The Definitive Guide to DAX: Business intelligence with Microsoft Power BI, SQL Server Analysis Services, and Excel</em> by Marco Russo and Alberto Ferrari.</p>
+			<h2 id="_idParaDest-163"><a id="_idTextAnchor168"></a>Optimizing relationships</h2>
+			<p>When<a id="_idIndexMarker452"></a> report visuals are configured with fields from multiple queries or tables and expected results are not seen, then it's possible there are issues with the relationships that have been set up (or autoconfigured by Power BI). </p>
+			<p>When optimizing relationships, it's important to understand the true cardinality of the tables involved (this may require analysis using Data view) and how that has been configured in Power BI (properties on the connecting line between queries in Model view). It's also important to verify that the filter direction supports propagation (shown by the arrows on the connecting lines in Model view).</p>
+			<p>Some other things to look out for that will make for suboptimal relationships include blank values matching columns between the tables and mismatching or incompatible data types for the matching columns between the tables.</p>
+			<p>Now, let's look at how we can optimize visuals.</p>
+			<h2 id="_idParaDest-164"><a id="_idTextAnchor169"></a>Optimizing visuals</h2>
+			<p>When <a id="_idIndexMarker453"></a>optimizing visuals, it's important to think about all the ways visuals are used in Power BI. Visuals can be used in the following:</p>
+			<ul>
+				<li>Reports</li>
+				<li>Dashboards</li>
+				<li>Paginated reports</li>
+			</ul>
+			<p>Let's look at how we can uniquely optimize visuals in each case in the next sections.</p>
+			<h3>Optimizing visuals in reports</h3>
+			<p>To<a id="_idIndexMarker454"></a> optimize <a id="_idIndexMarker455"></a>visuals in reports, we need to follow a layered approach. First, review each visual and determine whether it is required. Limit the visuals used to only those required to meet business requirements. Adding additional visuals that are not needed will have a negative impact on report performance. Next, apply the most restricted data filtering to the visuals. This is accomplished by using filters for all pages, only the selected page, or only a <a id="_idIndexMarker456"></a>specific visual. Lastly, you should consider performance when adding each visual to the report canvas. Each visual used has <a id="_idIndexMarker457"></a>the potential to decrease the overall performance of the report, especially third-party or custom visuals, as they may not have gone through extensive performance testing before becoming available for use.</p>
+			<h3>Optimizing visuals in dashboards</h3>
+			<p>To <a id="_idIndexMarker458"></a>optimize visuals in dashboards, you need to remember that <a id="_idIndexMarker459"></a>Power BI keeps a cache of data in order to serve dashboards in the Power BI service. The cache used by the Power BI service helps to enable consistent performance across multiple users (unless row-level security is used, in which case a per-context cache will be built). Live report tiles and streaming tiles will not use a cache since they are used to serve very up-to-date information.</p>
+			<p>By default, the dashboard cache will be updated automatically by the service every hour, but this can be configured manually in the dataset settings. This should be set to the default setting or optionally configured per business requirements.</p>
+			<h3>Optimizing visuals in paginated reports</h3>
+			<p>The<a id="_idIndexMarker460"></a> optimization of visuals in paginated reports centers<a id="_idIndexMarker461"></a> around the performance of the data retrieval settings and Premium capacity memory allocation. The optimization of paginated report data retrieval settings includes concepts such as limiting data used by the paginated reports, using expression-based fields, and using filters (applied to a dataset in Power BI) or parameters (filtering injected to underlying data sources). All these techniques go back to the idea of limiting the amount of data in the dataset used by the report. More details on using paginated reports will be covered in the chapter on paginated reports.</p>
+			<p>Additionally, since paginated reports rely on the Power BI Premium service, it's important to monitor the capacity resource usage using tools such as the Power BI Premium Capacity Metrics app. The use of the Metrics app is important for Power BI Premium administrators since it is possible to overload a Premium capacity with too many Premium workspaces for the specified SKU size. Paginated reports are run within a protected sandbox per Premium capacity to help ensure the isolation of resources. But it's also important to ensure only trusted publishers in your organization have access to publish paginated reports.</p>
+			<p>Next, we will look at optimizing using group by and summarize aggregations.</p>
+			<h1 id="_idParaDest-165"><a id="_idTextAnchor170"></a>Optimizing with aggregations</h1>
+			<p>Any time you<a id="_idIndexMarker462"></a> want to optimize your data model, in addition to reducing the data storage by removing unnecessary columns and rows, it's also important to consider <a id="_idIndexMarker463"></a>removing data by summarizing or using group by to reduce the number of rows and/or columns in your data if the additional grain is not needed.</p>
+			<p>For example, the data warehouse we use to store the data of historical sales and inventory data needed by our organization may contain highly detailed information, such as every sale made for every day of the business year. Additionally, it may contain multiple years of data. This kind of detail may be needed for some analysis, but other reports and analytics may only need total sales per month. So, in those cases, we can simply summarize the data by grouping the data by calendar year and month. Aggregating by month can reduce millions of rows of data into less than 100 rows, which can dramatically increase performance.</p>
+			<p>To illustrate this concept, let's look at a simple example of a table with 10 sales records:</p>
+			<div>
+				<div id="_idContainer088" class="IMG---Figure">
+					<img src="image/B18086_08_008.jpg" alt="Figure 8.8 – Example table of 10 sales
+" width="825" height="684"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.8 – Example table of 10 sales</p>
+			<p>If we want to answer questions about monthly sales, then we can aggregate the 10 records shown in <em class="italic">Figure 8.8</em> into only 4 records, as shown in <em class="italic">Figure 8.9</em>:</p>
+			<div>
+				<div id="_idContainer089" class="IMG---Figure">
+					<img src="image/B18086_08_009.jpg" alt="Figure 8.9 – Example table of aggregated sales by month
+" width="726" height="335"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.9 – Example table of aggregated sales by month</p>
+			<p>In this <a id="_idIndexMarker464"></a>example, we lose some data fidelity, but we reduce our <a id="_idIndexMarker465"></a>data size from 3 columns and 10 rows to just 2 columns with 4 rows. If we normally aggregate this data and do not drill down into each sale or drill down into data by day or week, then we can use this method to reduce the size of data in the data model while still being able to answer questions about the sales amount each month.</p>
+			<p>Last, we will look at how the built-in query diagnostics tool can be used to help optimize model performance.</p>
+			<h1 id="_idParaDest-166"><a id="_idTextAnchor171"></a>Query diagnostics</h1>
+			<p>The <strong class="bold">query diagnostics</strong> tool that is built into Power Query allows us to see additional information <a id="_idIndexMarker466"></a>related to each operation that Power Query performs. Many times, these Power Query operations will be data refreshes or when data is retrieved the first time; however, Power Query may perform other operations, such as retrieving a list of tables that can be used to source data. The information provided will provide more information on query steps, their duration, and other details that will allow you to understand which parts of the query take the longest time. Query diagnostics run in a trace fashion where the monitor needs to be started and stopped. When query diagnostics is running, it is recording the operations performed by Power Query to help you gain new insights.</p>
+			<p>There are two types of <a id="_idIndexMarker467"></a>diagnostics that can be <a id="_idIndexMarker468"></a>executed: <strong class="bold">step diagnostics</strong> and <strong class="bold">session diagnostics</strong>. Step diagnostics <a id="_idIndexMarker469"></a>will provide details on<a id="_idIndexMarker470"></a> only the selected step from a list of steps in the <strong class="bold">Query Settings</strong> pane. Session diagnostics can be used to start recording multiple steps, and then details will be recorded for <a id="_idIndexMarker471"></a>multiple<a id="_idIndexMarker472"></a> steps.</p>
+			<p>Diagnostics are recorded in special-purpose queries (or tables) inside Power Query and show up as tables<a id="_idIndexMarker473"></a> designated as follows:</p>
+			<ul>
+				<li><strong class="bold">Counters</strong> – This table stores diagnostic data containing processor and memory usage while the step or the session recording took place.</li>
+				<li><strong class="bold">Detailed</strong> – This table stores diagnostic data for each query, step, operation, and data source query, and the duration for each. This is the table with the most verbose information.</li>
+				<li><strong class="bold">Aggregated</strong> – This table is like the detailed table but is aggregated to improve readability.</li>
+				<li><strong class="bold">Partitions</strong> – This table provides information related to the logical partitions used for data privacy.</li>
+			</ul>
+			<p>Once the diagnostics tables have been created, they can even be used in report visualizations once the <strong class="bold">Enable load</strong> setting has been enabled for the table from the right-click menu.</p>
+			<div>
+				<div id="_idContainer090" class="IMG---Figure">
+					<img src="image/B18086_08_010.jpg" alt="Figure 8.10 – Right-click menu on a query showing the Enable load option
+" width="574" height="455"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 8.10 – Right-click menu on a query showing the Enable load option</p>
+			<p>Now, we'll look at how diagnostics tables can be generated for both sessions and steps.</p>
+			<h2 id="_idParaDest-167"><a id="_idTextAnchor172"></a>Session diagnostics</h2>
+			<p>To generate <a id="_idIndexMarker474"></a>session diagnostics tables, click <strong class="bold">Start Diagnostics</strong> under <a id="_idIndexMarker475"></a>the <strong class="bold">Tools</strong> tab on the ribbon in the Power Query window. Once the session has been started, perform the steps in Power Query for which you want the diagnostic data. Once the steps have completed, go back to the <strong class="bold">Tools</strong> tab on the ribbon and click <strong class="bold">Stop Diagnostics</strong>. Upon stopping the session, the diagnostics tables will show up in the <strong class="bold">Queries</strong> pane of the Power Query window under a new group called <strong class="bold">Diagnostics</strong>.</p>
+			<h2 id="_idParaDest-168"><a id="_idTextAnchor173"></a>Step diagnostics</h2>
+			<p>To<a id="_idIndexMarker476"></a> generate step diagnostics tables, select the step under <strong class="bold">Applied Steps</strong> of the <strong class="bold">Query Settings</strong> pane in Power Query. Then, click <strong class="bold">Diagnose Step</strong> under<a id="_idIndexMarker477"></a> the <strong class="bold">Tools</strong> tab of the ribbon. Once the diagnostics have executed, you'll see new diagnostic tables created for just this step in the <strong class="bold">Queries</strong> pane list, under a new group called <strong class="bold">Diagnostics</strong>.</p>
+			<h2 id="_idParaDest-169"><a id="_idTextAnchor174"></a>Understanding query diagnostics</h2>
+			<p>When<a id="_idIndexMarker478"></a> reviewing or analyzing the details or aggregations of query diagnostics data, it's important to understand what each step is doing and which ones are happening inside Power BI and which ones might be steps where Power BI is going back to underlying data sources (which is typical for data refreshes even for import scenarios). Some of the important columns to look at include the following:</p>
+			<ul>
+				<li>query (so you know which query or table the operations pertain to)</li>
+				<li>operation (to distinguish between opening a connection, sending a query, or evaluating, among other things)</li>
+				<li>start time</li>
+				<li>end time</li>
+				<li>exclusive duration</li>
+			</ul>
+			<p>The last few columns will help you understand which operations are taking the longest time during the query execution. </p>
+			<p>Once you know where the time is being spent, then you will be able to focus on that operation. For example, you may find that the data refresh is taking a long time because Power Query is waiting for the underlying database to return data to a query – so you'll end up with better performance in Power BI if you scale up the underlying database to make a better-performing data refresh in Power BI.</p>
+			<h1 id="_idParaDest-170"><a id="_idTextAnchor175"></a>Summary</h1>
+			<p>In this chapter, we learned about optimizing model performance. We learned how some of the easiest ways to increase data model performance include only keeping data that is necessary for reports and either removing the additional rows and columns using Power Query, aggregating the data to reduce it, or simply removing the data in the underlying data store (sometimes accomplished with a view in a database). We also learned how to use tools such as DAX Studio to investigate the inner workings of measures to best optimize those components of our data models for the best performance. We learned how we can optimize relationships and visuals and how we can use the query diagnostics tools in Power BI to better understand the operations that take place in Power Query.</p>
+			<p>In the next chapter, we will learn about creating dynamic and engaging reports using Power BI Desktop.</p>
+			<h1 id="_idParaDest-171"><a id="_idTextAnchor176"></a>Questions </h1>
+			<ol>
+				<li value="1">Which technique will increase the performance of data models?<ol><li>Adding more memory to Power BI Desktop</li><li>Changing the data source to Microsoft Excel</li><li>Publishing reports to Power BI Premium</li><li>Removing unnecessary data from the data model</li></ol></li>
+				<li>Aggregating data will do what?<ol><li>Reduce the number of columns and rows.</li><li>Reduce the number of columns only.</li><li>Increase the number of rows only.</li><li>Both b and c.</li></ol></li>
+				<li>Filtering in a Power BI report can be applied to what?<ol><li>All pages in a report file, a single page, only a visual.</li><li>Filtering can only be applied to visuals.</li><li>A single page or a visual.</li><li>A dashboard, a page, or a visual.</li></ol></li>
+				<li>Which tool or capability should be used to determine how much of a query duration uses the formula engine or the storage engine?<ol><li>Query diagnostics</li><li>Query analytics </li><li>DAX Studio</li><li>Tabular Editor</li></ol></li>
+				<li>When using query diagnostics, which kind of diagnostics should be used to analyze multiple steps in a query?<ol><li>Multiple-step diagnostics</li><li>Session diagnostics</li><li>Step diagnostics</li><li>Model diagnostics</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

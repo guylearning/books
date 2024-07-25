@@ -1,0 +1,1161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Exam Ref PL-300 Microsoft Power BI Data Analyst</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137901159.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch01"><span epub:type="pagebreak" id="page_1"></span><span class="gray">Chapter 1</span></h2>
+<h2 class="h2a">Prepare the data</h2>
+<p class="noindent">Over the past several years, Microsoft Power BI has evolved from a new entrant in the data space to one of the most popular business intelligence tools used to visualize and analyze data. Before you can analyze data in Power BI, you need to prepare, model, and visualize the data. Data preparation is the subject of this chapter; we review the skills necessary to consume data in Power BI Desktop.</p>
+<p class="indent">We start with the steps required to connect to various data sources. We then review the data profiling techniques, which help you “feel” the data. Later, we look at how you can clean and transform data by using Power Query—this activity often takes a disproportionate amount of time in many data analysis projects. Finally, we show how you can resolve data import errors after loading data.</p>
+<p class="object-title">Skills covered in this chapter:</p>
+<ul class="sq-s">
+<li><p class="bull"><a href="ch01.xhtml#ch01lev1sec1">Skill 1.1: Get data from different data sources</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev1sec2">Skill 1.2: Clean, transform, and load the data</a></p></li>
+</ul>
+<section>
+<h3 class="h3" id="ch01lev1sec1">Skill 1.1: Get data from different data sources</h3>
+<p class="noindent">No matter what your data source is, you need to get data in Power BI before you can work with it. Power BI can connect to a wide variety of data sources, and the number of supported data sources grows every month. Furthermore, Power BI allows you to create your own connectors, making it possible to connect to virtually any data source.</p>
+<p class="indent">The data consumption process begins with an understanding of business requirements and data sources available to you. For instance, if you need to work with near-real-time data, your data consumption process is going to be different compared to working with data that is going to be periodically refreshed. As you’ll see later in the chapter, different data sources support different connectivity modes.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title"><span epub:type="pagebreak" id="page_2"></span>This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec1">Identify and connect to a data source</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec2">Change data source settings</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec3">Select a shared dataset or create a local dataset</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec4">Select a storage mode</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec5">Use Microsoft Dataverse</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec6">Change the value in a parameter</a></p></li>
+<li><p class="bull"><a href="ch01.xhtml#ch01lev2sec7">Connect to a dataflow</a></p></li>
+</ul>
+</aside>
+<section>
+<h4 class="h4" id="ch01lev2sec1">Identify and connect to a data source</h4>
+<p class="noindent">There are over 100 native connectors in Power BI Desktop, and the Power BI team is regularly making new connectors available. When connecting to data in Power BI, the most common data sources are files, databases, and web services.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Data Sources In Power BI</p>
+<p class="note-para">The full list of data sources available in Power BI can be found at <em><a href="https://docs.microsoft.com/en-us/power-bi/connect-data/power-bi-data-sources">https://docs.microsoft.com/en-us/power-bi/connect-data/power-bi-data-sources</a>.</em></p>
+</div>
+<p class="indent">To choose the right connector, you must know what your data sources are. For example, you cannot use the Oracle database connector to connect to a SQL Server database, even though both are database connectors.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">In our examples, we are going to use this book’s companion files, which are based on a fictitious company called Wide World Importers. Subsequent instructions assume that you placed all companion files in the C:\PL-300 folder.</p>
+</div>
+<p class="indent">To review the skills needed to get data from different data sources, let’s start by connecting to the WideWorldImporters.xlsx file from this book’s companion files:</p>
+<ol class="num">
+<li><p class="num">On the <strong>Home</strong> tab, select <strong>Excel workbook</strong>.</p></li>
+<li><p class="num">In the <strong>Open</strong> window, navigate to the <strong>WideWorldImporters.xlsx</strong> file and select <strong>Open</strong>.</p></li>
+<li><p class="num">In the <strong>Navigator</strong> window, select all eight check boxes on the left; the window should look similar to <a href="ch01.xhtml#ch01fig01">Figure 1-1</a>.</p>
+<figure class="figure" id="ch01fig01">
+<img src="graphics/01fig01.jpg" alt="The figure shows the Navigator pane and the preview of the file contents." width="732" height="416"/>
+<p class="figcaption"><strong>FIGURE 1-1</strong> The Navigator window</p>
+</figure></li>
+<li><p class="num"><span epub:type="pagebreak" id="page_3"></span>Select <strong>Transform Data</strong>.</p></li>
+</ol>
+<p class="indent">After you complete these steps, the Power Query Editor window opens automatically; you can see it in <a href="ch01.xhtml#ch01fig02">Figure 1-2</a>.</p>
+<figure class="figure" id="ch01fig02">
+<img src="graphics/01fig02.jpg" alt="The figure shows Power Query Editor." width="732" height="325"/>
+<p class="figcaption"><strong>FIGURE 1-2</strong> Power Query Editor</p>
+</figure>
+<p class="indent">If in the Navigator window you chose <strong>Load</strong>, the Power Query Editor window would not open, and all Excel sheets you selected would be loaded as is.</p>
+<p class="indent">Note that the Navigator window shows you a preview of the objects you selected. For example, in <a href="ch01.xhtml#ch01fig01">Figure 1-1</a> we see the preview of the Targets for 2022 sheet; its shape suggests we need to apply some transformations to our data before loading it, because it has some extraneous information in its first few rows.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_4"></span><span class="gray"><em>Note</em></span> Data Preview Recentness</p>
+<p class="note-para">To make query editing experience more fluid, Power Query caches data previews. Therefore, if your data changes often, you may not see the latest data in Power Query Editor. To refresh a preview, you can select <strong>Home</strong> &gt; <strong>Refresh Preview</strong>. To refresh previews of all queries, you should select <strong>Home</strong> &gt; <strong>Refresh Preview</strong> &gt; <strong>Refresh All.</strong></p>
+</div>
+<p class="indent">The Navigator window is not unique to the Excel connector; indeed, you will see the same window when connecting to a complex data source like a database, for instance.</p>
+<p class="indent">We are going to transform our data later in this chapter. Before we do that, let’s connect to another data source: a folder. While you are in Power Query Editor:</p>
+<ol class="num">
+<li><p class="num">On the <strong>Home</strong> tab, select <strong>New Source</strong>. If you select the button label instead of the button, select <strong>More</strong>.</p></li>
+<li><p class="num">In the <strong>Get data</strong> window, select <strong>Folder</strong> and then <strong>Connect</strong>.</p></li>
+<li><p class="num">Select <strong>Browse</strong>, navigate to <strong>C:\PL-300\Targets</strong>, and select <strong>OK</strong> twice. At this stage, you should see the list of files in the folder like in <a href="ch01.xhtml#ch01fig03">Figure 1-3</a>.</p></li>
+</ol>
+<figure class="figure" id="ch01fig03">
+<img src="graphics/01fig03.jpg" alt="The figure shows the list of files in the Targets folder and some metadata for each file." width="733" height="382"/>
+<p class="figcaption"><strong>FIGURE 1-3</strong> List of files in C:\PL-300\Targets</p>
+</figure>
+<ol class="num">
+<li><p class="num">Select <strong>Combine &amp; Transform Data</strong>.</p></li>
+<li><p class="num">In the <strong>Combine Files</strong> window, select <strong>OK</strong> without changing any settings.</p></li>
+</ol>
+<p class="indent">At this stage, you have connected to two data sources: an Excel file and a folder, which contained several comma-separated values (CSV) files.</p>
+<p class="indent">Although we did not specify the file type when connecting to a folder, Power Query automatically determined the type of files and applied the transformations it deemed appropriate. In addition to Excel and CSV files, Power BI can connect to several other file types, including JSON, XML, PDF, and Access database.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_5"></span><span class="gray"><em>Important</em></span> Format Consistency</p>
+<p class="note-para">It is important that the format of the files in a folder be consistent—otherwise, you may run into issues. Power Query applies the same transformations to each file in a folder, and it decides which transformations are necessary based on the sample file you choose in the Combine Files window.</p>
+</div>
+<section>
+<h5 class="h5" id="ch01lev3sec1">Power Query Editor</h5>
+<p class="noindent">If you followed our instructions, your Power Query Editor window should look like <a href="ch01.xhtml#ch01fig04">Figure 1-4</a>.</p>
+<figure class="figure" id="ch01fig04">
+<img src="graphics/01fig04.jpg" alt="The figure shows Power Query Editor where the preview of the Targets query is shown." width="732" height="325"/>
+<p class="figcaption"><strong>FIGURE 1-4</strong> Power Query Editor after connecting to Excel and a folder</p>
+</figure>
+<p class="indent">As you can see, after you instructed Power Query to automatically combine files from the folder, it created the <em>Targets</em> query and several helper queries, whose names are italicized—this means they won’t be loaded. We will review the data loading options later in this chapter, and we’ll continue using the same queries we created in this example.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">You can review the steps we took by opening the file 1.1.1 Connect.pbix from the companion files folder.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec2">Query dependencies</h5>
+<p class="noindent">You can check the dependencies queries have by selecting <strong>Query Dependencies</strong> on the <strong>View</strong> tab. The <strong>Query Dependencies</strong> view provides a diagram like the one in <a href="ch01.xhtml#ch01fig05">Figure 1-5</a> that shows both data sources and queries.</p>
+<figure class="figure" id="ch01fig05">
+<img src="graphics/01fig05.jpg" alt="The figure shows the Query Dependencies view that shows how each query is related to another." width="732" height="259"/>
+<p class="figcaption"><strong>FIGURE 1-5</strong> Query Dependencies view</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_6"></span>To view the dependencies of a specific query, select a query, and Power BI will highlight both the queries that depend on the selected query as well as queries and sources that the query depends on.</p>
+<p class="indent">The default layout is top to bottom; you can change the layout by using the <strong>Layout</strong> drop-down list.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec2">Change data source settings</h4>
+<p class="noindent">After you connect to a data source, sometimes you may need to change some settings associated with it. For example, if you moved the WideWorldImporters.xlsx file to a different folder, you’d need to update the file path in Power BI to continue working with it.</p>
+<p class="indent">One way to change the data source settings is to select the cog wheel next to the Source step under <strong>Applied Steps</strong> in <strong>Query Settings</strong> in Power Query Editor. After you select the cog wheel, you can change the file path as well as the file type. The shortcoming of this approach is that you will need to change settings in each query that references the file, which can be tedious and error-prone if you have a lot of queries.</p>
+<p class="indent">Another way to change the data source settings is by selecting <strong>Data source settings</strong> on the <strong>Home</strong> tab. This opens the <strong>Data source settings</strong> window, shown in <a href="ch01.xhtml#ch01fig06">Figure 1-6</a>.</p>
+<figure class="figure" id="ch01fig06">
+<img src="graphics/01fig06.jpg" alt="The figure shows a list of sources in the current file: a folder and an Excel file." width="732" height="533"/>
+<p class="figcaption"><strong>FIGURE 1-6</strong> The Data source settings window</p>
+</figure>
+<p class="indent">The <strong>Data source settings</strong> window allows you to change the source settings for all affected queries at the same time by selecting <strong>Change Source</strong>. You can change and clear the permissions for each data source by selecting <strong>Edit Permissions</strong> and <strong>Clear Permissions</strong>, respectively. Permissions include the credentials used for connecting to a data source and the privacy level. Privacy levels are relevant when combining data from different sources in a single query, and we will look at them later in this chapter.</p>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec3"><span epub:type="pagebreak" id="page_7"></span>Select a shared dataset or create a local dataset</h4>
+<p class="noindent">So far in this chapter, we have been creating our own dataset, which is also known as a <em>local</em> dataset. If a dataset already exists that you or someone else prepared and published to the Power BI service, you can connect to that dataset, also known as a shared dataset. Using a shared dataset has several benefits:</p>
+<ul class="sq-s">
+<li><p class="bull">You ensure consistent data across different reports.</p></li>
+<li><p class="bull">When connecting to a shared dataset, you are not copying any data needlessly.</p></li>
+<li><p class="bull">You can create a copy of an existing report and modify it, which takes less effort than starting from scratch.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Using Shared Datasets</p>
+<p class="note-para">Sometimes different teams want to see the same data by using different visuals. In that case, it makes sense to create a single dataset and different reports that all connect to the same dataset.</p></div>
+<p class="indent">To be able to connect to a published dataset, you must have the Build permission or be a contributing member of the workspace where the dataset resides. We will review permissions in <a href="ch04.xhtml#ch04">Chapter 4</a>, “Deploy and maintain assets.”</p>
+<p class="indent"><span epub:type="pagebreak" id="page_8"></span>You can connect to a shared dataset from either Power BI Desktop or the Power BI service:</p>
+<ul class="sq-s">
+<li><p class="bull">In Power BI Desktop, select <strong>Power BI datasets</strong> on the <strong>Home</strong> tab.</p></li>
+<li><p class="bull">In the Power BI service, when you are in a workspace, select <strong>New</strong> &gt; <strong>Report</strong> &gt; <strong>Pick a published dataset</strong>.</p></li>
+</ul>
+<p class="indent">Either way, you will then see a list of shared datasets you can connect to, as shown in <a href="ch01.xhtml#ch01fig07">Figure 1-7</a>. Additionally, in the Power BI service, you can select <strong>Save a copy</strong> next to a report in a workspace to create a copy of the report without duplicating the dataset. This will be similar to connecting to a dataset from Power BI Desktop because you will be creating a report without an underlying data model.</p>
+<figure class="figure" id="ch01fig07">
+<img src="graphics/01fig07.jpg" alt="The figure shows the datasets available to the user. The columns are Name, Endorsement, Owner, Workspace, and Refreshed." width="732" height="406"/>
+<p class="figcaption"><strong>FIGURE 1-7</strong> List of available datasets</p>
+</figure>
+<p class="indent">After you are connected to a shared dataset in Power BI Desktop, some user interface buttons will be grayed out or missing because this connectivity mode comes with limitations. For example, when you connect to a shared dataset, Power Query Editor is not available, and the Data view is missing. In the lower-right corner, you’ll see the name and workspace you’re connected to, as shown in <a href="ch01.xhtml#ch01fig08">Figure 1-8</a>.</p>
+<figure class="figure" id="ch01fig08">
+<img src="graphics/01fig08.jpg" alt="The figure shows the message that reads Connected live to the Power BI Dataset: Contoso in Contoso." width="575" height="28"/>
+<p class="figcaption"><strong>FIGURE 1-8</strong> Power BI Desktop connected to a Power BI dataset</p>
+</figure>
+<p class="indent">You can select <strong>Transform Data</strong> &gt; <strong>Data source settings</strong> to change the dataset you are connected to. You can also select <strong>Transform Data</strong> or <strong>Make changes to this model</strong> in the lower-right corner to create a composite model, where you can combine data from the shared dataset with other data. Composite models are covered in the “Select a storage mode” section.</p>
+<p class="indent">If you choose not to create a composite model, note that you can still create measures, and they will be saved in your PBIX file but not in the shared dataset itself. That means other users <span epub:type="pagebreak" id="page_9"></span>who connect to the same shared dataset will not see the measures you created. These measures are known as <em>local</em> or <em>report-level</em> measures. Creating measures in general is going to be reviewed in <a href="ch02.xhtml#ch02">Chapter 2</a>, “Model the data.”</p>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec4">Select a storage mode</h4>
+<p class="noindent">The most common way to consume data in Power BI is to import it into the data model. When you import data in Power BI, you create a copy of it that is kept static until you refresh your dataset. Data from files and folders, which we connected to earlier in the chapter, can be imported only in Power BI. When it comes to databases, you can create data connections in one of two ways.</p>
+<p class="indent">First, you can import your data, which makes the Power BI data model cache it. This method offers you the greatest flexibility when you model your data because you can use all the available modeling features in Power BI.</p>
+<p class="indent">Second, you can connect to your data directly in its original source. This method is known as <em>DirectQuery</em>. With DirectQuery, data is not cached in Power BI. Instead, the original data source is queried every time you interact with Power BI visuals. Not all data sources support DirectQuery.</p>
+<p class="indent">A special case of DirectQuery called <em>Live Connection</em> exists for Analysis Services (both Tabular and Multidimensional) and the Power BI service. This connectivity mode ensures that all calculations take place in the corresponding data model.</p>
+<section>
+<h5 class="h5" id="ch01lev3sec3">Importing data</h5>
+<p class="noindent">When you import data, you load a copy of it into Power BI. Since Power BI is based on an in-memory columnar database engine, the imported data consumes both the RAM and disk space, because data is stored in files. During the development phase, the imported data consumes the disk space and RAM of your development machine. After you publish your report to a server, the imported data consumes the disk space and RAM of the server to which you publish your report. The implication of this is that you can’t load more data into Power BI than your hardware allows. This becomes an issue when you work with very large volumes of data.</p>
+<p class="indent">You have an option to transform data when you import it in Power BI, limited only by the functionality of Power BI. If you only load a subset of tables from your database, and you apply filters to some of the tables, only the filtered data gets loaded into Power BI.</p>
+<p class="indent">After data is loaded into the Power BI cache, it is kept in a compressed state, thanks to the in-memory database engine. The compression depends on many factors, including data type, values, and cardinality of the columns. In most cases, however, data will take much less space once it is loaded into Power BI compared to its original size.</p>
+<p class="indent">One of the advantages of this data connection method is that you can use all the functionality of Power BI without restrictions, including all transformations available in Power Query Editor, as well as all DAX functions when you model your data.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_10"></span>Additionally, you can combine imported data from more than one source in the same data model. For example, you can combine some data from a database and some data from an Excel file in a single table.</p>
+<p class="indent">Another advantage of this method is the speed of calculations. Because the Power BI engine stores data in-memory in compressed state, there is little to no latency when accessing the data. Additionally, the engine is optimized for calculations, resulting in the best computing speed.</p>
+<p class="indent">Data from imported tables can be seen in the <strong>Data</strong> view in Power BI Desktop, and you can see the relationships between tables in the <strong>Model</strong> view. The Report, Data, and Model buttons are shown in <a href="ch01.xhtml#ch01fig09">Figure 1-9</a> on the left.</p>
+<figure class="figure" id="ch01fig09">
+<img src="graphics/01fig09.jpg" alt="The figure shows the Report, Data, and Model buttons on the left of the Power BI Desktop window." width="732" height="225"/>
+<p class="figcaption"><strong>FIGURE 1-9</strong> Power BI Desktop when importing data</p>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec4">DirectQuery</h5>
+<p class="noindent">When you use the DirectQuery connectivity mode, you are not caching any data in Power BI. All data remains in the data source, except for metadata, which Power BI caches. Metadata includes column and table names, data types, and relationships.</p>
+<p class="indent">For most data sources supporting DirectQuery, when connecting to a data source, you select the entities you want to connect to, such as tables or views. Each entity becomes a table in your data model. The experience is similar to the Navigator window you saw earlier in the chapter when connecting to an Excel file, shown in <a href="ch01.xhtml#ch01fig01">Figure 1-1</a>.</p>
+<p class="indent">If you only use DirectQuery in your data model, the Power BI file size will be negligible compared to a file with imported data.</p>
+<p class="indent">The main advantage of this method is that you are not limited by the hardware of your development machine or the capacity of the server to which you will publish your report. All data is kept in the data source, and all the calculations are done in the source as well.</p>
+<p class="indent">Data from DirectQuery tables cannot be seen in the <strong>Data</strong> view of Power BI Desktop; if all tables in a data model are in DirectQuery mode, the <strong>Data</strong> view button will not be visible, though you can still use the <strong>Model</strong> view. A fragment of the interface when using DirectQuery is shown in <a href="ch01.xhtml#ch01fig10">Figure 1-10</a>.</p>
+<figure class="figure" id="ch01fig10">
+<img src="graphics/01fig10.jpg" alt="The figure shows the Report and Model buttons only." width="732" height="225"/>
+<p class="figcaption"><strong>FIGURE 1-10</strong> Power BI Desktop interface when using DirectQuery</p>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec5"><span epub:type="pagebreak" id="page_11"></span>Live Connection</h5>
+<p class="noindent">A special case of DirectQuery, called Live Connection, is available for Power BI service datasets and Analysis Services data models. It differs from DirectQuery in a few ways:</p>
+<ul class="sq-s">
+<li><p class="bull">You cannot apply any transformations to data.</p></li>
+<li><p class="bull">It is not possible to define physical relationships in Live Connection.</p></li>
+<li><p class="bull">Data modeling is limited to only creating measures.</p></li>
+</ul>
+<p class="indent">You may consider using Live Connection rather than importing data because of the enhanced data modeling capabilities and improved security features in the data source. More specifically, unlike DirectQuery with some databases, Live Connection always considers the username of the user who is viewing a report, which means security can be set up dynamically. Additionally, SQL Server Analysis Services can be configured to refresh as frequently as needed, unlike the scheduled refresh in the Power BI service, which is limited to eight times a day without Power BI Premium.</p>
+<p class="indent">If you connect to a dataset in DirectQuery or Live Connection mode and add other data, you’ll create a composite model, covered next.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec6">Composite models</h5>
+<p class="noindent">A <em>composite model</em> is a data model that combines imported data and DirectQuery or Live Connection data or that uses DirectQuery to connect to multiple data sources. For example, you could be getting the latest sales data from a database by using DirectQuery, and you could be importing an Excel spreadsheet with sales targets. You can combine both data sources in a single data model by creating a composite model.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Potential Security Risks In Composite Models</p>
+<p class="note-para">Building a composite model may pose security risks; for example, data from an Excel file may be sent to a database in a query, and a database administrator might see some data from the Excel file.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_12"></span>For each table in a composite model that uses imported data or DirectQuery, the <em>storage mode</em> property defines how the table is stored in the data model. To view the property, you can hover over a table in the <strong>Fields</strong> pane in the <strong>Report</strong> or <strong>Data</strong> view; alternatively, you can view or change it in the <strong>Model</strong> view in the <strong>Advanced</strong> section of the <strong>Properties</strong> pane once you select a table. Note that you cannot change the storage mode of tables that you get from models by using Live Connection.</p>
+<p class="indent">Storage mode can be set to one of the following options:</p>
+<ul class="sq-s">
+<li><p class="bull">Import</p></li>
+<li><p class="bull">DirectQuery</p></li>
+<li><p class="bull">Dual</p></li>
+</ul>
+<p class="indent">The <em>Dual</em> mode means a table is both cached and retrieved in DirectQuery mode when needed, depending on the storage mode of other tables used in the same query. This mode is useful whenever you have a table that is related to some imported tables and other tables whose storage mode is DirectQuery. For example, consider the data model from <a href="ch01.xhtml#ch01tab01">Table 1-1</a>.</p>
+<figure class="table" id="ch01tab01">
+<figcaption>
+<p class="title-t"><strong>TABLE 1-1</strong> Sample data model</p>
+</figcaption>
+<table class="table">
+<thead>
+<tr>
+<th class="th-bg"><p class="tab-para">Table Name</p></th>
+<th class="th-bg"><p class="tab-para">Data Source</p></th>
+<th class="th-bg1"><p class="tab-para">Storage Mode</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="border"><p class="tab-para">Sales</p></td>
+<td class="border"><p class="tab-para">Database</p></td>
+<td class="border1"><p class="tab-para">DirectQuery</p></td>
+</tr>
+<tr>
+<td class="border"><p class="tab-para">Date</p></td>
+<td class="border"><p class="tab-para">Database</p></td>
+<td class="border1"><p class="tab-para">Dual</p></td>
+</tr>
+<tr>
+<td class="border"><p class="tab-para">Targets</p></td>
+<td class="border"><p class="tab-para">Excel file</p></td>
+<td class="border1"><p class="tab-para">Import</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">In this model, the Date table is related to both the Sales and the Targets tables. When you use data from the Date and Sales tables, it is retrieved directly from the database in DirectQuery mode; when you use Date and Targets together, no query is sent to the database, which improves the performance of your reports.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Changing Storage Mode</p>
+<p class="note-para">If you change the storage mode from DirectQuery or Dual to Import, there is no going back. If you need to set the storage mode of a table to Dual, you must create a table by using DirectQuery first.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec5">Use Microsoft Dataverse</h4>
+<p class="noindent">Power Platform has a family of products that offer similar experiences when you get data in Power BI:</p>
+<ul class="sq-s">
+<li><p class="bull">Dataflows</p></li>
+<li><p class="bull">Microsoft Dataverse (formerly known as Common Data Service)</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_13"></span>Both Dataflows and Microsoft Dataverse store data in tables, also known as entities. Dataverse also offers a set of standardized tables that you can map your data to, or you can create your own tables.</p>
+<p class="indent">Connecting to Dataflows only requires you to sign in, and then you’ll see the dataflows and tables you have access to.</p>
+<p class="indent">To connect to Microsoft Dataverse, you’ll need to know the server address, which usually has the following format<strong>: environment.crm.dynamics.com</strong>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Finding Server Addresses</p>
+<p class="note-para">If you want to learn how to find the server name, see the step-by-step tutorial here: <em><a href="https://docs.microsoft.com/en-us/powerapps/maker/data-platform/data-platformpowerbi-connector">https://docs.microsoft.com/en-us/powerapps/maker/data-platform/data-platformpowerbi-connector</a>.</em></p>
+</div>
+<p class="indent">Additionally, you’ll need maker permissions to access the Power Apps portal and read permissions to access data within entities. Afterward, the connection experience is similar to connecting to a database.</p>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec6">Change the value in a parameter</h4>
+<p class="noindent">Query parameters can simplify certain tasks, like changing a data source address or placing a filter in a query. Here are some examples of when you’d use parameters:</p>
+<ul class="sq-s">
+<li><p class="bull">Switching between the development and production environments when getting data from a database</p></li>
+<li><p class="bull">Configuring incremental refresh (outside of the scope of this book)</p></li>
+<li><p class="bull">Creating custom functions by using the user interface</p></li>
+<li><p class="bull">Using report templates</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Templates In Power BI Desktop</p>
+<p class="note-para">Power BI report templates can be used as a starting point when you analyze data in Power BI. Power BI report templates are out of the scope of this book. More information on how you can create and use report templates is available at <em><a href="https://docs.microsoft.com/en-us/power-bi/create-reports/desktop-templates">https://docs.microsoft.com/en-us/power-bi/create-reports/desktop-templates</a>.</em></p>
+</div>
+<section>
+<h5 class="h5" id="ch01lev3sec7">Creating parameters</h5>
+<p class="noindent">To create a new parameter in Power Query Editor, on the <strong>Home</strong> ribbon select <strong>Manage Parameters</strong> &gt; <strong>New Parameter</strong>. You will then see the <strong>Manage Parameters</strong> window shown in <a href="ch01.xhtml#ch01fig11">Figure 1-11</a>.</p>
+<figure class="figure" id="ch01fig11">
+<img src="graphics/01fig11.jpg" alt="The figure shows a list of parameters and the available attributes." width="563" height="610"/>
+<p class="figcaption"><strong>FIGURE 1-11</strong> The Manage Parameters window</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_14"></span>For each parameter, you can configure the following options:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Name</strong> This will become the parameter name by which you can reference it.</p></li>
+<li><p class="bull"><strong>Description</strong> This will show up when you hover over the parameter in the <strong>Queries</strong> pane or when you open a report template that contains the parameter.</p></li>
+<li><p class="bull"><strong>Required</strong> This determines whether the parameter value can be empty.</p></li>
+<li><p class="bull"><strong>Type</strong> This is the data type of the parameter. Not all Power Query data types are available. For example, <em>whole number</em> cannot be selected; instead, you can choose <em>decimal number</em> for numerical parameters.</p>
+<ul class="sq1">
+<li><p class="bull"><strong>Suggested Values</strong> You can choose one of these three options:</p></li>
+<li><p class="bull"><strong>Any value</strong> This is the default setting, and it allows any value within the limits of the parameter type.</p></li>
+<li><p class="bull"><strong>List of values</strong> This allows you to type a list of values from which you can choose a parameter. When you use this option, you may also specify the default value, which will be selected if you open a template with this parameter.</p></li>
+<li><p class="bull"><strong>Query</strong> When this option is selected, you will need to use a query of type list that will feed the list of values.</p></li></ul></li>
+<li><p class="bull"><strong>Current Value</strong> This is the value the parameter returns when you reference it.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_15"></span><span class="gray"><em>Important</em></span> Parameter Type</p>
+<p class="note-para">If you intend to change a parameter in the Power BI service, you must set its data type correctly. Using the Any type will prevent you from editing the parameter value in the Power BI service.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec8">Using parameters</h5>
+<p class="noindent">Let’s follow an example of how to use parameters in practice:</p>
+<ol class="num">
+<li><p class="num">Create a new Power BI Desktop file.</p></li>
+<li><p class="num">Open <strong>Power Query Editor</strong> by selecting <strong>Transform data</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num">Create a new parameter as follows:</p>
+<ul class="sq1">
+<li><p class="bull">Name: <strong>Year</strong></p></li>
+<li><p class="bull">Type: <strong>Decimal number</strong></p></li>
+<li><p class="bull">Current Value: <strong>2006</strong></p></li></ul></li>
+<li><p class="num">Leave all other parameter options as is and select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">Now that you have created the new parameter, let’s connect to the <strong>CompanySales</strong> table from the AdventureWorks OData feed:</p>
+<ol class="num">
+<li><p class="num">Still in <strong>Power Query Editor</strong>, select <strong>New Source</strong> &gt; <strong>OData feed</strong>.</p></li>
+<li><p class="num">Enter <strong><a href="https://services.odata.org/AdventureWorksV3/AdventureWorks.svc/">https://services.odata.org/AdventureWorksV3/AdventureWorks.svc/</a></strong> in the <strong>URL</strong> box and select <strong>OK</strong>. If prompted for credentials, select <strong>Anonymous</strong>.</p></li>
+<li><p class="num">Select the <strong>CompanySales</strong> check box and select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">In the lower-left corner of Power Query Editor, note that the <strong>CompanySales</strong> query, which you’ve just created, returns 235 rows. We are now going to use our parameter to filter the query as follows:</p>
+<ol class="num">
+<li><p class="num">Select the filter button on the <strong>OrderYear</strong> column header and select <strong>Number Filters</strong> &gt; <strong>Equals</strong>. You will be presented with the filter options in <a href="ch01.xhtml#ch01fig12">Figure 1-12</a>.</p>
+<figure class="figure" id="ch01fig12">
+<img src="graphics/01fig12.jpg" alt="The figure shows the conditions that can be specified for filtering." width="650" height="286"/>
+<p class="figcaption"><strong>FIGURE 1-12</strong> Filter rows options</p>
+</figure>
+</li>
+<li><p class="num"><span epub:type="pagebreak" id="page_16"></span>Select the top <strong>1.2</strong> drop-down list next to <strong>equals</strong> and select <strong>Parameter</strong>. Note that the <strong>Year</strong> parameter we created earlier is automatically selected because it is the only parameter.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">The query now returns 50 rows, because it is filtered to only show rows where <strong>OrderYear</strong> is <strong>2006</strong>—the current value of the <strong>Year</strong> parameter.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec9">Editing parameters</h5>
+<p class="noindent">You can <em>edit</em> parameters in Power BI Desktop or the Power BI service. Editing a parameter refers to changing its current value, as opposed to managing a parameter, which refers to changing any parameter attribute.</p>
+<p class="indent">To continue with our example, you can edit the <strong>Year</strong> parameter by selecting it in the <strong>Queries</strong> pane and changing its current value to <strong>2007</strong>. Note how the <strong>CompanySales</strong> query now returns 96 rows instead of 50.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">You can review this example by opening 1.1.6 Parameters.pbix from the companion files folder.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Editing Multiple Parameters</p>
+<p class="note-para">If you had several parameters, it would be more convenient to edit all the parameters at once. In the main Power BI Desktop window, you can select <strong>Transform data</strong> &gt; <strong>Edit parameters;</strong> alternatively, in Power Query Editor, select <strong>Manage Parameters</strong> &gt; <strong>Edit Parameters.</strong></p>
+</div>
+<p class="indent">You can also edit parameters after publishing your report to the Power BI service. This is done in the <strong>Parameters</strong> section of dataset settings, as shown in <a href="ch01.xhtml#ch01fig13">Figure 1-13</a>.</p>
+<figure class="figure" id="ch01fig13">
+<img src="graphics/01fig13.jpg" alt="The figure shows dataset settings in the Power BI service." width="733" height="474"/>
+<p class="figcaption"><strong>FIGURE 1-13</strong> Editing parameters in the Power BI service</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_17"></span>After you change the parameter value, select <strong>Apply</strong>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Power BI Service</p>
+<p class="note-para">We review the Power BI service in more detail in <a href="ch04.xhtml#ch04">Chapter 4</a>.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec10">Creating functions</h5>
+<p class="noindent">Power Query allows you to create your own functions, which can be useful when you want to apply the same logic multiple times. One way to create a custom function is by converting a query to a function. If your query already uses parameters, then those will become the parameters of the new function.</p>
+<p class="indent">Let’s continue our AdventureWorks example and create a function that will output sales for a particular year based on the year you enter:</p>
+<ol class="num">
+<li><p class="num">Right-click the <strong>CompanySales</strong> query and select <strong>Create Function</strong>.</p></li>
+<li><p class="num">In the <strong>Function name</strong> box, enter <strong>SalesByYear</strong>.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">This creates the <strong>SalesByYear</strong> group of queries, which contains the <strong>Year</strong> parameter, the <strong>CompanySales</strong> query, and the <strong>SalesByYear</strong> function.</p>
+<p class="indent">Now test the new function:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>SalesByYear</strong> function in the <strong>Queries</strong> pane.</p></li>
+<li><p class="num">Enter <strong>2008</strong> in the <strong>Year</strong> box.</p></li>
+<li><p class="num">Select <strong>Invoke</strong>.</p></li>
+<li><p class="num">This creates the <strong>Invoked Function</strong> query that returns 73 rows and contains data for year 2008 only, which you can verify by selecting the <strong>OrderYear</strong> column filter button.</p></li>
+</ol>
+<p class="indent">Note that there is a special relationship between the <strong>SalesByYear</strong> function and <strong>CompanySales</strong> query: updating the latter also updates the former, which in turn updates all function invocations. For example, we can remove the <strong>ID</strong> column from the <strong>CompanySales</strong> query, and it will disappear from the <strong>Invoked Function</strong> query, too.</p>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">You should be able to identify scenarios when query parameters can be beneficial based on the business requirements of a client.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec7">Connect to a dataflow</h4>
+<p class="noindent">In addition to Power BI Desktop, Power Query can be found in the Power BI service: you can prep, clean, and transform data in dataflows. Dataflows can be useful when you want your Power Query queries to be reused across your organization without the queries necessarily <span epub:type="pagebreak" id="page_18"></span>being in the same dataset. For this reason, you cannot create a dataflow in your own workspace, because only you have access to it.</p>
+<p class="indent">To create a dataflow in a workspace, select <strong>New</strong> &gt; <strong>Dataflow</strong>. From there, you have several choices:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Add new tables</strong> Define new tables from scratch by using Power Query.</p></li>
+<li><p class="bull"><strong>Add linked tables</strong> Linked entities are tables in other dataflows that you can reuse to reduce duplication of data and improve consistency across your organization.</p></li>
+<li><p class="bull"><strong>Import model</strong> If you have a previously exported dataflow model file, you can import it.</p></li>
+<li><p class="bull"><strong>Create and attach</strong> Attach a Common Data Model folder from your Azure Data Lake Storage Gen2 account and use it in Power BI.</p></li>
+</ul>
+<p class="indent">The Power Query Online interface (<a href="ch01.xhtml#ch01fig14">Figure 1-14</a>) looks similar to Power Query Editor in Power BI Desktop.</p>
+<figure class="figure" id="ch01fig14">
+<img src="graphics/01fig14.jpg" alt="The figure shows a preview of the CompanySales query in dataflows." width="733" height="374"/>
+<p class="figcaption"><strong>FIGURE 1-14</strong> Power Query interface when editing a dataflow</p>
+</figure>
+<p class="indent">Once you finish authoring your queries, you can select <strong>Save &amp; close</strong> and enter the name of the new dataflow. After saving, you’ll need to refresh the dataflow by selecting <strong>Refresh now</strong> from the dataflow options in the workspace—otherwise, it won’t contain any data. When a dataflow finishes refreshing, you can connect to it from Power BI Desktop and get data from it.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev1sec2">Skill 1.2: Clean, transform, and load the data</h3>
+<p class="noindent">Unless you are connecting to a dataset that someone has already prepared for you, in many cases you must clean and transform data before you can load and analyze it.</p>
+<p class="indent">Power BI contains a powerful ETL (extract, transform, load) tool: Power Query. Power Query, also known as Get &amp; Transform Data, first appeared as an add-in for Excel 2010; starting with <span epub:type="pagebreak" id="page_19"></span>Excel 2016, it has been an integral part of Excel. You can see Power Query in several other Microsoft products, including Power Apps and Power Automate.</p>
+<p class="indent">When you connected to various data sources and worked inside Power Query Editor earlier in this chapter, you were using Power Query. Besides connecting to data, Power Query can perform sophisticated transformations to your data. In this book, Power Query refers to the engine behind Power Query Editor.</p>
+<p class="indent">Power Query uses a programming language called M, which is short for “mashup.” It is a functional, case-sensitive language. The latter point is worth noting because M is case-sensitive, unlike the other language of Power BI we are going to cover later, DAX. In addition, M is a completely new language that, unlike DAX, does not resemble Excel formula language in any way.</p>
+<p class="object-title">This skill covers how to:</p>
+<ul class="sq-s">
+<li><p class="bull">Profile the data</p></li>
+<li><p class="bull">Resolve inconsistencies, unexpected or null values, and data quality issues</p></li>
+<li><p class="bull">Identify and create appropriate keys for joins</p></li>
+<li><p class="bull">Evaluate and transform column data types</p></li>
+<li><p class="bull">Shape and transform tables</p></li>
+<li><p class="bull">Combine queries</p></li>
+<li><p class="bull">Apply user-friendly naming conventions to columns and queries</p></li>
+<li><p class="bull">Configure data loading</p></li>
+<li><p class="bull">Resolve data import errors</p></li>
+</ul>
+<section>
+<h4 class="h4" id="ch01lev2sec8">Profile the data</h4>
+<p class="noindent">When performing data analysis, you will find it useful to see the overall structure or shape of data, which you can achieve by profiling data. Data profiling allows you to describe its content and consistency. It’s advisable to do data profiling before working with data, because you can discover limitations in the source data and then decide if a better data source would be required. If you analyze the data without profiling it, you may miss outliers, and your results may not be representative of what’s really happening.</p>
+<p class="indent">Power Query has column profiling capabilities that can be used to profile your data before you even load it. These include column quality, column value distribution, and column profile.</p>
+<section>
+<h5 class="h5" id="ch01lev3sec11">Identify data anomalies</h5>
+<p class="noindent">Power Query provides different functionality for identifying data anomalies depending on what you are looking for; you might be looking for unexpected values, such as prices over $10,000 when you analyze sales of a retail store, or you may be looking for missing or error values. In this section, we cover missing or error values, and later in the chapter we look at how you can identify unexpected values.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_20"></span>When you look at a table in Power Query Editor, you can check the quality of each column. By default, each column will have a colored bar under its header, which shows how many valid, error, and empty values there are in each column. To show the exact percentages, select <strong>View</strong> &gt; <strong>Data Preview</strong> &gt; <strong>Column quality</strong>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">Open 1.1.1 Connect.pbix from the companion files folder to follow along with the examples.</p>
+</div>
+<p class="indent"><a href="ch01.xhtml#ch01fig15">Figure 1-15</a> shows the <strong>Employee</strong> query from our earlier Wide World Importers example with the <strong>Column quality</strong> feature enabled.</p>
+<figure class="figure" id="ch01fig15">
+<img src="graphics/01fig15.jpg" alt="The figure shows Valid, Error, and Empty under each column header." width="732" height="284"/>
+<p class="figcaption"><strong>FIGURE 1-15</strong> Column quality</p>
+</figure>
+<p class="indent">Note how the <strong>Parent Employee Key</strong> column has 85% valid values and 15% empty ones. If we didn’t expect any empty values in the column, this would prompt us to investigate the issue. For the column quality purposes in Power Query, empty values are <em>null</em> values or empty strings. There are no errors in this query, so the Error percentage is always 0%.</p>
+<p class="indent">If we now go to the <strong>Customer</strong> query and check the Postal Code column, we’ll see that there are &lt;1% error values. Note that Power Query won’t tell you the percentage of valid or missing values when there are errors in a column. For now, we’ll leave this error as is, and we’re going to fix the error in this column later in this chapter.</p>
+<p class="indent">To copy the column quality metrics, right-click the area under the column header and select <strong>Copy Quality Metrics</strong>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Data Sample</p>
+<p class="note-para">By default, column profiling is based on the first 1,000 rows of a query. You can use the entire dataset for column profiling by making a change in the lower-left corner of Power Query Editor.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec12"><span epub:type="pagebreak" id="page_21"></span>Examine data structures and interrogate column properties</h5>
+<p class="noindent">In addition to column quality, you can look at column value distribution. To enable this feature, select <strong>View</strong> &gt; <strong>Data Preview</strong> &gt; <strong>Column distribution</strong>. In <a href="ch01.xhtml#ch01fig16">Figure 1-16</a>, you can see the <strong>Stock Item</strong> query with this feature enabled.</p>
+<figure class="figure" id="ch01fig16">
+<img src="graphics/01fig16.jpg" alt="The figure shows the distribution of values under each column header." width="733" height="219"/>
+<p class="figcaption"><strong>FIGURE 1-16</strong> Column distribution</p>
+</figure>
+<p class="indent">Note that you can now see how many distinct and unique values each column has, as well as the distribution of column values in the form of a column chart under each column header. Column profiling is shown irrespective of the column type, which you can see to the left of a column’s name.</p>
+<p class="indent">The distinct number refers to how many different values there are in a column once duplicates are excluded. The unique number shows how many values occur exactly once. The number of distinct and unique values will be the same only if all values are unique.</p>
+<p class="indent">The column charts show the shape of the data—you can see whether the distribution of values is uniform or if some values appear more frequently than others. For example, in <a href="ch01.xhtml#ch01fig16">Figure 1-16</a>, you can see that the <strong>Selling Package</strong> column mostly consists of one value, with four other values appearing significantly less frequently.</p>
+<p class="indent">To copy the data behind a column chart, right-click a column chart and select <strong>Copy Value Distribution</strong>. This will provide you with a list of distinct values and the number of times they appear in the column.</p>
+<p class="indent">Knowing the column distribution can be particularly useful to identify columns that don’t add value to your analysis. For example, in the <strong>State Province</strong> query, you can see that the following columns have only one distinct value each:</p>
+<ul class="sq-s">
+<li><p class="bull">Country</p></li>
+<li><p class="bull">Continent</p></li>
+<li><p class="bull">Region</p></li>
+<li><p class="bull">Subregion</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_22"></span>Depending on your circumstances, you may choose to remove the columns to declutter your queries.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Understanding Value Distribution</p>
+<p class="note-para">The distribution of values is based on the current query only. For example, the distribution of the <strong>Stock Item Key</strong> column values may be different in the <strong>Stock Item</strong> and <strong>Sale</strong> queries. It’s also worth remembering that the distribution of values may be different if you choose to profile the entire dataset as opposed to the first 1,000 rows.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Table Schema</p>
+<p class="note-para">You can see the advanced properties of columns, such as their numeric precision or whether they are nullable, by using the <strong>Table.Schema</strong> function. Writing your own M code is outside the scope of this book. For more information about the Table.Schema function, visit <em><a href="https://docs.microsoft.com/en-us/powerquery-m/table-schema">https://docs.microsoft.com/en-us/powerquery-m/table-schema</a>.</em></p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec13">Interrogate data statistics</h5>
+<p class="noindent">You can also profile columns to get some statistics and better understand your data. To enable this feature, select <strong>View</strong> &gt; <strong>Data Preview</strong> &gt; <strong>Column profile</strong>. After you enable this feature, select a column header to see its profile. For example, <a href="ch01.xhtml#ch01fig17">Figure 1-17</a> shows the profile of the <strong>Unit Price</strong> column from the <strong>Stock Item</strong> query.</p>
+<figure class="figure" id="ch01fig17">
+<img src="graphics/01fig17.jpg" alt="The figure shows column statistics and value distribution of the Unit Price column." width="732" height="463"/>
+<p class="figcaption"><strong>FIGURE 1-17</strong> Column profile</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_23"></span>You can now see two new areas in the lower part of Power Query Editor:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Column statistics</strong> This shows various statistics for the column. In addition to the total count of values and the number of error, empty, distinct, and unique values, you can see other statistics, such as minimum, maximum, average, and the number of zero, odd, and even values, among others. You will see different statistics depending on the column type. For instance, for text columns you will see the number of empty strings in addition to the number of empty values. You can copy the statistics by selecting the ellipsis next to <strong>Column statistics</strong> and selecting <strong>Copy</strong>.</p></li>
+<li><p class="bull"><strong>Value distribution</strong> This is a more detailed version of the column chart you can see under the column name. You can now see which column refers to which value, and you can hover over a column to apply filters based on the corresponding value. You can copy the value distribution as text by selecting the ellipsis on the <strong>Value distribution</strong> header and selecting <strong>Copy</strong>. Also when you select the ellipsis, you can group the values depending on the data type. For example, you can group columns of type Date by year, month, day, week of year, and day of week. Text values can be grouped by text length. Whole numbers can be grouped by sign or parity (odd or even), whereas decimals can be grouped by sign only.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Profiling Tables</p>
+<p class="note-para">If you want to profile the whole table at once, you can use the <strong>Table.Profile</strong> function, which is not available when you are using the user interface alone, though you can write your own code to use it. For more information about the Table.Profile function, visit <em><a href="https://docs.microsoft.com/en-us/powerquery-m/table-profile">https://docs.microsoft.com/en-us/powerquery-m/table-profile</a>.</em></p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec9">Resolve inconsistencies, unexpected or null values, and data quality issues</h4>
+<p class="noindent">If you followed the Wide World Importers example earlier in the chapter, you’d recall that the <strong>Postal Code</strong> column in the <strong>Customer</strong> query had an error in it. Power Query offers several ways to deal with errors or other unexpected values:</p>
+<ul class="sq-s">
+<li><p class="bull">Replace values</p></li>
+<li><p class="bull">Remove rows</p></li>
+<li><p class="bull">Identify the root cause of error</p></li>
+</ul>
+<section>
+<h5 class="h5" id="ch01lev3sec14">Replace values</h5>
+<p class="noindent">You can replace undesirable values with different values by using the Power Query user interface. This approach can be appropriate when there are error values in the data source that you cannot fix. For example, when connecting to Excel, the #N/A values will show up as errors. Unless you can fix the errors in the source, it may be acceptable to replace them with some other values.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_24"></span>Since errors are not values as such, the procedure to replace them is different compared to replacing other unexpected values.</p>
+<p class="indent">To replace errors:</p>
+<ol class="num">
+<li><p class="num">Right-click a column header and select <strong>Replace Errors</strong>.</p></li>
+<li><p class="num">Enter the value you want to replace errors with in the <strong>Value</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">You can only replace errors in one column at a time when using the user interface.</p>
+<p class="indent">To replace a value in a column:</p>
+<ol class="num">
+<li><p class="num">Right-click a column header and select <strong>Replace Values</strong>.</p></li>
+<li><p class="num">Enter the value you want to replace in the <strong>Value To Find</strong> box.</p></li>
+<li><p class="num">Enter the replacement value in the <strong>Replace With</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">You can also right-click a value in the column and select <strong>Replace Values</strong>. This way, the <strong>Value To Find</strong> box will be prepopulated with the selected value.</p>
+<p class="indent">For text columns, you can use the advanced options shown in <a href="ch01.xhtml#ch01fig18">Figure 1-18</a>.</p>
+<figure class="figure" id="ch01fig18">
+<img src="graphics/01fig18.jpg" alt="The figure shows the Value To Find and Replace With options, along with Advanced options expanded." width="650" height="338"/>
+<p class="figcaption"><strong>FIGURE 1-18</strong> Replace Values options</p>
+</figure>
+<ul class="sq-s">
+<li><p class="bull"><strong>Match entire cell contents</strong> With this option checked, Power Query won’t replace values where the <strong>Replace With</strong> value is only part of the <strong>Value To Find</strong> value.</p></li>
+<li><p class="bull"><strong>Replace using special characters</strong> Use this to insert special character codes, such as a carriage return or a nonbreaking space, in the <strong>Replace With</strong> or <strong>Value To Find</strong> box.</p></li>
+</ul>
+<p class="indent">To replace values in multiple columns at once, you must select multiple columns before replacing values. To do so, hold the <strong>Ctrl</strong> key and select the columns whose values you want to replace. If you want to select a range of columns based on their order, you can select the first column, hold the <strong>Shift</strong> key, and select the last column.</p>
+<p class="indent">The type of the replacement value must be compatible with the data type of the column—otherwise, you may get errors.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_25"></span><span class="gray"><em>Note</em></span> Null Values In Power Query</p>
+<p class="note-para">Null values are special values in Power Query. If you want to replace a value with a null, or vice versa, enter the word <strong>null</strong> in the relevant box, and Power Query will recognize it as a special value rather than text.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec15">Remove rows</h5>
+<p class="noindent">If there are errors in a column, you may wish to remove the rows entirely, depending on the business requirements. To do so, you can right-click a column header and select <strong>Remove Errors</strong>. Note that this will only remove rows where there are errors in the selected column. If you wish to remove all rows in a table that contain errors in any column, you can select the table icon to the left of the column headers and select <strong>Remove Errors</strong>.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec16">Identify the root cause of error</h5>
+<p class="noindent">When you see an error in a column, you can check the error message behind the error. To do so, select the error cell, and you will see the error message in the preview section at the bottom.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Checking the Cell Contents</p>
+<p class="note-para">In general, you can use this method—selecting the cell—to see nested cell contents such as errors, lists, records, and tables.</p>
+<p class="note-para">Though you also have an option to select the hyperlink, keep in mind that this will add an extra query step, which you will have to remove if you want to load the query later.</p>
+</div>
+<p class="indent"><a href="ch01.xhtml#ch01fig19">Figure 1-19</a> shows the error message behind the error we saw in the <strong>Postal Code</strong> column of the <strong>Customer</strong> query.</p>
+<figure class="figure" id="ch01fig19">
+<img src="graphics/01fig19.jpg" alt="The figure shows an error message that reads DataFormat.Error: We couldn't convert to Number. Details: N/A." width="575" height="422"/>
+<p class="figcaption"><strong>FIGURE 1-19</strong> Error message</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_26"></span>After seeing this error message, you know that the error happened because Power Query tried to convert <strong>N/A</strong>, which is text, into a number. To confirm this, you can go one step back by selecting the <strong>Promoted Headers</strong> step in the list of <strong>Applied Steps</strong>—the cell will show N/A, so you must transform the column type to <strong>Text</strong> to prevent the error from happening, as covered later in this chapter.</p>
+<p class="indent">Although errors can happen for a variety of reasons, and not all errors occur because of type conversions, reading the error message will usually give you a good idea of what’s going on.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec10">Identify and create appropriate keys for joins</h4>
+<p class="noindent">Power BI allows you to combine data from different tables in several ways. Most commonly, you combine tables, or you create relationships between them.</p>
+<p class="indent">Combining tables requires a join in the query, which in Power Query is also known as <em>merge</em>. Relationships, which you create in the model, not in Power Query, create implicit joins when visuals calculate values. The choice between the two depends on the business requirements and is up to the data modeler. In this section, we are discussing the keys you need for either operation.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Combining Tables and Creating Relationships</p>
+<p class="note-para">We review different methods of combining tables later in this chapter, and we cover relationships in <a href="ch02.xhtml#ch02">Chapter 2</a>.</p>
+</div>
+<p class="indent">When you join tables, you need to have some criteria to join them, such as keys in each table. For example, you join the <em>City</em> and <em>Sale</em> tables by using the <em>City Key</em> column in each table. Though it’s handy to have keys named in the same way, it’s not required. For instance, you can join the <em>Sale</em> table with the <em>Date</em> table by using the <em>Invoice Date Key</em> from the <em>Sale</em> table and the <em>Date</em> column from the <em>Date</em> table.</p>
+<p class="indent">Each table can be on the <em>one</em> or the <em>many</em> side during a join. If a table is on the <em>one</em> side, it means the key in the table has a unique value for every row, and it’s also known as the <em>primary key</em>. If a table is on the <em>many</em> side, it means that values in the key column are not necessarily unique for every row and may repeat, and such a key is often called a <em>foreign key</em>.</p>
+<p class="indent">You can join tables that are both on the <em>one</em> side, but such situations are rare. Usually one table is on the <em>one</em> side and one table is on the <em>many</em> side. You can also perform joins when both tables are on the <em>many</em> side, though you should be aware that if you do it in Power Query, you will get duplicate rows.</p>
+<section>
+<h5 class="h5" id="ch01lev3sec17">Keys for joins in Power Query</h5>
+<p class="noindent">Power Query allows you to perform joins based on one or more columns at once, so it’s not necessary to create composite keys to merge tables in Power Query.</p>
+<p class="indent">For joins in Power Query, column types are important. For example, if a column is of type Date, then you won’t be able to merge it with a column of type Date/Time even if the Date/Time column has no Time component.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec18"><span epub:type="pagebreak" id="page_27"></span>Keys for relationships</h5>
+<p class="noindent">For relationships, Power BI is more forgiving of the data type. If columns that participate in a relationship are of different types, Power BI will do its best to convert them in one type behind the scenes. Although the relationship may still work, it’s always best to have the same data type for columns that are in a relationship.</p>
+<p class="indent">Power BI only allows you to create physical relationships between two tables on a single pair of columns. This means that in case you have a composite key in a table, you’ll need to combine the key columns in a single column before you can create a physical relationship between two tables. You can do it in Power Query or by creating a calculated column in DAX.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Calculated Columns and Dax</p>
+<p class="note-para">If you use DirectQuery, some calculated columns can still be translated into the native language of the data source efficiently. For example, the COMBINEVALUES function in DAX translates well into SQL. We review DAX in <a href="ch02.xhtml#ch02">Chapter 2</a>.</p>
+</div>
+<p class="indent">There are two ways of combining columns in Power Query:</p>
+<ul class="sq-s">
+<li><p class="bull">Create a new column This option keeps the original columns. To add a new merged column, select the columns you want to combine and select <strong>Add column</strong> &gt; <strong>From Text</strong> &gt; <strong>Merge Columns</strong>.</p></li>
+<li><p class="bull">Merge columns in-place This option removes the original columns. To merge existing columns, select the columns you want to merge and select <strong>Transform</strong> &gt; <strong>Text Column</strong> &gt; <strong>Merge Columns</strong>.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Column Selection Order</p>
+<p class="note-para">The order in which you select columns matters: the order of the text in the merged column follows the order of column selection. In other words, if you select column A first and then column B, the result will be different compared to your selecting column B first and then column A.</p>
+</div>
+<p class="indent">Either way, you’ll be presented with the options shown in <a href="ch01.xhtml#ch01fig20">Figure 1-20</a>.</p>
+<figure class="figure" id="ch01fig20">
+<img src="graphics/01fig20.jpg" alt="The figure shows the Separator and New column name options." width="650" height="243"/>
+<p class="figcaption"><strong>FIGURE 1-20</strong> Merge columns options</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_28"></span>You can use one of the predefined separators from the <strong>Separator</strong> drop-down list, or you can specify your own by selecting <strong>Custom</strong> from the drop-down list. You’re also given an option to enter the new column name. After you specify the options, select <strong>OK</strong>.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec11">Evaluate and transform column data types</h4>
+<p class="noindent">If the data source does not communicate the type of each column, by default Power Query will do its best to detect the data types automatically if types are not available. So, for example, you’ll get column types from a database but not from a JSON file, so Power Query will try to detect types. It’s important to note that the process is not perfect because Power Query does not always consider all values. As you saw earlier, Power Query may detect data types incorrectly.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Disabling Automatic Type Detection</p>
+<p class="note-para">If you find the automatic type detection undesirable, you can turn it off at <strong>File</strong> &gt; <strong>Options and settings</strong> &gt; <strong>Options</strong> &gt; <strong>Current file</strong> &gt; <strong>Data Load</strong> &gt; <strong>Type Detection</strong>.</p>
+</div>
+<p class="indent">Power Query supports the following data types:</p>
+<ul class="sq-s">
+<li><p class="bull">Decimal Number</p></li>
+<li><p class="bull">Fixed Decimal Number</p></li>
+<li><p class="bull">Whole Number</p></li>
+<li><p class="bull">Percentage</p></li>
+<li><p class="bull">Date/Time</p></li>
+<li><p class="bull">Date</p></li>
+<li><p class="bull">Time</p></li>
+<li><p class="bull">Date/Time/Timezone</p></li>
+<li><p class="bull">Duration</p></li>
+<li><p class="bull">Text</p></li>
+<li><p class="bull">True/False</p></li>
+<li><p class="bull">Binary</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Complex Data Types</p>
+<p class="note-para">Sometimes you may see other—complex—data types, like Function, List, Record, and Table. You will encounter some of them later in this chapter.</p>
+<p class="note-para">It’s also important to note that not all data types are available once you load your data. For example, the Percentage type becomes Decimal Number. We are reviewing data loading toward the end of this chapter.</p>
+</div>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_29"></span><span class="gray"><em>Need More Review?</em></span> Data Types In Power BI</p>
+<p class="note-para">Not all values can be stored in Power BI. For technical documentation on the data types in Power BI, including the supported range of values, visit <em><a href="https://docs.microsoft.com/en-us/power-bi/connect-data/desktop-data-types">https://docs.microsoft.com/en-us/power-bi/connect-data/desktop-data-types</a>.</em></p>
+</div>
+<p class="indent">Continuing our Wide World Importers example, we now know that there is an error in the <strong>Postal Code</strong> column of the <strong>Customer</strong> query due to data type conversion. Power Query scanned the first few rows and, seeing whole numbers, decided that the type of the column is <strong>Whole Number</strong>, which you can see from the icon on the left side of the column header.</p>
+<p class="indent">In our example, you should transform the <strong>Postal Code</strong> column type to Text to accommodate both numeric and text values.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Selecting the Data Type</p>
+<p class="note-para">Occasionally, selecting the data type may not be straightforward. For example, the calendar year number can be both numeric and text, but it is up to the data modeler to decide what the type should be.</p>
+<p class="note-para">In general, if it doesn’t make sense to perform mathematical operations with a column, then you may want to make it Text. In the case of a calendar year number, you may want to use it to apply filter conditions such as “greater than,” so the Whole Number type makes sense. In other cases, like postal codes, you probably won’t need to perform mathematical operations, so the Text type might be appropriate.</p></div>
+<p class="indent">To transform the column type, right-click a column header, then select <strong>Change Type</strong> and select the desired data type. Alternatively, you can select the column type icon on the column header, and then select the data type you want to transform the column to.</p>
+<p class="indent">Provided the last step in the <strong>Customer</strong> query is <em>Changed Type</em> and the step is selected, after you try to change the type of the <strong>Postal Code</strong> column, you will see the message shown in <a href="ch01.xhtml#ch01fig21">Figure 1-21</a>.</p>
+<figure class="figure" id="ch01fig21">
+<img src="graphics/01fig21.jpg" alt="The figure shows the Change Column Type dialog box with three buttons: Replace current, Add new step, and Cancel." width="450" height="198"/>
+<p class="figcaption"><strong>FIGURE 1-21</strong> Change Column Type dialog box</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_30"></span>Since Power Query has already automatically changed the type of the column before, you now have the option to either replace the conversion by selecting <strong>Replace current</strong> or add a new conversion on top of the existing one by selecting <strong>Add new step</strong>.</p>
+<p class="indent">In this case, you should replace the current conversion because otherwise Power Query will try to convert the error value to Text, and it will still be an error. After you select <strong>Replace current</strong>, you will not see any errors, and you will be able to see the column distribution and other statistics.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Caching In Power Query</p>
+<p class="note-para">If you still see errors after transforming type to Text, you should navigate to another query and come back to Customer. This is because Power Query sometimes caches the output and does not immediately update it.</p>
+</div>
+<p class="indent">Adding a new conversion step is appropriate in case you cannot convert the type in one step. For example, if you’ve got data in a CSV file, and there’s a column that contains Date/Time values, you will not be able to set the column type to Date. Instead, you should set the data type to Date/Time first, and then add a new conversion step that changes the type to Date. This way, you will get no errors.</p>
+<p class="indent">If you want Power Query to detect the type of one or more specific columns automatically, you can select the columns, then select <strong>Transform</strong> &gt; <strong>Any Column</strong> &gt; <strong>Detect Data Type</strong>.</p>
+<section>
+<h5 class="h5" id="ch01lev3sec19">Using locale</h5>
+<p class="noindent">Occasionally, you will need to transform data by using a certain locale. For example, if your computer uses the DMY date format and you receive data in MDY format, you’ll need to change type with the locale. To do so, right-click a column header and select <strong>Change Type</strong> &gt; <strong>Using Locale</strong>. From there, you’ll need to select the data type and locale from drop-down lists.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Dates and Locale</p>
+<p class="note-para">In some cases, like monthly data, selecting the incorrect locale may not result in errors, since 1–12 can be either 1 December or 12 January. Therefore, it is especially important to ensure your data comes in the expected format when the values can be ambiguous.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec12">Shape and transform tables</h4>
+<p class="noindent">Few data sources provide data in shapes that are ready to be used by Power BI. You’ll often need to transform your data, especially if you work with files. In this section, we review common table transformations in Power Query by transforming the Wide World Importers queries that contain sales targets: <strong>Targets for 2022</strong> and <strong>Targets</strong>.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_31"></span><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">If you want to follow along with the example, use 1.1.1 Connect.pbix from the companion files folder.</p>
+</div>
+<p class="noindent">In <a href="ch01.xhtml#ch01fig22">Figure 1-22</a>, you can see the first four columns of the <strong>Targets for 2022</strong> query. There are 14 columns and seven rows in this query, which you can check by looking at the lower-left corner of Power Query when viewing the query.</p>
+<figure class="figure" id="ch01fig22">
+<img src="graphics/01fig22.jpg" alt="The figure shows the preview of the Targets for 2022 query." width="733" height="167"/>
+<p class="figcaption"><strong>FIGURE 1-22</strong> Targets for 2022</p>
+</figure>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Query Row Count</p>
+<p class="note-para">The row count is based on the query preview, and it may not account for all rows. You’ll get a more accurate figure in the Data view after you load data.</p>
+</div>
+<p class="indent">As you can see, the <strong>Targets for 2022</strong> query is not yet ready to be used in Power BI for the following reasons:</p>
+<ul class="sq-s">
+<li><p class="bull">There are extraneous notes in the first few rows.</p></li>
+<li><p class="bull">There are totals.</p></li>
+<li><p class="bull">There is no date or month column.</p></li>
+<li><p class="bull">Values are pivoted.</p></li>
+<li><p class="bull">Data types are not set.</p></li>
+</ul>
+<p class="indent">In <a href="ch01.xhtml#ch01fig23">Figure 1-23</a>, you can see the Targets query.</p>
+<figure class="figure" id="ch01fig23">
+<img src="graphics/01fig23.jpg" alt="The figure shows a table with three columns: Source.Name, Buying Group, and Target Excluding Tax (Millions)." width="650" height="242"/>
+<p class="figcaption"><strong>FIGURE 1-23</strong> Targets query</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_32"></span>There are several issues with this query, too:</p>
+<ul class="sq-s">
+<li><p class="bull">Targets are provided at year level, but we need them to be at month level.</p></li>
+<li><p class="bull">Years come from filenames and have the .csv extension suffix.</p></li>
+<li><p class="bull">Targets are in millions instead of dollars.</p></li>
+</ul>
+<p class="indent">After you transform each query, you must combine them. In our example, we’re aiming for a single table with the following columns:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>End of Month</strong> You’ll need to make a relationship with the <em>Date</em> table later, and you can use a column of type Date for that.</p></li>
+<li><p class="bull"><strong>Buying Group</strong> Only three values and no totals.</p></li>
+<li><p class="bull"><strong>Target Excluding Tax</strong> In dollars, for each month.</p></li>
+</ul>
+<section>
+<h5 class="h5" id="ch01lev3sec20">Working with query steps</h5>
+<p class="noindent">To start getting the <strong>Targets for 2022</strong> query in the right shape, let’s undo some of the automatic transformations done by Power Query. By looking at the <strong>Applied Steps</strong> pane, you can see that after navigating to the right sheet in the Excel file, Power Query has promoted the first row to headers, even though the row did not contain column names. It also changed column types, considering column names as valid column values, which led to incorrect data type selection.</p>
+<ol class="num">
+<li><p class="num">Right-click the <strong>Promoted Headers</strong> step in the <strong>Applied Steps</strong> pane.</p></li>
+<li><p class="num">Select <strong>Delete Until End</strong>.</p></li>
+<li><p class="num">Select <strong>Delete</strong>.</p></li>
+</ol>
+<p class="indent">This removes the <strong>Promoted Headers</strong> step and all subsequent steps. The <strong>Delete Until End</strong> option is especially useful when you have more than two steps you want to remove.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Editing Steps</p>
+<p class="note-para">You can remove a single query step by selecting the cross icon. To change the order of steps, you can drag and drop a step. Some steps will have a gear icon—this will allow you to change the step options, if available.</p>
+<p class="note-para">It’s important to note that the query may break if you edit intermediate steps, since the order of steps in a query is sequential and most steps reference the previous step. For example, if you promote the first row to headers first, then change the column types, and then change the order of the last two steps, your query will break because the Changed Type step will be referencing incorrect column names.</p>
+</div>
+<p class="indent">As <a href="ch01.xhtml#ch01fig24">Figure 1-24</a> shows, you can now see some notes left by a sales planner in the first two rows. Note that columns are now not typed.</p>
+<figure class="figure" id="ch01fig24">
+<img src="graphics/01fig24.jpg" alt="The figure shows the preview of the Targets for 2022 query." width="733" height="198"/>
+<p class="figcaption"><strong>FIGURE 1-24</strong> Targets for 2022 with automatic transformations undone</p>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec21"><span epub:type="pagebreak" id="page_33"></span>Reducing rows and columns</h5>
+<p class="noindent">Since the first three rows don’t contain any meaningful data, we can remove them. In addition to filtering columns, the Power Query user interface offers the following options for row reduction:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Keep Rows</strong></p>
+<ul class="sq1">
+<li><p class="bull"><strong>Keep Top Rows</strong> Keeps the specified number of top rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Keep Bottom Rows</strong> Keeps the specified number of bottom rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Keep Range of Rows</strong> Skips a specified number of top rows and then keeps the chosen number of rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Keep Duplicates</strong> Keeps rows that appear more than once. This option can work on the whole table, meaning all column values will have to match for rows to be considered duplicates, or it can work on selected columns only, so values will only need to match in specified columns for duplicates to be kept.</p></li>
+<li><p class="bull"><strong>Keep Errors</strong> Keeps rows that contain errors. This option can work on the whole table or selected columns only.</p></li></ul></li>
+<li><p class="bull"><strong>Remove Rows</strong></p>
+<ul class="sq1">
+<li><p class="bull"><strong>Remove Top Rows</strong> Removes a specified number of top rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Remove Bottom Rows</strong> Removes a specified number of bottom rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Remove Alternate Rows</strong> Removes rows following a user-supplied pattern: it starts with a specified row, then alternates between removing the selected number of rows and keeping the chosen number of rows. Works on the whole table only.</p></li>
+<li><p class="bull"><strong>Remove Duplicates</strong> Removes rows that are duplicates of other rows. Can work on the whole table or selected columns only.</p></li>
+<li><p class="bull"><strong>Remove Blank Rows</strong> Removes rows that completely consist of empty strings or nulls. Works on the whole table only; if you need to remove blank values from a <span epub:type="pagebreak" id="page_34"></span>specific column, you can select the filter button to the right of a column’s name and select <strong>Remove Empty</strong>.</p></li>
+<li><p class="bull"><strong>Remove Errors</strong> Removes rows that contain errors. Can work on the whole table or selected columns only.</p></li></ul></li>
+</ul>
+<p class="indent">Since notes can potentially change, it’s best not to remove them by filtering out specific values. In our case, <strong>Remove Top Rows</strong> is appropriate, so we can perform the following steps:</p>
+<ol class="num">
+<li><p class="num">Select <strong>Remove Rows</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num">Select <strong>Remove Top Rows</strong>.</p></li>
+<li><p class="num">Enter <strong>3</strong> in the <strong>Number of rows</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">Now that we have removed the top three rows, we can use the first row for the column names by selecting <strong>Use First Row as Headers</strong> on the Home ribbon. The result should look like <a href="ch01.xhtml#ch01fig25">Figure 1-25</a>.</p>
+<figure class="figure" id="ch01fig25">
+<img src="graphics/01fig25.jpg" alt="The figure shows a table with Buying Group as the first column, followed by January, February, and March." width="733" height="121"/>
+<p class="figcaption"><strong>FIGURE 1-25</strong> Targets for 2022 with unnecessary rows removed and headers in place</p>
+</figure>
+<p class="indent">Note how Power Query automatically detected column types, this time correctly since only the first column is a text column and all the other columns are numeric.</p>
+<p class="indent">Next, you can see that the last row is a total row, and the last column, <strong>Year Target</strong>, is a total column. You need to remove both, because keeping them may result in incorrect aggregation later in Power BI.</p>
+<p class="indent">There are several ways to remove the last row, and which way is best for you depends on several factors:</p>
+<ul class="sq-s">
+<li><p class="bull">If you’re sure that the last row is always going to be a total row, you can remove it in the same way that you removed the top three rows earlier.</p></li>
+<li><p class="bull">If, on the other hand, you’re not sure that the total row is always going to be there, it’s safer to filter out a specific value from the <strong>Buying Group</strong> column—in our example, <strong>Buying Group Total</strong>.</p></li>
+<li><p class="bull">Depending on business logic, you can also apply a text filter that excludes values that end with the word <em>Total</em>. This kind of filter relies on actual Buying Group column values not ending with <em>Total</em>.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Case Sensitivity In Power Query</p>
+<p class="note-para">Since Power Query is case-sensitive by default, you must exclude the word “Total”; filtering out “total” won’t work.</p></div>
+<p class="indent"><span epub:type="pagebreak" id="page_35"></span>Let’s say you’re sure that only the total row label ends with the word <em>Total</em>, so we can apply a corresponding filter to the <strong>Buying Group</strong> column as follows:</p>
+<ol class="num">
+<li><p class="num">Select the filter button on the <strong>Buying Group</strong> column header.</p></li>
+<li><p class="num">Select <strong>Text Filters</strong> &gt; <strong>Does Not End With</strong>.</p></li>
+<li><p class="num">Enter <strong>Total</strong> in the box next to the drop-down list that shows <strong>does not end with</strong>.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">The last row is now filtered out, and you should remove the last column as well, since it contains totals for the year. To do so, select the <strong>Year Target</strong> column and press the <strong>Delete</strong> key.</p>
+<p class="indent">With the totals gone, Power Query Editor should show “13 columns, 3 rows” in the lower-left corner. However, the current <strong>Targets for 2022</strong> query still does not meet our goals because we don’t have a single date or month column. Instead, targets for each month appear in a separate column. We’ll address this issue next.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec22">Pivoting columns, unpivoting columns, and transposing</h5>
+<p class="noindent">The current <strong>Targets for 2022</strong> query is sometimes called <em>pivoted</em> because attributes appear on both rows and columns and the same measure is scattered across multiple columns—just like in an Excel PivotTable.</p>
+<p class="indent">Power Query provides several options when it comes to pivoting and unpivoting:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Pivot Column</strong> This creates a new column for each value in the column you pivot. One scenario when this option can be useful is when you have different measures mixed in the same column. For example, if you have <em>Quantity</em> and <em>Price</em> as text labels in one column and numeric quantity and price values in another column, you could pivot the first column to create separate Quantity and Price columns with numeric quantity and price values, respectively.</p></li>
+<li><p class="bull"><strong>Unpivot Columns</strong> The selected columns will be transformed into two: Attribute, containing old column names, and Value, containing old column values. In general, unpivoting is useful when the source data has been prepared by using a PivotTable or similar method. This specific option is appropriate when the list of columns you want to unpivot is known in advance.</p></li>
+<li><p class="bull"><strong>Unpivot Other Columns</strong> All columns except the selected ones will be unpivoted. This option is particularly useful when you only know the list of columns that don’t need to be unpivoted. For example, if you have a file where monthly data is added as columns every month and you want to unpivot months, then you could use this option.</p></li>
+<li><p class="bull"><strong>Unpivot Only Selected Columns</strong> Despite the names of the previous two options, Power Query tries to recognize when you want to unpivot the selected columns or other columns, so this option allows you to be strict about which columns are unpivoted.</p></li>
+</ul>
+<p class="indent">Furthermore, Power Query offers the <strong>Transpose</strong> feature, which allows you to transpose tables, treating rows as columns and columns as rows. This operation can be useful when you have multiple levels of headers; you can transpose your table, merge the columns that contain headers, and transpose again, so there will be only one row of headers.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_36"></span><span class="gray"><em>Important</em></span> Table Transposition and Column Names</p>
+<p class="note-para">When transposing tables, remember that you lose column names during the operation, so if you want to keep them, you must demote headers to the first row. You can do so by selecting the <strong>Use First Row as Headers</strong> drop-down and then selecting <strong>Use Headers as First Row</strong>.</p>
+</div>
+<p class="indent">For our Wide World Importers example, right-click the <strong>Buying Group</strong> column and select <strong>Unpivot Other Columns</strong>. This puts all column headers except for <strong>Buying Group</strong> in a single column called <strong>Attribute</strong>, and it puts all values in the <strong>Value</strong> column. The result should look like <a href="ch01.xhtml#ch01fig26">Figure 1-26</a>.</p>
+<figure class="figure" id="ch01fig26">
+<img src="graphics/01fig26.jpg" alt="The figure shows a table with three columns: Buying Group, Attribute, and Value." width="575" height="195"/>
+<p class="figcaption"><strong>FIGURE 1-26</strong> Unpivoted months</p>
+</figure>
+<p class="indent">As you can see, months now appear in a single column, which is what we want for Power BI. Now you need to transform month names into date values so you can create a relationship with the Date table later.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec23">Adding columns</h5>
+<p class="noindent">You can add a new column in Power Query by using one of the following options on the <strong>Add column</strong> ribbon:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Column From Examples</strong> This option allows you to type some examples in a new column, and Power Query will try its best to write a transformation formula to accommodate the examples.</p></li>
+<li><p class="bull"><strong>Custom Column</strong> You can type your own M formula for the new column.</p></li>
+<li><p class="bull"><strong>Invoke Custom Function</strong> This option invokes a custom function for every row of a table.</p></li>
+<li><p class="bull"><strong>Conditional Column</strong> This option provides an interface where you can specify the if-then-else logic for your new column.</p></li>
+<li><p class="bull"><strong>Index Column</strong> This option creates a sequential column that starts and increments with the values you specify. By default, it will start with 0 and increment by 1 for each row.</p></li>
+<li><p class="bull"><strong>Duplicate Column</strong> This option creates a copy of a column you select.</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_37"></span>In addition to these options, you can use data type–specific transformations to add columns, most of which are also available on the <strong>Transform</strong> ribbon. The difference between the <strong>Add Column</strong> and <strong>Transform</strong> ribbons is that the former will add a new column whereas the latter will transform a column in place.</p>
+<section>
+<h6 class="h6" id="ch01lev4sec1">Targets For 2022</h6>
+<p class="noindent">In the <strong>Targets for 2022</strong> query, you must transform month names into dates, and you’ll use the <strong>Custom Column</strong> option for this as follows:</p>
+<ol class="num">
+<li><p class="num">Select <strong>Add Column</strong> &gt; <strong>Custom Column</strong>.</p></li>
+<li><p class="num">Enter <strong>Start of Month</strong> in the <strong>New column name</strong> box.</p></li>
+<li><p class="num">Enter <strong>Date.From([Attribute] &amp; “2022”)</strong> in the <strong>Custom column formula</strong> box. The Custom Column window should look like <a href="ch01.xhtml#ch01fig27">Figure 1-27</a>.</p>
+<figure class="figure" id="ch01fig27">
+<img src="graphics/01fig27.jpg" alt="The figure shows the Custom Column window with New column name, Custom column formula, and Available columns elements." width="650" height="408"/>
+<p class="figcaption"><strong>FIGURE 1-27</strong> Custom Column window</p>
+</figure></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+<li><p class="num">Right-click the <strong>Attribute</strong> column and select <strong>Remove</strong>.</p></li>
+</ol>
+<p class="indent">When entering a custom column formula, you can use the columns available in the table by double-clicking them in the <strong>Available columns</strong> list on the right; this will insert a column reference into your formula.</p>
+<p class="indent">Once you complete these steps, the result should look like <a href="ch01.xhtml#ch01fig28">Figure 1-28</a>.</p>
+<figure class="figure" id="ch01fig28">
+<img src="graphics/01fig28.jpg" alt="The figure shows a table with three columns: Buying Group, Value, and Start of Month." width="575" height="220"/>
+<p class="figcaption"><strong>FIGURE 1-28</strong> Targets for 2022 with Start of Month column</p>
+</figure>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_38"></span><span class="gray"><em>Important</em></span> Custom Column Types</p>
+<p class="note-para">The <strong>Custom column</strong> feature creates a column without a data type by default; you must set the data type manually before loading to ensure that the data is loaded correctly.</p>
+</div>
+<p class="indent">As you can see, the <strong>Start of Month</strong> column you’ve just created has no column type, and you may want to make it the first column instead of the last. Additionally, you have to rename the <strong>Value</strong> column by completing the following steps:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>ABC123</strong> icon on the <strong>Start of Month</strong> column header and select <strong>Date</strong>.</p></li>
+<li><p class="num">Right-click the <strong>Start of Month</strong> column and select <strong>Move</strong> &gt; <strong>To Beginning</strong>.</p></li>
+<li><p class="num">Double-click the <strong>Value</strong> column header.</p></li>
+<li><p class="num">Enter <strong>Target Excluding Tax</strong> and press the Enter key.</p></li>
+</ol>
+<p class="indent">The <strong>Targets for 2022</strong> query is now finished, and we need to transform the <strong>Targets</strong> query next.</p>
+</section>
+<section>
+<h6 class="h6" id="ch01lev4sec2">Targets</h6>
+<p class="noindent">In the <strong>Targets</strong> query, you have yearly targets, and you need to have monthly targets. Let’s say that, according to business rules, it’s all right to divide the yearly target evenly across months for years prior to 2022, which this query contains.</p>
+<p class="indent">There are a few ways to solve this problem, one of which is adding a new column that contains months and expanding it as follows:</p>
+<ol class="num">
+<li><p class="num">Select <strong>Add Column</strong> &gt; <strong>Custom Column</strong>.</p></li>
+<li><p class="num">Enter <strong>Months</strong> in the <strong>New column name</strong> box.</p></li>
+<li><p class="num">Enter <strong>{1..12}</strong> in the <strong>Custom column formula</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">The result should look like <a href="ch01.xhtml#ch01fig29">Figure 1-29</a>.</p>
+<figure class="figure" id="ch01fig29">
+<img src="graphics/01fig29.jpg" alt="The figure shows the Months column highlighted, with List inside each cell." width="733" height="214"/>
+<p class="figcaption"><strong>FIGURE 1-29</strong> Months custom column added to the Targets query</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_39"></span>In M, braces signify a list, and a double period signifies a range. When you used <strong>{1..12}</strong> as a custom column formula, you put a list of numbers from 1 to 12, inclusive, in each cell of the new column. Therefore, you see the <em>List</em> hyperlinks in the <strong>Months</strong> column cells. Because custom columns by default don’t have a data type set, you see ABC123 as the column type, even though in reality it is of type List.</p>
+<p class="indent">If you select any <strong>List</strong> hyperlink, you’ll navigate to a new step that contains one such list. You can also preview the contents of a cell without navigating to the list by selecting a cell without selecting a hyperlink.</p>
+<p class="indent">You can expand the new column by selecting the double-arrow button on the column header. You’ll then see two options:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Expand to New Rows</strong> This option duplicates each table row by the number of list items in the row’s list.</p></li>
+<li><p class="bull"><strong>Extract Values</strong> This option keeps the number of rows in the table the same, and it concatenates the list items by using a separator you specify, which can be one of the predefined ones or a custom value you provide.</p></li>
+</ul>
+<p class="indent">In our example, you use the <strong>Expand to New Rows</strong> option. The result should look like <a href="ch01.xhtml#ch01fig30">Figure 1-30</a>.</p>
+<figure class="figure" id="ch01fig30">
+<img src="graphics/01fig30.jpg" alt="The figure shows the Months column highlighted, containing numbers." width="733" height="318"/>
+<p class="figcaption"><strong>FIGURE 1-30</strong> Expanded Months column</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_40"></span>Before you can create a column of type Date, you’ll have to transform the first column, which contains file names. Each file is named after a year and has a .csv extension. There are multiple ways to extract the year number from the column. The most appropriate way depends on the business requirements. In our example, you can extract the first four characters using the following steps:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>Source.Name</strong> column.</p></li>
+<li><p class="num">On the <strong>Transform</strong> ribbon, select <strong>Text Column</strong> &gt; <strong>Extract</strong> &gt; <strong>First Characters</strong>.</p></li>
+<li><p class="num">Enter <strong>4</strong> in the <strong>Count</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+<li><p class="num">Right-click the <strong>Source.Name</strong> column header and select <strong>Change Type</strong> &gt; <strong>Whole Number</strong>.</p></li>
+</ol>
+<p class="indent">Now that you have the year number, you can construct a date from it as follows:</p>
+<ol class="num">
+<li><p class="num">On the <strong>Add Column</strong> ribbon, select <strong>Custom Column</strong>.</p></li>
+<li><p class="num">Enter <strong>Start of Month</strong> in the <strong>New column name</strong> box.</p></li>
+<li><p class="num">Enter <strong>#date([Source.Name], [Months], 1)</strong> in the <strong>Custom column formula</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+<li><p class="num">Right-click the <strong>Start of Month</strong> column header and select <strong>Change Type</strong> &gt; <strong>Date</strong>.</p></li>
+</ol>
+<p class="indent">In the new Start of Month column, we’ve got dates now, as desired. You can now clean up the query in the following way:</p>
+<ol class="num">
+<li><p class="num">Hold the <strong>Ctrl</strong> key and select the following columns in order:</p>
+<ol class="alphaupper">
+<li><p class="alpha1">Start of Month</p></li>
+<li><p class="alpha1">Buying Group</p></li>
+<li><p class="alpha1">Target Excluding Tax (Millions)</p></li></ol></li>
+<li><p class="num">Right-click the header of any of the selected columns and select <strong>Remove Other Columns</strong>.</p></li>
+</ol>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Selection Order</p>
+<p class="note-para">The order in which you select columns matters; after you remove other columns, the remaining columns appear in the order in which you selected them.</p>
+</div>
+<p class="indent">The <strong>Target</strong> query now has three columns. The only problem left in this query is to correct the <strong>Target Excluding Tax (Millions)</strong> column. To do so, complete the following steps:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>Target Excluding Tax (Millions)</strong> column.</p></li>
+<li><p class="num">On the <strong>Transform</strong> ribbon, select <strong>Number Column</strong> &gt; <strong>Standard</strong> &gt; <strong>Multiply</strong>.</p></li>
+<li><p class="num">Enter <strong>1000000</strong> in the <strong>Value</strong> box and select <strong>OK</strong>.</p></li>
+<li><p class="num">Similarly, select <strong>Number Column</strong> &gt; <strong>Standard</strong> &gt; <strong>Divide</strong>, enter <strong>12</strong> in the <strong>Value</strong> box, and select <strong>OK</strong>.</p></li>
+<li><p class="num"><span epub:type="pagebreak" id="page_41"></span>Double-click the <strong>Target Excluding Tax (Millions)</strong> column header, enter <strong>Target Excluding Tax</strong>, and press <strong>Enter</strong>.</p></li>
+</ol>
+<p class="indent">The result should look like <a href="ch01.xhtml#ch01fig31">Figure 1-31</a>.</p>
+<figure class="figure" id="ch01fig31">
+<img src="graphics/01fig31.jpg" alt="The figure shows a table with three columns: Start of Month, Buying Group, and Target Excluding Tax." width="575" height="215"/>
+<p class="figcaption"><strong>FIGURE 1-31</strong> Transformed Target query</p>
+</figure>
+<p class="indent">Note how the column names are now the same as those in the <strong>Targets for 2022</strong> query—this is on purpose. You are now ready to combine the two queries into one.</p>
+</section>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec13">Combine queries</h4>
+<p class="noindent">There are two main ways to combine queries in Power Query:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Append</strong> This stacks queries vertically. In SQL, it’s like UNION ALL.</p></li>
+<li><p class="bull"><strong>Merge</strong> This combines queries horizontally based on the keys you supply. In SQL, it’s like JOIN.</p></li>
+</ul>
+<section>
+<h5 class="h5" id="ch01lev3sec24">Append</h5>
+<p class="noindent">When you append queries, you combine tables vertically. As a result, you get a taller table. Usually the tables will have the same columns, though this is not strictly necessary. The resulting table will have all columns from all queries, and if some columns were missing in one of the original queries, then they will be populated with <em>null</em> values if values are missing.</p>
+<p class="indent">You can append queries in two ways:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Append Queries</strong> This option appends one or more queries to the selected query and does not create any new queries. This is the default option if you select <strong>Append Queries</strong> without selecting the drop-down button.</p></li>
+<li><p class="bull"><strong>Append Queries as New</strong> This creates a new query that contains concatenated rows of the original queries. You can select this option after selecting the drop-down button.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Following Along With the Example</p>
+<p class="note-para">If you want to follow along with the example, you can open 1.2.5 Shape.pbix from the companion files folder</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_42"></span>In the Wide World Importers example, let’s append the <strong>Targets for 2022</strong> and <strong>Targets</strong> queries as follows:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>Targets</strong> query from the <strong>Queries</strong> pane.</p></li>
+<li><p class="num">Select <strong>Combine</strong> &gt; <strong>Append Queries</strong>. You should see the options shown in <a href="ch01.xhtml#ch01fig32">Figure 1-32</a>.</p>
+<figure class="figure" id="ch01fig32">
+<img src="graphics/01fig32.jpg" alt="The figure shows Two tables and Three or more tables options, as well as Table to append dropdown list." width="650" height="235"/>
+<p class="figcaption"><strong>FIGURE 1-32</strong> Options when appending</p>
+</figure>
+</li>
+<li><p class="num">Select <strong>Targets for 2022</strong> from the <strong>Table to append</strong> drop-down list.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">As a result, you will see a new step in the <strong>Applied Steps</strong> pane called <strong>Appended Query</strong>. Unless you scroll down, you will not see any new rows because they are appended to the end of the query. In the lower-left corner, you can note the change in the number of rows, which increased to 144 from 108 in the previous step.</p>
+<p class="indent">To meet our goal of having the <strong>End of Month</strong> column in the <strong>Targets</strong> query, let’s transform the <strong>Start of Month</strong> column:</p>
+<ol class="num">
+<li><p class="num">Right-click the <strong>Start of Month</strong> column and select <strong>Transform</strong> &gt; <strong>Month</strong> &gt; <strong>End of Month</strong>.</p></li>
+<li><p class="num">Rename the <strong>Start of Month</strong> column to <strong>End of Month</strong>.</p></li>
+</ol>
+<p class="indent">Note how you need to apply the transformation only once, even though the current query consists of two queries—<strong>Targets</strong> and <strong>Targets for 2022</strong>.</p>
+<p class="indent">For now, you can leave the <strong>Targets for 2022</strong> query as is, although it would be undesirable to load it since now there’s duplicated data in the <strong>Targets for 2022</strong> and <strong>Targets</strong> queries. We will address this issue later in the “Configure data loading” section.</p>
+</section>
+<section>
+<h5 class="h5" id="ch01lev3sec25">Merge</h5>
+<p class="noindent">As discussed earlier, when you merge queries you combine them horizontally; as a result, you get a wider table. When merging, you need a set of keys—columns that have matching values in both tables—telling Power Query which rows of the first table should be combined with which rows of the second table.</p>
+<p class="indent">Like with the Append Queries feature, you can either merge two queries without creating a new one or you can merge queries as new.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_43"></span>There are six kinds of joins in Power Query:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Left Outer</strong> All from first, matching from second</p></li>
+<li><p class="bull"><strong>Right Outer</strong> All from second, matching from first</p></li>
+<li><p class="bull"><strong>Full Outer</strong> All rows from both</p></li>
+<li><p class="bull"><strong>Inner</strong> Only matching rows</p></li>
+<li><p class="bull"><strong>Left Anti</strong> Rows only in first</p></li>
+<li><p class="bull"><strong>Right Anti</strong> Rows only in second</p></li>
+</ul>
+<p class="indent">You can see the visual representation of joins in <a href="ch01.xhtml#ch01fig33">Figure 1-33</a>.</p>
+<figure class="figure" id="ch01fig33">
+<img src="graphics/01fig33.jpg" alt="The figure shows Left outer, Right outer, Full outer, Inner, Left anti, and Right anti icons." width="650" height="110"/>
+<p class="figcaption"><strong>FIGURE 1-33</strong> Joins available in Power Query</p>
+</figure>
+<p class="indent">In case your data isn’t perfect, Power Query allows you to use fuzzy matching when performing merges. You can use the following options:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Similarity threshold</strong> Can be valued from 0 to 1, where 0 will make all values match each other and 1 will allow exact matches only. The default is 0.8.</p></li>
+<li><p class="bull"><strong>Ignore case</strong> Lowercase and uppercase letters will be treated as the same.</p></li>
+<li><p class="bull"><strong>Match by combining text parts</strong> Power Query will try to combine separate words into one to find matches between keys.</p></li>
+<li><p class="bull"><strong>Maximum number of matches</strong> This option will limit the number of rows from the second table that are matched against the first table, and it can be useful if you expect multiple matches.</p></li>
+<li><p class="bull"><strong>Transformation table</strong> You can use a column with two columns—<strong>From</strong> and <strong>To</strong>—to map values during the matching process. For example, you can map <em>NZ</em> to <em>New Zealand</em>, and the two values will be considered the same for merge purposes.</p></li>
+</ul>
+<p class="indent">For Wide World Importers, let’s merge the <strong>City</strong> and <strong>State Province</strong> queries using the following steps:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>City</strong> query in the <strong>Queries</strong> pane.</p></li>
+<li><p class="num">Select <strong>Combine</strong> &gt; <strong>Merge Queries</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num">Select <strong>State Province</strong> in the drop-down list below the <strong>City</strong> query preview.</p></li>
+<li><p class="num">Select <strong>State Province Key</strong> in both tables. The columns should be highlighted as in <a href="ch01.xhtml#ch01fig34">Figure 1-34</a>.</p>
+<figure class="figure" id="ch01fig34">
+<img src="graphics/01fig34.jpg" alt="The figure shows State Province Key highlighted in each table." width="650" height="583"/>
+<p class="figcaption"><strong>FIGURE 1-34</strong> Merge options</p>
+</figure>
+</li>
+<li><p class="num"><span epub:type="pagebreak" id="page_44"></span>Ensure <strong>Left Outer</strong> is selected from the Join Kind drop-down list.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">After you complete these steps, you’ll see a new column named <strong>State Province</strong> added to the <strong>City</strong> query. Note that the new column</p>
+<ul class="sq-s">
+<li><p class="bull">Is of type Table</p></li>
+<li><p class="bull">Has <em>Table</em> hyperlinks in each cell</p></li>
+<li><p class="bull">Has a double-arrow button instead of a filter button on its header</p></li>
+</ul>
+<p class="indent">If you select any cell in the new column without selecting the hyperlink, you’ll see a preview of the cell contents, and you’ll see a table row in our case.</p>
+<p class="indent">You can expand the new column by selecting the double-arrow button on its header. There are two ways to expand a table column:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Expand</strong> You can select the columns from the joined table that you want to add to the current table. If there is more than one matching row in the joined table, the current table’s rows will be duplicated after expansion.</p></li>
+<li><p class="bull"><strong>Aggregate</strong> This option aggregates rows and won’t duplicate any rows in the current table. You can apply arithmetic and statistical functions to the columns of the <span epub:type="pagebreak" id="page_45"></span>joined table. For example, if it made business sense, you could take the average of <strong>State Province Key</strong> from the <strong>State Province</strong> table.</p></li>
+</ul>
+<p class="indent">When expanding the table column, you can use the original column name as a prefix. This option can be useful if there are column names that are the same in both tables but their content is different. For instance, if you are merging the <strong>Product</strong> and <strong>Product Category</strong> tables and both have a column called <strong>Name</strong>, then you can use the original column name as a prefix to avoid confusion.</p>
+<p class="indent">In our example, let’s expand the merged column by completing these steps:</p>
+<ol class="num">
+<li><p class="num">In the <strong>City</strong> query, select the double-arrow button on the <strong>State Province</strong> column header.</p></li>
+<li><p class="num">Clear the <strong>Select All Columns</strong> check box.</p></li>
+<li><p class="num">Select the <strong>State Province</strong> and <strong>Sales Territory</strong> check boxes.</p></li>
+<li><p class="num">Clear the <strong>Use original column name as prefix</strong> check box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+<li><p class="num">Rename the <strong>State Province.1</strong> column to <strong>State Province</strong>.</p></li>
+<li><p class="num">Remove the <strong>State Province Key</strong> column.</p></li>
+</ol>
+<p class="indent">The result should look like <a href="ch01.xhtml#ch01fig35">Figure 1-35</a>.</p>
+<figure class="figure" id="ch01fig35">
+<img src="graphics/01fig35.jpg" alt="The figure shows a table with five columns: City Key, City, Location, State Province, and Sales Territory." width="733" height="159"/>
+<p class="figcaption"><strong>FIGURE 1-35</strong> City query with columns from the State Province query</p>
+</figure>
+<p class="indent">You’ve merged the <strong>City</strong> and <strong>State Province</strong> queries, and you’ve got five useful columns as a result. You don’t need the <strong>State Province Key</strong> column anymore, and the columns you didn’t include from the <strong>State Province</strong> query all had one distinct value each.</p>
+<p class="indent">As is the case for the <strong>Targets for 2022</strong> query, the information from the <strong>State Province</strong> query now appears in two queries, so there’s some data duplication in our queries. Again, we’ll address this later in the chapter.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec14">Apply user-friendly naming conventions to columns and queries</h4>
+<p class="noindent">When you create your data model in Power BI, you don’t have to follow any naming conventions to make your data model work. Nevertheless, following user-friendly naming conventions will make your model easier to use and reduce confusion among users.</p>
+<p class="indent">In Power BI, you are encouraged to name your tables, columns, and measures in ways that are commonly understood by people without a technical background. Contrary to the popular <span epub:type="pagebreak" id="page_46"></span>naming conventions in the database world, it’s completely fine to use spaces in names, so it’s not necessary to use underscores or camelCase in Power BI.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Data Model Clarity</p>
+<p class="note-para">Having a user-friendly data model is extremely important. In large companies, data modelers and report builders may be different people, and data models must be as easy to understand as possible for report builders.</p>
+<p class="note-para">Furthermore, report viewers can personalize visuals in the Power BI service; while doing so, they can browse the list of fields and tables available in the model, which makes following user-friendly naming conventions even more important.</p>
+</div>
+<p class="indent">If you retrieve data from views in a database, they may carry the schema and a prefix, and it’s desirable to remove them. For example, if you connect to a view called <strong>vw_Sales</strong> in the <strong>pbi</strong> schema, it will be imported as <strong>pbi vw_Sales</strong> in Power BI by default. It’s best to rename it to <strong>Sales</strong> for clarity, since neither <strong>pbi</strong> nor <strong>vw_</strong> may make sense to report builders and viewers.</p>
+<p class="indent">The Wide World Importers tables contain user-friendly query and column names.</p>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec15">Configure data loading</h4>
+<p class="noindent">When you develop your Power BI data model, you can use some helper queries in the process that you may not load to your model. For example, when you combine files from a folder, Power Query automatically creates some helper queries, which you can see in <a href="ch01.xhtml#ch01fig04">Figure 1-4</a> earlier in the chapter. The names of queries that aren’t loaded are italicized.</p>
+<p class="indent">If there’s a query you don’t want to load, right-click it in the <strong>Queries</strong> pane and clear the <strong>Enable load</strong> selection. If you have already loaded the query, you may see a warning that data loss may occur.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">If you want to follow along with the example, open 1.2.6 Combine.pbix from the companion files folder.</p>
+</div>
+<p class="indent">You may not want to load queries that were appended to or merged with another query. In the Wide World Importers example, you appended <strong>Targets for 2022</strong> to the <strong>Targets</strong> query, and you merged <strong>State Province</strong> with the <strong>City</strong> query. Because you had some data duplication as a result, it would be preferable to not load the <strong>Targets for 2022</strong> and <strong>State Province</strong> queries by performing the following steps:</p>
+<ol class="num">
+<li><p class="num">Right-click the <strong>Targets for 2022</strong> query and clear the <strong>Enable load</strong> selection.</p></li>
+<li><p class="num">Repeat the previous step for the <strong>State Province</strong> query.</p></li>
+</ol>
+<p class="indent">The names of the queries should be italicized now, like in <a href="ch01.xhtml#ch01fig36">Figure 1-36</a>.</p>
+<figure class="figure" id="ch01fig36">
+<img src="graphics/01fig36.jpg" alt="The figure shows a list of queries and some folders." width="221" height="401"/>
+<p class="figcaption"><strong>FIGURE 1-36</strong> Queries pane</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_47"></span>Once you load the data, the two queries won’t be loaded—they won’t become tables. You can now load the data by selecting <strong>Close &amp; Apply</strong> on the <strong>Home</strong> ribbon.</p>
+</section>
+<section>
+<h4 class="h4" id="ch01lev2sec16">Resolve data import errors</h4>
+<p class="noindent">Occasionally, you may see errors after you load data in Power BI. If you followed previous examples, you would see the message shown in <a href="ch01.xhtml#ch01fig37">Figure 1-37</a> after you loaded data.</p>
+<figure class="figure" id="ch01fig37">
+<img src="graphics/01fig37.jpg" alt="The figure shows a text message that reads 1 of the loaded queries contained errors." width="470" height="225"/>
+<p class="figcaption"><strong>FIGURE 1-37</strong> Apply query changes information</p>
+</figure>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion Files</p>
+<p class="note-para">If you want to follow along with the example, open 1.2.9 Errors.pbix from the companion files folder.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_48"></span>Errors in this context refer to error values. Error values by themselves don’t prevent queries from loading—you’re merely notified about the number of error values for each query. Error values are loaded as blank values.</p>
+<p class="indent">To view the rows that contain errors in Power Query, you can select the <strong>View errors</strong> hyperlink. This opens Power Query Editor, and it creates a new query called <strong>Errors in Customer</strong>, which contains one row. If you check the last column, <strong>Postal Code</strong>, you’ll see the error you encountered earlier, shown in <a href="ch01.xhtml#ch01fig38">Figure 1-38</a>.</p>
+<figure class="figure" id="ch01fig38">
+<img src="graphics/01fig38.jpg" alt="The figure shows the Errors in Customer query." width="733" height="401"/>
+<p class="figcaption"><strong>FIGURE 1-38</strong> Postal Code error</p>
+</figure>
+<p class="indent">The error happens because Power Query is trying to convert the “N/A” value, which is text, into a number. You can fix the issue by changing the data type of the <strong>Postal Code</strong> column as follows:</p>
+<ol class="num">
+<li><p class="num">Select the <strong>Customer</strong> query.</p></li>
+<li><p class="num">Right-click the <strong>Postal Code</strong> column.</p></li>
+<li><p class="num">Select <strong>Change Type</strong> &gt; <strong>Text</strong>.</p></li>
+<li><p class="num">Select <strong>Replace current</strong>.</p></li>
+</ol>
+<p class="indent">If you return to the Errors in Customer query, you’ll see that it’s empty. To clean up the queries, you can delete the group that starts with <strong>Query Errors</strong>.</p>
+<p class="indent">After you select <strong>Close &amp; Apply</strong>, you’ll see no error messages.</p>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch01lev1sec3">Chapter summary</h3>
+<ul class="sq-s">
+<li><p class="bull">Power BI has over 100 native connectors, with more being added all the time, and you can create your own connectors, too.</p></li>
+<li><p class="bull">You can change the data source settings, which include the location of the data source and the permissions associated with it. Changes apply to all queries that use the data source.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_49"></span>Power BI Desktop performs best and allows you to use most of its features when you import data. In some cases, importing data is not feasible—for example, when there is too much data to import, or when data is updated very frequently and business requirements demand always showing the latest data. These issues can be addressed if the data source supports the DirectQuery connectivity mode. With DirectQuery, no data is imported into Power BI. Instead, all data remains in the source, and every time Power BI needs to calculate values, it sends queries in the data source’s native query language. In some cases, you can apply certain types of transformations that can be translated to the native query language. There is a special case of DirectQuery called Live Connection, which is available with Analysis Services and Power BI service data models.</p></li>
+<li><p class="bull">You can create composite models by connecting to more than one data source in Direct­Query or by combining imported data and DirectQuery.</p></li>
+<li><p class="bull">You can connect to Microsoft Dataverse and dataflows, which use Power Query in the cloud. You can also create dataflows in the Power BI service.</p></li>
+<li><p class="bull">You can use parameters in your queries, which help you avoid making changes in several places manually. Parameters can also be useful to create your own functions.</p></li>
+<li><p class="bull">Power Query offers several ways to profile your data, which includes column statistics and distribution, as well as the number of errors.</p></li>
+<li><p class="bull">Some of the most common operations you can perform in Power Query are</p>
+<ul class="sq1">
+<li><p class="bull">Replacing values</p></li>
+<li><p class="bull">Reducing rows</p></li>
+<li><p class="bull">Adding, removing, and splitting columns</p></li>
+<li><p class="bull">Changing column type</p></li>
+<li><p class="bull">Combining queries</p></li>
+<li><p class="bull">Pivoting and unpivoting columns</p></li></ul></li>
+<li><p class="bull">Queries that don’t need to be loaded can stay as queries if you disable their loading.</p></li>
+<li><p class="bull">If you see errors after loading your data, Power Query can show you the rows that contain errors, allowing you to correct them.</p></li>
+</ul>
+</section>
+<section>
+<h3 class="h3" id="ch01lev1sec4">Thought experiment</h3>
+<p class="noindent">In this thought experiment, demonstrate your skills and knowledge of the topics covered in this chapter. You can find the answers in the section that follows.</p>
+<p class="indent">You are a data analyst at Contoso responsible for creating Power BI reports. Contoso has a development and a production environment, both of which use an Azure SQL Database. The production environment contains all historical data since 1990 and synchronizes with the OLTP system every five minutes; the development environment is only refreshed on demand. Additionally, some data is provided in CSV and Excel files.</p>
+<p class="indent">Since Contoso is just starting with Power BI, they don’t use Power BI Premium yet.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_50"></span>Based on background information and business requirements, answer the following questions:</p>
+<p class="question"><span class="gray"><strong><a id="ch01que1" href="ch01.xhtml#ch01que1a">1</a>.</strong></span> To reduce the load on the production environment, you connect to the development database and develop your reports. Once you publish your report, you need to use the production data instead. Because you’re developing your model iteratively, you need to switch between the environments back and forth. How can you minimize the time spent on changing data sources? The solution must allow for switching the source in the Power BI service.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Create a parameter for database location and use it in queries.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Change the data source in the Data Source settings.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Change the data source in the Source step in each query.</p>
+<p class="question"><span class="gray"><strong><a id="ch01que2" href="ch01.xhtml#ch01que2a">2</a>.</strong></span> You get data from a table in an Azure SQL Database that contains hundreds of millions of rows. Loading the full table takes half an hour. You would like to load a sample of 1,000 rows from the table. How can you achieve this? Your solution must minimize time spent on loading data.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Use a report-level filter.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Keep top rows.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Provide your own SQL statement that has a TOP clause.</p>
+<p class="question"><span class="gray"><strong><a id="ch01que3" href="ch01.xhtml#ch01que3a">3</a>.</strong></span> You get data from a CSV file with over 10,000 rows. You need to ensure one of the columns does not contain any missing values. Which Power Query features should you use?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Column distribution</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Column quality</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Column profiling based on top 1,000 rows</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Column profiling based on the entire dataset</p>
+<p class="question"><span class="gray"><strong><a id="ch01que4" href="ch01.xhtml#ch01que4a">4</a>.</strong></span> You are the only developer of Power BI reports in Contoso, and you’re creating the first sales report. Your report must show data no later than 10 minutes from its arrival in the production environment. Which connectivity mode suits best? Your solution must minimize the resources spent.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Import mode</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Live Connection</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> DirectQuery</p>
+<p class="question"><span class="gray"><strong><a id="ch01que5" href="ch01.xhtml#ch01que5a">5</a>.</strong></span> You need to combine the Customer and City tables, both of which have the CityKey ­column. Each row in the output table must contain a customer name and their city. Which Power Query feature should you use?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Group by</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Merge</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Transpose</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Append</p>
+<p class="question"><span epub:type="pagebreak" id="page_51"></span><span class="gray"><strong><a id="ch01que6" href="ch01.xhtml#ch01que6a">6</a>.</strong></span> After you load data from an Excel file, you encounter the error shown in <a href="ch01.xhtml#ch01fig39">Figure 1-39</a>.</p>
+<figure class="figure" id="ch01fig39">
+<img src="graphics/01fig39.jpg" alt="The figure shows the error message that reads DataFormat.Error: We couldn't convert to Number. Details: Not provided." width="450" height="92"/>
+<p class="figcaption"><strong>FIGURE 1-39</strong> Error message</p>
+</figure>
+<p class="question-p">Which Power Query feature can you use to resolve the error? Your solution must retain all data from Excel.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Replace errors</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Remove rows</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Change type (add new step)</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Change type (replace current)</p>
+</section>
+<section>
+<h3 class="h3" id="ch01lev1sec5">Thought experiment answers</h3>
+<p class="answer"><span class="gray"><strong><a id="ch01que1a" href="ch01.xhtml#ch01que1">1</a>.</strong></span> The answer is <strong>A</strong>. Using a parameter allows changing the source of all relevant queries at once, and it allows changing the source in the Power BI service. Although option B also allows changing the source of all affected queries, it does not allow changing the source in Power BI service. Option C requires you to change the source in each query separately, and you cannot change the source in the Power BI service this way.</p>
+<p class="answer"><span class="gray"><strong><a id="ch01que2a" href="ch01.xhtml#ch01que2">2</a>.</strong></span> The answer is <strong>B</strong> or <strong>C</strong>. Keeping top rows, if applied early in the query, will translate into SQL efficiently, resulting in fast data loading due to filtering taking place in the database. Using your own SQL statement with a TOP clause also filters data in the database, resulting in efficient data loading. Option A requires you to load all data first, which can take a long time.</p>
+<p class="answer"><span class="gray"><strong><a id="ch01que3a" href="ch01.xhtml#ch01que3">3</a>.</strong></span> The answer is <strong>B</strong> and <strong>D</strong>. Column distribution does not show the number of missing values, whereas column quality does. By default, column profiling is based on the first 1,000 rows; since there are over 10,000 rows in the CSV file, you need to perform column profiling on the entire dataset; otherwise, you risk missing some empty values at the end of the file.</p>
+<p class="answer"><span class="gray"><strong><a id="ch01que4a" href="ch01.xhtml#ch01que4">4</a>.</strong></span> The answer is <strong>C</strong>. The DirectQuery mode allows you to get the latest data as it arrives. Importing data requires refreshing the dataset, which would require Power BI Premium to refresh so frequently. Live Connection would require an Analysis Services model or a Power BI dataset, which are not available in Contoso.</p>
+<p class="answer"><span class="gray"><strong><a id="ch01que5a" href="ch01.xhtml#ch01que5">5</a>.</strong></span> The answer is <strong>B</strong>. Merge combines two tables by joining them based on a set of keys. Group by is for summarizing a single table. Transpose switches rows and columns of a single table. Append is best used to combine tables with mostly same columns.</p>
+<p class="answer"><span epub:type="pagebreak" id="page_52"></span><span class="gray"><strong><a id="ch01que6a" href="ch01.xhtml#ch01que6">6</a>.</strong></span> The answer is <strong>D</strong>. The error is due to a text value being converted to a number, so changing the type to text instead of number would prevent the error from happening. Replacing an error will result in a number or null value, which would mean the original text value would be lost. Removing rows would also result in data loss. Changing type as a new step will not solve the problem as it will apply to the error value.</p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

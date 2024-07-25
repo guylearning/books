@@ -1,0 +1,1417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Exam Ref PL-300 Microsoft Power BI Data Analyst</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137901159.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch02"><span epub:type="pagebreak" id="page_53"></span><span class="gray">Chapter 2</span></h2>
+<h2 class="h2a">Model the data</h2>
+<p class="noindent">In the previous chapter, we reviewed the skills necessary to get and transform data by using Power Query Editor—the process also known as <em>data shaping</em>. In this chapter, we examine the skills needed to model data.</p>
+<p class="indent">Although Power BI allows you to analyze your data to some degree right after you load it, a strong understanding of data modeling allows you to perform sophisticated analysis using rich data modeling capabilities, which includes creating relationships, hierarchies, and various calculations to bring out the true power of Power BI. Previously in the Power Query Editor we used the M language; after we load the data into the model, we use data analysis expressions, more commonly referred to as DAX—Power BI’s native query language.</p>
+<p class="indent">In this chapter, we review the skills necessary to design, develop, and optimize data models. Additionally, we look at DAX and how it can be used to enhance data models.</p>
+<p class="object-title">Skills covered in this chapter:</p>
+<ul class="sq-s">
+<li><p class="bull"><a href="ch02.xhtml#ch02lev1sec1">Skill 2.1: Design a data model</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev1sec2">Skill 2.2: Develop a data model</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev1sec3">Skill 2.3: Create model calculations by using DAX</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev1sec4">Skill 2.4: Optimize model performance</a></p></li>
+</ul>
+<section>
+<h3 class="h3" id="ch02lev1sec1">Skill 2.1: Design a data model</h3>
+<p class="noindent">A proper data model is the foundation of meaningful analysis. A Power BI data model is a collection of one or more tables and, optionally, relationships. A well-designed data model enables business users to understand and explore their data and derive insights from it. This step should be taken before you create any visuals by loading your data and defining the relationships between tables. Data modeling often occurs at the beginning phase of building a Power BI report so that you can create efficient measures that build upon your data model. In this section, we design a data model by focusing our attention on tables and their relationships.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title">This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec1">Define the tables and design a data model that uses a star schema</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec2">Configure table and column properties</a></p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_54"></span><a href="ch02.xhtml#ch02lev2sec3">Design and implement role-playing dimensions</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec4">Define a relationship’s cardinality and cross-filter direction</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec5">Create a common date table</a></p></li>
+</ul>
+</aside>
+<section>
+<h4 class="h4" id="ch02lev2sec1">Define the tables and design a data model that uses a star schema</h4>
+<p class="noindent">Once a query is loaded, it becomes a table in a Power BI data model. Tables can then be organized into different data model types, also known as <em>schemas</em>. The three most common schemas in Power BI are:</p>
+<ul class="sq-s">
+<li><p class="bull">Flat (fully denormalized) schema</p></li>
+<li><p class="bull">Star schema</p></li>
+<li><p class="bull">Snowflake schema</p></li>
+</ul>
+<p class="indent">There are other types of data models, though these three are the most common ones.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec26">Flat schema</h5>
+<p class="noindent">In the flat type of data model, all attributes are fully denormalized into a single table. Because there’s only one table, there are no relationships, and in most cases there’s no need for key.</p>
+<p class="indent">In our Wide World Importers example, we have a single table that contains all columns from all tables, meaning that the Sale and Targets columns will be in the same table. Because the tables have different data granularity, you run into problems when comparing actuals and targets.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Data Granularity</p>
+<p class="note-para">We review the concept of data granularity later in this skill section.</p>
+</div>
+<p class="indent">From the performance point of view, flat schemas are very efficient, though there are downsides:</p>
+<ul class="sq-s">
+<li><p class="bull">A single table can be cumbersome and confusing to navigate.</p></li>
+<li><p class="bull">Columns and data can often be duplicated, leading to a comparatively large file size.</p></li>
+<li><p class="bull">Mixing facts of different grains results in more complex DAX formulas.</p></li>
+</ul>
+<p class="indent">Flat schemas are often used when connecting to a single, simple source. However, for more complex data models, flat schemas should be avoided in Power BI as much as possible.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec27">Star schema</h5>
+<p class="noindent">When you use a star schema, tables are conceptually classified into two kinds:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Fact tables</strong> These tables contain the metrics you want to aggregate. Fact tables have foreign keys, which are required in order to create relationships with dimensions, and <span epub:type="pagebreak" id="page_55"></span>columns that you can aggregate. In our Wide World Importers example, the Sale and Targets tables are fact tables. Fact tables are sometimes also known as <em>data tables</em>.</p></li>
+<li><p class="bull"><strong>Dimension tables</strong> These tables contain the descriptive attributes that help you slice and dice your fact tables. A dimension table has a unique identifier—a key column—and descriptive columns. In our Wide World Importers example, the City, Customer, Date, Employee, and Stock Item are dimension tables. Dimension tables are also sometimes known as <em>lookup tables</em>.</p></li>
+</ul>
+<p class="indent">In a star schema, fact tables are surrounded by dimensions, as shown in <a href="ch02.xhtml#ch02fig01">Figure 2-1</a>.</p>
+<figure class="figure" id="ch02fig01">
+<img src="graphics/02fig01.jpg" alt="The Sale table is at the center and is surrounded by the Employee, Customer, Date, City, and Stock Item tables." width="732" height="377"/>
+<p class="figcaption"><strong>FIGURE 2-1</strong> Star schema with Sale as the only fact table</p>
+</figure>
+<p class="indent">The star schema has its name because it resembles a star, with the fact table in the center and dimension tables as the star points. It’s possible to have more than one fact table in a star schema, and it will still be a star schema.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Relationships</p>
+<p class="note-para">The lines that connect tables in <a href="ch02.xhtml#ch02fig01">Figure 2-1</a> represent relationships. We cover the relationships in more detail later in this section.</p>
+</div>
+<p class="indent">In most cases, the star schema is the preferred data modeling approach in Power BI. It addresses the shortcomings of the flat schema:</p>
+<ul class="sq-s">
+<li><p class="bull">Fields are logically grouped, making the model easier to understand.</p></li>
+<li><p class="bull">There is less duplication of data, which results in more efficient storage.</p></li>
+<li><p class="bull">You don’t need to write overly complex DAX formulas to work with fact tables that have a different grain.</p></li>
+</ul>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec28"><span epub:type="pagebreak" id="page_56"></span>Snowflake schema</h5>
+<p class="noindent">The snowflake schema is similar to the star schema, except it can have some dimensions that “snowflake” from other dimensions. You can see an example in <a href="ch02.xhtml#ch02fig02">Figure 2-2</a>.</p>
+<figure class="figure" id="ch02fig02">
+<img src="graphics/02fig02.jpg" alt="The model is the same as in Figure 2-1 except there's the State Province table, which is related to the City table." width="732" height="290"/>
+<p class="figcaption"><strong>FIGURE 2-2</strong> Snowflake schema with State Province snowflaking from the City table</p>
+</figure>
+<p class="indent">In the Wide World Importers example, if we loaded the State Province query, the data model could be a snowflake schema. This is because the State Province table is related to the City dimension table, which in turn is related to the Sale fact table.</p>
+<p class="indent">Snowflake schemas can be beneficial when there are fact tables that have different grains.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Dimensional Modeling</p>
+<p class="note-para">In addition to fact and dimension tables, there are other types of tables such as factless facts, junk, and degenerate dimensions. For more information, see “Understand star schema and the importance for Power BI” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/star-schema">https://docs.microsoft.com/en-us/power-bi/guidance/star-schema</a></em>.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec2">Configure table and column properties</h4>
+<p class="noindent">Both tables and columns have various properties you can configure, and you can do it in the <strong>Model</strong> view. To see the properties of a column or a table, select an object, and you will see its properties in the <strong>Properties</strong> pane.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec29">Table properties</h5>
+<p class="noindent">For tables, depending on the storage mode, you can configure the following properties:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Name</strong> Enter the table name.</p></li>
+<li><p class="bull"><strong>Description</strong> This property allows you to add a description of the table that will be stored in the model’s metadata. It can be useful when building reports because you can see the description when you hover over the table in the Fields pane.</p></li>
+<li><p class="bull"><strong>Synonyms</strong> These are useful for the Q&amp;A feature of Power BI, which we review in the next skill section. You can add synonyms so that the Q&amp;A feature can understand that you’re referring to a specific table even if you provide a different name for it.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_57"></span><strong>Row label</strong> This property is useful for both Q&amp;A and featured tables, and it allows you to select a column whose values will serve as labels for each row. For example, if you ask Q&amp;A to show “sales amount by product” and you select the Product Name column as the Row label of the Product table, then Q&amp;A will show sales amount for each product name.</p></li>
+<li><p class="bull"><strong>Key column</strong> If your table has a column that has unique values for every row, you can set that column as the key column.</p></li>
+<li><p class="bull"><strong>Is hidden</strong> You can hide a table so that it disappears from the Fields pane.</p></li>
+<li><p class="bull"><strong>Is featured table</strong> This property allows you to make a table featured, which will allow it to be used in Excel in certain scenarios.</p></li>
+<li><p class="bull"><strong>Storage mode</strong> This property may be set to Import, DirectQuery, or Dual, as we covered in the previous chapter.</p></li>
+</ul>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec30">Column properties</h5>
+<p class="noindent">For columns, depending on data type, you can configure the following properties:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Name</strong> Enter the column name.</p></li>
+<li><p class="bull"><strong>Description</strong> As you can for tables, you can add a column description.</p></li>
+<li><p class="bull"><strong>Synonyms</strong> As you can for tables, you can add synonyms to make the column work better with Q&amp;A.</p></li>
+<li><p class="bull"><strong>Display folder</strong> You can group columns from the same table into display folders.</p></li>
+<li><p class="bull"><strong>Is hidden</strong> Hiding a column keeps it in the data model and hides it in the Fields pane.</p></li>
+<li><p class="bull"><strong>Data type</strong> The available data types are different from those available in Power Query. For instance, Percentage, Date/Time/Timezone, and Duration are not available.</p></li>
+<li><p class="bull"><strong>Format</strong> Different data types will show different formatting properties. For example, for numeric columns, you'll see the following additional properties: Percentage format, Thousands separator, and Decimal places.</p></li>
+<li><p class="bull"><strong>Sort by column</strong> You can sort one column by another. For example, you can sort month names by month numbers to make them appear in the correct order.</p></li>
+<li><p class="bull"><strong>Data category</strong> This property can be useful for some visuals, and the default is Uncategorized. Depending on the data type, you can also select one of the following:</p>
+<ul class="sq">
+<li><p class="bull">Address</p></li>
+<li><p class="bull">Place</p></li>
+<li><p class="bull">City</p></li>
+<li><p class="bull">County</p></li>
+<li><p class="bull">State or Province</p></li>
+<li><p class="bull">Postal Code</p></li>
+<li><p class="bull">Country</p></li>
+<li><p class="bull">Continent</p></li>
+<li><p class="bull">Latitude</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_58"></span>Longitude</p></li>
+<li><p class="bull">Web URL</p></li>
+<li><p class="bull">Image URL</p></li>
+<li><p class="bull">Barcode</p></li></ul></li>
+<li><p class="bull"><strong>Summarize by</strong> This property determines how the column will be aggregated if you put it into a visual. The options you can choose depend on the data type. For most data types, in addition to Don’t Summarize/None, you can choose Count and Count (Distinct)/Distinct Count, whereas for numeric columns, you can also choose Sum, Average, Minimum/Min, and Maximum/Max. While Power BI will try to automatically determine the appropriate summarization, it’s not always accurate.</p></li>
+<li><p class="bull"><strong>Is nullable</strong>—You may disallow null values for a column; if during data refresh, a column is determined to get a null value, the refresh will fail.</p></li>
+</ul>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">You should know the difference between formatting a column and using the <code>FORMAT</code> function in DAX: the former retains the original data type, whereas the latter can be used to create a new column and always outputs text.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Measure Properties</p>
+<p class="note-para">You can also configure measure properties, many of which are the same as column properties. Notable exceptions include Sort by column, Summarize by, and Is nullable—these properties aren’t available for measures. We review measures in more detail later in this chapter.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec3">Design and implement role-playing dimensions</h4>
+<p class="noindent">In some cases, there may be more than one way to filter a fact table by a dimension. In the Wide World Importers example, the Sale table has two date columns: Invoice Date Key and Delivery Date Key, both of which can be related to the Date column from the Date table. Therefore, it’s possible to analyze sales by invoice date or delivery date, depending on the business requirements. In this situation, the Date dimension is a role-playing dimension.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion File</p>
+<p class="note-para">If you’re interested in following along the examples in this chapter, you can start with the 2.0 Model.pbix file in the companion files folder. The completed examples are available in 2.1 Design.pbix.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_59"></span>While Power BI allows you to have multiple physical relationships between two tables, no more than one can be active at a time, and other relationships must be set as inactive. Active relationships, by default, propagate filters. The choice of which relationship should be set as active depends on the default way of looking at data by the business.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Active and Inactive Relationships</p>
+<p class="note-para">For a more thorough explanation of when you would use active or inactive relationships, see “Active vs inactive relationship guidance” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/relationships-active-inactive">https://docs.microsoft.com/en-us/power-bi/guidance/relationships-active-inactive</a>.</em></p>
+</div>
+<p class="indent">To create a relationship between two tables, you can drag a key from one table on top of the corresponding key from the other table in the <strong>Model</strong> view.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Automatic Detection of Relationships</p>
+<p class="note-para">By default, Power BI will try to detect relationships between tables automatically after you load data. In doing so, Power BI usually relies on identical column names, and the process is not always perfect. You can turn it off in <strong>Options</strong> &gt; <strong>Current file</strong> &gt; <strong>Data load</strong> if required.</p>
+</div>
+<p class="noindent">In our Wide World Importers example, you can drag the <strong>Date</strong> column from the <strong>Date</strong> table on top of the <strong>Invoice Date Key</strong> column in the <strong>Sale</strong> table. This will create an active relationship, signified by the solid line. Next, you can drag the <strong>Date</strong> column from the <strong>Date</strong> table on top of the <strong>Delivery Date Key</strong> column from the <strong>Sale</strong> table. This will create an inactive relationship, signified by the dashed line. The result should look like <a href="ch02.xhtml#ch02fig03">Figure 2-3</a>.</p>
+<figure class="figure" id="ch02fig03">
+<img src="graphics/02fig03.jpg" alt="The figure shows two tables: Sale and Date. There are two lines between them, one of which is solid, and one is dashed. Both lines end with 1 near the Date table and an asterisk near the Sale table." width="650" height="261"/>
+<p class="figcaption"><strong>FIGURE 2-3</strong> Relationships between Sale and Date</p>
+</figure>
+<p class="indent">If you hover over a relationship line in the Model view, it’ll highlight the fields that participate in the relationship.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_60"></span><span class="gray"><em>Note</em></span> Cardinality and Cross-Filter Direction</p>
+<p class="note-para">Note how each relationship line in <a href="ch02.xhtml#ch02fig03">Figure 2-3</a> has 1 and * at its ends, as well as an arrowhead in the middle. This represents the cardinality and cross-filter direction, respectively, and we review those concepts in the next section.</p>
+</div>
+<p class="indent">In our Wide World Importers model, you should also create the relationships listed in <a href="ch02.xhtml#ch02tab01">Table 2-1</a>.</p>
+<figure class="table" id="ch02tab01">
+<figcaption>
+<p class="title-t"><strong>TABLE 2-1</strong> Additional relationships in Wide World Importers</p>
+</figcaption>
+<table class="table">
+<thead>
+<tr>
+<th class="th-bg"><p class="tab-para">FROM: TABLE (COLUMN)</p></th>
+<th class="th-bg1"><p class="tab-para">TO: TABLE (COLUMN)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="border"><p class="tab-para">Sale (City Key)</p></td>
+<td class="border"><p class="tab-para">City (City Key)</p></td>
+</tr>
+<tr>
+<td class="border"><p class="tab-para">Sale (Customer Key)</p></td>
+<td class="border"><p class="tab-para">Customer (Customer Key)</p></td>
+</tr>
+<tr>
+<td class="border"><p class="tab-para">Sale (Salesperson Key)</p></td>
+<td class="border"><p class="tab-para">Employee (Employee Key)</p></td>
+</tr>
+<tr>
+<td class="border"><p class="tab-para">Sale (Stock Item Key)</p></td>
+<td class="border"><p class="tab-para">Stock Item (Stock Item Key)</p></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="indent">Inactive relationships can be activated by using the <code>USERELATIONSHIP</code> function in DAX, which also deactivates the default active relationship, if any. The following is an example of a measure that uses <code>USERELATIONSHIP</code>:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a60pro01" id="p60pro01">Click here to view code image</a></p>
+<pre>
+Revenue by Delivery Date = 
+CALCULATE(
+    [Revenue],
+    USERELATIONSHIP(
+        'Date'[Date],
+        Sale[Delivery Date Key]
+    )
+)
+</pre>
+<p class="indent">To use <code>USERELATIONSHIP</code>, you need to define a relationship in the model first so that the function only works for existing relationships. This approach is useful for scenarios such as the Wide World Importers example, where we have multiple date columns within the same fact table.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> CALCULATE and USERELATIONSHIP</p>
+<p class="note-para"><code>CALCULATE</code> is the most important function in DAX, and we review it in more detail later in this chapter. It’s important to be aware of certain limitations of <code>USERELATIONSHIP</code>. For more information, see “USERELATIONSHIP” at <em><a href="https://docs.microsoft.com/en-us/dax/userelationship-function-dax">https://docs.microsoft.com/en-us/dax/userelationship-function-dax</a>.</em></p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_61"></span>If you have a number of measures that you want to analyze by using different relationships, this may result in your data model having many similar measures, cluttering your data model to a degree.</p>
+<p class="indent">Another drawback of using <code>USERELATIONSHIP</code> is that you cannot analyze data by using two relationships at the same time. For instance, if you have a single Date table, it won’t be possible to see which sales were invoiced last year and shipped this year.</p>
+<p class="indent">An alternative to <code>USERELATIONSHIP</code> that addresses these drawbacks is to use separate dimensions for each role or relationship. In Wide World Importers, you would have Delivery Date and Invoice Date dimensions, which would make it possible to analyze sales by both delivery and invoice dates.</p>
+<p class="indent">There are a few ways to create the new dimensions based on the existing Date table, one of which is to use calculated tables. For the Invoice Date table, the DAX formula would be as follows:</p>
+<pre>Invoice Date = 'Date'</pre>
+<p class="indent">The benefit of using calculated tables instead of referencing or duplicating queries in Power Query is that if you have calculated columns in your Date table, they will be copied in a calculated table, while you’ll need to re-create the same columns if you use Power Query to create the copies of the dimension.</p>
+<p class="indent">When you’re creating separate dimensions, it’s best to rename the columns to make it clear where fields are coming from. For example, instead of leaving the column called Date, it’s best to rename it to <strong>Invoice Date</strong>. You can do so by right-clicking a field in the <strong>Fields</strong> pane and selecting <strong>Rename</strong> or by double-clicking a field. Alternatively, you can rename fields by using a more complex calculated table expression. For example, you could use the <code>SELECTCOLUMNS</code> function in DAX to rename columns.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Calculated Tables</p>
+<p class="note-para">DAX allows you to create far more sophisticated calculated tables than copies of existing tables. We review calculated tables in more detail in Skill 2.2: Develop a data model.</p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec4">Define a relationship’s cardinality and cross-filter direction</h4>
+<p class="noindent">In the previous section, we looked at how you create relationships between tables. In this section, we review the concepts of cardinality and cross-filter direction of relationships.</p>
+<p class="indent">You can edit a relationship by double-clicking it in the Model view. For example, in <a href="ch02.xhtml#ch02fig04">Figure 2-4</a> you can see the options for one of the relationships between the Sale and Date tables.</p>
+<figure class="figure" id="ch02fig04">
+<img src="graphics/02fig04.jpg" alt="We see two drop-down lists for tables and table previews from which you can select columns. The Cardinality drop-down list has Many to one selected. The Cross filter direction has Single selected. The Make this relationship active check box is selected. Two other check boxes are inactive." width="733" height="625"/>
+<p class="figcaption"><strong>FIGURE 2-4</strong> Relationship options</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_62"></span>In the relationship options, you can select tables from drop-down lists. You get a preview of each table, from which you can select a column that will be part of a relationship. Unlike in the Merge operation in Power Query, only one column from each table can be part of a relationship.</p>
+<p class="indent">The <strong>Make this relationship active</strong> check box determines whether the relationship is active. Between two tables, there can be no more than one active relationship.</p>
+<p class="indent">When you’re using DirectQuery, the <strong>Assume referential integrity</strong> option is available, and it can improve query performance in certain cases.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Assume Referential Integrity</p>
+<p class="note-para">There are some requirements that data must meet for the <strong>Assume referential integrity</strong> option to work properly. For advanced details on this feature, including the requirements and implications of not meeting the requirements with this option set, see “Apply the Assume Referential Integrity setting in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/connect-data/desktop-assume-referential-integrity">https://docs.microsoft.com/en-us/power-bi/connect-data/desktop-assume-referential-integrity</a></em>.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_63"></span>Two options are worth reviewing in more detail: <strong>Cardinality</strong> and <strong>Cross filter direction</strong>.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec31">Cardinality</h5>
+<p class="noindent">Depending on the selected tables and columns, you can select one of the following options:</p>
+<ul class="sq-s">
+<li><p class="bull">Many to one</p></li>
+<li><p class="bull">One to one</p></li>
+<li><p class="bull">One to many</p></li>
+<li><p class="bull">Many to many</p></li>
+</ul>
+<p class="indent"><em>Many to one</em> and <em>One to many</em> are the same kind of relationship, and they differ only in the order in which the tables are listed. “Many” means that a key may appear more than once in the selected column, whereas “One” means a key value appears only once in the selected column. In our Wide World Importers example earlier, the Sale table was on the <em>many</em> side, whereas the Date table was on the <em>one</em> side; a single date appeared only once in the Date table, though there could be multiple sales on the same date in the Sale table.</p>
+<p class="indent"><em>One to one</em> is a special kind of relationship where a key value appears only once on both sides of the relationship. This type of relationship may be useful for splitting a single dimension with many columns into separate tables. You should only use this if you are confident that no duplicates will appear in this table, because duplicates will cause immediate errors in your data model.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> One-To-One Relationships</p>
+<p class="note-para">One-to-one relationships are rarely encountered in real life. For advanced information on this type of relationships in Power BI, see “One-to-one relationship guidance” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/relationships-one-to-one">https://docs.microsoft.com/en-us/power-bi/guidance/relationships-one-to-one</a>.</em></p>
+</div>
+<p class="indent"><em>Many-to-many</em> relationships in this context refer to a direct relationship between two tables, neither of which is guaranteed to have unique keys. We review this type of relationship later in this chapter.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec32">Cross filter direction</h5>
+<p class="noindent">This option determines the direction in which filters flow. For many-to-one and one-to-many relationships, you can select Single or Both:</p>
+<ul class="sq-s">
+<li><p class="bull">If you select <strong>Single</strong>, then the filters from the table on the “one” side will filter through to the table on the “many” side. This setting is signified by a single arrowhead on the relationship line in the Model view.</p></li>
+<li><p class="bull">If you select <strong>Both</strong>, then filters from both tables will flow in both directions; such relationship are known as <em>bidirectional</em>. This setting is signified by two arrowheads on the relationship line in the Model view, facing in opposite directions. When this option is selected, you can also select <strong>Apply security filter in both directions</strong> to make row-level security filters flow in both directions too.</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_64"></span>When editing table relationships, even if you set the relationship cross-filter direction to Both, by default the security filters are only applied in one direction. We noted that there’s an option to control security filtering called <strong>Apply security filter in both directions</strong>. This means that role filtering applied to a table will also be passed to the filtered table. When this option is disabled, only the table with filtered applied will be affected. This option exists because applying security filters affects the performance of your data model, so in some cases applying it may be undesirable.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Security Filters</p>
+<p class="note-para">Security filters refers to row-level security (RLS), a feature in Power BI that allows you to restrict access to data within a dataset based on a set of filters. We review row-level security in detail later in this chapter.</p>
+</div>
+<p class="indent">To illustrate how the cross-filter direction works, consider the data model shown in <a href="ch02.xhtml#ch02fig05">Figure 2-5</a>.</p>
+<figure class="figure" id="ch02fig05">
+<img src="graphics/02fig05.jpg" alt="There are three tables: Stock Item, Sale, and Date. Stock Item and Sale have a one-to-many relationship. Date and Sale also have a one-to-many relationship." width="732" height="188"/>
+<p class="figcaption"><strong>FIGURE 2-5</strong> Sample data model</p>
+</figure>
+<p class="indent">From this data model, you can create two table visuals as follows:</p>
+<ul class="sq-s">
+<li><p class="bull">Table 1: Distinct count of Stock Item by Year</p></li>
+<li><p class="bull">Table 2: Distinct count of Year by Stock Item</p></li>
+</ul>
+<p class="indent">Both table visuals are shown in <a href="ch02.xhtml#ch02fig06">Figure 2-6</a>. The first four rows are shown for Table 2 for illustrative purposes.</p>
+<figure class="figure" id="ch02fig06">
+<img src="graphics/02fig06.jpg" alt="Table 1 on the left, and it has four years and the total row. Table 2 is on the right, and there are many rows." width="732" height="167"/>
+<p class="figcaption"><strong>FIGURE 2-6</strong> Table visuals</p>
+</figure>
+<p class="indent">You can see that in Table 1, the numbers are different for different years and the total, whereas in Table 2, the Distinct Count of Year is showing 6 for all rows, including the Total.</p>
+<p class="indent">The numbers are different in Table 1 because filters from the Date table can reach the Stock Item table through the Sale table; the Date table filters the Sale table because there is <span epub:type="pagebreak" id="page_65"></span>a one-to-many relationship; then the Sale table filters the Stock Item table because there is a bidirectional relationship. In 2019, 2020, and 2021, Wide World Importers coincidentally sold 219 stock items, whereas in 2022, they sold 227 stock items. At the total level you see 228, which is not the total sum of stock items sold across all years. Importantly, the total 228 is showing as the distinct count of stock items when filters from the Date table are not applied.</p>
+<p class="indent">In Table 2, the numbers are the same because filters from the Stock Item table don’t reach the Date table as there is no bidirectional filter. Even though Wide World Importers only had sales in four years, you see 6 across all rows, which is the number of years in the Date table.</p>
+<p class="indent">It’s also possible to set the cross-filter direction by using the <code>CROSSFILTER</code> function in DAX, as you can see in this example:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a65pro01" id="p65pro01">Click here to view code image</a></p>
+<pre>Stock Items Sold =
+CALCULATE(
+    DISTINCTCOUNT('Stock Item'[Stock Item]),
+    CROSSFILTER(
+        Sale[Stock Item Key],
+        'Stock Item'[Stock Item Key],
+        BOTH
+    )
+)</pre>
+<p class="indent">The syntax of <code>CROSSFILTER</code> is similar to <code>USERELATIONSHIP</code>—the first two parameters are related columns. Additionally, there’s the third parameter—direction—and it can be one of the following:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>BOTH</strong> This option corresponds to <strong>Both</strong> in the relationship cross-filter direction options.</p></li>
+<li><p class="bull"><strong>NONE</strong> This option deactivates the relationship, and it corresponds to the cleared <strong>Make this relationship active</strong> check box.</p></li>
+<li><p class="bull"><strong>ONEWAY</strong> This option corresponds to <strong>Single</strong> in the relationship cross-filter direction options.</p></li>
+</ul>
+<p class="indent">Bidirectional filters are sometimes used in many-to-many relationships with bridge tables when direct many-to-many relationships are not desirable.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Bidirectional Relationships</p>
+<p class="note-para">For more examples and information on bidirectional relationships, see “Bi-directional relationship guidance” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/relationships-bidirectional-filtering">https://docs.microsoft.com/en-us/power-bi/guidance/relationships-bidirectional-filtering</a>.</em></p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Relationships Troubleshooting</p>
+<p class="note-para">Relationships may not work as expected for numerous reasons. For a comprehensive troubleshooting guide, see “Relationship troubleshooting guidance” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/relationships-troubleshoot">https://docs.microsoft.com/en-us/power-bi/guidance/relationships-troubleshoot</a>.</em></p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec5"><span epub:type="pagebreak" id="page_66"></span>Create a common date table</h4>
+<p class="noindent">By default, Power BI creates a calendar hierarchy for each date or date/time column from your data sources.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Auto Date/Time Hierarchies</p>
+<p class="note-para">For detailed considerations and limitations of the auto date/time feature, see “Auto date/time guidance in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/auto-date-time">https://docs.microsoft.com/en-us/power-bi/guidance/auto-date-time</a>.</em></p>
+</div>
+<p class="indent">While these can be useful in some cases, it’s best practice to create your own date table, which has several benefits:</p>
+<ul class="sq-s">
+<li><p class="bull">You can use a calendar other than Gregorian.</p></li>
+<li><p class="bull">You can have weeks in the calendar.</p></li>
+<li><p class="bull">You can filter multiple fact tables by using a single date dimension table.</p></li>
+</ul>
+<p class="indent">If you don’t have a date table you can import from a data source, you can create one yourself. It’s possible to create a date table by using Power Query or DAX, and there’s no difference in performance between the two methods.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec33">Creating a calendar table in Power Query</h5>
+<p class="noindent">In Power Query, you can use the M language <code>List.Dates</code> function, which returns a list of dates, and then convert the list to a table and add columns to it. The following query provides a sample calendar table that begins on January 1, 2018:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a66pro01" id="p66pro01">Click here to view code image</a></p>
+<pre>let
+    Source = #date(2018, 1, 1),
+    Dates = List.Dates(Source, Duration.TotalDays(Date.AddYears(Source, 6) - Source),
+  #duration(1,0,0,0)),
+    #"Converted to Table" = Table.FromList(Dates, Splitter.SplitByNothing(), type
+  table [Date = date]),
+    #"Inserted Year" = Table.AddColumn(#"Converted to Table", "Year", each Date.
+  Year([Date]), Int64.Type),
+    #"Inserted Month Name" = Table.AddColumn(#"Inserted Year", "Month Name", each Date.
+  MonthName([Date]), type text),
+    #"Inserted Month" = Table.AddColumn(#"Inserted Month Name", "Month", each Date.
+  Month([Date]), Int64.Type),
+    #"Inserted Week of Year" = Table.AddColumn(#"Inserted Month", "Week of Year", each
+  Date.WeekOfYear([Date]), Int64.Type)
+in
+
+    #"Inserted Week of Year"</pre>
+<p class="indent">If you want to add it to your model, you’ll need to start with a blank query:</p>
+<ol class="num">
+<li><p class="num">In Power Query Editor, select <strong>New Source</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num">Select <strong>Blank Query</strong>.</p></li>
+<li><p class="num">With the new query selected, select <strong>Query</strong> &gt; <strong>Advanced Editor</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num"><span epub:type="pagebreak" id="page_67"></span>Replace all existing code with the code above and select <strong>Done</strong>.</p></li>
+<li><p class="num">Give your query an appropriate name such as <em>Calendar</em> or <em>Date</em>.</p></li>
+</ol>
+<p class="indent">The result should look like <a href="ch02.xhtml#ch02fig07">Figure 2-7</a>, where the first few rows of the query are shown.</p>
+<figure class="figure" id="ch02fig07">
+<img src="graphics/02fig07.jpg" alt="There are five columns: Date, Year, Month Name, Month, and Week of Year." width="733" height="209"/>
+<p class="figcaption"><strong>FIGURE 2-7</strong> Sample calendar table built by using Power Query</p>
+</figure>
+<p class="indent">You may prefer having a table in Power Query when you intend to use it in some other queries, since it’s not possible to reference calculated tables in Power Query.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec34">Creating a calendar table in DAX</h5>
+<p class="noindent">If you choose to create a date table in DAX, you can use the <code>CALENDAR</code> or <code>CALENDARAUTO</code> function, both of which return a table with a single Date column. You can then add calculated columns to the table, or you can create a calculated table that already has all the columns.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Calculated Tables</p>
+<p class="note-para">We review the skills necessary to create calculated tables in Skill 2.2: Develop a data model.</p>
+</div>
+<p class="indent">The <code>CALENDAR</code> function requires you to provide the start and end dates, which you can hardcode for your business requirements or calculate dynamically:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a67pro01" id="p67pro01">Click here to view code image</a></p>
+<pre>Calendar Dynamic =
+CALENDAR(
+    MIN(Sale[Invoice Date Key]),
+    MAX(Sale[Invoice Date Key])
+)</pre>
+<p class="indent">The <code>CALENDARAUTO</code> function scans your data model for dates and returns an appropriate date range automatically.</p>
+<p class="indent">To build a table similar to the Power Query table you built earlier, use the following calculated table formula in DAX:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a67pro02" id="p67pro02">Click here to view code image</a></p>
+<pre>Calendar =
+ADDCOLUMNS(
+    CALENDARAUTO(),
+    "Year", YEAR([Date]),
+    "Month Name", FORMAT([Date], "MMMM"),
+    "Month", MONTH([Date]),
+    "Week of Year", WEEKNUM([Date])
+)</pre>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_68"></span><span class="gray"><em>Need More Review?</em></span> Creating Date Tables</p>
+<p class="note-para">For more examples of how you can create a date table, see “Create date tables in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/model-date-tables">https://docs.microsoft.com/en-us/power-bi/guidance/model-date-tables</a>.</em></p>
+</div>
+</section>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec2">Skill 2.2: Develop a data model</h3>
+<p class="noindent">Data model development refers to enhancements you add to your model after you’ve loaded your data and created relationships between tables. In this section, we review the skills you need to create calculated tables, calculated columns, and hierarchies, and we demonstrate how to configure row-level security for your report as well as set up the Q&amp;A feature.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title">This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec6">Create calculated tables</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec7">Create hierarchies</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec8">Create calculated columns</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec9">Implement row-level security roles</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec10">Use the Q&amp;A feature</a></p></li>
+</ul>
+</aside>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion File</p>
+<p class="note-para">The completed examples from this section are available in the 2.2 Develop.pbix file in the companion files folder.</p>
+</div>
+<section>
+<h4 class="h4" id="ch02lev2sec6">Create calculated tables</h4>
+<p class="noindent">Earlier in the chapter, you saw that one way to create a calendar table is to create a calculated table, which is an alternative to using Power Query. Calculated tables are defined by using DAX, and they’re based on the data that is already loaded into the data model or new data generated by using DAX. You won’t see calculated tables in Power Query Editor.</p>
+<p class="indent">Calculated tables are especially useful when you want to:</p>
+<ul class="sq-s">
+<li><p class="bull">Clone tables, including calculated columns</p></li>
+<li><p class="bull">Create tables that are based on data from different data sources</p></li>
+<li><p class="bull">Precalculate measures to improve report performance</p></li>
+</ul>
+<p class="indent">This list is not exhaustive—there are other cases when calculated tables are useful.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec35"><span epub:type="pagebreak" id="page_69"></span>Cloning tables</h5>
+<p class="noindent">You can use DAX to clone a table. To create a table called Invoice Date that’s a clone of the Date table, perform the following steps:</p>
+<ol class="nump">
+<li><p class="nump">Go to the <strong>Data</strong> view.</p></li>
+<li><p class="nump">Select <strong>New table</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="nump">Enter a calculated table expression. For example, this formula creates a table called Invoice Date by copying the Date table:</p>
+<pre class="pre">Invoice Date = 'Date'</pre></li>
+<li><p class="nump">Press <strong>Enter</strong>.</p></li>
+</ol>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec36">Creating tables that are based on data from different data sources</h5>
+<p class="noindent">Sometimes—for example, when creating a bridge table—you may need to extract distinct values from more than one table because the distinct values may be different in different tables. In that case, you’d need to take distinct values from both tables, and if they come from different data sources or from different “islands,” or both, the performance may be slow. You can solve this issue by using a calculated table.</p>
+<p class="indent">For example, you could retrieve the distinct Buying Group values from both the Customer and Targets tables by using the following calculated table formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a69pro01" id="p69pro01">Click here to view code image</a></p>
+<pre>Buying Group =
+DISTINCT(
+    UNION(
+        DISTINCT(Customer[Buying Group]),
+        DISTINCT(Targets[Buying Group])
+)</pre>
+<p class="indent">The <code>DISTINCT</code> function ensures there are no duplicates, and <code>UNION</code> combines values from two tables that come from different sources. <code>UNION</code> acts similarly to appending tables in Power Query, though they combine tables differently:</p>
+<ul class="sq-s">
+<li><p class="bull"><code>UNION</code> ignores column names and combines table columns based on their positions. The number of columns between tables must match.</p></li>
+<li><p class="bull">Appending tables in Power Query combines tables based on column names, and it’s possible to combine tables that have a different number of columns.</p></li>
+</ul>
+<p class="indent">In addition to <code>UNION</code>, other set functions available in DAX include <code>EXCEPT</code> and <code>INTERSECT</code>, which also require that tables have the same number of columns.</p>
+<p class="indent">Since the data is already in memory, this process is usually much quicker compared to creating the same table by using Power Query.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec37">Precalculating measures to improve report performance</h5>
+<p class="noindent">If you have complex measures <span epub:type="pagebreak" id="page_70"></span>that perform poorly, depending on the type of calculation you may want to precalculate them in a calculated table, and then create new measures that aggregate the precalculated values. This approach may not work for some types of ­calculations, though it usually helps with additive measures.</p>
+<p class="indent">Aggregations, which are outside the scope of the exam, are an example of calculated tables that precalculate measures and improve performance.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Using Calculated Tables</p>
+<p class="note-para">For more details on how to create calculated tables, see “Create calculated tables in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-calculated-tables">https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-calculated-tables</a>.</em></p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec7">Create hierarchies</h4>
+<p class="noindent">Power BI allows you to group columns into hierarchies, which you can then use in visuals.</p>
+<p class="indent">In our Wide World Importers example, you can create a geographical hierarchy as follows:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Model</strong> view.</p></li>
+<li><p class="num">Right-click the <strong>Sales Territory</strong> column in the <strong>City</strong> table.</p></li>
+<li><p class="num">Select <strong>Create hierarchy</strong>.</p></li>
+<li><p class="num">Double-click the newly created hierarchy and rename it to <strong>Geography</strong>.</p></li>
+<li><p class="num">In the Fields pane, drag the <strong>State Province</strong> column on top of <strong>Geography</strong>.</p></li>
+<li><p class="num">Repeat the previous step for the <strong>City</strong> column.</p></li>
+</ol>
+<p class="indent">Once created, the result should look like <a href="ch02.xhtml#ch02fig08">Figure 2-8</a>.</p>
+<figure class="figure" id="ch02fig08">
+<img src="graphics/02fig08.jpg" alt="The figure shows the City table as seen in the Fields pane. Geography has a hierarchy icon next to it. Under its name, there are the three columns that form it: Sales Territory, State Province, and City." width="200" height="316"/>
+<p class="figcaption"><strong>FIGURE 2-8</strong> The Geography hierarchy</p>
+</figure>
+<p class="indent">One column can be part of multiple hierarchies, and you can rename hierarchy items without affecting the original columns. At the same time, you don’t need to sort a hierarchy element by another column, because it inherits this property from the original column. The original column can be hidden, if desired.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_71"></span>A hierarchy can be created using only existing columns, and the columns must be in the same table. To include columns from different tables in the same hierarchy, you have to bring the columns into one table. You can do that by using Power Query or the <code>RELATED</code> function in DAX, for example.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> RELATED In DAX</p>
+<p class="note-para">For more information on the RELATED function in DAX, including examples and the requirements for using the function, see “RELATED” at <em><a href="https://docs.microsoft.com/en-us/dax/related-function-dax">https://docs.microsoft.com/en-us/dax/related-function-dax</a>.</em></p>
+</div>
+<p class="indent">Apart from the convenience of dragging multiple fields to a visual at once in the right order, a hierarchy does not provide any special benefits in Power BI compared to using columns individually, because you can use both hierarchies and multiple individual columns together in fields to achieve the same result.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec8">Create calculated columns</h4>
+<p class="noindent">Calculated columns are columns you create by using DAX. Similar to calculated tables, calculated columns can only use the data already loaded into the model or new data generated by DAX, and they don’t appear in Power Query Editor because they are generated after the data has been loaded into the model. By nature, creating calculated columns widens your table, and they are calculated after all your data is loaded, so multiple calculated columns can contribute to slow performance of your data model.</p>
+<p class="indent">If you’re experienced in Excel, creating calculated columns in DAX may remind you of creating columns in Excel, because DAX resembles the Excel formula language, and there are many functions that appear in DAX and Excel. There are some important differences, however:</p>
+<ul class="sq-s">
+<li><p class="bull">In DAX, there is no concept of a cell. If you need to get a value from a table, you have to filter a specific column down to that value.</p></li>
+<li><p class="bull">DAX is strongly typed; it’s not possible to mix values of different data types in the same column.</p></li>
+</ul>
+<p class="indent">In general, calculated columns are especially useful when you are:</p>
+<ul class="sq-s">
+<li><p class="bull">Creating columns to be used as filters or categories in visuals</p></li>
+<li><p class="bull">Precalculating poorly performing measures</p></li>
+</ul>
+<p class="indent">Here’s one way to create a calculated column:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Data</strong> view.</p></li>
+<li><p class="num">In the <strong>Fields</strong> pane, right-click a table where you want to create a calculated column.</p></li>
+<li><p class="num">Select <strong>New column</strong>.</p></li>
+<li><p class="num">Enter a calculated column expression by using DAX.</p></li>
+<li><p class="num">Press <strong>Enter</strong>.</p></li>
+</ol>
+<p class="indent"><span epub:type="pagebreak" id="page_72"></span>After you complete these steps, you’ll be able to see the results immediately. The formula that you write is automatically applied to each row in the new column. You can reference another column from the same table in the following way:</p>
+<pre>'Table name'[Column name]</pre>
+<p class="indent">Though it’s possible to reference a column within the same table by only using the column name, it’s not considered a good practice and should be avoided.</p>
+<p class="indent">For example, in Wide World Importers, you can calculate total cost in a calculated column in the Sale table by using the following expression:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a72pro01" id="p72pro01">Click here to view code image</a></p>
+<pre>Total Cost = Sale[Total Excluding Tax] - Sale[Profit]</pre>
+<p class="indent">If you want to reference a column from a related table that is on the one side of a relationship, you can use the <code>RELATED</code> function. For instance, in Wide World Importers, you can add a calculated column to the Sale table to calculate the price difference between the standard unit price and the price a product was sold for:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a72pro02" id="p72pro02">Click here to view code image</a></p>
+<pre>Unit Price Difference = RELATED('Stock Item'[Unit Price]) - Sale[Unit Price]</pre>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> <code>RELATED</code> and Inactive Relationships</p>
+<p class="note-para">By default, <code>RELATED</code> uses the active relationship. Though it’s possible to make <code>RELATED</code> use an inactive relationship, it’s much better to use the <code>LOOKUPVALUE</code> function for this. For more information on the function, see “LOOKUPVALUE” at <em><a href="https://docs.microsoft.com/en-us/dax/lookupvalue-function-dax">https://docs.microsoft.com/en-us/dax/lookupvalue-function-dax</a></em>.</p>
+</div>
+<p class="indent"><code>RELATED</code> works on the many side of a relationship. If you want to add a column to the one side of a relationship and reference the related rows, you can use the <code>RELATEDTABLE</code> function. For instance, you can add a calculated column to the Customer table to count the number of related rows in the Sale table for each customer:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a72pro03" id="p72pro03">Click here to view code image</a></p>
+<pre>Sales Rows = COUNTROWS(RELATEDTABLE(Sale))</pre>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">Unless you want to use the values generated from the calculated column as filters or categories in visuals, you should be creating measures, which we cover in Skill 2.3: Create model calculations by using DAX.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Create Calculated Columns</p>
+<p class="note-para">For more examples and a tutorial on how to create calculated columns, see “Tutorial: Create calculated columns in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-tutorial-create-calculated-columns">https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-tutorial-create-calculated-columns</a>.</em></p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec9"><span epub:type="pagebreak" id="page_73"></span>Implement row-level security roles</h4>
+<p class="noindent">A common business requirement is to secure data so that different users who view the same report can see different subsets of data. In Power BI, this can be accomplished with the feature called row-level security (RLS).</p>
+<p class="indent">Row-level security restricts data by filtering it at the row level, depending on the rules defined for each user. To configure RLS, you first need to create and define each role in Power BI Desktop, and then assign individual users or Active Directory security groups to the roles in the Power BI service.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Row-Level Security and Live Connections</p>
+<p class="note-para">Defining roles in Power BI only works for imported data and DirectQuery. When you connect live to a Power BI dataset or an Analysis Services data model, Power BI will rely on row-level security configured in the source, and you cannot override it by creating roles in Power BI Desktop.</p>
+</div>
+<p class="indent">In this section, we review the skills necessary to implement row-level security roles in Power BI Desktop. We examine assignment of roles in the Power BI service in <a href="ch04.xhtml#ch04">Chapter 4</a>, “Deploy and maintain assets.”</p>
+<section>
+<h5 class="h5" id="ch02lev3sec38">Creating roles in Power BI Desktop</h5>
+<p class="noindent">To see the list of roles configured in a dataset in Power BI Desktop, select <strong>Manage roles</strong> from the <strong>Modeling</strong> ribbon in the <strong>Report</strong> view. To create a new role, select <strong>Create</strong> in the <strong>Roles</strong> ­section. You’ll then be prompted to specify table filters, as shown in <a href="ch02.xhtml#ch02fig09">Figure 2-9</a>.</p>
+<figure class="figure" id="ch02fig09">
+<img src="graphics/02fig09.jpg" alt="The Manage roles window has three sections: roles, tables, and table filter DAX expression of the selected table." width="732" height="440"/>
+<p class="figcaption"><strong>FIGURE 2-9</strong> Manage roles</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_74"></span>When you create a role, you have the option to change the default name to a new one. It’s important to give roles user-friendly names because you’ll see them in Power BI service, and you need to be able to assign users to the correct roles. All roles are listed in the <strong>Roles</strong> section of the <strong>Manage roles</strong> window.</p>
+<p class="indent">If you right-click on a role or select the ellipsis next to a role, you’ll be presented with the following options:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Create</strong> This option creates a new role and is an alternative to the Create button below the list of roles.</p></li>
+<li><p class="bull"><strong>Duplicate</strong> This option creates a copy of the currently selected role.</p></li>
+<li><p class="bull"><strong>Rename</strong> Use this option to rename the currently selected role; you can also rename a role by double-clicking on its name.</p></li>
+<li><p class="bull"><strong>Delete</strong> This option deletes the currently selected role; this action can also be performed by selecting Delete below the list of roles.</p></li>
+</ul>
+<p class="indent">For each role, you can define a DAX expression to filter each table. When row-level security is configured, these expressions will be evaluated against each row of the relevant table, and only those rows for which the expressions are evaluated as <em>true</em> will be visible.</p>
+<p class="indent">You can either enter a table filter DAX expression yourself or use the ellipsis menu next to each table to add an expression that you can then customize. You can also access the menu by right-clicking on a table and choosing from these options:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Add filter</strong> This option lists all columns available in the table and lets you hide all rows.</p></li>
+<li><p class="bull"><strong>Copy table filter from</strong> This option copies a table filter DAX expression from another role that has a filter expression defined for the table.</p></li>
+<li><p class="bull"><strong>Clear table filter</strong> This option removes any table filter DAX expression from the table. It’s a shortcut to erasing all text from the Table filter DAX expression area manually.</p></li>
+</ul>
+<p class="indent">For example, in the Wide World Importers data model that we previously created, you can select the ellipsis next to <strong>City</strong> &gt; <strong>Add filter</strong> &gt; <strong>[Sales Territory]</strong> to insert an expression, as shown in the Table filter DAX expression area:</p>
+<pre>[Sales Territory] = "Value"</pre>
+<p class="indent">The placeholder expression depends on the data type of the column, and it helps you to write the correct filter expression.</p>
+<p class="indent">After you modify the expression, you can validate it by selecting the <strong>Verify DAX expression</strong> (check mark) button above the Table filter DAX expression area. If the expression is invalid, you’ll see a warning stating that the syntax is incorrect below the Table filter DAX expression area. Next to the check mark button is the <strong>Revert changes</strong> (cross) button, which reverts any changes that haven’t been applied yet.</p>
+<p class="indent">To hide all rows in a table, right-click on the table and click <strong>Add filter</strong> &gt; <strong>Hide all rows</strong>. This will add the following table filter DAX expression:</p>
+<pre>false</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_75"></span>Because <em>false</em> is never going to be <em>true</em> for any row, no rows will be shown in this case.</p>
+<p class="indent">You can configure row-level security in the Wide World Importers data model. First, create two roles as follows:</p>
+<ol class="num">
+<li><p class="num">Create a new role and call it <strong>Southeast</strong>.</p></li>
+<li><p class="num">For the <strong>Southeast</strong> role, in the <strong>City</strong> table, enter the following table filter DAX expression:</p>
+<pre>[Sales Territory] = "Southeast"</pre></li>
+<li><p class="num">Select the <strong>Verify DAX expression</strong> button above the <strong>Table filter DAX expression</strong> area.</p></li>
+<li><p class="num">Right-click the <strong>Southeast</strong> role and select <strong>Duplicate</strong>.</p></li>
+<li><p class="num">Rename the new role to <strong>Plains</strong>.</p></li>
+<li><p class="num">For the Plains role, update the table filter DAX expression in the City table as follows:</p>
+<pre>[Sales Territory] = "Plains"</pre></li>
+<li><p class="num">Select <strong>Save</strong>.</p></li>
+</ol>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Duplicating Roles</p>
+<p class="note-para">If you duplicate a role before you verify the last added table filter, the table filter will not be copied to the duplicate role.</p>
+</div>
+<p class="indent">We can now test the roles in Power BI Desktop.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec39">Viewing as roles in Power BI Desktop</h5>
+<p class="noindent">In Power BI Desktop, you can check what the users with specific roles will see even before you publish your report to the Power BI service and assign users to roles. For this, once you have at least one role defined, select <strong>View as</strong> on the <strong>Modeling</strong> ribbon in the <strong>Report</strong> view. You’ll then see the <strong>View as roles</strong> window shown in <a href="ch02.xhtml#ch02fig10">Figure 2-10</a>.</p>
+<figure class="figure" id="ch02fig10">
+<img src="graphics/02fig10.jpg" alt="The window shows a list of available roles in addition to None and Other user." width="425" height="428"/>
+<p class="figcaption"><strong>FIGURE 2-10</strong> View as roles</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_76"></span>Note that you can view as several roles simultaneously. This is because you can allocate a single user or a security group to multiple roles in the Power BI service; in this case, the security rules of the roles will complement each other. For example, if you select both the <strong>Plains</strong> and the <strong>Southeast</strong> roles, you’ll see data for both territories. For this reason, you should always have clear names for your RLS roles.</p>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">You should know the effect of combining multiple security roles for a single user based on the description of security filters of each role.</p>
+</div>
+<p class="indent">When viewing data as roles, you’ll see the bar at the top shown in <a href="ch02.xhtml#ch02fig11">Figure 2-11</a>.</p>
+<figure class="figure" id="ch02fig11">
+<img src="graphics/02fig11.jpg" alt="The bar says: “Now viewing report as: Plains, Southeast”. There's the Stop viewing button on the right." width="300" height="47"/>
+<p class="figcaption"><strong>FIGURE 2-11</strong> Now viewing report as</p>
+</figure>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Application of Row-Level Security</p>
+<p class="note-para">The filters applied by row-level security are applied only at query time and not at processing time. The implication of this is that the filters won’t change the values of calculated columns and calculated tables.</p>
+</div>
+<p class="indent">Another option in the <strong>View as roles</strong> window is <strong>Other user</strong>. With this option, you can test dynamic row-level security, which is covered next.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec40">Dynamic row-level security</h5>
+<p class="noindent">The roles we’ve created so far have been static, which means that all users within a role will see the same data. If you have many rules that specify how you should secure your data, this approach may mean you have to create a number of roles as well as update the data model every time a new role should be introduced or an old one removed.</p>
+<p class="indent">There is an alternative approach, called dynamic row-level security, which allows you to show different data to different users within the same role.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Dynamic Row-Level Security</p>
+<p class="note-para">Because dynamic row-level security can use a single role, this approach is preferable in large-scale implementations of Power BI where there are many users who need to see different data.</p>
+</div>
+<p class="indent">For this approach, your data model must contain the usernames of people who should have access to the relevant rows of data. You’ll also need to pass the active username as a <span epub:type="pagebreak" id="page_77"></span>filter condition. Power BI has two functions that allow you to get the username of the current user:</p>
+<ul class="sq-s">
+<li><p class="bull"><code>USERNAME</code> This function returns the domain and login of the user in the domain\login format.</p></li>
+<li><p class="bull"><strong>USERPRINCIPALNAME</strong> Depending on how the Active Directory was set up, this function usually returns the email address of the user.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Using <code>USERNAME</code> and <code>USERPRINCIPALNAME</code></p>
+<p class="note-para">If your computer is not part of an Active Directory domain, both functions will return the same result—domain\login. Once you publish your dataset to the Power BI service, both functions will return the email address of the user.</p>
+<p class="note-para">These functions can only be used in measures or table filter DAX expressions; if you try to use either of them in a calculated column or a calculated table, you’ll get an error.</p>
+</div>
+<p class="indent">To see how dynamic row-level security works in our Wide World Importers data model, first create a new security role:</p>
+<ol class="num">
+<li><p class="num">Select <strong>Manage roles</strong> on the <strong>Modeling</strong> ribbon.</p></li>
+<li><p class="num">Create a new security role and call it <strong>Dynamic RLS</strong>.</p></li>
+<li><p class="num">For the <strong>Dynamic RLS</strong> role, specify the following table filter DAX expression for the <strong>Employee</strong> table:</p>
+<pre class="pre">[Email] = USERPRINCIPALNAME()</pre></li>
+<li><p class="num">Select <strong>Save</strong>.</p></li>
+</ol>
+<p class="indent">Now you can test the new role:</p>
+<ol class="num">
+<li><p class="num">Select <strong>View as</strong> on the <strong>Modeling</strong> ribbon.</p></li>
+<li><p class="num">Select both <strong>Other user</strong> and <strong>Dynamic RLS</strong>.</p></li>
+<li><p class="num">Enter <strong>jack.potter@wideworldimporters.com</strong> in the <strong>Other user</strong> box.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+<li><p class="num">Go to the <strong>Data</strong> view.</p></li>
+<li><p class="num">Select the <strong>Employee</strong> table.</p></li>
+</ol>
+<p class="indent">Note that the Employee table is now filtered to just Jack Potter’s row, as shown in <a href="ch02.xhtml#ch02fig12">Figure 2-12</a>.</p>
+<figure class="figure" id="ch02fig12">
+<img src="graphics/02fig12.jpg" alt="The Employee table only shows Jack Potter's row." width="733" height="152"/>
+<p class="figcaption"><strong>FIGURE 2-12</strong> Employee table viewed as Jack Potter</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_78"></span>Although this may be good enough for us in certain cases, it’s a common requirement for managers to see the data of those who report to them. Since Jack is a manager, he should be able to see data of the salespersons who report to him. For that, we can create a new role called <strong>Dynamic RLS (hierarchy)</strong> with the following table filter DAX expression:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a78pro01" id="p78pro01">Click here to view code image</a></p>
+<pre>PATHCONTAINS(
+    PATH(
+        Employee[Employee Key],
+        Employee[Parent Employee Key]
+    ),
+    LOOKUPVALUE(
+        Employee[Employee Key],
+        Employee[Email],
+        USERPRINCIPALNAME()
+    )
+)</pre>
+<p class="indent">This table filter DAX expression keeps those rows where Jack is part of the hierarchy path, which relies on the Employee table having both the ID and parent ID columns.</p>
+<p class="indent">After you make this change, the Employee table will show four rows: Jack’s row and three rows of the salespersons who report to Jack, as seen in <a href="ch02.xhtml#ch02fig13">Figure 2-13</a>.</p>
+<figure class="figure" id="ch02fig13">
+<img src="graphics/02fig13.jpg" alt="The Employee table shows four rows: one for Jack and three of salespersons who report to Jack." width="733" height="217"/>
+<p class="figcaption"><strong>FIGURE 2-13</strong> Employee table viewed as Jack Potter</p>
+</figure>
+<p class="indent">So far, you’ve created the roles in Power BI Desktop. Once you publish the report, you’ll have to assign users or security groups to roles in Power BI service separately. We review these skills in <a href="ch04.xhtml#ch04">Chapter 4</a>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Row-Level Security</p>
+<p class="note-para">For more examples of implementing row-level security in Power BI, see “Row-level security (RLS) guidance in Power BI Desktop” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/rls-guidance">https://docs.microsoft.com/en-us/power-bi/guidance/rls-guidance</a>.</em></p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec10"><span epub:type="pagebreak" id="page_79"></span>Use the Q&amp;A feature</h4>
+<p class="noindent">Both Power BI Desktop and the Power BI service allow you to create visualizations that provide answers to specific questions. Although this gives you great control over formatting, it won’t work if you have RLS set up and users only have read access to content.</p>
+<p class="indent">Another way to explore data in Power BI is to use the Q&amp;A feature, also known as <em>natural language queries</em>. This feature enables you to get answers to your questions by typing them in natural language. Even users with read-only access can query datasets in a natural language.</p>
+<p class="indent">To start using Q&amp;A in Power BI Desktop, you need to be in the Report view. To insert the Q&amp;A visual, double-click the empty space on the report canvas. Alternatively, you can select <strong>Q&amp;A</strong> on the <strong>Insert</strong> ribbon. Either way, you’ll see a visual, as shown in <a href="ch02.xhtml#ch02fig14">Figure 2-14</a>.</p>
+<figure class="figure" id="ch02fig14">
+<img src="graphics/02fig14.jpg" alt="The Q&amp;A visual shows a text box at the top with placeholder text: “Ask a question about your data.” Below, there are sample questions." width="450" height="457"/>
+<p class="figcaption"><strong>FIGURE 2-14</strong> Q&amp;A visual</p>
+</figure>
+<p class="indent">Although the suggestions may not be immediately useful, you can ask your own questions. For example, you can enter <strong>profit by sales territory as column chart</strong>, and the result will look like <a href="ch02.xhtml#ch02fig15">Figure 2-15</a>.</p>
+<figure class="figure" id="ch02fig15">
+<img src="graphics/02fig15.jpg" alt="The Q&amp;A visual has created a column chart showing profit by sales territory" width="450" height="457"/>
+<p class="figcaption"><strong>FIGURE 2-15</strong> Q&amp;A showing profit by sales territory</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_80"></span>Note that the Q&amp;A visual updates its result as you type. Before we typed “as column chart,” the Q&amp;A visual was showing a bar chart.</p>
+<p class="indent">If desired, you can turn the Q&amp;A result into a standard visual by selecting the button between the question and the cog wheel in the upper-right corner of the Q&amp;A visual.</p>
+<p class="indent">The Q&amp;A visual depends on the field names as they are defined in the data model. For example, entering <strong>units by sales territory</strong> in the Q&amp;A visual won’t provide any meaningful results, as seen in <a href="ch02.xhtml#ch02fig16">Figure 2-16</a>.</p>
+<figure class="figure" id="ch02fig16">
+<img src="graphics/02fig16.jpg" alt="The visual shows a list of sales territories without any amounts." width="450" height="457"/>
+<p class="figcaption"><strong>FIGURE 2-16</strong> Q&amp;A visual showing units by sales territory</p>
+</figure>
+<p class="indent">This issue can be fixed by <em>teaching</em> Q&amp;A, as outlined next.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec41"><span epub:type="pagebreak" id="page_81"></span>Teach Q&amp;A</h5>
+<p class="noindent">The Q&amp;A visual didn’t understand the term <em>units</em> because it doesn’t appear in the Wide World Importers data model. The Q&amp;A visual underlines in red the terms it doesn’t understand. If you select <em>units</em> in the Q&amp;A visual, you may be given suggestions to replace <em>units</em> with another term or to define the term. Selecting <strong>define units</strong> allows you to teach Q&amp;A, as seen in <a href="ch02.xhtml#ch02fig17">Figure 2-17</a>.</p>
+<figure class="figure" id="ch02fig17">
+<img src="graphics/02fig17.jpg" alt="The window shows the current question and a list of terms the Q&amp;A feature didn't understand. In the lower-right corner, there's a preview of results." width="733" height="395"/>
+<p class="figcaption"><strong>FIGURE 2-17</strong> The Teach Q&amp;A window</p>
+</figure>
+<p class="indent">In the <strong>Define the terms Q&amp;A didn’t understand</strong> section, you can teach Q&amp;A that <em>units</em> refers to a certain field—for example, <em>quantity</em>—in the following way:</p>
+<ol class="num">
+<li><p class="num">Enter <strong>quantity</strong> next to <strong>Unit refers to</strong>.</p></li>
+<li><p class="num">Select <strong>Save</strong>.</p></li>
+<li><p class="num">Close the <strong>Q&amp;A setup</strong> window.</p></li>
+</ol>
+<p class="indent">The Q&amp;A visual now understands the term <em>units</em>, as you can see in <a href="ch02.xhtml#ch02fig18">Figure 2-18</a>.</p>
+<figure class="figure" id="ch02fig18">
+<img src="graphics/02fig18.jpg" alt="The Q&amp;A visual shows Quantity by Sales Territory as bar chart." width="450" height="457"/>
+<p class="figcaption"><strong>FIGURE 2-18</strong> Q&amp;A showing units by sales territory</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_82"></span>Since teaching Q&amp;A can be time-consuming, you can also add synonyms to your data model if you know them in advance, as covered next. This is another example where naming columns in Power Query Editor with friendly names will make this process easier.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec42">Synonyms</h5>
+<p class="noindent">Separately from teaching Q&amp;A, you can introduce your own Q&amp;A keywords and make Power BI recognize them. This is especially useful if your business users use acronyms or unique terminology such as substituting <em>margin</em> for <em>profit</em>. You can create a synonym for the Profit field, which will reduce confusion by your report users:</p>
+<ol class="num">
+<li><p class="num">In the <strong>Report</strong> view, select <strong>Q&amp;A setup</strong> on the <strong>Modeling</strong> ribbon.</p></li>
+<li><p class="num">Select <strong>Field synonyms</strong> on the left.</p></li>
+<li><p class="num">Expand the <strong>Sale</strong> section. You should see a list of fields in the Sale table, as shown in <a href="ch02.xhtml#ch02fig19">Figure 2-19</a>.</p>
+<figure class="figure" id="ch02fig19">
+<img src="graphics/02fig19.jpg" alt="We see a list of fields in the Sale table. For each field, as well as the table itself, there's a list of terms and suggested terms and the Include in Q&amp;A toggle." width="733" height="395"/>
+<p class="figcaption"><strong>FIGURE 2-19</strong> Field synonyms for the Sale table</p>
+</figure></li>
+<li><p class="num">Next to <strong>Profit</strong>, select <strong>Add</strong>.</p></li>
+<li><p class="num">Enter <strong>margin</strong> and press <strong>Enter</strong>.</p></li>
+<li><p class="num">Close the <strong>Q&amp;A setup</strong> window.</p></li>
+</ol>
+<p class="indent">If you now enter <strong>margin by color</strong> in the Q&amp;A visual, you’ll see a bar chart showing Profit by Color, despite not using the term <em>profit</em> explicitly.</p>
+<p class="indent">Additionally, in the <strong>Field synonyms</strong> section of <strong>Q&amp;A setup</strong>, you can exclude specific tables and fields from Q&amp;A if you don’t want Q&amp;A to use the table or field. Hidden objects are excluded by default. This is useful if you need to include staff data in your data model but don’t want users to query this data.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_83"></span><span class="gray"><em>Note</em></span> Q&amp;A Best Practices</p>
+<p class="note-para">Q&amp;A, when set up correctly, can be a powerful tool that enables data exploration by report consumers. For Q&amp;A best practices, see “Best practices to optimize Q&amp;A in Power BI” at <em><a href="https://docs.microsoft.com/en-us/power-bi/natural-language/q-and-a-best-practices">https://docs.microsoft.com/en-us/power-bi/natural-language/q-and-a-best-practices</a></em>.</p>
+</div>
+</section>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec3">Skill 2.3: Create model calculations by using DAX</h3>
+<p class="noindent">You used some DAX earlier in the chapter to create calculated tables and calculated columns as well as configure row-level security. In practice, DAX is most often used to create measures in Power BI.</p>
+<p class="indent">Writing your own formulas is an important skill that allows you to perform much more sophisticated analysis based on your data compared to not using DAX.</p>
+<p class="indent">In this section, we start by reviewing DAX fundamentals; then we look at <code>CALCULATE</code>, one of the most important functions in DAX, specifically in Time Intelligence or time-related calculations, which we review separately.</p>
+<p class="indent">DAX can help you replace some columns with measures, allowing you to reduce the data model size. Not all DAX formulas need to be complex, and we review some basic statistical functions in this section as well.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title">This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec11">Create basic measures by using DAX</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec12">Use CALCULATE to manipulate filters</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec13">Implement Time Intelligence using DAX</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec14">Replace implicit measures with explicit measures</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec15">Use basic statistical functions</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec16">Create semi-additive measures</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec17">Use quick measures</a></p></li>
+</ul>
+</aside>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Companion File</p>
+<p class="note-para">The completed examples from this section are available in the 2.3 Create.pbix file in the companion files folder.</p>
+</div>
+<section>
+<h4 class="h4" id="ch02lev2sec11">Create basic measures by using DAX</h4>
+<p class="noindent">Although many things can be computed by using calculated columns, in most cases it’s preferable to write measures, because they don’t increase the model size. Additionally, some calculations are simply not possible with calculated columns. For example, to calculate a ratio dynamically, you need to write a measure.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_84"></span>As you saw earlier, quick measures already allow you to perform basic calculations without writing DAX yourself. In this section, you start using DAX to build complex measures.</p>
+<p class="indent">It’s important to understand that Power BI allows you to aggregate columns in visuals without using measures, a practice sometimes called <em>implicit measures</em>. These can be useful when you want to quickly test how a visual might look or to perform a quick analysis on a column. However, it’s always best practice to create <em>explicit measures</em> by using DAX—even with trivial calculations such as <code>SUM</code>. Here are some reasons it’s preferable to create measures yourself:</p>
+<ul class="sq-s">
+<li><p class="bull">Implicit measures may provide unexpected results in some cases due to the Summarize by column property. For example, if you have a column that contains product prices and Power BI sets the summarization to <code>SUM</code>, then dragging the column in a visual will not produce meaningful results. Although you can change the summarization in the visual, following this approach means that you need to pay attention to this property every time you use implicit measures.</p></li>
+<li><p class="bull">Explicit measures can be reused in other measures. This is beneficial because you can write less code, which saves time and improves the maintainability of your data model.</p></li>
+<li><p class="bull">Implicit measures cannot leverage inactive relationships.</p></li>
+<li><p class="bull">Implicit measures are not supported by calculation groups.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Calculation Groups</p>
+<p class="note-para">Calculation groups are outside the scope of the exam, but they can be extremely useful in practice. For more information, see “Calculation groups” at <em><a href="https://docs.microsoft.com/en-us/analysis-services/tabular-models/calculation-groups">https://docs.microsoft.com/en-us/analysis-services/tabular-models/calculation-groups</a></em>.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Learning DAX</p>
+<p class="note-para">Teaching DAX is not the purpose of this book. If you want to learn DAX, <em>The Definitive Guide to DAX</em> by Marco Russo and Alberto Ferrari (Pearson, 2019) is a great explanation of DAX and its use.</p>
+</div>
+<p class="indent">Measures are different from calculated columns in a few ways. The main difference is that you can see the results of a calculated column immediately after defining the calculation, whereas you can’t see the results of a measure until you use it in a visual. This behavior allows measures to return different results depending on filters and where they’re used.</p>
+<p class="indent">Another difference between calculated columns and measures is that calculated column formulas apply to each row of a table, whereas measures work on columns and tables, not specific rows. Therefore, measures most often use aggregation functions in DAX.</p>
+<p class="indent">There are a few ways to create a measure in Power BI Desktop. Here’s one way:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Report</strong> view.</p></li>
+<li><p class="num">In the <strong>Fields</strong> pane, right-click a table in which you want to create a new measure.</p></li>
+<li><p class="num">Select <strong>New measure</strong>.</p></li>
+<li><p class="num">Enter the measure formula and press <strong>Enter</strong>.</p></li>
+</ol>
+<p class="indent"><span epub:type="pagebreak" id="page_85"></span>You can also create a measure by selecting <strong>New measure</strong> on the <strong>Home</strong> ribbon, but you have to make sure you’ve got the right table selected in the <strong>Fields</strong> pane; otherwise, your measure may not be created in the correct table. If you do create a measure in the wrong table, instead of re-creating the measure you can move it by performing the following steps:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Report</strong> view.</p></li>
+<li><p class="num">In the <strong>Fields</strong> pane, select the measure you want to move.</p></li>
+<li><p class="num">On the <strong>Measure tools</strong> ribbon, select the table your measure should be stored in from the <strong>Home table</strong> dropdown list.</p></li>
+</ol>
+<p class="indent">For example, to compute the total profit of Wide World Importers, use the following measure formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a85pro01" id="p85pro01">Click here to view code image</a></p>
+<pre>Total Profit = SUM(Sale[Profit])</pre>
+<p class="indent">You can compute total sales, excluding tax, by using the following measure formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a85pro03" id="p85pro03">Click here to view code image</a></p>
+<pre>Total Sales Excluding Tax = SUM(Sale[Total Excluding Tax])</pre>
+<p class="indent">If you want to compute the profit margin percentage, there are two ways of doing it. You could use this:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a85pro02" id="p85pro02">Click here to view code image</a></p>
+<pre>Profit % =
+DIVIDE(
+    SUM(Sale[Profit]),
+    SUM(Sale[Total Excluding Tax])
+)</pre>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Using <code>DIVIDE</code></p>
+<p class="note-para">We’re using <code>DIVIDE</code> in the formula to avoid division by 0. <code>DIVIDE</code> has an optional third ­parameter, which is the value to return in case you divide by 0.</p>
+</div>
+<p class="indent">However, this approach involves repeating your own code, which is undesirable because formulas become more difficult to maintain. You can avoid this issue if you reference the measures you created previously:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a85pro04" id="p85pro04">Click here to view code image</a></p>
+<pre>Profit % =
+DIVIDE(
+    [Total Profit],
+    [Total Sales Excluding Tax]
+)</pre>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Formatting Measures</p>
+<p class="note-para">Even though the Profit % measure has a percentage sign in its name, Power BI will format the measure as a decimal number by default. You can change the measure format on the <strong>Measure tools</strong> ribbon in the <strong>Formatting</strong> group. Formatting a measure after it’s been created is a great habit to learn.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_86"></span>When you’re referencing measures, it’s best practice to not use table names in front of them. Unlike column names, measure names are unique; different tables may have the same column names, but it’s not possible to have measures that share the same name.</p>
+<p class="indent">Another feature of DAX that allows you to avoid repeating yourself is variables. Think of a variable as a calculation within a measure. For instance, if you want to avoid showing zeros in your visuals, you could write a measure as follows:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a86pro01" id="p86pro01">Click here to view code image</a></p>
+<pre>Total Dry Items Units Sold =
+IF(
+    SUM(Sale[Total Dry Items]) &lt;&gt; 0,
+    SUM(Sale[Total Dry Items])
+)</pre>
+<p class="indent">By using a variable, you can avoid calling <code>SUM</code> twice:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a86pro02" id="p86pro02">Click here to view code image</a></p>
+<pre>Total Dry Items Units Sold = 
+VAR TotalDryItems = SUM(Sale[Total Dry Items])
+VAR Result =
+    IF(
+        TotalDryItems &lt;&gt; 0,
+        TotalDryItems
+    )
+RETURN
+    Result</pre>
+<p class="indent">Variables are especially useful when you want to store computationally expensive values, because variables are evaluated no more than once. As you’ll see later in this chapter, you can use many variables within the same formula.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec12">Use CALCULATE to manipulate filters</h4>
+<p class="noindent">Earlier in this chapter, you saw that the <code>CALCULATE</code> function can be used to alter relationships when paired with other DAX measures. The <code>USERELATIONSHIP</code> function with <code>CALCULATE</code> can activate inactive relationships, and <code>CROSSFILTER</code> with <code>CALCULATE</code> can change the filter direction.</p>
+<p class="indent">The <code>CALCULATE</code> function also allows you to alter the filter context under which measures are evaluated; you can add, remove, or update filters, or you can trigger context transition. We cover row context, filter context, and context transition in more detail later in this chapter.</p>
+<p class="indent"><code>CALCULATE</code> accepts a scalar expression as its first parameter, and subsequent parameters are filter arguments. Using <code>CALCULATE</code> with no filter arguments is only useful for context transition.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec43">Adding filters</h5>
+<p class="noindent"><code>CALCULATE</code> allows you to add filters in several formats. To calculate profit for the New England sales territory, you can write a measure that you can read as “Calculate the Total Profit where the Sales Territory is New England”:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a86pro03" id="p86pro03">Click here to view code image</a></p>
+<pre>New England Profit =
+CALCULATE(
+    [Total Profit],
+    City[Sales Territory] = "New England"
+)</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_87"></span>Importantly, you’re not limited to using one value per filter. You can calculate profit for New England, Far West, and Plains:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a87pro01" id="p87pro01">Click here to view code image</a></p>
+<pre>New England, Far West, and Plains Profit = 
+CALCULATE(
+    [Total Profit],
+    City[Sales Territory] IN {"New England", "Far West", "Plains"}
+)</pre>
+<p class="indent">You can specify filters for different columns at once too, which are combined by using the <code>AND</code> DAX function. For example, you can calculate profit in New England in 2020 that reads as “Calculate the Total Profit where the Sales Territory is New England and the Year is 2020”:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a87pro02" id="p87pro02">Click here to view code image</a></p>
+<pre>New England Profit 2020 = 
+CALCULATE(
+    [Total Profit],
+    City[Sales Territory] = "New England",
+    'Date'[Year] = 2020
+)</pre>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec44">Removing filters</h5>
+<p class="noindent">There are several DAX functions that you can use as <code>CALCULATE</code> modifiers to ignore filters, one of which is <code>ALL</code>. <code>ALL</code> can remove filters from:</p>
+<ul class="sq-s">
+<li><p class="bull">One or more columns from the same table</p></li>
+<li><p class="bull">An entire table</p></li>
+<li><p class="bull">The whole data model (when <code>ALL</code> is used with no parameters)</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Sort By Column and <code>ALL</code></p>
+<p class="note-para">If you’re removing filters from a column that is sorted by another column, you should remove filters from both columns—otherwise, you may get unexpected results.</p>
+</div>
+<p class="indent">For example, you can show profit for all sales territories regardless of any filters on the City[Sales Territory] column:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a87pro03" id="p87pro03">Click here to view code image</a></p>
+<pre>Profit All Sales Territories =
+
+CALCULATE(
+
+    [Total Profit],
+
+    ALL(City[Sales Territory])
+)</pre>
+<p class="indent">If you create a table that shows the new measure alongside Total Profit by Sales Territory, you get the results shown in <a href="ch02.xhtml#ch02fig20">Figure 2-20</a>.</p>
+<figure class="figure" id="ch02fig20">
+<img src="graphics/02fig20.jpg" alt="Total Profit shows different values for each Sales Territory, while Profit All Sales Territories shows the same value for every row, including the total row." width="375" height="250"/>
+<p class="figcaption"><strong>FIGURE 2-20</strong> Total Profit and Profit All Sales Territories by Sales Territory</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_88"></span>Note that the new measure displays the same value for any sales territory, which is the total of all sales territories combined regardless of sales territory.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Filter Functions In DAX</p>
+<p class="note-para">In addition to <code>ALL</code>, there are several other DAX functions that remove filters, such as <code>ALLEXCEPT</code> and <code>ALLSELECTED</code>. Full details of each function are outside the scope of this book. For an overview, see “Filter functions” at <em><a href="https://docs.microsoft.com/en-us/dax/filter-functions-dax">https://docs.microsoft.com/en-us/dax/filter-functions-dax</a></em>.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec45">Updating filters</h5>
+<p class="noindent">When you specify a filter such as <code>City[Sales Territory] = "New England"</code>, it’s an abbreviated way that corresponds to the following filter:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a88pro01" id="p88pro01">Click here to view code image</a></p>
+<pre>FILTER(
+    ALL(City[Sales Territory]),
+    City[Sales Territory] = "New England"
+)</pre>
+<p class="indent">By adding this filter, you are ignoring a filter by using <code>ALL</code>, and you’re adding a filter at the same time. This allows you to filter for New England regardless of the selected sales territory.</p>
+<p class="indent">If you create a table that shows Total Profit and New England Profit by Sales Territory, the result should look like <a href="ch02.xhtml#ch02fig21">Figure 2-21</a>.</p>
+<figure class="figure" id="ch02fig21">
+<img src="graphics/02fig21.jpg" alt="Total Profit shows different values for each Sales Territory, while New England Profit always shows profit for New England for every row." width="375" height="272"/>
+<p class="figcaption"><strong>FIGURE 2-21</strong> Total Profit and New England Profit by Sales Territory</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_89"></span>When you have Sales Territory on rows, each row from the Total Profit column is filtered for a single sales territory and the Total row shows values for all sales territories. In contrast, by using the measure above in the New England Profit column, you are filtering regardless of the current sales territory, showing only the New England Profit.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec46">Context transition</h5>
+<p class="noindent">Another important function of <code>CALCULATE</code> is context transition, which refers to transitioning from row context to filter context.</p>
+<p class="noindent">In DAX, there are two evaluation contexts:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Row context</strong> This context can be understood as “the current row.” Row context is present in calculated columns and iterators. Iterators are functions that take a table and go row by row, evaluating an expression for each row. For example, <code>FILTER</code> is an iterator; it takes a table, and for each row, it evaluates a filter condition. Those rows that satisfy the condition are included in the result of <code>FILTER</code>.</p></li>
+<li><p class="bull"><strong>Filter context</strong> This context can be understood as “all applied filters.” Filters can come from slicers, from the Filter pane, or by selecting a visual element. Filters can also be applied programmatically by using DAX.</p></li>
+</ul>
+<p class="indent">To review context transition, let’s create a sample table in the data model:</p>
+<ol class="num">
+<li><p class="num">On the <strong>Home</strong> ribbon, select <strong>Enter data</strong>.</p></li>
+<li><p class="num">Enter <strong>Sample</strong> in the <strong>Name</strong> box.</p></li>
+<li><p class="num">Enter the data shown in <a href="ch02.xhtml#ch02fig22">Figure 2-22</a>.</p>
+<figure class="figure" id="ch02fig22">
+<img src="graphics/02fig22.jpg" alt="There are two columns: Letter and Number. There are three rows. The Letter column values are A, B, and C. The Number column values are 1, 2, and 3." width="575" height="329"/>
+<p class="figcaption"><strong>FIGURE 2-22</strong> Entering data</p>
+</figure></li>
+<li><p class="num">Select <strong>Load</strong>.</p></li>
+</ol>
+<p class="indent">Now that you have the table, you can add two calculated columns to it to see the effect of context transition:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Data</strong> view.</p></li>
+<li><p class="num">Select the <strong>Sample</strong> table in the <strong>Fields</strong> pane.</p></li>
+<li><p class="num"><span epub:type="pagebreak" id="page_90"></span>Create a calculated column with the following formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a90pro01" id="p90pro01">Click here to view code image</a></p>
+<pre class="pre">Sum Number = SUM('Sample'[Number])</pre></li>
+<li><p class="num">Create another calculated column with the following formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a90pro02" id="p90pro02">Click here to view code image</a></p>
+<pre class="pre">Calculate Sum Number = CALCULATE(SUM('Sample'[Number]))</pre></li>
+</ol>
+<p class="indent">The result should look like <a href="ch02.xhtml#ch02fig23">Figure 2-23</a>.</p>
+<figure class="figure" id="ch02fig23">
+<img src="graphics/02fig23.jpg" alt="The Sum Number column has 6 in every row. The Calculate Sum Number has the same value as the Number column." width="450" height="102"/>
+<p class="figcaption"><strong>FIGURE 2-23</strong> Calculated columns in the Sample table</p>
+</figure>
+<p class="indent"><code>SUM</code>, as an aggregation function, uses filter context. Because there are no filters in the data model—there are no visuals, and you’re not adding any filters by using DAX—<code>SUM</code> aggregates the whole Number column, so the result in the Sum Number column is 6 regardless of the row.</p>
+<p class="indent">On the other hand, the Calculate Sum Number column uses the same formula as Sum Number, but importantly has been wrapped in <code>CALCULATE</code>. <code>CALCULATE</code> automatically performs context transition, so the result is different from using the <code>SUM</code> function alone. Context transition takes all values from all other columns and uses them as filters. Therefore, for the first row, you aggregate the Number column, where:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Sample[Letter]</strong> is <strong>A</strong></p></li>
+<li><p class="bull"><strong>Sample[Number]</strong> is <strong>1</strong></p></li>
+<li><p class="bull"><strong>Sample[Sum Number]</strong> is <strong>6</strong></p></li>
+</ul>
+<p class="indent">Where the sum of 1 is equal to 1, since there’s only one such row that meets these filters, you get 1. Separately for row 2, the sum of 2 equals 2, and for row 3, the sum of 3 equals 3. Context transition can be made even clearer by modifying the Sample table slightly as follows:</p>
+<ol class="num">
+<li><p class="num">On the <strong>Home</strong> ribbon, select <strong>Transform data</strong>.</p></li>
+<li><p class="num">Select the <strong>Sample</strong> query.</p></li>
+<li><p class="num">Select the cog wheel in the <strong>Source</strong> step.</p></li>
+<li><p class="num">Change the third row to match the second row, as shown in <a href="ch02.xhtml#ch02fig24">Figure 2-24</a>.</p>
+<figure class="figure" id="ch02fig24">
+<img src="graphics/02fig24.jpg" alt="The second and third row are now the same." width="575" height="329"/>
+<p class="figcaption"><strong>FIGURE 2-24</strong> Modified Sample table</p>
+</figure>
+</li>
+<li><p class="num"><span epub:type="pagebreak" id="page_91"></span>Select <strong>OK</strong>.</p></li>
+<li><p class="num">On the <strong>Home</strong> ribbon of Power Query Editor, select <strong>Close &amp; Apply</strong>.</p></li>
+<li><p class="num">If you now look at the Sample table in the <strong>Data</strong> view, the result will look like <a href="ch02.xhtml#ch02fig25">Figure 2-25</a>.</p></li>
+</ol>
+<figure class="figure" id="ch02fig25">
+<img src="graphics/02fig25.jpg" alt="The Sum Number column now shows 5 in every row. The Calculate Sum Number column shows 1, 4, and 4." width="400" height="91"/>
+<p class="figcaption"><strong>FIGURE 2-25</strong> Sample table after update</p>
+</figure>
+<p class="indent">Although the first row is calculated as you saw in the previous example, the second and third rows are now both showing 4. Intuitively, you could expect to see 2 and 2 in each row, though you’re getting 4 and 4. This is because for each row, due to context transition triggered by <code>CALCULATE</code>, you’re summing the Number column, where</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Sample[Letter]</strong> is <strong>B</strong></p></li>
+<li><p class="bull"><strong>Sample[Number]</strong> is <strong>2</strong></p></li>
+<li><p class="bull"><strong>Sample[Sum Number]</strong> is <strong>5</strong></p></li>
+</ul>
+<p class="indent">Because there are two such rows, you get 2 + 2 = 4 in both rows.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec13">Implement Time Intelligence using DAX</h4>
+<p class="noindent">It is common for business users to want to aggregate metrics—for example, revenue—across time, such as year-to-date revenue for a certain date, or prior-year revenue for the comparable period. Fortunately, DAX has a family of functions, referred to as Time Intelligence, that facilitate such calculations.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_92"></span>All Time Intelligence functions require a calendar table that has a date type column with unique values. If the date column is not part of a relationship, the calendar table must be marked as a date table, which can be done as follows:</p>
+<ol class="num">
+<li><p class="num">Go to the <strong>Report</strong> or <strong>Data</strong> view.</p></li>
+<li><p class="num">Select the calendar table in the <strong>Fields</strong> pane.</p></li>
+<li><p class="num">On the <strong>Table tools</strong> ribbon, select <strong>Mark as date table</strong> &gt; <strong>Mark as date table</strong>.</p></li>
+<li><p class="num">Select the date column from the <strong>Date column</strong> dropdown list.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Different Calendars</p>
+<p class="note-para">The Time Intelligence functions in DAX only support the Gregorian calendar. If you use a different kind of calendar—such as a 4-4-5, which is common in retail, or a weekly calendar—then you’ll need to use custom calculations. These types of calculations are out of the scope of this book.</p>
+</div>
+<p class="indent">Most Time Intelligence functions return tables that can be used as filters in <code>CALCULATE</code>. For example, you can use the <code>DATESYTD</code> function to calculate a year-to-date amount as follows:</p>
+<pre>Profit YTD =
+CALCULATE(
+    [Total Profit],
+    DATESYTD('Date'[Date])
+)</pre>
+<p class="indent">You can also combine Time Intelligence functions. For example, to calculate year-to-date profit for the previous year, use the following formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a92pro01" id="p92pro01">Click here to view code image</a></p>
+<pre>Profit PYTD =
+CALCULATE(
+    [Profit YTD],
+    DATEADD('Date'[Date], -1, YEAR)
+)</pre>
+<p class="indent">Some Time Intelligence functions, such as <code>DATESYTD</code>, can accommodate fiscal years. For example, if you had a fiscal year ending on June 30, you could calculate profit year-to-date for the fiscal year as follows:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a92pro02" id="p92pro02">Click here to view code image</a></p>
+<pre>Profit FYTD =
+CALCULATE(
+    [Total Profit],
+    DATESYTD('Date'[Date], "30-6")
+)</pre>
+<p class="indent">The Total Profit, Profit YTD, Profit PYTD, and Profit FYTD measures can be seen together in <a href="ch02.xhtml#ch02fig26">Figure 2-26</a>.</p>
+<figure class="figure" id="ch02fig26">
+<img src="graphics/02fig26.jpg" alt="The figure shows a matrix that displays Total Profit, Profit YTD, Profit PYTD, and Profit FYTD by year and month." width="575" height="615"/>
+<p class="figcaption"><strong>FIGURE 2-26</strong> Time Intelligence calculations</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_93"></span>Notice how the Profit YTD measure shows the cumulative total profit within each year. The Profit PYTD measure shows the same values as Profit YTD one year before. Profit FYTD shows the cumulative total profit for fiscal years, resetting on July 1 of each year.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Time Intelligence In DAX</p>
+<p class="note-para">DAX includes over 30 Time Intelligence functions. Full details on all Time Intelligence functions are out of the scope of this book. For more details, see “Time intelligence functions” at <em><a href="https://docs.microsoft.com/en-us/dax/time-intelligence-functions-dax">https://docs.microsoft.com/en-us/dax/time-intelligence-functions-dax</a></em>.</p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec14">Replace implicit measures with explicit measures</h4>
+<p class="noindent">It is sometimes possible to replace some numeric columns with measures, which can reduce the size of the data model. In our Wide World Importers example, there are several columns that could be replaced with measures.</p>
+<p class="indent">For example, the Total Chiller Items and Total Dry Items columns in the Sale table show quantity of chiller and dry items, respectively. Essentially, these columns show filtered quantities depending on whether an item is a chiller or a dry item.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_94"></span>Before you replace the two columns with measures, create the following measure, which you’ll reference and build upon later:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a94pro01" id="p94pro01">Click here to view code image</a></p>
+<pre>Total Quantity = SUM(Sale[Quantity])</pre>
+<p class="indent">You can now create the following two measures and use them instead of columns:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a94pro02" id="p94pro02">Click here to view code image</a></p>
+<pre><strong>Total Chiller Items (Measure)</strong> =
+CALCULATE(
+    [Total Quantity],
+    'Stock Item'[Is Chiller Stock] = TRUE
+)
+
+<strong>Total Dry Items (Measure)</strong> =
+CALCULATE(
+    [Total Quantity],
+    'Stock Item'[Is Chiller Stock] = FALSE
+)</pre>
+<p class="indent">If you remove the Total Chiller Items and Total Dry Items columns from the model, you’ll make it smaller and more efficient.</p>
+<p class="indent">Another example of a column that can be replaced by a measure is Total Including Tax from the Sale table. Since Total Excluding Tax and Tax Amount added together equals Total Including Tax, you can use the following measure instead:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a94pro03" id="p94pro03">Click here to view code image</a></p>
+<pre>Total Including Tax (Measure) =
+SUMX(
+    Sale,
+    Sale[Total Excluding Tax] + Sale[Tax Amount]
+)</pre>
+<p class="indent">Again, once you have the measure, removing the Total Including Tax column would reduce the size of the data model.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec15">Use basic statistical functions</h4>
+<p class="noindent">As mentioned previously, it’s best practice to create explicit measures even for basic calculations such as <code>SUM</code>, because you can build upon them to create more complex measures. You’ve already used <code>SUM</code> in our previous examples; here are several other basic statistical measures that are frequently used:</p>
+<ul class="sq-s">
+<li><p class="bull"><code>AVERAGE</code></p></li>
+<li><p class="bull"><code>MEDIAN</code></p></li>
+<li><p class="bull"><code>COUNT</code></p></li>
+<li><p class="bull"><code>DISTINCTCOUNT</code></p></li>
+<li><p class="bull"><code>MIN</code></p></li>
+<li><p class="bull"><code>MAX</code></p></li>
+</ul>
+<p class="indent">All these functions take a column as a reference and produce a scalar value. In addition, every function except <code>DISTINCTCOUNT</code> has an equivalent iterator function with the X suffix—for instance, <code>SUMX</code> is the iterator counterpart of <code>SUM</code>. Iterators take two parameters: a table to iterate <span epub:type="pagebreak" id="page_95"></span>through, and an expression to evaluate for each row. The evaluated results are then aggregated according to the base function; for example, <code>SUMX</code> will sum the results. When you’re learning the difference, it can be helpful to create sample tables similar to the examples shown earlier to visually compare the nuances of the different functions.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Statistical Functions In DAX</p>
+<p class="note-para">There are over 60 statistical functions in DAX, and describing each one is out of the scope of this book. For an overview, see “Statistical functions” at <em><a href="https://docs.microsoft.com/en-us/dax/statistical-functions-dax">https://docs.microsoft.com/en-us/dax/statistical-functions-dax</a></em>.</p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec16">Create semi-additive measures</h4>
+<p class="noindent">In general, there are three kinds of measures:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Additive</strong> These measures are aggregated by using the <code>SUM</code> function across any dimensions. A typical example is revenue, which can be added across different product categories, cities, and dates, as well as other dimensions. Revenue of all months within a year, when added together, equals the total year revenue.</p></li>
+<li><p class="bull"><strong>Semi-additive</strong> These measures can be added across some but not all dimensions. For example, inventory counts can be added across different product categories and cities, but not dates; if you had five units yesterday and two units today, that doesn’t mean you’ll have seven units tomorrow. On the other hand, if you have five units in Sydney and two units in Melbourne, this means you’ve got seven units in the two cities in total.</p></li>
+<li><p class="bull"><strong>Non-additive</strong> These measures cannot be added across any dimensions. For instance, you cannot add up the average price across any dimension, because the result would not make any practical sense. If the average sale price in Sydney was $4.50, and it was $3.50 in Melbourne, you cannot say that across both cities, the average price was $8.00 or even $4.00 because the number of units sold could be very different.</p></li>
+</ul>
+<p class="indent">In this section, we focus on semi-additive measures. There are several ways to write a semi-additive measure, and the correct way for you depends on your business requirements. Let’s say your business is interested in inventory counts, and you have the data model shown in <a href="ch02.xhtml#ch02fig27">Figure 2-27</a>.</p>
+<figure class="figure" id="ch02fig27">
+<img src="graphics/02fig27.jpg" alt="There are three tables: Stock Item, Inventory, and Date. Inventory is on the many side of relationships with Stock Item and Date." width="733" height="222"/>
+<p class="figcaption"><strong>FIGURE 2-27</strong> Inventory data model</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_96"></span>If you have inventory figures for all dates of interest in your data, you can write the following measure:</p>
+<pre>Inventory Balance =
+CALCULATE(
+    SUM(Inventory[Balance]),
+    LASTDATE('Date'[Date])
+)</pre>
+<p class="indent">In addition to <code>LASTDATE</code> and its sister function <code>FIRSTDATE</code>, there are some DAX functions that can help you retrieve the opening or closing balance for different time periods:</p>
+<ul class="sq-s">
+<li><p class="bull"><code>OPENINGBALANCEMONTH</code></p></li>
+<li><p class="bull"><code>OPENINGBALANCEQUARTER</code></p></li>
+<li><p class="bull"><code>OPENINGBALANCEYEAR</code></p></li>
+<li><p class="bull"><code>CLOSINGBALANCEMONTH</code></p></li>
+<li><p class="bull"><code>CLOSINGBALANCEQUARTER</code></p></li>
+<li><p class="bull"><code>CLOSINGBALANCEYEAR</code></p></li>
+</ul>
+<p class="indent">The functions that start with <code>CLOSING</code> evaluate an expression for the last date in the period, and the functions that start with <code>OPENING</code> evaluate an expression for one day before the first date in the period. This means that the opening balance for February 1 is the same as the closing balance for January 31.</p>
+<p class="indent">For example, you can calculate the opening month balance for inventory as follows:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a96pro01" id="p96pro01">Click here to view code image</a></p>
+<pre>Inventory Opening Balance Month =
+OPENINGBALANCEMONTH(
+    SUM(Inventory[Balance]),
+    'Date'[Date]
+)</pre>
+<p class="indent">The date-based functions listed here only work if you have data for all dates of interest. For example, if you’d chosen to use <code>CLOSINGBALANCEMONTH</code> but your data ends on May 23, 2022, as is the case for sample data, you’d get a blank value for May 2022. For cases such as this, you can use <code>LASTNONBLANKVALUE</code> or <code>FIRSTNONBLANKVALUE</code> as shown here:</p>
+<pre>Inventory Last Nonblank =
+LASTNONBLANKVALUE(
+    'Date'[Date],
+    SUM(Inventory[Balance])
+)</pre>
+<p class="indent">This measure will show the latest available balance in the current context.</p>
+<p class="indent">The Inventory Balance, Inventory Opening Balance Month, and Inventory Last Nonblank measures can be seen in <a href="ch02.xhtml#ch02fig28">Figure 2-28</a>.</p>
+<figure class="figure" id="ch02fig28">
+<img src="graphics/02fig28.jpg" alt="The three measures show different results." width="650" height="327"/>
+<p class="figcaption"><strong>FIGURE 2-28</strong> Inventory measures</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_97"></span>Determining which calculation you should use depends on your business requirements—there is no single correct answer that applies to all scenarios. Missing data may mean there’s no inventory, or it may mean that data isn’t captured frequently enough, so the data modeler should understand the underlying data before writing the calculations to ensure the data isn’t represented incorrectly.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec17">Use quick measures</h4>
+<p class="noindent">A measure in Power BI is a dynamic evaluation of a DAX query that will change in response to interactions with other visuals, enabling quick, meaningful exploration of your data. Creating efficient measures will be one of the smartest things you can do to build insightful reports. If you’re new to DAX and writing measures, or you’re wanting to perform quick analysis, you have the option of creating a quick measure. There are several ways to create a quick measure:</p>
+<ul class="sq-s">
+<li><p class="bull">Select <strong>Quick measure</strong> from the <strong>Home</strong> ribbon.</p></li>
+<li><p class="bull">Right-click or select the ellipsis next to a table or column in the <strong>Fields</strong> pane and select <strong>New quick measure</strong>. This method may prefill the quick measure form shown next.</p></li>
+<li><p class="bull">If you already use a field in a visual, select the dropdown arrow next to the field in the Values section and select <strong>New quick measure</strong>. This method also may prefill the quick measure form shown next. If possible, this will add the new quick measure to the existing visualization. You’ll be able to use this measure in other visuals too.</p></li>
+</ul>
+<p class="indent">The following calculations are available as quick measures:</p>
+<ul class="sq-s">
+<li><p class="bull">Aggregate per category</p>
+<ul class="sq1">
+<li><p class="bull">Average per category</p></li>
+<li><p class="bull">Variance per category</p></li>
+<li><p class="bull">Max per category</p></li></ul></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_98"></span>Min per category</p></li>
+<li><p class="bull">Weighted average per category</p></li>
+<li><p class="bull">Filters</p>
+<ul class="sq1">
+<li><p class="bull">Filtered value</p></li>
+<li><p class="bull">Difference from filtered value</p></li>
+<li><p class="bull">Percentage difference from filtered value</p></li>
+<li><p class="bull">Sales from new customers</p></li></ul></li>
+<li><p class="bull">Time Intelligence</p>
+<ul class="sq1">
+<li><p class="bull">Year-to-date total</p></li>
+<li><p class="bull">Quarter-to-date total</p></li>
+<li><p class="bull">Month-to-date total</p></li>
+<li><p class="bull">Year-over-year change</p></li>
+<li><p class="bull">Quarter-over-quarter change</p></li>
+<li><p class="bull">Month-over-month change</p></li>
+<li><p class="bull">Rolling average</p></li></ul></li>
+<li><p class="bull">Totals</p>
+<ul class="sq1">
+<li><p class="bull">Running total</p></li>
+<li><p class="bull">Total for category (filters applied)</p></li>
+<li><p class="bull">Total for category (filters not applied)</p></li></ul></li>
+<li><p class="bull">Mathematical operations</p>
+<ul class="sq1">
+<li><p class="bull">Addition</p></li>
+<li><p class="bull">Subtraction</p></li>
+<li><p class="bull">Multiplication</p></li>
+<li><p class="bull">Division</p></li>
+<li><p class="bull">Percentage difference</p></li>
+<li><p class="bull">Correlation coefficient</p></li></ul></li>
+<li><p class="bull">Text</p>
+<ul class="sq1">
+<li><p class="bull">Star rating</p></li>
+<li><p class="bull">Concatenated list of values</p></li></ul></li>
+</ul>
+<p class="indent">Each calculation has its own description and a list of field wells—you can see an example in <a href="ch02.xhtml#ch02fig29">Figure 2-29</a>.</p>
+<figure class="figure" id="ch02fig29">
+<img src="graphics/02fig29.jpg" alt="The Correlation coefficient is selected in the Calculation drop-down list. Below, there are three field wells: Category, Measure X, and Measure Y. On the right, there's a list of visible fields." width="649" height="675"/>
+<p class="figcaption"><strong>FIGURE 2-29</strong> Quick Measures dialog box</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_99"></span>For example, by using quick measures, you can calculate average profit per employee for Wide World Importers as follows:</p>
+<ol class="num">
+<li><p class="num">Ensure the <strong>Sale</strong> table is selected in the <strong>Fields</strong> pane.</p></li>
+<li><p class="num">Select <strong>Quick measure</strong> on the <strong>Home</strong> ribbon.</p></li>
+<li><p class="num">From the <strong>Calculation</strong> dropdown list, select <strong>Average per category</strong>.</p></li>
+<li><p class="num">Drag the <strong>Profit</strong> column from the <strong>Sale</strong> table to the <strong>Base value</strong> field well.</p></li>
+<li><p class="num">Drag the <strong>Employee</strong> column from the <strong>Employee</strong> table to the <strong>Category</strong> field well.</p></li>
+<li><p class="num">Select <strong>OK</strong>.</p></li>
+</ol>
+<p class="indent">Once done, you can find the new measure called <strong>Profit average per Employee</strong> in the <strong>Fields</strong> pane.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Home Table</p>
+<p class="note-para">Your new quick measure will be created in the last active table. If you’re struggling to find the measure, you can use the search bar in the Fields pane.</p>
+<p class="note-para">To move a measure to a different table, select a measure in the <strong>Fields</strong> pane and select a new table in the <strong>Home</strong> table dropdown list on the <strong>Measure Tools</strong> ribbon.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_100"></span>If you select the new measure, you’ll see its DAX formula:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a100pro01" id="p100pro01">Click here to view code image</a></p>
+<pre>Profit average per Employee =
+AVERAGEX(
+    KEEPFILTERS(VALUES('Employee'[Employee])),
+    CALCULATE(SUM('Sale'[Profit]))
+)</pre>
+<p class="indent">You can modify the formula, if needed. Reading the DAX can be a great way to learn how measures can be written.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Quick Measures</p>
+<p class="note-para">For more information on quick measures, including limitations and considerations, see “Use quick measures for common calculations” at <em><a href="https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-quick-measures">https://docs.microsoft.com/en-us/power-bi/transform-model/desktop-quick-measures</a></em>.</p>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec4">Skill 2.4: Optimize model performance</h3>
+<p class="noindent">Sometimes after you create the first version of your data model, you may realize that it doesn’t perform well enough. Because of the way Power BI stores data, it may mean that your data model isn’t performing as efficiently as it can. In this section, we review the skills necessary to optimize a model’s performance and learn how you can identify measures, visuals, and relationships that are slow.</p>
+<p class="indent">When working with imported data in Power BI, keep in mind that it’s a <em>columnstore</em> database, which means that the number of distinct values in a column—also known as <em>cardinality</em>—usually plays a more important role than the number of rows. Therefore, one way to address poor performance is to reduce cardinality levels, which you can do by changing data types or summarizing data.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title">This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec18">Remove unnecessary rows and columns</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec19">Identify poorly performing measures, relationships, and visuals</a></p></li>
+<li><p class="bull"><a href="ch02.xhtml#ch02lev2sec20">Reduce cardinality levels to improve performance</a></p></li>
+</ul>
+</aside>
+<section>
+<h4 class="h4" id="ch02lev2sec18">Remove unnecessary rows and columns</h4>
+<p class="noindent">In Power BI, it’s preferable to only load data that is necessary for reporting and then add more data later as required. In practice, you should disable loading of queries that aren’t needed for reporting and filter the data to only the required rows and columns before loading into the model.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec47"><span epub:type="pagebreak" id="page_101"></span>Remove unnecessary rows</h5>
+<p class="noindent">Reducing the number of rows requires some filtering criteria, which can be based on attributes or dates.</p>
+<p class="indent">For example, instead of loading all Wide World Importers data, you could load data for a specific sales territory if you’re only interested in analyzing that specific sales territory. You can use parameters when filtering to make the process more manageable; this approach will also make it possible to change filters once the dataset is published to the Power BI service.</p>
+<p class="indent">You can also filter by dates and only load some recent data in case you’re not interested in historical data. In addition to parameters, you can apply relative date filters, such as “is in the previous 2 years.”</p>
+<p class="indent">Filtering rows after you create reports won’t break any visuals in the existing reports.</p>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec48">Remove unnecessary columns</h5>
+<p class="noindent">Columns in a data model usually serve at least one of two purposes: they could be used to support visuals or calculations, or both. It’s preferable to not load columns that aren’t used for any purpose, especially if they’ve got a high number of distinct values.</p>
+<p class="indent">Some data warehouses include primary keys for fact tables. Although that may be useful for data audit purposes, you should remove primary keys from Power BI data models because they have a unique value for every row, and fact tables can be long. Primary keys of fact tables can occupy over 50% of data model size without bringing any benefit. In the Wide World Importers example, removing the Sale Key column from the Sale table reduces the file size by 43%.</p>
+<p class="indent">If you need to count the number of rows in a fact table, it’s more efficient to use <code>COUNTROWS</code> than <code>DISTINCTCOUNT</code> of the primary key column.</p>
+<p class="indent">Removing columns that are used in visuals or calculations is going to break existing reports or even the dataset. You can use the Remove Other Columns functionality in Power Query Editor to have a step to refer to if you need to add a column to your model later. This step will also prevent columns added to the dataset from being automatically brought into your model, such as a new column added to a SQL table by a database administrator.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec19">Identify poorly performing measures, relationships, and visuals</h4>
+<p class="noindent">Sometimes you may notice that the report performance is not optimal. Power BI Desktop has a feature called Performance Analyzer, which you can use to trace the slow-performing visuals and to see the DAX queries behind them.</p>
+<p class="indent">To turn on Performance Analyzer, go to the <strong>Report</strong> view and select <strong>View</strong> &gt; <strong>Performance analyzer</strong>. This opens the Performance Analyzer pane shown in <a href="ch02.xhtml#ch02fig30">Figure 2-30</a>.</p>
+<figure class="figure" id="ch02fig30">
+<img src="graphics/02fig30.jpg" alt="The pane has the Start recording button, which is active. Refresh visuals and Stop are inactive." width="733" height="393"/>
+<p class="figcaption"><strong>FIGURE 2-30</strong> Performance Analyzer</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_102"></span>Performance Analyzer works by recording traces, and it then shows you how long each visual took to render. To start recording traces, select <strong>Start recording</strong>. After that, you need to perform some actions, such as applying filters, that will recalculate the visuals, or you can select <strong>Refresh visuals</strong> to refresh the visuals as they are. You’ll then see the rendering duration for each visual.</p>
+<p class="indent">To identify the slowest visuals, you can sort visuals in the Performance Analyzer pane by selecting the arrow next to <strong>Duration (ms)</strong>.</p>
+<p class="indent">Each visual that contains data has a DAX query behind it, which you can copy by expanding the line of the visual in the Performance Analyzer pane and selecting <strong>Copy query</strong>. You can analyze the query further in DAX Studio, for example. It’s also possible to export all traces by selecting <strong>Export</strong>.</p>
+<p class="indent">To clear the Performance Analyzer pane, select <strong>Clear</strong>. Once you’re done recording traces, select <strong>Stop</strong>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch02lev2sec20">Reduce cardinality levels to improve performance</h4>
+<p class="noindent">Power BI employs several compression mechanisms to reduce the size of data, the details of which are outside the scope of this book. One way to decrease the data size, which we cover next, is by reducing the cardinality of columns by changing data types or the default summarization.</p>
+<section>
+<h5 class="h5" id="ch02lev3sec49">Changing data types</h5>
+<p class="noindent">In Power BI, two data types can be used for decimal numbers:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Decimal number</strong> Can store more than four decimal places</p></li>
+<li><p class="bull"><strong>Fixed decimal number</strong> Can only store up to four decimal places</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_103"></span>If your data contains more than four decimal places for some values and you don’t need that level of precision, you should change the data type to Fixed Decimal Number to save space.</p>
+<p class="indent">Another way to change the cardinality levels is to split decimal number columns into pairs of whole numbers and decimal numbers, which should be done as close to the data source as possible. Whole numbers can be of any range, whereas decimal numbers should be between 0 and 1. These two columns can then be aggregated by using <code>SUMX</code> in the following fashion:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a103pro01" id="p103pro01">Click here to view code image</a></p>
+<pre>Full number =
+SUMX(
+    'Fact table',
+    'Fact table'[Whole number] + 'Fact table'[Decimal number]
+)</pre>
+<p class="indent">Although you’ll get two columns instead of one, in many cases you’ll see improvements in cardinality levels and, as a result, a decrease in the data model size. For the same reasons, in Power BI it’s best practice to split Date/Time columns with Time components into two: Date and Time. This is because you are increasing the number of duplicates in each column, and therefore the column is more efficiently stored in memory.</p>
+<p class="indent">Some text columns, such as invoice numbers that are stored as text, can also sometimes be reduced in size. For example, if your fact table contains a column with invoice numbers, which always have the INV prefix and eight numbers that follow it, such as INV01234567, you can remove the INV prefix and change the data type of numbers from Text to Whole Number. If the prefix is inconsistent, you can split it and move it to a different column. This is because storing whole numbers is usually more efficient than storing text.</p>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">You should be able to recognize models that would benefit from splitting columns and selecting different data types.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch02lev3sec50">Summarizing data</h5>
+<p class="noindent">If your source data provides a level of detail that’s not required by reporting, then you may want to consider summarizing your data to reduce cardinality.</p>
+<p class="indent">For example, if the source data contains daily sales information but you only report monthly values, you may want to summarize your sales data to be at the month level instead of the day level. This approach will reduce the size of your model dramatically, though it will make the reporting of daily data impossible.</p>
+<p class="indent">It’s preferable to summarize your data as close to the data source as possible. Power Query also allows you to summarize data by using the <strong>Group By</strong> functionality on the <strong>Transform</strong> ribbon.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_104"></span>Data summarization involves a trade-off between data model size and the available level of detail; whether you should summarize data depends on your business requirements.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Data Reduction Techniques</p>
+<p class="note-para">All possible data reduction techniques are outside the scope of this book. For more examples of reducing your data when working with imported data, see “Data reduction techniques for Import modeling” at <em><a href="https://docs.microsoft.com/en-us/power-bi/guidance/import-modeling-data-reduction">https://docs.microsoft.com/en-us/power-bi/guidance/import-modeling-data-reduction</a></em>.</p>
+</div>
+</section>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec5">Chapter summary</h3>
+<ul class="sq-s">
+<li><p class="bull">Power BI supports various types of schemas: flat (fully denormalized), star, and snowflake. The preferred schema for Power BI is the star schema.</p></li>
+<li><p class="bull">You can configure various column and table properties in the Model view.</p></li>
+<li><p class="bull">In some cases, it may be preferable to define role-playing dimensions, which allow you to use a single dimension to filter one fact table by using different keys in the table.</p></li>
+<li><p class="bull">Power BI supports the following three cardinality types for relationships: one-to-one, one-to-many, and many-to-many. For one-to-one relationships, the cross-filter direction is always Both (each table filters the other). One-to-many dimensions can have their cross-filter direction be set to either Single (the one side filters the many side) or Both. You choose the cross-filter direction of many-to-many relationships depending on your business requirements. Relationships whose cross-filter direction is set to Both are also known as bidirectional relationships.</p></li>
+<li><p class="bull">For bidirectional relationships, security filters won’t flow in both directions automatically, though you can configure that behavior in the relationship properties.</p></li>
+<li><p class="bull">For best performance, look carefully at the storage mode of each table, the cardinality and cross-filter direction of relationships, and the cardinality of columns (the number of distinct values).</p></li>
+<li><p class="bull">Besides measures, you can use DAX to create calculated tables and calculated columns in Power BI.</p></li>
+<li><p class="bull">You can create a common table in Power BI by using Power Query or DAX, or you can load it from a data source.</p></li>
+<li><p class="bull">Power BI supports the creation of hierarchies, which can be useful to make models more user-friendly, though they have no technical advantages over several fields being used together in a visual without being combined in a hierarchy.</p></li>
+<li><p class="bull">You can secure your data model by using row-level security, which can use static DAX filters on one or more tables, or dynamic row-level security that considers which user is viewing the report.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_105"></span>Power BI allows you to use natural language queries by using the Q&amp;A visual. You can add synonyms to your data model to make Q&amp;A work better.</p></li>
+<li><p class="bull"><code>CALCULATE</code> is one of the most important functions in DAX, and you can use it to manipulate filters. More specifically, you can add, ignore, and update filters. <code>CALCULATE</code> is also used for context transition.</p></li>
+<li><p class="bull">The Time Intelligence family of DAX functions allows you to aggregate values across time; for instance, you can use <code>DATESYTD</code> to calculate year-to-date values, or you can use <code>DATEADD</code> to calculate a value during the same period last year. There are also functions that allow you to create semi-additive measures, such as <code>OPENINGBALANCEMONTH</code>.</p></li>
+<li><p class="bull">Power BI has a feature called Quick Measures, which allows you to define calculations without writing any DAX code.</p></li>
+<li><p class="bull">In some cases, it may be preferable to replace numeric columns with measures to reduce the size of the data model.</p></li>
+<li><p class="bull">In general, you should only load data that is necessary for analysis by removing columns or filtering rows in Power Query, especially for primary keys of fact tables.</p></li>
+<li><p class="bull">Performance Analyzer in Power BI can be useful to identify performance bottlenecks.</p></li>
+<li><p class="bull">You can improve the cardinality of columns by selecting appropriate data types, as well as summarizing data.</p></li>
+</ul>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec6">Thought experiment</h3>
+<p class="noindent">In this thought experiment, demonstrate your skills and knowledge of the topics covered in this chapter. You can find the answers in the section that follows.</p>
+<p class="indent">You are a data analyst at Contoso responsible for creating Power BI reports.</p>
+<p class="indent">Management has requested a report based on the historical data available. Based on background information and business requirements, answer the following questions:</p>
+<p class="question"><span class="gray"><strong><a id="ch02que1" href="ch02.xhtml#ch02que1a">1</a>.</strong></span> A data model has a fact table that has over 15 million rows. There is a date/time column called DateTime, which contains both date and time. You need to reduce the size of the data model. Your solution must preserve as much of the original data as possible. Which solution should you implement?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Change the data type of the DateTime column to Text.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Clean the DateTime column.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Split the DateTime column into two separate columns: one column that contains dates, and one column that contains the time portion.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Change the data type of the DateTime column to Date.</p>
+<p class="question"><span epub:type="pagebreak" id="page_106"></span><span class="gray"><strong><a id="ch02que2" href="ch02.xhtml#ch02que2a">2</a>.</strong></span> You create a visual that is supposed to show revenue by year. You use the Year column from the Calendar table and the Revenue measure from the Sale table. The formula of the Revenue measure is as follows:</p>
+<p class="codelink"><a href="ch02_images.xhtml#a106pro01" id="p106pro01">Click here to view code image</a></p>
+<pre>Revenue = SUM(Sale[Total Including Tax])</pre>
+<p class="questionp">The result is shown in <a href="ch02.xhtml#ch02fig31">Figure 2-31</a>. After checking data, you can see that in 2021, revenue was $60 million. How can you fix the visual? The solution must use the minimum amount of DAX and ensure that the Calendar table can be used with other fact tables. The solution must also take into account that you may be interested in analyzing other measures based on the Sale table.</p>
+<figure class="figure" id="ch02fig31">
+<img src="graphics/02fig31.jpg" alt="All columns show the same value, which is around 200 million." width="650" height="302"/>
+<p class="figcaption"><strong>FIGURE 2-31</strong> Revenue by Year</p>
+</figure>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Use the <code>TREATAS</code> function in DAX.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Create an active relationship between the Calendar and the Sale tables.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Merge the Sale and Calendar tables.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Create a calculated table that calculates revenue for each year.</p>
+<p class="question"><span class="gray"><strong><a id="ch02que3" href="ch02.xhtml#ch02que3a">3</a>.</strong></span> There are two roles in a data model: CentralRegion, which filters the Region table to only show the Central region, and AppliancesDepartment, which filters the Department table to only show the Appliances department. A user is a member of both roles. What will they see in a sales report?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Sales from the Central region or the Appliances department; they will see all departments in the Central region and all regions in the Appliances department.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Sales from the Central region and the Appliances department; they will only see the Appliances department within the Central region.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Only one role will be applied, whichever was configured first.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> The user will see an error message.</p>
+<p class="question"><span epub:type="pagebreak" id="page_107"></span><span class="gray"><strong><a id="ch02que4" href="ch02.xhtml#ch02que4a">4</a>.</strong></span> Your Date table currently consists only of one column called Date, which contains dates. You need to add a column to the Date table that shows month and year in the MMMM YYYY format, e.g., May 2022. What should you do? Your solution must require the minimum amount of effort and storage, and the solution must ensure that the values are sorted chronologically.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Create a calculated column that uses the <code>FORMAT</code> function.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Create a calculated column that uses the <code>EOMONTH</code> function format as MMMM YYYY.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Duplicate the Date column and apply a custom format string.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Create a new calculated table called Date – MMMM YYYY and format as MMMM YYYY.</p>
+<p class="question"><span class="gray"><strong><a id="ch02que5" href="ch02.xhtml#ch02que5a">5</a>.</strong></span> You need to write a measure that calculates the monthly balance. Which formula should you use?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> <code>CALCULATE(SUM(Inventory[Balance]), ENDOFMONTH('Date'[Date]))</code></p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> <code>CALCULATE(SUM(Inventory[Balance]), MAX(Inventory[Date]))</code></p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> <code>CALCULATE(SUM(Inventory[Balance]), DATESMTD(Inventory[Date]))</code></p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> <code>CALCULATE(MAX(Inventory[Balance]), LASTDATE(Inventory[Date]))</code></p>
+<p class="question"><span class="gray"><strong><a id="ch02que6" href="ch02.xhtml#ch02que6a">6</a>.</strong></span> You inherit a Power BI data model that contains several tables, one of which has many calculated columns that all use the <code>RELATED</code> function. You would like to reduce the size of the model. What should you do?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Append tables.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Merge tables.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Separate tables into several data models.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Hide unused columns.</p>
+<p class="question"><span class="gray"><strong><a id="ch02que7" href="ch02.xhtml#ch02que7a">7</a>.</strong></span> You created a sales report and enabled row-level security on it. There are multiple roles, each filtering the dataset to one department. Each role has a corresponding Active Directory group. The report is primarily used by sales managers, each of whom can view their department only. One sales manager has recently moved from one department to another. What should you do?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Update role membership in the Power BI service.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Change roles in Power BI Desktop.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Raise a request to remove the user from their old Active Directory group and add them to the new one.</p>
+</section>
+<section>
+<h3 class="h3" id="ch02lev1sec7"><span epub:type="pagebreak" id="page_108"></span>Thought experiment answers</h3>
+<p class="answer"><span class="gray"><strong><a id="ch02que1a" href="ch02.xhtml#ch02que1">1</a>.</strong></span> The answer is <strong>C</strong>. Splitting a date/time column into a date and a time column will keep the original data and reduces the number of distinct values in columns, resulting in a smaller data model. Changing the data type to text, as answer A suggests, won’t change the number of distinct values, and therefore won’t reduce the size of the file. Answer B, cleaning a column, removes nonprintable characters, which does not reduce the number of distinct values when applied to a column of type date/time. If you change the data type of the DateTime column to date in accordance to answer D, you’ll see the reduction in the size of the model, and you’ll lose the time portion, which goes against the requirements.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que2a" href="ch02.xhtml#ch02que2">2</a>.</strong></span> The answer is <strong>B</strong>. Creating an active physical relationship is the best solution because it requires no DAX, allows the Calendar table to be used with tables other than Sale, and you can use other measures from the Sale table together with fields from the Calendar table. While using the <code>TREATAS</code> function that answer A suggests may work, it requires using unnecessarily complex DAX, especially considering that you may be interested in analyzing measures other than Revenue. The merged table from answer C will either prevent the Calendar table from being used with other tables, or it’ll duplicate data from the Calendar table unnecessarily. Answer D would fix the graph, but it won’t solve the problem when other measures are analyzed by year.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que3a" href="ch02.xhtml#ch02que3">3</a>.</strong></span> The answer is <strong>A</strong>. Power BI supports multiple roles for a single user, and they are combined by using the union logic, so the user will see all departments within the Central region and all regions within the Appliances department.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que4a" href="ch02.xhtml#ch02que4">4</a>.</strong></span> The answer is <strong>B</strong>. If you use the <code>EOMONTH</code> function, you’ll get a calculated column that contains the end-of-month dates, and you can then apply a custom format string to show the values in the desirable format. Since the values will still be of type date, they will be automatically sorted in the correct order. If we use the <code>FORMAT</code> function, you’ll get the values in the format that you want, though they will be text values that require a sorting column—otherwise the values will be sorted alphabetically. A sorting column will use extra storage. If you apply a custom format string to a duplicated Date column, the values will look the way you want, though underneath they will still be dates, so there will be more than one value for each month-year combination. By creating a new calculated table as in answer D, you are increasing the data model size and adding unnecessary complexity.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que5a" href="ch02.xhtml#ch02que5">5</a>.</strong></span> The answer is <strong>A</strong>. <code>SUM</code> will correctly aggregate inventory balances for all dimensions except Date, since <code>ENDOFMONTH</code> will pick the last date of month to show the monthly balance. In answer B, MAX is used as a filter in <code>CALCULATE</code>, and it won’t work because it returns a scalar value instead of a table. Answer C will provide incorrect values in cases where you have daily or weekly inventory balances. Answer D won’t aggregate the balances correctly, since it will pick the maximum balance across the available values.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que6a" href="ch02.xhtml#ch02que6">6</a>.</strong></span> The answer is <strong>B</strong>. Using the <code>RELATED</code> function in a calculated column often means duplicating data. If columns need to be in the same table—for example, to build a <span epub:type="pagebreak" id="page_109"></span>hierarchy—then it may be preferable to merge tables into one. Appending tables, as in answer A, would stack them vertically and wouldn’t provide the desired output. Separating tables in several data models, as answer C suggests, will reduce the size of the model, though it won’t allow you to have the same data. Hiding unused columns as suggested in answer D doesn’t reduce the size of the model.</p>
+<p class="answer"><span class="gray"><strong><a id="ch02que7a" href="ch02.xhtml#ch02que7">7</a>.</strong></span> The answer is <strong>C</strong>. Since the security is managed by Active Directory groups, the user should be removed from their old department security group and added to their new department security group. If you add them to a new role in the Power BI service without affecting their group membership, as suggested in answer A, they’ll see sales of both old and new departments. Changing roles in Power BI Desktop (answer B) won’t help because role membership is managed outside of Power BI Desktop.<span epub:type="pagebreak" id="page_110"></span></p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

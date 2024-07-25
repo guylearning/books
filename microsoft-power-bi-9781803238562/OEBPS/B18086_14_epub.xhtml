@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer230">
+			<h1 id="_idParaDest-254"><em class="italic"><a id="_idTextAnchor263"></a>Chapter 14</em>: Managing Workspaces</h1>
+			<p>At the center of the Power BI value proposition is the ability to use it to create and communicate powerful and vivid stories about data. This enables the creation of information and value from raw data. As we have seen throughout the course of this book, Power BI Desktop on its own is a useful toolbox of capabilities for making sense of data and uncovering insights that can often get buried among many millions of rows and thousands of columns in typical enterprise data. However, when we combine Power BI Desktop with the services hosted on PowerBI.com, then we can unlock the potential for sharing information and using the dynamic and robust reporting and analytics capabilities of Power BI across large groups of users.</p>
+			<p>To share information created in Power BI with other users, Power BI has the concept of <strong class="bold">publishing</strong> content, and in this chapter, we will learn about <strong class="bold">workspaces</strong>, <strong class="bold">apps</strong>, how workspaces can be used for the <strong class="bold">development life cycle</strong>, and how we can monitor the <strong class="bold">usage</strong> and <strong class="bold">performance</strong> of our reports deployed to workspaces.</p>
+			<p>In this chapter, we are going to cover the following topics:</p>
+			<ul>
+				<li>Using workspaces</li>
+				<li>Distributing reports and dashboards</li>
+				<li>Using deployment pipelines</li>
+				<li>Monitoring workspace usage</li>
+			</ul>
+			<h1 id="_idParaDest-255"><a id="_idTextAnchor264"></a>Technical requirements</h1>
+			<p>We will need the following tools in this chapter:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC</li>
+				<li>A Power BI data model where we can apply the advanced features covered in this chapter</li>
+				<li>At least the free tier of Power BI and logging into PowerBI.com with a work or school email address</li>
+			</ul>
+			<h1 id="_idParaDest-256"><a id="_idTextAnchor265"></a>Using workspaces</h1>
+			<p>Power BI workspaces are places in the Power BI service where datasets, reports, and dashboards can <a id="_idIndexMarker714"></a>be hosted or published for multiple users to use. Power BI Desktop is typically used to publish reports and datasets to workspaces; however, the service provides a REST API in which custom applications can interact with workspaces, including the management of assets on workspaces or even publishing. There are other workspace assets, such as dashboards and dataflows, that are created within a workspace using PowerBI.com but the primary authoring tool is Power BI Desktop. </p>
+			<p>Let's next explore the ways in which workspaces can be managed through roles and permissions.</p>
+			<h2 id="_idParaDest-257"><a id="_idTextAnchor266"></a>Using workspace roles</h2>
+			<p>Workspaces <a id="_idIndexMarker715"></a>allow users to be given permission to objects stored in the workspace. Those permissions center around distinct <strong class="bold">roles</strong>, such a<a id="_idTextAnchor267"></a>s <strong class="bold">Admin</strong> (or administrator), <strong class="bold">Member</strong>, <strong class="bold">Contributor</strong>, and <strong class="bold">Viewer</strong>. These roles each have unique permissions inside the workspace. For example, the Admin role can delete content, add users, and change user roles, while Member roles cannot. <em class="italic">Figure 14.1</em> details the permissions attributed to each role. It's important to remember that products and services like Power BI change over time and it's best to look at the latest information <a id="_idIndexMarker716"></a>available in the documentation here: <a href="https://docs.microsoft.com/en-US/power-bi/collaborate-share/service-roles-new-workspaces#workspace-roles">https://docs.microsoft.com/en-US/power-bi/collaborate-share/service-roles-new-workspaces#workspace-roles</a>.</p>
+			<div>
+				<div id="_idContainer216" class="IMG---Figure">
+					<img src="image/B18086_14_01.jpg" alt="Figure 14.1 – Workspace roles and permissions
+" width="1617" height="1500"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.1 – Workspace roles and permissions</p>
+			<p>1 Additional permissions will be needed on the gateway; the scope of this table is the permissions within the workspace.</p>
+			<p>2 Copying reports and using datasets across workspaces require build permission in the source workspace dataset. The simplest way to add this is via the Contributor role.</p>
+			<p>3 Admin users <a id="_idIndexMarker717"></a>can allow contributors to update the app for a workspace. If this is enabled, contributors still cannot publish a new app or change who has permission to use it.</p>
+			<p>This table in <em class="italic">Figure 14.1</em> will help you when it comes to understanding the differences between the roles and how permissions within a workspace can be set up so that administrators have the permissions they need, while members or viewers have fewer permissions.</p>
+			<p>Next, we'll look at how workspace licensing works so we can understand some important differences between Power BI free, Pro, and Premium with respect to workspaces.</p>
+			<h2 id="_idParaDest-258"><a id="_idTextAnchor268"></a>Workspace licensing</h2>
+			<p>Workspaces store <a id="_idIndexMarker718"></a>and host data for users and this takes server resources to achieve. So, for most organizations, this will involve <strong class="bold">licensing</strong> costs. Power BI does have a free tier, but it is limited when it comes to capabilities as many of the advanced <a id="_idIndexMarker719"></a>features discussed in this chapter require either <strong class="bold">Pro</strong> or <strong class="bold">Premium licensing</strong>. Most <a id="_idIndexMarker720"></a>organizations using Power BI will opt for paid licensing after seeing the value they can get from using the advanced capabilities of the Power BI service.</p>
+			<p>Workspaces are accessible via PowerBI.com; however, they can be hosted in a shared <strong class="bold">Software-as-a-Service</strong> (<strong class="bold">SaaS</strong>) environment, or they can be hosted in dedicated environments. Dedicated <a id="_idIndexMarker721"></a>environments are called <strong class="bold">Premium</strong> and have various capacity sizes, or <strong class="bold">SKUs</strong>, as shown in <em class="italic">Figure 14.2</em>:</p>
+			<div>
+				<div id="_idContainer217" class="IMG---Figure">
+					<img src="image/B18086_14_02.jpg" alt="Figure 14.2 – Power BI Premium capacity SKUs
+" width="1393" height="543"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.2 – Power BI Premium capacity SKUs</p>
+			<p>The table in <em class="italic">Figure 14.2</em> has been adapted from the table in the Power BI documentation, available at this website: https://docs.microsoft.com/en-us/power-bi/admin/service-premium-what-is#capacity-nodes.</p>
+			<p>As you can see in <em class="italic">Figure 14.2</em>, each Premium capacity SKU has different <strong class="bold">virtual cores</strong>, or <strong class="bold">vCores</strong>, and memory <a id="_idIndexMarker722"></a>characteristics that will be dedicated to hosting workspaces. <em class="italic">P</em>-type SKUs are for general enterprise reporting or embedding <a id="_idIndexMarker723"></a>Power BI reports for your organization, while <em class="italic">EM</em> SKUs are for organizational report embedding. Some SKUs must be purchased through volume licensing, which we will not cover in this book. It's just important to understand that there are different types and sizes of Power BI Premium capacity SKUs.</p>
+			<p>Power BI <strong class="bold">Premium Per User</strong> (<strong class="bold">PPU</strong>) allows <a id="_idIndexMarker724"></a>workspaces to be hosted in the shared SaaS environment but dedicated resources are given to the specific Power BI workspaces designated for that user. Between Premium capacity and PPU, there are multiple options to meet the needs of organizations, while at the same time unlocking advanced features and capabilities.</p>
+			<p>Premium relates to workspaces because workspaces will be hosted either on the shared environment or a Premium capacity or will be identified as having PPU. When this happens, there <a id="_idIndexMarker725"></a>will be additional capabilities unlocked for the workspace, which will be covered in later sections, such as monitoring usage and performance.</p>
+			<p>Let's next look at how workspaces can help with distributing reports and dashboards.</p>
+			<h1 id="_idParaDest-259"><a id="_idTextAnchor269"></a>Distributing reports and dashboards</h1>
+			<p>Within a Power BI workspace, we have datasets, reports, dashboards, and other artifacts that <a id="_idIndexMarker726"></a>make up a Power BI app. When reports and dashboards (or even datasets) get created and you want to enable other users within your organization <a id="_idIndexMarker727"></a>to use them and get value from what has been created, you'll want to package these together as a Power BI app to make it easy to use by others in your organization. Workspaces that are published as an app can be placed on the user's <strong class="bold">home screen</strong>, given a logo and description, as well as be targeted to specific users or groups of users. For example, if there are multiple teams from finance and marketing that build datasets, reports, and dashboards for their respective teams, these sets of artifacts are also probably important to the CEO and CFO, who would like to consume a subset of the reports and dashboards from these workspaces in a very tailored way. </p>
+			<p>Let's explore how we'd create a Power BI app from an existing workspace so we can distribute the reports and dashboards in a specific way. </p>
+			<h2 id="_idParaDest-260"><a id="_idTextAnchor270"></a>Creating a Power BI app</h2>
+			<p>At a high level, the <a id="_idIndexMarker728"></a>steps involved with creating a Power BI app are as follows:</p>
+			<ol>
+				<li>Navigate to the workspace that contains the content you'd like to distribute as an app.</li>
+				<li>Click the <strong class="bold">Create app</strong> button in the upper right-hand corner of the page.</li>
+				<li>Provide the name and description of the app to be published.</li>
+				<li>Provide optional information, such as the app logo, theme color, contact information, and support URL.</li>
+				<li>Configure navigation for the app by clicking the <strong class="bold">Navigation</strong> link at the top of the page.</li>
+				<li>Configure permissions for the app by clicking the <strong class="bold">Permissions</strong> link at the top of the page.</li>
+				<li>Click <strong class="bold">Publish app</strong> in the bottom right-hand corner of the page.</li>
+			</ol>
+			<p>Next, we will look <a id="_idIndexMarker729"></a>at each of the steps to publish a Power BI app in detail.</p>
+			<p>First, we'll need to start from an existing workspace that contains the reports and dashboard we'd like to distribute. This will be on the PowerBI.com service and will look something like <em class="italic">Figure 14.3</em>:</p>
+			<div>
+				<div id="_idContainer218" class="IMG---Figure">
+					<img src="image/B18086_14_03.jpg" alt="Figure 14.3 – A Power BI workspace with reports and dashboards
+" width="1046" height="580"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.3 – A Power BI workspace with reports and dashboards</p>
+			<p>After clicking the <strong class="bold">Create app</strong> button, we'll see a wizard-like menu that will walk us through the creation of Power BI from the assets in this workspace.</p>
+			<p>The first things <a id="_idIndexMarker730"></a>we need to provide to create the app are the name and description. After that, there are optional values, such as the URL to support, an app logo, the theme color, and contact information to go along with the app. These values are important because for any published data assets within an organization, it's important to know how to get support for that dataset as well as who is publishing the dataset (in this case, within the app), while the color and logo are important for building the brand of the app within the organization and to help users connect with the information presented in the app.</p>
+			<div>
+				<div id="_idContainer219" class="IMG---Figure">
+					<img src="image/B18086_14_04.jpg" alt="Figure 14.4 – Creating a Power BI app
+" width="1044" height="922"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.4 – Creating a Power BI app</p>
+			<p>The next <a id="_idIndexMarker731"></a>configuration for the app includes the navigation. At the top of the configuration page, we can click the <strong class="bold">Navigation</strong> tab to set the preferences for navigating the content of the workspace.</p>
+			<p><em class="italic">Figure 14.5</em> shows the navigation configuration using the new navigation builder. The navigation screen is where we can change the order of the reports to be shown in the app, as well as hiding some reports or dashboards so they won't be included in the app:</p>
+			<div>
+				<div id="_idContainer220" class="IMG---Figure">
+					<img src="image/B18086_14_05.jpg" alt="Figure 14.5 – Configuration of the app navigation
+" width="1097" height="943"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.5 – Configuration of the app navigation</p>
+			<p>In our previous example, the finance team has been publishing reports and making dashboards in <a id="_idIndexMarker732"></a>this workspace, but for the C-suite audience, maybe we don't need reports showing detailed financial information and instead only need to distribute the high-level information that the C-suite audience will need.</p>
+			<p>Hovering over each item on the left-hand side of the screen will show the up and down arrows as well as the eye icon, which can be used to hide that item. Using the <strong class="bold">+ New</strong> button, it's also possible to create sections that reports and dashboards can be grouped into as well as links to external content, as shown in <em class="italic">Figure 14.6</em>:</p>
+			<div>
+				<div id="_idContainer221" class="IMG---Figure">
+					<img src="image/B18086_14_06.jpg" alt="Figure 14.6 – Organizing workspace content inside the app navigation configuration
+" width="824" height="478"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.6 – Organizing workspace content inside the app navigation configuration</p>
+			<p>Lastly, you need <a id="_idIndexMarker733"></a>to review the permissions that the app will have once it's published. Click the <strong class="bold">Permissions</strong> tab at the top of the screen to specify the users or groups that will have access to the app or that it will be available to all users in the organization. </p>
+			<p>This is also where you specify downstream permissions that might need to change to the workspace and the containing assets, as well as giving (or revoking) permissions to copy reports in the app or allow sharing of the app and underlying assets.</p>
+			<div>
+				<div id="_idContainer222" class="IMG---Figure">
+					<img src="image/B18086_14_07.jpg" alt="Figure 14.7 – Permissions configuration for a Power BI app
+" width="659" height="432"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.7 – Permissions configuration for a Power BI app</p>
+			<p><em class="italic">Figure 14.7</em> shows how <a id="_idIndexMarker734"></a>permissions options can be set. You'll notice the option for <strong class="bold">Install this app automatically.</strong> is grayed out. This is disabled by default (as shown) but can be enabled in the Power BI admin portal by enabling it in <strong class="bold">Tenant settings</strong> | <strong class="bold">Content pack and app settings</strong> | <strong class="bold">Push apps to end users</strong>.</p>
+			<div>
+				<div id="_idContainer223" class="IMG---Figure">
+					<img src="image/B18086_14_08.jpg" alt="Figure 14.8 – Enabling Push apps to end users in the Power BI admin portal
+" width="1044" height="662"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.8 – Enabling Push apps to end users in the Power BI admin portal</p>
+			<p>Once this default setting has been changed in the admin portal, as shown in <em class="italic">Figure 14.8</em>, then the option to install the app automatically for users will be available. Be aware that this <a id="_idIndexMarker735"></a>option is only available if access to the app is for specific individuals or groups. In our example of publishing the app to the C-suite, we'd want to select a group that contains only the C-suite users and then install the app automatically so this published app is easily accessible to the end users.</p>
+			<p>Power BI apps are a useful way to help end users consume, find, and use reports and dashboards to answer important business questions. Apps provide content creators with a way to custom-tailor the content for the appropriate audience to increase impact.</p>
+			<p>In the next section, we'll see how workspaces are also helpful for the development life cycle.</p>
+			<h1 id="_idParaDest-261"><a id="_idTextAnchor271"></a>Using deployment pipelines</h1>
+			<p>In software <a id="_idIndexMarker736"></a>development best practices, you never want to mix development work with work that has been completed, is of a known good quality, and is used for production. To do this, most organizations will have separate environments for development and production. Some organizations will have more environments in the middle, such as specific kinds of testing or preproduction. By securing who can access production environments, it will protect the code or artifacts deployed there from the introduction of software bugs or the running of code that has not been fully tested. </p>
+			<p>Most organizations will also use these multiple environments to set up specific teams of people who will be dedicated to the function of each environment. For example, only developers creating <a id="_idIndexMarker737"></a>new artifacts or code will have access to the development environment, only testers will have access to the test environment, and only production operations teams will have access to the production environment. This <a id="_idIndexMarker738"></a>is called <strong class="bold">separation of duties</strong>. By using separation of duties, the organization can help ensure that only properly developed and fully tested code or artifacts get used in production environments.</p>
+			<p>Power BI uses workspaces to help in the deployment process. Deployment pipelines allow you to set up a specific workspace for development, one for test and one for production. As we've already learned when workspaces are created, specific users or groups need to be added to them and a role defined for the users or groups. This provides the separation of duties capability that is required for proper development and deployment practices. </p>
+			<p>In addition to the workspace access capabilities, deployment pipelines in Power BI also provide a way to clone the content from one workspace to another. Connections within a workspace stay the same, which allows you to set up connections to development datasets (which tend to be smaller for the sake of storage and efficiency during development), while keeping testing and production datasets (which tend to be larger to serve production needs) intact in the testing and production workspaces.</p>
+			<p>By using deployment pipelines, Power BI developers can gain the benefits of software development best practices, such as testing out ideas in development environments before deploying to production, and organizations can gain peace of mind that production environments can be protected with separation of duties and putting proper testing in place before deploying to production.</p>
+			<p>Let's learn how we can use Power BI deployment pipelines in the next section.</p>
+			<h2 id="_idParaDest-262"><a id="_idTextAnchor272"></a>Creating a deployment pipeline</h2>
+			<p>To create a deployment pipeline for Power BI, log in to PowerBI.com with your work or school account. We need <a id="_idIndexMarker739"></a>to be aware that deployment pipelines require the workspaces used to be deployed to either a Premium capacity or for PPU to be enabled in the workspace.</p>
+			<p>After logging into PowerBI.com, create or verify the workspaces that you'd like to use for each of the stages (development, test, and production). Be sure that these workspaces have been identified and click <strong class="bold">Deployment pipelines</strong> in the right-hand menu, as shown in <em class="italic">Figure 14.9</em>:</p>
+			<div>
+				<div id="_idContainer224" class="IMG---Figure">
+					<img src="image/B18086_14_09.jpg" alt="Figure 14.9 – Deployment pipelines in the Power BI menu
+" width="236" height="540"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.9 – Deployment pipelines in the Power BI menu</p>
+			<p>Deployment pipelines will not be available on the menu if you are not a Power BI Pro user and if your organization has not deployed Premium capacity or PPU. Deployment pipelines also require the new workspace (rather than the classic workspace) experience within Power BI.</p>
+			<p>On the <strong class="bold">Deployment pipelines</strong> screen, click the <strong class="bold">Create pipeline</strong> button. Provide a name and optional description for the pipeline and click <strong class="bold">Create</strong>. </p>
+			<p>Next, you will see the main deployment pipelines configuration screen, as shown in <em class="italic">Figure 14.10</em>. This is where you will select which workspace is to be used for the development, testing, and production stages. To use a workspace for a deployment stage, you must <a id="_idIndexMarker740"></a>be an admin of the workspace, it must not be assigned to another pipeline, and the workspace must reside on a Premium capacity or PPU license. Additionally, the workspace cannot contain Power BI samples (https://docs.microsoft.com/power-bi/create-reports/sample-datasets) and you must have the workspace members' permissions for adjacent stage workspaces.</p>
+			<div>
+				<div id="_idContainer225" class="IMG---Figure">
+					<img src="image/B18086_14_10.jpg" alt="Figure 14.10 – Deployment pipelines configuration
+" width="1623" height="795"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.10 – Deployment pipelines configuration</p>
+			<p>On the deployment pipelines configuration page, you simply select the workspace to use for each stage from the drop-down list. Once the workspace is selected for a deployment stage, you click the <strong class="bold">Assign a workspace</strong> button and the workspace is assigned to the stage.</p>
+			<p>After this happens, the service checks the content of each stage workspace. If multiple stages are set up, then you'll also see the service identify differences between the stages. If both stages have the same content, then you'll see the symbol shown in <em class="italic">Figure 14.11</em> between the stages shown on the configuration page:</p>
+			<div>
+				<div id="_idContainer226" class="IMG---Figure">
+					<img src="image/B18086_14_11.jpg" alt="Figure 14.11 – Workspace stages are in sync
+" width="178" height="113"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.11 – Workspace stages are in sync</p>
+			<p>If there are <a id="_idIndexMarker741"></a>differences between the stages, then you will see the symbol shown in <em class="italic">Figure 14.12</em> between the stages shown on the configuration page:</p>
+			<div>
+				<div id="_idContainer227" class="IMG---Figure">
+					<img src="image/B18086_14_12.jpg" alt="Figure 14.12 – Workspace stages are not in sync
+" width="138" height="161"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.12 – Workspace stages are not in sync</p>
+			<p>When stages are not in sync and there are changes between them, the pipeline page makes it easy to see the differences by clicking <strong class="bold">Compare</strong>.</p>
+			<p><strong class="bold">Compare</strong> will show the updates going from development to test or from test to production. This is helpful because there may be many reports, datasets, dataflows, or dashboards in a workspace and this tool will highlight the differences showing <strong class="bold">New</strong>, <strong class="bold">Different</strong>, and <strong class="bold">Missing from</strong>. It's helpful to have these highlights when verifying what needs to be reviewed between stages before deploying onward. In <em class="italic">Figure 14.13</em>, we can see that there are two new dashboards, one new report and a report and dataset, that are different from the test deployment stage. These are content items that you would need to review before moving from the development to the testing stages. The same process would happen between the testing and production stages:</p>
+			<div>
+				<div id="_idContainer228" class="IMG---Figure">
+					<img src="image/B18086_14_13.jpg" alt="Figure 14.13 – Deployment pipeline showing changes between development and test
+" width="1650" height="901"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.13 – Deployment pipeline showing changes between development and test</p>
+			<p>Once all content has been reviewed and established for your organization, you can move the <a id="_idIndexMarker742"></a>content from development to testing by clicking the <strong class="bold">Deploy to test</strong> button. If there are items identified as <strong class="bold">Different</strong>, you will see a warning about replacing the content items in the next stage (testing, for example). When this has been confirmed by clicking <strong class="bold">Continue</strong>, then the process of cloning the content from the development stage workspace to the testing stage workspace will begin. </p>
+			<h2 id="_idParaDest-263"><a id="_idTextAnchor273"></a>Unassigning a workspace to a deployment pipeline stage</h2>
+			<p>It is possible <a id="_idIndexMarker743"></a>to unassign a workspace from a deployment pipeline stage. To do this, click the menu for the stage and select <strong class="bold">Unassign workspace</strong>. The stage will need to be empty if you'd like to reassign the same workspace to this stage.</p>
+			<h2 id="_idParaDest-264"><a id="_idTextAnchor274"></a>Automating deployment pipelines</h2>
+			<p>Most software <a id="_idIndexMarker744"></a>development teams utilize tools to automate processes and achieve continuous integration and continuous deployment. It's possible to use automation with Power BI deployment pipelines as well. There are multiple ways automation can be achieved with deployment pipelines.</p>
+			<p>For development teams that use Azure DevOps, there is either the open source extension for Power BI development pipelines (<a href="https://github.com/microsoft/powerbi-azure-pipelines-extensions">https://github.com/microsoft/powerbi-azure-pipelines-extensions</a>) or the use of PowerShell to automate the process. You can find PowerShell examples in the Power BI developer samples GitHub repository (<a href="https://github.com/microsoft/PowerBI-Developer-Samples/">https://github.com/microsoft/PowerBI-Developer-Samples/</a>).</p>
+			<p>It's also possible <a id="_idIndexMarker745"></a>to automate deployment pipeline operations using the Power BI REST API (<a href="https://docs.microsoft.com/rest/api/power-bi/pipelines/">https://docs.microsoft.com/rest/api/power-bi/pipelines/</a>). The REST API makes it possible to use many tools and processes, including custom applications, to facilitate the pipeline processes.</p>
+			<p>We will not <a id="_idIndexMarker746"></a>go into depth on how to use these capabilities but for the purpose of the PL-300 exam, it is important to know these capabilities exist and how you would use them as an overall development process.</p>
+			<p>We will now look at how we can monitor the usage and performance of Power BI workspaces.</p>
+			<h1 id="_idParaDest-265"><a id="_idTextAnchor275"></a>Monitoring workspace usage</h1>
+			<p>Part of managing deployed workspaces includes understanding how the content they contain is used in the organization. Understanding how content such as reports and dashboards <a id="_idIndexMarker747"></a>are used can help provide feedback on their improvement and the value the organization users get from them. For example, if a set of enterprise reports is created, tested, and deployed to production but never used or usage drops off, then it's possible something is missing; perhaps the analysis is correct but the way the information is presented in the report visuals make it less useful, so users stop using the reports. Knowing how users use reports that have been deployed is <a id="_idIndexMarker748"></a>a key part of managing Power BI workspaces. <strong class="bold">Usage metric reports</strong> are the way the Power BI service provides insight into how end users interact with your workspace content.</p>
+			<h2 id="_idParaDest-266"><a id="_idTextAnchor276"></a>Using usage reports</h2>
+			<p>Usage for <a id="_idIndexMarker749"></a>reports and dashboards <a id="_idIndexMarker750"></a>are surfaced with the help of reports that are generated by the Power BI service. Usage metrics reports can be generated by selecting the <strong class="bold">View usage metrics</strong> report under the menu button for each report or dashboard, as shown in <em class="italic">Figure 14.14</em>:</p>
+			<div>
+				<div id="_idContainer229" class="IMG---Figure">
+					<img src="image/B18086_14_14.jpg" alt="Figure 14.14 – Menu for a Power BI report 
+" width="341" height="676"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 14.14 – Menu for a Power BI report </p>
+			<p>Usage metrics reports are generated by the Power BI service and at the time of writing contain data going back 30 days of usage history for new workspaces. When these reports are generated by the service, they create Power BI datasets and are accessible via the built-in reports as well as through the <strong class="bold">Analyze with Excel</strong> capability of Power BI. This allows for customization of reporting from the dataset.</p>
+			<p>Usage metrics reports include how many times reports are used or opened, unique viewers of reports, total report page views and by date, how end users arrived at the reports (via the workspace, shared from another user, or via an app), the time it takes for reports to open, the overall performance for the day and week, which web browsers are used, and many other metrics that are key to understanding the usability and value of the reports to the end users.</p>
+			<p>Usage metrics reporting requires Power BI Pro or PPU licensing to view. However, usage data is collected for all users of the reports. Additionally, Power BI administrators can enable or <a id="_idIndexMarker751"></a>disable usage metrics for <a id="_idIndexMarker752"></a>content creators, and per-user data also needs to be enabled in the admin portal.</p>
+			<p>Refining and improving your Power BI solutions requires a good understanding of how users are using the content available to them. Usage metrics reporting is an easy-to-use and helpful way of gathering these insights.</p>
+			<h1 id="_idParaDest-267"><a id="_idTextAnchor277"></a>Summary</h1>
+			<p>In this chapter, we learned about managing workspaces in Power BI.</p>
+			<p>We learned how user roles work in workspaces and how roles provide a way to manage users and groups within a workspace to ensure proper access and permissions are available to users as needed. We also learned how workspaces can have different kinds of licensing that will enable different advanced or enterprise capabilities. We learned that workspaces can be assigned different amounts of resources for hosting in a Premium capacity. </p>
+			<p>We learned how workspaces can be packaged as a Power BI app, which helps end users find and utilize the content created in reports and dashboards. Apps provide a way to curate content and distribute it among organizational users.</p>
+			<p>We also learned how software development best practices can be implemented using deployment pipelines. We learned that deployment pipelines use the basic unit of organization provided by workspaces.</p>
+			<p>Lastly, we discovered how important it is to understand and use the usage metric capabilities of the Power BI service to gain insights into how end users use the content being created in Power BI. Understanding how users use content is key to improving over time and providing the right value for the needs of the organization.</p>
+			<p>In the next chapter, we will look at how we can apply some best practices to managing Power BI datasets.</p>
+			<h1 id="_idParaDest-268"><a id="_idTextAnchor278"></a>Questions</h1>
+			<ol>
+				<li value="1">Advanced capabilities of Power BI may require a licensed version of Power BI. Licensed versions of Power BI include:<ol><li>Premium and Advanced</li><li>Plus and Pro</li><li>Power BI 2022</li><li>Pro and Premium</li></ol></li>
+				<li>Which workspace role has permissions to delete a workspace?<ol><li>Owner</li><li>Admin</li><li>Member</li><li>Contributor</li></ol></li>
+				<li>Which stages are used in Power BI deployment pipelines?<ol><li>Development and production</li><li>Development, test, and production</li><li>Development, test, preproduction, and production</li><li>Development, integration testing, user acceptance testing, and production</li></ol></li>
+				<li>How many days of history will usage metrics reporting show?<ol><li>90</li><li>60</li><li>30</li><li>Unlimited</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

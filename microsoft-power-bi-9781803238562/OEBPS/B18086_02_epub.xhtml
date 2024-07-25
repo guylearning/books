@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer012">
+			<h1 id="_idParaDest-27"><em class="italic"><a id="_idTextAnchor025"></a>Chapter 2</em>: Connecting to Data Sources</h1>
+			<p>In most organizations, data tends to be stored in various data stores, such as filesystems, proprietary and open source databases, or even distributed filesystems for high-performance compute platforms. Often the data has meaning and is useful while being stored in the source systems, such as a transactional database that keeps track of sales from a group of point-of-sale systems. In this example, data is stored in a relational database that is tuned to keep track of each sale. For analytics purposes, we will likely want to use this data in concert with data from a separate system that tracks the inventory of items we have for sale. The inventory will likely be a different relational database, possibly from another technology vendor. To better understand whether we are stocking too many items (or not enough) for sale, we need to create a view of the data from both sales and inventory databases. </p>
+			<p>Over the past few decades, this has been the goal of data warehousing – to allow data from all over an organization to be combined to help answer meaningful business questions with the goal of helping organizations to run more efficiently, and to help them enable further transformations to help in the competing marketplace. The data warehousing industry exists to help make this easier, but this is always an increasing challenge as new technologies for data storage and processing arise. </p>
+			<p>The end goal of data warehousing is to allow businesses to have a 360-degree view of their business, and to do that not only do data warehouses need to connect to disparate data sources but so do BI and other reporting tools. Many times, data is stored outside the enterprise data warehouse that also needs to be incorporated into the analysis. The rise of more popular <strong class="bold">Software-as-a-Service</strong> (<strong class="bold">SaaS</strong>) providers also means that data can live in the cloud, and it also needs to be incorporated into BI and reporting analysis in order to provide the whole picture to the business decision makers.</p>
+			<p>Microsoft Power BI provides some of the most comprehensive connectivity capabilities on the BI reporting and analytics tools on the market. This means Power BI can connect to disparate data sources for use in creating reports and dashboards.</p>
+			<p>In this chapter, we're going to cover the following topics:</p>
+			<ul>
+				<li>Identifying data sources</li>
+				<li>Connecting to data sources</li>
+				<li>Power BI datasets</li>
+				<li>Power BI dataflows</li>
+				<li>Query performance tuning</li>
+				<li>Advanced options (what-if parameters, DAX parameters, PBIDS files, and XMLA endpoints)</li>
+			</ul>
+			<h1 id="_idParaDest-28"><a id="_idTextAnchor026"></a>Technical requirements</h1>
+			<p>The following are the prerequisites in order to complete the work in this chapter:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC.</li>
+				<li>Access to some data to use. We're also providing synthetic data that can be used. This is <a id="_idTextAnchor027"></a>available in the GitHub repository for this book here: <a href="https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data">https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data</a>.</li>
+			</ul>
+			<h1 id="_idParaDest-29"><a id="_idTextAnchor028"></a>Identifying data sources</h1>
+			<p>In this section, we will review the various data source options that Power BI provides.</p>
+			<h2 id="_idParaDest-30"><a id="_idTextAnchor029"></a>Local data sources, files, and databases</h2>
+			<p>Most BI developers<a id="_idIndexMarker023"></a> will work from a local Windows PC. Usually, that PC is not also running<a id="_idIndexMarker024"></a> an enterprise database or functioning as a corporate file server. Power BI provides<a id="_idIndexMarker025"></a> the ability to connect local data on your PC just the same as if the data is stored on a corporate file server (using network connectivity or Windows file share) or if you're running a development server on your local machine. For ad hoc and testing purposes, many users will also want to import data files, such as CSV or Excel, from their local PC as well. Power BI supports various formats and makes it easy to import local files/data.</p>
+			<p>You can also import a folder of files or a Microsoft SharePoint folder of files. </p>
+			<p>Power BI also supports connecting to databases in the most popular databases. Most enterprise organizations run their business using data stored in databases, so sourcing data from a database is a common occurrence using Power BI. Some of the most popular databases include Microsoft SQL Server, Oracle Database, and SAP. </p>
+			<p>To see a complete list of supported files and databases, be sure to review the official documentation at <a href="https://docs.microsoft.com/power-bi/connect-data/power-bi-data-sources">https://docs.microsoft.com/power-bi/connect-data/power-bi-data-sources</a>.</p>
+			<h2 id="_idParaDest-31"><a id="_idTextAnchor030"></a>Cloud and SaaS data sources </h2>
+			<p>In recent years, as more organizations<a id="_idIndexMarker026"></a> have seen the value and adopted the cloud<a id="_idIndexMarker027"></a> to help digitally transform their business, support for common<a id="_idIndexMarker028"></a> cloud databases and SaaS providers has also been very important. Power BI<a id="_idIndexMarker029"></a> supports a wide range of Microsoft Azure cloud services, including Azure Synapse Analytics and Amazon Redshift.</p>
+			<p>Outside of these dedicated connectors to databases and cloud services, Power BI also includes capabilities that enable connectivity using open or standards-based solutions, such as ODBC, REST API, and OData.</p>
+			<p>To see a complete list of supported<a id="_idIndexMarker030"></a> cloud and SaaS data sources, check the official documentation at <a href="https://docs.microsoft.com/power-bi/connect-data/power-bi-data-sources">https://docs.microsoft.com/power-bi/connect-data/power-bi-data-sources</a>.</p>
+			<p>It's important for BI tools to connect to the data sources where data is stored. If an organization uses a data store that the BI tool does not support, then the data needs to be moved to a supported data store. For the exam, it is important to know some of the common data sources supported by Power BI. The wide connectivity to data has helped Power BI become one of the leading BI tools on the market today.</p>
+			<h1 id="_idParaDest-32"><a id="_idTextAnchor031"></a>Connecting to data sources</h1>
+			<p>You may want to include data<a id="_idIndexMarker031"></a> from a variety of different sources, each of which has its own methods of connecting. We'll look at a couple of types of data sources in this section.</p>
+			<h2 id="_idParaDest-33"><a id="_idTextAnchor032"></a>On-premises data gateway</h2>
+			<p>Since Power BI lives as both a desktop tool<a id="_idIndexMarker032"></a> and an online SaaS that provides the hosting of reports and dashboards, it is important to connect to non-online-hosted data sources as well. This is accomplished with the <strong class="bold">on-premises data gateway</strong> (referred to as the data gateway). The data gateway is a free download from the Microsoft Download Center that works with the online Power BI service to enable this connectivity on local resources from the cloud. </p>
+			<p>It is important to understand<a id="_idIndexMarker033"></a> how the on-premises data gateway is different from other gateway software that may have been used in the past. The data gateway software runs on a local Windows computer, and it needs to have an internet connection to connect to an intermediary<a id="_idIndexMarker034"></a> Azure Service Bus. This encrypted connection to <strong class="bold">Azure Service Bus</strong> (provided by the Power BI service) allows the data gateway to work with the Power BI service, without needing any firewall ports to be opened. This allows a cloud service to connect to the local network. Most enterprise network security teams want to maintain or consistently improve the security posture of their organization and using the on-premises data gateway architecture will help those teams meet security goals as well. </p>
+			<p>Please note that the data gateway supports different data sources in different ways. Some sources are supported and some are not; it's important to make note of the sources you intend to use and check for the needed support, either directly from the Power BI service or using the on-premises data gateway.</p>
+			<div>
+				<div id="_idContainer007" class="IMG---Figure">
+					<img src="image/B18086_02_001.jpg" alt="Figure 2.1 – Architecture of the on-premises data gateway
+" width="1109" height="1011"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 2.1 – Architecture of the on-premises data gateway</p>
+			<p>A data gateway can function<a id="_idIndexMarker035"></a> in two modes: <strong class="bold">personal mode</strong> and <strong class="bold">standard mode</strong>. Standard mode<a id="_idIndexMarker036"></a> is typically used<a id="_idIndexMarker037"></a> in organizations on server hardware and provides DirectQuery and live connection to Analysis Services support. Standard mode, however, must run as a service on the computer and requires administrator privileges, while personal<a id="_idIndexMarker038"></a> mode does not. When<a id="_idIndexMarker039"></a> running in standard<a id="_idIndexMarker040"></a> mode, this data<a id="_idIndexMarker041"></a> gateway also<a id="_idIndexMarker042"></a> works with <strong class="bold">Azure Analysis Services</strong>, <strong class="bold">Azure Logic Apps</strong>, <strong class="bold">Power Apps</strong>, <strong class="bold">Power Automate</strong>, and <strong class="bold">Power BI dataflows</strong>.</p>
+			<p>The data gateway<a id="_idIndexMarker043"></a> is available for download from <a href="https://powerbi.microsoft.com/gateway/">https://powerbi.microsoft.com/gateway/</a>.</p>
+			<p>Anytime Power BI connects to a data source (directly or with the on-premises data gateway), it uses one of two types of queries. Next, we'll look at query types. </p>
+			<h2 id="_idParaDest-34"><a id="_idTextAnchor033"></a>Exploring query types</h2>
+			<p>When Power BI connects to any data source, it makes<a id="_idIndexMarker044"></a> one of two types of connections or queries.</p>
+			<h3>DirectQuery</h3>
+			<p>The first type is called <strong class="bold">DirectQuery</strong>, or a live connection to the data. This means that Power BI is storing credentials and a connection<a id="_idIndexMarker045"></a> string to the data source. For example, this could be the relational database<a id="_idIndexMarker046"></a> storing inventory data used in a warehouse. This DirectQuery connection allows Power BI to query the inventory database and retrieve information such as the tables and views available in the source database, the schema of those tables and views, as well as records contained in the tables and views. Once a connection has been made, the data retrieved is used and displayed by Power BI. DirectQuery is useful when the underlying data has the potential to be changed quickly and the most up-to-date information is needed for use in Power BI reports and dashboards. For example, if a real-time inventory system has been implemented in the warehouse and the inventory system itself keeps an up-to-the-second record of goods for sale, then it's possible the purchasing team may also need up-to-the-second reports that allow them to make the most informed decisions when it comes to refilling stock in the warehouse.</p>
+			<h3>Import Query</h3>
+			<p>The second type of connection is called <strong class="bold">Import Query</strong>. Import will connect to a data source and store the same credentials<a id="_idIndexMarker047"></a> and connection string, but it will also import the data and store that in memory<a id="_idIndexMarker048"></a> in Power BI (either the Desktop authoring tool or the Power BI online service). Import is useful when all the necessary data can fit into memory, but can also dramatically speed up the performance of reports inside Power BI since the underlying data source does not need to be queried for each report/dashboard view. Import Query makes Power BI do all the work (storing the data as well as calculating fields, rendering the dynamic report visuals, and so on), while DirectQuery allows Power BI to share some of this work with the underlying data source using a pushdown query. Import Query is generally the best place to start (from a performance perspective) as Power BI can optimally store data in its own internal <strong class="bold">VertiPaq</strong> format when using<a id="_idIndexMarker049"></a> Import Query. VertiPaq is the proprietary storage engine inside Power BI and is highly optimized for data compression as well as calculations needed to render reports. For example, if a business analyst wants to create a new report for management and the data comes from four or five different Microsoft Excel files, then it's likely that Import Query should be used. The performance of the report will be optimized since Power BI is handling the queries/calculations, storage of the data imported from Excel, and rendering of the visuals. This means no network latency and no dependency upon external data storage.</p>
+			<p>Import Query also has an additional feature that is important to note: it allows data to be refreshed. When using Power BI Desktop, this can be completed by clicking the <strong class="bold">Refresh</strong> button but once a report is published<a id="_idIndexMarker050"></a> to the Power BI service, then it's possible to schedule a refresh at a regular<a id="_idIndexMarker051"></a> or timed interval. This is useful when reports need to import data into Power BI to provide the best report performance experience, but also need to show updated data (that doesn't need to be up to the second). There are limitations on the number of times data can be refreshed by the Power BI service depending on the capacity where the report is deployed. For many organizations, there is a need for fresh data in reports and dashboards, but it doesn't need to be up to the second, so for those use cases, a daily or few-times-a-day refresh will work and make for an excellent report viewing experience.</p>
+			<p>It should be noted that DirectQuery and Import Query support different data sources in different ways. For example, when the data source is a CSV file stored on a local filesystem, it must use Import Query because there is no underlying query engine to which Power BI can send a pushdown query. CSV data will get imported into the Power BI storage engine and used for reporting. Upon clicking <strong class="bold">Refresh</strong>, this data will again be pulled by Power BI from the source CSV file into the Power BI storage<a id="_idIndexMarker052"></a> engine. Another example would be an <strong class="bold">Azure Synapse Analytics SQL dedicated pool</strong> (a common cloud-based data warehouse); in this case, the creator of the Power BI report has the option to choose either DirectQuery or Import Query. Knowing the trade-offs between DirectQuery and Import Query is important in this case, as they will have an impact on both the Power BI report and the underlying data source.</p>
+			<div>
+				<div id="_idContainer008" class="IMG---Figure">
+					<img src="image/B18086_02_002.jpg" alt="Figure 2.2 – Query performance versus freshness comparison 
+" width="1636" height="215"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 2.2 – Query performance versus freshness comparison </p>
+			<p>For example, if Import Query uses Synapse Analytics SQL dedicated as a source, but those who manage the service regularly pause the SQL dedicated pool over the weekends, then it would be important to note that Power BI would not be able to do a scheduled refresh at this time. Additionally, there would be more load on the SQL dedicated pool when the Power BI refresh is running.</p>
+			<p>When a query is created in Power BI, then a definition<a id="_idIndexMarker053"></a> of the data is created in the data model. This component of the Power BI data model<a id="_idIndexMarker054"></a> is called a Power BI dataset. Next, we'll look at Power BI datasets in depth.</p>
+			<h1 id="_idParaDest-35"><a id="_idTextAnchor034"></a>Power BI datasets</h1>
+			<p>Data used in Power BI reports uses a Power BI dataset. Power BI datasets are basically a connection string<a id="_idIndexMarker055"></a> and credentials that Power BI uses to connect to a data source. Every report that is created in Power BI must have a dataset associated with it. This ensures the report has data to visualize.</p>
+			<p>Power BI datasets are often created using the Power BI Desktop tool. At the time a report is published, both the report (containing visuals) and the dataset are published to the Power BI service. It is important to note that credentials are not sent to the Power BI service and must be re-entered upon publishing – this is useful to allow report developers to create reports locally using their own credentials (often with development data sources) but then change the connection string and credentials after reports are published (to production data sources).</p>
+			<p>Datasets can be used or shared among reports or can come from uploading Excel files to the Power BI service directly or come from push or streaming sources as well. For example, the Azure Stream Analytics service provides the capability of streaming data directly to a Power BI service streaming dataset for use with dashboards created on the Power BI service.</p>
+			<h1 id="_idParaDest-36"><a id="_idTextAnchor035"></a>Power BI dataflows</h1>
+			<p>As data needs change, Power BI continues<a id="_idIndexMarker056"></a> to adapt to those needs to help organizations understand and use their data to meet continuously changing market demands. <strong class="bold">Dataflows</strong> are a capability in Power BI that empowers Power BI users to perform self-service data preparation, which is sometimes a necessary component of the end-to-end reporting and analytics solution.</p>
+			<div>
+				<div id="_idContainer009" class="IMG---Figure">
+					<img src="image/B18086_02_003.jpg" alt="Figure 2.3 – Visual representation of how Power BI dataflows work with other Power BI assets and content
+" width="1216" height="704"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 2.3 – Visual representation of how Power BI dataflows work with other Power BI assets and content</p>
+			<p>Like other data transformation tools, Power BI dataflows connect to disparate data sources and then perform a transformation<a id="_idIndexMarker057"></a> on the data before it gets used as a Power BI dataset. This is useful when an organization wants to prevent report developers from needing to access the underlying data sources directly (potentially for security or performance reasons). Dataflows also enable the capability of optimizing data transformation that might always need to take place in order to make data usable in reports. For example, if database data columns always need to be renamed and joined with data in another table in order to be used by report creators, then doing it once in a dataflow might be an optimized way to do this rather than needing report creators to do this each time (and possibly different ways each time).</p>
+			<p>Dataflows also provide a place where data can uniformly be transformed and made ready for Power BI report consumption from other Power Platform or Azure services. Using the Microsoft Azure cloud backbone, services such as Microsoft Dataverse and Dynamics 365 are popular sources for use with dataflows but other cloud services also apply. </p>
+			<p>While dataflows can be used by Power BI Pro<a id="_idIndexMarker058"></a> users, some<a id="_idIndexMarker059"></a> features require <strong class="bold">Premium Per User</strong> (<strong class="bold">PPU</strong>) or <strong class="bold">Premium capacity</strong>. These are features such as DirectQuery from data sources, incremental refresh, computed and linked entities, and the enhanced compute engine.</p>
+			<h1 id="_idParaDest-37"><a id="_idTextAnchor036"></a>Query performance tuning</h1>
+			<p>When considering optimizing the performance of Power BI queries, there are a few places to start, and the recommendation<a id="_idIndexMarker060"></a> is to look at each as a layer of performance tuning to undertake. These layers include reducing the size of the data, optimizing DirectQuery (when used), and optimizing composite models (when used).</p>
+			<h2 id="_idParaDest-38"><a id="_idTextAnchor037"></a>Reducing the data size</h2>
+			<p>This technique is the idea of limiting the amount<a id="_idIndexMarker061"></a> of data that Power BI needs to work<a id="_idIndexMarker062"></a> with to only what is needed for the report. For example, if the sales database being used as the source for the report contains sales data for 70 countries but there is only a need to report sales for 5 countries, then it makes sense to only use data for the 5 needed countries. This can be accomplished when connecting to the source database and using a <strong class="source-inline">WHERE</strong> clause that limits the data to only the rows for the needed countries. </p>
+			<p>While this technique works well with rows of data, it can be applied to columns also. It's not uncommon for enterprise databases to have tables that are very wide or contain many columns. Depending on the reporting use case, many columns will not be needed and can be left out of the Power BI data model. This will further reduce the data size. In this case, only the necessary columns can be selected by using the <strong class="source-inline">SELECT</strong> clause of a custom query when connecting to the data source. It's possible to write a custom query selecting only the rows and columns needed for the report by clicking <strong class="bold">Advanced options</strong> when connecting to the data source in Power BI. Keep in mind that not every data source will support limiting the data imported this way. Some sources may require some prefiltering to limit the dataset to only the needed data before connecting to it from Power BI.</p>
+			<p>Depending on the use cases, it's also possible to do precalculations or summarization outside of Power BI before the data is loaded into Power BI. In cases where preprocessing or filtering is needed, it's also a worthwhile exercise to see whether there are any calculations or pre-aggregations that can take place on the data before it gets used by Power BI. This has the possibility of greatly reducing data sizes but there may be trade-offs depending on the scenario. Depending on the situation, doing pre-aggregation may not always be possible or preferred. </p>
+			<p>For example, if the sales database contains detailed transaction-level data (think every single item and price for every single customer purchase), if the retail store had five different sales on the same day to different customers and each one of them purchased a bottle of soda, then the sales detail table might contain five rows of data to record each sale of soda to each customer on that day. The report might not need data<a id="_idIndexMarker063"></a> at that granular level but instead, it might<a id="_idIndexMarker064"></a> be fine to just have a sum of all the sales for that soda for that day, which would be one row of data. In this case, we could pre-aggregate this data using a view in the database or in a custom SQL query used in Power BI when we connect to the sales database. Both methods would result in fewer rows of data in Power BI while still meeting the business requirements of the report.</p>
+			<p>In review, some of the important techniques to remember for reducing data size include the following:</p>
+			<ul>
+				<li>Reducing to only the rows and columns of data required</li>
+				<li>Completing precalculation and summarization prior to use in Power BI</li>
+			</ul>
+			<p>Next, let's look at optimizing DirectQuery data sources.</p>
+			<h2 id="_idParaDest-39"><a id="_idTextAnchor038"></a>DirectQuery optimization</h2>
+			<p>When using DirectQuery, it's important<a id="_idIndexMarker065"></a> to remember that the total performance<a id="_idIndexMarker066"></a> experienced is dependent upon both Power BI and the underlying data source. Many times, Power BI reports will use a data warehouse such as Azure Synapse Analytics as the data source and for enterprise data warehouses like this, there are several considerations to keep in mind when optimizing the performance of DirectQuery. Some or all of these techniques may not always be possible, but they are often worth considering. They are listed here in the order you should consider them:</p>
+			<ol>
+				<li><strong class="bold">Indexes</strong> – Relational databases support the building<a id="_idIndexMarker067"></a> of indexes. Indexes allow the efficient query and retrieval of data at the cost of storage to maintain the index data structure. As data storage has continually decreased in recent years, adding indexes to database tables and views often becomes advantageous to help decrease the time needed to return data with a query.</li>
+				<li><strong class="bold">Dimension-to-fact table key integrity</strong> – When fact and dimension tables are used in a data warehouse<a id="_idIndexMarker068"></a> it's important that dimension tables contain a key that provides proper data cardinality. This means that records in the dimension table can be matched (or joined) to records in the fact tables(s) without causing a Cartesian product – which is generally something to avoid for both storage and performance reasons.</li>
+				<li><strong class="bold">Materialize data and dates</strong> – When possible, materializing calculated data and date tables in the source database can help solve performance in DirectQuery scenarios because it reduces the need to perform these calculations downstream in Power BI.</li>
+				<li><strong class="bold">Distributed tables</strong> – For <strong class="bold">Massively Parallel Processing</strong> (<strong class="bold">MPP</strong>) data warehouses, it's often worth considering reviewing<a id="_idIndexMarker069"></a> the query performance of the distributed tables<a id="_idIndexMarker070"></a> stored in the data warehouse. MPP databases store data and query over multiple compute nodes in a cluster, and database tables are typically organized in such a way that the storage of data<a id="_idIndexMarker071"></a> on compute nodes is distributed<a id="_idIndexMarker072"></a> in a manner that makes joins efficient and performant for queries. It is possible that distributed tables in the MPP database aren't set up for efficient queries and it would be beneficial to consider how the tables are distributed by changing query patterns or changing the distributed table setup.</li>
+			</ol>
+			<p>Next, let's look at optimizing composite models.</p>
+			<h2 id="_idParaDest-40"><a id="_idTextAnchor039"></a>Composite model optimization</h2>
+			<p>When something is composite, it is made up of more than one thing. <strong class="bold">Composite models</strong> in Power BI mean that a single data model<a id="_idIndexMarker073"></a> contains data from multiple sources, and these<a id="_idIndexMarker074"></a> can be both Import and DirectQuery. Note that composite models can't be used for every data source type, and they introduce complexity to the data model that needs to be managed. If possible, consider <em class="italic">not</em> using composite models, for the sake of reducing complexity and security. Since data from imported datasets can be used to cross-filter data in DirectQuery datasets, queries that push down to the DirectQuery datasets could contain sensitive information, and since relational databases usually log all queries that are processed, that means it's possible sensitive information that was imported will now end up in the query logs of the relational database used in the DirectQuery dataset.</p>
+			<p>In general, as stated previously, it's best to start with Import Query for data models and then only consider DirectQuery if there are very large volumes of data or there is a need for up-to-the-second reporting of a supported data source. Switching to a composite model allows the following:</p>
+			<ul>
+				<li>Using DirectQuery with multiple DirectQuery-supported data sources</li>
+				<li>Using DirectQuery with additional data imported into the model</li>
+				<li>Boosting the performance of a DirectQuery data model by importing selected tables into storage and optimizing the query operations</li>
+			</ul>
+			<p>In order to optimize a composite<a id="_idIndexMarker075"></a> model, there are two main areas to consider: table storage and the use of aggregations.</p>
+			<h3>Table storage</h3>
+			<p>When a composite model is enabled, each table<a id="_idIndexMarker076"></a> can be configured in one of three different modes:</p>
+			<ul>
+				<li><strong class="bold">DirectQuery</strong> – This mode functions like DirectQuery always has: no data is stored in the Power BI model and data<a id="_idIndexMarker077"></a> is always queried back to the underlying data source when needed by Power BI. This is best used when data needs to be the most up to date from the source or when data volumes are very large and unable to be imported. It's common that large fact tables will be best set to DirectQuery mode.</li>
+				<li><strong class="bold">Import</strong> – This mode functions like Import <a id="_idIndexMarker078"></a>always has: data is copied into the in-memory storage in the Power BI data model. It's sometimes possible for dimension tables to be set to Import mode to help increase performance when grouping and filtering. When data is stored in memory in the model, we'll see the highest performance in Power BI.</li>
+				<li><strong class="bold">Dual</strong> – This mode allows tables<a id="_idIndexMarker079"></a> to behave like both Import and DirectQuery. This is useful when it's possible that a cross-filter query or slice of data in a visual will generate a query that pushes down to the same DirectQuery source for both tables. Since Dual allows data to be stored in memory in the data model, it's possible this will aid performance.</li>
+			</ul>
+			<h3>Aggregations</h3>
+			<p>Composite models support storing DirectQuery tables<a id="_idIndexMarker080"></a> as Import tables. They also add the ability for data to be aggregated when it is stored in the data model. Storing aggregated data in memory in the Power BI data model will increase query performance over very large DirectQuery datasets. The rule of thumb for aggregation tables is that the underlying source table should be no less than 10x larger. For example, if the underlying data warehouse table contains 5 million records, then the aggregation table should contain no more than 500,000 records. If it contains more than 500,000 records, then it's likely the trade-off for creating and managing the aggregation table will not be worth the minimal performance gain compared to using the existing DirectQuery table. However, if the aggregation table results in 500,000 or fewer records, then it will likely show great<a id="_idIndexMarker081"></a> performance gains and will be worth the creation and management of the aggregation table.</p>
+			<h1 id="_idParaDest-41"><a id="_idTextAnchor040"></a>Advanced options (what-if parameters, Power Query parameters, PBIDS files, and XMLA endpoints) </h1>
+			<p>Power BI provides many advanced capacities. From tools for creating what-if analysis to dynamic DAX code, to storing data sources and structures for ease of use to serving advanced connections, to a myriad<a id="_idIndexMarker082"></a> of data consumers using <strong class="bold">XML for Analysis</strong> (<strong class="bold">XMLA</strong>), including other non-Power BI tools, this portion of the chapter will dive deeper into these advanced capabilities.</p>
+			<h2 id="_idParaDest-42"><a id="_idTextAnchor041"></a>What-if parameters</h2>
+			<p>Power BI parameters<a id="_idIndexMarker083"></a> allow for advanced analysis using multiple values for different scenarios. This capability is like <strong class="bold">What-If Analysis</strong> in Microsoft Excel. It allows for the creation of measures that calculate percentage value increases of existing numeric values. What-if parameters make it easy to see and use multiple percentage increases/decreases by automatically creating a slicer and a table with generated values. By creating a measure using the generated values of the what-if parameter, you can simulate changes to numeric data in a data model. For example, in our sales data, we can have aggregated total monthly sales. By using the what-if parameters capability, we can generate data used in a sales target of 100% to 200% and see the corresponding impact of that increase across the total monthly sales. </p>
+			<p>To use the what-if parameters, we can use the following steps: </p>
+			<ol>
+				<li value="1">Click the <strong class="bold">New Parameter</strong> button on the <strong class="bold">Modeling</strong> toolbar in Power BI Desktop. </li>
+				<li>Provide a name for the parameter. We'll use <strong class="source-inline">Sales Increase</strong>.</li>
+				<li>Select a data type. For this example, we'll select <strong class="bold">Fixed decimal number</strong>.</li>
+				<li>For <strong class="bold">Minimum</strong> and <strong class="bold">Maximum</strong>, select <strong class="bold">1.00</strong> and <strong class="bold">2.00</strong>, respectively – to represent 100% and 200%.</li>
+				<li>Set the <strong class="bold">Increment</strong> value to the granularity desired in the slicer. If you want the slicer to move at 10% increments, then set this value to <strong class="bold">0.10</strong>.</li>
+				<li>Set the <strong class="bold">Default</strong> value to be <strong class="bold">1.00</strong> as this will be 100%.</li>
+				<li>Lastly, leave the <strong class="bold">Add slicer to this page</strong> checkbox selected so the slicer will automatically be created on the current page.</li>
+				<li>Click <strong class="bold">OK</strong>.</li>
+			</ol>
+			<p>In <em class="italic">Figure 2.4</em>, we can see how this what-if parameter<a id="_idIndexMarker084"></a> can be configured:</p>
+			<div>
+				<div id="_idContainer010" class="IMG---Figure">
+					<img src="image/B18086_02_004.jpg" alt="Figure 2.4 – Example what-if parameter configuration
+" width="600" height="586"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 2.4 – Example what-if parameter configuration</p>
+			<p>Once this has been completed, there will be a new table called <strong class="bold">Sales Increase</strong> and a slicer is added to the report. The slicer can be used as shown in <em class="italic">Figure 2.5</em> to select a "what-if" value for the sales increase:</p>
+			<div>
+				<div id="_idContainer011" class="IMG---Figure">
+					<img src="image/B18086_02_005.jpg" alt="Figure 2.5 – Slicer created for the what-if parameter value
+" width="380" height="121"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 2.5 – Slicer created for the what-if parameter value</p>
+			<p>This table contains two fields: <strong class="bold">Sales Increase</strong> and <strong class="bold">Sales Increase Value</strong>. The <strong class="bold">Sales Increase</strong> field stores the generated increments from 1.00, 1.1, 1.2, 1.3, 1.4, and so on up to 2.0, while <strong class="bold">Sales Increase Value</strong> contains only the DAX expression<a id="_idIndexMarker085"></a> using the <strong class="source-inline">SELECTEDVALUE</strong> function, which correlates to the location of the slicer. Together, these allow a dynamic multiplier to be selected using the slicer visual and another measure to be created that will multiply (or perform other math) against other fields in the data, like this:</p>
+			<pre class="source-code">= [Monthly Sales] * [Sales Increase Value]</pre>
+			<p>This simple equation allows us to see what would happen if sales increase by nothing (100%) all the way up to double sales (200%) with this dynamic value set by the user using the slicer.</p>
+			<h2 id="_idParaDest-43"><a id="_idTextAnchor042"></a>Power Query parameters</h2>
+			<p>For data connection and transformation, Power BI uses a technology called <strong class="bold">Power Query</strong>. Power Query is a key component<a id="_idIndexMarker086"></a> of Power BI, but it also powers data connection and data shaping in Excel. Power Query provides extensive capabilities, including the ability to create and use parameters that help Power Query become more extensible and maintainable. Power Query parameters allow dynamic values to be used that can be used in a query or queries.</p>
+			<p>The <strong class="bold">Manage Parameters</strong> tool is used from within the Power Query window (<strong class="bold">Home</strong> menu | <strong class="bold">Transform</strong> <strong class="bold">data</strong>) and allows the creation of new parameters to be used within Power Query. Each parameter has these values:</p>
+			<ul>
+				<li><strong class="bold">Name</strong>.</li>
+				<li><strong class="bold">Description</strong>.</li>
+				<li><strong class="bold">Required</strong> or <strong class="bold">Not Required</strong>.</li>
+				<li><strong class="bold">Type</strong> – This is where the data type is set (decimal number, date/time, text, or binary).</li>
+				<li><strong class="bold">Suggested Values</strong> – This is either <strong class="bold">Any value</strong>, <strong class="bold">List of Values</strong>, or <strong class="bold">Query</strong>.</li>
+				<li><strong class="bold">Current Value</strong> – Allows for the initial value of the parameter to be set.</li>
+			</ul>
+			<p>We will check out the <strong class="bold">Suggested Values</strong> parameter<a id="_idIndexMarker087"></a> in depth here.</p>
+			<h3>Any Value</h3>
+			<p>A parameter value can be any string<a id="_idIndexMarker088"></a> of characters or numbers the user desires to enter. </p>
+			<h3>List of Values</h3>
+			<p>This option provides the capability<a id="_idIndexMarker089"></a> of defining a list of values that can be used as parameters. The user interface shows a table interface to help the user enter the values to be stored as preset options. When <strong class="bold">List of Values</strong> is used, the user also selects <strong class="bold">Default Value</strong> and <strong class="bold">Current Value</strong> from the options defined in the <strong class="bold">List of Values</strong> table. It is possible to type values in as a parameter; <strong class="bold">List of Values</strong> merely provides the default options that can be easily selected.</p>
+			<h3>Query</h3>
+			<p>This option makes it possible to select a query<a id="_idIndexMarker090"></a> that contains an output list of values. This is useful when you need to have a dynamically updating list of values and yo<a id="_idTextAnchor043"></a>u don't want to hardcode them into the <strong class="bold">Manage Parameters</strong> tool. Instead, these could be stored in a database or a file and then included in the data model as a typical query. To use values in a parameter, a list query first needs to be made. To make a list query inside Power Query, take the following steps:</p>
+			<ol>
+				<li value="1">Select the column from an existing query that contains the list of values you want to use as the dynamic list of values in a parameter.</li>
+				<li>Right-click the column and select <strong class="bold">Add as New Query</strong>.</li>
+				<li>A new query is created in the query list. The icon used is different from the typical table-like icon. Instead, it looks more like a list.</li>
+				<li>The new query can be renamed as needed and then selected as an option in the <strong class="bold">Query</strong> drop-down list.</li>
+			</ol>
+			<p>When a query is used for <strong class="bold">Suggested Values</strong>, the option for <strong class="bold">Current Value</strong> is still available.</p>
+			<p>Parameters are often used in different ways, but common scenarios include the following:</p>
+			<ul>
+				<li>A common value used for multiple transformations</li>
+				<li>Used as arguments for custom functions</li>
+			</ul>
+			<p>When parameters are configured, they will become<a id="_idIndexMarker091"></a> a selectable option on transforms such as <strong class="bold">Filter Rows</strong>. <strong class="bold">Always</strong> <strong class="bold">Allow</strong> may need to be checked under the <strong class="bold">View</strong> menu | <strong class="bold">Parameters</strong>.</p>
+			<h2 id="_idParaDest-44"><a id="_idTextAnchor044"></a>PBIDS files</h2>
+			<p>Sometimes identifying and creating the connections<a id="_idIndexMarker092"></a> to data sources can be a challenge in larger organizations as there can be many data sources to choose from. In those cases, it may be helpful to create something called a PBIDS file. <strong class="bold">Power BI Data Source</strong> (<strong class="bold">PBIDS</strong>) files contain the data source connection information only, which will allow beginner report creators to get started quickly with the proper data sources prepopulated.</p>
+			<p>The PBIDS file format is based on JSON and is fully editable<a id="_idIndexMarker093"></a> in a text editor but also creatable from an existing <strong class="bold">Power BI Desktop file</strong> (<strong class="bold">PBIX</strong>). </p>
+			<p>To create a PBIDS file with Power BI Desktop (from an existing PBIX file that has the needed data source connected), take the following steps:</p>
+			<ol>
+				<li value="1">Click <strong class="bold">Options and settings</strong> under the <strong class="bold">File</strong> menu.</li>
+				<li>Click <strong class="bold">Data source settings</strong>.</li>
+				<li>Verify that the connections in the current file look correct, and then click <strong class="bold">Export PBIDS</strong>.</li>
+				<li>Select the location where the file will be saved.</li>
+			</ol>
+			<p>The JSON structure of the PBIDS file will look something like this:</p>
+			<pre class="source-code">{</pre>
+			<pre class="source-code">  "version": "0.1",</pre>
+			<pre class="source-code">  "connections": [</pre>
+			<pre class="source-code">    {</pre>
+			<pre class="source-code">      "details": {</pre>
+			<pre class="source-code">        "protocol": "&lt;PROTOCOL USED, SUCH AS TDS FOR SQL SERVER&gt;",</pre>
+			<pre class="source-code">        "address": {</pre>
+			<pre class="source-code">          "server": "&lt;SERVER HOSTNAME OR IP&gt;",</pre>
+			<pre class="source-code">          "database": "&lt;DATABASE NAME&gt;"</pre>
+			<pre class="source-code">        },</pre>
+			<pre class="source-code">        "authentication": null,</pre>
+			<pre class="source-code">        "query": null</pre>
+			<pre class="source-code">      },</pre>
+			<pre class="source-code">      "options": {},</pre>
+			<pre class="source-code">      "mode": null</pre>
+			<pre class="source-code">    }</pre>
+			<pre class="source-code">  ]</pre>
+			<pre class="source-code">}</pre>
+			<p>PBIDS files only contain connection information and do not contain credentials. This is an important distinction as PBIDS files can be shared around an organization and for security reasons, data sources (files and databases) are often controlled and set by data governance teams to protect sensitive data.</p>
+			<p>A PBIDS file<a id="_idIndexMarker094"></a> will open with Power BI Desktop, and you will be greeted with the final steps for the creation of the connection, such as credentials, Import, or DirectQuery (where applicable), and then the data source will be set up and you will be able to create reports or visuals. The user will not need to specify the details of the connection to the source.</p>
+			<p>As of the time of writing, PBIDS files only support connecting to one data source in a file. If more than one is specified, an error will result.</p>
+			<h2 id="_idParaDest-45"><a id="_idTextAnchor045"></a>XMLA endpoints</h2>
+			<p><strong class="bold">XMLA</strong> is the communications protocol<a id="_idIndexMarker095"></a> used by Microsoft SQL Server Analysis Services instances. XMLA is a widely used connectivity option supported by many BI tools as a source for visualization. </p>
+			<p>Power BI is built off the foundation of Analysis Services technologies, and as part of Power BI Premium, it is possible to connect to a Power BI Premium workspace using XMLA. This happens through an XMLA endpoint that is part of the Premium service. </p>
+			<p>Common uses of XMLA endpoint clients used include the following:</p>
+			<ul>
+				<li><strong class="bold">SQL Server Data Tools</strong> (<strong class="bold">SSDT</strong>)/Visual Studio with Analysis<a id="_idIndexMarker096"></a> Services – Some organizations standardize developer tooling. SSDT has been around a long time and is widely used.</li>
+				<li><strong class="bold">SQL Server Management Studio</strong> (<strong class="bold">SSMS</strong>) – Another tool that has been around a while<a id="_idIndexMarker097"></a> and is widely used, SSMS allows you to create DAX, MDX, and XMLA queries.</li>
+				<li>Power BI Report Builder.</li>
+				<li>Tabular Editor.</li>
+				<li>DAX Studio.</li>
+				<li>ALM Toolkit.</li>
+				<li>And the perennial favorite data tool: Microsoft Excel.</li>
+			</ul>
+			<p>Many times, an XMLA endpoint<a id="_idIndexMarker098"></a> will be used for dataset management with write operations. When this is the case, it's recommended to enable large model support in Power BI Premium. Large model support in Power BI Premium will allow data models to grow larger than 10 GB of compressed data size. When write operations need to take place, be advised that XMLA endpoints are enabled as read-only by default, so write capability will need to be enabled.</p>
+			<p>Tenant-level settings are enabled by default to allow XMLA endpoints and analyzing in Excel with on-premises datasets. This setting is enabled for the entire organization by default. Some organizations will choose to disable this default setting, so it's important to know that this may need to be enabled sometimes.</p>
+			<p>To enable read-write capability for XMLA endpoints, this option needs to be changed in the Power BI admin portal:</p>
+			<ol>
+				<li value="1">Select <strong class="bold">Capacity settings</strong>.</li>
+				<li>Select <strong class="bold">Power BI Premium</strong>, then select the name of the capacity.</li>
+				<li>Expand <strong class="bold">Workloads</strong> and select <strong class="bold">Read Write</strong> under the <strong class="bold">XMLA Endpoint</strong> setting.</li>
+			</ol>
+			<p>The XMLA endpoint connection URL can be seen for each workspace deployed to Power BI Premium by viewing the workspace settings and clicking on the <strong class="bold">Premium</strong> tab.</p>
+			<p>In addition to client connectivity to Power BI Premium workspaces, XMLA endpoint capability also enables fine-grained data refresh capabilities. By setting up data partitioning, it becomes possible to refresh selected historical partitions without having to reload all data. This is useful for organizations who want to maximize the data stored in the Power BI service (for best report performance) while using large historical datasets.</p>
+			<h1 id="_idParaDest-46"><a id="_idTextAnchor046"></a>Summary</h1>
+			<p>In this chapter, we looked at a number of topics related to connecting to and querying data with Power BI. We reviewed some of the popular data sources that are supported by Power BI and how queries to those data sources can be DirectQuery or Import, and how those sources can even be located on-premises. It's very important that Power BI supports as many data sources as possible so organizations can spend more time querying data and using it to answer business questions and less time moving data to a supported data store.</p>
+			<p>We also learned how Power BI supports the creation of composite data models that use both DirectQuery and Import data. Composite models help enable many new use cases, including performance optimization in some scenarios. We learned how Power BI uses the concept of a dataset to store connection information to a data source and how that connection information can be shared using a PBIDS file that can be shared across an organization to help make getting connected to data easier for new Power BI developers.</p>
+			<p>Finally, we learned what Power BI dataflows are and also some of the other advanced features of Power BI Premium, such as XMLA endpoints, which allow power users to connect to the backend analysis service running in the Power BI service to enable advanced capabilities. Other advanced topics we reviewed included what-if parameters, which allow the advanced analysis of data using dynamically generated values, and Power Query parameters, which help to extend and provide more flexibility for programming a data connection and transformation queries. These topics are key to having a foundational knowledge of Power BI and how it is used to solve today's BI challenges.</p>
+			<p>In the next chapter, we will cover the capabilities that Power BI has for data profiling. Profiling data is important to understand more about your data and how the data can be use<a id="_idTextAnchor047"></a>d for data visualization and BI reporting.</p>
+			<h1 id="_idParaDest-47"><a id="_idTextAnchor048"></a>Questions </h1>
+			<ol>
+				<li value="1">Which data sources can Power BI connect to?<ol><li>Only local, on-premises data sources</li><li>On-premises, cloud, and SaaS sources</li><li>Only SaaS sources</li><li>On-premises and cloud sources</li></ol></li>
+				<li>What are some ways to tune the performance of Power BI queries?<ol><li>Running a shrink on the data model</li><li>Importing only the required data</li><li>Zipping the PBIX file</li><li>Removing all queries</li></ol></li>
+				<li>XMLA is the protocol used for which software or service?<ol><li>Microsoft Analysis Services</li><li>Microsoft Excel</li><li>Azure Synapse Analytics</li><li>Microsoft SQL Server Management Studio</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

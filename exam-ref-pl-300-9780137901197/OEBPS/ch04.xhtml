@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Exam Ref PL-300 Microsoft Power BI Data Analyst</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="9780137901159.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section epub:type="chapter">
+<h2 class="h2" id="ch04"><span epub:type="pagebreak" id="page_177"></span><span class="gray">Chapter 4</span></h2>
+<h2 class="h2a">Deploy and maintain assets</h2>
+<p class="noindent">The Power BI service has many features designed for collaboration and sharing the results of your work with others in a secure way. It also allows you to efficiently keep data in your reports up to date.</p>
+<p class="indent">In this chapter, we first review the skills necessary to refresh datasets on a periodic basis and how to do so incrementally. We also describe the various ways in which datasets can be secured, which includes segregating access to different parts of the dataset for different groups of people. Since it may be useful to reuse a dataset for different purposes, we also look at how you can raise awareness of a dataset you manage.</p>
+<p class="indent">In the next part of the chapter, we review how to create and manage workspaces, which are meant for collaboration in the Power BI service. Once you’re ready to share the results of your work, you can package the content you created in an app and share it with a wider audience. We conclude the chapter by reviewing data sensitivity labels for workspace content.</p>
+<p class="object-title">Skills covered in this chapter:</p>
+<ul class="sq-s">
+<li><p class="bull"><a href="ch04.xhtml#ch04lev1sec1">Skills 4.1: Manage files and datasets</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev1sec2">Skills 4.2: Manage workspaces</a></p></li>
+</ul>
+<section>
+<h3 class="h3" id="ch04lev1sec1">Skill 4.1: Manage files and datasets</h3>
+<p class="noindent">In the Power BI service, reports and datasets are separate concepts; reports contain visualizations and related information, such as bookmarks, whereas datasets contain only the modeled data. One dataset may potentially have more than one report, whereas one report can be connected to one dataset only.</p>
+<p class="indent">Keeping data up to date is almost always important, and the Power BI service provides a way to do it at fixed intervals in an efficient manner by refreshing only the latest data, if needed.</p>
+<p class="indent">You have several options to provide access to a dataset to your users: you can grant full access to the whole dataset, read-only access to the whole dataset, or access to only those rows that you want users to see. Once you are ready to share a dataset with others, you can promote or certify it to facilitate its discovery throughout your organization.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title"><span epub:type="pagebreak" id="page_178"></span>This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec1">Identify when a gateway is required</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec2">Configure a dataset scheduled refresh</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec3">Configure row-level security group membership</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec4">Provide access to datasets</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec5">Manage global options for files</a></p></li>
+</ul>
+</aside>
+<section>
+<h4 class="h4" id="ch04lev2sec1">Identify when a gateway is required</h4>
+<p class="noindent">If you want to refresh a dataset that uses on-premises data, you need to install an on-premises data gateway on a computer within your network. A gateway can access on-premises and online data sources when you add data sources to it, which may include the connection details and credentials—the gateway acts as a bridge between the Power BI service and your on-premises data sources.</p>
+<p class="indent">There are two on-premises data gateway modes:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Standard mode</strong> Multiple people can use the gateway, and you can use it with other Microsoft services as well, such as Power Automate. This mode is appropriate for corporate environments because you can add each data source once, and then the gateway users will all be able to use it. You can specify generic credentials for data sources.</p></li>
+<li><p class="bull"><strong>Personal mode</strong> Only one person can use the gateway, and you can use it only with Power BI. This mode is useful only when you don’t plan to share the gateway with others.</p></li>
+</ul>
+<p class="indent">Alternatively, if you only need to connect to cloud data sources secured by virtual networks, then you need to use a virtual network (VNet) data gateway. In this case, you don’t have to install a gateway because it’s a service that runs in the cloud.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Data Gateways</p>
+<p class="note-para">Instructions on how to install and configure data gateways are outside the scope of this book. For more details, see “What is an on-premises data gateway?” at <em><a href="https://docs.microsoft.com/en-us/power-bi/connect-data/service-gateway-onprem">https://docs.microsoft.com/en-us/power-bi/connect-data/service-gateway-onprem</a>.</em></p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec2">Configure a dataset scheduled refresh</h4>
+<p class="noindent">When you build a report, a common requirement is to keep the underlying data up to date. You can refresh a dataset manually in Power BI Desktop or the Power BI service, but this approach isn’t viable when you need to refresh data periodically. To address this issue, you can configure a scheduled refresh in the Power BI service.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_179"></span>You configure a scheduled refresh for each dataset individually in the dataset settings. For this, expand the <strong>Scheduled refresh</strong> section of the dataset settings and switch the <strong>Keep your data up to date</strong> toggle to <strong>On</strong>. You will then be able to configure refresh frequency and other settings, as shown in <a href="ch04.xhtml#ch04fig01">Figure 4-1</a>.</p>
+<figure class="figure" id="ch04fig01">
+<img src="graphics/04fig01.jpg" alt="The figure shows the settings that can be configured for scheduled refresh." width="243" height="453"/>
+<p class="figcaption"><strong>FIGURE 4-1</strong> Scheduled refresh settings.</p>
+</figure>
+<p class="indent">You can configure the following settings for scheduled refresh:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Refresh frequency</strong> Specify how often the dataset will be refreshed: Daily or Weekly. If you set this option to Weekly, you can select the days of the week the refresh will run.</p></li>
+<li><p class="bull"><strong>Time zone</strong> The time zone of refreshes.</p></li>
+<li><p class="bull"><strong>Time</strong> You can add the time of refreshes in 30-minute intervals. The maximum number of refreshes you can set depends on whether the workspace is backed by a Premium capacity.</p></li>
+<li><p class="bull"><strong>Send refresh failure notifications to</strong> This option can send an email to the dataset owner in case of a refresh failure. You can enter email addresses of other users who will receive the notifications, which can be useful when multiple people are responsible for the dataset.</p></li>
+</ul>
+<p class="indent">After you adjust settings, select <strong>Apply</strong>. If you select Apply without setting the scheduled refresh time, your dataset will refresh at midnight.</p>
+<p class="indent">You can see refresh history of a dataset at the top of the dataset settings by selecting <strong>Refresh history</strong>.</p>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec3"><span epub:type="pagebreak" id="page_180"></span>Configure row-level security group membership</h4>
+<p class="noindent">Configuring row-level security (RLS) is a two-step process. In Skill 2.2: Develop a data model, we reviewed the first step—implementing RLS roles in Power BI Desktop. In this section, we review the steps needed to complete the RLS setup for a dataset; we assign and test roles in the Power BI service.</p>
+<section>
+<h5 class="h5" id="ch04lev3sec73">Assigning roles in the Power BI service</h5>
+<p class="noindent">Once you’ve configured row-level security roles in Power BI Desktop, you need to publish your report to the Power BI service and add members to each role. To do so, go to the dataset security settings by hovering over a dataset in the list of workspace items and selecting <strong>More options</strong> &gt; <strong>Security</strong>. If you don’t have any roles defined in the dataset, you’ll see the message in <a href="ch04.xhtml#ch04fig02">Figure 4-2</a>.</p>
+<figure class="figure" id="ch04fig02">
+<img src="graphics/04fig02.jpg" alt="The message reads, “RLS has moved to Power BI Desktop. Any previously defined RLS security is no longer working. You will need to re-create RLS in Power BI Desktop. In the Power BI Service, you can add members to roles you create.”" width="650" height="167"/>
+<p class="figcaption"><strong>FIGURE 4-2</strong> The RLS has moved to Power BI Desktop message.</p>
+</figure>
+<p class="indent">If you’ve created RLS roles defined in the dataset, you’ll see a page like the one shown in <a href="ch04.xhtml#ch04fig03">Figure 4-3</a>.</p>
+<figure class="figure" id="ch04fig03">
+<img src="graphics/04fig03.jpg" alt="The figure shows a page with list of roles on the left and role members on the right." width="650" height="309"/>
+<p class="figcaption"><strong>FIGURE 4-3</strong> Row-level security role membership.</p>
+</figure>
+<p class="indent">On the left side of the Row-Level Security page, you can see a list of all roles in the dataset. The numbers in brackets show how many members each role has. On the right, you can view, add, and remove members for a selected role.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_181"></span>To add a member to a role, first select a role on the left, and then enter email addresses or security groups in the <strong>People or groups who belong to this role</strong> field. After you enter new members, select <strong>Add</strong> &gt; <strong>Save</strong>. The changes will be applied immediately.</p>
+<p class="indent">To remove a member from a role, select the cross next to the member and then select <strong>Save</strong>.</p>
+<p class="indent">When you use row-level security in Power BI, you can use an email address for each user. Although this solution works, it can be hard to maintain. For example, consider that you have several datasets that use RLS based on the same rules and it’s viewed mostly by the same users. If a new user joins your company and you need to give them access to those datasets, you will have to update the row-level security settings for each dataset.</p>
+<p class="indent">In cases like this, you can assign security groups as members of row-level security roles. When a new user joins the company, you will have to add them to the security group only once. The same principles apply to sharing content in Power BI, which we cover later in this chapter.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Need More Review?</em></span> Creating Security Groups</p>
+<p class="note-para">Instructions on how to create security groups are outside the scope of this book. For more details, see “Create a group in the Microsoft 365 admin center” at <em><a href="https://docs.microsoft.com/en-us/microsoft-365/admin/create-groups/create-groups">https://docs.microsoft.com/en-us/microsoft-365/admin/create-groups/create-groups</a>.</em></p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec74">Viewing as roles in the Power BI service</h5>
+<p class="noindent">As you saw with the View as feature in Power BI Desktop, you can test roles in the Power BI service. For this, you need to hover over a role on the Row-Level Security page and select <strong>More options</strong> (the ellipsis) &gt; <strong>Test as role</strong>. You will then see the way a report appears to the members of the role. For example, <a href="ch04.xhtml#ch04fig04">Figure 4-4</a> shows what members of the Plains role would see, which you created in <a href="ch02.xhtml#ch02">Chapter 2</a>, “Model the data.” The role applies a filter on Sales Territory.</p>
+<figure class="figure" id="ch04fig04">
+<img src="graphics/04fig04.jpg" alt="The figure shows a report in the Power BI service with a blue bar at the top saying “Now viewing as: Plains.”" width="732" height="431"/>
+<p class="figcaption"><strong>FIGURE 4-4</strong>  Testing a role in the Power BI service.</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_182"></span>If needed, you can test a combination of roles or view as a specific user by selecting <strong>Now viewing as</strong> in the blue bar at the top and selecting the desired parameters. Once you are satisfied with how the roles work, you can select <strong>Back to Row-Level Security</strong>.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Row-Level Security and Workspace Roles</p>
+<p class="note-para">Row-level security does not work on users who have the Contributor, Member, or Admin role in the workspace in which the dataset resides. Those who have edit rights will always see the whole dataset regardless of the security settings, even though the Test as role feature may show a filtered dataset.</p>
+<p class="note-para">We review workspace roles in Skill 4.2: Create and manage workspaces.</p>
+</div>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec4">Provide access to datasets</h4>
+<p class="noindent">The Power BI service enables collaboration between different users. To let other users build reports based on a dataset that you published, you have to share the dataset with them. There are several ways of achieving this, as described next.</p>
+<section>
+<h5 class="h5" id="ch04lev3sec75">Sharing through a workspace</h5>
+<p class="noindent">When publishing to the Power BI service, you can publish to your own workspace or a shared workspace. Contributing users of shared workspaces will automatically have access to the dataset you publish.</p>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec76">Sharing through an app</h5>
+<p class="noindent">You can also make your dataset available for others when you share an app with them. For this, you’ll need to grant the app users the Build permission by selecting the <strong>Allow all users to connect to the app's underlying datasets using the Build permission</strong> check box, as shown in <a href="ch04.xhtml#ch04fig05">Figure 4-5</a>.</p>
+<figure class="figure" id="ch04fig05">
+<img src="graphics/04fig05.jpg" alt="The figure shows the various permissions that can be set when configuring an app." width="732" height="638"/>
+<p class="figcaption"><strong>FIGURE 4-5</strong> App permissions.</p>
+</figure>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Apps</p>
+<p class="note-para">We’re reviewing Power BI apps in more details in Skill 4.2: Create and manage workspaces.</p>
+</div>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Dataset Permissions</p>
+<p class="note-para">Removing app access for a user or a security group doesn’t automatically revoke their access to the underlying datasets. To remove the dataset access completely, you may have to do it by managing permissions of the datasets, as covered next.</p>
+</div>
+<p class="indent">Without the Build permission, users won’t be able to connect to your dataset unless they’re contributing workspace members or you give them access to the individual dataset.</p>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec77"><span epub:type="pagebreak" id="page_183"></span>Managing dataset permissions</h5>
+<p class="noindent">If you want to share an individual dataset, you can do so by managing dataset permissions. To view the permissions of a dataset, select <strong>Manage permissions</strong> from the dataset menu. You’ll then see a list of users who have access to the dataset, as shown in <a href="ch04.xhtml#ch04fig06">Figure 4-6</a>.</p>
+<figure class="figure" id="ch04fig06">
+<img src="graphics/04fig06.jpg" alt="The figure shows a list of users who have access to a dataset." width="733" height="298"/>
+<p class="figcaption"><strong>FIGURE 4-6</strong> Dataset access.</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_184"></span>If the dataset resides in a shared workspace, you’ll see the role each workspace member has. Users can have the following permissions:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Read</strong> The minimum level of access needed to view reports based on this dataset.</p></li>
+<li><p class="bull"><strong>Reshare</strong> Allows users to reshare reports and dashboards based on this dataset.</p></li>
+<li><p class="bull"><strong>Build</strong> With this permission, users can build their own reports from this dataset.</p></li>
+</ul>
+<p class="indent">To share a dataset with a new user, follow these steps:</p>
+<ol class="num">
+<li><p class="num">Select <strong>Add user</strong>.</p></li>
+<li><p class="num">Enter email addresses or security groups under <strong>Grant people access</strong>.</p></li>
+<li><p class="num">Select the permissions you want to grant. You can allow recipients to either reshare the artifact or build new content from the underlying datasets.</p></li>
+<li><p class="num">Select <strong>Grant access</strong>.</p></li>
+</ol>
+<p class="indent">If you want to change the existing permissions for a user or security group, select <strong>Permission options</strong> (the ellipsis) next to a user or security group and select the desired action, such as add or remove a permission. Note that workspace roles can’t be changed here.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Workspace Roles</p>
+<p class="note-para">We review workspace roles in Skill 4.2: Create and manage workspaces.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec78">Impact analysis</h5>
+<p class="noindent">For datasets you share, it may be useful to know what other reports or dashboards use this dataset. Since Power BI allows you to use the same dataset across different workspaces, the reports and dashboards that use the dataset may reside outside of its home workspace, and the owner of the dataset may not always have access to the workspace. This information is contained in the dataset’s impact analysis. To see the impact analysis, in the dataset menu select <strong>View lineage</strong>. You’ll see the information shown in <a href="ch04.xhtml#ch04fig07">Figure 4-7</a>.</p>
+<figure class="figure" id="ch04fig07">
+<img src="graphics/04fig07.jpg" alt="Impact analysis shows how many workspaces, reports, and dashboards are affected, in addition to the total number of views related to an item. There's a button to notify contacts." width="733" height="359"/>
+<p class="figcaption"><strong>FIGURE 4-7</strong> Impact analysis.</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_185"></span>Impact analysis shows the list of reports and dashboards across all workspaces related to the dataset. For each item, you can see how many viewers and views it had in the last 30 days, excluding today, and which workspace it’s in. Impact analysis is particularly useful when you’re making potentially breaking changes to the dataset because you know which items are going to be affected, as well as how popular those items are. You can notify contacts of the affected reports and dashboards by selecting <strong>Notify contacts</strong>.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec5">Manage global options for files</h4>
+<p class="noindent">When using Power BI Desktop, you can change some settings that will apply to your general editing experience when working in Power BI Desktop. To see the settings in Power BI Desktop, select <strong>File</strong> &gt; <strong>Options and settings</strong> &gt; <strong>Options</strong> and note the sections under the <strong>Global</strong> heading. For example, the <strong>Data Load</strong> section is shown in <a href="ch04.xhtml#ch04fig08">Figure 4-8</a>.</p>
+<figure class="figure" id="ch04fig08">
+<img src="graphics/04fig08.jpg" alt="The Data Load section has the following settings visible: Type Detection, Background Data, Loading tables simultaneously, and Time intelligence." width="650" height="626"/>
+<p class="figcaption"><strong>FIGURE 4-8</strong> Data Load section of Options.</p>
+</figure>
+<p class="indent">In addition to global setttings, there are report-specific settings under the <strong>Current File</strong> heading. Some of the report-specific settings are also available in the Power BI service. To view report settings, open a report and select <strong>File</strong> &gt; <strong>Settings</strong>.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_186"></span><span class="gray"><em>Note</em></span> File Settings</p>
+<p class="note-para">Describing all available settings is outside the scope of this book. If you want to learn more, see “Change settings for Power BI reports” at <em><a href="https://docs.microsoft.com/en-us/power-bi/create-reports/power-bi-report-settings">https://docs.microsoft.com/en-us/power-bi/create-reports/power-bi-report-settings</a>.</em></p>
+</div>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev1sec2">Skill 4.2: Manage workspaces</h3>
+<p class="noindent">Collaboration in Power BI happens in workspaces, which serve as containers for dashboards, reports, workbooks, datasets, and dataflows. In this section we cover how to create and configure a workspace and illustrate how the Power BI service lifecycle strategy can help you implement phased deployments. We also review the skills necessary to create and manage workspaces, assign roles, publish and update apps and workspace assets, and apply sensitivity labels to workspace items.</p>
+<aside epub:type="sidebar" class="sidebar1">
+<p class="side-title">This skill covers how to:</p>
+<ul class="sq">
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec6">Create and configure a workspace</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec7">Assign workspace roles</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec8">Configure and update a workspace app</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec9">Publish, import, or update assets in a workspace</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec10">Apply sensitivity labels to workspace content</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec11">Configure subscriptions and data alerts</a></p></li>
+<li><p class="bull"><a href="ch04.xhtml#ch04lev2sec12">Promote or certify Power BI content</a></p></li>
+</ul>
+</aside>
+<section>
+<h4 class="h4" id="ch04lev2sec6">Create and configure a workspace</h4>
+<p class="noindent">Each Power BI user has access to their own workspace, called <em>My workspace</em>, and only they can publish to the workspace. Though it’s possible to share content from a personal workspace, the functionality is limited—for example, you cannot create an app in your workspace.</p>
+<p class="indent">To collaborate with others or package content in an app to share with others, you should create a separate workspace. Doing so will allow others to publish to the same workspace, and you’ll have access to other Power BI features, such as dataflows.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Creating Workspaces</p>
+<p class="note-para">A user who wants to create a workspace requires at least a Power BI Pro license.</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_187"></span><a href="ch04.xhtml#ch04fig09">Figure 4-9</a> shows a diagram with a simplified relationship between Power BI Desktop reports and Power BI service items.</p>
+<figure class="figure" id="ch04fig09">
+<img src="graphics/04fig09.jpg" alt="The diagram shows a Power BI Desktop report file outside of the workspace." width="729" height="346"/>
+<p class="figcaption"><strong>FIGURE 4-9</strong> Power BI workspace contents.</p>
+</figure>
+<p class="indent">When you publish a Power BI Desktop to a workspace, you publish the visualizations, which become a report in Power BI service. If there was an associated data model, it would become a Power BI dataset. As discussed in <a href="ch03.xhtml#ch03">Chapter 3</a>, “Visualize and analyze the data,” dashboards can have visuals pinned from reports and directly from datasets. We review Power BI apps later in this chapter in detail.</p>
+<p class="indent">To create a workspace in Power BI service, follow this procedure:</p>
+<ol class="num">
+<li><p class="num">From the left-hand menu, select <strong>Workspaces</strong> &gt; <strong>Create a workspace</strong>.</p></li>
+<li><p class="num">Enter the workspace name. The name must be unique in the organization.</p></li>
+<li><p class="num">Select <strong>Save</strong>.</p></li>
+</ol>
+<p class="indent">When creating a workspace, you can optionally set a workspace image and enter a workspace description. Furthermore, you can use the following advanced settings:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Contact list</strong> You can select who will receive notifications about issues in the workspace. By default, it will be workspace admins, or you can enter specific users and groups.</p></li>
+<li><p class="bull"><strong>Workspace OneDrive</strong> To have the option to add items to the workspace from a dedicated OneDrive location, you can enter it here. Note that there’s no synchronization between the Power BI workspace membership and those who have access to the OneDrive location. You should give access to the workspace to the same Microsoft 365 group that owns the OneDrive location. Managing OneDrive is outside the scope of this book.</p></li>
+<li><p class="bull"><strong>License mode</strong> If your organization uses Power BI Premium and you’re a capacity admin, you can allocate this workspace to a dedicated capacity. Administration of Power BI Premium is outside the scope of this book.</p></li>
+<li><p class="bull"><span epub:type="pagebreak" id="page_188"></span><strong>Develop a template app</strong> You can develop a template app and share it with users outside of your organization. Template apps are outside the scope of this book.</p></li>
+<li><p class="bull"><strong>Allow contributors to update the app for this workspace</strong> By default, contributors cannot update workspace apps; you can change this by selecting this check box.</p></li>
+</ul>
+<p class="indent">Once you’ve created a workspace, you can change its settings in Power BI service in the following way:</p>
+<ol class="num">
+<li><p class="num">From the left-hand menu, select <strong>Workspaces</strong>.</p></li>
+<li><p class="num">Find the workspace of interest, hover over it, and select <strong>More</strong> &gt; <strong>Workspace settings</strong>.</p></li>
+<li><p class="num">Change the settings as desired.</p></li>
+<li><p class="num">Select <strong>Save</strong>.</p></li>
+</ol>
+<p class="indent">To delete a workspace, select <strong>Delete workspace</strong> &gt; <strong>Delete</strong> from the workspace settings.</p>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec7">Assign workspace roles</h4>
+<p class="noindent">You can see the list of users who have access to a workspace by selecting <strong>Access</strong> from the workspace, where you can also add or remove users. To reflect the different needs of users, Power BI offers four workspace roles:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Viewers</strong> can</p>
+<ul class="sq1">
+<li><p class="bull">View dashboards, reports, and workbooks in the workspace.</p></li>
+<li><p class="bull">Read data from dataflows in the workspace.</p></li></ul></li>
+<li><p class="bull"><strong>Contributors</strong> can do everything that viewers can do and</p>
+<ul class="sq1">
+<li><p class="bull">Add, edit, and delete content in the workspace.</p></li>
+<li><p class="bull">Schedule refreshes and use the on-premises gateway within the workspace.</p></li>
+<li><p class="bull">Feature dashboards and reports from the workspace.</p></li></ul></li>
+<li><p class="bull"><strong>Members</strong> can do everything that contributors can do and</p>
+<ul class="sq1">
+<li><p class="bull">Add other users as members, contributors, or viewers to the workspace.</p></li>
+<li><p class="bull">Publish and update the workspace app.</p></li>
+<li><p class="bull">Share and allow others to reshare items from the workspace.</p></li>
+<li><p class="bull">Feature the workspace app.</p></li></ul></li>
+<li><p class="bull"><strong>Admins</strong> can do everything that members can do and</p>
+<ul class="sq1">
+<li><p class="bull">Update and delete the workspace.</p></li>
+<li><p class="bull">Add and remove other users of any role from the workspace.</p></li></ul></li>
+</ul>
+<p class="indent">As mentioned earlier in the chapter, there’s a workspace setting that allows contributors to update apps. This setting can be useful when you want a user to be able to update an app but not add other users to the workspace.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_189"></span>Note that giving someone a role in a workspace does not remove the need to give them additional rights. For example, you may make a user an admin of a workspace, but unless they have a Power BI Pro license, they won’t be able to fully use the role.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Important</em></span> Row-Level Security</p>
+<p class="note-para">Row-level security applies only to viewers since all other roles have full access to all datasets within a workspace.</p>
+</div>
+<div class="tip">
+<p class="tip-title"><img src="graphics/tip.jpg" alt="images" width="55" height="55"/> <em><span class="gray">Exam Tip</span></em></p>
+<p class="tip-para">You should know which role is appropriate for a user based on the business requirements. In most cases, you should follow the principle of least privilege.</p>
+</div>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec8">Configure and update a workspace app</h4>
+<p class="noindent">When you are ready to share your reports and dashboards with users in your organization, you can publish an app. An app is a collection of Power BI items, such as a dashboard, reports, and workbooks, packaged together. There can be only one app per app workspace.</p>
+<p class="indent">When creating or updating an app, you can select which content items appear in the app by toggling the <strong>Include in app</strong> switch to <strong>Yes</strong> or <strong>No</strong>, as shown in <a href="ch04.xhtml#ch04fig10">Figure 4-10</a>.</p>
+<figure class="figure" id="ch04fig10">
+<img src="graphics/04fig10.jpg" alt="The figure shows all items having Yes in the Include in app column." width="733" height="359"/>
+<p class="figcaption"><strong>FIGURE 4-10</strong> Include in app switch.</p>
+</figure>
+<p class="indent">Note that datasets and dataflows cannot be included in the app.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_190"></span>To publish an app from a workspace, select <strong>Create app</strong>. If an app already exists, you’ll see <strong>Update app</strong> instead. There are three steps in app configuration:</p>
+<ul class="sq-s">
+<li><p class="bull">Setup</p></li>
+<li><p class="bull">Navigation</p></li>
+<li><p class="bull">Permissions</p></li>
+</ul>
+<section>
+<h5 class="h5" id="ch04lev3sec79">Setup</h5>
+<p class="noindent">When you select <strong>Create app</strong> or <strong>Update app</strong>, you’ll be taken to app setup, as shown in <a href="ch04.xhtml#ch04fig11">Figure 4-11</a>.</p>
+<figure class="figure" id="ch04fig11">
+<img src="graphics/04fig11.jpg" alt="The figure shows the initial app setup options." width="732" height="599"/>
+<p class="figcaption"><strong>FIGURE 4-11</strong> App setup.</p>
+</figure>
+<p class="indent">To publish an app, specify the app name and description. Additionally, you’ll see the following options on the Setup screen:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Support site</strong> Share where your users can find help related to the app.</p></li>
+<li><p class="bull"><strong>App logo</strong> By default, the app logo is the same as the workspace image. You can provide a different one here.</p></li>
+<li><p class="bull"><strong>App theme color</strong> This color will be used for the app menu and navigation.</p></li>
+<li><p class="bull"><strong>Contact information</strong> You can select the app publisher, workspace contacts, or specific individuals or groups.</p></li>
+</ul>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec80"><span epub:type="pagebreak" id="page_191"></span>Navigation</h5>
+<p class="noindent">In the navigation step, you can customize the navigation pane. In addition to selecting the navigation pane width under the <strong>Advanced</strong> options, you can rename, reorder, hide, and group app content items under <strong>Navigation</strong>.</p>
+<p class="indent">To group app content items, you must create a section first by selecting <strong>New</strong> &gt; <strong>Section</strong> and giving it a new name. Then you can select an app content item and select a section from the <strong>Section</strong> dropdown list.</p>
+<p class="indent">Furthermore, you can add links to the navigation pane. For each link, you can select where to open it:</p>
+<ul class="sq-s">
+<li><p class="bull">New tab</p></li>
+<li><p class="bull">Current tab</p></li>
+<li><p class="bull">Content area</p></li>
+</ul>
+<p class="indent">You can see the Navigation screen in <a href="ch04.xhtml#ch04fig12">Figure 4-12</a>.</p>
+<figure class="figure" id="ch04fig12">
+<img src="graphics/04fig12.jpg" alt="The figure shows the Navigation screen that has the Navigation section and the content details." width="733" height="434"/>
+<p class="figcaption"><strong>FIGURE 4-12</strong> App navigation.</p>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec81">Permissions</h5>
+<p class="noindent">On the Permissions screen, you can select who has access to the app. You can grant access to the entire organization or specific individuals or groups. If you only grant access to specific individual or groups, you can select <strong>Install this app automatically</strong> so that it automatically appears in the Apps section of the Power BI service for each user—otherwise, each user will have to install the app manually from the Apps section.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_192"></span><span class="gray"><em>Note</em></span> Access for Workspace Users</p>
+<p class="note-para">Users and groups with access to a workspace can access the corresponding app without you explicitly granting them access.</p>
+</div>
+<p class="indent">For users with access to the app, you can grant the following rights:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Allow all users to connect to the app’s underlying datasets using the Build permission</strong> Although the datasets won’t show up in the app, this setting allows you to connect to datasets from Power BI or use Analyze in Excel.</p></li>
+<li><p class="bull"><strong>Allow users to make a copy of the reports in this app</strong> This setting allows users to copy reports to their personal workspaces to customize them. It is available only if the Build permission is granted.</p></li>
+<li><p class="bull"><strong>Allow users to share the app and the app’s underlying datasets using the Share permission</strong> Note that connecting to the datasets requires the Build permission.</p></li>
+</ul>
+<p class="indent">The Permissions screen is shown in <a href="ch04.xhtml#ch04fig13">Figure 4-13</a>.</p>
+<figure class="figure" id="ch04fig13">
+<img src="graphics/04fig13.jpg" alt="The figure shows the list of users who have access to the app and additional permissions." width="733" height="476"/>
+<p class="figcaption"><strong>FIGURE 4-13</strong> App permissions.</p>
+</figure>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec82">App view</h5>
+<p class="noindent">Once you publish an app, the result will look like <a href="ch04.xhtml#ch04fig14">Figure 4-14</a>.</p>
+<figure class="figure" id="ch04fig14">
+<img src="graphics/04fig14.jpg" alt="The figure shows the app as it appears when published. On the left, there's the app navigation. The rest of the screen is taken by the content." width="733" height="359"/>
+<p class="figcaption"><strong>FIGURE 4-14</strong> App view.</p>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_193"></span>Note that the interface only has the app navigation; to go back and see the standard Power BI sidebar, you can select <strong>Power BI</strong> in the upper-left corner.</p>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec83">Update a published app</h5>
+<p class="noindent">After you publish your app, you can make changes to it if you are a contributing workspace user. For this, you need to go to the app workspace and make the changes you want; once you have made the changes, go back to the app workspace list of contents and select <strong>Update app</strong>. You can also update the Setup, Navigation, and Permissions settings that you configured when you created the app, and then select <strong>Update app</strong> &gt; <strong>Update</strong> to propagate the app changes.</p>
+<p class="indent">Note that on the Permissions screen, you will see the app link, as well as dashboard and report links. When you share any of those links, users will see all contents of the app, not just dashboards or reports.</p>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec84">Unpublish an app</h5>
+<p class="noindent">If you want to unpublish an app, you can do so from the app workspace by selecting <strong>More options</strong> &gt; <strong>Unpublish app</strong> &gt; <strong>Unpublish</strong>. Doing so will not delete the app workspace contents; instead, the app will be removed from the list of apps of each user and become inaccessible.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec9">Publish, import, or update assets in a workspace</h4>
+<p class="noindent">You can publish a report to the Power BI service from Power BI Desktop by selecting <strong>Publish</strong> on the <strong>Home</strong> ribbon. To publish a report from Power BI Desktop, you must be signed in. By default, your report will be published to your personal workspace, unless you already published to another workspace in the same session. If you are a contributor in other workspaces, you can select a workspace to publish to.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_194"></span>If the workspace you are publishing to already contains a dataset with the same name, you will be asked if you want to replace it, and you’ll see how many workspace items it affects, as shown in <a href="ch04.xhtml#ch04fig15">Figure 4-15</a>. This feature can be particularly useful when you’re updating a dataset that has other reports built from it.</p>
+<figure class="figure" id="ch04fig15">
+<img src="graphics/04fig15.jpg" alt="The figure shows a message that reads “Replace this dataset? You already have a dataset named 'Wide World Importers' in Power BI.”" width="432" height="305"/>
+<p class="figcaption"><strong>FIGURE 4-15</strong> Dataset impact.</p>
+</figure>
+<p class="indent">An alternative to publishing from Power BI Desktop is to publish from the Power BI service by going to a workspace and selecting <strong>New</strong> &gt; <strong>Upload a file</strong>. You’ll be given a choice to publish a local file, a file from OneDrive, or a file from SharePoint, as shown in <a href="ch04.xhtml#ch04fig16">Figure 4-16</a>.</p>
+<figure class="figure" id="ch04fig16">
+<img src="graphics/04fig16.jpg" alt="The figure shows four tiles in Power BI service: Local File, OneDrive - Business, SharePoint - Team Sites, and Learn about importing files." width="732" height="358"/>
+<p class="figcaption"><strong>FIGURE 4-16</strong> Creating new content from files.</p>
+</figure>
+<p class="indent">Selecting <strong>Local File</strong> will prompt you to select a file from your computer to publish, whereas <strong>OneDrive</strong> and <strong>SharePoint</strong> options allow you to publish from the cloud. Publishing from OneDrive can be beneficial because you can edit a report locally in Power BI Desktop in a folder that’s synced to OneDrive, and it will be published automatically upon saving and closing the file because Power BI can sync published files from OneDrive.</p>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec10"><span epub:type="pagebreak" id="page_195"></span>Apply sensitivity labels to workspace content</h4>
+<p class="noindent">Within an organization, different data may have different security levels. For example, some data must not leave a specific department, and other data may be shared publicly. To help users understand the sensitivity level of workspace content, you can apply sensitivity labels.</p>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Enabling Sensitivity Labels</p>
+<p class="note-para">For users to be able to apply sensitivity labels, they must be enabled in Power BI admin portal tenant settings, typically by the central IT department in the organization. The admin portal is out of the scope of the exam. For more information, see “Enable sensitivity labels in Power BI” at <em><a href="https://docs.microsoft.com/en-us/power-bi/admin/service-security-enable-data-sensitivity-labels">https://docs.microsoft.com/en-us/power-bi/admin/service-security-enable-data-sensitivity-labels</a>.</em></p>
+</div>
+<p class="indent">When information protection is enabled in your Power BI tenant, you can set a sensitivity label for a workspace item in the following way:</p>
+<ol class="num">
+<li><p class="num">Go to the settings of a workspace item.</p></li>
+<li><p class="num">Select a sensitivity label from the dropdown list under <strong>Sensitivity label</strong>.</p></li>
+<li><p class="num">Optionally, check <strong>Apply this label to the dataset's downstream content</strong> or similar.</p></li>
+<li><p class="num">Select <strong>Apply</strong> or <strong>Save</strong>.</p></li>
+</ol>
+<p class="indent">After you set a sensitivity label, it will be displayed when anyone views the item, as well as in the list of workspace contents, as shown in <a href="ch04.xhtml#ch04fig17">Figure 4-17</a>.</p>
+<figure class="figure" id="ch04fig17">
+<img src="graphics/04fig17.jpg" alt="The figure shows several workspace items with applied sensitivity labels." width="733" height="359"/>
+<p class="figcaption"><strong>FIGURE 4-17</strong> Sensitivity labels.</p>
+</figure>
+<p class="indent">Note how two reports have sensitivity labels shown in the Sensitivity column. If you hover over a sensitivity label, you’ll see its description.</p>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec11"><span epub:type="pagebreak" id="page_196"></span>Configure subscriptions and data alerts</h4>
+<p class="noindent">In the Power BI service, you can subscribe yourself and others to individual report pages, dashboards, and paginated reports, which will make Power BI send snapshots of content to your email. When subscribing, you can select the frequency and specific times when you want to receive subscription emails.</p>
+<section>
+<h5 class="h5" id="ch04lev3sec85">Subscribing to content</h5>
+<p class="noindent">The process of subscribing to a dashboard, report page, or a paginated report is similar:</p>
+<ol class="num">
+<li><p class="num">Navigate to the content item of interest and select <strong>Subscribe</strong>.</p></li>
+<li><p class="num">In the <strong>Subscribe to emails</strong> menu, select <strong>Add new subscription</strong>.</p></li>
+<li><p class="num">Enter the subscription name, addressees, email subject, frequency, time, start and end dates, and other options as needed.</p></li>
+<li><p class="num">Select <strong>Save and close</strong>.</p></li>
+</ol>
+<p class="indent">You can create several subscriptions to the same content item. <a href="ch04.xhtml#ch04fig18">Figure 4-18</a> shows options available when subscribing to a dashboard as an example.</p>
+<figure class="figure" id="ch04fig18">
+<img src="graphics/04fig18.jpg" alt="The figure shows the various options available when subscribing to a dashboard." width="733" height="359"/>
+<p class="figcaption"><strong>FIGURE 4-18</strong> Subscription options.</p>
+</figure>
+<p class="indent">When creating a subscription, you can select <strong>Run now</strong> to receive an email immediately. To disable a subscription without deleting it, switch the toggle next to <strong>Run</strong> <strong>now</strong> to <strong>Off</strong>. To delete a subscription, select <strong>Delete</strong> in the upper-right corner of the subscription settings. The <strong>Manage all subscriptions</strong> link takes you to a list of all subscriptions you created in the current workspace. Viewing all subscriptions you created is covered in the next section.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_197"></span><span class="gray"><em>Need More Review?</em></span> Subscriptions In the Power BI Service</p>
+<p class="note-para">For more details on subscriptions, including considerations and limitations, see “Email subscriptions for Power BI reports and dashboards” at <em><a href="https://docs.microsoft.com/en-us/power-bi/consumer/end-user-subscribe">https://docs.microsoft.com/en-us/power-bi/consumer/end-user-subscribe</a></em>.</p>
+</div>
+</section>
+<section>
+<h5 class="h5" id="ch04lev3sec86">Managing your subscriptions</h5>
+<p class="noindent">In addition to viewing workspace-specific subscriptions, you can see all subscriptions you created in the following way:</p>
+<ol class="num">
+<li><p class="num">Go to <strong>My workspace</strong>.</p></li>
+<li><p class="num">Select <strong>Settings</strong> in the upper-right corner.</p></li>
+<li><p class="num">Select <strong>Settings</strong> &gt; <strong>Settings</strong> &gt; <strong>Subscriptions</strong>.</p></li>
+</ol>
+<p class="indent"><a href="ch04.xhtml#ch04fig19">Figure 4-19</a> shows a sample list of subscriptions to manage.</p>
+<figure class="figure" id="ch04fig19">
+<img src="graphics/04fig19.jpg" alt="The figure shows a table with three columns: Content Name, Actions, and Overview." width="733" height="532"/>
+<p class="figcaption"><strong>FIGURE 4-19</strong> List of subscriptions.</p>
+</figure>
+<p class="indent">While the page says <strong>My workspace</strong>, it shows subscriptions created across all workspaces. To edit subscriptions, select <strong>Edit</strong> under <strong>Actions</strong>. The <strong>Overview</strong> column shows how many subscriptions to a content item you have.</p>
+</section>
+</section>
+<section>
+<h4 class="h4" id="ch04lev2sec12"><span epub:type="pagebreak" id="page_198"></span>Promote or certify Power BI content</h4>
+<p class="noindent">When you create Power BI content and share it, you can increase its visibility for other users by endorsing it. For example, other users can search for an endorsed dataset and build reports from it. When many datasets are available in the organization, it’s useful to know how reliable each dataset is—some may be created for test purposes only, whereas others may be considered a single source of truth in the company. By default, all datasets look the same when you search for datasets, be it from Power BI Desktop or the Power BI service. In this case, it may be a good idea to endorse datasets—let the reports creators know which datasets are high quality and reliable.</p>
+<p class="indent">You can endorse datasets, dataflows, reports, and apps. There are two ways to endorse Power BI content:</p>
+<ul class="sq-s">
+<li><p class="bull"><strong>Promote</strong> Promoted content has a badge that signifies that the content is ready to be used by others. Any contributing member of the workspace where the content resides can promote it. Content promotion facilitates the content being reused across the organization.</p></li>
+<li><p class="bull"><strong>Certify</strong> Content can be certified to show that it’s recommended for use, meaning it is highly reliable and curated. Only people selected by the Power BI tenant admins can certify Power BI content.</p></li>
+</ul>
+<div class="note">
+<p class="note-title"><span class="gray"><em>Note</em></span> Endorsing Different Types of Power BI Content</p>
+<p class="note-para">The process of endorsing all content types is the same. For ilustration purposes, next we review how to endorse a dataset.</p>
+</div>
+<p class="indent">A dataset can be promoted or certified in the <strong>Endorsement and discovery</strong> section of the dataset settings in Power BI service, as shown in <a href="ch04.xhtml#ch04fig20">Figure 4-20</a>.</p>
+<figure class="figure" id="ch04fig20">
+<img src="graphics/04fig20.jpg" alt="The figure shows the Endorsement section of dataset settings. There are three radio buttons: Default, Promoted, and Certified." width="732" height="259"/>
+<p class="figcaption"><strong>FIGURE 4-20</strong> Endorsement.</p>
+</figure>
+<p class="indent">Once you select <strong>Promoted</strong> or <strong>Certified</strong>, select <strong>Apply</strong> to save the changes.</p>
+<div class="note">
+<p class="note-title"><span epub:type="pagebreak" id="page_199"></span><span class="gray"><em>Note</em></span> Dataset Description</p>
+<p class="note-para">To help users understand what they can use a dataset for, you can add a description in the Endorsement section as well.</p>
+</div>
+<p class="indent">If the <strong>Certified</strong> option is inactive, it means you cannot certify datasets yourself. In this case, you should request dataset certification from those who were selected by your Power BI tenant admins to certify datasets. Those who can certify datasets may not always be members of the workspace that contains the dataset. If that’s the case, the person who can certify a dataset will need to become a contributing member of the workspace.</p>
+<p class="indent">You can see the Certified and Promoted badges in <a href="ch04.xhtml#ch04fig21">Figure 4-21</a>.</p>
+<figure class="figure" id="ch04fig21">
+<img src="graphics/04fig21.jpg" alt="The figure shows a list of datasets where one has a Certified badge and another one has a Promoted badge." width="732" height="406"/>
+<p class="figcaption"><strong>FIGURE 4-21</strong> Promoted and Certified badges.</p>
+</figure>
+</section>
+</section>
+<section>
+<h3 class="h3" id="ch04lev1sec3">Chapter summary</h3>
+<ul class="sq-s">
+<li><p class="bull">To ensure that data in your datasets is kept up to date, the Power BI service enables you to configure scheduled refresh. If your dataset is based on on-premises data, you’ll need to use an on-premises data gateway. An on-premises data gateway is available in two modes: personal and standard. Personal mode is for use by a single person; on-premises data gateway in standard mode can be used by the whole company. If you need to use data secured by virtual networks, you can use a virtual network (VNet) data gateway.</p></li>
+<li><p class="bull">To ensure that row-level security (RLS) works on datasets published to the Power BI service, you need to add members to RLS roles in the Power BI service. You can also test <span epub:type="pagebreak" id="page_200"></span>roles in the Power BI service in a way similar to how you test them Power BI Desktop. RLS only works for dataset readers, and it won’t work for contributing workspace members.</p></li>
+<li><p class="bull">Datasets can be shared individually, through an app, or through a workspace. Shared datasets can be used to build reports and dashboards in other workspaces. To track the usage of shared datasets, you can perform a dataset impact analysis.</p></li>
+<li><p class="bull">Global settings for files can be changed in Power BI Desktop, whereas report-specific settings can be applied both in Power BI Desktop and the Power BI service.</p></li>
+<li><p class="bull">You can collaborate on developing Power BI content in workspaces. Creating a workspace requires a Power BI Pro license.</p></li>
+<li><p class="bull">Four roles are available in Power BI workspaces, listed from least to most privileged: Viewer, Contributor, Member, Admin. Row-level security only works on viewers; other roles can see all data within a workspace and RLS won’t apply to them.</p></li>
+<li><p class="bull">If you want to share content from a workspace with end users, it’s best to publish an app. An app includes the workspace content that you select, except for datasets and dataflows. You can customize the navigation of an app further by renaming, reordering, and grouping content items. You can also add links to an app. After you publish an app, you can update or unpublish it.</p></li>
+<li><p class="bull">You can publish a report from Power BI Desktop. Alternatively, from the Power BI service, you can upload a local file or a file from OneDrive or SharePoint.</p></li>
+<li><p class="bull">Sensitivity labels allow you to show users the level of confidentiality of each workspace item. To be able to apply sensitivity labels, the information protection settings must be enabled by your Power BI tenant admin.</p></li>
+<li><p class="bull">You can subscribe yourself and others to report pages, dashboards, and paginated reports. Only the person who created a subscription can manage it.</p></li>
+<li><p class="bull">You can endorse Power BI content by promoting or certifying it to denote that it is high-quality and reliable. Any user with at least the Contributor role in a workspace can promote content that resides in the workspace. Power BI content can be certified only by those who were selected by Power BI tenant admins to certify content, which signifies a higher status of endorsement. Endorsed content has specific badges next to it to differentiate it from other content.</p></li>
+</ul>
+</section>
+<section>
+<h3 class="h3" id="ch04lev1sec4">Thought experiment</h3>
+<p class="noindent">In this thought experiment, demonstrate your skills and knowledge of the topics covered in this chapter. You can find the answers in the section that follows.</p>
+<p class="indent">You are a data analyst at Contoso responsible for creating and distributing Power BI reports. The management requested that you share your reports with a wider audience.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_201"></span>Based on background information and business requirements, answer the following questions:</p>
+<p class="question"><span class="gray"><strong><a id="ch04que1" href="ch04.xhtml#ch04que1a">1</a>.</strong></span> You’ve created a report that you published to a workspace. A few business users need to have the ability to view the reports. What’s the most appropriate way to achieve this? Your solution must consider that the report audience may change in the future and that you’ve already created other reports in the workspace that will be ready to be shared at a later date.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Share an app with individual users.</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Share an app with a security group.</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Share a report from the workspace with individuals.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Give the users the Viewer role in the workspace.</p>
+<p class="question"><span class="gray"><strong><a id="ch04que2" href="ch04.xhtml#ch04que2a">2</a>.</strong></span> You’re an admin of a workspace, and you’d like to invite a few users to collaborate with you on reports. They need to be able to update reports and the app but not add others to the workspace. Which role should you give the users?</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> Admin</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> Member</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Contributor</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> Viewer</p>
+<p class="question"><span class="gray"><strong><a id="ch04que3" href="ch04.xhtml#ch04que3a">3</a>.</strong></span> You create a report based on data from Azure SQL Database. You publish the report to the Power BI service, and you need to ensure that the dataset is updated every day at midnight. Contoso does not use any special network configuration. Which gateway configuration do you need to use? Your solution must minimize the configuration effort.</p>
+<p class="questiona"><span class="gray"><strong>A.</strong></span> On-premises data gateway (personal mode).</p>
+<p class="questiona"><span class="gray"><strong>B.</strong></span> On-premises data gateway (standard mode).</p>
+<p class="questiona"><span class="gray"><strong>C.</strong></span> Two on-premises data gateways: one in personal mode, and one in standard mode.</p>
+<p class="questiona"><span class="gray"><strong>D.</strong></span> No gateway is necessary.</p>
+</section>
+<section>
+<h3 class="h3" id="ch04lev1sec5">Thought experiment answers</h3>
+<p class="answer"><span class="gray"><strong><a id="ch04que1a" href="ch04.xhtml#ch04que1">1</a>.</strong></span> The answer is <strong>B</strong>. Sharing an app with a security group ensures that users can view only the report you include in the app without exposing other workspace assets. It also minimizes the effort to update the list of viewers because you can update the security group membership, which will be used for the Power BI app access. Sharing an app with individual users, as option A suggests, comes close, but adding or removing viewers will require opening the Power BI website and is not considered best practice. For similar reasons, option C is incorrect; additionally, if you share reports individually as opposed <span epub:type="pagebreak" id="page_202"></span>to packaging them in an app, then accessing them will be more difficult for users because they won’t be in one place. If you give users the Viewer role in a workspace—option D—they’ll see all reports in the workspace. This does not satisfy the business requirements because some reports in the workspace aren’t ready to be shared yet.</p>
+<p class="answer"><span class="gray"><strong><a id="ch04que2a" href="ch04.xhtml#ch04que2">2</a>.</strong></span> The answer is <strong>C</strong>. Contributors can update reports in a workspace, and they can update the app when allowed in workspace settings; at the same time, contributors cannot add others to a workspace. Options A and B both suggest roles that can add other users to a workspace, which goes against the business requirements. Option D, Viewer, isn’t right because viewers cannot update reports or apps in a workspace.</p>
+<p class="answer"><span class="gray"><strong><a id="ch04que3a" href="ch04.xhtml#ch04que3">3</a>.</strong></span> The answer is <strong>D</strong>. Since Contoso has no special network configuration in place, the Azure SQL Database can be accessed without a gateway. Options A, B, and C are incorrect because they suggest using an on-premises data gateway.</p>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

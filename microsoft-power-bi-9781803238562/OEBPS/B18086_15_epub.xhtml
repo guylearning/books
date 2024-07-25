@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer241">
+			<p> </p>
+			<h1 id="_idParaDest-269"><em class="italic"><a id="_idTextAnchor279"></a>Chapter 15</em>: Managing Datasets</h1>
+			<p>Once you have published your Power BI report on the service, there are a few more things that need to be configured. When published, a Power BI report can create two artifacts in the Power BI service, the report itself and the report's dataset. The dataset is everything except the report pages; the tables, the columns, the relationships, and the measures all make up the dataset.</p>
+			<div>
+				<div id="_idContainer231" class="IMG---Figure">
+					<img src="image/B18086_15_1.jpg" alt="Figure 15.1 – One report in Power BI Desktop creates two artifacts in the Power BI service
+" width="362" height="246"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.1 – One report in Power BI Desktop creates two artifacts in the Power BI service</p>
+			<p>In this chapter, we will cover how to administer the dataset, how to make sure the date data in the dataset is up to date, how to limit that data to only the people and groups who need it, and how to provide access to your dataset so other report creators can use it for their reports. </p>
+			<p>In this chapter, we will cover the following:</p>
+			<ul>
+				<li>Configuring a dataset scheduled refresh </li>
+				<li>Identifying when a gateway is required</li>
+				<li>Configuring row-level security group membership </li>
+				<li>Providing access to datasets </li>
+			</ul>
+			<p>This part of the exam is all about configuring your dataset after publishing. This is a very important step that if skipped could lead to out-of-date reports or report users accessing data that they should not. </p>
+			<h1 id="_idParaDest-270"><a id="_idTextAnchor280"></a>Technical requirements</h1>
+			<p>The following are the prerequisites in order to complete the work in this chapter:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC.</li>
+				<li>We've also provided synthetic data that can be used, which is available in the GitHub repository for this book here: <a href="https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data">https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data</a>.</li>
+			</ul>
+			<h1 id="_idParaDest-271"><a id="_idTextAnchor281"></a>Configuring a dataset scheduled refresh </h1>
+			<p>It is very important to have not only accurate but also timely data for your reports. Looking at <a id="_idIndexMarker753"></a>a sales forecast report for last year, or even last week's inventory report, may lead you to making the wrong business decisions. To keep your imported Power BI report data up to date, you will have to refresh the data by pulling data from the data source. You can manually refresh the data of a dataset, but this can be inconvenient, to say the least. An easier way is to have the Power BI service schedule the refresh for you. </p>
+			<p>To schedule a refresh, go to the workspace you published the report to and select the <strong class="bold">Datasets + dataflows</strong> option from the menu, then hover your mouse over the dataset name. When you do that, the refresh now and schedule refresh icons will appear; select the schedule refresh icon.</p>
+			<p>This will open the dataset settings page, where you can then set up scheduled refreshes.</p>
+			<div>
+				<div id="_idContainer232" class="IMG---Figure">
+					<img src="image/B18086_15_2.jpg" alt="Figure 15.2 – Selecting the schedule refresh button on the settings page
+" width="1088" height="619"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.2 – Selecting the schedule refresh button on the settings page</p>
+			<p>Refreshes <a id="_idIndexMarker754"></a>can be scheduled daily or weekly. You can schedule a dataset to be refreshed up to 48 times a day if the dataset is in a Premium workspace. If it is not, then you can only schedule up to eight refreshes daily.</p>
+			<div>
+				<div id="_idContainer233" class="IMG---Figure">
+					<img src="image/B18086_15_3.jpg" alt="Figure 15.3 – Datasets can be refreshed multiple times a day if needed
+" width="539" height="592"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.3 – Datasets can be refreshed multiple times a day if needed</p>
+			<p>You can <a id="_idIndexMarker755"></a>also add people to be notified if a refresh fails. </p>
+			<h1 id="_idParaDest-272"><a id="_idTextAnchor282"></a>Identifying when a gateway is required</h1>
+			<p>Power BI can directly connect to most cloud-based data sources. If your data source is on-premises, you will <a id="_idIndexMarker756"></a>need to install and configure an on-premises data gateway. You will not need to know how to install a gateway for the exam. But you <em class="italic">will</em> need to know when it is necessary.</p>
+			<p>The Power BI service will inform you if a gateway is necessary. There is a <strong class="bold">Gateway connection</strong> option on the dataset settings page. If your dataset requires a gateway, this section will inform you that you have not configured your dataset to use an on-premises data gateway.</p>
+			<div>
+				<div id="_idContainer234" class="IMG---Figure">
+					<img src="image/B18086_15_4.jpg" alt="Figure 15.4 – If a gateway is needed, the Power BI service will inform you
+" width="985" height="579"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.4 – If a gateway is needed, the Power BI service will inform you</p>
+			<p>Once you add your dataset's data source to the gateway, the error will go away and you can refresh the dataset as needed.</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">You will not be able to enable the slider to schedule a refresh if a gateway is required and not set up.</p>
+			<div>
+				<div id="_idContainer235" class="IMG---Figure">
+					<img src="image/B18086_15_5.jpg" alt="Figure 15.5 – A data source set to use a gateway
+" width="1097" height="490"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.5 – A data source set to use a gateway</p>
+			<p>Identifying when <a id="_idIndexMarker757"></a>a gateway is required is quite simple. The Power BI service will inform you, either by disabling the scheduled refresh or with a <em class="italic">not correctly configured</em> message in the <strong class="bold">Gateway connection</strong> area.</p>
+			<h1 id="_idParaDest-273"><a id="_idTextAnchor283"></a>Configuring row-level security group membership </h1>
+			<p>As you saw in <a href="B18086_05_epub.xhtml#_idTextAnchor089"><em class="italic">Chapter 5</em></a>, <em class="italic">Designing a Data Model</em>, you can use DAX to filter your reports for <a id="_idIndexMarker758"></a>row-level security. Once you publish your dataset to the Power BI service, you can enforce row-level security by assigning users or groups to the roles you created. </p>
+			<p>Power BI <a id="_idIndexMarker759"></a>uses <strong class="bold">Azure Active Directory</strong> (<strong class="bold">AAD</strong>) for security. You can add members or AAD security groups to the roles created in a report. Row-level security can use distribution groups, security groups, or mail-enabled security groups.</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">Row-level security cannot use Microsoft 365 groups.</p>
+			<p>It is important to note that row-level security only applies to users that have Viewer access to the workspace. If a user is directly assigned or a member of a group is assigned to a role with more elevated permissions, row-level security will not apply. That means that anyone <a id="_idIndexMarker760"></a>who has been assigned the Contributor, Member, or Admin role in the workspace will see all the data, unfiltered by row-level security.</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">Row-level security does not apply to anyone with editing permissions to the workspace. </p>
+			<p>Assigning a user or group to a role starts with the dataset. Go to the <strong class="bold">Datasets + dataflows</strong> page from the menu, then hover your mouse over the dataset name and open the drop-down menu by clicking on the three vertical dots. Select the <strong class="bold">Security</strong> option from the menu.</p>
+			<div>
+				<div id="_idContainer236" class="IMG---Figure">
+					<img src="image/B18086_15_6.jpg" alt="Figure 15.6 – Row-level security is configured from the security page
+" width="689" height="681"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.6 – Row-level security is configured from the security page</p>
+			<p>This will <a id="_idIndexMarker761"></a>open the row-level security page. If your dataset has roles defined, you will see them listed here. </p>
+			<p>Select the role you want to assign users or groups to and use the search box to find them <a id="_idIndexMarker762"></a>in AAD. Once you have assigned the required members to the role, click <strong class="bold">Save</strong>. </p>
+			<div>
+				<div id="_idContainer237" class="IMG---Figure">
+					<img src="image/B18086_15_7.jpg" alt="Figure 15.7 – Adding users or groups to row-level security by searching AAD
+" width="732" height="587"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.7 – Adding users or groups to row-level security by searching AAD</p>
+			<p>Once you have populated all the row-level security roles, you are done.</p>
+			<h1 id="_idParaDest-274"><a id="_idTextAnchor284"></a>Providing access to datasets</h1>
+			<p>One of the great things about Power BI is that you can reuse datasets from other reports to create your own reports. This allows you to minimize the memory used by Power BI and <a id="_idIndexMarker763"></a>keep all your reports consistent. If you have ever been to a meeting where everyone is arguing about the numbers and where they came from, then you know that having one, consistent source of data can be invaluable. </p>
+			<p>Another reason to use the same dataset is that you only have to refresh the data for one dataset instead of many. This leads to less strain on the source system. </p>
+			<p>You can automatically connect to any dataset in any workspace where you are a Contributor, Member, or Admin. You will need to be granted access to any other dataset, on a dataset-by-dataset basis. </p>
+			<p>To grant someone access, open the <strong class="bold">Datasets + dataflows</strong> page from the menu, then hover your mouse over the dataset name and open the drop-down menu by clicking on the three vertical dots. Select <strong class="bold">Manage permissions</strong> from the menu.</p>
+			<div>
+				<div id="_idContainer238" class="IMG---Figure">
+					<img src="image/B18086_15_8.jpg" alt="Figure 15.8 – Use Manage permissions to share your dataset
+" width="595" height="680"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.8 – Use Manage permissions to share your dataset</p>
+			<p>This will <a id="_idIndexMarker764"></a>open the <strong class="bold">Manage permissions</strong> page. On this page, you can grant a user or group permission to use the dataset by clicking on the <strong class="bold">+Add user</strong> button. This will open a window that will let you grant access to users or groups.</p>
+			<div>
+				<div id="_idContainer239" class="IMG---Figure">
+					<img src="image/B18086_15_9.jpg" alt="Figure 15.9 – Granting anything more than read-only access requires selecting one or more of the options
+" width="380" height="607"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.9 – Granting anything more than read-only access requires selecting one or more of the options</p>
+			<p>Granting access <a id="_idIndexMarker765"></a>to the dataset grants the users read-only access to that dataset. This will allow them to see the dataset information page; it does not allow them to use the dataset to create new reports. For that, you have three additional permission choices:</p>
+			<ul>
+				<li><strong class="bold">Allow recipients to share this dataset</strong></li>
+				<li><strong class="bold">Allow recipients to build content with the data associated with this dataset</strong></li>
+				<li><strong class="bold">Send an email notification</strong></li>
+			</ul>
+			<p>If you want a user or group to have permission to create new reports based on the dataset, make sure that the second choice is selected. If you want them to be able to share the dataset with others who may make reports, select the first. If you want to inform the users or groups that you have shared the dataset with them, check the <strong class="bold">Send email</strong> option. </p>
+			<p>You can create new reports using the datasets that you have published or that have been shared <a id="_idIndexMarker766"></a>with you by selecting <strong class="bold">Power BI datasets</strong> under the <strong class="bold">Get data</strong> option or clicking on the Power BI dataset icon on the <strong class="bold">Home</strong> ribbon of Power BI Desktop.</p>
+			<div>
+				<div id="_idContainer240" class="IMG---Figure">
+					<img src="image/B18086_15_10.jpg" alt="Figure 15.10 – Reusing datasets in Power BI Desktop
+" width="1320" height="585"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 15.10 – Reusing datasets in Power BI Desktop</p>
+			<p>Once you have selected Power BI datasets as your source, all the datasets you have access to will be available for you to use. </p>
+			<p>Reusing Power BI datasets allows you to use the same, consistent data across multiple reports with a simplified refresh schedule. </p>
+			<h1 id="_idParaDest-275"><a id="_idTextAnchor285"></a>Summary</h1>
+			<p>In this chapter, you learned a lot about Power BI datasets, including the fact that when you publish a report to Power BI, the service splits the report into two artifacts, the report and the dataset. </p>
+			<p>Once you publish your report and dataset to the Power BI service, the data in the dataset should be kept up to date. Though you could just import the data into Power BI Desktop and republish it, you learned a much better way, which is scheduling a refresh. If your data is on-premises, you need to use an on-premises data gateway for that data refresh. The on-premises data gateway allows you to synchronize data between your on-premises data sources and your Power BI datasets.</p>
+			<p>You also learned about a very important topic, how to enforce the row-level security you built into your data model in Powe BI Desktop. Using AAD, row-level security allows you to assign DAX filters to users or groups so they only see the data that they are supposed to see.</p>
+			<p>Sharing datasets allows you and other report creators to use the same semantic model, with the same tables, columns, and measures. Sharing also means that you only have to refresh one dataset instead of many.</p>
+			<p>In the next chapter, you will look at how to manage Power BI workspaces in the Power BI service.</p>
+			<h1 id="_idParaDest-276"><a id="_idTextAnchor286"></a>Questions</h1>
+			<ol>
+				<li>If I need to use an on-premises SQL Server as a source for my report that will use an import query of a dataset, what should I do? <ol><li>You must move all of your data to Azure.</li><li>This is not possible.</li><li>Use a self-hosted integration runtime.</li><li>Use an on-premises data gateway.</li></ol></li>
+				<li>How many times per day can a dataset refresh be scheduled in a Premium workspace?<ol><li>24</li><li>48</li><li>96</li><li>12</li></ol></li>
+				<li>Row-level security only applies to users who have workspace access at what level?<ol><li>Member</li><li>Admin</li><li>Viewer</li><li>All of the above</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

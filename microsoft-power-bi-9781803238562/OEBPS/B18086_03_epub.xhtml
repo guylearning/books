@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer023">
+			<h1 id="_idParaDest-48"><em class="italic"><a id="_idTextAnchor049"></a>Chapter 3</em>: Profiling the Data</h1>
+			<p>After connecting to data and getting it into Power BI, your next step will be to profile your data, or as data scientists and statisticians call it, performing <strong class="bold">exploratory data analysis</strong>. This is the process of <em class="italic">getting to know your data</em>. One of the worst things you can do is to create reports without knowing how the underlying data is structured. This is particularly true of data you work with all the time. It's often a great idea to step back and really look at the data you are working with to make sure you understand what is there and what isn't.</p>
+			<p>If you have null values in a column of data, how will you handle them? If you are only getting 100 rows when you expected 10,000, what will you do? </p>
+			<p>Power BI loves working with date fields, but what if your dates are coming in as text? Or as a number? </p>
+			<p>You will have to learn how to identify these problems and correct them. The PL-300 exam may test you on how to identify and fix these problems. </p>
+			<p>In this chapter, we will cover the following exam skills:</p>
+			<ul>
+				<li>Identifying data anomalies</li>
+				<li>Interrogating data statistics</li>
+			</ul>
+			<h1 id="_idParaDest-49"><a id="_idTextAnchor050"></a>Technical requirements</h1>
+			<p>To complete the exercises in the chapter, you will need the following:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC, with the Power Query Editor open.</li>
+				<li>Access to some data to use. We've also provided synthetic data that can be used, which is available in the GitHub repository for this book here: <a href="https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data">https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data</a>.</li>
+			</ul>
+			<h1 id="_idParaDest-50"><a id="_idTextAnchor051"></a>Identifying data anomalies</h1>
+			<p>We will <a id="_idIndexMarker099"></a>start with the same tool, the Power BI Power Query Editor, that we used to connect to and transform our data in <a href="B18086_02_epub.xhtml#_idTextAnchor025"><em class="italic">Chapter 2</em></a>, <em class="italic">Connecting to Data Sources</em>. The Power Query Editor provides several tools to help us to identify anomalies.</p>
+			<div>
+				<div id="_idContainer013" class="IMG---Figure">
+					<img src="image/B18086_03_001.jpg" alt="Figure 3.1 – Power BI Desktop Power Query Editor
+" width="1650" height="928"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.1 – Power BI Desktop Power Query Editor</p>
+			<p>You will find most of the tools on the <strong class="bold">View</strong> ribbon. You may be tested on any or all of these in the certification exam.</p>
+			<div>
+				<div id="_idContainer014" class="IMG---Figure">
+					<img src="image/B18086_03_002.jpg" alt="Figure 3.2 – Power Query Editor showing that we have nulls in our column
+" width="1041" height="720"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.2 – Power Query Editor showing that we have nulls in our column</p>
+			<p>It is very<a id="_idIndexMarker100"></a> important to note, and it may come up on the test, that the Power Query Editor only looks at the first 1,000 rows of data. In the lower left-hand corner of the Power Query Editor, you will see a selector to change the Power Query Editor to scan your entire dataset. </p>
+			<div>
+				<div id="_idContainer015" class="IMG---Figure">
+					<img src="image/B18086_03_003.jpg" alt="Figure 3.3 – Controlling how many columns are profiled
+" width="800" height="321"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.3 – Controlling how many columns are profiled</p>
+			<p class="callout-heading">Real-World Tip</p>
+			<p class="callout">You may not want <a id="_idIndexMarker101"></a>to do this against very large datasets. It will take longer and you may use all your computer's memory before profiling can finish. </p>
+			<h2 id="_idParaDest-51"><a id="_idTextAnchor052"></a>Interrogating column properties</h2>
+			<p>The<a id="_idIndexMarker102"></a> first option that we will look at is <strong class="bold">Column quality</strong>. </p>
+			<p>This option will create a small table showing the percentage of rows containing valid data (green) or errors (red) or are empty (black). Remember, this will only include the statistics for the first 1,000 rows by default. </p>
+			<p>In the following example, you can see that 1% of the <strong class="bold">Segment</strong> column is null, 4% of <strong class="bold">Discounts</strong> is null, and 1% of the <strong class="bold">Date</strong> data has errors:</p>
+			<div>
+				<div id="_idContainer016" class="IMG---Figure">
+					<img src="image/B18086_03_004.jpg" alt="Figure 3.4 – Column quality showing how many rows in your column are valid, will return an error, or are empty
+" width="837" height="807"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.4 – Column quality showing how many rows in your column are valid, will return an error, or are empty</p>
+			<p>It is very <a id="_idIndexMarker103"></a>easy and intuitive to see all this information immediately. Once you know about error and null rows, you can set about fixing them, if necessary.</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">Errors are often the result of a row having the wrong data type in the column: a text field where Power BI expects a numeric or date value. </p>
+			<p>For the test, it is<a id="_idIndexMarker104"></a> important to remember that <strong class="bold">Column</strong> <strong class="bold">quality</strong> shows you the percentage of valid, error, and null rows in a column. </p>
+			<h2 id="_idParaDest-52"><a id="_idTextAnchor053"></a>Examining data structures</h2>
+			<p>Once<a id="_idIndexMarker105"></a> you have handled any errors in your columns and decided what to do with null rows, you can start looking at your data structures.</p>
+			<p>The first thing to look at is <strong class="bold">data</strong> <strong class="bold">types</strong>. Your <a id="_idIndexMarker106"></a>reports will run faster if you have everything set to its its correct type. You can easily change between data types using the <strong class="bold">Transform</strong> ribbon. </p>
+			<div>
+				<div id="_idContainer017" class="IMG---Figure">
+					<img src="image/B18086_03_005.jpg" alt="Figure 3.5 – A screenshot showing possible data types
+" width="840" height="542"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.5 – A screenshot showing possible data types</p>
+			<p>Ensure that your data sources are providing you with data of the types that are expected. You <a id="_idIndexMarker107"></a>will get errors or anomalous results if there's text where you expect a number or a date.</p>
+			<p>You can also change the type by clicking on the data type icon to the left of the column name in the <strong class="bold">Data Preview</strong> area of the Power Query Editor.</p>
+			<div>
+				<div id="_idContainer018" class="IMG---Figure">
+					<img src="image/B18086_03_006.jpg" alt="Figure 3.6 – You can also change data types in Power BI Desktop
+" width="249" height="597"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.6 – You can also change data types in Power BI Desktop</p>
+			<p>It is typically best to set data types for fields in Power Query and then only change the categorization or formatting of a field in Power BI Desktop. For example, categorizing the numeric values of 38.889484 and -77.035278 as latitude and longitude rather than simply decimal numbers will help Power BI properly display these decimal values while not inherently changing the way they are stored.</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">Changing data can be accomplished from the Power Query Editor or Power BI Desktop.</p>
+			<p>Next, let's get a closer look at the statistics generated from your data.</p>
+			<h1 id="_idParaDest-53"><a id="_idTextAnchor054"></a>Interrogating data statistics </h1>
+			<p>Knowing how<a id="_idIndexMarker108"></a> your data is distributed within a column can be extremely helpful. It can tell you a large amount of information in a simple, easy-to-understand format. In the Power Query Editor, there are two ways to see summarized data on a column: <strong class="bold">Column distribution</strong> and <strong class="bold">Column profile</strong>.</p>
+			<h2 id="_idParaDest-54"><a id="_idTextAnchor055"></a>Column distribution</h2>
+			<p><strong class="bold">Column distribution</strong> generates<a id="_idIndexMarker109"></a> a bar chart for the data in the column. This is particularly good for categorical data, such as countries, market segment, or payment type, for example. Below the bar chart, there will be two numbers, a count of distinct values in the column, including duplicates and nulls, and a count of how many values are unique. </p>
+			<p>As you can see from the following screenshot, this works better for categorical data than for continuous numbers:</p>
+			<div>
+				<div id="_idContainer019" class="IMG---Figure">
+					<img src="image/B18086_03_007.jpg" alt="Figure 3.7 – Power Query Editor displaying how data is distributed
+" width="833" height="843"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.7 – Power Query Editor displaying how data is distributed</p>
+			<p class="callout-heading">Test Tip</p>
+			<p class="callout">Look for weird or<a id="_idIndexMarker110"></a> unexpected distributions of your data. If you only have five business segments, you should not see any more or any less in the graph.</p>
+			<p>The <strong class="bold">Segment</strong> column has only six distinct values, whereas the <strong class="bold">Discounts</strong> column has many distinct and many<a id="_idIndexMarker111"></a> unique values. For the test, you want to remember that you can use <strong class="bold">Column distribution</strong> to see how many distinct and unique values you have in your column. You can also use it to generate a bar chart that shows how those values are distributed.</p>
+			<p>If we look at the <strong class="bold">Discounts</strong> column, maybe there's a better way to see what's going on.</p>
+			<h2 id="_idParaDest-55"><a id="_idTextAnchor056"></a>Column profile</h2>
+			<p>This option<a id="_idIndexMarker112"></a> will give you a more detailed view of how the data is spread in your column. It will provide you with summary statistics for the first 1,000 rows, by default, of your dataset. This includes a count of how many rows Power BI is bringing in. This can give you not only a sense of how large the data in the column is but also whether you are missing data. If your original data source had 500 rows, but you are only seeing 250, then either you filtered out half your data in Power BI or it's not being retrieved from the source for some reason. This row count will also show how many rows are outliers, how many are null, and how many are empty text. It will also show the minimum value and the maximum value. If the column is marked as a text column, Power BI determines the minimum and maximum alphabetically. </p>
+			<p>If the column is marked as a numeric column, then along with all those statistics, you will see how many rows are zero, the average for the column, and the standard deviation. There is <a id="_idIndexMarker113"></a>also an entry for <strong class="bold">NaN</strong>, which stands for <strong class="bold">not a number</strong>. This is the count of rows that have some non-numeric character in them. </p>
+			<p>The bar chart will show you how the values are distributed. This is a larger and easier-to-read visualization of the same data from the <strong class="bold">Column distribution</strong> option. The main differences, aside from the size, are that you can easily compare distributions between columns in <strong class="bold">Column distribution</strong>, and you can easily create a filter of your data in <strong class="bold">Column profile</strong>. In <strong class="bold">Column profile</strong>, you can hover over or click one of the bars and choose to either exclude all the rows it represents from the report or filter the report to just those rows. </p>
+			<p>Here, you can see a column profile for a numeric column. Notice that the column statistics include <strong class="bold">Average</strong>, <strong class="bold">Standard deviation</strong>, <strong class="bold">Zero</strong>, and <strong class="bold">NaN</strong>. Also, note that by hovering over one of the columns, you are presented with the <strong class="bold">Equals</strong> or <strong class="bold">Does not Equal</strong> options. Choosing either one will add a <strong class="bold">Filtered Rows Step</strong> to <strong class="bold">Applied Steps</strong> and filter the report according to which you choose. </p>
+			<div>
+				<div id="_idContainer020" class="IMG---Figure">
+					<img src="image/B18086_03_008.jpg" alt="Figure 3.8 – Summary statistics and distribution for a single numeric column
+" width="1650" height="933"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.8 – Summary statistics and distribution for a single numeric column</p>
+			<p>Looking at <a id="_idIndexMarker114"></a>the summary statistics and distribution for a single column will let you get a feel for your data, giving you a preview of what you can report on when you start adding visualization to the report page. For example, <em class="italic">Figure 3.8</em> shows us the minimum, maximum, and average values that can be used as summary values on a table visual in your report. </p>
+			<p>The following screenshot shows the column statistics for a text-type column. Notice that there are fewer statistics available:</p>
+			<div>
+				<div id="_idContainer021" class="IMG---Figure">
+					<img src="image/B18086_03_009.jpg" alt="Figure 3.9 – A screenshot showing column statistics for a text type column
+" width="1650" height="946"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.9 – A screenshot showing column statistics for a text type column</p>
+			<p>Notice this <a id="_idIndexMarker115"></a>text column does not have an average or other number-based statistics.</p>
+			<p>Date columns have one more statistical field than text. A date column will have all the statistics as a text column, but will also have an average. </p>
+			<div>
+				<div id="_idContainer022" class="IMG---Figure">
+					<img src="image/B18086_03_010.jpg" alt="Figure 3.10 – Date fields have their own subset of statistics
+" width="1650" height="949"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 3.10 – Date fields have their own subset of statistics</p>
+			<p>Looking at <a id="_idIndexMarker116"></a>individual column statistics can help you ensure that the data you are reporting on is correct. It can also provide you with some information on what to expect when you start adding visualizations to the reporting page. </p>
+			<h1 id="_idParaDest-56"><a id="_idTextAnchor057"></a>Summary</h1>
+			<p>In this chapter, we looked at how Power BI can help us identify data anomalies by viewing column quality. We looked at how to examine data structures and data types in the Power Query Editor. We interrogated the properties of our columns by enabling the <strong class="bold">Column quality</strong> setting. Finally, we explored the data statistics associated with our columns by using <strong class="bold">Column distribution</strong> and <strong class="bold">Column profile</strong>. Power BI Desktop is an easy-to-use exploratory data analysis tool. <strong class="bold">Column quality</strong> can quickly alert you to possible problems in your data. Having a tool that shows you how much of your data is valid, how much is null, and how much will generate errors lets you know at a glance about possible problems. </p>
+			<p>Looking at how the data is distributed in your columns can alert you to missing data. The distribution can also let you know at a glance if your data is unexpectedly skewed. </p>
+			<p>One-click access to summary statistics using <strong class="bold">Column profile</strong> lets you get an immediate feel for your data. <strong class="bold">Column profile</strong> can let you know what kind of data you have and how it is shaped. The profile can also let you know if you may want to keep or get rid of a column. </p>
+			<p>In the next chapter, we will look at cleaning and organizing your data for reporting. You will learn about cross-filter direction and security filtering, calculated tables, hierarchies, calculated columns, row-level security, object-level security, and the Q&amp;A feature.</p>
+			<h1 id="_idParaDest-57"><a id="_idTextAnchor058"></a>Questions </h1>
+			<ol>
+				<li>Which tool is used to transform data?<ol><li>Power Edit</li><li>Transform Data</li><li>Query Tool</li><li>Power Query</li></ol></li>
+				<li>By default, the Power Query Editor will use how many rows of data?<ol><li>100 rows</li><li>1,000 rows</li><li>2,000 rows</li><li>Entire dataset</li></ol></li>
+				<li>Column distribution view can be enabled by selecting the checkbox under which tab on the ribbon?<ol><li>Tools</li><li>Statistics</li><li>View</li><li>Home</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

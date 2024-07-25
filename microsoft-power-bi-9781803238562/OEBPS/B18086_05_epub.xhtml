@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer049">
+			<h1 id="_idParaDest-87"><em class="italic"><a id="_idTextAnchor089"></a>Chapter 5</em>: Designing a Data Model</h1>
+			<p>Once you have connected to your data, done a bit of analysis, and organized it for reporting, the next step is to create a data model. </p>
+			<p>A good data model will provide faster and more accurate reporting. If the data model is easy to understand, report developers will take less time to generate reports, and it will make those reports easier to maintain. We'll see how to do that in this chapter.</p>
+			<p>In this chapter, we will cover the following topics – each using the same names you'll see in the exam:</p>
+			<ul>
+				<li>Define the tables</li>
+				<li>Flatten out a parent-child hierarchy</li>
+				<li>Define role-playing dimensions</li>
+				<li>Configure table and column properties</li>
+				<li>Define quick measures</li>
+				<li>Resolve many-to-many relationships</li>
+				<li>Create a common date table</li>
+				<li>Define the appropriate level of data granularity</li>
+				<li>Design the data model to meet performance requirements</li>
+			</ul>
+			<h1 id="_idParaDest-88"><a id="_idTextAnchor090"></a>Technical requirements</h1>
+			<p>You will need the following:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC, connected to some data to use: <a href="https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data">https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data</a></li>
+			</ul>
+			<h1 id="_idParaDest-89"><a id="_idTextAnchor091"></a>Define the tables</h1>
+			<p>As mentioned in the introduction, once you've acquired your data, cleaned it, and organized it, you can start to model it. Usually, a simpler model will perform better than a complicated <a id="_idIndexMarker228"></a>model. As every situation is different, there are a few hard-and-fast rules for simplifying your data model. This is good news for you, as you will encounter a few questions about this and most are common sense. </p>
+			<p>When creating tables, what you leave out can be as important as what you keep. Typically, if a column or table is not necessary for a visual or a calculation, do not include it in the model. If you bring in more tables and columns than you need, not only will the reports based on the model be slower but it can also lead to confusion. If you import all the tables from your database, report creators will have to search through all the tables to find the columns they need to report on. This can lead to frustration, especially if the end result is a slow-running report. Slow-running reports are usually bad reports. No one wants to wait for a report to finish showing their data, especially Power BI reports. Power BI reports are known for their interactivity, that is, the slicing and dicing of data in real time. There is an immediacy to working with Power BI reports that is diminished when the report is slow to render. </p>
+			<p>Let's explore parent-child hierarchies next.</p>
+			<h1 id="_idParaDest-90"><a id="_idTextAnchor092"></a>Flatten out a parent-child hierarchy</h1>
+			<p>Where possible, you should strive for simpler models. When your report builders see fewer tables, they will be <a id="_idIndexMarker229"></a>able to use the model more effectively. The simpler the model, the fewer problems you will have with it. We are not saying leave out important data, but we are saying, again, <em class="italic">if it's not necessary, don't include it</em>.</p>
+			<p>The most common way to do this is by using a star schema.</p>
+			<h2 id="_idParaDest-91"><a id="_idTextAnchor093"></a>Star schema</h2>
+			<p>A <strong class="bold">star schema</strong> organizes your data into <strong class="bold">fact</strong> and <strong class="bold">dimension tables</strong>. You can use dimension tables <a id="_idIndexMarker230"></a>to filter the fact table. Dimension tables contain <a id="_idIndexMarker231"></a>information that is repeated over and over again, for example, in the <strong class="source-inline">Sales</strong> table. If you think of a product dimension, it can hold all the information about a product, such as the name, color, SKU, size, and weight. Instead of repeating that information over and over, you can represent the product by an <a id="_idIndexMarker232"></a>SKU number or even an integer in the <strong class="source-inline">Sales</strong> table. You can <a id="_idIndexMarker233"></a>then filter the <strong class="source-inline">Sales</strong> table by selecting a product name, or even filter it to all products sold that are purple.</p>
+			<p class="figure-caption"> </p>
+			<div>
+				<div id="_idContainer031" class="IMG---Figure">
+					<img src="image/B18086_05_001.jpg" alt="Figure 5.1 – An example of a star schema
+" width="778" height="727"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.1 – An example of a star schema</p>
+			<h3>Complicated models</h3>
+			<p>A complicated model is <a id="_idIndexMarker234"></a>confusing for report designers and slower for Power BI to refresh and render.</p>
+			<div>
+				<div id="_idContainer032" class="IMG---Figure">
+					<img src="image/B18086_05_002.jpg" alt="Figure 5.2 – A very complicated model 
+" width="1527" height="974"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.2 – A very complicated model </p>
+			<p>Notice how hard it is to read and follow the relationships.</p>
+			<h3>Simple model</h3>
+			<p>A simpler model is easier to <a id="_idIndexMarker235"></a>maintain, create reports on, and refresh.</p>
+			<div>
+				<div id="_idContainer033" class="IMG---Figure">
+					<img src="image/B18086_05_003.jpg" alt="Figure 5.3 – A simpler model
+" width="873" height="841"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.3 – A simpler model</p>
+			<p>A simpler table structure should be simple to navigate. The columns and tables should have friendly names, not <a id="_idIndexMarker236"></a>obtuse system-defined ones. Whenever possible, you should merge or append tables to minimize relationships. Those relationships should also make sense.</p>
+			<h2 id="_idParaDest-92"><a id="_idTextAnchor094"></a>Defining relationships</h2>
+			<p>As you can see in both <em class="italic">Figure 5.2</em> and <em class="italic">Figure 5.3</em>, there are lines connecting the tables in the modeling view. These lines <a id="_idIndexMarker237"></a>define the relationship between <a id="_idIndexMarker238"></a>the tables. </p>
+			<h3>Manage relationships</h3>
+			<p>You can manage relationships <a id="_idIndexMarker239"></a>by selecting the <strong class="bold">Manage relationships</strong> button on the modeling tab.</p>
+			<div>
+				<div id="_idContainer034" class="IMG---Figure">
+					<img src="image/B18086_05_004.jpg" alt="Figure 5.4 – Manage relationships window
+" width="1015" height="977"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.4 – Manage relationships window</p>
+			<p>Using this <a id="_idIndexMarker240"></a>window, you can create, edit, and delete relationships between tables. You can also choose the <strong class="bold">Autodetect…</strong> button, which will try to find relationships in your data. </p>
+			<h3>Edit relationship </h3>
+			<p>You can choose to edit relationships from <strong class="bold">Manage relationships</strong> or by right-clicking on one of the relationship lines <a id="_idIndexMarker241"></a>in the model and selecting <strong class="bold">Properties</strong>. You can set or change the properties of any relationship in the <strong class="bold">Edit relationship</strong> dialog window.</p>
+			<div>
+				<div id="_idContainer035" class="IMG---Figure">
+					<img src="image/B18086_05_005.jpg" alt="Figure 5.5 – Edit relationship dialog
+" width="1055" height="903"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.5 – Edit relationship dialog</p>
+			<p>Relationships control filtering and can change the behavior of calculations. They are at the heart of how a Power BI data model works and are one of the key differentiators between Power BI and its competitors. Choosing a subset of data from one side of the relationship can <a id="_idIndexMarker242"></a>filter what data is available on the other side. If you have a <strong class="source-inline">Date</strong> table and filter it to today, if that <strong class="source-inline">Date</strong> table has a relationship with your <strong class="source-inline">Sales</strong> table, the <strong class="source-inline">Sales</strong> table will also be filtered.</p>
+			<p>Within the <strong class="bold">Edit relationship</strong> dialog, you can change how the tables interact in two ways: with cardinality or cross-filter direction.</p>
+			<h2 id="_idParaDest-93"><a id="_idTextAnchor095"></a>Cardinality</h2>
+			<p>Power BI relationship <strong class="bold">cardinality</strong> decides <a id="_idIndexMarker243"></a>which table filters the other. There are three possible <a id="_idIndexMarker244"></a>cardinalities. </p>
+			<h3>Many-to-one (*:1) and one-to-many (1:*)</h3>
+			<p>This is a relationship <a id="_idIndexMarker245"></a>where you have one unique instance <a id="_idIndexMarker246"></a>of each value in a column in one table and many instances of those same values in another table. This is the default type of relationship in Power BI.</p>
+			<h3>Many-to-many (*:*)</h3>
+			<p>In this type of relationship, you have many values in common between two columns in two different <a id="_idIndexMarker247"></a>tables, so it does not require one side to be unique. This is not recommended. The lack of unique values can lead to confusion and your report developers may not know which value represents which table. In the <em class="italic">Resolve many-to-many relationships</em> section later in this chapter, you will learn how to represent a many-to-many relationship with many-to-one and one-to-many.</p>
+			<h3>One-to-one (1:1)</h3>
+			<p>This is the easiest relationship to describe. If you have a unique set of values in a column in a table <a id="_idIndexMarker248"></a>and another unique set of values in a column in another table, and they are the exact same set of values, you can create a one-to-one relationship. This is not recommended, as you are storing duplicate data, and if your data ever changes, you could end up generating errors unless both tables receive the data change and thus maintain the exact same value sets. </p>
+			<p>The top table in the dialog box corresponds to the left-hand side of the cardinality. The many-to-one and one-to-many options are identical if the table you want on the <em class="italic">one</em> side is in the <a id="_idIndexMarker249"></a>correct location in the dialog box. For one-to-many, the <em class="italic">one</em> side should be listed at the top of the box; for many-to-one, the <em class="italic">one</em> side should be the second table listed. </p>
+			<h2 id="_idParaDest-94"><a id="_idTextAnchor096"></a>Cross-filter direction</h2>
+			<p>We use <a id="_idIndexMarker250"></a>relationships to filter data. <strong class="bold">Cross-filter direction</strong> determines <a id="_idIndexMarker251"></a>whether that filter works in a single direction or both directions.</p>
+			<h3>Single direction</h3>
+			<p>In a single direction, one table in the filter is used to filter the data. For instance, products <a id="_idIndexMarker252"></a>can filter sales, but sales cannot filter products. For a one-to-many or many-to-one relationship, the <em class="italic">one</em> side, the side with the unique values, will be used to filter the <em class="italic">many</em> side.</p>
+			<h3>Both directions </h3>
+			<p>If you enable <strong class="bold">Both</strong>, then either table can filter the other. So, in our example, the <strong class="source-inline">Products</strong> table <a id="_idIndexMarker253"></a>can filter the <strong class="source-inline">Sales</strong> table, but the <strong class="source-inline">Sales</strong> table can also filter the <strong class="source-inline">Products</strong> table. If we add a third table of <strong class="source-inline">Region</strong>, we can then use the <strong class="source-inline">Region</strong> table to filter the <strong class="source-inline">Sales</strong> table to <em class="italic">then</em> filter the <strong class="source-inline">Products</strong> table. This would allow us to generate a report telling us what products are sold in each region. Be careful about using <strong class="bold">Both</strong> on all your relationships, though, as it may add ambiguity to your model and may also lower performance. </p>
+			<p>You will not be allowed to create a circular dependency. This means that if we have <strong class="bold">Both</strong> enabled on all our relationships, there's a strong possibility that eventually you will try to link to a table that's already referenced by another table that your first table has a relationship with. This might be a table that references a table that then references another table that you have a relationship to. If all those relationships are marked as <strong class="bold">Both</strong>, then when you try to create a new relationship, you will get an error message telling you to deactivate relationships. We will talk more about active and inactive relationships later in this chapter.</p>
+			<p>You can avoid this by <a id="_idIndexMarker254"></a>having all relationships marked as <strong class="bold">Single</strong> or by using a star schema. In a star schema, dimension tables only ever have a relationship with the fact table.</p>
+			<h2 id="_idParaDest-95"><a id="_idTextAnchor097"></a>Relationship test tips</h2>
+			<p>Here are <a id="_idIndexMarker255"></a>some tips for managing table relationships:</p>
+			<ul>
+				<li>Relationships can only connect two tables together.</li>
+				<li>Relationships do not have to be between columns of the same data type, though it is advised.</li>
+				<li>Relationships have direction, either <strong class="bold">Single</strong> or <strong class="bold">Both</strong>. </li>
+				<li>Cardinality defines which table in the relationship the filter is applied to.</li>
+				<li>Relationships can help reduce the model size, but too many relationships can make models confusing and hard to work with. </li>
+				<li>You can never create a circular relationship. </li>
+				<li>Two tables can have more than one relationship between them, but only one can be active.</li>
+			</ul>
+			<h1 id="_idParaDest-96"><a id="_idTextAnchor098"></a>Define role-playing dimensions</h1>
+			<p>If you are used to using <a id="_idIndexMarker256"></a>star schemas, one of the features is the idea of a <strong class="bold">role-playing dimension</strong>. This does not mean that your dimension will be out LARPing somewhere; it means we can use a dimension in multiple ways.</p>
+			<p>Power BI doesn't directly support role-playing dimensions; instead, it mimics the capability by utilizing active and inactive relationships. A table can only have one active relationship with another table, but it can have multiple inactive relationships. We just tell Power BI <a id="_idIndexMarker257"></a>when we want to use the inactive relationship instead of the active one. </p>
+			<h2 id="_idParaDest-97"><a id="_idTextAnchor099"></a>Date table as a role-playing dimension</h2>
+			<p>In this diagram, our <strong class="source-inline">Date</strong> table has two relationships between it and the <strong class="source-inline">Sales</strong> table: one on the order date and <a id="_idIndexMarker258"></a>one on the shipping date. This allows this <strong class="source-inline">Date</strong> table to filter the <strong class="source-inline">Sales</strong> table by order date or shipping date, or both! It allows the <strong class="source-inline">Date</strong> table to pretend to be the "order date dimension" or the "shipping date dimension."</p>
+			<div>
+				<div id="_idContainer036" class="IMG---Figure">
+					<img src="image/B18086_05_006.jpg" alt="Figure 5.6 – Date table playing multiple roles
+" width="988" height="338"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.6 – Date table playing multiple roles</p>
+			<p>Date dimensions are some of the most common types of role-playing dimensions you will use. We will explore this more in the <em class="italic">Create a common date table</em> section later in this chapter. For now, we're moving on to table configuration. </p>
+			<h1 id="_idParaDest-98"><a id="_idTextAnchor100"></a>Configure table and column properties</h1>
+			<p>Once we have our relationships sorted, we can take a peek at our table and column properties. In Power <a id="_idIndexMarker259"></a>BI Desktop, you can view and make changes to <a id="_idIndexMarker260"></a>these properties in Model view. You can multiselect columns or tables using the normal Windows shortcuts of <em class="italic">Ctrl</em>-clicking or <em class="italic">Shift</em>-clicking.</p>
+			<p>The properties <a id="_idIndexMarker261"></a>pane is <a id="_idIndexMarker262"></a>organized into three sections: <strong class="bold">General</strong>, <strong class="bold">Formatting</strong>, and <strong class="bold">Advanced</strong>.</p>
+			<h2 id="_idParaDest-99"><a id="_idTextAnchor101"></a>The General section</h2>
+			<p>There are many properties that can be set on a column or table. Probably the most common one is to hide a column or table for Report view. Think about a relationship, as we discussed in the <a id="_idIndexMarker263"></a>previous sections. You will often end up with two <a id="_idIndexMarker264"></a>columns that contain the same data. You will usually want to hide one or both of those columns. You can control hiding/unhiding a column or table with the toggle.</p>
+			<p>The most common table and column property operations are in the General section.</p>
+			<div>
+				<div id="_idContainer037" class="IMG---Figure">
+					<img src="image/B18086_05_007.jpg" alt="Figure 5.7 – The General section of the properties pane
+" width="1085" height="666"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.7 – The General section of the properties pane</p>
+			<p>Another cool feature you can set under the properties is <strong class="bold">synonyms</strong>. Synonyms let you query the model using natural language and let various business entities keep their own nouns. You may call it <a id="_idIndexMarker265"></a>a purchase order number, another group may just call it a purchase, and another just an order number. Synonyms let everyone use their own natural language for querying.</p>
+			<p>Organizing your columns and measures into display folders can make it easier for report builders to find the <a id="_idIndexMarker266"></a>columns and calculations they need to display <a id="_idIndexMarker267"></a>on the report. This is done by simply typing in the name of the display folder. If you want a deeper path, you can separate each subfolder with a <strong class="source-inline">\</strong> character.</p>
+			<h2 id="_idParaDest-100"><a id="_idTextAnchor102"></a>The Formatting section</h2>
+			<p>The Formatting area <a id="_idIndexMarker268"></a>lets you control the formatting of the column when it is <a id="_idIndexMarker269"></a>used in a report. Your choices here will be determined by the data type of the column. There are not many choices for text columns. </p>
+			<p>You can also change the data type of the column here. But be careful: if you set a column with text data to be a fixed decimal number, you will get an error.</p>
+			<h3>Numeric formatting options</h3>
+			<p>For numeric <a id="_idIndexMarker270"></a>columns, you set the format to <strong class="bold">Currency</strong>, <strong class="bold">Decimal number</strong>, <strong class="bold">Whole number</strong>, <strong class="bold">Percentage</strong>, or <strong class="bold">Scientific</strong>. If those aren't enough, you can specify a custom format. You can even choose whether you want a thousands separator. The actual separator chosen will be determined by the region format you have chosen for your PC.</p>
+			<div>
+				<div id="_idContainer038" class="IMG---Figure">
+					<img src="image/B18086_05_008.jpg" alt="Figure 5.8 – Numeric formatting options
+" width="903" height="554"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.8 – Numeric formatting options</p>
+			<h3>Date formatting options</h3>
+			<p>As with numeric <a id="_idIndexMarker271"></a>data, you can set how you want your dates to be displayed. There is a format dropdown, just like for numbers, but it only contains date formatting options. If none of those work for you, you can define a custom date format. </p>
+			<div>
+				<div id="_idContainer039" class="IMG---Figure">
+					<img src="image/B18086_05_009.jpg" alt="Figure 5.9 – Date formatting options
+" width="420" height="267"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.9 – Date formatting options</p>
+			<h2 id="_idParaDest-101"><a id="_idTextAnchor103"></a>The Advanced section</h2>
+			<p>In the <strong class="bold">Advanced</strong> section, you can choose to sort one column by another column in the same table. A common <a id="_idIndexMarker272"></a>use for this feature is to sort months by <a id="_idIndexMarker273"></a>their dates, as opposed to alphabetically.</p>
+			<p>You can also categorize your data. This will control the default for how the data is displayed in your report. Most of the options are related to locations, and data categorized as an address or a continent will, by default, be displayed on a map.</p>
+			<p class="figure-caption"> </p>
+			<div>
+				<div id="_idContainer040" class="IMG---Figure">
+					<img src="image/B18086_05_010.jpg" alt="Figure 5.10 – Advanced formatting options
+" width="404" height="456"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.10 – Advanced formatting options</p>
+			<p>This is only the default, as we will find out: you can always change the visual once it's on the report.</p>
+			<h1 id="_idParaDest-102"><a id="_idTextAnchor104"></a>Define quick measures</h1>
+			<p>Measures are calculations that define business rules. It is not a business rule if we cannot define it mathematically. We don't say "We need most of our customers to like us"; we say "We need a 90% or better score on all customer surveys returned." We don't say "We need <a id="_idIndexMarker274"></a>to create reports for people to use"; we say "This report should be used at least once a week by 73.4% of managers in finance."</p>
+			<p>There is a whole Excel-like language for creating measures. But the <strong class="bold">quick measures</strong> feature allows you to build calculations without knowing DAX. </p>
+			<p>The available calculations are organized into six categories:</p>
+			<ul>
+				<li>Aggregate within category</li>
+				<li>Filters and baselines</li>
+				<li>Time Intelligence</li>
+				<li>Running Total</li>
+				<li>Mathematical Operations</li>
+				<li>Text</li>
+			</ul>
+			<p>Start by ri<a id="_idTextAnchor105"></a>ght-clicking on a table or column in the <strong class="bold">Field</strong> pane to create a calculation. Select the calculation you want from the list, then drag and drop in the fields you want to base your calculation on, and then click <strong class="bold">OK</strong>. You've now created a measure.</p>
+			<div>
+				<div id="_idContainer041" class="IMG---Figure">
+					<img src="image/B18086_05_011.jpg" alt="Figure 5.11 – Creating a weighted average of gross profit by region weighted by cost
+" width="1038" height="1112"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.11 – Creating a weighted average of gross profit by region weighted by cost</p>
+			<p>Quick measures are <a id="_idIndexMarker275"></a>a great way to not only create business calculations but also learn DAX. You can look at the calculation once it is created and see how Power BI does it.</p>
+			<h1 id="_idParaDest-103"><a id="_idTextAnchor106"></a>Resolve many-to-many relationships</h1>
+			<p>Many-to-many relationships are <em class="italic">not</em> recommended. As mentioned earlier in this chapter, the lack <a id="_idIndexMarker276"></a>of a column with unique values can lead to performance issues and possible confusion about which column to filter on.</p>
+			<p>For instance, the following diagram shows a many-to-many relationship between my <strong class="source-inline">Manager</strong> table and my <strong class="source-inline">Sales</strong> table. I track sales by region, not manager, so I have a region on my <strong class="source-inline">Sales</strong> table:</p>
+			<div>
+				<div id="_idContainer042" class="IMG---Figure">
+					<img src="image/B18086_05_012.jpg" alt="Figure 5.12 – Many-to-many relationships are slow and bad
+" width="906" height="321"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.12 – Many-to-many relationships are slow and bad</p>
+			<p>I can easily fix this by creating a new "bridge" table named <strong class="source-inline">Region</strong> of the unique region values fro<a id="_idTextAnchor107"></a>m my <strong class="source-inline">Manager</strong> table. I can do this in Power Query or DAX, with one query. </p>
+			<p>I can then delete the many-to-many relationship and create two new relationships: a many-to-one from the <strong class="source-inline">Sales</strong> table to the new <strong class="source-inline">Region</strong> table and a one-to-many from the <strong class="source-inline">Region</strong> table to the <strong class="source-inline">Manager</strong> table. </p>
+			<div>
+				<div id="_idContainer043" class="IMG---Figure">
+					<img src="image/B18086_05_013.jpg" alt='Figure 5.13 – Creating a bridge table solves our "many" problems
+' width="1251" height="443"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.13 – Creating a bridge table solves our "many" problems</p>
+			<p>For the exam, understand that, although available, many-to-many relationships should be avoided. One <a id="_idIndexMarker277"></a>method to remove them is to just create a table of the unique values you need and create many-to-one and one-to-many relationships to it.</p>
+			<h1 id="_idParaDest-104"><a id="_idTextAnchor108"></a>Create a common date table</h1>
+			<p>Date tables are <em class="italic">awesome</em>. We already discussed them briefly in the <em class="italic">Define role-playing dimensions</em> section, but now we will talk more about them. </p>
+			<p>Many, if not most, reports have a date-based aspect to them. "How many widgets did I sell last month?" followed <a id="_idIndexMarker278"></a>by "Was that better than the previous month?" or "How about the same month last year?" are common questions asked about our data. A date table will help you answer these questions.</p>
+			<p>You have two options for creating date tables.</p>
+			<h2 id="_idParaDest-105"><a id="_idTextAnchor109"></a>Power BI date hierarchy tables</h2>
+			<p>You can let Power BI look for every date column in your model and create a hidden hierarchy table for <a id="_idIndexMarker279"></a>every column. This will allow you to use those hierarchies when you want to be able to report by day, month, quarter, or year. You can also use these hierarchies in quick measures, slicers, or filters. All you must do is use the date column in your report; Power BI takes care of the rest using the hidden table.</p>
+			<div>
+				<div id="_idContainer044" class="IMG---Figure">
+					<img src="image/B18086_05_014.jpg" alt="Figure 5.14 – Uncheck this box and use your own date table, please
+" width="1025" height="987"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.14 – Uncheck this box and use your own date table, please</p>
+			<p>There may be times <a id="_idIndexMarker280"></a>when you don't want to use this built-in date hierarchy capability; for example, when you want to build this yourself, then automatic date tables can cause extra storage and complexity to your data model. Additionally, there can be scenarios when date and time are stored together, so defining relationships between <a id="_idIndexMarker281"></a>fields with date and time to those with only the date will result in poorly related data because time is still being considered. </p>
+			<h2 id="_idParaDest-106"><a id="_idTextAnchor110"></a>Using your own date table</h2>
+			<p>You can either create a date table in Power BI or use a date table already in your data source. Many data <a id="_idIndexMarker282"></a>sources are time-based and contain a date table. But if your data source doesn't provide one, you can create one in Power BI, by using either Power Query or DAX. DAX has a built-in function called <strong class="source-inline">CALENDARAUTO</strong> that can generate a date table for you, which we will implement as follows:</p>
+			<ol>
+				<li>Once you have your date table, you have to mark it as a date table. To mark a table as a date table, you must have a table in your model that has the following:<ul><li>A column with the date data type.</li><li>That column must contain unique values.</li><li>That column can have no blank or null rows.</li><li>The column must have a contiguous date span; it cannot have any missing dates in the middle.</li><li>The column must span a full year, but it does not have to be a calendar year.</li></ul></li>
+				<li>If you have a table that meets those requirements, you can mark it as a date table by selecting the three dots (ellipses) next to the table name in the modeling view and selecting <strong class="bold">Mark as date table</strong> from the selection.</li>
+			</ol>
+			<div>
+				<div id="_idContainer045" class="IMG---Figure">
+					<img src="image/B18086_05_015.jpg" alt="Figure 5.15 – Let's make that a date table!
+" width="957" height="602"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.15 – Let's make that a date table!</p>
+			<ol>
+				<li value="3">That will bring up the <strong class="bold">Mark as date table</strong> dialog, where you can tell Power BI which column you <a id="_idIndexMarker283"></a>want to use as your date column. If the column meets all of the criteria, you will get a green validation checkmark and the <strong class="bold">OK</strong> button will become active.</li>
+			</ol>
+			<div>
+				<div id="_idContainer046" class="IMG---Figure">
+					<img src="image/B18086_05_016.jpg" alt="Figure 5.16 – Power BI will only let you pick a column that meets the requirements
+" width="990" height="579"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.16 – Power BI will only let you pick a column that meets the requirements</p>
+			<p>Congratulations, you now have a date table! </p>
+			<ol>
+				<li value="4">The next step is <a id="_idIndexMarker284"></a>to ensure that all of your date columns are in a one-to-many relationship with the date table. The "one" side of the relationship must be the date table. </li>
+			</ol>
+			<p>Now we can talk about what wonders a date table can unlock.</p>
+			<h2 id="_idParaDest-107"><a id="_idTextAnchor111"></a>Date math</h2>
+			<p>Power BI has some really powerful time intelligence functions that require a date table to work. These functions <a id="_idIndexMarker285"></a>allow you to create calculations based on time periods such as days, months, quarters, and years. </p>
+			<p>Currently, there are 35 time-based calculations that require a date table to work. I will not list them all here, as my editor hates long, bulleted lists. If you are using a date table, then the date column <a id="_idIndexMarker286"></a>in the calculation <em class="italic">must</em> come from the date table for these calculations to work.</p>
+			<h2 id="_idParaDest-108"><a id="_idTextAnchor112"></a>Model size</h2>
+			<p>Creating your own date table and creating relationships with all the date columns in your model will reduce <a id="_idIndexMarker287"></a>the model size, sometimes significantly. This will speed up both refreshes and report load times. I have seen reports go from load times of more than 5 minutes to under 30 seconds, just by removing the hidden date tables. </p>
+			<p>For many smaller reports, these date tables are great. They speed up development and allow less-savvy report creators to get going with a shallower learning curve. </p>
+			<p>For larger reports, these date tables can be a performance killer. They slow down large datasets and can make date math confusing. Using a date table allows you to standardize on one date across all your data.</p>
+			<h2 id="_idParaDest-109"><a id="_idTextAnchor113"></a>Role-playing with our date table</h2>
+			<p>We already touched on <a id="_idIndexMarker288"></a>this when we talked about role-playing dimensions, but I want to reiterate it here. Date tables are awesome to role-play with; they provide a single date field for all reporting but can pretend to be any date field in your report. </p>
+			<p class="callout-heading">Note</p>
+			<p class="callout">Make certain all the relationships with the date table are marked as <strong class="bold">Single direction</strong>. This way, our order date won't filter out the shipped date. </p>
+			<h1 id="_idParaDest-110"><a id="_idTextAnchor114"></a>Define the appropriate level of data granularity</h1>
+			<p>One key way to establish what your report can contain is establishing its granularity, or grain. The grain is the <a id="_idIndexMarker289"></a>smallest level your report can go to. It is not uncommon for data in a fact table to be stored as a daily or monthly total. If you are storing sales by store by day, you should not divide that number by 24 to get hourly totals. That number implies a degree of certainty that is not actually in the data.</p>
+			<p>I'm going to present a screenshot from earlier, but this time talk about <em class="italic">what</em> we are relating, not <em class="italic">how</em>. </p>
+			<div>
+				<div id="_idContainer047" class="IMG---Figure">
+					<img src="image/B18086_05_017.jpg" alt="Figure 5.17– The grain of the Sales table is product by Region Name and OrderNumber
+" width="1252" height="443"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.17– The grain of the Sales table is product by Region Name and OrderNumber</p>
+			<p>Here, you can see that our <strong class="source-inline">Manager</strong> table can filter our <strong class="source-inline">Sales</strong> table through the <strong class="source-inline">Region</strong> table, and the <a id="_idIndexMarker290"></a>other way around: <strong class="source-inline">Sales</strong>&gt;<strong class="source-inline">Region</strong>&gt;<strong class="source-inline">Manager</strong>. If I filter the <strong class="source-inline">Manager</strong> table by <strong class="source-inline">ManagerName</strong>, it will filter the <strong class="source-inline">Sales</strong> table by <strong class="source-inline">Region</strong>. So, if Ted and Ananya both manage the Midwest region, both will end up showing the exact same revenue.</p>
+			<div>
+				<div id="_idContainer048" class="IMG---Figure">
+					<img src="image/B18086_05_018.jpg" alt="Figure 5.18 – This is incorrect
+" width="600" height="203"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 5.18 – This is incorrect</p>
+			<p>If you noticed that the total is not a summation of the <strong class="source-inline">Net Profit</strong> column, you are correct. Power BI calculated the net profit total separately; it doesn't just add the columns above it. We will talk about filter context later in this book, in <a href="B18086_09_epub.xhtml#_idTextAnchor178"><em class="italic">Chapter 9</em></a>, <em class="italic">Creating Reports</em>.</p>
+			<p>Just remember, you can never have more detail than your model allows. When it comes time for me to hand <a id="_idIndexMarker291"></a>out my bonuses, I can't just give half credit to each manager. That would not be fair if the bulk of my profit come from one of them. That's a quick way to lose a good manager.</p>
+			<h1 id="_idParaDest-111"><a id="_idTextAnchor115"></a>Design the data model to meet performance requirements</h1>
+			<p>As mentioned previously, model performance is extremely important. A faster rendering report is a <a id="_idIndexMarker292"></a>much more enjoyable experience for your consumers than one that takes minutes to show data. A report that refreshes faster places much less strain on source systems, thus making the owners of those systems much more likely to remove access to them.</p>
+			<p>Many of the preceding topics in this chapter, and in previous chapters, have dealt with this issue. Gathering and organizing your data and then correctly designing a data model on that data is what all the chapters up to this point have been about. By doing it all correctly, you will have fast data models that are simple and clear and concise to use, and easy to maintain.</p>
+			<p>One of the keys to modeling data in Power BI is creating the correct relationships between tables. As with many things in life, good relationships lead to good performance. </p>
+			<p>In larger models, removing the hidden date tables can greatly improve performance. Using a date table will simplify report building and allow consistency across your reports. Date tables also allow the use of more complex date functions.</p>
+			<p>Many of our "fast, simple, and clear" reporting requirements can be accomplished by using a star schema. A star schema helps us to implement good relationships while avoiding circular ones. It will usually enable faster reporting because we filter the fact table based on data in our smaller dimension tables. </p>
+			<h1 id="_idParaDest-112"><a id="_idTextAnchor116"></a>Summary</h1>
+			<p>This chapter was all about creating the best data model for our reports. We covered a lot of ground and hit many topics, all of which might be in the exam.</p>
+			<p>The important takeaways are as follows.</p>
+			<p>Simpler is better. Simple models are easier to create reports on and usually result in faster rendering. That means your report consumers will be happier and you will receive fewer complaints from them!</p>
+			<p>The star schema pattern is a great tool. Star schemas usually lead to smaller, faster models, as Power BI is built to consume star schema-type models natively. Also, star schemas lead to good relationships. Which brings us to the next point.</p>
+			<p>It's all about good relationships. As you will find out in almost every chapter of this book going forward, relationships are the key to Power BI reporting. Good relationships lead to good, interactive reports. Good relationships lead to accurate slicing and dicing of data. </p>
+			<p>Use your own date table. Dates are extremely important to reporting. Creating your own date table will result in a smaller dataset footprint and allow you to use data time intelligence features. We will see in <a href="B18086_09_epub.xhtml#_idTextAnchor178"><em class="italic">Chapter 9</em></a>, <em class="italic">Creating Reports</em>, that one date table can role-play as many different date tables. </p>
+			<p>To really take advantage of your date table, make sure all the date columns in your report have a relationship with the date table. We will explore this more in <a href="B18086_09_epub.xhtml#_idTextAnchor178"><em class="italic">Chapter 9</em></a>, <em class="italic">Creating Reports</em>.</p>
+			<p>Quick measures help you use complicated calculations with minimal effort. Using quick measures will help you develop your report quicker and can be used as a training tool, teaching you how to create more complicated calculations. You will learn more about measures in <em class="italic">Chapters 6</em>, <em class="italic">7</em>, <em class="italic">8</em>, <em class="italic">9</em>, <em class="italic">10</em>, and <em class="italic">11</em>.</p>
+			<p>Remember the grain of your report. You can't report on anything lower than your grain. Remember, the grain of your report is defined by the smallest piece you can report on. If you have sales data per store per day, you cannot report on sales per store per hour by dividing the day into 24 hours. You could roll your report up to weekly or a region; you just cannot go any lower than per day or per store.</p>
+			<p>In the next chapter, you will learn how to develop your data model to make it more effective for reporting. </p>
+			<h1 id="_idParaDest-113"><a id="_idTextAnchor117"></a>Questions </h1>
+			<ol>
+				<li value="1">Which type of table relationship describes a scenario where each unique value in one table occurs only once in another table?<ol><li>Many-to-many</li><li>One-to-one</li><li>One-to-many</li><li>Unique relationship</li></ol></li>
+				<li>What is the DAX formula needed to build a quick measure to calculate the weighted average per category?<ol><li><strong class="source-inline">AVG(CATEGORY)</strong>.</li><li><strong class="source-inline">AVGW(CATEGORY)</strong>.</li><li><strong class="source-inline">AVERAGE([QUERY].[CATEGORY])</strong>.</li><li>DAX isn't needed for a quick measure.</li></ol></li>
+				<li>If your data has sales by store by day, are you able to find sales by hour?<ol><li>No.</li><li>Yes.</li><li>Sort of, it will be averaged by store by day.</li><li>Sort of, it will be averaged by store by hour.</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

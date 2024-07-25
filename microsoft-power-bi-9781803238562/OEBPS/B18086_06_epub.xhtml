@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer060">
+			<h1 id="_idParaDest-114"><em class="italic"><a id="_idTextAnchor118"></a>Chapter 6</em>: Using Data Model Advanced Features</h1>
+			<p>Now that we've designed a <strong class="bold">data model</strong> that incorporates a <strong class="bold">star schema</strong>, uses <strong class="bold">fact and dimension tables</strong>, and links them together with <strong class="bold">surrogate keys</strong>, we can make use of some of the advanced capabilities of data models in <strong class="bold">Power BI</strong>. We'll be exploring these capabilities in this chapter.</p>
+			<p>In this chapter, we're going to cover the following topics:</p>
+			<ul>
+				<li>Using sensitivity labels</li>
+				<li>Implementing row-level security</li>
+				<li>Applying natural-language Q&amp;A capability</li>
+			</ul>
+			<h1 id="_idParaDest-115"><a id="_idTextAnchor119"></a>Technical requirements</h1>
+			<p>To best understand the topics covered in this chapter, it is advised that you have the following available:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC</li>
+				<li>A Power BI data model where we can apply the advanced features covered in this chapter</li>
+			</ul>
+			<h1 id="_idParaDest-116"><a id="_idTextAnchor120"></a>Using sensitivity labels</h1>
+			<p>As part of the <a id="_idIndexMarker293"></a>holistic data protection capabilities, Power BI includes <a id="_idIndexMarker294"></a>integration with <strong class="bold">Microsoft Information Protection</strong> (<strong class="bold">MIP</strong>). MIP provides <strong class="bold">sensitivity labels</strong> as a way of making it easy for users to classify critical content and data while not making this a burden for the user or restricting collaboration.</p>
+			<p>Sensitivity labels allow users to classify datasets, reports, dashboards, and dataflows as having a specific sensitivity so that data can be protected. For example, some data used in Power BI reports might be publicly accessible data, and this feature allows those datasets to be labeled as such. In the same way, internal sales data might need to be protected and labeled as confidential; when this happens, the data is protected by the service from being accessed by those who do not <a id="_idIndexMarker295"></a>have permission to access data labeled <em class="italic">confidential</em>. It can also enforce encryption, restrict forwarding, and, in some cases, printing as well.</p>
+			<p>In Power BI, sensitivity labels are persistent wherever the data is used. There is a concept known as <strong class="bold">downstream inheritance</strong> that will enforce downstream data products to adhere to the defined sensitivity label. For example, if the sales data is labeled as confidential, then a downstream <a id="_idIndexMarker296"></a>aggregation of that data in a new table or query will also be labeled as confidential if this feature is enabled. This helps ensure that data is protected throughout its life cycle. Downstream inheritance works when data is exported as a PDF from the Power BI service or Excel from the Power BI service or Power BI Desktop. It does not support exporting to CSV files.</p>
+			<p>The requirements <a id="_idIndexMarker297"></a>for sensitivity labels in Power BI are as follows:</p>
+			<ul>
+				<li><strong class="bold">Azure Information Protection</strong> (<strong class="bold">AIP</strong>) Premium P1 or Premium P2.</li>
+				<li>AIP, which <a id="_idIndexMarker298"></a>uses the MIP unified labeling platform.</li>
+				<li>The user applying labels must have a Power BI Pro or Premium per-user license.</li>
+				<li>Defined and published sensitivity labels for your organization in Microsoft 365.</li>
+				<li>An up-to-date version of Power BI Desktop.</li>
+			</ul>
+			<p>For sensitivity labels to be used in Power BI, MIP sensitivity labels need to be enabled on the tenant. Administrators <a id="_idIndexMarker299"></a>can enable sensitivity labels in the <strong class="bold">Power BI admin portal</strong>.</p>
+			<p>Within the Power BI admin portal, the sensitivity labels setting can be found under <strong class="bold">Tenant settings</strong> and then <strong class="bold">Information Protection</strong>. This capability can be enabled for an entire organization or specific security groups within the organization. </p>
+			<p>Sensitivity labels are an expanding capability for Power BI where additional features, such as default labeling, mandatory labeling, and downstream inheritance capabilities, are being added. Through expanded <a id="_idIndexMarker300"></a>integration, such as <strong class="bold">Cloud App Security</strong>, <strong class="bold">sensitivity labels</strong> are also used <a id="_idIndexMarker301"></a>to prevent <strong class="bold">data exfiltration</strong> by blocking the exporting of data from reports.</p>
+			<p>In the next section, we'll look at how we can further enhance the security of data in a data model by using row-level security.</p>
+			<h1 id="_idParaDest-117"><a id="_idTextAnchor121"></a>Implementing row-level security</h1>
+			<p>A common security need for customers building reporting solutions with Power BI and needing to simplify the <a id="_idIndexMarker302"></a>data model is a way to build multitenant data models. This means that data can be stored in a single table but only be viewable by the designated users who <a id="_idIndexMarker303"></a>should have access to it. This capability is called <strong class="bold">row-level security</strong>.</p>
+			<p>Row-level security allows filtering to happen at the table level in a data model based on the user accessing the data. For example, an entire table might contain all the sales data for the organization across different regions or countries and some users of the report might only need to access data from their region or country. Without row-level security, we'd have to manually set up different tables for each region or country as well as a combined table with data from all regions for senior leadership. With row-level security, we can define the roles needed and apply a <strong class="bold">DAX expression</strong> to the <a id="_idIndexMarker304"></a>table that will handle the filtering for each role. This way, all data can be stored in the same table and the filtering criteria set up for row-level security ensure each user sees only the appropriate data.</p>
+			<h2 id="_idParaDest-118"><a id="_idTextAnchor122"></a>Setting up row-level security</h2>
+			<p>After connecting <a id="_idIndexMarker305"></a>to data in Power BI Desktop and creating a report that shows sales by country, your report might look like this:</p>
+			<div>
+				<div id="_idContainer050" class="IMG---Figure">
+					<img src="image/B18086_06_001.jpg" alt="Figure 6.1 – Example Power BI report visual showing sum of TotalDue in sales per country, for the United Kingdom and the United States
+" width="328" height="148"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.1 – Example Power BI report visual showing sum of TotalDue in sales per country, for the United Kingdom and the United States</p>
+			<p>In the <a id="_idIndexMarker306"></a>following steps, we will set up row-level security so each team member can only see the data for their respective country:</p>
+			<ol>
+				<li>On the <strong class="bold">Modeling</strong> tab, click <strong class="bold">Manage roles</strong>. In the <strong class="bold">Manage roles</strong> window, we create all the roles within our organization that will need to view data in the report. </li>
+				<li>Click <strong class="bold">Create</strong> to create a new role.</li>
+				<li>Type a name for the role that corresponds to one of the groups of users that will access the data. For example, there may be a group of sales leaders in the United States, so we'll call this role <strong class="source-inline">US Sales</strong>. We'll also create a role for <strong class="source-inline">UK Sales</strong>.</li>
+				<li>Select the address table. The address table is used as a single place in our data model where all addresses (shipping and billing) are stored. A relationship is established between our address table and our sales and customers table, which allows cross-filtering between the tables. This will be required for the data to be filtered properly by the DAX expression we set up in the row-level security.</li>
+				<li>Type in the <strong class="source-inline">[CountryRegion] = "United States"</strong> and <strong class="source-inline">[CountryRegion] = "United Kingdom"</strong> DAX expression for each role created.</li>
+			</ol>
+			<p>We can verify that the roles and filtering are set up properly by using the <strong class="bold">View as</strong> button on the ribbon under <strong class="bold">Modeling</strong>. </p>
+			<div>
+				<div id="_idContainer051" class="IMG---Figure">
+					<img src="image/B18086_06_002.jpg" alt="Figure 6.2 – The same Power BI report visual showing sum of TotalDue in sales per country filtered to only show the United States
+" width="340" height="172"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.2 – The same Power BI report visual showing sum of TotalDue in sales per country filtered to only show the United States</p>
+			<ol>
+				<li value="1">Click <strong class="bold">View as</strong>.</li>
+				<li>Select <a id="_idIndexMarker307"></a>one of the roles we just created; try <strong class="bold">US Sales</strong>.</li>
+				<li>View the filtered data in the report.</li>
+			</ol>
+			<p>Next, let's look at managing this security.</p>
+			<h2 id="_idParaDest-119"><a id="_idTextAnchor123"></a>Managing row-level security </h2>
+			<p>In Power BI Desktop, you can manage roles and the DAX expression applied to each role by clicking <strong class="bold">Manage roles</strong> under the <strong class="bold">Modeling</strong> tab on the ribbon. In the Power BI service, you can view the <a id="_idIndexMarker308"></a>row-level security roles that have been created for a dataset by clicking <strong class="bold">More options</strong> under a dataset. From there, select <strong class="bold">Security</strong> on the <strong class="bold">More options</strong> menu.</p>
+			<p>In the Power BI service, members can be added to the row-level security roles that have been created. Typically, groups <a id="_idIndexMarker309"></a>of users would be added to each defined role. Row-level security roles can contain groups such as <strong class="bold">distribution groups</strong>, <strong class="bold">mail-enabled groups</strong>, or <strong class="bold">security groups</strong>. <strong class="bold">Office 365 groups</strong> cannot <a id="_idIndexMarker310"></a>be added. Additionally, it is <a id="_idIndexMarker311"></a>possible to <a id="_idIndexMarker312"></a>add specific users to a role as well but as a security best practice the use of groups is advised.</p>
+			<p>It's also <a id="_idIndexMarker313"></a>possible to use a <strong class="bold">dynamic variable</strong> called <strong class="source-inline">username()</strong> and <strong class="source-inline">userprincipalname()</strong> with the DAX query of a role. This will be dynamically populated for the user logged in and viewing the report. This corresponds to the <strong class="source-inline">DOMAIN\user</strong> or <strong class="source-inline">user@domain.com</strong> value for the current user or viewer of the report. </p>
+			<p>When it comes <a id="_idIndexMarker314"></a>to the dynamic capabilities of reporting in Power BI, one of the best features to help with the creation of reports and understanding data models is the Q&amp;A feature, which we'll look at next.</p>
+			<h1 id="_idParaDest-120"><a id="_idTextAnchor124"></a>Applying natural-language Q&amp;A capability</h1>
+			<p>The <strong class="bold">Q&amp;A</strong> feature <a id="_idIndexMarker315"></a>of Power BI allows you to use <strong class="bold">natural language</strong> to ask a question of the data and return a visual providing the answer. This can be useful when users are learning about the dataset and can also provide a way for less experienced users to build complex visuals. </p>
+			<p>Q&amp;A is useful for report designers to explore data, create visuals, and build reports in a quick way using natural language. Even for experienced report designers, Q&amp;A provides a way to start with a basic question and then still have the same visuals that could be created manually with the same fine-tuning adjustments possible on the visual after it's been created by Q&amp;A.</p>
+			<p>Q&amp;A is also useful for report viewers, allowing them to quickly get to the most important questions they want to ask of the report data. After viewing the Q&amp;A-created visuals, they can easily pin the created visuals to a new or existing (if they have the required permissions) dashboards in the Power BI service.</p>
+			<h2 id="_idParaDest-121"><a id="_idTextAnchor125"></a>Using Q&amp;A in reports and dashboards</h2>
+			<p>An easy <a id="_idIndexMarker316"></a>way to <a id="_idIndexMarker317"></a>get started using Q&amp;A is to add the visual to a report. </p>
+			<div>
+				<div id="_idContainer052" class="IMG---Figure">
+					<img src="image/B18086_06_003.jpg" alt="Figure 6.3 – Button to add a Q&amp;A visual to a report
+" width="176" height="210"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.3 – Button to add a Q&amp;A visual to a report</p>
+			<p>The first <a id="_idIndexMarker318"></a>time this visual is added to a report, you may see the <a id="_idIndexMarker319"></a>following message:</p>
+			<div>
+				<div id="_idContainer053" class="IMG---Figure">
+					<img src="image/B18086_06_004.jpg" alt="Figure 6.4 – New Q&amp;A visual added to a report
+" width="349" height="165"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.4 – New Q&amp;A visual added to a report</p>
+			<p>This indicates that the Q&amp;A feature is not yet enabled for this Power BI file. From here, click <strong class="bold">Turn on Q&amp;A</strong> to enable the feature. When Q&amp;A is enabled for a file, an index of the data will be created. This index is updated regularly when a file is open in Power BI Desktop and when reports are published to the Power BI service, they require no maintenance by the user. After this happens, the visual will load and you may see something like this:</p>
+			<div>
+				<div id="_idContainer054" class="IMG---Figure">
+					<img src="image/B18086_06_005.jpg" alt="Figure 6.5 – Example Q&amp;A visual on a report
+" width="602" height="146"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.5 – Example Q&amp;A visual on a report</p>
+			<p>Upon the <a id="_idIndexMarker320"></a>first load, Q&amp;A will attempt to show example questions <a id="_idIndexMarker321"></a>to help users get started asking natural-language questions of this dataset. Those are shown in the blue boxes near the bottom of the visual, as seen in <em class="italic">Figure 6.5</em>. When the example queries are selected, the text is populated in the search text box and then a few seconds later, the query runs against the data. This gives the user time to see the query and make changes if desired.</p>
+			<div>
+				<div id="_idContainer055" class="IMG---Figure">
+					<img src="image/B18086_06_006.jpg" alt="Figure 6.6 – Example Q&amp;A query showing blue underline
+" width="602" height="156"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.6 – Example Q&amp;A query showing blue underline</p>
+			<p>When Power BI understands that a word in a natural-language query relates to a field in the dataset, the word gets underlined in blue, as seen in <em class="italic">Figure 6.6</em>.</p>
+			<p>When users type in natural-language queries, Q&amp;A provides autocompletion to help the user navigate the data and find questions that can be asked of the data. For example, if we have a dataset containing only customer contact information, we could probably ask <em class="italic">how many customers do we have in each state?</em>, but we need to ask this in a way that aligns with the data model.</p>
+			<div>
+				<div id="_idContainer056" class="IMG---Figure">
+					<img src="image/B18086_06_007.jpg" alt="Figure 6.7 – Q&amp;A visual showing suggestions for a query
+" width="603" height="179"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.7 – Q&amp;A visual showing suggestions for a query</p>
+			<p>We can <a id="_idIndexMarker322"></a>see in <em class="italic">Figure 6.7</em> that Q&amp;A is making autocomplete <a id="_idIndexMarker323"></a>recommendations based on the word <strong class="source-inline">state</strong> and that it seems like a field in our <strong class="bold">StateProvince</strong> data model. After accepting the top suggestion, we're able to instantly see the visual created for us by Q&amp;A.</p>
+			<div>
+				<div id="_idContainer057" class="IMG---Figure">
+					<img src="image/B18086_06_008.jpg" alt="Figure 6.8 – Q&amp;A visual showing count of customers from each state ordered from 
+most to least in a bar chart
+" width="602" height="286"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.8 – Q&amp;A visual showing count of customers from each state ordered from most to least in a bar chart</p>
+			<p>At any time while querying with natural language, the resulting visual is shown below it, and the <img src="image/B18086_06_010.png" alt="" width="28" height="27"/> button can be clicked to turn the visual shown into a standard visual in the report. This is one of the ways the Q&amp;A visual makes it easier for report designers to build reports.</p>
+			<p>At the top of the visual, we can see that we can help Q&amp;A better understand the data model by providing <strong class="bold">synonyms</strong>. In the example query used previously, <em class="italic">how many customers do we have in each state?</em>, we noted that the word <strong class="bold">state</strong> was not immediately recognized as the <strong class="bold">StateProvince</strong> field in our data model. While sometimes autocomplete suggestions will help us here, it's also <a id="_idIndexMarker324"></a>possible the autocomplete doesn't recognize <a id="_idIndexMarker325"></a>the words used in your data model. If you're using a word that is domain-specific, then you may need to provide synonyms that will help Q&amp;A better understand your data model. </p>
+			<p>In addition to synonyms, there <a id="_idIndexMarker326"></a>are more advanced capabilities by providing a <strong class="bold">linguistic schema</strong> in the <a id="_idIndexMarker327"></a>form of a <strong class="bold">*.yaml</strong> (<strong class="bold">YAML</strong>) file, which is possible from Power BI Desktop. We'll cover that in the next section.</p>
+			<h2 id="_idParaDest-122"><a id="_idTextAnchor126"></a>Q&amp;A linguistic models</h2>
+			<p>A <strong class="bold">linguistic model</strong> is like <a id="_idIndexMarker328"></a>a regular Power BI data model in that it is a way to describe the data and relationships between columns and tables. A linguistic model also describes the terminology used in a data model. This helps Q&amp;A to better relate words used in a <strong class="bold">natural-language query</strong> to <a id="_idIndexMarker329"></a>tables, columns, and relationships in the data model. </p>
+			<p>Linguistic models <a id="_idIndexMarker330"></a>in Power BI are represented as a YAML file and allow the report designer to define the relationship between specific words, phrasings, and the data in the data model. For example, by editing a custom YAML file, you can specify that both a bicycle frame and a bicycle wheel are part of a bicycle. This would help Q&amp;A to be able to support natural-language queries when a user asks about sales of bicycle components, as opposed to all products, which would include things such as bicycle helmets and gloves.</p>
+			<p>Importing linguistic models happens in Power BI Desktop under the <strong class="bold">Modeling</strong> tab on the ribbon.</p>
+			<div>
+				<div id="_idContainer059" class="IMG---Figure">
+					<img src="image/B18086_06_009.jpg" alt="Figure 6.9 – Editing a linguistic schema in Power BI Desktop
+" width="602" height="185"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 6.9 – Editing a linguistic schema in Power BI Desktop</p>
+			<p>Full details <a id="_idIndexMarker331"></a>of the linguistic schema will not be covered in the exam, but for some more information, let's consider how they work.</p>
+			<p>Linguistic models in Power BI use a basic structure in the YAML file:</p>
+			<ul>
+				<li>General information, such as the version and language</li>
+				<li>Entities</li>
+				<li>Relationships</li>
+			</ul>
+			<p>Within the <strong class="bold">entities</strong> section, there <a id="_idIndexMarker332"></a>is a description of each table and each column in <a id="_idIndexMarker333"></a>every table of the data model. Each entity (table or column) is described with a binding tag (if it is a table or a column belonging to a table) as well as a state tag (if it was generated by Power BI) and then tags that further define the entity with terms. For example, a linguistic model will start out with the following:</p>
+			<pre class="source-code">Version: 3.3.0</pre>
+			<pre class="source-code">Language: en-US</pre>
+			<pre class="source-code">DynamicImprovement: HighConfidence</pre>
+			<pre class="source-code">Entities:</pre>
+			<pre class="source-code">  table_1:</pre>
+			<pre class="source-code">    Definition:</pre>
+			<pre class="source-code">      Binding: {Table: Table1}</pre>
+			<pre class="source-code">    State: Generated</pre>
+			<pre class="source-code">    Terms:</pre>
+			<pre class="source-code">    - table 1: {State: Generated}</pre>
+			<pre class="source-code">    - Table1: {Type: Noun, State: Generated, Weight: 0.99}</pre>
+			<pre class="source-code">  table_1.column_1:</pre>
+			<pre class="source-code">    Definition:</pre>
+			<pre class="source-code">      Binding: {Table: Table1, Column: Column1}</pre>
+			<pre class="source-code">    State: Generated</pre>
+			<pre class="source-code">    Terms:</pre>
+			<pre class="source-code">    - column 1: {State: Generated}</pre>
+			<pre class="source-code">    - Column1: {Type: Noun, State: Generated, Weight: 0.99}  </pre>
+			<p>This section <a id="_idIndexMarker334"></a>defines the <a id="_idIndexMarker335"></a>entities that will be used in the next section, relationships.</p>
+			<p>The <strong class="bold">relationships</strong> section is <a id="_idIndexMarker336"></a>where <strong class="bold">phrasings</strong> are defined. Phrasings are <a id="_idIndexMarker337"></a>how you define relationships between things. For example, it's where you <a id="_idIndexMarker338"></a>can define that <em class="italic">purchase orders</em> contain <em class="italic">products</em> or that <em class="italic">airplane wings</em> contain <em class="italic">parts</em>. Q&amp;A can make good guesses on entries that relate to each other when it comes to general knowledge domains, but when it comes to domain-specific knowledge, this is where a custom linguistic model can help users be able to ask domain-specific questions.</p>
+			<p>Phrasings are made using the building blocks of basic grammar:</p>
+			<ul>
+				<li><strong class="bold">Nouns</strong> – A person, place, or thing</li>
+				<li><strong class="bold">Verbs</strong> – An action or state of being</li>
+				<li><strong class="bold">Adjectives</strong> – A description of a noun</li>
+				<li><strong class="bold">Prepositions</strong> – A word that governs a noun and expresses a relationship to another noun, verb, or adjective</li>
+			</ul>
+			<p>To get an idea of how phrasings work, let's look at attribute phrasings.</p>
+			<p><strong class="bold">Attribute phrasings</strong> are used <a id="_idIndexMarker339"></a>when a noun is made up of another noun. For example, if orders are made up of items, then the attribute phrasing would be as follows: </p>
+			<pre class="source-code">orders_has_items:</pre>
+			<pre class="source-code">  Binding: {Table: Orders}</pre>
+			<pre class="source-code">  Phrasings:</pre>
+			<pre class="source-code">  - Attribute: {Subject: order, Object: order.item}</pre>
+			<p>Other types of phrasings include the following:</p>
+			<ul>
+				<li><strong class="bold">Name phrasings</strong> enable <a id="_idIndexMarker340"></a>the use <a id="_idIndexMarker341"></a>of product names in Q&amp;A. </li>
+				<li><strong class="bold">Adjective phrasings</strong> allow <a id="_idIndexMarker342"></a>the mapping <a id="_idIndexMarker343"></a>of a generic term, such as <em class="italic">satisfied customers</em>, to a numeric value, as would be the case in a survey requesting a <em class="italic">rating of 10</em>.</li>
+				<li><strong class="bold">Noun phrasings</strong> define <a id="_idIndexMarker344"></a>nouns that use domain-specific language, such <a id="_idIndexMarker345"></a>as "winning season" being defined as winning more games than losing in professional sports.</li>
+				<li><strong class="bold">Preposition phrasings</strong> create relationships between things using prepositions. For example, some <a id="_idIndexMarker346"></a>products may be books and those <a id="_idIndexMarker347"></a>books might be about business intelligence. So, creating preposition phrasings would allow Q&amp;A to answer questions such as <em class="italic">How many books are about business intelligence?</em></li>
+				<li><strong class="bold">Verb phrasings</strong> create <a id="_idIndexMarker348"></a>relationships between nouns using verbs, for <a id="_idIndexMarker349"></a>example, <em class="italic">customers submit orders</em>. This allows Q&amp;A to answer questions such as <em class="italic">Which customer submitted orders for business intelligence books?</em></li>
+			</ul>
+			<p>The Power BI documentation (<a href="https://docs.microsoft.com/power-bi/natural-language/q-and-a-tooling-advanced">https://docs.microsoft.com/power-bi/natural-language/q-and-a-tooling-advanced</a>) contains more details on creating linguistic models.</p>
+			<h2 id="_idParaDest-123"><a id="_idTextAnchor127"></a>Optimizing Q&amp;A in data models</h2>
+			<p>Q&amp;A works <a id="_idIndexMarker350"></a>best when table relationships are set up so <a id="_idIndexMarker351"></a>the service can fully understand how data from one table relates to another table. Using the previous example, if the relationship between <em class="italic">Customers</em> and <em class="italic">Addresses</em> is not set up, then it will not be possible for Q&amp;A to understand that each unique customer has an address that lives in the Addresses table. This relationship is <a id="_idIndexMarker352"></a>defined by a <strong class="bold">many-to-one</strong> relationship in our data model between the <em class="italic">CustomerAddress</em> table and the <em class="italic">Customer</em> table.</p>
+			<p>Another area that often needs optimization work in the data model is field names and data types. It's not uncommon for fields to use different names, especially across different data sources that are often needed to build meaningful reports. You should always be sure to rename fields to be consistent across all tables/queries in the data model. Remember, renaming fields in the Power BI data model does not impact the name of a column or field in any underlying data stores. Similarly to field names, field data types should match and be set optimally based on the type of data stored. For example, if a date field is stored as a numeric type, it will be challenging for Q&amp;A to answer questions about data for a specific month. </p>
+			<p>If you're still not able to ask questions that you'd like to ask of Q&amp;A, then additional recommendations include the following: </p>
+			<ul>
+				<li>Review which numeric columns should and should not be automatically aggregated (<strong class="bold">Properties</strong> on the <strong class="bold">Modeling</strong> tab).</li>
+				<li>Categorize data properly for geography and date columns (<strong class="bold">Properties</strong> on the <strong class="bold">Modeling</strong> tab), choosing a column for sorting (<strong class="bold">Sort by Column</strong> on the <strong class="bold">Modeling</strong> tab).</li>
+				<li>Normalize the data model. As a <a id="_idIndexMarker353"></a>general rule, use <strong class="bold">Third Normal Form</strong> (<strong class="bold">3NF</strong>) database normalization principles when building a Power BI data model. Adjustments to your data model can be made using Power Query.</li>
+				<li>Append queries when data has been partitioned.</li>
+			</ul>
+			<p>Add synonyms <a id="_idIndexMarker354"></a>and/or edit the linguistic model appropriately <a id="_idIndexMarker355"></a>to meet the needs of the data. Natural-language Q&amp;A queries can bring a new level of usability and discoverability to Power BI data. When properly configured, Q&amp;A can be a powerful tool for fast and simple analysis. </p>
+			<h1 id="_idParaDest-124"><a id="_idTextAnchor128"></a>Summary</h1>
+			<p>In this chapter, we learned about the advanced data modeling features of Power BI. </p>
+			<p>We learned how we can protect sensitive data in our data model by using sensitivity labels, and how sensitivity labels integrate with a holistic data protection suite across Microsoft products and services. We learned that sensitivity labels can be configured to follow the data even when it is exported from Power BI into other data stores, such as Microsoft Excel.</p>
+			<p>We also learned how row-level security can be implemented and used. We learned that row-level security can be used to tailor the data in a report to the specific users or groups of users who are consuming the reports, so we don't need to make costly data model changes. </p>
+			<p>Lastly, we learned about Q&amp;A and how it can be used to dynamically create report and dashboard visuals from natural-language queries written by report designers or report users. We learned that Q&amp;A can be used to help users explore data made available by the data model. We learned how using synonyms and custom linguistics models can make Q&amp;A tailored to technical or domain-specific words used in a data model.</p>
+			<p>In the next chapter, we will look at how the DAX language can be used to create measures and columns in your data model. This will be helpful as you improve your data model to meet increasing demand from report users.</p>
+			<h1 id="_idParaDest-125"><a id="_idTextAnchor129"></a>Questions</h1>
+			<ol>
+				<li value="1">Which of the following does Power BI use as the default sensitivity labels?<ol><li>Top secret, secret, official, public</li><li>Confidential, official, public</li><li>Confidential, general, public</li><li>Whatever your organization uses for MIP sensitivity labels</li></ol></li>
+				<li>If the data model for sales data includes columns for <strong class="bold">Country</strong>, <strong class="bold">State</strong>, and <strong class="bold">Postal</strong> <strong class="bold">code</strong>, what are some potential ways we can implement row-level security to filter data?<ol><li>Use a DAX expression to filter by <strong class="bold">Country</strong>, <strong class="bold">State</strong>, or <strong class="bold">Postal</strong> <strong class="bold">code</strong>.</li><li>Use a DAX expression to filter by <strong class="bold">State</strong> or <strong class="bold">Postal</strong> <strong class="bold">code</strong>.</li><li>Use a DAX expression to filter by <strong class="bold">Country</strong> or <strong class="bold">State</strong>.</li><li>Use a security filter by <strong class="bold">Country</strong>.</li></ol></li>
+				<li>What kind of model (or YAML file) is used for domain-specific natural-language querying in Power BI?<ol><li>Data model</li><li>Super model</li><li>Linguistic model</li><li>Dimensional model</li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>

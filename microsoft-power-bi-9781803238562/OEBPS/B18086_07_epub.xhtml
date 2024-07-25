@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en"
+lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:epub="http://www.idpf.org/2007/ops">
+<head>
+<title>Microsoft Power BI Data Analyst Certification Guide</title>
+<link rel="stylesheet" type="text/css" href="override_v1.css"/>
+<link rel="stylesheet" type="text/css" href="css/style-JRserifv5.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><div id="_idContainer080">
+			<h1 id="_idParaDest-126"><em class="italic"><a id="_idTextAnchor130"></a>Chapter 7</em>: Creating Measures Using DAX</h1>
+			<p>Once you have connected to your data, done a bit of analysis, and organized it for reporting, the next step is to create a data model. </p>
+			<p>A good data model will provide faster and more accurate reporting. If the data model is easy to understand, report developers will take less time to generate reports and it will make those reports easier to maintain. The data model is a crucial component of any Power BI solution, so ensuring you have effective and efficient use of measures will be a key factor. In this chapter, we will take a deep dive into the powerful <strong class="bold">Data Analysis Expressions</strong> (<strong class="bold">DAX</strong>) programming language, which will unlock dynamic and useful capabilities for solving reporting challenges.</p>
+			<p>In this chapter, we will cover the following topics:</p>
+			<ul>
+				<li>Building complex measures with DAX</li>
+				<li>Using <strong class="source-inline">CALCULATE</strong> to manipulate filters</li>
+				<li>Implementing time intelligence using DAX</li>
+				<li>Replacing numeric calculated columns with measures</li>
+				<li>Using basic statistical functions to enhance data</li>
+				<li>Implementing top N analysis</li>
+				<li>Creating semi-additive measures</li>
+			</ul>
+			<h1 id="_idParaDest-127"><a id="_idTextAnchor131"></a>Technical requirements</h1>
+			<p>For this chapter, please make sure you have the following:</p>
+			<ul>
+				<li>Microsoft Power BI Desktop installed on a Microsoft Windows PC.</li>
+				<li>Access to some data to use. We have also provided synthetic data that can be used, which is available in the GitHub repository for this book here: <a href="https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data">https://github.com/PacktPublishing/Microsoft-Power-BI-Data-Analyst-Certification-Guide/tree/main/example-data</a>.</li>
+			</ul>
+			<h1 id="_idParaDest-128"><a id="_idTextAnchor132"></a>Building complex measures with DAX</h1>
+			<p>Power BI uses a programming language called<a id="_idIndexMarker356"></a> DAX for creating calculated columns, calculated tables, and measures. This language can be used to easily create complex expressions to implement business rules. </p>
+			<p>As we discussed in the previous chapter, measures are calculations that define business rules. It is not a business rule if we cannot define it mathematically. We don't say "We need most of our customers to like us"; we say "We need a 90% or better score on all customer surveys returned." We don't say "We need to create reports for people to use"; we say "This report should be used at least once a week by 73.4% of managers in finance."</p>
+			<p>DAX uses a<a id="_idIndexMarker357"></a> Microsoft Excel-like language for these <a id="_idIndexMarker358"></a>calculations. That means if you have ever created a formula in Excel, you are already well on your way to learning DAX! If you haven't, know that millions, if not billions, of people around the world use Excel every day; it's one of the most common programs on the planet.</p>
+			<p>A DAX formula starts with a name, the name of the calculated column or table or the name of the measure. The name can contain most characters or numbers, including some special characters. What the name <em class="italic">cannot</em> contain is an equal sign, <strong class="source-inline">=</strong>. The equal sign is used to mark the end of the name and the beginning of the formula. After the equal sign, a function, or combination of functions, is applied, which returns a value. In the case of a measure or calculated column, this has to be a single value; in the case of a calculated table, this can be a range of values.</p>
+			<div>
+				<div id="_idContainer061" class="IMG---Figure">
+					<img src="image/B18086_07_001.jpg" alt="Figure 7.1 – A basic DAX measure
+" width="896" height="254"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.1 – A basic DAX measure</p>
+			<p>In the preceding<a id="_idIndexMarker359"></a> example, you<a id="_idIndexMarker360"></a> can see the following:</p>
+			<ol>
+				<li>is the name of the expression.</li>
+				<li>is the equal sign that indicates the beginning of the formula.</li>
+				<li>is the function we are using. This could be one or more functions, but they must return a single value.</li>
+				<li>is the argument of the function; this can be columns or other functions.</li>
+				<li>is the table that is being referred to.</li>
+				<li>is the column of that table.</li>
+			</ol>
+			<p>It is important to note that a function always references a column or a table. You can add filters to the function to limit it to some set of rows, but it will always reference a column or table. This is not the same behavior as Excel, where a function references a specific cell.</p>
+			<p>A calculated column or measure function will always return a value or a table. If a table is returned, further functions must be applied so you return a single value. </p>
+			<p>A calculated table will return a table of data, but that kind of goes without saying. </p>
+			<p>Although DAX is<a id="_idIndexMarker361"></a> simple to learn, as<a id="_idIndexMarker362"></a> we talked about before, Power BI provides a quick and easy way to get started with DAX by using quick measures, which we will explore next.</p>
+			<h2 id="_idParaDest-129"><a id="_idTextAnchor133"></a>Quick measures</h2>
+			<p>Quick measures are <a id="_idIndexMarker363"></a>a capability that allows you to use a drag-and-drop interface to quickly create measures with a minimal amount of code. Quick measures are a great way to not only easily create measures but also learn DAX. You can look at the code produced by quick measures and see some of the more esoteric functions, such as how to calculate a weighted average of the base value for each category.</p>
+			<p>See <a href="B18086_05_epub.xhtml#_idTextAnchor089"><em class="italic">Chapter 5</em></a>, <em class="italic">Designing a Data Model</em>, for more information about quick measures. </p>
+			<h2 id="_idParaDest-130"><a id="_idTextAnchor134"></a>Creating your own measure</h2>
+			<p>So, how <a id="_idIndexMarker364"></a>do we create these DAX calculations? We already touched upon quick measures, but you may have noticed that you can right-click on a table in the <strong class="bold">Fields</strong> list and choose the <strong class="bold">New measure</strong> option. Alternatively, you can select the <strong class="bold">Modeling</strong> tab from Report view or the <strong class="bold">Table tools</strong> tab from Data view to create a new measure.</p>
+			<div>
+				<div id="_idContainer062" class="IMG---Figure">
+					<img src="image/B18086_07_002.jpg" alt="Figure 7.2 – How to create a new measure. 1 is the context menu. 2 is the Modeling tab from Report view. 3 is Table tools from Data view
+" width="1284" height="536"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.2 – How to create a new measure. 1 is the context menu. 2 is the Modeling tab from Report view. 3 is Table tools from Data view</p>
+			<p>Once you have <a id="_idIndexMarker365"></a>selected one of these options, the formula bar will appear and you can start typing your new measure. </p>
+			<h2 id="_idParaDest-131"><a id="_idTextAnchor135"></a>Measures versus calculated columns</h2>
+			<p>DAX provides a way to add or generate data using data brought in from other data sources. This provides a way to build a more complete picture using the data you have. Both measures and<a id="_idIndexMarker366"></a> calculated columns can do this but there are nuances<a id="_idIndexMarker367"></a> and pros and cons to each, which we'll look at later in this chapter.</p>
+			<p>Suppose you want to create a new column in a sales table for gross revenue. As some of you may know, gross revenue is usually calculated as <em class="italic">quantity * unit price</em>. What we can't do is sum up the number of things sold for the day and multiply it by the sum of the unit prices of the things sold for the day. That would not lead to an accurate number. If I sold one widget for $3 and two gadgets for $6, I did not have $18 worth of sales; I had only $15. I must go line by line with this calculation:</p>
+			<pre class="source-code">Gross Revenue = Sales[Quantity] * Sales[UnitPrice]</pre>
+			<p>This is the classic use for a calculated column. </p>
+			<p>Later in this chapter, in the <em class="italic">Replacing numeric calculated columns with measures</em> section, we will explain why the best answer for this may not be calculated columns and how to craft a measure that goes line by line. </p>
+			<h2 id="_idParaDest-132"><a id="_idTextAnchor136"></a>Default summarization</h2>
+			<p>It is also important to know that<a id="_idIndexMarker368"></a> every numeric field has a default summarization that will be applied to it when it is added to a visual in a report. You can see the default summarization for your column in the <strong class="bold">Column tools</strong> tab. You can change the default summarization to another calculation from the dropdown, or even choose <strong class="bold">Don't summarize</strong>. This last choice is good for things such as ZIP codes, which are numeric columns we want to display as text.</p>
+			<div>
+				<div id="_idContainer063" class="IMG---Figure">
+					<img src="image/B18086_07_003.jpg" alt="Figure 7.3 – Choosing the default summarization for your column
+" width="1586" height="447"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.3 – Choosing the default summarization for your column</p>
+			<p>Next, we will look at how <a id="_idIndexMarker369"></a>measures use filtering context to calculate the needed value dynamically.</p>
+			<h2 id="_idParaDest-133"><a id="_idTextAnchor137"></a>Context is everything!</h2>
+			<p>One of the <a id="_idIndexMarker370"></a>most powerful things about Power BI is that it does all the calculations of measures in context. </p>
+			<p>Take the gross revenue calculation we previously discussed. That calculation returns one value per row of my <strong class="source-inline">Sales</strong> table. But if I use that column in a visual, it will automatically be filtered in the row context of the visual.</p>
+			<div>
+				<div id="_idContainer064" class="IMG---Figure">
+					<img src="image/B18086_07_004.jpg" alt="Figure 7.4 – Data is summarized depending on its context
+" width="1299" height="268"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.4 – Data is summarized depending on its context</p>
+			<p>This behavior is the same for measures. This is a good thing, else we would have to create one measure per scenario, such as the sum of gross revenue by state or the sum of gross revenue by demographic. Instead, we can have one gross revenue and use it in multiple visuals.</p>
+			<p>Calculations can be applied in both the row context and the filter context. As you can see from the preceding screenshot, <strong class="bold">Gross Revenue</strong> in the table has one value per line of my <strong class="bold">Sales</strong> table. This is the row context. If I drag it onto a visual, it will sum in the filter context of the visual. This is the default summarization of the <strong class="bold">Gross Revenue</strong> field working in conjunction with the filter context.</p>
+			<p>The two rows of my table<a id="_idIndexMarker371"></a> visual, <strong class="bold">Helicopter</strong> and <strong class="bold">Airplane</strong>, each shows the correct gross revenue for their filter context. The total is the gross revenue calculated, ignoring the row filter of <strong class="bold">Product Item Group</strong>. The total is <em class="italic">not</em> a summation of the values in the table column; it is a separate calculation. </p>
+			<p>So, the context of the calculation will have an effect on the calculated value that is displayed. </p>
+			<h1 id="_idParaDest-134"><a id="_idTextAnchor138"></a>Using CALCULATE to manipulate filters</h1>
+			<p>Often, we<a id="_idIndexMarker372"></a> want to add to or override the <a id="_idIndexMarker373"></a>filter context of a value. For that, we have the <strong class="source-inline">CALCULATE</strong> function. This is one of the most important functions to learn to pass the exam. </p>
+			<p>Suppose we want to create a measure that calculates the gross revenue for just our Midwest region. This will allow us to see the Midwest gross revenue. I have created the measure using the <strong class="bold">Calculate</strong> function and added it to the table we saw before. </p>
+			<div>
+				<div id="_idContainer065" class="IMG---Figure">
+					<img src="image/B18086_07_005.jpg" alt="Figure 7.5 – Using Calculate to change the context filter
+" width="1170" height="315"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.5 – Using Calculate to change the context filter</p>
+			<p>Notice that our Midwest net revenue is filtered to both <strong class="bold">Midwest</strong> and <strong class="bold">Product Item Group</strong> when in the filter context. </p>
+			<h2 id="_idParaDest-135"><a id="_idTextAnchor139"></a>Simple filtering</h2>
+			<p>The<a id="_idIndexMarker374"></a> <strong class="source-inline">Calculate</strong> command syntax is as follows: </p>
+			<pre class="source-code">CALCULATE (&lt;measure expression&gt;, &lt;filter1&gt;, &lt;filter2&gt;, …)</pre>
+			<p>The first argument in the <strong class="source-inline">CALCULATE</strong> function must be an expression that returns a single value. Each filter is separated by a comma. You can have none, one, or multiple filters. Filters can be a table. All the <strong class="source-inline">&lt;filter&gt;</strong> arguments in a single <strong class="source-inline">CALCULATE()</strong> behave as if they are wrapped in an <strong class="source-inline">AND()</strong> function. In other words, a row must match every <strong class="source-inline">&lt;filter&gt;</strong> argument to be included in the calculation. If you need an <strong class="source-inline">OR()</strong> style of operation, you can use the <strong class="source-inline">||</strong> operator.</p>
+			<p>If your filter is a simple comparison, such as <strong class="source-inline">=</strong>, <strong class="source-inline">&lt;</strong>, <strong class="source-inline">&gt;</strong>, <strong class="source-inline">&lt;=</strong>, <strong class="source-inline">&gt;=</strong>, or <strong class="source-inline">&lt;&gt;</strong>, then you do not have to use the <strong class="source-inline">FILTER()</strong> command. </p>
+			<h2 id="_idParaDest-136"><a id="_idTextAnchor140"></a>The FILTER function</h2>
+			<p>Say you are trying to <a id="_idIndexMarker375"></a>compare one of the following:</p>
+			<ul>
+				<li><strong class="source-inline">&lt;column&gt; = &lt;measure&gt;</strong></li>
+				<li><strong class="source-inline">&lt;column&gt; = &lt;formula&gt;</strong></li>
+				<li><strong class="source-inline">&lt;column&gt; = &lt;column&gt;</strong></li>
+				<li><strong class="source-inline">&lt;measure&gt; = &lt;measure&gt;</strong></li>
+				<li><strong class="source-inline">&lt;measure&gt; = &lt;formula&gt;</strong></li>
+				<li><strong class="source-inline">&lt;measure&gt; = &lt;fixed value&gt;</strong></li>
+			</ul>
+			<p>Then, you are r<a id="_idTextAnchor141"></a>equired to use the <strong class="source-inline">F</strong><strong class="source-inline">ilter()</strong> command. </p>
+			<p>The filter command requires a table as its first argument. This does not have to be an actual table; you could create one as part of the statement.</p>
+			<p>The <strong class="source-inline">CALCULATE</strong> syntax with the <strong class="source-inline">FILTER</strong> argument looks like this: </p>
+			<pre class="source-code">CALCULATE(&lt;measure expression&gt;, FILTER(table, &lt;expression),&lt;filter2&gt;, …). </pre>
+			<p>If we were trying to get a row count of our products by name, we could create this measure:</p>
+			<div>
+				<div id="_idContainer066" class="IMG---Figure">
+					<img src="image/B18086_07_006.jpg" alt="Figure 7.6 – By using CALCULATE and FILTER together, you can access much more complex filtering
+" width="1650" height="932"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.6 – By using CALCULATE and FILTER together, you can access much more complex filtering</p>
+			<p>The following list shows <a id="_idIndexMarker376"></a>the various elements seen in this screenshot:</p>
+			<ol>
+				<li>The measure definition. We must use the filter statement because we are comparing a column against a measure expression, <strong class="source-inline">MAX</strong>.</li>
+				<li>The table rank with the <strong class="bold">Product Name</strong> column. Notice it is just an alphabetical ranking.</li>
+				<li>(Outlined) The table rank in two different tables. Notice it makes no sense in the left-hand table, but in the right-hand table, it changes the ranks based on our selecting <strong class="bold">Helicopter</strong> in the left-hand table. The table rank is correct in this context filter. </li>
+			</ol>
+			<p>Understanding how the <strong class="source-inline">CALCULATE</strong> function works will be important for passing the exam and working with Power BI in the future. </p>
+			<h2 id="_idParaDest-137"><a id="_idTextAnchor142"></a>The ALL function</h2>
+			<p>The <strong class="source-inline">ALL</strong> function<a id="_idIndexMarker377"></a> instructs the surrounding function to ignore the execution context for the table or column within the function. </p>
+			<p>What if you wanted to know what percentage of gross revenue each product provided? It should add up to 100% however you sliced and diced your data.</p>
+			<p>If you simply divide your gross revenue for a product by the sum of gross revenue for all products, you can get that answer. But the filter context will make that result <strong class="source-inline">1</strong>: </p>
+			<pre class="source-code">% Product Gross Revenue = </pre>
+			<pre class="source-code">DIVIDE(</pre>
+			<pre class="source-code">  SUM(Sales[Gross Revenue]),</pre>
+			<pre class="source-code">  SUM(Sales[Gross Revenue])</pre>
+			<pre class="source-code">      )</pre>
+			<p>You can use <strong class="source-inline">CALCULATE</strong> with <strong class="source-inline">ALL</strong> to ignore any context filters:</p>
+			<pre class="source-code">% Product Gross Revenue = </pre>
+			<pre class="source-code">DIVIDE(</pre>
+			<pre class="source-code"> SUM(Sales[Gross Revenue]),</pre>
+			<pre class="source-code"> CALCULATE(SUM(Sales[Gross Revenue]),ALL('Product'[Product Name])) </pre>
+			<pre class="source-code">      ) </pre>
+			<p>If you use the <strong class="source-inline">Product Name</strong> column from the <strong class="source-inline">Product</strong> table, this will work.</p>
+			<div>
+				<div id="_idContainer067" class="IMG---Figure">
+					<img src="image/B18086_07_007.jpg" alt="Figure 7.7 – With CALCULATE and the ALL filter option, you can ignore filter context
+" width="1133" height="1058"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.7 – With CALCULATE and the ALL filter option, you can ignore filter context</p>
+			<p>You can use <strong class="source-inline">CALCULATE</strong> to change <a id="_idIndexMarker378"></a>the filter context of a value or even ignore the filter context entirely. </p>
+			<p>Next, we'll look at a special kind of calculation – time intelligence calculations, which Power BI has built-in capabilities for to ease implementation.</p>
+			<h1 id="_idParaDest-138"><a id="_idTextAnchor143"></a>Implementing time intelligence using DAX</h1>
+			<p>Most<a id="_idIndexMarker379"></a> reports have a time quality; we often<a id="_idIndexMarker380"></a> need to compare now versus some previous point in time to see whether we are trending in the right direction. Power BI offers many powerful time intelligence functions to handle this kind of reporting.</p>
+			<p>In <a href="B18086_05_epub.xhtml#_idTextAnchor089"><em class="italic">Chapter 5</em></a>, <em class="italic">Designing a Data Model</em>, we covered how to create a date table. This chapter explains how to use its awesomeness. </p>
+			<p>Time intelligence functions fall into one of two types:</p>
+			<ul>
+				<li>Functions that require <strong class="source-inline">CALCULATE</strong>.</li>
+				<li>Functions that return a scalar value on their own. This is sometimes referred to as <strong class="bold">syntactic sugar</strong>, which is<a id="_idIndexMarker381"></a> an awesome name.</li>
+			</ul>
+			<p>A function that uses the <strong class="source-inline">DATESYTD</strong> call requires <strong class="source-inline">CALCULATE</strong>:</p>
+			<pre class="source-code">Products Ordered YTD = CALCULATE(COUNT(Sales[Product SKU]),DATESYTD('Date'[Date]))</pre>
+			<p>Syntactic <a id="_idIndexMarker382"></a>sugar has an aggregate value in its name, such <a id="_idIndexMarker383"></a>as <strong class="source-inline">TOTALYTD</strong> or <strong class="source-inline">CLOSINGBALANCEMONTH</strong>. We will get the same results as the <strong class="source-inline">CALCULATE</strong> measure using the following:</p>
+			<pre class="source-code">Total Products Ordered YTD = TOTALYTD(COUNT(Sales[Product SKU]),'Date'[Date])</pre>
+			<p>It may take generating some error messages before you get a feel for which type of function you are trying to use. </p>
+			<h2 id="_idParaDest-139"><a id="_idTextAnchor144"></a>Date tables</h2>
+			<p>To get the most out of your time calculations, you need to use the date column from your date table. This will<a id="_idIndexMarker384"></a> allow for consistency in analysis, can lead to a smaller and faster data model, and allows you to use DAX time intelligence functions, such as Year-over-Year and Same Period Last Year.</p>
+			<p>The most important thing when working with a date table is that every date in your data model has a relationship to the date column of your date table. I cannot stress this enough. Here, I have my date table with two relationships, one to <strong class="bold">OrderDate</strong> and one to <strong class="bold">ShipDate</strong>:</p>
+			<div>
+				<div id="_idContainer068" class="IMG---Figure">
+					<img src="image/B18086_07_008.jpg" alt="Figure 7.8 – OrderDate is the active relationship (solid line) between the tables; ShipDate is the inactive relationship (dotted line)
+" width="930" height="473"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.8 – OrderDate is the active relationship (solid line) between the tables; ShipDate is the inactive relationship (dotted line)</p>
+			<p>To use the <a id="_idIndexMarker385"></a>date table, use the date column in the date table in all your calculations. The date table simply becomes another table with the referenced values that are used to filter records in other tables, such as filtering the <strong class="bold">Sales</strong> table in <em class="italic">Figure 7.8</em>. </p>
+			<h2 id="_idParaDest-140"><a id="_idTextAnchor145"></a>Role-playing dimensions</h2>
+			<p>In <a href="B18086_05_epub.xhtml#_idTextAnchor089"><em class="italic">Chapter 5</em></a>, <em class="italic">Designing a Data Model</em>, we talked about role-playing dimensions and how they allow a <a id="_idIndexMarker386"></a>dimension to be used in multiple ways. Now, we are going to use our date table as a role-playing dimension to filter data based on different dates and against different columns. </p>
+			<p>The first role our date table will play is going to be the <strong class="source-inline">OrderDate</strong> dimension. </p>
+			<p>We can use the time intelligence measure we created earlier to count how many products were ordered each day. Notice we are using the syntactic sugar <strong class="source-inline">TOTALYTD</strong> call:</p>
+			<pre class="source-code">Total Products Ordered YTD = TOTALYTD(COUNT(Sales[Product SKU]),'Date'[Date])</pre>
+			<p>Also notice we are not even mentioning <strong class="source-inline">OrderDate</strong>. The relationship between the <strong class="source-inline">Sales</strong> table and the date table defaults to using <strong class="source-inline">OrderDate</strong>. You can think of the date table as being the <strong class="source-inline">OrderDate</strong> dimension table in this context.</p>
+			<p>The next role our date table will play will be the <strong class="source-inline">ShipDate</strong> dimension table. We will create almost the same measure as our <strong class="source-inline">Products Ordered</strong> measure but tell Power BI to use the <strong class="source-inline">ShipDate</strong> relationship instead of the <strong class="source-inline">OrderDate</strong> relationship:</p>
+			<pre class="source-code">Total Products Shipped YTD = TOTALYTD(COUNT(Sales[Product  SKU]),DATESYTD('Date'[Date]),USERELATIONSHIP('Date'[Date],Sales[ShipDate]))</pre>
+			<p>This allows us to <a id="_idIndexMarker387"></a>show both the number of products ordered by Year-to-Date and the number of products shipped by Year-to-Date. </p>
+			<div>
+				<div id="_idContainer069" class="IMG---Figure">
+					<img src="image/B18086_07_009.jpg" alt="Figure 7.9 – In this quarter, I shipped 999 fewer products than were ordered. That's what I get for giving the shipping department the week after Christmas off!
+" width="590" height="397"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.9 – In this quarter, I shipped 999 fewer products than were ordered. That's what I get for giving the shipping department the week after Christmas off!</p>
+			<p>So, here you have a very talented date table, able to jump in and pretend to be a dimension for any date in your model. Wow, what a table!</p>
+			<p>Now, let's explore how numeric calculated columns can be replaced with measures.</p>
+			<h1 id="_idParaDest-141"><a id="_idTextAnchor146"></a>Replacing numeric calculated columns with measures</h1>
+			<p>Calculated<a id="_idIndexMarker388"></a> columns and measures <a id="_idIndexMarker389"></a>are different in the way they are stored and calculated within Power BI. When calculated columns are added to a data model, the values are calculated and stored for every row. This means that if there are 1,000 rows in a table and you add a calculated column for <strong class="source-inline">Margin</strong> (using a formula taking sales minus production costs), then for each row of the table, the data model would store a value for <strong class="source-inline">Margin</strong>. This data would be stored and updated whenever the model was refreshed so there are storage and performance implications when using many calculated columns.</p>
+			<p>Measures are not stored but instead calculated when used on the fly. Instead of creating a calculated column for <strong class="source-inline">Margin</strong>, you could instead create a measure that performs the same calculation, but the value would not be stored in the data model but instead be computed when the measure is used in a report visual.</p>
+			<p>For Power BI to use a measure to replicate what a calculated column does, the measure would have to be calculated row by row. </p>
+			<p>Normal Power BI statistical functions use a single table column as the only argument for their calculations, functions such as <strong class="source-inline">SUM</strong>, <strong class="source-inline">COUNT</strong>, and <strong class="source-inline">AVERAGE</strong>.</p>
+			<h2 id="_idParaDest-142"><a id="_idTextAnchor147"></a>The X functions</h2>
+			<p>Statistical functions also have a <a id="_idIndexMarker390"></a>separate <strong class="source-inline">X</strong> function, such as <strong class="source-inline">SUMX</strong>, <strong class="source-inline">COUNTX</strong>, and <strong class="source-inline">AVERAGEX</strong>, and these take two arguments, a table and an expression. The expression is calculated in row context for the provided table. </p>
+			<p>We could recreate our gross revenue calculation using the <strong class="source-inline">SUMX</strong> function like so:</p>
+			<ul>
+				<li>Original: <p class="source-code">Gross Revenue = Sales[Quantity] * Sales[UnitPrice]</p></li>
+				<li><strong class="source-inline">SUMX</strong>: <p class="source-code">Gross Revenue X = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])</p></li>
+			</ul>
+			<p>This gives us the following table:</p>
+			<div>
+				<div id="_idContainer070" class="IMG---Figure">
+					<img src="image/B18086_07_010.jpg" alt="Figure 7.10 – Both calculations return identical results
+" width="730" height="257"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.10 – Both calculations return identical results</p>
+			<p>Note that there is a cost<a id="_idIndexMarker391"></a> associated with the X functions, as we do not have the data already calculated, so Power BI will have to calculate it every time. But in many situations, the savings in model size, especially the model's memory footprint, may be worth it. </p>
+			<p>So, when do we use a calculated column and when do we use a measure? </p>
+			<h2 id="_idParaDest-143"><a id="_idTextAnchor148"></a>When to use calculated columns</h2>
+			<p>Calculated columns are<a id="_idIndexMarker392"></a> ideal for fixed values. For example, if you want the fixed value of the year number parsed out from an entire column storing the date, the value in the calculated column would always be the same based on the date. Parsing and calculating the year value <strong class="source-inline">2022-06-01</strong> would always return <strong class="source-inline">2022</strong>.</p>
+			<p>Likewise, if you want to add any text values to a table, then it's best to use a calculated column. For example, if you wanted to parse the name of the month from the date, then the calculated value would be the same based on the date. Parsing and calculating the text month value <strong class="source-inline">2022-06-01</strong> would always return <strong class="source-inline">July</strong>.</p>
+			<p>Calculated columns must be used if you plan to filter by a value stored. You can add a calculated column to a visual, page, or all pages filter in a Power BI report.</p>
+			<h2 id="_idParaDest-144"><a id="_idTextAnchor149"></a>When to use measures</h2>
+			<p>Measures are <a id="_idIndexMarker393"></a>best used when values can or need to change based on the context. For example, the sum of revenue would change depending on the region we selected. Total revenue might be $1,000,000 with revenue across three different regions. Some visuals will need to show total revenue, while other visuals for regional managers might need to be filtered to only show revenue for their region.</p>
+			<p>Measures can be used to minimize the size of data in a data model as they don't add to data stores since they are calculated on the fly. This increases CPU load but reduces data size and refresh time.</p>
+			<p>Measures cannot be added to a filter in Power BI, so if you need to filter by the value in a measure, it will instead need to be a calculated column.</p>
+			<h1 id="_idParaDest-145"><a id="_idTextAnchor150"></a>Using basic statistical functions to enhance data</h1>
+			<p>Like <a id="_idIndexMarker394"></a>many programming languages<a id="_idIndexMarker395"></a> DAX has built-in capabilities for statistical and aggregation functions, such as sum, count, and averages. If you've used these functions in Microsoft Excel, you will pick up how to use these functions quickly in DAX.</p>
+			<p>Often our reports use statistics to explain and explore our data. Statistics can show you how your data is distributed, explain trends, or identify outliers. Using statistics to summarize your data can provide a quick and easy way to not only describe your data but also help find new insights or heretofore undiscovered trends. We saw this in <a href="B18086_03_epub.xhtml#_idTextAnchor049"><em class="italic">Chapter 3</em></a>, when we used data profiling to help us understand our data in Power Query.</p>
+			<p>Generating a statistical summary can provide you with a high-level view of your data. The advantage of doing this in DAX over Power Query is that we can use the relationships in our model and generate statistics that cover more than one table. This will help you gain even deeper insights into your data and provide you with a better foundation for your data storytelling. </p>
+			<p>Many times, you will be asked how often something happens or at what frequency. You may be asked to give the net revenue of the top 10 products by region. Power BI makes answering complex questions such as this much easier. In this example, the net revenue data needs to be grouped by both product and region. Using the statistical functions in Power BI and DAX, this challenge becomes much easier.</p>
+			<p>More often, you <a id="_idIndexMarker396"></a>may be asked to return the<a id="_idIndexMarker397"></a> minimum, maximum, or average of a column. If so, you do not need to create a new measure; you can override the default summarization of a column on a per-visual basis. </p>
+			<h2 id="_idParaDest-146"><a id="_idTextAnchor151"></a>Changing the default summarization</h2>
+			<p>Power BI has many<a id="_idIndexMarker398"></a> statistical functions. In fact, many of them are similar to their Excel counterparts. Many times, they can be accessed by right-clicking on the <strong class="bold">Values</strong> field in the <strong class="bold">Visualizations</strong> pane. In the dropdown, you can change the visual to use a different summarization from whatever was set as the default.</p>
+			<div>
+				<div id="_idContainer071" class="IMG---Figure">
+					<img src="image/B18086_07_011.jpg" alt="Figure 7.11 – Just because a column has a default summarization, doesn't mean we cannot change it on a visual-by-visual basis
+" width="1254" height="854"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.11 – Just because a column has a default summarization, doesn't mean we cannot change it on a visual-by-visual basis</p>
+			<p>Here, you can see that instead of using the default summarization of <strong class="bold">Sum</strong> for gross revenue, we changed this table to use <strong class="bold">Median</strong>. This is even easier than quick measures.</p>
+			<p>It is better, from<a id="_idIndexMarker399"></a> a performance standpoint, to create the statistical measure instead of changing the default summarization of a column. Also, it is important to note that this feature only works on columns, not measures. It could be a native column or a calculated column, but it must be a column. Measures are already aggregated, so there is no way to change them on the fly; you have to either change the measure or create a new one.</p>
+			<h2 id="_idParaDest-147"><a id="_idTextAnchor152"></a>Binning and grouping histograms</h2>
+			<p>One of the more common <a id="_idIndexMarker400"></a>ways to display data is with a histogram. This is a fancy term for <a id="_idIndexMarker401"></a>any one of the many varieties of bar or column charts that are available in Power BI. The simplest bar chart will show the relationship between two data points, usually a dimension and a measure: </p>
+			<ol>
+				<li value="1">A histogram usually displays just one data point that has been broken down into bins. We can do this by creating a new group on a column.</li>
+				<li>Sticking with our <strong class="bold">Gross Revenue</strong> column, if we add that to the report surface, it will create a bar chart with a single bar. </li>
+			</ol>
+			<div>
+				<div id="_idContainer072" class="IMG---Figure">
+					<img src="image/B18086_07_012.jpg" alt="Figure 7.12 – This is a very smooth histogram. If we break it up into parts, it might become more interesting
+" width="526" height="526"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.12 – This is a very smooth histogram. If we break it up into parts, it might become more interesting</p>
+			<ol>
+				<li value="3">We can<a id="_idIndexMarker402"></a> then right-click on the <strong class="bold">Gross Revenue</strong> column in the<a id="_idIndexMarker403"></a> field area and select <strong class="bold">New group</strong>.</li>
+			</ol>
+			<div>
+				<div id="_idContainer073" class="IMG---Figure">
+					<img src="image/B18086_07_013.jpg" alt="Figure 7.13 – We can bin our column by creating a group
+" width="431" height="591"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.13 – We can bin our column by creating a group</p>
+			<p>This will <a id="_idIndexMarker404"></a>open the <strong class="bold">New group</strong> dialog, where we can define our group. By <a id="_idIndexMarker405"></a>default, binning splits a numeric or date/time column into equally sized groups. We can override this behavior by changing <strong class="bold">Bin Type</strong> to <strong class="bold">Number of bins</strong> and selecting a bin count. The fewer bins you have, the less likely you are to see trends in your data, but having too many bins can also lead to the same problem. </p>
+			<div>
+				<div id="_idContainer074" class="IMG---Figure">
+					<img src="image/B18086_07_014.jpg" alt="Figure 7.14 – Using the Groups dialog to break down our column into parts
+" width="1138" height="837"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.14 – Using the Groups dialog to break down our column into parts</p>
+			<ol>
+				<li value="4">After <a id="_idIndexMarker406"></a>choosing our bin count, we can click <strong class="bold">OK</strong>. We now have a<a id="_idIndexMarker407"></a> new group that we can add to the axis of our column chart.</li>
+			</ol>
+			<div>
+				<div id="_idContainer075" class="IMG---Figure">
+					<img src="image/B18086_07_015.jpg" alt="Figure 7.15 – This is a much more interesting histogram than we started with! We have grouped our single value into five separate sums
+" width="486" height="476"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.15 – This is a much more interesting histogram than we started with! We have grouped our single value into five separate sums</p>
+			<p>We have now <a id="_idIndexMarker408"></a>produced a histogram that displays the gross revenue by the <a id="_idIndexMarker409"></a>bucket size that we selected. This allows us to see that most of our gross revenue comes from smaller transactions. </p>
+			<h1 id="_idParaDest-148"><a id="_idTextAnchor153"></a>Implementing top N analysis</h1>
+			<p>People and <a id="_idIndexMarker410"></a>companies love top N lists. There are whole websites dedicated to <em class="italic">The top 10 foods that celebrity data analysts like to eat</em> and <em class="italic">Top 25 ways to make your Power BI data model faster</em>. Not really, but I would definitely sign up for the first one!</p>
+			<p>Top N lists can provide useful information for organizations. Data consumers like to see what the company's top-selling products are. What is the most popular color widget? How do I compare my top 10 product's revenue against the rest?</p>
+			<p>There are actually two different problems here. One is to generate a ranking function and display it, and the other is to create a top N table to use a filter in a measure.</p>
+			<h2 id="_idParaDest-149"><a id="_idTextAnchor154"></a>Ranking function</h2>
+			<p>You can create a rank<a id="_idIndexMarker411"></a> and ordered list by using the <strong class="source-inline">RANKX</strong> function. This is another one of those <strong class="source-inline">X</strong> functions that aggregate over a table. It will produce a numerical ranking of a category by an expression: </p>
+			<pre class="source-code">RANKX(&lt;table&gt;, &lt;expression&gt;[, &lt;value&gt;[, &lt;order&gt;[, &lt;ties&gt;]]])  </pre>
+			<p>As with all the <strong class="source-inline">X</strong> functions, <strong class="source-inline">RANKX</strong> takes a table as its first argument. It then has an expression that is evaluated for each row of the table in the first argument and returns a single scalar value for ranking. The next three arguments are optional. The <strong class="source-inline">value</strong> argument returns a single value whose rank is to be found. This is usually skipped and the value from the expression is used. The order can be descending or ascending, with descending the default. Finally, we can tell <strong class="source-inline">RANKX</strong> how to handle ties. If you choose <strong class="source-inline">SKIP</strong>, then the next rank value, after a tie, is the rank value of the tie plus the count of tied values. For example, if three values are tied with a rank of <strong class="source-inline">11</strong>, then the next value will receive a rank of <strong class="source-inline">14</strong> (11 + 3). If you choose <strong class="source-inline">DENSE</strong>, then the next rank value after a tie is the next value. For example, if three values are tied with a rank of <strong class="source-inline">11</strong>, then the next value will receive a rank of <strong class="source-inline">12</strong>.</p>
+			<p>Here's an example of a ranking function to number our product names by gross profit:</p>
+			<pre class="source-code">Product Rank = RANKX(ALL('Product'[Product Name]),Sales[Gross Profit],,DESC,Skip)</pre>
+			<p>The table we are ranking over, <strong class="source-inline">ALL('Product'[Product Name])</strong>, uses the <strong class="source-inline">ALL</strong> filter. This means that even if we filter our report down to one product name, it will retain its rank against all product names and not just become rank 1.</p>
+			<div>
+				<div id="_idContainer076" class="IMG---Figure">
+					<img src="image/B18086_07_016.jpg" alt="Figure 7.16 – Ranking is easy in Power BI!
+" width="678" height="452"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.16 – Ranking is easy in Power BI!</p>
+			<p>Notice that each <a id="_idIndexMarker412"></a>product item group gets its own ranking, and that's even when we filter down to one product; it maintains its ranking. </p>
+			<h2 id="_idParaDest-150"><a id="_idTextAnchor155"></a>Top N functions</h2>
+			<p>There is nothing<a id="_idIndexMarker413"></a> in the <strong class="source-inline">RANKX</strong> function to limit the number of rows returned. We will see in this section how to limit our calculations to the top N. </p>
+			<p>We will start with the easiest way: just asking. </p>
+			<h3>Q&amp;Aing our way to a top N list</h3>
+			<p>As we saw in the previous <a id="_idIndexMarker414"></a>chapter, we can use Power BI's impressive natural-language capabilities to help us create reports. Using the Q&amp;A visual, we can ask Power BI to answer the question <em class="italic">What are my top 5 product names by gross revenue?</em> </p>
+			<div>
+				<div id="_idContainer077" class="IMG---Figure">
+					<img src="image/B18086_07_017.jpg" alt="Figure 7.17 – When you are not certain how to do something in Power BI, just ask!
+" width="642" height="697"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.17 – When you are not certain how to do something in Power BI, just ask!</p>
+			<p>And with<a id="_idIndexMarker415"></a> zero coding on our part, we get a top 5 chart! </p>
+			<h3>Top N filter</h3>
+			<p>In the filters pane, there is an option for a top N filter<a id="_idIndexMarker416"></a> on a visual. Click on the visual you want to filter and select the category you want to filter on.</p>
+			<p>Then, in the filters pane, expand the <strong class="bold">Filter type</strong> list and select <strong class="bold">Top N</strong>. In the <strong class="bold">Show items</strong> settings, select <strong class="bold">Top</strong> and however many you want to display. Then, select a numeric column or measure as the<a id="_idIndexMarker417"></a> value that you want to filter the field by. The visual updates accordingly.</p>
+			<div>
+				<div id="_idContainer078" class="IMG---Figure">
+					<img src="image/B18086_07_018.jpg" alt="Figure 7.18 – Using the filters pane to limit a visual to the top 5! Easy!
+" width="656" height="589"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.18 – Using the filters pane to limit a visual to the top 5! Easy!</p>
+			<p>We can use this type of <a id="_idIndexMarker418"></a>filter to limit our <strong class="source-inline">RANKX</strong> functions as well, though it would be easier to create a filter on the <strong class="source-inline">RANKX</strong> field and limit it to 5 or 10 or whatever we choose. </p>
+			<h3>Top N function</h3>
+			<p>Another option to calculate the top <a id="_idIndexMarker419"></a>10 products using DAX is to use the <strong class="source-inline">TOPN</strong> function. Using <strong class="source-inline">TOPN</strong>, you can discover the top 10 values in different filtering contexts, such as the impact the top 10 products made on the total sales.</p>
+			<p>The <strong class="source-inline">TOPN</strong> function returns a table, not a single scalar value, and you can use it as follows:</p>
+			<pre class="source-code">TOPN(&lt;n_value&gt;, &lt;table&gt;, &lt;orderBy_expression&gt;, [&lt;order&gt;[, &lt;orderBy_expression&gt;, [&lt;order&gt;]]…])</pre>
+			<p>The first value is where we tell <strong class="source-inline">TOPN</strong> how many rows we want in our table, while the next is the table we want to run <strong class="source-inline">TOPN</strong> over. This can be any valid DAX expression that returns a table, or just a table. <strong class="source-inline">orderBy_Expression</strong> is the value we want to order our table by, and the order is the direction, descending or ascending, that we want the table to be ordered in. We can repeat <strong class="source-inline">orderBy_expression</strong> and order if we want to use more than one expression in our calculation. </p>
+			<p>Here is an example where we use <strong class="source-inline">TOPN</strong> to generate a table to filter our data by:</p>
+			<pre class="source-code">Top Product Gross Revenue =</pre>
+			<pre class="source-code">CALCULATE([Gross Rev],</pre>
+			<pre class="source-code">TOPN(1,ALL('Product'[Product Name]),[Gross Rev],DESC)</pre>
+			<pre class="source-code">)</pre>
+			<p>We can use this calculation in visuals or other calculations. We can use this in another measure to compare how other products compare against our best-selling product:</p>
+			<pre class="source-code">% Product Gross Revenue vs Top= </pre>
+			<pre class="source-code">DIVIDE(</pre>
+			<pre class="source-code">        [Top Product Gross Revenue],</pre>
+			<pre class="source-code">        SUM(Sales[Gross Revenue])</pre>
+			<pre class="source-code">        )</pre>
+			<p>We can now create a visual comparing our top product revenue versus everything else.</p>
+			<div>
+				<div id="_idContainer079" class="IMG---Figure">
+					<img src="image/B18086_07_019.jpg" alt="Figure 7.19 – Comparing our top product gross revenue against all our products
+" width="601" height="378"/>
+				</div>
+			</div>
+			<p class="figure-caption">Figure 7.19 – Comparing our top product gross revenue against all our products</p>
+			<p><strong class="source-inline">TOPN</strong> is a great<a id="_idIndexMarker420"></a> way to compare parts of your data against the rest of the data. Next, let's look at how we can use semi-additive measures to enhance our data model.</p>
+			<h1 id="_idParaDest-151"><a id="_idTextAnchor156"></a>Creating semi-additive measures</h1>
+			<p>Power BI has<a id="_idIndexMarker421"></a> three different types of measures it can perform: additive, non-additive, and semi-additive. We will check each of them out in the following sections.</p>
+			<h2 id="_idParaDest-152"><a id="_idTextAnchor157"></a>Additive measures</h2>
+			<p>An additive measure, such <a id="_idIndexMarker422"></a>as sum, aggregates over an element. Our gross profit calculations are examples of additive measures. The gross profit for each product item group adds up to the gross profit for <em class="italic">all</em> product item groups.</p>
+			<h2 id="_idParaDest-153"><a id="_idTextAnchor158"></a>Non-additive measures</h2>
+			<p>Non-additive measures <a id="_idIndexMarker423"></a>do not aggregate over anything. <strong class="source-inline">DISTINCT COUNT</strong> is a good example of this. The <strong class="source-inline">DISTINCT COUNT</strong> value of product SKUs ordered over a month does not equal the sum of distinct counts of every day of that month.</p>
+			<h2 id="_idParaDest-154"><a id="_idTextAnchor159"></a>Semi-additive measures</h2>
+			<p>Semi-additive <a id="_idIndexMarker424"></a>measures use <strong class="source-inline">SUM</strong> to aggregate over some of the elements and different aggregations over other dimensions. </p>
+			<p>One common scenario that uses a semi-additive calculation is inventory. </p>
+			<p>Let's say we need to perform an inventory count in our warehouse. If we have 100 helicopters in the warehouse on Monday, and then we have 95 on Tuesday, we can't add those numbers up. We do not have 195 helicopters in our warehouse, we have 95. </p>
+			<p>If want to get an inventory count for a specific date, we could write a measure like this: </p>
+			<pre class="source-code">Last Inventory Count =CALCULATE(SUM( 'Warehouse'[Inventory Count]), LASTDATE('Date'[Date]))</pre>
+			<p>This calculation will prevent <strong class="source-inline">SUM</strong> from aggregating across all the dates; the function will only sum for the last date in the period. This will, effectively, create a semi-additive measure.</p>
+			<h1 id="_idParaDest-155"><a id="_idTextAnchor160"></a>Summary</h1>
+			<p>In this chapter, we covered a lot of ground! We talked a lot about DAX, the programming language to implement business rules in Power BI. </p>
+			<p>We went over the basics of DAX, how it looks a lot like Microsoft Excel formulas, and how those formulas are applied in either the row or filter context. We compared measures to calculated columns. </p>
+			<p>We then discussed one of the most powerful functions in DAX, <strong class="source-inline">CALCULATE</strong>. We used <strong class="source-inline">CALCULATE</strong> to manipulate the filter context of our formulas to create more complex equations. We saw how <strong class="source-inline">CALCULATE</strong> can be used with simple filtering or be combined with the <strong class="source-inline">FILTER</strong> function for more powerful operations.</p>
+			<p>We discussed date tables and how they can be used with time intelligence calculations and how the date table becomes a role-playing dimension to be used across many related tables. We learned that Power BI includes time intelligence functions to make aggregations such as Year-over-Year much easier.</p>
+			<p>When comparing measures and columns, we learned that there are pros and cons to each. We explored how by using both in your data model, you can best optimize for your business needs, by using calculated columns when you need to calculate a value that you can use in a filter. This can also be used while using measures to calculate a value on the fly based on the filtering context. We also covered statistical functions, including <strong class="source-inline">RANKX</strong> and <strong class="source-inline">TOPN</strong>. These and other functions will help bring out more value from the data in your Power BI data model. We finished by looking at additive, non-additive, and semi-additive measures to round out our understanding of measures. </p>
+			<p>In the next chapter, we will explore how we can optimize our Power BI data model for performance. </p>
+			<h1 id="_idParaDest-156"><a id="_idTextAnchor161"></a>Questions</h1>
+			<ol>
+				<li value="1">What are quick measures?<ol><li>Measures that move around the screen quickly</li><li>Calculated fields that can be added without coding</li><li>Measures that can quickly be added by writing DAX code</li><li>Custom visuals added from Microsoft AppSource</li></ol></li>
+				<li>What is used to evaluate an expression in the context of a modified filter?<ol><li><strong class="source-inline">COMPUTE</strong></li><li><strong class="source-inline">APPRAISE</strong></li><li><strong class="source-inline">SUM</strong></li><li><strong class="source-inline">CALCULATE</strong></li></ol></li>
+				<li>If you only have the <strong class="source-inline">Sales Amount</strong> and <strong class="source-inline">Total Product Cost</strong> fields, which function would be best to use to calculate the sum of margin?<ol><li><strong class="source-inline">SUMX</strong></li><li><strong class="source-inline">MARGIN</strong></li><li><strong class="source-inline">DISTINCTCOUNT</strong></li><li><strong class="source-inline">FILTER</strong></li></ol></li>
+			</ol>
+		</div>
+	</div>
+</div>
+</body>
+</html>
