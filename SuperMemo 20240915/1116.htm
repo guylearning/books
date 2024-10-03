@@ -1,0 +1,359 @@
+<html>
+
+<head>
+<meta http-equiv="description" content="SuperMemo Collection: (((backup of mindx created on 2024-09-15 23-55-25))), Page: Cascade, specificity, and inheritance">
+<meta http-equiv="keywords" content="SuperMemo, (((backup of mindx created on 2024-09-15 23-55-25))), Cascade, specificity, and inheritance">
+<meta name="GENERATOR" content="SuperMemo for Windows (Build 18.05)">
+<title>(((backup of mindx created on 2024-09-15 23-55-25))): Cascade, specificity, and inheritance (SuperMemo collection)</title>
+</head>
+
+<body>
+
+<p align="center"><b><font size="5">(((backup of mindx created on 2024-09-15 23-55-25))): Cascade, specificity, and inheritance </font></b><br>(5 elements)</p>
+<a name="TopOfPages"> </a>
+<b>Contents:</b>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#FFCCFF">
+<tr>
+<td width="100%">
+  <a href="index.htm">Root</a> <a href="1720.htm"> - Next</a> - <a href="1722.htm">Previous</a> - <a href="1722.htm">Parent</a>
+<font size="2">
+<ul>
+<li><a href="index.htm">MindX</a></li>
+<ul>
+<li><a href="3.htm">Explor</a></li>
+<ul>
+<li><a href="330.htm">MDN Front-End Developer</a></li>
+<ul>
+<li><a href="332.htm">Core</a></li>
+<ul>
+<li><a href="336.htm">3. CSS fundamentals</a></li>
+<ul>
+<li><a href="1722.htm">3.4 Handling conflicts in CSS.</a></li>
+<ul>
+<li>This page: Cascade, specificity, and inheritance</li>
+<ol>
+<li>Conflicting rules (see <a href="#1567">below)</a>
+<li>Understanding how the concepts work together. These three concepts (cascade, specificity, and inheritance) together control which CSS applies to what element. In the sections . (see <a href="#1568">below)</a>
+<li>Understanding inheritance. We'll start with inheritance. In the example below, we have a <ul> element with two levels of unordered lists nested inside it. We have given the . (see <a href="#1569">below)</a>
+<li>Understanding the cascade. We now understand that inheritance is why a paragraph nested deep in the structure of your HTML is the same color as the CSS applied to the body . (see <a href="#1570">below)</a>
+<li>The effect of CSS location. Finally, it is important to note that the precedence of a CSS declaration depends on what stylesheet and cascade layer it is specified in. It is . (see <a href="#1571">below)</a>
+</ol>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</font>
+</td>
+</tr>
+</table>
+</center>
+</div>
+
+<P align="center"><b><a name="1567">Topic #1,567: Conflicting rules</a></P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<STRONG><FONT color=blue>Cascade, specificity, and inheritance : </FONT></STRONG>
+<H2 id=conflicting_rules><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#conflicting_rules"><SPAN class=headers>Title:</SPAN></B><SPAN class=RefText> Conflicting rules</SPAN></FONT></A></H2>
+<DIV class=section-content>
+<P>CSS stands for <STRONG>Cascading Style Sheets</STRONG>, and that first word <EM>cascading</EM> is incredibly important to understand &#8212; the way that the cascade behaves is key to understanding CSS.</P>
+<P>At some point, you will be working on a project and you will find that the CSS you thought should be applied to an element is not working. Often, the problem is that you create two rules that apply different values of the same property to the same element. <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Cascade"><STRONG>Cascade</STRONG></A> and the closely-related concept of <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity"><STRONG>specificity</STRONG></A> are mechanisms that control which rule applies when there is such a conflict. The rule that's styling your element may not be the one you expect, so you need to understand how these mechanisms work.</P>
+<P>Also significant here is the concept of <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Inheritance"><STRONG>inheritance</STRONG></A>, which means that some CSS properties by default inherit values set on the current element's parent element and some don't. This can also cause some behavior that you might not expect.</P>
+<P>Let's start by taking a quick look at the key things we are dealing with, then we'll look at each in turn and see how they interact with each other and your CSS. These can seem like a tricky set of concepts to understand. As you get more practice writing CSS, the way it works will become more obvious to you.</P></DIV></SECTION><SECTION aria-labelledby=cascade>
+<H3 id=cascade><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#cascade">Cascade</A></H3>
+<DIV class=section-content>
+<P>Stylesheets <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Cascade"><STRONG>cascade</STRONG></A> &#8212; at a very simple level, this means that the origin, the cascade layer, and the order of CSS rules matter. When two rules from the same cascade layer apply and both have equal specificity, the one that is defined last in the stylesheet is the one that will be used.</P>
+<P>In the below example, we have two rules that could apply to the <CODE>&lt;h1&gt;</CODE> element. The <CODE>&lt;h1&gt;</CODE> content ends up being colored blue. This is because both the rules are from the same source, have an identical element selector, and therefore, carry the same specificity, but the last one in the source order wins.</P></DIV></SECTION><SECTION aria-labelledby=specificity>
+<H3 id=specificity><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#specificity">Specificity</A></H3>
+<DIV class=section-content>
+<P><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity">Specificity</A> is the algorithm that the browser uses to decide which property value is applied to an element. If multiple style blocks have different selectors that configure the same property with different values and target the same element, specificity decides the property value that gets applied to the element. Specificity is basically a measure of how specific a selector's selection will be:</P>
+<UL>
+<LI>An element selector is less specific; it will select all elements of that type that appear on a page, so it has less weight. Pseudo-element selectors have the same specificity as regular element selectors. 
+<LI>A class selector is more specific; it will select only the elements on a page that have a specific <CODE>class</CODE> attribute value, so it has more weight. Attribute selectors and pseudo-classes have the same weight as a class.</LI></UL>
+<P>Below, we again have two rules that could apply to the <CODE>&lt;h1&gt;</CODE> element. The <CODE>&lt;h1&gt;</CODE> content below ends up being colored red because the class selector <CODE>main-heading</CODE> gives its rule a higher specificity. So even though the rule with the <CODE>&lt;h1&gt;</CODE> element selector appears further down in the source order, the one with the higher specificity, defined using the class selector, will be applied.</P>
+<P>We'll explain the specificity algorithm later on.</P></DIV></SECTION><SECTION aria-labelledby=inheritance>
+<H3 id=inheritance><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#inheritance">Inheritance</A></H3>
+<DIV class=section-content>
+<P>Inheritance also needs to be understood in this context &#8212; some CSS property values set on parent elements are inherited by their child elements, and some aren't.</P>
+<P>For example, if you set a <CODE>color</CODE> and <CODE>font-family</CODE> on an element, every element inside it will also be styled with that color and font, unless you've applied different color and font values directly to them.</P>
+<P>Some properties do not inherit &#8212; for example, if you set a <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/width"><CODE>width</CODE></A> of 50% on an element, all of its descendants do not get a width of 50% of their parent's width. If this was the case, CSS would be very frustrating to use!</P>
+<DIV id=sect1 class="notecard note">
+<P><STRONG>Note:</STRONG> On MDN CSS property reference pages, you can find a technical information box called "Formal definition", which lists a number of data points about that property, including whether it is inherited or not. See the <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/color#formal_definition">color property Formal definition section</A> as an example.</P></DIV></DIV></SECTION><SECTION aria-labelledby=understanding_how_the_concepts_work_together>
+<H2 id=understanding_how_the_concepts_work_together><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#understanding_how_the_concepts_work_together">
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<P align="center"><b><a name="1568">Topic #1,568: Understanding how the concepts work together. These three concepts (cascade, specificity, and inheritance) together control which CSS applies to what element. In the sections .</a> (<a href="#TopOfPages"><font size="1">top</font></a></b>)</P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<strong><font color="blue">Cascade, specificity, and inheritance : </font></strong>
+Understanding how the concepts work together</A></H2>
+<DIV class=section-content>
+<P>These three concepts (cascade, specificity, and inheritance) together control which CSS applies to what element. In the sections below, we'll see how they work together. It can sometimes seem a little bit complicated, but you will start to remember them as you get more experienced with CSS, and you can always look up the details if you forget! Even experienced developers don't remember all the details.</P>
+<P>The following video shows how you can use the Firefox DevTools to inspect a page's cascade, specificity, and more:</P></DIV></SECTION><SECTION aria-labelledby=understanding_inheritance>
+<H2 id=understanding_inheritance><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#understanding_inheritance">
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<P align="center"><b><a name="1569">Topic #1,569: Understanding inheritance. We'll start with inheritance. In the example below, we have a <ul> element with two levels of unordered lists nested inside it. We have given the .</a> (<a href="#TopOfPages"><font size="1">top</font></a></b>)</P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<strong><font color="blue">Cascade, specificity, and inheritance : </font></strong>
+Understanding inheritance</A></H2>
+<DIV class=section-content>
+<P>We'll start with inheritance. In the example below, we have a <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul"><CODE>&lt;ul&gt;</CODE></A> element with two levels of unordered lists nested inside it. We have given the outer <CODE>&lt;ul&gt;</CODE> a border, padding, and font color.</P>
+<P>The <CODE>color</CODE> property is an inherited property. So, the <CODE>color</CODE> property value is applied to the direct children and also to the indirect children &#8212; the immediate child <CODE>&lt;li&gt;</CODE>s and those inside the first nested list. We have then added the class <CODE>special</CODE> to the second nested list and applied a different color to it. This then inherits down through its children.</P>
+<P>Properties like <CODE>width</CODE> (as mentioned earlier), <CODE>margin</CODE>, <CODE>padding</CODE>, and <CODE>border</CODE> are not inherited properties. If a border were to be inherited by the children in this list example, every single list and list item would gain a border &#8212; probably not an effect we would ever want!</P>
+<P>Though every CSS property page lists whether or not the property is inherited, you can often guess the same intuitively if you know what aspect the property value will style.</P></DIV></SECTION><SECTION aria-labelledby=controlling_inheritance>
+<H3 id=controlling_inheritance><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#controlling_inheritance">Controlling inheritance</A></H3>
+<DIV class=section-content>
+<P>CSS provides five special universal property values for controlling inheritance. Every CSS property accepts these values.</P>
+<DL>
+<DT id=inherit><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/inherit"><CODE>inherit</CODE></A> 
+<DD>
+<P>Sets the property value applied to a selected element to be the same as that of its parent element. Effectively, this "turns on inheritance".</P>
+<DT id=initial><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/initial"><CODE>initial</CODE></A> 
+<DD>
+<P>Sets the property value applied to a selected element to the <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/initial_value">initial value</A> of that property.</P>
+<DT id=revert><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/revert"><CODE>revert</CODE></A> 
+<DD>
+<P>Resets the property value applied to a selected element to the browser's default styling rather than the defaults applied to that property. This value acts like <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/unset"><CODE>unset</CODE></A> in many cases.</P>
+<DT id=revert-layer><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer"><CODE>revert-layer</CODE></A> 
+<DD>
+<P>Resets the property value applied to a selected element to the value established in a previous <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/@layer">cascade layer</A>.</P>
+<DT id=unset><A href="https://developer.mozilla.org/en-US/docs/Web/CSS/unset"><CODE>unset</CODE></A> 
+<DD>
+<P>Resets the property to its natural value, which means that if the property is naturally inherited it acts like <CODE>inherit</CODE>, otherwise it acts like <CODE>initial</CODE>.</P></DD></DL>
+<DIV id=sect2 class="notecard note">
+<P><STRONG>Note:</STRONG> See <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Cascade#origin_types">Origin types</A> for more information on each of these and how they work.</P></DIV>
+<P>We can look at a list of links and explore how universal values work. The live example below allows you to play with the CSS and see what happens when you make changes. Playing with code really is the best way to better understand HTML and CSS.</P>
+<P>For example:</P>
+<OL>
+<LI>The second list item has the class <CODE>my-class-1</CODE> applied. This sets the color of the <CODE>&lt;a&gt;</CODE> element nested inside to <CODE>inherit</CODE>. If you remove the rule, how does it change the color of the link? 
+<LI>Do you understand why the third and fourth links are the color that they are? The third link is set to <CODE>initial</CODE>, which means it uses the initial value of the property (in this case black) and not the browser default for links, which is blue. The fourth is set to <CODE>unset</CODE> which means that the link text uses the color of the parent element, green. 
+<LI>Which of the links will change color if you define a new color for the <CODE>&lt;a&gt;</CODE> element &#8212; for example <CODE>a { color: red; }</CODE>? 
+<LI>After reading the next section on resetting all properties, come back and change the <CODE>color</CODE> property to <CODE>all</CODE>. Notice how the second link is on a new line and has a bullet. What properties do you think were inherited?</LI></OL></DIV></SECTION><SECTION aria-labelledby=resetting_all_property_values>
+<H3 id=resetting_all_property_values><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#resetting_all_property_values">Resetting all property values</A></H3>
+<DIV class=section-content>
+<P>The CSS shorthand property <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/all"><CODE>all</CODE></A> can be used to apply one of these inheritance values to (almost) all properties at once. Its value can be any one of the inheritance values (<CODE>inherit</CODE>, <CODE>initial</CODE>, <CODE>revert</CODE>, <CODE>revert-layer</CODE>, or <CODE>unset</CODE>). It's a convenient way to undo changes made to styles so that you can get back to a known starting point before beginning new changes.</P>
+<P>In the below example, we have two blockquotes. The first has styling applied to the blockquote element itself. The second has a class applied to the blockquote, which sets the value of <CODE>all</CODE> to <CODE>unset</CODE>.</P>
+<P>Try setting the value of <CODE>all</CODE> to some of the other available values and observe what the difference is.</P></DIV></SECTION><SECTION aria-labelledby=understanding_the_cascade>
+<H2 id=understanding_the_cascade><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#understanding_the_cascade">
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<P align="center"><b><a name="1570">Topic #1,570: Understanding the cascade. We now understand that inheritance is why a paragraph nested deep in the structure of your HTML is the same color as the CSS applied to the body .</a> (<a href="#TopOfPages"><font size="1">top</font></a></b>)</P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<strong><font color="blue">Cascade, specificity, and inheritance : </font></strong>
+Understanding the cascade</A></H2>
+<DIV class=section-content>
+<P>We now understand that inheritance is why a paragraph nested deep in the structure of your HTML is the same color as the CSS applied to the body. From the introductory lessons, we have an understanding of how to change the CSS applied to something at any point in the document &#8212; whether by assigning CSS to an element or by creating a class. We will now look at how cascade defines which CSS rules apply when more than one style block apply the same property, but with different values, to the same element.</P>
+<P>There are three factors to consider, listed here in increasing order of importance. Later ones overrule earlier ones:</P>
+<OL>
+<LI><STRONG>Source order</STRONG> 
+<LI><STRONG>Specificity</STRONG> 
+<LI><STRONG>Importance</STRONG></LI></OL>
+<P>We will look at these to see how browsers figure out exactly what CSS should be applied.</P></DIV></SECTION><SECTION aria-labelledby=source_order>
+<H3 id=source_order><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#source_order">Source order</A></H3>
+<DIV class=section-content>
+<P>We have already seen how source order matters to the cascade. If you have more than one rule, all of which have exactly the same weight, then the one that comes last in the CSS will win. You can think of this as: the rule that is nearer the element itself overwrites the earlier ones until the last one wins and gets to style the element.</P>
+<P>Source order only matters when the specificity weight of the rules is the same, so let's look at specificity:</P></DIV></SECTION><SECTION aria-labelledby=specificity_2>
+<H3 id=specificity_2><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#specificity_2">Specificity</A></H3>
+<DIV class=section-content>
+<P>You will often run into a situation where you know that a rule comes later in the stylesheet, but an earlier, conflicting rule is applied. This happens because the earlier rule has a <STRONG>higher specificity</STRONG> &#8212; it is more specific, and therefore, is being chosen by the browser as the one that should style the element.</P>
+<P>As we saw earlier in this lesson, a class selector has more weight than an element selector, so the properties defined in the class style block will override those defined in the element style block.</P>
+<P>Something to note here is that although we are thinking about selectors and the rules that are applied to the text or component they select, it isn't the entire rule that is overwritten, only the properties that are declared in multiple places.</P>
+<P>This behavior helps avoid repetition in your CSS. A common practice is to define generic styles for the basic elements, and then create classes for those that are different. For example, in the stylesheet below, we have defined generic styles for level 2 headings, and then created some classes that change only some of the properties and values. The values defined initially are applied to all headings, then the more specific values are applied to the headings with the classes.</P>
+<P>Let's now have a look at how the browser will calculate specificity. We already know that an element selector has low specificity and can be overwritten by a class. Essentially a value in points is awarded to different types of selectors, and adding these up gives you the weight of that particular selector, which can then be assessed against other potential matches.</P>
+<P>The amount of specificity a selector has is measured using three different values (or components), which can be thought of as ID, CLASS, and ELEMENT columns in the hundreds, tens, and ones place:</P>
+<UL>
+<LI><STRONG>Identifiers</STRONG>: Score one in this column for each ID selector contained inside the overall selector. 
+<LI><STRONG>Classes</STRONG>: Score one in this column for each class selector, attribute selector, or pseudo-class contained inside the overall selector. 
+<LI><STRONG>Elements</STRONG>: Score one in this column for each element selector or pseudo-element contained inside the overall selector.</LI></UL>
+<DIV id=sect3 class="notecard note">
+<P><STRONG>Note:</STRONG> The universal selector (<A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors"><CODE>*</CODE></A>), <A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators">combinators</A> (<CODE>+</CODE>, <CODE>&gt;</CODE>, <CODE>~</CODE>, ' '), and specificity adjustment selector (<A href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where"><CODE>:where()</CODE></A>) along with its parameters, have no effect on specificity.</P></DIV>
+<P>The negation (<A href="https://developer.mozilla.org/en-US/docs/Web/CSS/:not"><CODE>:not()</CODE></A>), relational selector (<A href="https://developer.mozilla.org/en-US/docs/Web/CSS/:has"><CODE>:has()</CODE></A>), the matches-any (<A href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is"><CODE>:is()</CODE></A>) pseudo-classes, and <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Nesting_and_specificity">CSS nesting</A> themselves don't add to specificity, but their parameters or nested rules do. The specificity weight that each contributes to the specificity algorithm is the specificity weight of the selector in the parameter or nested rule with the greatest weight.</P>
+<P>The following table shows a few isolated examples to get you in the mood. Try going through these, and make sure you understand why they have the specificity that we have given them. We've not covered selectors in detail yet, but you can find details of each selector on the MDN <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selectors_and_combinators">selectors reference</A>.</P><FIGURE class=table-container>
+<TABLE>
+<THEAD>
+<TR>
+<TH>Selector</TH>
+<TH>Identifiers</TH>
+<TH>Classes</TH>
+<TH>Elements</TH>
+<TH>Total specificity</TH></TR></THEAD>
+<TBODY>
+<TR>
+<TD><CODE>h1</CODE></TD>
+<TD>0</TD>
+<TD>0</TD>
+<TD>1</TD>
+<TD>0-0-1</TD></TR>
+<TR>
+<TD><CODE>h1 + p::first-letter</CODE></TD>
+<TD>0</TD>
+<TD>0</TD>
+<TD>3</TD>
+<TD>0-0-3</TD></TR>
+<TR>
+<TD><CODE>li &gt; a[href*="en-US"] &gt; .inline-warning</CODE></TD>
+<TD>0</TD>
+<TD>2</TD>
+<TD>2</TD>
+<TD>0-2-2</TD></TR>
+<TR>
+<TD><CODE>#identifier</CODE></TD>
+<TD>1</TD>
+<TD>0</TD>
+<TD>0</TD>
+<TD>1-0-0</TD></TR>
+<TR>
+<TD><CODE>button:not(#mainBtn, .cta</CODE>)</TD>
+<TD>1</TD>
+<TD>0</TD>
+<TD>1</TD>
+<TD>1-0-1</TD></TR></TBODY></TABLE></FIGURE>
+<P>Before we move on, let's look at an example in action.</P>
+<P>So what's going on here? First of all, we are only interested in the first seven rules of this example, and as you'll notice, we have included their specificity values in a comment before each one.</P>
+<UL>
+<LI>The first two selectors are competing over the styling of the link's background color. The second one wins and makes the background color blue because it has an extra ID selector in the chain: its specificity is 2-0-1 vs. 1-0-1. 
+<LI>Selectors 3 and 4 are competing over the styling of the link's text color. The second one wins and makes the text white because although it has one less element selector, the missing selector is swapped out for a class selector, which has more weight than infinity element selectors. The winning specificity is 1-1-3 vs. 1-0-4. 
+<LI>Selectors 5&#8211;7 are competing over the styling of the link's border when hovered. Selector 6 clearly loses to selector 5 with a specificity of 0-2-3 vs. 0-2-4; it has one fewer element selectors in the chain. Selector 7, however, beats both selectors 5 and 6 because it has the same number of sub-selectors in the chain as selector 5, but an element has been swapped out for a class selector. So the winning specificity is 0-3-3 vs. 0-2-3 and 0-2-4.</LI></UL>
+<DIV id=sect4 class="notecard note">
+<P><STRONG>Note:</STRONG> Each selector type has its own level of specificity that cannot be overwritten by selectors with a lower specificity level. For example, a <EM>million</EM> <STRONG>class</STRONG> selectors combined would not be able to overwrite the specificity of <EM>one</EM> <STRONG>id</STRONG> selector.</P>
+<P>The best way to evaluate specificity is to score the specificity levels individually starting from the highest and moving on to the lowest when necessary. Only when there is a tie between selector scores within a specificity column do you need to evaluate the next column down; otherwise, you can disregard the lower specificity selectors since they can never overwrite the higher specificity selectors.</P></DIV></DIV></SECTION><SECTION aria-labelledby=inline_styles>
+<H3 id=inline_styles><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#inline_styles">Inline styles</A></H3>
+<DIV class=section-content>
+<P>Inline styles, that is, the style declaration inside a <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes#style"><CODE>style</CODE></A> attribute, take precedence over all normal styles, no matter the specificity. Such declarations don't have selectors, but their specificity can be construed as 1-0-0-0; always more than any other specificity weight no matter how many IDs are in the selectors.</P></DIV></SECTION><SECTION aria-labelledby=!important>
+<H3 id=!important><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#!important">!important</A></H3>
+<DIV class=section-content>
+<P>There is a special piece of CSS that you can use to overrule all of the above calculations, even inline styles - the <CODE>!important</CODE> flag. However, you should be very careful while using it. This flag is used to make an individual property and value pair the most specific rule, thereby overriding the normal rules of the cascade, including normal inline styles.</P>
+<DIV id=sect5 class="notecard note">
+<P><STRONG>Note:</STRONG> It is useful to know that the <CODE>!important</CODE> flag exists so that you know what it is when you come across it in other people's code. <STRONG>However, we strongly recommend that you never use it unless you absolutely have to.</STRONG> The <CODE>!important</CODE> flag changes the way the cascade normally works, so it can make debugging CSS problems really hard to work out, especially in a large stylesheet.</P></DIV>
+<P>Take a look at this example where we have two paragraphs, one of which has an ID.</P>
+<P>Let's walk through this to see what's happening &#8212; try removing some of the properties to see what happens if you are finding it hard to understand:</P>
+<OL>
+<LI>You'll see that the third rule's <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/color"><CODE>color</CODE></A> and <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/padding"><CODE>padding</CODE></A> values have been applied, but the <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/background-color"><CODE>background-color</CODE></A> hasn't. Why? Really, all three should surely apply because rules later in the source order generally override earlier rules. 
+<LI>However, the rules above it win because class selectors have higher specificity than element selectors. 
+<LI>Both elements have a <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes#class"><CODE>class</CODE></A> of <CODE>better</CODE>, but the 2nd one has an <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes#id"><CODE>id</CODE></A> of <CODE>winning</CODE> too. Since IDs have an <EM>even higher</EM> specificity than classes (you can only have one element with each unique ID on a page, but many elements with the same class &#8212; ID selectors are <EM>very specific</EM> in what they target), the red background color and the 1px black border should both be applied to the 2nd element, with the first element getting the gray background color, and no border, as specified by the class. 
+<LI>The 2nd element <EM>does</EM> get the red background color, but no border. Why? Because of the <CODE>!important</CODE> flag in the second rule. Adding the <CODE>!important</CODE> flag after <CODE>border: none</CODE> means that this declaration will win over the <CODE>border</CODE> value in the previous rule, even though the ID selector has higher specificity.</LI></OL>
+<DIV id=sect6 class="notecard note">
+<P><STRONG>Note:</STRONG> The only way to override an important declaration is to include another important declaration with the <EM>same specificity</EM> later in the source order, or one with higher specificity, or to include an important declaration in a prior cascade layer (we haven't covered cascade layers yet).</P></DIV>
+<P>One situation in which you may have to use the <CODE>!important</CODE> flag is when you are working on a CMS where you can't edit the core CSS modules, and you really want to override an inline style or an important declaration that can't be overridden in any other way. But really, don't use it if you can avoid it.</P></DIV></SECTION><SECTION aria-labelledby=the_effect_of_css_location>
+<H2 id=the_effect_of_css_location><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#the_effect_of_css_location">
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<P align="center"><b><a name="1571">Topic #1,571: The effect of CSS location. Finally, it is important to note that the precedence of a CSS declaration depends on what stylesheet and cascade layer it is specified in. It is .</a> (<a href="#TopOfPages"><font size="1">top</font></a></b>)</P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<strong><font color="blue">Cascade, specificity, and inheritance : </font></strong>
+The effect of CSS location</A></H2>
+<DIV class=section-content>
+<P>Finally, it is important to note that the precedence of a CSS declaration depends on what stylesheet and cascade layer it is specified in.</P>
+<P>It is possible for users to set custom stylesheets to override the developer's styles. For example, a visually impaired user might want to set the font size on all web pages they visit to be double the normal size to allow for easier reading.</P>
+<P>It is also possible to declare developer styles in cascade layers: you can make non-layered styles override styles declared in layers or you can make styles declared in later layers override styles from earlier declared layers. For example, as a developer you may not be able to edit a third-party stylesheet, but you can import the external stylesheet into a cascade layer so that all of your styles easily override the imported styles without worrying about third-party selector specificity.</P></DIV></SECTION><SECTION aria-labelledby=order_of_overriding_declarations>
+<H3 id=order_of_overriding_declarations><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#order_of_overriding_declarations">Order of overriding declarations</A></H3>
+<DIV class=section-content>
+<P>Conflicting declarations will be applied in the following order, with later ones overriding earlier ones:</P>
+<OL>
+<LI>Declarations in user agent style sheets (e.g., the browser's default styles, used when no other styling is set). 
+<LI>Normal declarations in user style sheets (custom styles set by a user). 
+<LI>Normal declarations in author style sheets (these are the styles set by us, the web developers). 
+<LI>Important declarations in author style sheets. 
+<LI>Important declarations in user style sheets. 
+<LI>Important declarations in user agent style sheets.</LI></OL>
+<DIV id=sect7 class="notecard note">
+<P><STRONG>Note:</STRONG> The order of precedence is inverted for styles flagged with <CODE>!important</CODE>. It makes sense for web developers' stylesheets to override user stylesheets, so the design can be kept as intended; however, sometimes users have good reasons to override web developer styles, as mentioned above, and this can be achieved by using <CODE>!important</CODE> in their rules.</P></DIV></DIV></SECTION><SECTION aria-labelledby=order_of_cascade_layers>
+<H3 id=order_of_cascade_layers><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#order_of_cascade_layers">Order of cascade layers</A></H3>
+<DIV class=section-content>
+<P>Even though <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/@layer">cascade layers</A> is an advanced topic and you might not use this feature right away, it's important to understand how layers cascade.</P>
+<P>When you declare CSS in cascade layers, the order of precedence is determined by the order in which the layers are declared. CSS styles declared outside of any layer are combined together, in the order in which those styles are declared, into an unnamed layer, as if it were the last declared layer. With competing normal (not important) styles, later layers take precedence over earlier defined layers. For styles flagged with <CODE>!important</CODE>, however, the order is reversed, with important styles in earlier layers taking precedence over important styles declared in subsequent layers or outside of any layer. Inline styles take precedence over all author styles, no matter the layer.</P>
+<P>When you have multiple style blocks in different layers providing competing values for a property on a single element, the order in which the layers are declared determines the precedence. Specificity between layers doesn't matter, but specificity within a single layer still does.</P>
+<P>Let's discuss a few things from the above example to understand what's happening. Two layers have been declared, <CODE>firstLayer</CODE> and <CODE>secondLayer</CODE>, in that order. Even though the specificity in <CODE>secondLayer</CODE> is the highest, no properties from that declaration are used. Why? Because non-layered normal styles take precedence over layered normal styles, no matter the specificity, and important layered styles take precedence over important styles declared in later layers, again, no matter the specificity.</P>
+<P>If you change the first line of CSS in this example to read <CODE>@layer secondLayer, firstLayer;</CODE>, you will change the layer declaration order, and all the important styles from <CODE>firstLayer</CODE> will be changed to their respective values in <CODE>secondLayer</CODE>.</P></DIV></SECTION><SECTION aria-labelledby=scoping_proximity>
+<H3 id=scoping_proximity><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#scoping_proximity">Scoping proximity</A></H3>
+<DIV class=section-content>
+<P>Another advanced topic that you might not use right away but may need to understand in the future is <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/@scope"><CODE>@scope</CODE></A>. This is an <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule">at-rule</A> that enables you to create a block of rules that will only apply to a specific subsection of the HTML on your page. For example, you can specify styles that will only apply to <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img"><CODE>&lt;img&gt;</CODE></A> elements when they're nested inside elements that have a <CODE>feature</CODE> class:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>css</SPAN></DIV><PRE class="brush: css notranslate" data-signature="DfpXgX+2p/29xMmkrYAn4TRtPT3MVOEfl85qAPQCLZ4="><CODE><SPAN class="token atrule"><SPAN class="token rule">@scope</SPAN> <SPAN class="token punctuation">(</SPAN>.feature<SPAN class="token punctuation">)</SPAN></SPAN> <SPAN class="token punctuation">{</SPAN>
+  <SPAN class="token selector">img</SPAN> <SPAN class="token punctuation">{</SPAN>
+    <SPAN class="token property">border</SPAN><SPAN class="token punctuation">:</SPAN> 2px solid black<SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token property">display</SPAN><SPAN class="token punctuation">:</SPAN> block<SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token punctuation">}</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P><STRONG>Scoping proximity</STRONG> is the mechanism that resolves conflicts between scoped elements. Scoping proximity states that when two scopes have conflicting styles, the style with the smallest number of hops up the DOM tree hierarchy to the scope root wins. See <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/@scope#how_scope_conflicts_are_resolved">How <CODE>@scope</CODE> conflicts are resolved</A> for more details and an example.</P>
+<DIV id=sect8 class="notecard note">
+<P><STRONG>Note:</STRONG> Scoping proximity overrules source order but is itself overridden by other, higher-priority criteria such as <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/important">importance</A>, <A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_layers">layers</A>, and <A href="https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity">specificity</A>.</P></DIV></DIV></SECTION><SECTION aria-labelledby=test_your_skills!>
+<H2 id=test_your_skills!><A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#test_your_skills!">
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<div align="center">
+<center>
+<table border="2" cellpadding="5" cellspacing="5" width="100%" bgcolor="#FFCC66">
+<tr>
+<td width="100%">
+<p><b>About using this material:</b></p>
+<p>The best way to <b>learn</b> this material is to use <a href="http://super-memory.com/english/smintro.htm">SuperMemo</a> software.<br>
+SuperMemo is the world's leader in accelerated learning technologies
+ (see: <a href="http://www.super-memory.com">SuperMemo Website</a>)
+<p>
+No download URL currently available
+</td>
+</tr>
+<tr>
+<td width="100%">
+<b>Contact data:</b></p>
+<p><b>Author: User of SuperMemo</b><br>
+<a href="http://super-memory.com">super-memory.com</a><br>
+date: 10/3/2024 10:20:41 AM<br>
+Page generated with:<br> SuperMemo 18<br>Build: 18.05 of Oct 29, 2020
+</td>
+</tr>
+<tr>
+<td width="100%">
+</td>
+</tr>
+</table>
+</center>
+</div>
+</body>
+
+</html>

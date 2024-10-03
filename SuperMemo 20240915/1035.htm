@@ -1,0 +1,470 @@
+<html>
+
+<head>
+<meta http-equiv="description" content="SuperMemo Collection: (((backup of mindx created on 2024-09-15 23-55-25))), Page: A first splash into JavaScript">
+<meta http-equiv="keywords" content="SuperMemo, (((backup of mindx created on 2024-09-15 23-55-25))), A first splash into JavaScript">
+<meta name="GENERATOR" content="SuperMemo for Windows (Build 18.05)">
+<title>(((backup of mindx created on 2024-09-15 23-55-25))): A first splash into JavaScript (SuperMemo collection)</title>
+</head>
+
+<body>
+
+<p align="center"><b><font size="5">(((backup of mindx created on 2024-09-15 23-55-25))): A first splash into JavaScript </font></b><br>(1 elements)</p>
+<a name="TopOfPages"> </a>
+<b>Contents:</b>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#FFCCFF">
+<tr>
+<td width="100%">
+  <a href="index.htm">Root</a> <a href="1031.htm"> - Next</a> - <a href="1440.htm">Previous</a> - <a href="339.htm">Parent</a> - <a href="1031.htm">Next sibling</a> - <a href="1030.htm">Previous sibling</a>
+<font size="2">
+<ul>
+<li><a href="index.htm">MindX</a></li>
+<ul>
+<li><a href="3.htm">Explor</a></li>
+<ul>
+<li><a href="330.htm">MDN Front-End Developer</a></li>
+<ul>
+<li><a href="332.htm">Core</a></li>
+<ul>
+<li><a href="339.htm">6. JavaScript fundamentals</a></li>
+<ul>
+<li>This page: A first splash into JavaScript</li>
+<ol>
+<li>Example — Guess the number game (see <a href="#1409">below)</a>
+</ol>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</font>
+</td>
+</tr>
+</table>
+</center>
+</div>
+
+<P align="center"><b><a name="1409">Topic #1,409: Example &#8212; Guess the number game</a></P>
+<div align="center">
+<center>
+<table border="1" cellpadding="5" cellspacing="5" width="100%" bgcolor="#99CCFF">
+<tr>
+<td bordercolor="#0066FF">
+<STRONG><FONT color=blue>A first splash into JavaScript : </FONT></STRONG>
+<P></P>
+<DIV></DIV></SECTION><SECTION aria-labelledby=example_&#8212;_guess_the_number_game>
+<H2 id=example_&#8212;_guess_the_number_game><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#example_&#8212;_guess_the_number_game"><FONT color=#0066cc><SPAN class=headers>Title:</SPAN></B><SPAN class=RefText> Example &#8212; Guess the number game</SPAN></FONT></FONT></A></H2>
+<DIV class=section-content>
+<P>In this article we'll show you how to build up the simple game you can see below:</P>
+<P>Have a go at playing it &#8212; familiarize yourself with the game before you move on.</P>
+<P>Let's imagine your boss has given you the following brief for creating this game:</P>
+<BLOCKQUOTE>
+<P>I want you to create a simple guess the number type game. It should choose a random number between 1 and 100, then challenge the player to guess the number in 10 turns. After each turn, the player should be told if they are right or wrong, and if they are wrong, whether the guess was too low or too high. It should also tell the player what numbers they previously guessed. The game will end once the player guesses correctly, or once they run out of turns. When the game ends, the player should be given an option to start playing again.</P></BLOCKQUOTE>
+<P>Upon looking at this brief, the first thing we can do is to start breaking it down into simple actionable tasks, in as much of a programmer mindset as possible:</P>
+<OL>
+<LI>Generate a random number between 1 and 100. 
+<LI>Record the turn number the player is on. Start it on 1. 
+<LI>Provide the player with a way to guess what the number is. 
+<LI>Once a guess has been submitted first record it somewhere so the user can see their previous guesses. 
+<LI>Next, check whether it is the correct number. 
+<LI>If it is correct: 
+<OL>
+<LI>Display congratulations message. 
+<LI>Stop the player from being able to enter more guesses (this would mess the game up). 
+<LI>Display control allowing the player to restart the game.</LI></OL>
+<LI>If it is wrong and the player has turns left: 
+<OL>
+<LI>Tell the player they are wrong and whether their guess was too high or too low. 
+<LI>Allow them to enter another guess. 
+<LI>Increment the turn number by 1.</LI></OL>
+<LI>If it is wrong and the player has no turns left: 
+<OL>
+<LI>Tell the player it is game over. 
+<LI>Stop the player from being able to enter more guesses (this would mess the game up). 
+<LI>Display control allowing the player to restart the game.</LI></OL>
+<LI>Once the game restarts, make sure the game logic and UI are completely reset, then go back to step 1.</LI></OL>
+<P>Let's now move forward, looking at how we can turn these steps into code, building up the example, and exploring JavaScript features as we go.</P></DIV></SECTION><SECTION aria-labelledby=initial_setup>
+<H3 id=initial_setup><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#initial_setup"><FONT color=#0066cc>Initial setup</FONT></A></H3>
+<DIV class=section-content>
+<P>To begin this tutorial, we'd like you to make a local copy of the <A class=external href="https://github.com/mdn/learning-area/blob/main/javascript/introduction-to-js-1/first-splash/number-guessing-game-start.html" target=_blank><FONT color=#0066cc>number-guessing-game-start.html</FONT></A> file (<A class=external href="https://mdn.github.io/learning-area/javascript/introduction-to-js-1/first-splash/number-guessing-game-start.html" target=_blank><FONT color=#0066cc>see it live here</FONT></A>). Open it in both your text editor and your web browser. At the moment you'll see a simple heading, paragraph of instructions and form for entering a guess, but the form won't currently do anything.</P>
+<P>The place where we'll be adding all our code is inside the <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script"><CODE><FONT color=#0066cc>&lt;script&gt;</FONT></CODE></A> element at the bottom of the HTML:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>html</SPAN></DIV><PRE class="brush: html notranslate" data-signature="/5mSaaH94a8qEgBpvcagDY9JlYUTSy+YJJTFALZj/s0="><CODE><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>script</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN><SPAN class="token script"><SPAN class="token language-javascript">
+  <SPAN class="token comment">// Your JavaScript goes here</SPAN>
+</SPAN></SPAN><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>script</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+</CODE></PRE></DIV></DIV></SECTION><SECTION aria-labelledby=adding_variables_to_store_our_data>
+<H3 id=adding_variables_to_store_our_data><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#adding_variables_to_store_our_data"><FONT color=#0066cc>Adding variables to store our data</FONT></A></H3>
+<DIV class=section-content>
+<P>Let's get started. First of all, add the following lines inside your <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script"><CODE><FONT color=#0066cc>&lt;script&gt;</FONT></CODE></A> element:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="oo6jGfc5WEhDuce/0sw23+fjgEaE+gXbA4lwQuBFx3w="><CODE><SPAN class="token keyword">let</SPAN> randomNumber <SPAN class="token operator">=</SPAN> Math<SPAN class="token punctuation">.</SPAN><SPAN class="token function">floor</SPAN><SPAN class="token punctuation">(</SPAN>Math<SPAN class="token punctuation">.</SPAN><SPAN class="token function">random</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token operator">*</SPAN> <SPAN class="token number">100</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+
+<SPAN class="token keyword">const</SPAN> guesses <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".guesses"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">const</SPAN> lastResult <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".lastResult"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">const</SPAN> lowOrHi <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".lowOrHi"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+
+<SPAN class="token keyword">const</SPAN> guessSubmit <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".guessSubmit"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">const</SPAN> guessField <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".guessField"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+
+<SPAN class="token keyword">let</SPAN> guessCount <SPAN class="token operator">=</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">let</SPAN> resetButton<SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>This section of the code sets up the variables and constants we need to store the data our program will use.</P>
+<P>Variables are basically names for values (such as numbers, or strings of text). You create a variable with the keyword <CODE>let</CODE> followed by a name for your variable.</P>
+<P>Constants are also used to name values, but unlike variables, you can't change the value once set. In this case, we are using constants to store references to parts of our user interface. The text inside some of these elements might change, but each constant always references the same HTML element that it was initialized with. You create a constant with the keyword <CODE>const</CODE> followed by a name for the constant.</P>
+<P>You can assign a value to your variable or constant with an equals sign (<CODE>=</CODE>) followed by the value you want to give it.</P>
+<P>In our example:</P>
+<UL>
+<LI>The first variable &#8212; <CODE>randomNumber</CODE> &#8212; is assigned a random number between 1 and 100, calculated using a mathematical algorithm. 
+<LI>The first three constants are each made to store a reference to the results paragraphs in our HTML, and are used to insert values into the paragraphs later on in the code (note how they are inside a <CODE>&lt;div&gt;</CODE> element, which is itself used to select all three later on for resetting, when we restart the game): 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>html</SPAN></DIV><PRE class="brush: html notranslate" data-signature="r74XAFFIW2sv+1DY3CjIhRzFA1DeBTZssycMPaCu8rM="><CODE><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>div</SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>resultParas<SPAN class="token punctuation">"</SPAN></SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+  <SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>p</SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>guesses<SPAN class="token punctuation">"</SPAN></SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>p</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+  <SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>p</SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>lastResult<SPAN class="token punctuation">"</SPAN></SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>p</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+  <SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>p</SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>lowOrHi<SPAN class="token punctuation">"</SPAN></SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>p</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+<SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>div</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+</CODE></PRE></DIV>
+<LI>The next two constants store references to the form text input and submit button and are used to control submitting the guess later on. 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>html</SPAN></DIV><PRE class="brush: html notranslate" data-signature="b6Se0ngYYVMREZnSzFZI5OjdbVPGXPOT5QW8ARB8s0o="><CODE><SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>label</SPAN> <SPAN class="token attr-name">for</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>guessField<SPAN class="token punctuation">"</SPAN></SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>Enter a guess: <SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;/</SPAN>label</SPAN><SPAN class="token punctuation">&gt;</SPAN></SPAN>
+<SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>input</SPAN> <SPAN class="token attr-name">type</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>number<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token attr-name">id</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>guessField<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>guessField<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token punctuation">/&gt;</SPAN></SPAN>
+<SPAN class="token tag"><SPAN class="token tag"><SPAN class="token punctuation">&lt;</SPAN>input</SPAN> <SPAN class="token attr-name">type</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>submit<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token attr-name">value</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>Submit guess<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token attr-name">class</SPAN><SPAN class="token attr-value"><SPAN class="token punctuation attr-equals">=</SPAN><SPAN class="token punctuation">"</SPAN>guessSubmit<SPAN class="token punctuation">"</SPAN></SPAN> <SPAN class="token punctuation">/&gt;</SPAN></SPAN>
+</CODE></PRE></DIV>
+<LI>Our final two variables store a guess count of 1 (used to keep track of how many guesses the player has had), and a reference to a reset button that doesn't exist yet (but will later).</LI></UL>
+<DIV id=sect2 class="notecard note">
+<P><STRONG>Note:</STRONG> You'll learn a lot more about variables and constants later on in the course, starting with the article <A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables"><FONT color=#0066cc>Storing the information you need &#8212; Variables</FONT></A>.</P></DIV></DIV></SECTION><SECTION aria-labelledby=functions>
+<H3 id=functions><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#functions"><FONT color=#0066cc>Functions</FONT></A></H3>
+<DIV class=section-content>
+<P>Next, add the following below your previous JavaScript:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="xwi2PlUcz+3do3luJqFbUYGvTZ6EvXW//y78sC6vtjY="><CODE><SPAN class="token keyword">function</SPAN> <SPAN class="token function">checkGuess</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  <SPAN class="token function">alert</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">"I am a placeholder"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>Functions are reusable blocks of code that you can write once and run again and again, saving the need to keep repeating code all the time. This is really useful. There are a number of ways to define functions, but for now we'll concentrate on one simple type. Here we have defined a function by using the keyword <CODE>function</CODE>, followed by a name, with parentheses put after it. After that, we put two curly braces (<CODE>{ }</CODE>). Inside the curly braces goes all the code that we want to run whenever we call the function.</P>
+<P>When we want to run the code, we type the name of the function followed by the parentheses.</P>
+<P>Let's try that now. Save your code and refresh the page in your browser. Then go into the <A href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools"><FONT color=#0066cc>developer tools JavaScript console</FONT></A>, and enter the following line:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="nbCvNqJJPIJaBlcTpGSbdDwViv1K8VLTRGK4jDKVHbU="><CODE><SPAN class="token function">checkGuess</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>After pressing <KBD>Return</KBD>/<KBD>Enter</KBD>, you should see an alert come up that says <CODE>I am a placeholder</CODE>; we have defined a function in our code that creates an alert whenever we call it.</P>
+<DIV id=sect3 class="notecard note">
+<P><STRONG>Note:</STRONG> You'll learn a lot more about functions later on in the article <A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Functions"><FONT color=#0066cc>Functions &#8212; reusable blocks of code</FONT></A>.</P></DIV></DIV></SECTION><SECTION aria-labelledby=operators>
+<H3 id=operators><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#operators"><FONT color=#0066cc>Operators</FONT></A></H3>
+<DIV class=section-content>
+<P>JavaScript operators allow us to perform tests, do math, join strings together, and other such things.</P>
+<P>If you haven't already done so, save your code, refresh the page in your browser, and open the <A href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools"><FONT color=#0066cc>developer tools JavaScript console</FONT></A>. Then we can try typing in the examples shown below &#8212; type in each one from the "Example" columns exactly as shown, pressing <KBD>Return</KBD>/<KBD>Enter</KBD> after each one, and see what results they return.</P>
+<P>First let's look at arithmetic operators, for example:</P><FIGURE class=table-container>
+<TABLE>
+<THEAD>
+<TR>
+<TH>Operator</TH>
+<TH>Name</TH>
+<TH>Example</TH></TR></THEAD>
+<TBODY>
+<TR>
+<TD><CODE><FONT size=3>+</FONT></CODE></TD>
+<TD>Addition</TD>
+<TD><CODE><FONT size=3>6 + 9</FONT></CODE></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>-</FONT></CODE></TD>
+<TD>Subtraction</TD>
+<TD><CODE><FONT size=3>20 - 15</FONT></CODE></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>*</FONT></CODE></TD>
+<TD>Multiplication</TD>
+<TD><CODE><FONT size=3>3 * 7</FONT></CODE></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>/</FONT></CODE></TD>
+<TD>Division</TD>
+<TD><CODE><FONT size=3>10 / 5</FONT></CODE></TD></TR></TBODY></TABLE></FIGURE>
+<P>There are also some shortcut operators available, called <A href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators#assignment_operators"><FONT color=#0066cc>compound assignment operators</FONT></A>. For example, if you want to add a new number to an existing one and return the result, you could do this:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="kfJUpduy52wwuVqDL4kF6ta7HSmYZ8STeIm+Fk+o3xI="><CODE><SPAN class="token keyword">let</SPAN> number1 <SPAN class="token operator">=</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+number1 <SPAN class="token operator">+=</SPAN> <SPAN class="token number">2</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>This is equivalent to</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="fG6D0cqMhCgW0xQzbCXHo2ib1CL4eX4RzA1IOYvXHnI="><CODE><SPAN class="token keyword">let</SPAN> number2 <SPAN class="token operator">=</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+number2 <SPAN class="token operator">=</SPAN> number2 <SPAN class="token operator">+</SPAN> <SPAN class="token number">2</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>When we are running true/false tests (for example inside conditionals &#8212; see <A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#conditionals"><FONT color=#0066cc>below</FONT></A>) we use <A href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators"><FONT color=#0066cc>comparison operators</FONT></A>. For example:</P><FIGURE class=table-container>
+<TABLE class=standard-table>
+<THEAD>
+<TR>
+<TH scope=col>Operator</TH>
+<TH scope=col>Name</TH>
+<TH scope=col>Example</TH></TR>
+<TR>
+<TD><CODE><FONT size=3>===</FONT></CODE></TD>
+<TD>Strict equality (is it exactly the same?)</TD>
+<TD>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="60UEw6C7w2OGdG/kXWjUiLe00ZEJSZZuIRO2xUglAds="><CODE><FONT size=3><SPAN class="token number">5</SPAN> <SPAN class="token operator">===</SPAN> <SPAN class="token number">2</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">4</SPAN> <SPAN class="token comment">// false</SPAN>
+<SPAN class="token string">'Chris'</SPAN> <SPAN class="token operator">===</SPAN> <SPAN class="token string">'Bob'</SPAN> <SPAN class="token comment">// false</SPAN>
+<SPAN class="token number">5</SPAN> <SPAN class="token operator">===</SPAN> <SPAN class="token number">2</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">3</SPAN> <SPAN class="token comment">// true</SPAN>
+<SPAN class="token number">2</SPAN> <SPAN class="token operator">===</SPAN> <SPAN class="token string">'2'</SPAN> <SPAN class="token comment">// false; number versus string</SPAN>
+</FONT></CODE></PRE></DIV></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>!==</FONT></CODE></TD>
+<TD>Non-equality (is it not the same?)</TD>
+<TD>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="ye1woVcaAyDY2+BhoMug1sc81gRyudxe4sxjWeYel1Y="><CODE><FONT size=3><SPAN class="token number">5</SPAN> <SPAN class="token operator">!==</SPAN> <SPAN class="token number">2</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">4</SPAN> <SPAN class="token comment">// true</SPAN>
+<SPAN class="token string">'Chris'</SPAN> <SPAN class="token operator">!==</SPAN> <SPAN class="token string">'Bob'</SPAN> <SPAN class="token comment">// true</SPAN>
+<SPAN class="token number">5</SPAN> <SPAN class="token operator">!==</SPAN> <SPAN class="token number">2</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">3</SPAN> <SPAN class="token comment">// false</SPAN>
+<SPAN class="token number">2</SPAN> <SPAN class="token operator">!==</SPAN> <SPAN class="token string">'2'</SPAN> <SPAN class="token comment">// true; number versus string</SPAN>
+</FONT></CODE></PRE></DIV></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>&lt;</FONT></CODE></TD>
+<TD>Less than</TD>
+<TD>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="a2zo6ySYZajlnGrfc+490fJriU2wTE7np8hqm+pJrdQ="><CODE><FONT size=3><SPAN class="token number">6</SPAN> <SPAN class="token operator">&lt;</SPAN> <SPAN class="token number">10</SPAN> <SPAN class="token comment">// true</SPAN>
+<SPAN class="token number">20</SPAN> <SPAN class="token operator">&lt;</SPAN> <SPAN class="token number">10</SPAN> <SPAN class="token comment">// false</SPAN></FONT></CODE></PRE></DIV></TD></TR>
+<TR>
+<TD><CODE><FONT size=3>&gt;</FONT></CODE></TD>
+<TD>Greater than</TD>
+<TD>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="Y1EEbIEIKTonA8Qpfel1cvOoW+JP44EDQo5ib2XDtBI="><CODE><FONT size=3><SPAN class="token number">6</SPAN> <SPAN class="token operator">&gt;</SPAN> <SPAN class="token number">10</SPAN> <SPAN class="token comment">// false</SPAN>
+<SPAN class="token number">20</SPAN> <SPAN class="token operator">&gt;</SPAN> <SPAN class="token number">10</SPAN> <SPAN class="token comment">// true</SPAN></FONT></CODE></PRE></DIV></TD></TR></THEAD>
+<TBODY></TBODY></TABLE></FIGURE></DIV></SECTION><SECTION aria-labelledby=text_strings>
+<H3 id=text_strings><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#text_strings"><FONT color=#0066cc>Text strings</FONT></A></H3>
+<DIV class=section-content>
+<P>Strings are used for representing text. We've already seen a string variable: in the following code, <CODE>"I am a placeholder"</CODE> is a string:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="xwi2PlUcz+3do3luJqFbUYGvTZ6EvXW//y78sC6vtjY="><CODE><SPAN class="token keyword">function</SPAN> <SPAN class="token function">checkGuess</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  <SPAN class="token function">alert</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">"I am a placeholder"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>You can declare strings using double quotes (<CODE>"</CODE>) or single quotes (<CODE>'</CODE>), but you must use the same form for the start and end of a single string declaration: you can't write <CODE>"I am a placeholder'</CODE>.</P>
+<P>You can also declare strings using backticks (<CODE>`</CODE>). Strings declared like this are called <EM>template literals</EM> and have some special properties. In particular, you can embed other variables or even expressions in them:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="XFPkHkJLHCwsk4cmK/jimpHGZ4BJfiM0ayOZMvESs9s="><CODE><SPAN class="token keyword">const</SPAN> name <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Mahalia"</SPAN><SPAN class="token punctuation">;</SPAN>
+
+<SPAN class="token keyword">const</SPAN> greeting <SPAN class="token operator">=</SPAN> <SPAN class="token template-string"><SPAN class="token template-punctuation string">`</SPAN><SPAN class="token string">Hello </SPAN><SPAN class="token interpolation"><SPAN class="token interpolation-punctuation punctuation">${</SPAN>name<SPAN class="token interpolation-punctuation punctuation">}</SPAN></SPAN><SPAN class="token template-punctuation string">`</SPAN></SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>This gives you a mechanism to join strings together.</P></DIV></SECTION><SECTION aria-labelledby=conditionals>
+<H3 id=conditionals><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#conditionals"><FONT color=#0066cc>Conditionals</FONT></A></H3>
+<DIV class=section-content>
+<P>Returning to our <CODE>checkGuess()</CODE> function, I think it's safe to say that we don't want it to just spit out a placeholder message. We want it to check whether a player's guess is correct or not, and respond appropriately.</P>
+<P>At this point, replace your current <CODE>checkGuess()</CODE> function with this version instead:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="VDy8HHV5P+b3Z8ljvWgJQccXXf6HbWzE7rUj7qrJNdc="><CODE><SPAN class="token keyword">function</SPAN> <SPAN class="token function">checkGuess</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  <SPAN class="token keyword">const</SPAN> userGuess <SPAN class="token operator">=</SPAN> <SPAN class="token function">Number</SPAN><SPAN class="token punctuation">(</SPAN>guessField<SPAN class="token punctuation">.</SPAN>value<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token keyword">if</SPAN> <SPAN class="token punctuation">(</SPAN>guessCount <SPAN class="token operator">===</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+    guesses<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Previous guesses:"</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token punctuation">}</SPAN>
+  guesses<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token template-string"><SPAN class="token template-punctuation string">`</SPAN><SPAN class="token interpolation"><SPAN class="token interpolation-punctuation punctuation">${</SPAN>guesses<SPAN class="token punctuation">.</SPAN>textContent<SPAN class="token interpolation-punctuation punctuation">}</SPAN></SPAN><SPAN class="token string"> </SPAN><SPAN class="token interpolation"><SPAN class="token interpolation-punctuation punctuation">${</SPAN>userGuess<SPAN class="token interpolation-punctuation punctuation">}</SPAN></SPAN><SPAN class="token template-punctuation string">`</SPAN></SPAN><SPAN class="token punctuation">;</SPAN>
+
+  <SPAN class="token keyword">if</SPAN> <SPAN class="token punctuation">(</SPAN>userGuess <SPAN class="token operator">===</SPAN> randomNumber<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+    lastResult<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Congratulations! You got it right!"</SPAN><SPAN class="token punctuation">;</SPAN>
+    lastResult<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>backgroundColor <SPAN class="token operator">=</SPAN> <SPAN class="token string">"green"</SPAN><SPAN class="token punctuation">;</SPAN>
+    lowOrHi<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token function">setGameOver</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token punctuation">}</SPAN> <SPAN class="token keyword">else</SPAN> <SPAN class="token keyword">if</SPAN> <SPAN class="token punctuation">(</SPAN>guessCount <SPAN class="token operator">===</SPAN> <SPAN class="token number">10</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+    lastResult<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"!!!GAME OVER!!!"</SPAN><SPAN class="token punctuation">;</SPAN>
+    lowOrHi<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token function">setGameOver</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token punctuation">}</SPAN> <SPAN class="token keyword">else</SPAN> <SPAN class="token punctuation">{</SPAN>
+    lastResult<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Wrong!"</SPAN><SPAN class="token punctuation">;</SPAN>
+    lastResult<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>backgroundColor <SPAN class="token operator">=</SPAN> <SPAN class="token string">"red"</SPAN><SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token keyword">if</SPAN> <SPAN class="token punctuation">(</SPAN>userGuess <SPAN class="token operator">&lt;</SPAN> randomNumber<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+      lowOrHi<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Last guess was too low!"</SPAN><SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token punctuation">}</SPAN> <SPAN class="token keyword">else</SPAN> <SPAN class="token keyword">if</SPAN> <SPAN class="token punctuation">(</SPAN>userGuess <SPAN class="token operator">&gt;</SPAN> randomNumber<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+      lowOrHi<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Last guess was too high!"</SPAN><SPAN class="token punctuation">;</SPAN>
+    <SPAN class="token punctuation">}</SPAN>
+  <SPAN class="token punctuation">}</SPAN>
+
+  guessCount<SPAN class="token operator">++</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessField<SPAN class="token punctuation">.</SPAN>value <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessField<SPAN class="token punctuation">.</SPAN><SPAN class="token function">focus</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>This is a lot of code &#8212; phew! Let's go through each section and explain what it does.</P>
+<UL>
+<LI>The first line declares a variable called <CODE>userGuess</CODE> and sets its value to the current value entered inside the text field. We also run this value through the built-in <CODE>Number()</CODE> constructor, just to make sure the value is definitely a number. Since we're not changing this variable, we'll declare it using <CODE>const</CODE>. 
+<LI>Next, we encounter our first conditional code block. A conditional code block allows you to run code selectively, depending on whether a certain condition is true or not. It looks a bit like a function, but it isn't. The simplest form of conditional block starts with the keyword <CODE>if</CODE>, then some parentheses, then some curly braces. Inside the parentheses, we include a test. If the test returns <CODE>true</CODE>, we run the code inside the curly braces. If not, we don't, and move on to the next bit of code. In this case, the test is testing whether the <CODE>guessCount</CODE> variable is equal to <CODE>1</CODE> (i.e. whether this is the player's first go or not): 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="/lg9RBX1hf6zg87onT9OjNTGIYIjiFvsc4F65AB0COM="><CODE>guessCount <SPAN class="token operator">===</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>If it is, we make the guesses paragraph's text content equal to <CODE>Previous guesses:</CODE>. If not, we don't. 
+<LI>Next, we use a template literal to append the current <CODE>userGuess</CODE> value onto the end of the <CODE>guesses</CODE> paragraph, with a blank space in between. 
+<LI>The next block does a few checks: 
+<UL>
+<LI>The first <CODE>if (){ }</CODE> checks whether the user's guess is equal to the <CODE>randomNumber</CODE> set at the top of our JavaScript. If it is, the player has guessed correctly and the game is won, so we show the player a congratulations message with a nice green color, clear the contents of the Low/High guess information box, and run a function called <CODE>setGameOver()</CODE>, which we'll discuss later. 
+<LI>Now we've chained another test onto the end of the last one using an <CODE>else if (){ }</CODE> structure. This one checks whether this turn is the user's last turn. If it is, the program does the same thing as in the previous block, except with a game over message instead of a congratulations message. 
+<LI>The final block chained onto the end of this code (the <CODE>else { }</CODE>) contains code that is only run if neither of the other two tests returns true (i.e. the player didn't guess right, but they have more guesses left). In this case we tell them they are wrong, then we perform another conditional test to check whether the guess was higher or lower than the answer, displaying a further message as appropriate to tell them higher or lower.</LI></UL>
+<LI>The last three lines in the function get us ready for the next guess to be submitted. We add 1 to the <CODE>guessCount</CODE> variable so the player uses up their turn (<CODE>++</CODE> is an incrementation operation &#8212; increment by 1), and empty the value out of the form text field and focus it again, ready for the next guess to be entered.</LI></UL></DIV></SECTION><SECTION aria-labelledby=events>
+<H3 id=events><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#events"><FONT color=#0066cc>Events</FONT></A></H3>
+<DIV class=section-content>
+<P>At this point, we have a nicely implemented <CODE>checkGuess()</CODE> function, but it won't do anything because we haven't called it yet. Ideally, we want to call it when the "Submit guess" button is pressed, and to do this we need to use an <STRONG>event</STRONG>. Events are things that happen in the browser &#8212; a button being clicked, a page loading, a video playing, etc. &#8212; in response to which we can run blocks of code. <STRONG>Event listeners</STRONG> observe specific events and call <STRONG>event handlers</STRONG>, which are blocks of code that run in response to an event firing.</P>
+<P>Add the following line below your <CODE>checkGuess()</CODE> function:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="l/NGuRL2petgJEH6mHsFWCPM2GnY5OQ7cnCOELzHoCQ="><CODE>guessSubmit<SPAN class="token punctuation">.</SPAN><SPAN class="token function">addEventListener</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">"click"</SPAN><SPAN class="token punctuation">,</SPAN> checkGuess<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>Here we are adding an event listener to the <CODE>guessSubmit</CODE> button. This is a method that takes two input values (called <EM>arguments</EM>) &#8212; the type of event we are listening out for (in this case <CODE>click</CODE>) as a string, and the code we want to run when the event occurs (in this case the <CODE>checkGuess()</CODE> function). Note that we don't need to specify the parentheses when writing it inside <A title=addEventListener() href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"><CODE><FONT color=#0066cc>addEventListener()</FONT></CODE></A>.</P>
+<P>Try saving and refreshing your code now, and your example should work &#8212; to a point. The only problem now is that if you guess the correct answer or run out of guesses, the game will break because we've not yet defined the <CODE>setGameOver()</CODE> function that is supposed to be run once the game is over. Let's add our missing code now and complete the example functionality.</P></DIV></SECTION><SECTION aria-labelledby=finishing_the_game_functionality>
+<H3 id=finishing_the_game_functionality><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#finishing_the_game_functionality"><FONT color=#0066cc>Finishing the game functionality</FONT></A></H3>
+<DIV class=section-content>
+<P>Let's add that <CODE>setGameOver()</CODE> function to the bottom of our code and then walk through it. Add this now, below the rest of your JavaScript:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="Wr9HVkccJ0p/yEJiRHf2aEGxNWNRlQrWzASsifGer7o="><CODE><SPAN class="token keyword">function</SPAN> <SPAN class="token function">setGameOver</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  guessField<SPAN class="token punctuation">.</SPAN>disabled <SPAN class="token operator">=</SPAN> <SPAN class="token boolean">true</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessSubmit<SPAN class="token punctuation">.</SPAN>disabled <SPAN class="token operator">=</SPAN> <SPAN class="token boolean">true</SPAN><SPAN class="token punctuation">;</SPAN>
+  resetButton <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">createElement</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">"button"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  resetButton<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Start new game"</SPAN><SPAN class="token punctuation">;</SPAN>
+  document<SPAN class="token punctuation">.</SPAN>body<SPAN class="token punctuation">.</SPAN><SPAN class="token function">append</SPAN><SPAN class="token punctuation">(</SPAN>resetButton<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  resetButton<SPAN class="token punctuation">.</SPAN><SPAN class="token function">addEventListener</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">"click"</SPAN><SPAN class="token punctuation">,</SPAN> resetGame<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<UL>
+<LI>The first two lines disable the form text input and button by setting their disabled properties to <CODE>true</CODE>. This is necessary, because if we didn't, the user could submit more guesses after the game is over, which would mess things up. 
+<LI>The next three lines generate a new <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button"><CODE><FONT color=#0066cc>&lt;button&gt;</FONT></CODE></A> element, set its text label to "Start new game", and add it to the bottom of our existing HTML. 
+<LI>The final line sets an event listener on our new button so that when it is clicked, a function called <CODE>resetGame()</CODE> is run.</LI></UL>
+<P>Now we need to define this function too! Add the following code, again to the bottom of your JavaScript:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="B1x67A+TFx4M14iY+8nfpe+t/cq5BYHBlBWLIOAAWN4="><CODE><SPAN class="token keyword">function</SPAN> <SPAN class="token function">resetGame</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  guessCount <SPAN class="token operator">=</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+
+  <SPAN class="token keyword">const</SPAN> resetParas <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelectorAll</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".resultParas p"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token keyword">for</SPAN> <SPAN class="token punctuation">(</SPAN><SPAN class="token keyword">const</SPAN> resetPara <SPAN class="token keyword">of</SPAN> resetParas<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+    resetPara<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+  <SPAN class="token punctuation">}</SPAN>
+
+  resetButton<SPAN class="token punctuation">.</SPAN>parentNode<SPAN class="token punctuation">.</SPAN><SPAN class="token function">removeChild</SPAN><SPAN class="token punctuation">(</SPAN>resetButton<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+
+  guessField<SPAN class="token punctuation">.</SPAN>disabled <SPAN class="token operator">=</SPAN> <SPAN class="token boolean">false</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessSubmit<SPAN class="token punctuation">.</SPAN>disabled <SPAN class="token operator">=</SPAN> <SPAN class="token boolean">false</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessField<SPAN class="token punctuation">.</SPAN>value <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+  guessField<SPAN class="token punctuation">.</SPAN><SPAN class="token function">focus</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+
+  lastResult<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>backgroundColor <SPAN class="token operator">=</SPAN> <SPAN class="token string">"white"</SPAN><SPAN class="token punctuation">;</SPAN>
+
+  randomNumber <SPAN class="token operator">=</SPAN> Math<SPAN class="token punctuation">.</SPAN><SPAN class="token function">floor</SPAN><SPAN class="token punctuation">(</SPAN>Math<SPAN class="token punctuation">.</SPAN><SPAN class="token function">random</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token operator">*</SPAN> <SPAN class="token number">100</SPAN><SPAN class="token punctuation">)</SPAN> <SPAN class="token operator">+</SPAN> <SPAN class="token number">1</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>This rather long block of code completely resets everything to how it was at the start of the game, so the player can have another go. It:</P>
+<UL>
+<LI>Puts the <CODE>guessCount</CODE> back down to 1. 
+<LI>Empties all the text out of the information paragraphs. We select all paragraphs inside <CODE>&lt;div class="resultParas"&gt;&lt;/div&gt;</CODE>, then loop through each one, setting their <CODE>textContent</CODE> to <CODE>''</CODE> (an empty string). 
+<LI>Removes the reset button from our code. 
+<LI>Enables the form elements, and empties and focuses the text field, ready for a new guess to be entered. 
+<LI>Removes the background color from the <CODE>lastResult</CODE> paragraph. 
+<LI>Generates a new random number so that you are not just guessing the same number again!</LI></UL>
+<P><STRONG>At this point, you should have a fully working (simple) game &#8212; congratulations!</STRONG></P>
+<P>All we have left to do now in this article is to talk about a few other important code features that you've already seen, although you may have not realized it.</P></DIV></SECTION><SECTION aria-labelledby=loops>
+<H3 id=loops><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#loops"><FONT color=#0066cc>Loops</FONT></A></H3>
+<DIV class=section-content>
+<P>One part of the above code that we need to take a more detailed look at is the <A href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><FONT color=#0066cc>for...of</FONT></A> loop. Loops are a very important concept in programming, which allow you to keep running a piece of code over and over again, until a certain condition is met.</P>
+<P>To start with, go to your <A href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools"><FONT color=#0066cc>browser developer tools JavaScript console</FONT></A> again, and enter the following:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="wR2TjJ4UNjR76uewBWoudBwzpBR1uJ+6NXQCvBQLYNo="><CODE><SPAN class="token keyword">const</SPAN> fruits <SPAN class="token operator">=</SPAN> <SPAN class="token punctuation">[</SPAN><SPAN class="token string">"apples"</SPAN><SPAN class="token punctuation">,</SPAN> <SPAN class="token string">"bananas"</SPAN><SPAN class="token punctuation">,</SPAN> <SPAN class="token string">"cherries"</SPAN><SPAN class="token punctuation">]</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">for</SPAN> <SPAN class="token punctuation">(</SPAN><SPAN class="token keyword">const</SPAN> fruit <SPAN class="token keyword">of</SPAN> fruits<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  console<SPAN class="token punctuation">.</SPAN><SPAN class="token function">log</SPAN><SPAN class="token punctuation">(</SPAN>fruit<SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>What happened? The strings <CODE>'apples', 'bananas', 'cherries'</CODE> were printed out in your console.</P>
+<P>This is because of the loop. The line <CODE>const fruits = ['apples', 'bananas', 'cherries'];</CODE> creates an array. We will work through <A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Arrays"><FONT color=#0066cc>a complete Arrays guide</FONT></A> later in this module, but for now: an array is a collection of items (in this case strings).</P>
+<P>A <CODE>for...of</CODE> loop gives you a way to get each item in the array and run some JavaScript on it. The line <CODE>for (const fruit of fruits)</CODE> says:</P>
+<OL>
+<LI>Get the first item in <CODE>fruits</CODE>. 
+<LI>Set the <CODE>fruit</CODE> variable to that item, then run the code between the <CODE>{}</CODE> curly braces. 
+<LI>Get the next item in <CODE>fruits</CODE>, and repeat 2, until you reach the end of <CODE>fruits</CODE>.</LI></OL>
+<P>In this case, the code inside the curly braces is writing out <CODE>fruit</CODE> to the console.</P>
+<P>Now let's look at the loop in our number guessing game &#8212; the following can be found inside the <CODE>resetGame()</CODE> function:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="wCS7uNu+lb8wuwy91PiPKtEa8dknQOP/wEU30/0XIUc="><CODE><SPAN class="token keyword">const</SPAN> resetParas <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelectorAll</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".resultParas p"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token keyword">for</SPAN> <SPAN class="token punctuation">(</SPAN><SPAN class="token keyword">const</SPAN> resetPara <SPAN class="token keyword">of</SPAN> resetParas<SPAN class="token punctuation">)</SPAN> <SPAN class="token punctuation">{</SPAN>
+  resetPara<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">""</SPAN><SPAN class="token punctuation">;</SPAN>
+<SPAN class="token punctuation">}</SPAN>
+</CODE></PRE></DIV>
+<P>This code creates a variable containing a list of all the paragraphs inside <CODE>&lt;div class="resultParas"&gt;</CODE> using the <A title=querySelectorAll() href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"><CODE><FONT color=#0066cc>querySelectorAll()</FONT></CODE></A> method, then it loops through each one, removing the text content of each.</P>
+<P>Note that even though <CODE>resetPara</CODE> is a constant, we can change its internal properties like <CODE>textContent</CODE>.</P></DIV></SECTION><SECTION aria-labelledby=a_small_discussion_on_objects>
+<H3 id=a_small_discussion_on_objects><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#a_small_discussion_on_objects"><FONT color=#0066cc>A small discussion on objects</FONT></A></H3>
+<DIV class=section-content>
+<P>Let's add one more final improvement before we get to this discussion. Add the following line just below the <CODE>let resetButton;</CODE> line near the top of your JavaScript, then save your file:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="g6WmCxjagqyODtjPiDurYoleOmduWIXHWMCcIN7rQmA="><CODE>guessField<SPAN class="token punctuation">.</SPAN><SPAN class="token function">focus</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>This line uses the <A title=focus() href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus"><CODE><FONT color=#0066cc>focus()</FONT></CODE></A> method to automatically put the text cursor into the <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"><CODE><FONT color=#0066cc>&lt;input&gt;</FONT></CODE></A> text field as soon as the page loads, meaning that the user can start typing their first guess right away, without having to click the form field first. It's only a small addition, but it improves usability &#8212; giving the user a good visual clue as to what they've got to do to play the game.</P>
+<P>Let's analyze what's going on here in a bit more detail. In JavaScript, most of the items you will manipulate in your code are objects. An object is a collection of related functionality stored in a single grouping. You can create your own objects, but that is quite advanced and we won't be covering it until much later in the course. For now, we'll just briefly discuss the built-in objects that your browser contains, which allow you to do lots of useful things.</P>
+<P>In this particular case, we first created a <CODE>guessField</CODE> constant that stores a reference to the text input form field in our HTML &#8212; the following line can be found amongst our declarations near the top of the code:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="zq3yt7AH9lpxmegaAfaMjSrol4fAVPuvhHiZrmhRBX4="><CODE><SPAN class="token keyword">const</SPAN> guessField <SPAN class="token operator">=</SPAN> document<SPAN class="token punctuation">.</SPAN><SPAN class="token function">querySelector</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token string">".guessField"</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>To get this reference, we used the <A title=querySelector() href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"><CODE><FONT color=#0066cc>querySelector()</FONT></CODE></A> method of the <A href="https://developer.mozilla.org/en-US/docs/Web/API/Document"><CODE><FONT color=#0066cc>document</FONT></CODE></A> object. <CODE>querySelector()</CODE> takes one piece of information &#8212; a <A href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors"><FONT color=#0066cc>CSS selector</FONT></A> that selects the element you want a reference to.</P>
+<P>Because <CODE>guessField</CODE> now contains a reference to an <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"><CODE><FONT color=#0066cc>&lt;input&gt;</FONT></CODE></A> element, it now has access to a number of properties (basically variables stored inside objects, some of which can't have their values changed) and methods (basically functions stored inside objects). One method available to input elements is <CODE>focus()</CODE>, so we can now use this line to focus the text input:</P>
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="g6WmCxjagqyODtjPiDurYoleOmduWIXHWMCcIN7rQmA="><CODE>guessField<SPAN class="token punctuation">.</SPAN><SPAN class="token function">focus</SPAN><SPAN class="token punctuation">(</SPAN><SPAN class="token punctuation">)</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<P>Variables that don't contain references to form elements won't have <CODE>focus()</CODE> available to them. For example, the <CODE>guesses</CODE> constant contains a reference to a <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p"><CODE><FONT color=#0066cc>&lt;p&gt;</FONT></CODE></A> element, and the <CODE>guessCount</CODE> variable contains a number.</P></DIV></SECTION><SECTION aria-labelledby=playing_with_browser_objects>
+<H3 id=playing_with_browser_objects><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#playing_with_browser_objects"><FONT color=#0066cc>Playing with browser objects</FONT></A></H3>
+<DIV class=section-content>
+<P>Let's play with some browser objects a bit.</P>
+<OL>
+<LI>First of all, open up your program in a browser. 
+<LI>Next, open your <A href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools"><FONT color=#0066cc>browser developer tools</FONT></A>, and make sure the JavaScript console tab is open. 
+<LI>Type <CODE>guessField</CODE> into the console and the console shows you that the variable contains an <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"><CODE><FONT color=#0066cc>&lt;input&gt;</FONT></CODE></A> element. You'll also notice that the console autocompletes the names of objects that exist inside the execution environment, including your variables! 
+<LI>Now type in the following: 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="LIezj/uYM+n1kP/0jr8EmYaYCBluxU/G6LjmrtknUGk="><CODE>guessField<SPAN class="token punctuation">.</SPAN>value <SPAN class="token operator">=</SPAN> <SPAN class="token number">2</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>The <CODE>value</CODE> property represents the current value entered into the text field. You'll see that by entering this command, we've changed the text in the text field! 
+<LI>Now try typing <CODE>guesses</CODE> into the console and pressing <KBD>Enter</KBD> (or <KBD>Return</KBD>, depending on your keyboard). The console shows you that the variable contains a <A href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p"><CODE><FONT color=#0066cc>&lt;p&gt;</FONT></CODE></A> element. 
+<LI>Now try entering the following line: 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="HZoMoPKICP8h1RVG//y41B3SplMpul6DLuivn404GjI="><CODE>guesses<SPAN class="token punctuation">.</SPAN>value<SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>The browser returns <CODE>undefined</CODE>, because paragraphs don't have the <CODE>value</CODE> property. 
+<LI>To change the text inside a paragraph, you need the <A title=textContent href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"><CODE><FONT color=#0066cc>textContent</FONT></CODE></A> property instead. Try this: 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="m1KehGwgh0HU7OzDCH8S2Mkj1SF0SauL70+0/4Gl5JA="><CODE>guesses<SPAN class="token punctuation">.</SPAN>textContent <SPAN class="token operator">=</SPAN> <SPAN class="token string">"Where is my paragraph?"</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>
+<LI>Now for some fun stuff. Try entering the below lines, one by one: 
+<DIV class=code-example>
+<DIV class=example-header><SPAN class=language-name>js</SPAN></DIV><PRE class="brush: js notranslate" data-signature="lyhQNXXI4tyhOpIOYRii02slKLabnLr42ERF8pTRsAM="><CODE>guesses<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>backgroundColor <SPAN class="token operator">=</SPAN> <SPAN class="token string">"yellow"</SPAN><SPAN class="token punctuation">;</SPAN>
+guesses<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>fontSize <SPAN class="token operator">=</SPAN> <SPAN class="token string">"200%"</SPAN><SPAN class="token punctuation">;</SPAN>
+guesses<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>padding <SPAN class="token operator">=</SPAN> <SPAN class="token string">"10px"</SPAN><SPAN class="token punctuation">;</SPAN>
+guesses<SPAN class="token punctuation">.</SPAN>style<SPAN class="token punctuation">.</SPAN>boxShadow <SPAN class="token operator">=</SPAN> <SPAN class="token string">"3px 3px 6px black"</SPAN><SPAN class="token punctuation">;</SPAN>
+</CODE></PRE></DIV>Every element on a page has a <CODE>style</CODE> property, which itself contains an object whose properties contain all the inline CSS styles applied to that element. This allows us to dynamically set new CSS styles on elements using JavaScript. </LI></OL></DIV></SECTION><SECTION aria-labelledby=finished_for_now&#8230;>
+<H2 id=finished_for_now&#8230;><A href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash#finished_for_now&#8230;"><FONT color=#0066cc>
+</td>
+</tr>
+</table>
+</center>
+</div>
+<hr>
+<div align="center">
+<center>
+<table border="2" cellpadding="5" cellspacing="5" width="100%" bgcolor="#FFCC66">
+<tr>
+<td width="100%">
+<p><b>About using this material:</b></p>
+<p>The best way to <b>learn</b> this material is to use <a href="http://super-memory.com/english/smintro.htm">SuperMemo</a> software.<br>
+SuperMemo is the world's leader in accelerated learning technologies
+ (see: <a href="http://www.super-memory.com">SuperMemo Website</a>)
+<p>
+No download URL currently available
+</td>
+</tr>
+<tr>
+<td width="100%">
+<b>Contact data:</b></p>
+<p><b>Author: User of SuperMemo</b><br>
+<a href="http://super-memory.com">super-memory.com</a><br>
+date: 10/3/2024 10:20:41 AM<br>
+Page generated with:<br> SuperMemo 18<br>Build: 18.05 of Oct 29, 2020
+</td>
+</tr>
+<tr>
+<td width="100%">
+</td>
+</tr>
+</table>
+</center>
+</div>
+</body>
+
+</html>
